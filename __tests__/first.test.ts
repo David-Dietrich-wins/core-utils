@@ -1,5 +1,5 @@
-import { hello } from "../src/index"
+import { hello } from "../src/index";
 
-test('Verifies hello', () => {
-  expect(hello('David')).toBe('Hello, David!');
+test("Verifies hello", () => {
+  expect(hello("David")).toBe("Hello, David!");
 });
