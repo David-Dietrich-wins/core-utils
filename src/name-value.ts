@@ -30,8 +30,8 @@ export type NameValueAsType<Tvalue = string, Tname = string> = {
   value: Tvalue
 }
 
-export interface INameValueBoolean extends INameValue<boolean> { }
-export interface INameValueNumber extends INameValue<number> { }
+export type INameValueBoolean = INameValue<boolean>
+export type INameValueNumber = INameValue<number>
 
 export type NameValueBoolean = NameValueType<boolean>
 export type NameValueNumber = NameValueType<number>

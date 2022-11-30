@@ -13,6 +13,7 @@ import { FetchDataTypesAllowed, fetchJson, FetchSettings } from "./fetch-http"
  */
 function wrapPromise<TResponse>(promise: Promise<TResponse>): { read: () => TResponse } {
   let status = 'pending'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let response: any
 
   const suspender = promise
@@ -47,9 +48,12 @@ function wrapPromise<TResponse>(promise: Promise<TResponse>): { read: () => TRes
  * @returns A read() method to be used by <Suspense> and <ErrorBoundary> to show components when the data is ready.
  */
 export default function fetchData<Tdata extends FetchDataTypesAllowed, Tret>(
-  { url, method, data, fname, bearerToken }: FetchSettings
+  { url, method, data, fname, bearerToken }: FetchSettings<Tdata>
 ) {
-  const promise = fetchJson(url, method, data, fname, bearerToken)
+  const settings: FetchSettings<Tdata> = {
+    url, method, data, fname, bearerToken
+  }
+  const promise = fetchJson<Tdata, Tret>(settings)
 
   return wrapPromise(promise)
 }

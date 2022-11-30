@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StringOrStringArray } from "./types"
 
 /**
@@ -7,18 +9,8 @@ import { StringOrStringArray } from "./types"
  * @param obj Array of items to add to listObjects.
  * @returns listObjects. If null, was passed, it is a new array.
  */
-export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] | undefined {
-  if (isNullOrUndefined(obj)) {
-    return
-  }
-
-  listObjects = safeArray(listObjects)
-
-  for (let i = 0; getObject(obj, i); ++i) {
-    listObjects.push(getObject(obj, i)!)
-  }
-
-  return listObjects
+export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] {
+  return safeArray(listObjects).concat(safeArray(obj))
 }
 
 /**
@@ -29,8 +21,8 @@ export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] | undefined 
  * @returns The first item in the array, or undefined or defaultIfNone if the array has no values.
  */
 export function arrayFirst<T>(tArray: T[] | null | undefined, defaultIfNone?: T): T | undefined {
-  if (isArray(tArray, 1)) {
-    return tArray![0]
+  if (tArray && isArray(tArray, 1)) {
+    return tArray[0]
   }
 
   return defaultIfNone
@@ -44,8 +36,8 @@ export function arrayFirst<T>(tArray: T[] | null | undefined, defaultIfNone?: T)
  * @returns The last item in the array, or null or defaultIfNone if the array has no values.
  */
 export function arrayLast<T>(tArray: T[] | null | undefined, defaultIfNone?: T): T | undefined {
-  if (isArray(tArray, 1)) {
-    return getObject(tArray!, -1)
+  if (tArray && isArray(tArray, 1)) {
+    return getObject(tArray, -1)
   }
 
   return defaultIfNone
@@ -58,7 +50,7 @@ export function arrayLast<T>(tArray: T[] | null | undefined, defaultIfNone?: T):
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
-export function deepCloneJson(obj: object, fname?: string): any {
+export function deepCloneJson(obj: object, fname?: string) {
   fname = fname || 'deepCloneJson'
 
   return safestrToJson(safeJsonToString(obj, fname), fname)
@@ -69,7 +61,7 @@ export function deepCloneJson(obj: object, fname?: string): any {
  * i.e., isDirty = deepDiffMapper().anyChanges(formOriginalValues, formCurrentValues);
  * @returns An object that wraps varying levels of comparison information.
  */
-export function deepDiffMapper(): any {
+export function deepDiffMapper() {
   return {
     VALUE_CREATED: "created",
     VALUE_UPDATED: "updated",
@@ -82,6 +74,7 @@ export function deepDiffMapper(): any {
      * @param obj2 Second object to compare.
      * @returns True if any changes between the objects.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     anyChanges(obj1: any, obj2: any): boolean {
       const changed = this.getChanges(obj1, obj2)
 
@@ -95,7 +88,8 @@ export function deepDiffMapper(): any {
      * @param obj2 Second object to compare.
      * @returns The changed items between the two objects.
      */
-    getChanges(obj1: any, obj2: any): any {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getChanges(obj1: any, obj2: any) {
       const objChanges = this.map(obj1, obj2)
       const changeEntries = Object.entries(objChanges)
 
@@ -111,7 +105,7 @@ export function deepDiffMapper(): any {
         isObject(objChanges, "type") &&
         isObject(objChanges, "data")
       ) {
-        return "unchanged" !== objChanges.type
+        return "unchanged" !== (objChanges as any).type
       }
 
       // We are dealing with a larger object or array comparison.
@@ -122,7 +116,8 @@ export function deepDiffMapper(): any {
      * @param param0 A key value pair to look for changes. Deep inspection
      * @returns True if an object with type and data is found with changes present.
      */
-    findTypeData([key, value]: [string, any]): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    findTypeData([, value]: [string, any]): boolean {
       const found =
         isObject(value, "type") &&
         isObject(value, "data") &&
@@ -143,7 +138,7 @@ export function deepDiffMapper(): any {
      * @param obj2 The second object to compare.
      * @returns A {type: string, value: object} object with all changes.
      */
-    map(obj1: any, obj2: any): object {
+    map<T>(obj1: T, obj2: T): object {
       if (this.isFunction(obj1) || this.isFunction(obj2)) {
         throw new Error("Invalid argument. Function given, object expected.")
       }
@@ -156,6 +151,7 @@ export function deepDiffMapper(): any {
       }
 
       const diff = {}
+      // eslint-disable-next-line no-loops/no-loops
       for (const key in obj1) {
         if (this.isFunction(obj1[key])) {
           continue
@@ -169,6 +165,7 @@ export function deepDiffMapper(): any {
         (diff as any)[key] = this.map(obj1[key], value2)
       }
 
+      // eslint-disable-next-line no-loops/no-loops
       for (const key in obj2) {
         if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
           continue
@@ -185,6 +182,7 @@ export function deepDiffMapper(): any {
      * @param value2 The second value to compare.
      * @returns A this.VALUE_xxx string describing the change or unchanged.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     compareValues(value1: any, value2: any): string {
       if (value1 === value2) {
         return this.VALUE_UNCHANGED
@@ -208,18 +206,23 @@ export function deepDiffMapper(): any {
 
       return this.VALUE_UPDATED
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isFunction(x: any): boolean {
       return Object.prototype.toString.call(x) === "[object Function]"
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isArray(x: any): boolean {
       return Object.prototype.toString.call(x) === "[object Array]"
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isDate(x: any): boolean {
       return Object.prototype.toString.call(x) === "[object Date]"
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isObject(x: any): boolean {
       return Object.prototype.toString.call(x) === "[object Object]"
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isValue(x: any): boolean {
       return !this.isObject(x) && !this.isArray(x)
     },
@@ -232,12 +235,13 @@ export function deepDiffMapper(): any {
  * @param ret The object to get the ret.body object.
  * @returns The existing ret.body object of the ret object..
  */
-export function getBody(ret: any): any {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getBody<T>(ret: any) {
   if (!isObject(ret) || !isObject(ret.body)) {
     throw new Error("Object body not found")
   }
 
-  return ret.body
+  return ret.body as T
 }
 
 /**
@@ -354,6 +358,7 @@ export function getMantissa(num: number): number {
  * @returns A number with the given decimal places. Or 0 if num was null or undefined.
  */
 export function getNumberFormatted(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   num: any | null | undefined,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
@@ -382,6 +387,7 @@ export function getNumberFormatted(
  * @returns A string of the passed in num with the given decimal places.
  */
 export function getNumberString(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   num: any,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
@@ -395,11 +401,11 @@ export function getNumberString(
   }
 
   maxDecimalPlaces = maxDecimalPlaces || 0
-  minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
+  // minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
 
   return new Intl.NumberFormat("en", {
     maximumFractionDigits: maxDecimalPlaces,
-    minimumFractionDigits: maxDecimalPlaces,
+    minimumFractionDigits: minDecimalPlaces,
   }).format(num)
 }
 
@@ -435,6 +441,7 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
  * @param keyToFind The property to look for in the object.
  * @returns The value from the obj[keyToFind]. undefined if not found.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getObjectValue(obj: any, keyToFind: string): any {
   if ((Object.keys(obj) || []).find((x) => x === keyToFind)) {
     return obj[keyToFind]
@@ -499,6 +506,7 @@ export function getPercentChangeString(
  * @param minlength The required minimum length to consider to have data. If not supplied, defaults to 1.
  * @returns True if the object meets the minimum length requirements.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasData(o: any | null | undefined, minlength = 1): boolean {
   // console.log('minlength: ' + minlength + ', o: ' + o)
   try {
@@ -529,7 +537,7 @@ export function hasData(o: any | null | undefined, minlength = 1): boolean {
 
     return isArray(Object.keys(o), minlength)
   } catch (ex) {
-    console.log("grayarrow-jsutils.hasData", ex)
+    console.error("grayarrow-jsutils.hasData", ex)
   }
 
   return false
@@ -695,7 +703,7 @@ export function isString(obj: any, minlength = 0): boolean {
  */
 export function newGuid(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
+    const r = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
@@ -719,7 +727,7 @@ export function getNullObject<T>(obj: T) {
  */
 export function safeArray<T>(arr: T | T[] | null | undefined, ifNull?: T[]): T[] {
   if (isNullOrUndefined(arr)) {
-    return isArray(ifNull) ? (ifNull!) : []
+    return ifNull && isArray(ifNull) ? (ifNull) : []
   }
 
   return isArray(arr) ? arr as T[] : [arr as T]
@@ -736,7 +744,8 @@ export function safeJsonToString(json: object, fname?: string): string {
     return JSON.stringify(safeObject(json))
   }
   catch (ex) {
-    console.log(fname ? fname : 'safeJsonToString', ex)
+    // eslint-disable-next-line no-console
+    console.error(fname ? fname : 'safeJsonToString', ex)
   }
 
   return ""
@@ -765,8 +774,8 @@ export function safeObject(obj: object | null | undefined, ifNull?: object): obj
  * @returns A guaranteed string to be nonnull. Returns ifNull if the string does not have data.
  */
 export function safestr(s: string | null | undefined, ifNull = ""): string {
-  if (hasData(s)) {
-    return s!
+  if (s && hasData(s)) {
+    return s
   }
 
   return hasData(ifNull) ? ifNull : ""
@@ -797,7 +806,7 @@ export function safestrToJson<T>(strjson: string | null | undefined, fname?: str
     return JSON.parse(safestr(strjson))
   }
   catch (ex) {
-    console.log(fname ? fname : 'safestrToJson', ex)
+    console.error(fname ? fname : 'safestrToJson', ex)
   }
 }
 
@@ -873,6 +882,7 @@ export function prefixIfHasData(s: string, prefix = ", "): string {
  * @param newKey The new name of the key.
  * @returns The original object with the renamed key.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renameProperty(obj: any, oldKey: any, newKey: any): object {
   if (
     !isObject(obj) ||
@@ -903,8 +913,10 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
  * @param mustHaveValue If true, the property must have a value in order for func() to be called.
  * @returns The original object with function having been run on each property.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function runOnAllMembers<T extends object = any>(
   obj: T,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   func: (key: string, value: any) => any,
   mustHaveValue = true
 ) {
@@ -915,8 +927,10 @@ export function runOnAllMembers<T extends object = any>(
     throw new Error("runOnAllMembers() received an empty function operator.")
   }
 
+  // eslint-disable-next-line no-loops/no-loops
   for (const [key, value] of Object.entries(obj)) {
     if (!mustHaveValue || (mustHaveValue && value)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (obj as any)[key] = func(key, value)
     }
     // console.log(`${key}: ${value}`)
@@ -1308,16 +1322,15 @@ export function urlJoin(
   relativePath: string,
   addTrailingSlash = true
 ) {
-  let url = safestr(baseUrl)
-  relativePath = safestr(relativePath)
-
   // Remove any trailing slashes before adding a trailing slash.
-  while (url.length && "/" === url.slice(-1)) {
-    url = url.slice(0, -1)
-  }
+  let url = safestr(baseUrl).trimStart().replace(/[/]+[/]$/, '/')
+  relativePath = safestr(relativePath).replace(/[/]+[/]$/, '/').replace(/^[/]+[/]/, '/')
 
-  if (!relativePath.startsWith("/")) {
+  if (!relativePath.startsWith("/") && !url.endsWith('/')) {
     url += "/"
+  }
+  else if (relativePath.startsWith("/") && url.endsWith("/")) {
+    url = url.slice(0, -1)
   }
 
   url += relativePath
@@ -1331,7 +1344,7 @@ export function urlJoin(
     addTrailingSlash = false
   }
 
-  if (addTrailingSlash && !relativePath.endsWith("/")) {
+  if (addTrailingSlash && !url.endsWith("/")) {
     url += "/"
   }
 

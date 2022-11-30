@@ -7,7 +7,7 @@ export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
 export type FetchDataTypesAllowed = JSONValue | object
 
-export type FetchSettings<Tdata extends FetchDataTypesAllowed | undefined = undefined> = {
+export type FetchSettings<Tdata extends FetchDataTypesAllowed | unknown = unknown> = {
   url: string,
   method: HttpMethod,
   data?: Tdata,
@@ -40,13 +40,8 @@ export function getHttpHeaderJson(bearerToken?: string) {
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchHttp<Tdata extends FetchDataTypesAllowed | undefined = undefined>(
-  url: string,
-  method: HttpMethod,
-  data?: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+export async function fetchHttp<Tdata extends FetchDataTypesAllowed | unknown = unknown>(
+  { url, method, data, fname, bearerToken }: FetchSettings<Tdata>
 ) {
   if (!fname || !hasData(fname)) {
     fname = 'fetchHttp'
@@ -74,50 +69,40 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed | undefined 
       throw err
     }
 
-    throw new GrayArrowExceptionHttp((err as any).message, fname)
+    throw new GrayArrowExceptionHttp((err instanceof Error) ? (err as Error).message : fetchHttp.name, fname)
   }
 
   if (!response) {
-    throw new GrayArrowExceptionHttp(`${fname!}: NO response in HTTP ${method} to URL: ${url}.`, fname)
+    throw new GrayArrowExceptionHttp(`${fname}: NO response in HTTP ${method} to URL: ${url}.`, fname)
   }
 
   if (!response.ok) {
-    let captureResponse: ICaptureResponse | undefined
+    let captureResponse: ICaptureResponse<unknown> | undefined
     if (401 === response.status) {
       try {
         captureResponse = await response.json()
       }
-      catch (jsonerr) { }
+      catch (jsonerr) { /* empty */ }
     }
 
-    throw new GrayArrowExceptionHttp(`${fname!}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`, fname, { response, captureResponse })
+    throw new GrayArrowExceptionHttp(`${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`, fname, { response, captureResponse })
   }
 
   return response
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
-  url: string,
-  method: HttpMethod,
-  data?: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+  settings: FetchSettings<Tdata>
 ) {
-  const resp = await fetchHttp(url, method, data, fname, bearerToken, settings)
+  const resp = await fetchHttp(settings)
 
   return await resp.text()
 }
 
-export async function fetchJson<Tdata extends FetchDataTypesAllowed | undefined, Tret>(
-  url: string,
-  method: HttpMethod,
-  data?: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+export async function fetchJson<Tdata extends FetchDataTypesAllowed | unknown, Tret>(
+  settings: FetchSettings<Tdata>
 ): Promise<Tret> {
-  const resp = await fetchHttp(url, method, data, fname, bearerToken, settings)
+  const resp = await fetchHttp(settings)
 
   return await resp.json()
 }
@@ -129,13 +114,10 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed | undefined,
  * @param fname The callers function name for outputting in potential error calls.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchDelete(
-  url: string,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings
-) {
-  return fetchHttp(url, "DELETE", undefined, fname, bearerToken, settings)
+export async function fetchDelete(settings: FetchSettings) {
+  settings.method = "DELETE"
+
+  return fetchHttp(settings)
 }
 
 /**
@@ -146,13 +128,11 @@ export async function fetchDelete(
  * @returns The returned Response object in a Promise.
  */
 export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  url: string,
-  fname?: string,
-  bearerToken?: string,
-  data?: Tdata,
-  settings?: FetchSettings<Tdata>
+  settings: FetchSettings<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>(url, "DELETE", data, fname, bearerToken, settings)
+  settings.method = "DELETE"
+
+  return fetchJson<Tdata, Tret>(settings)
 }
 
 /**
@@ -163,13 +143,10 @@ export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret 
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned JSON object.
  */
-export async function fetchGet<Tret>(
-  url: string,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings
-) {
-  return fetchJson<undefined, Tret>(url, "GET", undefined, fname, bearerToken, settings)
+export async function fetchGet<Tret>(settings: FetchSettings<undefined>) {
+  settings.method = "GET"
+
+  return fetchJson<undefined, Tret>(settings)
 }
 
 /**
@@ -181,13 +158,11 @@ export async function fetchGet<Tret>(
  * @returns The returned Response object in a Promise.
  */
 export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  url: string,
-  data: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+  settings: FetchSettings<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>(url, "PATCH", data, fname, bearerToken, settings)
+  settings.method = "PATCH"
+
+  return fetchJson<Tdata, Tret>(settings)
 }
 
 /**
@@ -200,13 +175,11 @@ export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = und
  * @returns The returned JSON object.
  */
 export async function fetchPost<Tdata extends FetchDataTypesAllowed | undefined, Tret = undefined>(
-  url: string,
-  data?: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+  settings: FetchSettings<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>(url, "POST", data, fname, bearerToken, settings)
+  settings.method = "POST"
+
+  return fetchJson<Tdata, Tret>(settings)
 }
 
 /**
@@ -218,11 +191,9 @@ export async function fetchPost<Tdata extends FetchDataTypesAllowed | undefined,
  * @returns The returned Response object in a Promise.
  */
 export async function fetchPut<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  url: string,
-  data: Tdata,
-  fname?: string,
-  bearerToken?: string,
-  settings?: FetchSettings<Tdata>
+  settings: FetchSettings<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>(url, "PUT", data, fname, bearerToken, settings)
+  settings.method = "PUT"
+
+  return fetchJson<Tdata, Tret>(settings)
 }

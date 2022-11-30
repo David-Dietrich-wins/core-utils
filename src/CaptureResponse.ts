@@ -1,7 +1,7 @@
 import { GrayArrowException } from "./exception-types"
-import { isNullOrUndefined, isObject, safestrLowercase } from "./skky"
+import { isObject, safestrLowercase } from "./skky"
 
-export interface ICaptureResponse<T = any> {
+export interface ICaptureResponse<T> {
   id: number
   ts: number
   msg: string
@@ -11,7 +11,7 @@ export interface ICaptureResponse<T = any> {
   obj?: T
 }
 
-export class CaptureResponse<T = any> implements ICaptureResponse<T> {
+export class CaptureResponse<T> implements ICaptureResponse<T> {
   id = +new Date()
   ts = this.id
 
@@ -31,14 +31,14 @@ export class CaptureResponse<T = any> implements ICaptureResponse<T> {
     this.obj = obj
   }
 
-  setError(errobj?: any) {
+  setError<T>(errobj?: T) {
     this.result = 'Error'
     this.responseCode = -1
 
     if (errobj) {
       if (isObject(errobj) && errobj instanceof GrayArrowException) {
-        if (!isNullOrUndefined(errobj.responseCode)) {
-          this.responseCode = errobj.responseCode!
+        if (errobj.responseCode) {
+          this.responseCode = errobj.responseCode
         }
 
         if (errobj.message) {
@@ -58,7 +58,7 @@ export class CaptureResponse<T = any> implements ICaptureResponse<T> {
             this.responseCode = errobj
             break
           default:
-            this.obj = errobj
+            // this.obj = errobj
             break
         }
       }
@@ -73,15 +73,15 @@ export class CaptureResponse<T = any> implements ICaptureResponse<T> {
     }
   }
 
-  static responseCodeIsGood(ret?: any): boolean {
-    if (isObject(ret, 'responseCode')) {
+  static responseCodeIsGood<T>(ret?: ICaptureResponse<T>): boolean {
+    if (ret && isObject(ret, 'responseCode')) {
       return ret.responseCode >= 200 && ret.responseCode < 300
     }
 
     return false
   }
-  static isSuccess(ret?: any): boolean {
-    if (isObject(ret, 'result')) {
+  static isSuccess<T>(ret?: ICaptureResponse<T>): boolean {
+    if (ret && isObject(ret, 'result')) {
       return 'success' === safestrLowercase(ret.result)
     }
 

@@ -1,13 +1,13 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "type": "module",
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist node_modules package-lock.json yarn.lock",
-    "cleanbuild": "yarn clean && yarn build",
+    "cleanbuild": "yarn clean && yarn && yarn build",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "test": "jest"
@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/grayarrow/core-utils#readme",
   "devDependencies": {
-    "@jest/globals": "^29.3.1",
     "@types/jest": "^29.2.3",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.45.0",

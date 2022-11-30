@@ -14,7 +14,7 @@ export default class Config<Tid = string, Tval = boolean> extends IdCreatedUpdat
   val!: Tval
 
   constructor(
-    id: Tid,
+    id: Tid | IConfig<Tid, Tval>,
     userid: Tid,
     name = '',
     val: Tval,
@@ -24,7 +24,7 @@ export default class Config<Tid = string, Tval = boolean> extends IdCreatedUpdat
     created = new Date()) {
     super(id, createdby, created, updatedby, updated)
     if (isObject(id)) {
-      this.copyFromDatabase(id as any)
+      this.copyFromDatabase(id as IConfig<Tid, Tval>)
     }
     else {
       // constructor items

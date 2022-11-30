@@ -31,24 +31,24 @@ export class InstrumentationStatistics extends GrayArrowObject {
     return 'InstrumentationStatistics'
   }
 
-  addStats(stats?: InstrumentationStatistics): void {
-    if (isObject(stats)) {
-      this.successes += (stats!.successes || 0)
-      this.failures += (stats!.failures || 0)
-      this.totalProcessed += (stats!.totalProcessed || 0)
+  addStats(stats?: InstrumentationStatistics) {
+    if (stats && isObject(stats)) {
+      this.successes += (stats.successes || 0)
+      this.failures += (stats.failures || 0)
+      this.totalProcessed += (stats.totalProcessed || 0)
 
-      this.skipped += (stats!.skipped || 0)
+      this.skipped += (stats.skipped || 0)
 
-      this.add += (stats!.add || 0)
-      this.delete += (stats!.delete || 0)
-      this.update += (stats!.update || 0)
-      this.upsert += (stats!.upsert || 0)
+      this.add += (stats.add || 0)
+      this.delete += (stats.delete || 0)
+      this.update += (stats.update || 0)
+      this.upsert += (stats.upsert || 0)
 
-      this.msg = this.msg.concat(safeArray(stats!.msg))
+      this.msg = this.msg.concat(safeArray(stats.msg))
     }
   }
 
-  addMessage(msg?: StringOrStringArray | object): number {
+  addMessage(msg?: StringOrStringArray | object) {
     const fname = 'addMessage'
 
     if (isArray(msg)) {
@@ -75,52 +75,52 @@ export class InstrumentationStatistics extends GrayArrowObject {
     throw new GrayArrowException('Message is not a string or set of strings.', this.classMethodString(fname), '' + msg)
   }
 
-  addFailure(msg?: string): number {
+  addFailure(msg?: string) {
     ++this.failures
     this.addProcessed(msg)
 
     return this.failures
   }
 
-  addSuccess(msg?: string): number {
+  addSuccess(msg?: string) {
     ++this.successes
     this.addProcessed(msg)
 
     return this.successes
   }
 
-  addSkip(msg?: string): number {
+  addSkip(msg?: string) {
     ++this.skipped
     this.addProcessed(msg)
 
     return this.skipped
   }
-  added(msg?: string): number {
+  added(msg?: string) {
     ++this.add
 
     this.addMessage(msg)
     return this.add
   }
-  deleted(msg?: string): number {
+  deleted(msg?: string) {
     ++this.delete
 
     this.addMessage(msg)
     return this.delete
   }
-  updated(msg?: string): number {
+  updated(msg?: string) {
     ++this.update
 
     this.addMessage(msg)
     return this.update
   }
-  upserted(msg?: string): number {
+  upserted(msg?: string) {
     ++this.upsert
 
     this.addMessage(msg)
     return this.upsert
   }
 
-  addProcessed(msg?: string): number {
+  addProcessed(msg?: string) {
     ++this.totalProcessed
 
     if (hasData(msg)) {
@@ -130,22 +130,22 @@ export class InstrumentationStatistics extends GrayArrowObject {
     return this.totalProcessed
   }
 
-  finished(): void {
+  finished() {
     this.finishTime = new Date()
   }
 
-  get processingTime(): number {
+  get processingTime() {
     return timeDifference(this.startTime, this.finishTime || new Date())
   }
   /** Gets the total processing time in seconds. */
-  get processingTimeInSeconds(): number {
+  get processingTimeInSeconds() {
     return timeDifferenceInSeconds(this.startTime, this.finishTime || new Date())
   }
-  processingTimeString(longFormat: boolean): string {
+  processingTimeString(longFormat: boolean) {
     return timeDifferenceString(this.startTime, this.finishTime || new Date(), longFormat)
   }
 
-  lineSeparator(isOneLine = false, multilineSeparator?: string): string {
+  lineSeparator(isOneLine = false, multilineSeparator?: string) {
     if (isOneLine) {
       return ', '
     }
@@ -153,10 +153,10 @@ export class InstrumentationStatistics extends GrayArrowObject {
     return safestr(multilineSeparator || '\n', '\n')
   }
 
-  getNumberString(num: number): string {
+  getNumberString(num: number) {
     return getNumberString(num, 0)
   }
-  messageString(isOneLine?: boolean): string {
+  messageString(isOneLine?: boolean) {
     let s = `Processed ${this.getNumberString(this.totalProcessed)} items in ${this.processingTimeString(true)}${isOneLine ? '' : '.'}`
     if (this.add) {
       s += `${this.lineSeparator(isOneLine)}Added: ${this.getNumberString(this.add)}${isOneLine ? '' : '.'}`

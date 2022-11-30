@@ -1,3 +1,5 @@
+import { safeArray } from "./skky"
+
 export type ColorRange = readonly [string, string]
 
 /**
@@ -18,8 +20,8 @@ export function InterpolateColorRange(colorRange: ColorRange, percent: number) {
     endColor = endColor.substring(1)
   }
 
-  const n0 = startColor.match(/.{1,2}/g)!.map((oct) => parseInt(oct, 16) * (1 - percent))
-  const n1 = endColor.match(/.{1,2}/g)!.map((oct) => parseInt(oct, 16) * percent)
+  const n0 = safeArray(startColor.match(/.{1,2}/g)).map((oct) => parseInt(oct, 16) * (1 - percent))
+  const n1 = safeArray(endColor.match(/.{1,2}/g)).map((oct) => parseInt(oct, 16) * percent)
 
   const ci = [0, 1, 2].map((i) => Math.min(Math.round(n0[i] + n1[i]), 255))
 

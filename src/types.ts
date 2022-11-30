@@ -1,4 +1,4 @@
-export type AnyFixLater = any
+export type AnyFixLater = unknown
 export type JSONValue = string | number | boolean | { [x: string]: JSONValue } | JSONValue[]
 
 export type Concrete<Type> = {

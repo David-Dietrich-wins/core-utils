@@ -53,7 +53,7 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolume, ISymbolName {
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 
-export interface IPolitiscale extends INameValue<number, PolitiscaleName> { }
+export type IPolitiscale = INameValue<number, PolitiscaleName>
 export interface IHasPolitiscales {
   scales?: IPolitiscale[]
 }
@@ -259,7 +259,7 @@ export interface IPriceBar<Tdate = string> extends IDate<Tdate>, IVolume {
 export interface IPriceBarSymbol<Tdate = string> extends IPriceBar<Tdate>, ISymbol { }
 export interface IPriceBarTicker<Tdate = string> extends IPriceBar<Tdate>, ITicker { }
 
-export interface IPriceHistory<Tdate = string> extends IPriceBar<Tdate> { }
+export type IPriceHistory<Tdate = string> = IPriceBar<Tdate>
 
 export interface IPriceHistoricalFull extends IPriceHistory {
   adjClose: number          // 212.31,
@@ -300,7 +300,7 @@ export class AssetQuoteShort implements ISymbolPriceVolume {
   price = 0
   volume = 0
 
-  constructor(obj: any) {
+  constructor(obj: AssetQuoteShort) {
     if (isObject(obj)) {
       Object.assign(this, obj)
     }
@@ -393,7 +393,7 @@ export class PriceHistoricalResponse implements IPriceHistoricalFull {
   changeOverTime = 0;   // -0.04002,
   datetime = 0;   // 1624507200000
 
-  constructor(obj: any) {
+  constructor(obj: IPriceHistoricalFull) {
     if (isObject(obj)) {
       Object.assign(this, obj)
     }
