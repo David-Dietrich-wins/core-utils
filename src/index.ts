@@ -1,9 +1,9 @@
-export const hello = (name: string): string => "Hello, " + name + "!";
+export const hello = (name: string): string => "Hello, " + name + "!"
 
-const howAboutThis = () => {
+export const howAboutThis = () => {
   const mycode = 'a lot'
 
-  console.log(mycode, 'hello')
-  
+  console.log(mycode, hello('David'))
+
   return mycode
 }
