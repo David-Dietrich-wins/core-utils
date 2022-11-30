@@ -1,0 +1,31 @@
+{
+  "name": "@grayarrow/core-utils",
+  "version": "1.0.16",
+  "description": "Core utilities for TypeScript and JavaScript projects.",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist node_modules package-lock.json yarn.lock",
+    "cleanbuild": "yarn clean && yarn build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grayarrow/core-utils.git"
+  },
+  "keywords": [
+    "GrayArrow",
+    "utilities",
+    "TypeScript"
+  ],
+  "author": "David Dietrich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grayarrow/core-utils/issues"
+  },
+  "homepage": "https://github.com/grayarrow/core-utils#readme",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  }
+}
