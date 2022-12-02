@@ -1,4 +1,4 @@
-import { IId, IValue } from "./interfaces"
+import { IId, IValue } from "./interfaces.js"
 
 export interface IIdValue<Tid = string, Tvalue = string> extends IId<Tid>, IValue<Tvalue> { }
 

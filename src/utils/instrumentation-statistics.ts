@@ -1,9 +1,9 @@
-import { GrayArrowException } from "./exception-types"
-import { GrayArrowObject } from "./GrayArrowObject"
-import { isObject, isArray, isString, timeDifference, timeDifferenceInSeconds, timeDifferenceString, safestr, getNumberString, safeArray, hasData } from "./skky"
-import { StringOrStringArray } from "./types"
+import { GrayArrowException } from "./exception-types.js"
+import { GrayArrowObject } from "./GrayArrowObject.js"
+import { isObject, isArray, isString, timeDifference, timeDifferenceInSeconds, timeDifferenceString, safestr, getNumberString, safeArray, hasData } from "./skky.js"
+import { StringOrStringArray } from "./types.js"
 
-export class InstrumentationStatistics extends GrayArrowObject {
+export default class InstrumentationStatistics extends GrayArrowObject {
   successes = 0
   failures = 0
   totalProcessed = 0

@@ -1,4 +1,4 @@
-import { FetchDataTypesAllowed, fetchJson, FetchSettings } from "./fetch-http"
+import { FetchDataTypesAllowed, fetchJson, HttpFetchRequestProps, HttpMethod } from "./fetch-http.js"
 
 // From https://blog.logrocket.com/react-suspense-data-fectching/
 // This will prevent a component from rendering until the data is ready.
@@ -48,12 +48,13 @@ function wrapPromise<TResponse>(promise: Promise<TResponse>): { read: () => TRes
  * @returns A read() method to be used by <Suspense> and <ErrorBoundary> to show components when the data is ready.
  */
 export default function fetchData<Tdata extends FetchDataTypesAllowed, Tret>(
-  { url, method, data, fname, bearerToken }: FetchSettings<Tdata>
+  method: HttpMethod,
+  { url, data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
 ) {
-  const settings: FetchSettings<Tdata> = {
-    url, method, data, fname, bearerToken
+  const settings: HttpFetchRequestProps<Tdata> = {
+    url, data, fname, bearerToken
   }
-  const promise = fetchJson<Tdata, Tret>(settings)
+  const promise = fetchJson<Tdata, Tret>(method, settings)
 
   return wrapPromise(promise)
 }

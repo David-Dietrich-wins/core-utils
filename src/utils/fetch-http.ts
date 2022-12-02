@@ -1,15 +1,14 @@
-import { ICaptureResponse } from "./CaptureResponse"
-import { GrayArrowExceptionHttp } from "./exception-types"
-import { hasData, isObject, isArray } from "./skky"
-import { JSONValue } from "./types"
+import { ICaptureResponse } from "./CaptureResponse.js"
+import { GrayArrowExceptionHttp } from "./exception-types.js"
+import { hasData, isObject, isArray } from "./skky.js"
+import { JSONValue } from "./types.js"
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
-export type FetchDataTypesAllowed = JSONValue | object
+export type FetchDataTypesAllowed = JSONValue | object | undefined
 
-export type FetchSettings<Tdata extends FetchDataTypesAllowed | unknown = unknown> = {
+export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> = {
   url: string,
-  method: HttpMethod,
   data?: Tdata,
   fname?: string,
   bearerToken?: string
@@ -40,8 +39,9 @@ export function getHttpHeaderJson(bearerToken?: string) {
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchHttp<Tdata extends FetchDataTypesAllowed | unknown = unknown>(
-  { url, method, data, fname, bearerToken }: FetchSettings<Tdata>
+export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
+  method: HttpMethod,
+  { url, data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
 ) {
   if (!fname || !hasData(fname)) {
     fname = 'fetchHttp'
@@ -92,19 +92,21 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed | unknown = 
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
-  settings: FetchSettings<Tdata>
+  method: HttpMethod,
+  settings: HttpFetchRequestProps<Tdata>
 ) {
-  const resp = await fetchHttp(settings)
+  const resp = await fetchHttp(method, settings)
 
   return await resp.text()
 }
 
-export async function fetchJson<Tdata extends FetchDataTypesAllowed | unknown, Tret>(
-  settings: FetchSettings<Tdata>
-): Promise<Tret> {
-  const resp = await fetchHttp(settings)
+export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tret = object>(
+  method: HttpMethod,
+  settings: HttpFetchRequestProps<Tdata>
+) {
+  const resp = await fetchHttp(method, settings)
 
-  return await resp.json()
+  return await resp.json() as Tret
 }
 
 /**
@@ -114,10 +116,8 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed | unknown, T
  * @param fname The callers function name for outputting in potential error calls.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchDelete(settings: FetchSettings) {
-  settings.method = "DELETE"
-
-  return fetchHttp(settings)
+export async function fetchDelete(settings: HttpFetchRequestProps) {
+  return fetchHttp("DELETE", settings)
 }
 
 /**
@@ -128,11 +128,9 @@ export async function fetchDelete(settings: FetchSettings) {
  * @returns The returned Response object in a Promise.
  */
 export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  settings: FetchSettings<Tdata>
+  settings: HttpFetchRequestProps<Tdata>
 ) {
-  settings.method = "DELETE"
-
-  return fetchJson<Tdata, Tret>(settings)
+  return fetchJson<Tdata, Tret>("DELETE", settings)
 }
 
 /**
@@ -143,10 +141,8 @@ export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret 
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned JSON object.
  */
-export async function fetchGet<Tret>(settings: FetchSettings<undefined>) {
-  settings.method = "GET"
-
-  return fetchJson<undefined, Tret>(settings)
+export async function fetchGet<Tret extends FetchDataTypesAllowed>(settings: HttpFetchRequestProps<Tret>) {
+  return fetchJson<FetchDataTypesAllowed, Tret>("GET", settings)
 }
 
 /**
@@ -158,11 +154,9 @@ export async function fetchGet<Tret>(settings: FetchSettings<undefined>) {
  * @returns The returned Response object in a Promise.
  */
 export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  settings: FetchSettings<Tdata>
+  settings: HttpFetchRequestProps<Tdata>
 ) {
-  settings.method = "PATCH"
-
-  return fetchJson<Tdata, Tret>(settings)
+  return fetchJson<Tdata, Tret>("PATCH", settings)
 }
 
 /**
@@ -174,12 +168,10 @@ export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = und
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned JSON object.
  */
-export async function fetchPost<Tdata extends FetchDataTypesAllowed | undefined, Tret = undefined>(
-  settings: FetchSettings<Tdata>
+export async function fetchPost<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
+  settings: HttpFetchRequestProps<Tdata>
 ) {
-  settings.method = "POST"
-
-  return fetchJson<Tdata, Tret>(settings)
+  return fetchJson<Tdata, Tret>("POST", settings)
 }
 
 /**
@@ -191,9 +183,7 @@ export async function fetchPost<Tdata extends FetchDataTypesAllowed | undefined,
  * @returns The returned Response object in a Promise.
  */
 export async function fetchPut<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
-  settings: FetchSettings<Tdata>
+  settings: HttpFetchRequestProps<Tdata>
 ) {
-  settings.method = "PUT"
-
-  return fetchJson<Tdata, Tret>(settings)
+  return fetchJson<Tdata, Tret>("PUT", settings)
 }

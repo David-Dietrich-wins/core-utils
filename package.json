@@ -1,11 +1,12 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.19",
+  "version": "1.0.40",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
-  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:esm": "tsc --outDir dist/esm",
+    "build:cjs": "tsc --module commonjs --outDir dist",
     "clean": "rm -rf dist node_modules package-lock.json yarn.lock",
     "cleanbuild": "yarn clean && yarn && yarn build",
     "lint": "eslint . --ext .ts",
@@ -23,6 +24,11 @@
   ],
   "author": "David Dietrich",
   "license": "ISC",
+  "main": "dist/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "dist", "esm", "src"
+  ],
   "bugs": {
     "url": "https://github.com/grayarrow/core-utils/issues"
   },

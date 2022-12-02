@@ -1,4 +1,4 @@
-import { urlJoin } from "./skky"
+import { urlJoin } from "../src/utils/skky"
 
 test("Url join with trailing slashes", () => {
   const baseUrl = "  https://TestTrailing.com//"

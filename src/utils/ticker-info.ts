@@ -1,7 +1,7 @@
-import { IdName } from './id-name'
-import { INameValue } from './name-value'
-import { isObject } from './skky'
-import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from './interfaces'
+import { IdName } from './id-name.js'
+import { INameValue } from './name-value.js'
+import { isObject } from './skky.js'
+import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from './interfaces.js'
 
 export interface ISymbol {
   symbol: string
@@ -58,7 +58,7 @@ export interface IHasPolitiscales {
   scales?: IPolitiscale[]
 }
 
-export interface ICompanyCity extends IDate, IHasPolitiscales, IName, ISlug, ITicker {
+export interface ICompanyCityBase extends IDate, IHasPolitiscales, IName, ISlug, ITicker {
   description: string
   imageUrl: string
   website: string
@@ -398,17 +398,6 @@ export class PriceHistoricalResponse implements IPriceHistoricalFull {
       Object.assign(this, obj)
     }
   }
-}
-
-export const CONST_defaultCompanyCity: ICompanyCity = {
-  name: '',
-  date: '',
-  description: '',
-  imageUrl: '',
-  website: '',
-  slug: '',
-  ticker: '',
-  scales: [],
 }
 
 export interface IRatioCashFlow {
