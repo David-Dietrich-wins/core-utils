@@ -160,7 +160,7 @@ export function deepDiffMapper() {
           value2 = obj2[key]
         }
 
-        ;(diff as any)[key] = this.map(obj1[key], value2)
+        (diff as any)[key] = this.map(obj1[key], value2)
       }
 
       // eslint-disable-next-line no-loops/no-loops
@@ -169,7 +169,7 @@ export function deepDiffMapper() {
           continue
         }
 
-        ;(diff as any)[key] = this.map(undefined, obj2[key])
+        (diff as any)[key] = this.map(undefined, obj2[key])
       }
 
       return diff
@@ -917,7 +917,7 @@ export function runOnAllMembers<T extends object = any>(
   for (const [key, value] of Object.entries(obj)) {
     if (!mustHaveValue || (mustHaveValue && value)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(obj as any)[key] = func(key, value)
+      (obj as any)[key] = func(key, value)
     }
     // console.log(`${key}: ${value}`)
   }
@@ -1016,7 +1016,7 @@ export function splitToArray(
   if (isString(strOrArray)) {
     splitted = (strOrArray as string).split(splitter)
   } else if (isArray(strOrArray)) {
-    ;(strOrArray as string[]).map((x: string) => splitted.push(x.split(splitter)))
+    (strOrArray as string[]).map((x: string) => splitted.push(x.split(splitter)))
   } else {
     throw 'Invalid type passed to splitToArray'
   }

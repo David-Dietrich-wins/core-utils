@@ -2163,6 +2163,11 @@ eslint-plugin-no-for-of-loops@^1.0.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-no-for-of-loops/-/eslint-plugin-no-for-of-loops-1.0.1.tgz#2ee3732d50c642b8d1bfacedbfe3b28f86222369"
   integrity sha512-uCotzBHt2W+HbLw2srRmqDJHOPbJGzeVLstKh8YyxS3ppduq2P50qdpJfHKoD+UGbnqA/zhy8NRgPH6p0y8bnA==
 
+eslint-plugin-no-loops@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-no-loops/-/eslint-plugin-no-loops-0.3.0.tgz#e81fecb4eaaf494a926d9caba9a7cd84d1fede7d"
+  integrity sha512-qI0oMgD0mA2Kpad2P/WncEqeVzvJKpHs/6+PA1SW4E6gXSXRmeV2cPv6+fnEgFwC7i+QtFRay2jUQ8DCH02nZg==
+
 eslint-plugin-node@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-node/-/eslint-plugin-node-11.1.0.tgz#c95544416ee4ada26740a30474eefc5402dc671d"
@@ -4905,9 +4910,9 @@ run-parallel@^1.1.9:
     queue-microtask "^1.2.2"
 
 rxjs@^7.5.7:
-  version "7.5.7"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.7.tgz#2ec0d57fdc89ece220d2e702730ae8f1e49def39"
-  integrity sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.6.0.tgz#361da5362b6ddaa691a2de0b4f2d32028f1eb5a2"
+  integrity sha512-DDa7d8TFNUalGC9VqXvQ1euWNN7sc63TrUCuM9J998+ViviahMIjKSOU7rfcgFOF+FCD71BhDRv4hrFz+ImDLQ==
   dependencies:
     tslib "^2.1.0"
 

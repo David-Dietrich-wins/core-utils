@@ -10,6 +10,8 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
-  "plugins": ["@typescript-eslint", "no-for-of-loops"],
-  "rules": {}
+  "plugins": ["@typescript-eslint", "no-loops"],
+  "rules": {
+    "no-loops/no-loops": 2
+  }
 }
