@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { StringOrStringArray, TypeOrArray } from './types'
+import { StringOrStringArray, TypeOrArray } from './types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.

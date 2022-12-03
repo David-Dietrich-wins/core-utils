@@ -1,4 +1,4 @@
-import { IDashboardScreenSetting, IDashboardSettings } from "./tp-items"
+import { IDashboardScreenSetting, IDashboardSettings } from './tp-items.js'
 
 export default class DashboardSettings implements IDashboardSettings {
   screens: IDashboardScreenSetting[] = []

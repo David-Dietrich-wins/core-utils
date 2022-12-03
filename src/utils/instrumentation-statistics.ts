@@ -1,5 +1,5 @@
-import { GrayArrowException } from './exception-types'
-import { GrayArrowObject } from './GrayArrowObject'
+import { GrayArrowException } from './exception-types.js'
+import GrayArrowObject from './GrayArrowObject.js'
 import {
   isObject,
   isArray,
@@ -11,8 +11,8 @@ import {
   getNumberString,
   safeArray,
   hasData,
-} from './skky'
-import { StringOrStringArray } from './types'
+} from './skky.js'
+import { StringOrStringArray } from './types.js'
 
 export default class InstrumentationStatistics extends GrayArrowObject {
   successes = 0

@@ -1,4 +1,4 @@
-export class GrayArrowObject {
+export default class GrayArrowObject {
   static readonly CLASS_Name = 'GrayArrowObject'
 
   get className() {

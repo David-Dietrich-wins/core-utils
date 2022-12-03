@@ -1,2 +1,2 @@
-export * from './utils'
-export * from './tplot'
+export * from './utils/index.js'
+export * from './tplot/index.js'

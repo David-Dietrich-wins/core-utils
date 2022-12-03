@@ -1,6 +1,6 @@
-import { GrayArrowException } from './exception-types'
-import { GrayArrowObject } from './GrayArrowObject'
-import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './skky'
+import { GrayArrowException } from './exception-types.js'
+import GrayArrowObject from './GrayArrowObject.js'
+import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './skky.js'
 
 class WebStorage extends GrayArrowObject {
   constructor() {

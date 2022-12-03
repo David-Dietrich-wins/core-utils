@@ -1,4 +1,5 @@
-import { IId, IIdName } from '../utils'
+import { IIdName } from '../utils/id-name.js'
+import { IId } from '../utils/interfaces.js'
 
 export interface IHeaderTickersConfig {
   tickers: string[]

@@ -1,5 +1,5 @@
-import { GrayArrowException } from './exception-types'
-import { isObject, safestrLowercase } from './skky'
+import { GrayArrowException } from './exception-types.js'
+import { isObject, safestrLowercase } from './skky.js'
 
 export interface ICaptureResponse<T> {
   id: number

@@ -1,7 +1,7 @@
-import { ICaptureResponse } from './CaptureResponse'
-import { GrayArrowExceptionHttp } from './exception-types'
-import { hasData, isObject, isArray } from './skky'
-import { JSONValue } from './types'
+import { ICaptureResponse } from './CaptureResponse.js'
+import { GrayArrowExceptionHttp } from './exception-types.js'
+import { hasData, isObject, isArray } from './skky.js'
+import { JSONValue } from './types.js'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
