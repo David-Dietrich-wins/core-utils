@@ -1,6 +1,6 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.42",
+  "version": "1.0.43",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "main": "./lib/index.js",
