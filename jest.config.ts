@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/test/**/*.spec.ts'],
@@ -6,10 +6,11 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/types/**/*.ts',
   ],
-  globals: {
-    'ts-jest': {
+  transform: {
+    'globals': ['ts-jest', {
       diagnostics: false,
       isolatedModules: true,
-    },
-  },
-};
+      /* ts-jest config goes here in Jest */
+    }]
+  }
+}

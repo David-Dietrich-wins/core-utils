@@ -1,10 +1,11 @@
-module.exports = {
+export default {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'node', 'prettier'],
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.json'],
+    ecmaVersion: 'latest',
   },
   extends: [
     'eslint:recommended',
@@ -29,4 +30,4 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },
-};
+}
