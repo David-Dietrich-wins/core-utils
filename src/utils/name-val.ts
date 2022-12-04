@@ -1,6 +1,6 @@
-import { IName, IVal } from "./interfaces.js"
+import { IName, IVal } from './interfaces.js'
 
-export interface INameVal<Tval = string, Tname = string> extends IName<Tname>, IVal<Tval> { }
+export interface INameVal<Tval = string, Tname = string> extends IName<Tname>, IVal<Tval> {}
 
 export class NameVal<Tval = string, Tname = string> implements INameVal<Tval, Tname> {
   name: Tname

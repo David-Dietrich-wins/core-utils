@@ -1,14 +1,20 @@
-import { IdCreatedUpdated, IIdCreatedUpdated } from "./id-created-updated.js"
-import { IIdName } from "./id-name.js"
-import { IIdVal } from "./id-val.js"
-import { NameValType } from "./name-val.js"
-import { isObject } from "./skky.js"
+import { IdCreatedUpdated, IIdCreatedUpdated } from './id-created-updated.js'
+import { IIdName } from './id-name.js'
+import { IIdVal } from './id-val.js'
+import { NameValType } from './name-val.js'
+import { isObject } from './skky.js'
 
-export interface IConfig<Tid = string, Tval = boolean> extends IIdVal<Tid, Tval>, IIdName<Tid, string>, IIdCreatedUpdated<Tid> {
+export interface IConfig<Tid = string, Tval = boolean>
+  extends IIdVal<Tid, Tval>,
+    IIdName<Tid, string>,
+    IIdCreatedUpdated<Tid> {
   userid: Tid
 }
 
-export default class Config<Tid = string, Tval = boolean> extends IdCreatedUpdated<Tid> implements IConfig<Tid, Tval> {
+export default class Config<Tid = string, Tval = boolean>
+  extends IdCreatedUpdated<Tid>
+  implements IConfig<Tid, Tval>
+{
   userid!: Tid
   name = ''
   val!: Tval
@@ -21,12 +27,12 @@ export default class Config<Tid = string, Tval = boolean> extends IdCreatedUpdat
     updatedby = 'Config',
     updated = new Date(),
     createdby = 'Config',
-    created = new Date()) {
+    created = new Date()
+  ) {
     super(id, createdby, created, updatedby, updated)
     if (isObject(id)) {
       this.copyFromDatabase(id as IConfig<Tid, Tval>)
-    }
-    else {
+    } else {
       // constructor items
       this.userid = userid
       this.name = name
@@ -45,7 +51,7 @@ export default class Config<Tid = string, Tval = boolean> extends IdCreatedUpdat
   api(): NameValType<Tval> {
     return {
       name: this.name,
-      val: this.val
+      val: this.val,
     }
   }
 }

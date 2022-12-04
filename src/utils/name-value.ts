@@ -1,8 +1,11 @@
-import { IName, IType, IValue } from "./interfaces.js"
+import { IName, IType, IValue } from './interfaces.js'
 
-export interface INameType<TType = string, Tname = string> extends IName<Tname>, IType<TType> { }
-export interface INameTypeValue<TValue = string, TType = string, Tname = string> extends IName<Tname>, IType<TType>, IValue<TValue> { }
-export interface INameValue<Tvalue = string, Tname = string> extends IName<Tname>, IValue<Tvalue> { }
+export interface INameType<TType = string, Tname = string> extends IName<Tname>, IType<TType> {}
+export interface INameTypeValue<TValue = string, TType = string, Tname = string>
+  extends IName<Tname>,
+    IType<TType>,
+    IValue<TValue> {}
+export interface INameValue<Tvalue = string, Tname = string> extends IName<Tname>, IValue<Tvalue> {}
 
 export class NameValue<Tvalue = string, Tname = string> implements INameValue<Tvalue, Tname> {
   name: Tname
@@ -16,7 +19,8 @@ export class NameValue<Tvalue = string, Tname = string> implements INameValue<Tv
 
 export class NameValueType<TValue = string, TType = string, TName = string>
   extends NameValue<TValue, TName>
-  implements INameTypeValue<TValue, TType, TName> {
+  implements INameTypeValue<TValue, TType, TName>
+{
   type: TType
 
   constructor(name: TName, value: TValue, type: TType) {

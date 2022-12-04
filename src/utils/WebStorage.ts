@@ -1,6 +1,6 @@
-import { GrayArrowException } from "./exception-types.js"
-import { GrayArrowObject } from "./GrayArrowObject.js"
-import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from "./skky.js"
+import { GrayArrowException } from './exception-types.js'
+import GrayArrowObject from './GrayArrowObject.js'
+import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './skky.js'
 
 class WebStorage extends GrayArrowObject {
   constructor() {
@@ -26,8 +26,10 @@ class WebStorage extends GrayArrowObject {
   getItem<T extends object>(key: string) {
     const val = safestrTrim(this.getString(key))
     if (hasData(val)) {
-      if ((val.startsWith('{') && val.endsWith('}'))
-        || (val.startsWith('[') && val.endsWith(']'))) {
+      if (
+        (val.startsWith('{') && val.endsWith('}')) ||
+        (val.startsWith('[') && val.endsWith(']'))
+      ) {
         return safestrToJson<T>(val)
       }
     }
@@ -54,7 +56,7 @@ class WebStorage extends GrayArrowObject {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setItem(key: string, value: any) {
-    const saveval = (isObject(value) || isArray(value)) ? safeJsonToString(value) : String(value)
+    const saveval = isObject(value) || isArray(value) ? safeJsonToString(value) : String(value)
 
     this.storageProvider.setItem(key, saveval)
   }
@@ -64,7 +66,7 @@ class WebStorage extends GrayArrowObject {
  * Override our WebStorage object's storageProvide for our specific use case.
  * We need to hold this in a method as Storage cannot be accessed until useEffect().
  */
- class WebStorageLocal extends WebStorage {
+class WebStorageLocal extends WebStorage {
   get storageProvider() {
     return localStorage
   }
@@ -74,12 +76,11 @@ class WebStorage extends GrayArrowObject {
  * Override our WebStorage object's storageProvide for our specific use case.
  * We need to hold this in a method as Storage cannot be accessed until useEffect().
  */
- class WebStorageSession extends WebStorage {
+class WebStorageSession extends WebStorage {
   get storageProvider(): Storage {
     return sessionStorage
   }
 }
-
 
 export const LocalStorage = new WebStorageLocal()
 export const SessionStorage = new WebStorageSession()

@@ -1,4 +1,4 @@
-import { safeArray } from "./skky.js"
+import { safeArray } from './skky.js'
 
 export type ColorRange = readonly [string, string]
 
@@ -42,10 +42,14 @@ export function InterpolateColorRange(colorRange: ColorRange, percent: number) {
  * @param endWeight The weight for calculating the ending color.
  * @returns An HTML #FFFFFF formatted color that is the middle color of the percent between the start and end colors.
  */
- export function InterpolateWeightedColorRange(colorRange: ColorRange, startWeight: number, endWeight: number) {
+export function InterpolateWeightedColorRange(
+  colorRange: ColorRange,
+  startWeight: number,
+  endWeight: number
+) {
   const range: ColorRange = [
     InterpolateColorRange(colorRange, startWeight),
-    InterpolateColorRange(colorRange, endWeight)
+    InterpolateColorRange(colorRange, endWeight),
   ]
 
   return range

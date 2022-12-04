@@ -1,4 +1,4 @@
-import { AnyFixLater } from "./types.js"
+import { AnyFixLater } from './types.js'
 
 export interface IAnyStringItems {
   [id: string]: AnyFixLater

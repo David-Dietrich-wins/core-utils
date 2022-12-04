@@ -1,19 +1,22 @@
-import { isNullOrUndefined, isObject } from "./skky.js"
-import { ICreatedBy, IId, IUpdatedBy } from "./interfaces.js"
+import { isNullOrUndefined, isObject } from './skky.js'
+import { ICreatedBy, IId, IUpdatedBy } from './interfaces.js'
 
-export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy { }
-export interface IIdCreatedUpdated<Tid = string> extends IIdCreated<Tid>, IUpdatedBy { }
+export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
+export interface IIdCreatedUpdated<Tid = string> extends IIdCreated<Tid>, IUpdatedBy {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {
   id?: Tid
   createdby = 'IdCreated'
   created = new Date()
 
-  constructor(id: Tid | IIdCreated<Tid> | undefined, createdby = 'IdCreated', created = new Date()) {
+  constructor(
+    id: Tid | IIdCreated<Tid> | undefined,
+    createdby = 'IdCreated',
+    created = new Date()
+  ) {
     if (id && isObject(id)) {
       this.copyFromDatabase(id as IIdCreated<Tid>)
-    }
-    else {
+    } else {
       if (!isNullOrUndefined(id)) {
         this.id = id as Tid
       }
@@ -30,17 +33,25 @@ export class IdCreated<Tid = string> implements IIdCreated<Tid> {
   }
 }
 
-export class IdCreatedUpdated<Tid = string> extends IdCreated<Tid> implements IIdCreatedUpdated<Tid> {
+export class IdCreatedUpdated<Tid = string>
+  extends IdCreated<Tid>
+  implements IIdCreatedUpdated<Tid>
+{
   updatedby = 'IdCreatedUpdated'
   updated = new Date()
 
-  constructor(id: Tid | IIdCreatedUpdated<Tid> | undefined, createdby = 'IdCreatedUpdated', created = new Date(), updatedby = 'IdCreatedUpdated', updated = new Date()) {
+  constructor(
+    id: Tid | IIdCreatedUpdated<Tid> | undefined,
+    createdby = 'IdCreatedUpdated',
+    created = new Date(),
+    updatedby = 'IdCreatedUpdated',
+    updated = new Date()
+  ) {
     super(id, createdby, created)
 
     if (id && isObject(id)) {
       this.copyFromDatabase(id as IIdCreatedUpdated<Tid>)
-    }
-    else {
+    } else {
       this.updated = updated
       this.updatedby = updatedby
     }

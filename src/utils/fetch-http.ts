@@ -1,16 +1,16 @@
-import { ICaptureResponse } from "./CaptureResponse.js"
-import { GrayArrowExceptionHttp } from "./exception-types.js"
-import { hasData, isObject, isArray } from "./skky.js"
-import { JSONValue } from "./types.js"
+import { ICaptureResponse } from './CaptureResponse.js'
+import { GrayArrowExceptionHttp } from './exception-types.js'
+import { hasData, isObject, isArray } from './skky.js'
+import { JSONValue } from './types.js'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
 export type FetchDataTypesAllowed = JSONValue | object | undefined
 
 export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> = {
-  url: string,
-  data?: Tdata,
-  fname?: string,
+  url: string
+  data?: Tdata
+  fname?: string
   bearerToken?: string
   statusCodesToBypassErrorHandler?: number[]
 }
@@ -21,10 +21,10 @@ export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> 
  * @returns A JSON ready header for HTTP calls.
  */
 export function getHttpHeaderJson(bearerToken?: string) {
-  const headers = new Headers({ "Content-Type": "application/json" })
+  const headers = new Headers({ 'Content-Type': 'application/json' })
 
   if (hasData(bearerToken)) {
-    headers.append("Authorization", `Bearer ${bearerToken}`)
+    headers.append('Authorization', `Bearer ${bearerToken}`)
   }
 
   return headers
@@ -63,17 +63,19 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     }
 
     response = await fetch(url, req)
-  }
-  catch (err) {
+  } catch (err) {
     if (err instanceof GrayArrowExceptionHttp) {
       throw err
     }
 
-    throw new GrayArrowExceptionHttp((err instanceof Error) ? (err as Error).message : fetchHttp.name, fname)
+    throw new GrayArrowExceptionHttp(err instanceof Error ? err.message : fetchHttp.name, fname)
   }
 
   if (!response) {
-    throw new GrayArrowExceptionHttp(`${fname}: NO response in HTTP ${method} to URL: ${url}.`, fname)
+    throw new GrayArrowExceptionHttp(
+      `${fname}: NO response in HTTP ${method} to URL: ${url}.`,
+      fname
+    )
   }
 
   if (!response.ok) {
@@ -81,11 +83,16 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     if (401 === response.status) {
       try {
         captureResponse = await response.json()
+      } catch (jsonerr) {
+        /* empty */
       }
-      catch (jsonerr) { /* empty */ }
     }
 
-    throw new GrayArrowExceptionHttp(`${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`, fname, { response, captureResponse })
+    throw new GrayArrowExceptionHttp(
+      `${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`,
+      fname,
+      { response, captureResponse }
+    )
   }
 
   return response
@@ -106,7 +113,7 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tr
 ) {
   const resp = await fetchHttp(method, settings)
 
-  return await resp.json() as Tret
+  return (await resp.json()) as Tret
 }
 
 /**
@@ -117,7 +124,7 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tr
  * @returns The returned Response object in a Promise.
  */
 export async function fetchDelete(settings: HttpFetchRequestProps) {
-  return fetchHttp("DELETE", settings)
+  return fetchHttp('DELETE', settings)
 }
 
 /**
@@ -130,7 +137,7 @@ export async function fetchDelete(settings: HttpFetchRequestProps) {
 export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
   settings: HttpFetchRequestProps<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>("DELETE", settings)
+  return fetchJson<Tdata, Tret>('DELETE', settings)
 }
 
 /**
@@ -141,8 +148,10 @@ export async function fetchDeleteJson<Tdata extends FetchDataTypesAllowed, Tret 
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned JSON object.
  */
-export async function fetchGet<Tret extends FetchDataTypesAllowed>(settings: HttpFetchRequestProps<Tret>) {
-  return fetchJson<FetchDataTypesAllowed, Tret>("GET", settings)
+export async function fetchGet<Tret extends FetchDataTypesAllowed>(
+  settings: HttpFetchRequestProps<Tret>
+) {
+  return fetchJson<FetchDataTypesAllowed, Tret>('GET', settings)
 }
 
 /**
@@ -156,7 +165,7 @@ export async function fetchGet<Tret extends FetchDataTypesAllowed>(settings: Htt
 export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
   settings: HttpFetchRequestProps<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>("PATCH", settings)
+  return fetchJson<Tdata, Tret>('PATCH', settings)
 }
 
 /**
@@ -171,7 +180,7 @@ export async function fetchPatch<Tdata extends FetchDataTypesAllowed, Tret = und
 export async function fetchPost<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
   settings: HttpFetchRequestProps<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>("POST", settings)
+  return fetchJson<Tdata, Tret>('POST', settings)
 }
 
 /**
@@ -185,5 +194,5 @@ export async function fetchPost<Tdata extends FetchDataTypesAllowed, Tret = unde
 export async function fetchPut<Tdata extends FetchDataTypesAllowed, Tret = undefined>(
   settings: HttpFetchRequestProps<Tdata>
 ) {
-  return fetchJson<Tdata, Tret>("PUT", settings)
+  return fetchJson<Tdata, Tret>('PUT', settings)
 }

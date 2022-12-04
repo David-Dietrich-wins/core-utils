@@ -1,4 +1,4 @@
-import { IVal } from "./interfaces.js"
+import { IVal } from './interfaces.js'
 
 export interface IKeyVal<Tval = string, Tkey = string> extends IVal<Tval> {
   key: Tkey

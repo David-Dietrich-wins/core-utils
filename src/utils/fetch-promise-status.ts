@@ -1,4 +1,9 @@
-import { FetchDataTypesAllowed, fetchJson, HttpFetchRequestProps, HttpMethod } from "./fetch-http.js"
+import {
+  FetchDataTypesAllowed,
+  fetchJson,
+  HttpFetchRequestProps,
+  HttpMethod,
+} from './fetch-http.js'
 
 // From https://blog.logrocket.com/react-suspense-data-fectching/
 // This will prevent a component from rendering until the data is ready.
@@ -16,16 +21,16 @@ function wrapPromise<TResponse>(promise: Promise<TResponse>): { read: () => TRes
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let response: any
 
-  const suspender = promise
-    .then((res) => {
+  const suspender = promise.then(
+    (res) => {
       status = 'success'
       response = res
     },
-      (err) => {
-        status = 'error'
-        response = err
-      }
-    )
+    (err) => {
+      status = 'error'
+      response = err
+    }
+  )
 
   const read = (): TResponse => {
     switch (status) {
@@ -52,7 +57,10 @@ export default function fetchData<Tdata extends FetchDataTypesAllowed, Tret>(
   { url, data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
 ) {
   const settings: HttpFetchRequestProps<Tdata> = {
-    url, data, fname, bearerToken
+    url,
+    data,
+    fname,
+    bearerToken,
   }
   const promise = fetchJson<Tdata, Tret>(method, settings)
 

@@ -1,5 +1,5 @@
-import { GrayArrowException } from "./exception-types.js"
-import { isObject, safestrLowercase } from "./skky.js"
+import { GrayArrowException } from './exception-types.js'
+import { isObject, safestrLowercase } from './skky.js'
 
 export interface ICaptureResponse<T> {
   id: number
@@ -48,9 +48,8 @@ export class CaptureResponse<T> implements ICaptureResponse<T> {
         if (errobj.obj) {
           this.obj = errobj.obj
         }
-      }
-      else {
-        switch (typeof (errobj)) {
+      } else {
+        switch (typeof errobj) {
           case 'string':
             this.msg = errobj
             break

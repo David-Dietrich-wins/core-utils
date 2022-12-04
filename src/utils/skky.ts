@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { StringOrStringArray, TypeOrArray } from "./types.js"
+import { StringOrStringArray, TypeOrArray } from './types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -63,10 +63,10 @@ export function deepCloneJson<T>(obj: object, fname?: string) {
  */
 export function deepDiffMapper() {
   return {
-    VALUE_CREATED: "created",
-    VALUE_UPDATED: "updated",
-    VALUE_DELETED: "deleted",
-    VALUE_UNCHANGED: "unchanged",
+    VALUE_CREATED: 'created',
+    VALUE_UPDATED: 'updated',
+    VALUE_DELETED: 'deleted',
+    VALUE_UNCHANGED: 'unchanged',
 
     /**
      * Checks if there are any changes between two objects.
@@ -102,10 +102,10 @@ export function deepDiffMapper() {
       // Are we dealing with a simple value comparison?
       if (
         2 === changeEntries.length &&
-        isObject(objChanges, "type") &&
-        isObject(objChanges, "data")
+        isObject(objChanges, 'type') &&
+        isObject(objChanges, 'data')
       ) {
-        return "unchanged" !== (objChanges as any).type
+        return 'unchanged' !== (objChanges as any).type
       }
 
       // We are dealing with a larger object or array comparison.
@@ -119,17 +119,15 @@ export function deepDiffMapper() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     findTypeData([, value]: [string, any]): boolean {
       const found =
-        isObject(value, "type") &&
-        isObject(value, "data") &&
+        isObject(value, 'type') &&
+        isObject(value, 'data') &&
         2 === Object.entries(value).length &&
         // eslint-disable-next-line @typescript-eslint/dot-notation
-        "unchanged" !== value["type"]
+        'unchanged' !== value['type']
 
       return (
         found ||
-        (isObject(value) && Object.entries(value).find(this.findTypeData, this)
-          ? true
-          : false)
+        (isObject(value) && Object.entries(value).find(this.findTypeData, this) ? true : false)
       )
     },
     /**
@@ -140,7 +138,7 @@ export function deepDiffMapper() {
      */
     map<T>(obj1: T, obj2: T) {
       if (this.isFunction(obj1) || this.isFunction(obj2)) {
-        throw new Error("Invalid argument. Function given, object expected.")
+        throw new Error('Invalid argument. Function given, object expected.')
       }
       // console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
       if (this.isValue(obj1) || this.isValue(obj2)) {
@@ -188,11 +186,7 @@ export function deepDiffMapper() {
         return this.VALUE_UNCHANGED
       }
 
-      if (
-        this.isDate(value1) &&
-        this.isDate(value2) &&
-        value1.getTime() === value2.getTime()
-      ) {
+      if (this.isDate(value1) && this.isDate(value2) && value1.getTime() === value2.getTime()) {
         return this.VALUE_UNCHANGED
       }
 
@@ -208,19 +202,19 @@ export function deepDiffMapper() {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isFunction(x: any) {
-      return Object.prototype.toString.call(x) === "[object Function]"
+      return Object.prototype.toString.call(x) === '[object Function]'
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isArray(x: any) {
-      return Object.prototype.toString.call(x) === "[object Array]"
+      return Object.prototype.toString.call(x) === '[object Array]'
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isDate(x: any) {
-      return Object.prototype.toString.call(x) === "[object Date]"
+      return Object.prototype.toString.call(x) === '[object Date]'
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isObject(x: any) {
-      return Object.prototype.toString.call(x) === "[object Object]"
+      return Object.prototype.toString.call(x) === '[object Object]'
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isValue(x: any) {
@@ -238,7 +232,7 @@ export function deepDiffMapper() {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getBody<T>(ret: any) {
   if (!isObject(ret) || !isObject(ret.body)) {
-    throw new Error("Object body not found")
+    throw new Error('Object body not found')
   }
 
   return ret.body as T
@@ -255,7 +249,7 @@ export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
   }
 
   const myset = new Set(stringOrArray)
-  return [...myset].join(",")
+  return [...myset].join(',')
 }
 
 /**
@@ -285,7 +279,11 @@ export function getAsNumber(stringOrNumber: string | number | null | undefined) 
  * @param minDecimalPlaces The minimum number of required decimal places to show.
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
-export function getAsNumberOrUndefined(stringOrNumber: string | number | null | undefined, maxDecimalPlaces?: number, minDecimalPlaces?: number) {
+export function getAsNumberOrUndefined(
+  stringOrNumber: string | number | null | undefined,
+  maxDecimalPlaces?: number,
+  minDecimalPlaces?: number
+) {
   if (!isNullOrUndefined(stringOrNumber)) {
     return getNumberFormatted(stringOrNumber, maxDecimalPlaces, minDecimalPlaces)
   }
@@ -343,9 +341,9 @@ export function getMantissa(num: number) {
     return 0
   }
 
-  const str = "" + num
-  const arr = str.split(".")
-  if ((isArray(arr, 2) && hasData(arr[1]))) {
+  const str = '' + num
+  const arr = str.split('.')
+  if (isArray(arr, 2) && hasData(arr[1])) {
     return +arr[1]
   }
 
@@ -373,7 +371,11 @@ export function getNumberFormatted(
     }
   }
 
-  if (!isNullOrUndefined(num) && isNumber(num) && (!isNullOrUndefined(maxDecimalPlaces) || !isNullOrUndefined(minDecimalPlaces))) {
+  if (
+    !isNullOrUndefined(num) &&
+    isNumber(num) &&
+    (!isNullOrUndefined(maxDecimalPlaces) || !isNullOrUndefined(minDecimalPlaces))
+  ) {
     const mystr = getNumberString(num, maxDecimalPlaces, minDecimalPlaces)
     return parseFloat(mystr.replace(',', ''))
   }
@@ -405,7 +407,7 @@ export function getNumberString(
   maxDecimalPlaces = maxDecimalPlaces || 0
   // minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
 
-  return new Intl.NumberFormat("en", {
+  return new Intl.NumberFormat('en', {
     maximumFractionDigits: maxDecimalPlaces,
     minimumFractionDigits: minDecimalPlaces,
   }).format(num)
@@ -424,11 +426,10 @@ export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
     index = index || 0
 
     if (isArray(arr)) {
-      const arrT = (arr as T[])
+      const arrT = arr as T[]
       if (index >= 0 && arrT.length > index) {
         return arrT[index]
-      }
-      else if (index < 0 && arrT.length >= Math.abs(index)) {
+      } else if (index < 0 && arrT.length >= Math.abs(index)) {
         return arrT[arrT.length - Math.abs(index)]
       }
     } else if (index === 0) {
@@ -496,10 +497,10 @@ export function getPercentChangeString(
   // return Math.floor(percent)
   let ret = percent.toFixed(decimalPlaces ? decimalPlaces : 2)
   if (showPercent) {
-    ret += "%"
+    ret += '%'
   }
 
-  return (percent > 0 ? "+" : "") + ret
+  return (percent > 0 ? '+' : '') + ret
 }
 
 /**
@@ -541,7 +542,7 @@ export function hasData(o: any | null | undefined, minlength = 1): boolean {
 
     return isArray(Object.keys(o), minlength)
   } catch (ex) {
-    console.error("grayarrow-jsutils.hasData", ex)
+    console.error('grayarrow-jsutils.hasData', ex)
   }
 
   return false
@@ -576,15 +577,13 @@ export function isArray(arr: any, minLengthOrIncludes?: any) {
  * @returns True if the object is a boolean.
  */
 export function isBoolean(obj: any) {
-  return "boolean" === typeof obj
+  return 'boolean' === typeof obj
 }
 
 export function isEmptyObject(obj: any) {
   return (
     null == obj ||
-    (isObject(obj) &&
-      safeArray(Object.keys(obj)).length === 0 &&
-      obj.constructor === Object)
+    (isObject(obj) && safeArray(Object.keys(obj)).length === 0 && obj.constructor === Object)
   )
 }
 
@@ -598,12 +597,12 @@ export function isEmptyObject(obj: any) {
 export function isEmptyString(s: any, allowFunction = true) {
   try {
     const testString = (str: any) => {
-      return !str || (isString(str) && "" === str)
+      return !str || (isString(str) && '' === str)
     }
 
     return testString(s) || (allowFunction && isFunction(s) && testString(s()))
   } catch (ex) {
-    console.log("grayarrow-jsutils.isEmptyString:", ex)
+    console.log('grayarrow-jsutils.isEmptyString:', ex)
   }
 
   return true
@@ -615,7 +614,7 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @returns True if the object is a function.
  */
 export function isFunction(obj: any) {
-  return "function" === typeof obj
+  return 'function' === typeof obj
 }
 
 /**
@@ -626,12 +625,8 @@ export function isFunction(obj: any) {
  * @param maxValue The maximum value the number can be.
  * @returns True if the object is a number and if provided, >= to the minValue and/or <= to the maxValue.
  */
-export function isNumber(
-  obj: any,
-  minValue: number | null = null,
-  maxValue: number | null = null
-) {
-  if (isNullOrUndefined(obj) || "number" !== typeof obj) {
+export function isNumber(obj: any, minValue: number | null = null, maxValue: number | null = null) {
+  if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
     return false
   }
 
@@ -651,7 +646,7 @@ export function isNumber(
  * @returns True if the object passed in is null or undefined.
  */
 export function isNullOrUndefined(obj: any | null | undefined) {
-  return "undefined" === typeof obj || null == obj
+  return 'undefined' === typeof obj || null == obj
 }
 
 /**
@@ -665,7 +660,7 @@ export function isObject(
   obj: any | null | undefined,
   minLengthOrContainsField: number | string = 0
 ) {
-  const isok = obj && "object" === typeof obj && !isArray(obj)
+  const isok = obj && 'object' === typeof obj && !isArray(obj)
   if (!isok) {
     return false
   }
@@ -679,9 +674,7 @@ export function isObject(
   }
 
   if (isString(minLengthOrContainsField as string)) {
-    return (Object.keys(obj) || []).includes(
-      minLengthOrContainsField as string
-    )
+    return (Object.keys(obj) || []).includes(minLengthOrContainsField as string)
   }
 
   return true
@@ -695,10 +688,7 @@ export function isObject(
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
 export function isString(obj: any, minlength = 0) {
-  return (
-    ("string" === typeof obj || (obj && obj instanceof String)) &&
-    obj.length >= minlength
-  )
+  return ('string' === typeof obj || (obj && obj instanceof String)) && obj.length >= minlength
 }
 
 /**
@@ -706,9 +696,9 @@ export function isString(obj: any, minlength = 0) {
  * @returns A global unique identifier as a 16 character string.
  */
 export function newGuid() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8
+      v = c == 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
 }
@@ -731,10 +721,10 @@ export function getNullObject<T>(obj: T) {
  */
 export function safeArray<T>(arr: T | T[] | null | undefined, ifNull?: T[]) {
   if (isNullOrUndefined(arr)) {
-    return ifNull && isArray(ifNull) ? (ifNull) : []
+    return ifNull && isArray(ifNull) ? ifNull : []
   }
 
-  return isArray(arr) ? arr as T[] : [arr as T]
+  return isArray(arr) ? (arr as T[]) : [arr as T]
 }
 
 /**
@@ -746,13 +736,12 @@ export function safeArray<T>(arr: T | T[] | null | undefined, ifNull?: T[]) {
 export function safeJsonToString(json: object, fname?: string) {
   try {
     return JSON.stringify(safeObject(json))
-  }
-  catch (ex) {
+  } catch (ex) {
     // eslint-disable-next-line no-console
     console.error(fname ? fname : 'safeJsonToString', ex)
   }
 
-  return ""
+  return ''
 }
 
 /**
@@ -777,12 +766,12 @@ export function safeObject(obj: object | null | undefined, ifNull?: object) {
  * @param ifNull If the string is null, return this value. Defaults to "".
  * @returns A guaranteed string to be nonnull. Returns ifNull if the string does not have data.
  */
-export function safestr(s: string | null | undefined, ifNull = "") {
+export function safestr(s: string | null | undefined, ifNull = '') {
   if (s && hasData(s)) {
     return s
   }
 
-  return hasData(ifNull) ? ifNull : ""
+  return hasData(ifNull) ? ifNull : ''
 }
 
 /**
@@ -808,8 +797,7 @@ export function safestrLowercase(s: string | null | undefined, trim = true) {
 export function safestrToJson<T>(strjson: string | null | undefined, fname?: string) {
   try {
     return JSON.parse(safestr(strjson)) as T
-  }
-  catch (ex) {
+  } catch (ex) {
     console.error(fname ? fname : 'safestrToJson', ex)
   }
 
@@ -845,7 +833,7 @@ export function safestrUppercase(s: string | null | undefined, trim = true) {
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-export function pluralSuffix(isPlural: number, suffix = "s") {
+export function pluralSuffix(isPlural: number, suffix = 's') {
   if (isNumber(isPlural) && 1 === isPlural) {
     isPlural = 0
   }
@@ -854,7 +842,7 @@ export function pluralSuffix(isPlural: number, suffix = "s") {
     return safestr(suffix)
   }
 
-  return ""
+  return ''
 }
 
 /**
@@ -864,10 +852,10 @@ export function pluralSuffix(isPlural: number, suffix = "s") {
  */
 export function plusMinus(num: number) {
   if (!num) {
-    return ""
+    return ''
   }
 
-  return num > 0 ? "+" : "-"
+  return num > 0 ? '+' : '-'
 }
 
 /**
@@ -877,8 +865,8 @@ export function plusMinus(num: number) {
  * @param prefix The prefix if the string is not empty.
  * @returns The prefix if the string is not empty.
  */
-export function prefixIfHasData(s: string, prefix = ", ") {
-  return hasData(s) ? safestr(prefix) : ""
+export function prefixIfHasData(s: string, prefix = ', ') {
+  return hasData(s) ? safestr(prefix) : ''
 }
 
 /**
@@ -890,22 +878,14 @@ export function prefixIfHasData(s: string, prefix = ", ") {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renameProperty(obj: any, oldKey: any, newKey: any) {
-  if (
-    !isObject(obj) ||
-    !isString(oldKey, 1) ||
-    !isString(newKey, 1) ||
-    oldKey === newKey
-  ) {
-    throw new Error("Cannot renameProperty. Invalid settings.")
+  if (!isObject(obj) || !isString(oldKey, 1) || !isString(newKey, 1) || oldKey === newKey) {
+    throw new Error('Cannot renameProperty. Invalid settings.')
   }
 
   Object.defineProperty(
     obj,
     newKey,
-    Object.getOwnPropertyDescriptor(
-      obj,
-      oldKey as PropertyKey
-    ) as PropertyDescriptor
+    Object.getOwnPropertyDescriptor(obj, oldKey as PropertyKey) as PropertyDescriptor
   )
   delete obj[oldKey]
 
@@ -927,10 +907,10 @@ export function runOnAllMembers<T extends object = any>(
   mustHaveValue = true
 ) {
   if (!isObject(obj)) {
-    throw new Error("runOnAllMembers() received an empty object.")
+    throw new Error('runOnAllMembers() received an empty object.')
   }
   if (!isFunction(func)) {
-    throw new Error("runOnAllMembers() received an empty function operator.")
+    throw new Error('runOnAllMembers() received an empty function operator.')
   }
 
   // eslint-disable-next-line no-loops/no-loops
@@ -983,7 +963,7 @@ export function sortFunction(
   if (isNullOrUndefined(isAsc)) {
     isAsc = true
   } else if (isString(isAsc as any)) {
-    isAsc = "desc" !== safestrLowercase(isAsc as string)
+    isAsc = 'desc' !== safestrLowercase(isAsc as string)
   }
   const aEmpty = isNullOrUndefined(a)
   const bEmpty = isNullOrUndefined(b)
@@ -999,8 +979,7 @@ export function sortFunction(
   // equal items sort equally
   else if (a === b) {
     return 0
-  }
-  else if (compareStringsLowercase && isString(a) && isString(b)) {
+  } else if (compareStringsLowercase && isString(a) && isString(b)) {
     // A little recursive, but we will not come back here a second time.
     return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
   }
@@ -1028,7 +1007,7 @@ export function sortFunction(
  */
 export function splitToArray(
   strOrArray: StringOrStringArray,
-  splitter = ",",
+  splitter = ',',
   removeEmpties = true,
   trimStrings = true
 ) {
@@ -1037,11 +1016,9 @@ export function splitToArray(
   if (isString(strOrArray)) {
     splitted = (strOrArray as string).split(splitter)
   } else if (isArray(strOrArray)) {
-    (strOrArray as string[]).map((x: string) =>
-      splitted.push(x.split(splitter))
-    )
+    (strOrArray as string[]).map((x: string) => splitted.push(x.split(splitter)))
   } else {
-    throw "Invalid type passed to splitToArray"
+    throw 'Invalid type passed to splitToArray'
   }
 
   if (trimStrings) {
@@ -1049,7 +1026,7 @@ export function splitToArray(
   }
 
   if (removeEmpties) {
-    return splitted.filter((e: string) => e ? true : false)
+    return splitted.filter((e: string) => (e ? true : false))
   }
 
   return splitted
@@ -1066,7 +1043,7 @@ export function splitToArray(
  */
 export function splitToArrayOrStringIfOnlyOne(
   strOrArray: StringOrStringArray,
-  splitter = ",",
+  splitter = ',',
   removeEmpties = true,
   trimStrings = true
 ): StringOrStringArray {
@@ -1080,7 +1057,7 @@ export function splitToArrayOrStringIfOnlyOne(
     return arr[0]
   }
 
-  return ""
+  return ''
 }
 
 /**
@@ -1094,16 +1071,11 @@ export function splitToArrayOrStringIfOnlyOne(
  */
 export function splitToArrayOrStringIfOnlyOneToUpper(
   strOrArray: StringOrStringArray,
-  splitter = ",",
+  splitter = ',',
   removeEmpties = true,
   trimStrings = true
 ): StringOrStringArray {
-  const arr = splitToArrayOrStringIfOnlyOne(
-    strOrArray,
-    splitter,
-    removeEmpties,
-    trimStrings
-  )
+  const arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties, trimStrings)
 
   if (isArray(arr)) {
     return (arr as string[]).map((x: string) => x.toUpperCase())
@@ -1119,22 +1091,16 @@ export function splitToArrayOrStringIfOnlyOneToUpper(
  * @param valueWrapper An optional wrapper around the value. Usually a quote or double quote.
  * @returns The name=value string.
  */
-export function stringEquals(
-  name: string,
-  value: string,
-  valueWrapper = ""
-) {
+export function stringEquals(name: string, value: string, valueWrapper = '') {
   if (hasData(name)) {
     return (
       name +
-      "=" +
-      (hasData(valueWrapper)
-        ? stringWrap(valueWrapper, value, valueWrapper)
-        : safestr(value))
+      '=' +
+      (hasData(valueWrapper) ? stringWrap(valueWrapper, value, valueWrapper) : safestr(value))
     )
   }
 
-  return ""
+  return ''
 }
 /**
  * Creates a string with a name='value' or name="value" depending on useSingleQuote.
@@ -1143,22 +1109,16 @@ export function stringEquals(
  * @param useSingleQuote True if you want to use a single quote, otherwise a double quote is used.
  * @returns The name="value" or name='value' string.
  */
-export function stringEqualsQuoted(
-  name: string,
-  value: string,
-  useSingleQuote = true
-) {
+export function stringEqualsQuoted(name: string, value: string, useSingleQuote = true) {
   if (hasData(name)) {
     return (
       name +
-      "=" +
-      (useSingleQuote || false
-        ? stringWrapSingleQuote(value)
-        : stringWrapDoubleQuote(value))
+      '=' +
+      (useSingleQuote || false ? stringWrapSingleQuote(value) : stringWrapDoubleQuote(value))
     )
   }
 
-  return ""
+  return ''
 }
 
 /**
@@ -1185,7 +1145,7 @@ export function stringWrapDoubleQuote(str: string) {
  * @returns The (str) wrapped string.
  */
 export function stringWrapParen(str: string) {
-  return stringWrap("(", str, ")")
+  return stringWrap('(', str, ')')
 }
 /**
  * Creates a string as 'str'.
@@ -1203,9 +1163,9 @@ export function stringWrapSingleQuote(str: string) {
  * @returns The absolute value of milliseconds difference between the two times.
  */
 export function timeDifference(startTime: Date, endTime?: Date) {
-  const fname = "timeDifference: "
+  const fname = 'timeDifference: '
   if (!startTime) {
-    throw new Error(fname + "You must have a start time.")
+    throw new Error(fname + 'You must have a start time.')
   }
 
   if (!endTime) {
@@ -1220,10 +1180,7 @@ export function timeDifference(startTime: Date, endTime?: Date) {
  * @param endTime The ending time for the diff. If none provided, the current time is used.
  * @returns The absolute value of seconds difference between the two times rounded down (even if milliseconds is > 500)
  */
-export function timeDifferenceInSeconds(
-  startTime: Date,
-  endTime?: Date
-) {
+export function timeDifferenceInSeconds(startTime: Date, endTime?: Date) {
   return Math.floor(timeDifference(startTime, endTime) / 1000)
 }
 /**
@@ -1241,7 +1198,11 @@ export function timeDifferenceString(
   longFormat = false,
   showMilliseconds = false
 ) {
-  return timeDifferenceStringFromMillis(timeDifference(startTime, endTime), longFormat, showMilliseconds)
+  return timeDifferenceStringFromMillis(
+    timeDifference(startTime, endTime),
+    longFormat,
+    showMilliseconds
+  )
 }
 /**
  * Returns the number of seconds or optionally milliseconds, between two times as a string representation.
@@ -1262,7 +1223,7 @@ export function timeDifferenceStringFromMillis(
   const hours = Math.floor(seconds / 3600)
   const days = Math.floor(seconds / (3600 * 24))
 
-  let s = ""
+  let s = ''
   if (days > 0) {
     s += longFormat ? `${days} day${pluralSuffix(days)}` : `${days}d`
   }
@@ -1270,32 +1231,30 @@ export function timeDifferenceStringFromMillis(
   if (hours > 0) {
     s += longFormat
       ? `${prefixIfHasData(s)}${hours} hour${pluralSuffix(hours)}`
-      : `${prefixIfHasData(s, " ")}${hours}h`
+      : `${prefixIfHasData(s, ' ')}${hours}h`
   }
 
   if (minutes > 0) {
     s += longFormat
       ? `${prefixIfHasData(s)}${minutes} minute${pluralSuffix(minutes)}`
-      : `${prefixIfHasData(s, " ")}${minutes}m`
+      : `${prefixIfHasData(s, ' ')}${minutes}m`
   }
 
   const secondsModulo = seconds % 60
   if (secondsModulo > 0) {
     s += longFormat
-      ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(
-        secondsModulo
-      )}`
-      : `${prefixIfHasData(s, " ")}${secondsModulo}s`
+      ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(secondsModulo)}`
+      : `${prefixIfHasData(s, ' ')}${secondsModulo}s`
   }
 
   if (showMilliseconds) {
     const micros = millis % 1000
     if (micros > 0) {
-      s += `${prefixIfHasData(s, longFormat ? ", " : " ")}${micros % 1000}ms`
+      s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${micros % 1000}ms`
     }
   }
 
-  return safestr(s, longFormat ? "0 seconds" : "0s")
+  return safestr(s, longFormat ? '0 seconds' : '0s')
 }
 
 /**
@@ -1309,10 +1268,7 @@ export function toHex(decimal: number, chars = 2) {
     chars = 2
   }
 
-  return ((decimal || 0) + Math.pow(16, chars))
-    .toString(16)
-    .slice(-chars)
-    .toUpperCase()
+  return ((decimal || 0) + Math.pow(16, chars)).toString(16).slice(-chars).toUpperCase()
 }
 
 /**
@@ -1323,35 +1279,29 @@ export function toHex(decimal: number, chars = 2) {
  * @param addTrailingSlash Set to true to append a trailing / if this is a pure URL without variables.
  * @returns A safely constructed URL joined with a /.
  */
-export function urlJoin(
-  baseUrl: string,
-  relativePath: string,
-  addTrailingSlash = true
-) {
+export function urlJoin(baseUrl: string, relativePath: string, addTrailingSlash = true) {
   // Remove any trailing slashes before adding a trailing slash.
-  let url = safestr(baseUrl).trimStart().replace(/[/]+[/]$/, '/')
-  relativePath = safestr(relativePath).replace(/[/]+[/]$/, '/').replace(/^[/]+[/]/, '/')
+  let url = safestr(baseUrl)
+    .trimStart()
+    .replace(/[/]+[/]$/, '/')
+  relativePath = safestr(relativePath)
+    .replace(/[/]+[/]$/, '/')
+    .replace(/^[/]+[/]/, '/')
 
-  if (!relativePath.startsWith("/") && !url.endsWith('/')) {
-    url += "/"
-  }
-  else if (relativePath.startsWith("/") && url.endsWith("/")) {
+  if (!relativePath.startsWith('/') && !url.endsWith('/')) {
+    url += '/'
+  } else if (relativePath.startsWith('/') && url.endsWith('/')) {
     url = url.slice(0, -1)
   }
 
   url += relativePath
 
-  if (
-    url.includes("?") ||
-    url.includes("&") ||
-    url.includes("#") ||
-    url.includes("=")
-  ) {
+  if (url.includes('?') || url.includes('&') || url.includes('#') || url.includes('=')) {
     addTrailingSlash = false
   }
 
-  if (addTrailingSlash && !url.endsWith("/")) {
-    url += "/"
+  if (addTrailingSlash && !url.endsWith('/')) {
+    url += '/'
   }
 
   return url

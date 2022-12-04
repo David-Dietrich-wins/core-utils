@@ -1,4 +1,4 @@
-import { hasData } from "./skky.js"
+import { hasData } from './skky.js'
 
 export class GrayArrowException<Tobj = string> extends Error {
   functionNameSource: string
@@ -8,7 +8,9 @@ export class GrayArrowException<Tobj = string> extends Error {
   constructor(m: string, functionNameSource: string, obj?: Tobj) {
     super(m)
 
-    this.functionNameSource = hasData(functionNameSource) ? functionNameSource : 'GrayArrowException'
+    this.functionNameSource = hasData(functionNameSource)
+      ? functionNameSource
+      : 'GrayArrowException'
     this.obj = obj
 
     Object.setPrototypeOf(this, new.target.prototype)
