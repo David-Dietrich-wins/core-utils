@@ -50,20 +50,21 @@ function wrapPromise<TResponse>(promise: Promise<TResponse>): { read: () => TRes
  * Wraps a Promise waiting for status conditions via the returned read() method.
  * Throws the Promise if it is not completed so that <Suspense> continues waiting until the Promise if returned cleanly from read().
  * @param url The API Endpoint to be used for this call.
+ * @param sourceFunctionName The callers function name for outputting in potential error calls.
  * @param method The HTTP method to be used for this call. GET, PUT, POST, ...
  * @returns A read() method to be used by <Suspense> and <ErrorBoundary> to show components when the data is ready.
  */
 export default function fetchData<Tdata extends FetchDataTypesAllowed, Tret>(
   url: string,
+  sourceFunctionName: string,
   method: HttpMethod,
-  { data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
+  { data, bearerToken }: HttpFetchRequestProps<Tdata>
 ) {
   const settings: HttpFetchRequestProps<Tdata> = {
     data,
-    fname,
     bearerToken,
   }
-  const promise = fetchJson<Tdata, Tret>(url, method, settings)
+  const promise = fetchJson<Tdata, Tret>(url, sourceFunctionName, method, settings)
 
   return wrapPromise(promise)
 }
