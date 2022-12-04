@@ -1,6 +1,6 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.47",
+  "version": "1.0.48",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "main": "./lib/index.js",
@@ -10,13 +10,13 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json",
+    "clean": "rm -rf coverage dist lib node_modules yarn.lock package-lock.json",
     "clean:build": "yarn clean && yarn && yarn build",
+    "coverage": "jest --coverage",
     "lint": "eslint ./src/ --fix",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
     "test:watch": "jest --watch",
-    "coverage": "jest --coverage",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
