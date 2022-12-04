@@ -1,16 +1,11 @@
-export default {
+import type { Config } from 'jest'
+import { defaults } from 'jest-config'
+
+const config: Config = {
+  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mts'],
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/test/**/*.spec.ts'],
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/types/**/*.ts',
-  ],
-  transform: {
-    'globals': ['ts-jest', {
-      diagnostics: false,
-      isolatedModules: true,
-      /* ts-jest config goes here in Jest */
-    }]
-  }
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
 }
+
+export default config

@@ -74,7 +74,7 @@
     ".husky",
     ".vscode",
     "node_modules",
-    "test",
+    "__tests__",
     ".*",
     "jest.config.ts",
     "tsconfig.*",
