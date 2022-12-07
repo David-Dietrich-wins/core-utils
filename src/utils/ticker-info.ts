@@ -354,7 +354,7 @@ export interface IMarketHolidays {
   year: number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
-  "Washington's Birthday": string
+  'Washington\'s Birthday': string
   'Good Friday': string
   'Memorial Day': string
   'Juneteenth National Independence Day': string

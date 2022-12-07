@@ -1153,7 +1153,7 @@ export function stringWrapParen(str: string) {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string) {
-  return stringWrap("'", str, "'")
+  return stringWrap('\'', str, '\'')
 }
 
 /**
