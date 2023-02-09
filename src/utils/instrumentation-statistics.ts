@@ -1,4 +1,3 @@
-import { GrayArrowException } from './exception-types.js'
 import GrayArrowObject from './GrayArrowObject.js'
 import {
   isObject,
@@ -12,9 +11,10 @@ import {
   safeArray,
   hasData,
 } from './skky.js'
+import { GrayArrowException } from './exception-types.js'
 import { StringOrStringArray } from './types.js'
 
-export default class InstrumentationStatistics extends GrayArrowObject {
+class InstrumentationStatistics extends GrayArrowObject {
   successes = 0
   failures = 0
   totalProcessed = 0
@@ -133,7 +133,7 @@ export default class InstrumentationStatistics extends GrayArrowObject {
     return this.upsert
   }
 
-  addProcessed(msg?: string) {
+  addProcessed(msg?: StringOrStringArray | object) {
     ++this.totalProcessed
 
     if (hasData(msg)) {
@@ -214,11 +214,11 @@ export default class InstrumentationStatistics extends GrayArrowObject {
     } else if (this.msg.length) {
       s += '\n\nMessages:'
 
-      this.msg.forEach((m) => {
-        s += `\n${m}`
-      })
+      s += this.msg.reduce((acc: string, cur: string) => (acc += `\n${cur}`), '')
     }
 
     return s
   }
 }
+
+export default InstrumentationStatistics

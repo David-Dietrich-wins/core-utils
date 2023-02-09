@@ -57,3 +57,7 @@ export interface IVal<T> {
 export interface IValue<T> {
   value: T
 }
+
+export interface IJwt {
+  jwt: string
+}

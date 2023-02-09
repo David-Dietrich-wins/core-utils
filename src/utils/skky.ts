@@ -148,7 +148,7 @@ export function deepDiffMapper() {
         }
       }
 
-      const diff = {}
+      const diff: Record<string, unknown> = {}
       // eslint-disable-next-line no-loops/no-loops
       for (const key in obj1) {
         if (this.isFunction(obj1[key])) {
@@ -160,7 +160,7 @@ export function deepDiffMapper() {
           value2 = obj2[key]
         }
 
-        (diff as any)[key] = this.map(obj1[key], value2)
+        diff[key] = this.map(obj1[key], value2)
       }
 
       // eslint-disable-next-line no-loops/no-loops
@@ -169,7 +169,7 @@ export function deepDiffMapper() {
           continue
         }
 
-        (diff as any)[key] = this.map(undefined, obj2[key])
+        diff[key] = this.map(undefined, obj2[key])
       }
 
       return diff
@@ -733,9 +733,14 @@ export function safeArray<T>(arr: T | T[] | null | undefined, ifNull?: T[]) {
  * @param fname The optional function name that is the source of the operation. Used for exception logging.
  * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
  */
-export function safeJsonToString(json: object, fname?: string) {
+export function safeJsonToString(
+  json: object,
+  fname?: string,
+  replacer?: (number | string)[],
+  space?: string | number
+) {
   try {
-    return JSON.stringify(safeObject(json))
+    return JSON.stringify(safeObject(json), replacer, space)
   } catch (ex) {
     // eslint-disable-next-line no-console
     console.error(fname ? fname : 'safeJsonToString', ex)
@@ -900,8 +905,8 @@ export function renameProperty(obj: any, oldKey: any, newKey: any) {
  * @returns The original object with function having been run on each property.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function runOnAllMembers<T extends object = any>(
-  obj: T,
+export function runOnAllMembers(
+  obj: Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   func: (key: string, value: any) => any,
   mustHaveValue = true
@@ -917,7 +922,7 @@ export function runOnAllMembers<T extends object = any>(
   for (const [key, value] of Object.entries(obj)) {
     if (!mustHaveValue || (mustHaveValue && value)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (obj as any)[key] = func(key, value)
+      obj[key] = func(key, value)
     }
     // console.log(`${key}: ${value}`)
   }
@@ -1015,8 +1020,8 @@ export function splitToArray(
 
   if (isString(strOrArray)) {
     splitted = (strOrArray as string).split(splitter)
-  } else if (isArray(strOrArray)) {
-    (strOrArray as string[]).map((x: string) => splitted.push(x.split(splitter)))
+  } else if (Array.isArray(strOrArray)) {
+    strOrArray.map((x: string) => splitted.push(x.split(splitter)))
   } else {
     throw 'Invalid type passed to splitToArray'
   }
@@ -1194,7 +1199,7 @@ export function timeDifferenceInSeconds(startTime: Date, endTime?: Date) {
  */
 export function timeDifferenceString(
   startTime: Date,
-  endTime: Date | undefined,
+  endTime?: Date,
   longFormat = false,
   showMilliseconds = false
 ) {
