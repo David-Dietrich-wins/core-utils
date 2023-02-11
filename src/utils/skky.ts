@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { GrayArrowException } from './exception-types.js'
 import { StringOrStringArray, TypeOrArray } from './types.js'
 
 /**
@@ -26,6 +27,15 @@ export function arrayFirst<T>(tArray: T[] | null | undefined, defaultIfNone?: T)
   }
 
   return defaultIfNone
+}
+
+export function arrayFirstOrExceptionIfNone<T>(tArray: T[] | null | undefined, defaultIfNone?: T) {
+  const first = arrayFirst(tArray, defaultIfNone)
+  if(!first) {
+    throw new GrayArrowException('Empty array.', arrayFirstOrExceptionIfNone.name)
+  }
+
+  return first
 }
 
 /**
@@ -440,6 +450,15 @@ export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
   return undefined
 }
 
+export function getObjectWithException<T>(arr: TypeOrArray<T>, index = 0){
+  const item = getObject(arr, index)
+  if(!item) {
+    throw new GrayArrowException('No object found.', getObjectWithException.name)
+  }
+
+  return item
+}
+
 /**
  * Gets from the object the value from the key that matches find string.
  * @param obj The object to search for the key.
@@ -448,7 +467,7 @@ export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getObjectValue(obj: any, keyToFind: string) {
-  if ((Object.keys(obj) || []).find((x) => x === keyToFind)) {
+  if ((Object.keys(obj) ?? []).find((x) => x === keyToFind)) {
     return obj[keyToFind]
   }
 
@@ -905,8 +924,8 @@ export function renameProperty(obj: any, oldKey: any, newKey: any) {
  * @returns The original object with function having been run on each property.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function runOnAllMembers(
-  obj: Record<string, unknown>,
+export function runOnAllMembers<T extends object>(
+  obj: T,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   func: (key: string, value: any) => any,
   mustHaveValue = true
@@ -922,7 +941,7 @@ export function runOnAllMembers(
   for (const [key, value] of Object.entries(obj)) {
     if (!mustHaveValue || (mustHaveValue && value)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      obj[key] = func(key, value)
+      (obj as any)[key] = func(key, value)
     }
     // console.log(`${key}: ${value}`)
   }

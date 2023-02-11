@@ -1,5 +1,6 @@
 import CryptoHelper from '../src/utils/CryptoHelper'
-// import InstrumentationStatistics from '../src/utils/instrumentation-statistics'
+import InstrumentationStatistics from '../src/utils/InstrumentationStatistics'
+
 import {
   addDaysToDate,
   addHoursToDate,
@@ -57,19 +58,17 @@ describe('DateHelper', () => {
   })
 })
 
-// describe('Instrumentation Statistics', () => {
-//   test('string', () => {
-//     const msg = 'string'
+describe('Instrumentation Statistics', () => {
+  test('string2', () => {
+    const msg = 'string'
 
-//     const istats = new InstrumentationStatistics()
-//     istats.addProcessed(msg)
+    const istats = new InstrumentationStatistics()
+    istats.addProcessed(msg)
 
-//     expect(istats.messageString()).toContain('Processed 1')
-//     expect(istats.messageString()).toContain(`
-// Messages:
-// `)
-//     expect(istats.messageString()).toContain('string')
-//   })
+    expect(istats.messageString()).toContain('Processed 1')
+    expect(istats.messageString()).toContain('Messages:')
+    expect(istats.messageString()).toContain('string')
+  })
 
 //   test('string array', () => {
 //     const msg = ['string', 'array']
@@ -99,4 +98,4 @@ describe('DateHelper', () => {
 //     expect(istats.messageString()).toContain('"string"')
 //     expect(istats.messageString()).toContain('"ts":2234443')
 //   })
-// })
+})
