@@ -1,7 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { GrayArrowException } from './exception-types.js'
-import { StringOrStringArray, TypeOrArray } from './types.js'
+import { GrayArrowException } from './exception-types'
+import { StringOrStringArray, TypeOrArray } from './types'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.

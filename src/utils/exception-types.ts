@@ -1,4 +1,4 @@
-import { hasData } from './skky.js'
+import { hasData } from './skky'
 
 export class GrayArrowException<Tobj = string> extends Error {
   functionNameSource: string
