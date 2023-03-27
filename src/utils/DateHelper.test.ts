@@ -4,7 +4,7 @@ import {
   addMillisToDate,
   addMinutesToDate,
   addSecondsToDate,
-} from './DateHelper'
+} from './DateHelper.js'
 
 describe('DateHelper', () => {
   const dateToTest = new Date()

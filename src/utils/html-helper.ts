@@ -1,4 +1,4 @@
-import { safeArray } from './skky'
+import { safeArray } from './skky.js'
 
 export type ColorRange = readonly [string, string]
 

@@ -1,8 +1,8 @@
 import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ICaptureResponse } from './CaptureResponse'
-import { GrayArrowExceptionHttp } from './GrayArrowException'
-import { hasData, isObject, isArray } from './skky'
-import { JSONValue } from './types'
+import { ICaptureResponse } from './CaptureResponse.js'
+import { GrayArrowExceptionHttp } from './GrayArrowException.js'
+import { hasData, isObject, isArray } from './skky.js'
+import { JSONValue } from './types.js'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 

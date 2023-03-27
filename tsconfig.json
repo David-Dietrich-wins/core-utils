@@ -1,8 +1,28 @@
 {
-    "extends": "./tsconfig-base.json",
-    "compilerOptions": {
-        "module": "esnext",
-        "outDir": "dist/mjs",
-        "target": "esnext"
-    }
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": false,
+    "lib": ["ESNext", "DOM"],
+    "module": "ESNext",
+    "target": "ESNext",
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "moduleResolution": "nodenext",
+    "noFallthroughCasesInSwitch": true,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "traceResolution": false,
+    "types": ["node", "jest"],
+    "outDir": "dist"
+  },
+  "compileOnSave": false,
+  "exclude": ["__tests__/**/*.(spec|test).ts", "dist"],
+  "include": ["src"]
 }

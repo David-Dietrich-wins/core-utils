@@ -3,16 +3,11 @@
   "version": "1.0.58",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js"
-    }
-  },
+  "type": "module",
+  "exports": "./dist/index.js",
   "scripts": {
-    "build": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && ./fixup",
+    "build": "rm -fr dist/* && tsc",
+    "buildb4": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
     "clean": "rm -rf coverage dist/* node_modules yarn.lock package-lock.json",
     "clean:build": "yarn clean && yarn && yarn build",
     "coverage": "jest --coverage",

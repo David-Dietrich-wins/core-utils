@@ -1,5 +1,5 @@
-import { GrayArrowException } from './GrayArrowException'
-import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './skky'
+import { GrayArrowException } from './GrayArrowException.js'
+import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './skky.js'
 
 class WebStorage {
   get storageProvider(): Storage {

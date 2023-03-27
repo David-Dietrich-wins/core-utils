@@ -1,4 +1,4 @@
-import { CryptoHelper } from './CryptoHelper'
+import { CryptoHelper } from './CryptoHelper.js'
 
 describe('CryptoHelper', () => {
   test('Generate random string', () => {
