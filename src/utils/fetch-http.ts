@@ -1,3 +1,4 @@
+import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ICaptureResponse } from './CaptureResponse.js'
 import { GrayArrowExceptionHttp } from './exception-types.js'
 import { hasData, isObject, isArray } from './skky.js'
@@ -32,7 +33,7 @@ export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> 
  * @returns A JSON ready header for HTTP calls.
  */
 export function getHttpHeaderJson(bearerToken?: string) {
-  const headers = new Headers({ 'Content-Type': 'application/json' })
+  const headers = new AxiosHeaders({ 'Content-Type': 'application/json' })
 
   if (hasData(bearerToken)) {
     headers.append('Authorization', `Bearer ${bearerToken}`)
@@ -63,18 +64,18 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     throw new Error(`${sourceFunctionName} passed an empty URL.`)
   }
 
-  let response: Response
+  let response: AxiosResponse
   try {
-    const req: RequestInit = {
+    const req: AxiosRequestConfig = {
       method,
       headers: getHttpHeaderJson(bearerToken),
     }
 
     if (data && hasData(data)) {
-      req.body = isObject(data) || isArray(data) ? JSON.stringify(data) : String(data)
+      req.data = isObject(data) || isArray(data) ? JSON.stringify(data) : String(data)
     }
 
-    response = await fetch(url, req)
+    response = await axios.get(url, req)
   } catch (err) {
     if (err instanceof GrayArrowExceptionHttp) {
       throw err
@@ -93,11 +94,11 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     )
   }
 
-  if (!response.ok) {
+  if (response.status < 200 || response.status >= 300) {
     let captureResponse: ICaptureResponse<unknown> | undefined
     if (401 === response.status) {
       try {
-        captureResponse = await response.json()
+        captureResponse = response.data()
       } catch (jsonerr) {
         /* empty */
       }
@@ -110,7 +111,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     )
   }
 
-  return response
+  return response.data
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
