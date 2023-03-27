@@ -10,10 +10,10 @@ import {
   safeArray,
   hasData,
 } from './skky'
-import { GrayArrowException } from './exception-types'
+import { GrayArrowException } from './GrayArrowException'
 import { StringOrStringArray } from './types'
 
-export default class InstrumentationStatistics {
+export class InstrumentationStatistics {
   skipped = 0
 
   update = 0

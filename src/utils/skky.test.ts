@@ -1,6 +1,14 @@
-import { safestr, timeDifferenceString } from '../src/utils/skky'
+import { arrayFirst, safestr, timeDifferenceString } from './skky'
 
-describe('Helpers', () => {
+describe('skky', () => {
+  test('arrayFirst', () => {
+    const message = 'hello'
+
+    const result = arrayFirst(['hello', 'bb'])
+
+    expect(result).toMatch(message)
+  })
+
   test('Time Difference', () => {
     const dtNow = new Date()
     const startDate = new Date(+dtNow)

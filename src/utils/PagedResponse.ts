@@ -3,7 +3,7 @@ export interface IPagedResponse<T> {
   totalCount: number
 }
 
-export default class PagedResponse<T> implements IPagedResponse<T> {
+export class PagedResponse<T> implements IPagedResponse<T> {
   dataPage: T[] = []
   totalCount = 0
 

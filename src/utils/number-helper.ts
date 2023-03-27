@@ -1,4 +1,12 @@
-import { runOnAllMembers, isString, isNumber, isNullOrUndefined, isArray, isObject, safeArray } from './skky.js'
+import {
+  runOnAllMembers,
+  isString,
+  isNumber,
+  isNullOrUndefined,
+  isArray,
+  isObject,
+  safeArray,
+} from './skky'
 
 /**
  * Individually adds all same member names who are number together.
@@ -8,17 +16,21 @@ import { runOnAllMembers, isString, isNumber, isNullOrUndefined, isArray, isObje
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
-  return runOnAllMembers(objLeft, (key, val) => {
-    const lval = parseFloat(val)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rval: any = (objRight as any)[key] ? parseFloat((objRight as any)[key]) : NaN
+  return runOnAllMembers(
+    objLeft,
+    (key, val) => {
+      const lval = parseFloat(val)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rval: any = (objRight as any)[key] ? parseFloat((objRight as any)[key]) : NaN
 
-    if (isNaN(lval)) {
-      return isNaN(rval) ? val : rval
-    }
+      if (isNaN(lval)) {
+        return isNaN(rval) ? val : rval
+      }
 
-    return isNaN(rval) ? lval : lval + rval
-  }, false)
+      return isNaN(rval) ? lval : lval + rval
+    },
+    false
+  )
 }
 
 /**
@@ -38,13 +50,17 @@ export function divideByNumbers<T extends object = any>(obj: T, divideBy: number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function setMaxDecimalPlaces(obj: any, maxDecimalPlaces = 2, ignoreKeys: string[] = []): any {
+export function setMaxDecimalPlaces(
+  obj: any,
+  maxDecimalPlaces = 2,
+  ignoreKeys: string[] = []
+): any {
   if (isNullOrUndefined(maxDecimalPlaces)) {
     throw new Error('Invalid number of decimal places.')
   }
 
   const formatter = (num: number) => {
-    return (Math.round((num * 100) / 100)).toFixed(maxDecimalPlaces)
+    return Math.round((num * 100) / 100).toFixed(maxDecimalPlaces)
   }
 
   if (isNumber(obj)) {
@@ -61,7 +77,7 @@ export function setMaxDecimalPlaces(obj: any, maxDecimalPlaces = 2, ignoreKeys: 
 
   // Go through the whole array.
   if (isArray(obj)) {
-    return safeArray(obj).reduce((acc, cur)=>{
+    return safeArray(obj).reduce((acc, cur) => {
       acc.push(setMaxDecimalPlaces(cur))
 
       return acc

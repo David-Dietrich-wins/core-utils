@@ -1,5 +1,4 @@
-import CryptoJs from 'crypto-js'
-const { TripleDES } = CryptoJs
+import CryptoJs, { TripleDES } from 'crypto-js'
 
 export interface ICryptoSettings {
   aes256key: string
@@ -7,7 +6,7 @@ export interface ICryptoSettings {
   tripleDesEncryptionKey: string
 }
 
-export default class CryptoHelper {
+export class CryptoHelper {
   public static readonly CONST_CharsNumbers = '01234567890'
   public static readonly CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz'
   public static readonly CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'

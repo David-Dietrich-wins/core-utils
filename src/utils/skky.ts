@@ -1,4 +1,4 @@
-import { GrayArrowException } from './exception-types'
+import { GrayArrowException } from './GrayArrowException'
 import { StringOrStringArray, TypeOrArray } from './types'
 
 /**

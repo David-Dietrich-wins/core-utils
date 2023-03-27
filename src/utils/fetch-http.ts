@@ -1,8 +1,8 @@
 import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ICaptureResponse } from './CaptureResponse.js'
-import { GrayArrowExceptionHttp } from './exception-types.js'
-import { hasData, isObject, isArray } from './skky.js'
-import { JSONValue } from './types.js'
+import { ICaptureResponse } from './CaptureResponse'
+import { GrayArrowExceptionHttp } from './GrayArrowException'
+import { hasData, isObject, isArray } from './skky'
+import { JSONValue } from './types'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -67,6 +67,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
   let response: AxiosResponse
   try {
     const req: AxiosRequestConfig = {
+      url,
       method,
       headers: getHttpHeaderJson(bearerToken),
     }
@@ -75,7 +76,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
       req.data = isObject(data) || isArray(data) ? JSON.stringify(data) : String(data)
     }
 
-    response = await axios.get(url, req)
+    response = await axios.request(req)
   } catch (err) {
     if (err instanceof GrayArrowExceptionHttp) {
       throw err
@@ -111,7 +112,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     )
   }
 
-  return response.data
+  return response.data()
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(

@@ -1,6 +1,6 @@
-import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.js'
+import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items'
 
-export default class ConfigData {
+export class ConfigData {
   customData = ''
   useMinusEight = true
   openFirstPlot = true

@@ -1,8 +1,8 @@
-import { IdCreatedUpdated, IIdCreatedUpdated } from './id-created-updated.js'
-import { IIdName } from './id-name.js'
-import { IIdVal } from './id-val.js'
-import { NameValType } from './name-val.js'
-import { isObject } from './skky.js'
+import { IdCreatedUpdated, IIdCreatedUpdated } from './id-created-updated'
+import { IIdName } from './id-name'
+import { IIdVal } from './id-val'
+import { NameValType } from './name-val'
+import { isObject } from './skky'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,

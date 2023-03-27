@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GrayArrowException } from './exception-types.js'
-import { isNullOrUndefined, isObject, safestrLowercase } from './skky.js'
+import { GrayArrowException } from './GrayArrowException'
+import { isNullOrUndefined, isObject, safestrLowercase } from './skky'
 
 export interface IApiWrapper<T = any> {
   id: number
@@ -86,5 +86,3 @@ export class ApiWrapper<T = any> implements IApiWrapper<T> {
     return false
   }
 }
-
-export default ApiWrapper
