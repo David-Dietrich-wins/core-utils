@@ -20,9 +20,11 @@
     "strict": true,
     "traceResolution": false,
     "types": ["node", "jest"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true
   },
   "compileOnSave": false,
-  "exclude": ["__tests__/**/*.(spec|test).ts", "dist"],
-  "include": ["src"]
+  "exclude": ["__tests__/**/*.(spec|test).mts", "dist/**/*", "**/*.(spec|test).mts"],
+  "ts-node": { "esm": true },
+  "files": ["./src/index.mts"]
 }
