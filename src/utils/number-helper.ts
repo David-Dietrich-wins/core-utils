@@ -6,7 +6,7 @@ import {
   isArray,
   isObject,
   safeArray,
-} from './skky.js'
+} from './skky'
 
 /**
  * Individually adds all same member names who are number together.

@@ -1,13 +1,20 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.58",
+  "version": "2.0.0",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
-  "type": "module",
-  "exports": "./dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "scripts": {
-    "build": "rm -fr dist/* && tsc",
-    "buildb4": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
+    "buildesm": "rm -fr dist/* && tsc",
+    "build": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
     "clean": "rm -rf coverage dist/* node_modules yarn.lock package-lock.json",
     "clean:build": "yarn clean && yarn && yarn build",
     "coverage": "jest --coverage",
@@ -22,7 +29,7 @@
     "url": "git+https://github.com/grayarrow/core-utils.git"
   },
   "engines": {
-    "node": ">=12.0"
+    "node": ">=16.0"
   },
   "keywords": [
     "GrayArrow",
@@ -61,5 +68,8 @@
   "dependencies": {
     "axios": "^1.3.2",
     "crypto-js": "^4.1.1"
-  }
+  },
+  "files": [
+    "dist/"
+  ]
 }

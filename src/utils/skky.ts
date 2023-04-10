@@ -1,5 +1,5 @@
-import { GrayArrowException } from './GrayArrowException.js'
-import { StringOrStringArray, TypeOrArray } from './types.js'
+import { GrayArrowException } from './GrayArrowException'
+import { StringOrStringArray, TypeOrArray } from './types'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -304,7 +304,7 @@ export function getAsNumberOrUndefined(
  * Use this method to convert any string, number or boolean to its boolean value;
  * @param b Any object to test if it can be converted to a boolean.
  */
-export function getBoolean(b: any) {
+export function getBoolean(b: unknown) {
   if (!b) {
     return false
   }
@@ -313,7 +313,7 @@ export function getBoolean(b: any) {
     return b
   }
 
-  if (isString(b)) {
+  if ('string' === typeof(b)) {
     const s = safestrLowercase(b).trim()
     switch (s) {
       case 'false':
@@ -572,7 +572,7 @@ export function hasData(o: any | null | undefined, minlength = 1): boolean {
  * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
  * @returns True if arr is an array and meets any minimum requirements.
  */
-export function isArray(arr: any, minLengthOrIncludes?: any) {
+export function isArray(arr: unknown, minLengthOrIncludes?: unknown) {
   if (!arr || !Array.isArray(arr)) {
     return false
   }
@@ -593,11 +593,11 @@ export function isArray(arr: any, minLengthOrIncludes?: any) {
  * @param obj Any object to test if it is a boolean value.
  * @returns True if the object is a boolean.
  */
-export function isBoolean(obj: any) {
+export function isBoolean(obj: unknown) {
   return 'boolean' === typeof obj
 }
 
-export function isEmptyObject(obj: any) {
+export function isEmptyObject(obj: unknown) {
   return (
     null == obj ||
     (isObject(obj) && safeArray(Object.keys(obj)).length === 0 && obj.constructor === Object)
@@ -611,13 +611,13 @@ export function isEmptyObject(obj: any) {
  * @param allowFunction True if s is a function and you want to call the function to get s.
  * @returns True if the object s is an empty string.
  */
-export function isEmptyString(s: any, allowFunction = true) {
+export function isEmptyString(s: unknown, allowFunction = true) {
   try {
-    const testString = (str: any) => {
+    const testString = (str: unknown) => {
       return !str || (isString(str) && '' === str)
     }
 
-    return testString(s) || (allowFunction && isFunction(s) && testString(s()))
+    return testString(s) || (allowFunction && 'function' === typeof(s) && testString(s()))
   } catch (ex) {
     console.log('grayarrow-jsutils.isEmptyString:', ex)
   }
@@ -630,7 +630,7 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @param obj Any object to test if it is a function.
  * @returns True if the object is a function.
  */
-export function isFunction(obj: any) {
+export function isFunction(obj: unknown) {
   return 'function' === typeof obj
 }
 
@@ -642,7 +642,7 @@ export function isFunction(obj: any) {
  * @param maxValue The maximum value the number can be.
  * @returns True if the object is a number and if provided, >= to the minValue and/or <= to the maxValue.
  */
-export function isNumber(obj: any, minValue: number | null = null, maxValue: number | null = null) {
+export function isNumber(obj: unknown, minValue: number | null = null, maxValue: number | null = null) {
   if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
     return false
   }
@@ -662,7 +662,7 @@ export function isNumber(obj: any, minValue: number | null = null, maxValue: num
  * @param obj Any variable to test if it is null or undefined.
  * @returns True if the object passed in is null or undefined.
  */
-export function isNullOrUndefined(obj: any | null | undefined) {
+export function isNullOrUndefined(obj: unknown | null | undefined) {
   return 'undefined' === typeof obj || null == obj
 }
 
@@ -674,7 +674,7 @@ export function isNullOrUndefined(obj: any | null | undefined) {
  * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
  */
 export function isObject(
-  obj: any | null | undefined,
+  obj: unknown | null | undefined,
   minLengthOrContainsField: number | string = 0
 ) {
   const isok = obj && 'object' === typeof obj && !isArray(obj)
@@ -682,7 +682,7 @@ export function isObject(
     return false
   }
 
-  if (isNumber(minLengthOrContainsField)) {
+  if ('number' === typeof(minLengthOrContainsField)) {
     if (minLengthOrContainsField <= 0) {
       return true
     }
@@ -704,7 +704,7 @@ export function isObject(
  * @param minlength The minimum length the string must be.
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
-export function isString(obj: any, minlength = 0) {
+export function isString(obj: unknown, minlength = 0) {
   return ('string' === typeof obj || (obj && obj instanceof String)) && obj.length >= minlength
 }
 
@@ -953,19 +953,19 @@ export function runOnAllMembers<T extends object>(
  * @param obj The object to look for the array.
  * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
  */
-export function searchObjectForArray(obj: any) {
-  if (isArray(obj)) {
-    return obj
+export function searchObjectForArray(obj: unknown) {
+  if (Array.isArray(obj)) {
+    return obj as unknown[]
   }
 
   if (isObject(obj)) {
     const found = Object.values(obj).find((x) => isArray(x))
     if (found) {
-      return found as any[]
+      return found as unknown[]
     }
   }
 
-  return []
+  return [] as unknown[]
 }
 
 /**
@@ -984,7 +984,7 @@ export function sortFunction(
 ): number {
   if (isNullOrUndefined(isAsc)) {
     isAsc = true
-  } else if (isString(isAsc as any)) {
+  } else if (isString(isAsc)) {
     isAsc = 'desc' !== safestrLowercase(isAsc as string)
   }
   const aEmpty = isNullOrUndefined(a)
@@ -1033,12 +1033,12 @@ export function splitToArray(
   removeEmpties = true,
   trimStrings = true
 ) {
-  let splitted: any[] = []
+  let splitted: string[] = []
 
   if (isString(strOrArray)) {
     splitted = (strOrArray as string).split(splitter)
   } else if (Array.isArray(strOrArray)) {
-    strOrArray.map((x: string) => splitted.push(x.split(splitter)))
+    strOrArray.forEach((x: string) => (splitted.concat(x.split(splitter))))
   } else {
     throw 'Invalid type passed to splitToArray'
   }
