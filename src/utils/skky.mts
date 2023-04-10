@@ -572,7 +572,7 @@ export function hasData(o: any | null | undefined, minlength = 1): boolean {
  * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
  * @returns True if arr is an array and meets any minimum requirements.
  */
-export function isArray(arr: any, minLengthOrIncludes?: any) {
+export function isArray(arr: unknown, minLengthOrIncludes?: unknown) {
   if (!arr || !Array.isArray(arr)) {
     return false
   }
@@ -593,11 +593,11 @@ export function isArray(arr: any, minLengthOrIncludes?: any) {
  * @param obj Any object to test if it is a boolean value.
  * @returns True if the object is a boolean.
  */
-export function isBoolean(obj: any) {
+export function isBoolean(obj: unknown) {
   return 'boolean' === typeof obj
 }
 
-export function isEmptyObject(obj: any) {
+export function isEmptyObject(obj: unknown) {
   return (
     null == obj ||
     (isObject(obj) && safeArray(Object.keys(obj)).length === 0 && obj.constructor === Object)
@@ -642,7 +642,7 @@ export function isFunction(obj: any) {
  * @param maxValue The maximum value the number can be.
  * @returns True if the object is a number and if provided, >= to the minValue and/or <= to the maxValue.
  */
-export function isNumber(obj: any, minValue: number | null = null, maxValue: number | null = null) {
+export function isNumber(obj: unknown, minValue: number | null = null, maxValue: number | null = null) {
   if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
     return false
   }
@@ -662,8 +662,8 @@ export function isNumber(obj: any, minValue: number | null = null, maxValue: num
  * @param obj Any variable to test if it is null or undefined.
  * @returns True if the object passed in is null or undefined.
  */
-export function isNullOrUndefined(obj: any | null | undefined) {
-  return 'undefined' === typeof obj || null == obj
+export function isNullOrUndefined(obj?: unknown) {
+  return 'undefined' === typeof obj || null === obj
 }
 
 /**
@@ -674,7 +674,7 @@ export function isNullOrUndefined(obj: any | null | undefined) {
  * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
  */
 export function isObject(
-  obj: any | null | undefined,
+  obj: unknown | undefined,
   minLengthOrContainsField: number | string = 0
 ) {
   const isok = obj && 'object' === typeof obj && !isArray(obj)
@@ -682,7 +682,7 @@ export function isObject(
     return false
   }
 
-  if (isNumber(minLengthOrContainsField)) {
+  if ('number' === typeof(minLengthOrContainsField)) {
     if (minLengthOrContainsField <= 0) {
       return true
     }
@@ -704,7 +704,7 @@ export function isObject(
  * @param minlength The minimum length the string must be.
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
-export function isString(obj: any, minlength = 0) {
+export function isString(obj: unknown, minlength = 0) {
   return ('string' === typeof obj || (obj && obj instanceof String)) && obj.length >= minlength
 }
 
