@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GrayArrowException } from './GrayArrowException'
 import { StringOrStringArray, TypeOrArray } from './types'
 
@@ -953,19 +954,19 @@ export function runOnAllMembers<T extends object>(
  * @param obj The object to look for the array.
  * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
  */
-export function searchObjectForArray(obj: unknown) {
+export function searchObjectForArray(obj: any) {
   if (Array.isArray(obj)) {
-    return obj as unknown[]
+    return obj
   }
 
   if (isObject(obj)) {
     const found = Object.values(obj).find((x) => isArray(x))
     if (found) {
-      return found as unknown[]
+      return found as any[]
     }
   }
 
-  return [] as unknown[]
+  return []
 }
 
 /**

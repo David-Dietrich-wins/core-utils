@@ -1,8 +1,9 @@
-import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ICaptureResponse } from './CaptureResponse'
 import { GrayArrowExceptionHttp } from './GrayArrowException'
 import { hasData, isObject, isArray } from './skky'
 import { JSONValue } from './types'
+import { getHttpHeaderJson } from './AxiosHelper'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -25,21 +26,6 @@ export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> 
    * Useful if you want to send back codes like Unauthorized, File too large, ...
    */
   statusCodesToBypassErrorHandler?: number[]
-}
-
-/**
- * An HTTP header to support JSON API calls. An optional Bearer token can be provided as well.
- * @param bearerToken An optional security token to add as Authorization to the HTTP header.
- * @returns A JSON ready header for HTTP calls.
- */
-export function getHttpHeaderJson(bearerToken?: string) {
-  const headers = new AxiosHeaders({ 'Content-Type': 'application/json' })
-
-  if (hasData(bearerToken)) {
-    headers.append('Authorization', `Bearer ${bearerToken}`)
-  }
-
-  return headers
 }
 
 /**
