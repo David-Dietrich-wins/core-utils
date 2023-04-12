@@ -1,5 +1,5 @@
-import { InstrumentationStatistics } from './InstrumentationStatistics'
-import { safeJsonToString } from './skky'
+import { InstrumentationStatistics } from './InstrumentationStatistics.js'
+import { safeJsonToString } from './skky.js'
 
 describe('InstrumentationStatistics', () => {
   test('string2', () => {

@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios'
-import { hasData } from './skky'
+import { hasData } from './skky.js'
 
 export function getHttpHeaderBearerToken(bearerToken?: string) {
   const headers: Record<string, string> = {}

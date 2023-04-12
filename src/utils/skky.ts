@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GrayArrowException } from './GrayArrowException'
-import { StringOrStringArray, TypeOrArray } from './types'
+import { GrayArrowException } from './GrayArrowException.js'
+import { StringOrStringArray, ArrayOrSingle } from './types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -430,7 +430,7 @@ export function getNumberString(
  * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
  * @returns The given object at arr[index], or undefined if it does not exist.
  */
-export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
+export function getObject<T>(arr: ArrayOrSingle<T>, index = 0) {
   if (!isNullOrUndefined(arr)) {
     index = index || 0
 
@@ -449,7 +449,7 @@ export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
   return undefined
 }
 
-export function getObjectWithException<T>(arr: TypeOrArray<T>, index = 0){
+export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0){
   const item = getObject(arr, index)
   if(!item) {
     throw new GrayArrowException('No object found.', getObjectWithException.name)

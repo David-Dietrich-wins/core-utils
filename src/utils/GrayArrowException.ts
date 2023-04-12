@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { hasData } from './skky'
+import { hasData } from './skky.js'
 
 export class GrayArrowException<Tobj = string> extends Error {
   functionNameSource: string
