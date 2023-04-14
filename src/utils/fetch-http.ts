@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ICaptureResponse } from './CaptureResponse.js'
 import { GrayArrowExceptionHttp } from './GrayArrowException.js'
-import { hasData, isObject, isArray } from './skky.js'
+import { hasData, isObject } from './skky.js'
 import { JSONValue } from './types.js'
 import { getHttpHeaderJson } from './AxiosHelper.js'
 
@@ -59,7 +59,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     }
 
     if (data && hasData(data)) {
-      req.data = isObject(data) || isArray(data) ? JSON.stringify(data) : String(data)
+      req.data = isObject(data) ? JSON.stringify(data) : String(data)
     }
 
     response = await axios.request(req)
