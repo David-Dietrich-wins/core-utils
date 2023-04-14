@@ -1,6 +1,6 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "type":"module",
