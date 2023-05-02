@@ -1,4 +1,4 @@
-import { IName, IType, IValue } from './interfaces.mjs'
+import { IName, IType, IValue } from './interfaces.js'
 
 export interface INameType<TType = string, Tname = string> extends IName<Tname>, IType<TType> {}
 export interface INameTypeValue<TValue = string, TType = string, Tname = string>

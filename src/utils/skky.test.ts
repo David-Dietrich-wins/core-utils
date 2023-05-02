@@ -1,4 +1,4 @@
-import { arrayFirst, safestr, timeDifferenceString } from './skky.mjs'
+import { arrayFirst, safestr, timeDifferenceString } from './skky.js'
 
 describe('skky', () => {
   test('arrayFirst', () => {

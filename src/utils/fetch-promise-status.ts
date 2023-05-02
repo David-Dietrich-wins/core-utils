@@ -3,7 +3,7 @@ import {
   fetchJson,
   HttpFetchRequestProps,
   HttpMethod,
-} from './fetch-http.mjs'
+} from './fetch-http.js'
 
 // From https://blog.logrocket.com/react-suspense-data-fectching/
 // This will prevent a component from rendering until the data is ready.

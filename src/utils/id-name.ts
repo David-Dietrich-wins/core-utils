@@ -1,5 +1,5 @@
-import { INameValue } from './name-value.mjs'
-import { IDate, IId, IName, ISlug, IType } from './interfaces.mjs'
+import { INameValue } from './name-value.js'
+import { IDate, IId, IName, ISlug, IType } from './interfaces.js'
 
 export interface IIdName<Tid = string, Tname = string> extends IId<Tid>, IName<Tname> {}
 
