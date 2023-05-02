@@ -1,9 +1,3 @@
-import { AnyFixLater } from './types.mjs'
-
-export interface IAnyStringItems {
-  [id: string]: AnyFixLater
-}
-
 export interface ICreatedBy {
   createdby: string
   created: Date

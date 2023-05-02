@@ -1,5 +1,5 @@
-import { GrayArrowException } from './GrayArrowException.mjs'
-import { StringOrStringArray, TypeOrArray } from './types.mjs'
+import { GrayArrowException } from './GrayArrowException.js'
+import { StringOrStringArray, ArrayOrSingle } from './types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -29,7 +29,7 @@ export function arrayFirst<T>(tArray: T[] | null | undefined, defaultIfNone?: T)
 
 export function arrayFirstOrExceptionIfNone<T>(tArray: T[] | null | undefined, defaultIfNone?: T) {
   const first = arrayFirst(tArray, defaultIfNone)
-  if(!first) {
+  if (!first) {
     throw new GrayArrowException('Empty array.', arrayFirstOrExceptionIfNone.name)
   }
 
@@ -113,7 +113,7 @@ export function deepDiffMapper() {
         isObject(objChanges, 'type') &&
         isObject(objChanges, 'data')
       ) {
-        return 'unchanged' !== (objChanges as any).type
+        return 'unchanged' !== (objChanges as { type: string }).type
       }
 
       // We are dealing with a larger object or array comparison.
@@ -163,7 +163,7 @@ export function deepDiffMapper() {
           continue
         }
 
-        let value2
+        let value2: unknown
         if (obj2[key] !== undefined) {
           value2 = obj2[key]
         }
@@ -173,6 +173,7 @@ export function deepDiffMapper() {
 
       // eslint-disable-next-line no-loops/no-loops
       for (const key in obj2) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
           continue
         }
@@ -208,24 +209,19 @@ export function deepDiffMapper() {
 
       return this.VALUE_UPDATED
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isFunction(x: any) {
+    isFunction(x: unknown) {
       return Object.prototype.toString.call(x) === '[object Function]'
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isArray(x: any) {
+    isArray(x: unknown) {
       return Object.prototype.toString.call(x) === '[object Array]'
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isDate(x: any) {
+    isDate(x: unknown): x is Date {
       return Object.prototype.toString.call(x) === '[object Date]'
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isObject(x: any) {
+    isObject(x: unknown): x is object {
       return Object.prototype.toString.call(x) === '[object Object]'
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isValue(x: any) {
+    isValue(x: unknown) {
       return !this.isObject(x) && !this.isArray(x)
     },
   }
@@ -237,13 +233,12 @@ export function deepDiffMapper() {
  * @param ret The object to get the ret.body object.
  * @returns The existing ret.body object of the ret object..
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getBody<T>(ret: any) {
-  if (!isObject(ret) || !isObject(ret.body)) {
+export function getBody<T>(ret: unknown) {
+  if (!isObject(ret, 'body')) {
     throw new Error('Object body not found')
   }
 
-  return ret.body as T
+  return (ret as { body: unknown }).body as T
 }
 
 /**
@@ -304,7 +299,7 @@ export function getAsNumberOrUndefined(
  * Use this method to convert any string, number or boolean to its boolean value;
  * @param b Any object to test if it can be converted to a boolean.
  */
-export function getBoolean(b: any) {
+export function getBoolean(b?: unknown) {
   if (!b) {
     return false
   }
@@ -429,28 +424,27 @@ export function getNumberString(
  * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
  * @returns The given object at arr[index], or undefined if it does not exist.
  */
-export function getObject<T>(arr: TypeOrArray<T>, index = 0) {
+export function getObject<T>(arr: ArrayOrSingle<T>, index = 0) {
   if (!isNullOrUndefined(arr)) {
     index = index || 0
 
     if (isArray(arr)) {
-      const arrT = arr as T[]
-      if (index >= 0 && arrT.length > index) {
-        return arrT[index]
-      } else if (index < 0 && arrT.length >= Math.abs(index)) {
-        return arrT[arrT.length - Math.abs(index)]
+      if (index >= 0 && arr.length > index) {
+        return arr[index]
+      } else if (index < 0 && arr.length >= Math.abs(index)) {
+        return arr[arr.length - Math.abs(index)]
       }
     } else if (index === 0) {
-      return arr as T
+      return arr
     }
   }
 
   return undefined
 }
 
-export function getObjectWithException<T>(arr: TypeOrArray<T>, index = 0){
+export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
   const item = getObject(arr, index)
-  if(!item) {
+  if (!item) {
     throw new GrayArrowException('No object found.', getObjectWithException.name)
   }
 
@@ -465,7 +459,7 @@ export function getObjectWithException<T>(arr: TypeOrArray<T>, index = 0){
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getObjectValue(obj: any, keyToFind: string) {
-  if ((Object.keys(obj) ?? []).find((x) => x === keyToFind)) {
+  if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
     return obj[keyToFind]
   }
 
@@ -572,7 +566,10 @@ export function hasData(o: any | null | undefined, minlength = 1): boolean {
  * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
  * @returns True if arr is an array and meets any minimum requirements.
  */
-export function isArray(arr: unknown, minLengthOrIncludes?: unknown) {
+export function isArray<T = unknown>(
+  arr?: T | T[],
+  minLengthOrIncludes?: T | number
+): arr is Array<T> {
   if (!arr || !Array.isArray(arr)) {
     return false
   }
@@ -582,7 +579,7 @@ export function isArray(arr: unknown, minLengthOrIncludes?: unknown) {
   }
 
   if (isNumber(minLengthOrIncludes)) {
-    return arr.length >= (minLengthOrIncludes as number)
+    return arr.length >= minLengthOrIncludes
   }
 
   return arr.includes(minLengthOrIncludes)
@@ -593,7 +590,7 @@ export function isArray(arr: unknown, minLengthOrIncludes?: unknown) {
  * @param obj Any object to test if it is a boolean value.
  * @returns True if the object is a boolean.
  */
-export function isBoolean(obj: unknown) {
+export function isBoolean(obj: unknown): obj is boolean {
   return 'boolean' === typeof obj
 }
 
@@ -611,13 +608,13 @@ export function isEmptyObject(obj: unknown) {
  * @param allowFunction True if s is a function and you want to call the function to get s.
  * @returns True if the object s is an empty string.
  */
-export function isEmptyString(s: any, allowFunction = true) {
+export function isEmptyString(s: unknown, allowFunction = true) {
   try {
-    const testString = (str: any) => {
+    const testString = (str: unknown) => {
       return !str || (isString(str) && '' === str)
     }
 
-    return testString(s) || (allowFunction && isFunction(s) && testString(s()))
+    return testString(s) || (allowFunction && 'function' === typeof s && testString(s()))
   } catch (ex) {
     console.log('grayarrow-jsutils.isEmptyString:', ex)
   }
@@ -630,7 +627,7 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @param obj Any object to test if it is a function.
  * @returns True if the object is a function.
  */
-export function isFunction(obj: any) {
+export function isFunction(obj: unknown) {
   return 'function' === typeof obj
 }
 
@@ -642,7 +639,11 @@ export function isFunction(obj: any) {
  * @param maxValue The maximum value the number can be.
  * @returns True if the object is a number and if provided, >= to the minValue and/or <= to the maxValue.
  */
-export function isNumber(obj: unknown, minValue: number | null = null, maxValue: number | null = null) {
+export function isNumber(
+  obj: unknown,
+  minValue: number | null = null,
+  maxValue: number | null = null
+): obj is number {
   if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
     return false
   }
@@ -662,7 +663,7 @@ export function isNumber(obj: unknown, minValue: number | null = null, maxValue:
  * @param obj Any variable to test if it is null or undefined.
  * @returns True if the object passed in is null or undefined.
  */
-export function isNullOrUndefined(obj?: unknown) {
+export function isNullOrUndefined(obj: unknown | null | undefined): obj is null | undefined {
   return 'undefined' === typeof obj || null === obj
 }
 
@@ -674,9 +675,10 @@ export function isNullOrUndefined(obj?: unknown) {
  * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
  */
 export function isObject(
-  obj: unknown | undefined,
+  obj: unknown | null | undefined,
   minLengthOrContainsField: number | string = 0
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): obj is Record<string, any> {
   const isok = obj && 'object' === typeof obj && !isArray(obj)
   if (!isok) {
     return false
@@ -687,11 +689,11 @@ export function isObject(
       return true
     }
 
-    return (Object.keys(obj) || []).length >= minLengthOrContainsField
+    return safeArray(Object.keys(obj)).length >= minLengthOrContainsField
   }
 
-  if (isString(minLengthOrContainsField as string)) {
-    return (Object.keys(obj) || []).includes(minLengthOrContainsField as string)
+  if (isString(minLengthOrContainsField)) {
+    return safeArray(Object.keys(obj)).includes(minLengthOrContainsField)
   }
 
   return true
@@ -704,8 +706,8 @@ export function isObject(
  * @param minlength The minimum length the string must be.
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
-export function isString(obj: unknown, minlength = 0) {
-  return ('string' === typeof obj || (obj && obj instanceof String)) && obj.length >= minlength
+export function isString(obj: unknown, minlength = 0): obj is string {
+  return ('string' === typeof obj || obj instanceof String) && obj.length >= minlength
 }
 
 /**
@@ -741,7 +743,7 @@ export function safeArray<T>(arr: T | T[] | null | undefined, ifNull?: T[]) {
     return ifNull && isArray(ifNull) ? ifNull : []
   }
 
-  return isArray(arr) ? (arr as T[]) : [arr as T]
+  return isArray(arr) ? arr : [arr]
 }
 
 /**
@@ -775,10 +777,10 @@ export function safeJsonToString(
  */
 export function safeObject(obj: object | null | undefined, ifNull?: object) {
   if (isObject(obj)) {
-    return obj || {}
+    return obj
   }
 
-  return isObject(ifNull) ? (ifNull as object) : {}
+  return isObject(ifNull) ? ifNull : {}
 }
 
 /**
@@ -935,14 +937,13 @@ export function runOnAllMembers<T extends object>(
     throw new Error('runOnAllMembers() received an empty function operator.')
   }
 
-  // eslint-disable-next-line no-loops/no-loops
-  for (const [key, value] of Object.entries(obj)) {
+  const objAsRecord = obj as Record<string, unknown>
+  Object.entries(obj).forEach(([key, value]) => {
     if (!mustHaveValue || (mustHaveValue && value)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (obj as any)[key] = func(key, value)
+      objAsRecord[key] = func(key, value)
     }
     // console.log(`${key}: ${value}`)
-  }
+  })
 
   return obj
 }
@@ -953,15 +954,15 @@ export function runOnAllMembers<T extends object>(
  * @param obj The object to look for the array.
  * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
  */
-export function searchObjectForArray(obj: any) {
-  if (isArray(obj)) {
-    return obj
+export function searchObjectForArray<T = unknown>(obj: object): T[] {
+  if (Array.isArray(obj)) {
+    return obj as T[]
   }
 
   if (isObject(obj)) {
     const found = Object.values(obj).find((x) => isArray(x))
     if (found) {
-      return found as any[]
+      return found as T[]
     }
   }
 
@@ -977,14 +978,16 @@ export function searchObjectForArray(obj: any) {
  * @returns -1, 0 or 1 depending on the sort direction.
  */
 export function sortFunction(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   a: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   b: any,
   isAsc: string | boolean = true,
   compareStringsLowercase = true
 ): number {
   if (isNullOrUndefined(isAsc)) {
     isAsc = true
-  } else if (isString(isAsc as any)) {
+  } else if (isString(isAsc)) {
     isAsc = 'desc' !== safestrLowercase(isAsc as string)
   }
   const aEmpty = isNullOrUndefined(a)
@@ -1033,22 +1036,22 @@ export function splitToArray(
   removeEmpties = true,
   trimStrings = true
 ) {
-  let splitted: any[] = []
+  let splitted: string[] = []
 
   if (isString(strOrArray)) {
-    splitted = (strOrArray as string).split(splitter)
+    splitted = strOrArray.split(splitter)
   } else if (Array.isArray(strOrArray)) {
-    strOrArray.map((x: string) => splitted.push(x.split(splitter)))
+    strOrArray.forEach((x) => splitted.concat(x.split(splitter)))
   } else {
     throw 'Invalid type passed to splitToArray'
   }
 
   if (trimStrings) {
-    splitted = splitted.map((x: string) => x.trim())
+    splitted = splitted.map((x) => x.trim())
   }
 
   if (removeEmpties) {
-    return splitted.filter((e: string) => (e ? true : false))
+    return splitted.filter((e) => (e ? true : false))
   }
 
   return splitted
@@ -1100,10 +1103,10 @@ export function splitToArrayOrStringIfOnlyOneToUpper(
   const arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties, trimStrings)
 
   if (isArray(arr)) {
-    return (arr as string[]).map((x: string) => x.toUpperCase())
+    return arr.map((x) => x.toUpperCase())
   }
 
-  return safestrUppercase(arr as string)
+  return safestrUppercase(arr)
 }
 
 /**

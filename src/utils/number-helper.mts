@@ -38,10 +38,9 @@ export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
  * @param obj Object to divide all members.
  * @param divideBy The number to divide all members by.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function divideByNumbers<T extends object = any>(obj: T, divideBy: number) {
+export function divideByNumbers<T extends object = object>(obj: T, divideBy: number) {
   return runOnAllMembers(obj, (key, val) => {
-    if (isString(val) && !isNaN(val)) {
+    if (isString(val)) {
       val = parseFloat(val)
     }
 
@@ -49,12 +48,12 @@ export function divideByNumbers<T extends object = any>(obj: T, divideBy: number
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setMaxDecimalPlaces(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any,
   maxDecimalPlaces = 2,
   ignoreKeys: string[] = []
-): any {
+) {
   if (isNullOrUndefined(maxDecimalPlaces)) {
     throw new Error('Invalid number of decimal places.')
   }
@@ -70,7 +69,7 @@ export function setMaxDecimalPlaces(
   if (isString(obj)) {
     // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
     // ...and ensure strings of whitespace fail
-    if (!isNaN(obj) && !isNaN(parseFloat(obj))) {
+    if (!isNaN(parseFloat(obj))) {
       return formatter(parseFloat(obj)).toString()
     }
   }

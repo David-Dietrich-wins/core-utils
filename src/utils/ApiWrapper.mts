@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { GrayArrowException } from './GrayArrowException.mjs'
-import { isNullOrUndefined, isObject, safestrLowercase } from './skky.mjs'
+import { GrayArrowException } from './GrayArrowException.js'
+import { isNullOrUndefined, isObject, safestrLowercase } from './skky.js'
 
-export interface IApiWrapper<T = any> {
+export interface IApiWrapper<T = unknown> {
   id: number
   ts: number
   message: string
@@ -12,7 +11,7 @@ export interface IApiWrapper<T = any> {
   obj?: T
 }
 
-export class ApiWrapper<T = any> implements IApiWrapper<T> {
+export class ApiWrapper<T = unknown> implements IApiWrapper<T> {
   id = +new Date()
   ts = this.id
 
@@ -32,6 +31,7 @@ export class ApiWrapper<T = any> implements IApiWrapper<T> {
     this.obj = obj
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setError(errobj?: any) {
     this.result = 'Error'
     this.responseCode = -1
@@ -71,16 +71,17 @@ export class ApiWrapper<T = any> implements IApiWrapper<T> {
     this.obj = obj
   }
 
-  static responseCodeIsGood(ret?: any): boolean {
+  static responseCodeIsGood(ret?: unknown): boolean {
     if (isObject(ret, 'responseCode')) {
-      return ret.responseCode >= 200 && ret.responseCode < 300
+      const rcode = (ret as { responseCode: number }).responseCode
+      return rcode >= 200 && rcode < 300
     }
 
     return false
   }
-  static isSuccess(ret?: any): boolean {
+  static isSuccess(ret?: unknown): boolean {
     if (isObject(ret, 'result')) {
-      return 'success' === safestrLowercase(ret.result)
+      return 'success' === safestrLowercase((ret as { result: string }).result)
     }
 
     return false

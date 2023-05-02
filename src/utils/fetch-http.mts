@@ -1,8 +1,9 @@
-import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ICaptureResponse } from './CaptureResponse.mjs'
-import { GrayArrowExceptionHttp } from './GrayArrowException.mjs'
-import { hasData, isObject, isArray } from './skky.mjs'
-import { JSONValue } from './types.mjs'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { ICaptureResponse } from './CaptureResponse.js'
+import { GrayArrowExceptionHttp } from './GrayArrowException.js'
+import { hasData, isObject } from './skky.js'
+import { JSONValue } from './types.js'
+import { getHttpHeaderJson } from './AxiosHelper.js'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -28,21 +29,6 @@ export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> 
 }
 
 /**
- * An HTTP header to support JSON API calls. An optional Bearer token can be provided as well.
- * @param bearerToken An optional security token to add as Authorization to the HTTP header.
- * @returns A JSON ready header for HTTP calls.
- */
-export function getHttpHeaderJson(bearerToken?: string) {
-  const headers = new AxiosHeaders({ 'Content-Type': 'application/json' })
-
-  if (hasData(bearerToken)) {
-    headers.append('Authorization', `Bearer ${bearerToken}`)
-  }
-
-  return headers
-}
-
-/**
  * Makes an HTTP call to an API using the given HTTP method.
  * @param url The URL endpoint of the API call.
  * @param method The HTTP method to be used.
@@ -50,7 +36,7 @@ export function getHttpHeaderJson(bearerToken?: string) {
  * @param data Optional body to send with the request. Can be a JSON object or a string.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
+export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object, Tret = unknown>(
   url: string,
   sourceFunctionName: string,
   method: HttpMethod,
@@ -64,16 +50,16 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     throw new Error(`${sourceFunctionName} passed an empty URL.`)
   }
 
-  let response: AxiosResponse
+  let response: AxiosResponse<ICaptureResponse<Tret>>
   try {
-    const req: AxiosRequestConfig = {
+    const req: AxiosRequestConfig<Tdata | string> = {
       url,
       method,
       headers: getHttpHeaderJson(bearerToken),
     }
 
     if (data && hasData(data)) {
-      req.data = isObject(data) || isArray(data) ? JSON.stringify(data) : String(data)
+      req.data = isObject(data) ? JSON.stringify(data) : String(data)
     }
 
     response = await axios.request(req)
@@ -99,7 +85,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     let captureResponse: ICaptureResponse<unknown> | undefined
     if (401 === response.status) {
       try {
-        captureResponse = response.data()
+        captureResponse = response.data
       } catch (jsonerr) {
         /* empty */
       }
@@ -112,7 +98,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     )
   }
 
-  return response.data()
+  return response
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
@@ -123,18 +109,18 @@ export async function fetchData<Tdata extends FetchDataTypesAllowed>(
 ) {
   const resp = await fetchHttp(url, sourceFunctionName, method, settings || {})
 
-  return await resp.text()
+  return await resp.data
 }
 
-export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tret = object>(
+export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tret = unknown>(
   url: string,
   sourceFunctionName: string,
   method: HttpMethod,
   settings?: HttpFetchRequestProps<Tdata>
 ) {
-  const resp = await fetchHttp(url, sourceFunctionName, method, settings || {})
+  const resp = await fetchHttp<Tdata, Tret>(url, sourceFunctionName, method, settings ?? {})
 
-  return (await resp.json()) as Tret
+  return resp.data
 }
 
 /**
@@ -144,12 +130,14 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tr
  * @param settings The HTTP parameters for making the HTTP call.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchDelete(
+export async function fetchDelete<Tret = unknown>(
   url: string,
   sourceFunctionName: string,
-  settings: HttpFetchRequestProps
+  settings: HttpFetchRequestProps<undefined>
 ) {
-  return fetchHttp(url, sourceFunctionName, 'DELETE', settings)
+  const resp = await fetchHttp<undefined, Tret>(url, sourceFunctionName, 'DELETE', settings)
+
+  return resp.data
 }
 
 /**
