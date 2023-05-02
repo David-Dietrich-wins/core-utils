@@ -1,4 +1,4 @@
-import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.js'
+import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.mjs'
 
 export class ConfigData {
   customData = ''

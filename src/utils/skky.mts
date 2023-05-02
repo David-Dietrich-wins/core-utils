@@ -684,7 +684,7 @@ export function isObject(
     return false
   }
 
-  if (isNumber(minLengthOrContainsField)) {
+  if ('number' === typeof(minLengthOrContainsField)) {
     if (minLengthOrContainsField <= 0) {
       return true
     }

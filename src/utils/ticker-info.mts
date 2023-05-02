@@ -1,7 +1,7 @@
-import { IdName } from './id-name.js'
-import { INameValue } from './name-value.js'
-import { isObject } from './skky.js'
-import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from './interfaces.js'
+import { IdName } from './id-name.mjs'
+import { INameValue } from './name-value.mjs'
+import { isObject } from './skky.mjs'
+import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from './interfaces.mjs'
 
 export interface ISymbol {
   symbol: string

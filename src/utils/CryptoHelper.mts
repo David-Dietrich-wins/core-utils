@@ -1,4 +1,5 @@
-import CryptoJs, { TripleDES } from 'crypto-js'
+import CryptoJs from 'crypto-js'
+const { TripleDES } = CryptoJs
 
 export interface ICryptoSettings {
   aes256key: string

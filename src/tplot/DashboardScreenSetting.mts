@@ -1,4 +1,4 @@
-import { IDashboardScreenSetting, IGridTileConfig } from './tp-items.js'
+import { IDashboardScreenSetting, IGridTileConfig } from './tp-items.mjs'
 
 export class DashboardScreenSetting implements IDashboardScreenSetting {
   id = ''

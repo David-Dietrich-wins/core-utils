@@ -9,9 +9,9 @@ import {
   getNumberString,
   safeArray,
   hasData,
-} from './skky.js'
-import { GrayArrowException } from './GrayArrowException.js'
-import { StringOrStringArray } from './types.js'
+} from './skky.mjs'
+import { GrayArrowException } from './GrayArrowException.mjs'
+import { StringOrStringArray } from './types.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
