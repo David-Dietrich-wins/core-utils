@@ -36,7 +36,7 @@ export type HttpFetchRequestProps<Tdata extends FetchDataTypesAllowed = object> 
  * @param data Optional body to send with the request. Can be a JSON object or a string.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
+export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object, Tret = unknown>(
   url: string,
   sourceFunctionName: string,
   method: HttpMethod,
@@ -50,9 +50,9 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     throw new Error(`${sourceFunctionName} passed an empty URL.`)
   }
 
-  let response: AxiosResponse
+  let response: AxiosResponse<ICaptureResponse<Tret>>
   try {
-    const req: AxiosRequestConfig = {
+    const req: AxiosRequestConfig<Tdata | string> = {
       url,
       method,
       headers: getHttpHeaderJson(bearerToken),
@@ -85,7 +85,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     let captureResponse: ICaptureResponse<unknown> | undefined
     if (401 === response.status) {
       try {
-        captureResponse = response.data()
+        captureResponse = response.data
       } catch (jsonerr) {
         /* empty */
       }
@@ -98,7 +98,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     )
   }
 
-  return response.data()
+  return response
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
@@ -109,18 +109,18 @@ export async function fetchData<Tdata extends FetchDataTypesAllowed>(
 ) {
   const resp = await fetchHttp(url, sourceFunctionName, method, settings || {})
 
-  return await resp.text()
+  return await resp.data
 }
 
-export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tret = object>(
+export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tret = unknown>(
   url: string,
   sourceFunctionName: string,
   method: HttpMethod,
   settings?: HttpFetchRequestProps<Tdata>
 ) {
-  const resp = await fetchHttp(url, sourceFunctionName, method, settings || {})
+  const resp = await fetchHttp<Tdata, Tret>(url, sourceFunctionName, method, settings ?? {})
 
-  return (await resp.json()) as Tret
+  return resp.data
 }
 
 /**
@@ -130,12 +130,14 @@ export async function fetchJson<Tdata extends FetchDataTypesAllowed = object, Tr
  * @param settings The HTTP parameters for making the HTTP call.
  * @returns The returned Response object in a Promise.
  */
-export async function fetchDelete(
+export async function fetchDelete<Tret = unknown>(
   url: string,
   sourceFunctionName: string,
-  settings: HttpFetchRequestProps
+  settings: HttpFetchRequestProps<undefined>
 ) {
-  return fetchHttp(url, sourceFunctionName, 'DELETE', settings)
+  const resp = await fetchHttp<undefined, Tret>(url, sourceFunctionName, 'DELETE', settings)
+
+  return resp.data
 }
 
 /**
