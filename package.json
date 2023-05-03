@@ -1,12 +1,19 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "2.0.20",
+  "version": "2.0.22",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
-  "types": "dist/mjs/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/mjs/index.mjs",
+  "types": "./dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/mjs/index.mjs",
+      "types": "./dist/mjs/index.d.ts"
+    }
+  },
   "scripts": {
     "buildesm": "rm -fr dist/* && tsc",
     "build": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
