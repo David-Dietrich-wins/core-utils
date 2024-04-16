@@ -12,7 +12,7 @@
     "listFiles": false,
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "pretty": true,
