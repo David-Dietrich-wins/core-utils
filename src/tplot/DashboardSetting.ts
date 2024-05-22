@@ -1,4 +1,4 @@
-import { safeArray } from '../utils/skky.js'
+import { safeArray } from '../services/general.js'
 import { IDashboardScreenSetting, IDashboardSetting } from './tp-items.js'
 
 export class DashboardSetting implements IDashboardSetting {
