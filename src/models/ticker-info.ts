@@ -1,7 +1,7 @@
 import { IdName } from '../models/id-name'
-import { INameValue } from '../models/name-value'
 import { isObject } from '../services/general'
-import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from '../models/interfaces'
+import { IDate, IName, IPrice, IType, IVal, I_Id } from '../models/interfaces'
+import { IHasPolitiscales } from './politagree'
 
 export interface ISymbol {
   symbol: string
@@ -49,19 +49,6 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolume, ISymbolName {
   earningsAnnouncement: string // 2021-06-09T16:09:00.000+0000,
   sharesOutstanding: number // 70800004,
   timestamp: number // 1624635044
-}
-
-export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
-
-export type IPolitiscale = INameValue<number, PolitiscaleName>
-export interface IHasPolitiscales {
-  scales?: IPolitiscale[]
-}
-
-export interface ICompanyCityBase extends IDate, IHasPolitiscales, IName, ISlug, ITicker {
-  description: string
-  imageUrl: string
-  website: string
 }
 
 export interface IUsersWithCount<Tid = string> extends I_Id<Tid> {
@@ -354,6 +341,7 @@ export interface IMarketHolidays {
   year: number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
+  // eslint-disable-next-line quotes
   "Washington's Birthday": string
   'Good Friday': string
   'Memorial Day': string
@@ -572,7 +560,6 @@ export interface ITickerSearch extends ISymbolName, ITicker, IType {
   description: string
   exchange: string
 }
-export interface ITickerSearchWithScales extends ITickerSearch, IHasPolitiscales {}
 
 export interface ITickerType extends IdName, ITicker, IType {}
 export type AssetQuoteWithChanges = IAssetQuoteResponse &
