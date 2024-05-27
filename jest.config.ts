@@ -6,8 +6,8 @@ const config: Config = {
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   preset: 'ts-jest',
   testEnvironment: 'node',
-  // extensionsToTreatAsEsm: ['ts', 'mts'],
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
+  extensionsToTreatAsEsm: ['.ts', '.mts'],
+  // collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
 }
 
 export default config

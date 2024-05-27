@@ -6,6 +6,7 @@ import {
   isArray,
   isObject,
   safeArray,
+  isNumeric,
 } from './general.js'
 
 /**
@@ -67,9 +68,7 @@ export function setMaxDecimalPlaces(
   }
 
   if (isString(obj)) {
-    // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    // ...and ensure strings of whitespace fail
-    if (!isNaN(parseFloat(obj))) {
+    if (!isNumeric(obj)) {
       return formatter(parseFloat(obj)).toString()
     }
   }
@@ -86,8 +85,9 @@ export function setMaxDecimalPlaces(
   ignoreKeys = safeArray(ignoreKeys)
   if (isObject(obj)) {
     Object.entries(obj).forEach(([key, val]) => {
-      if (!ignoreKeys.includes(key) && isNumber(val) && !isNaN(val as number)) {
-        obj[key] = formatter(val as number)
+      if (!ignoreKeys.includes(key) && isNumeric(val)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-extra-semi
+        ;(obj as any)[key] = formatter(val as number)
       }
     })
   }

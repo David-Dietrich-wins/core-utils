@@ -354,7 +354,7 @@ export interface IMarketHolidays {
   year: number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
-  "Washington's Birthday": string
+  'Washington\'s Birthday': string
   'Good Friday': string
   'Memorial Day': string
   'Juneteenth National Independence Day': string
@@ -577,7 +577,9 @@ export interface ITickerSearchWithScales extends ITickerSearch, IHasPolitiscales
 export interface ITickerType extends IdName, ITicker, IType {}
 export type AssetQuoteWithChanges = IAssetQuoteResponse &
   ITicker & { changes: number; companyName: string }
-export type AssetQuoteWithIpoDate = AssetQuoteWithChanges & { ipoDate?: number }
+export type AssetQuoteWithIpoDate = AssetQuoteWithChanges & {
+  ipoDate?: number
+}
 export type AssetQuoteWithScore = AssetQuoteWithChanges & {
   matches: number
   scorePercentage?: number

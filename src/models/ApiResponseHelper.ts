@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { isObject, isString } from '../services/general'
-import { ApiWrapper } from '../services/ApiWrapper'
-import { HTTP_Forbidden } from '.'
+import { isObject, isString } from '../services/general.js'
+import { ApiWrapper } from '../services/ApiWrapper.js'
+import { HTTP_Forbidden } from './MgmExceptionTypes.js'
 
 /**
  * Used to wrap all API return calls in a standard wrapper.

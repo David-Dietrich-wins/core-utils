@@ -1,4 +1,12 @@
-import { safestr, timeDifferenceString, urlJoin } from './general.js'
+import {
+  getAsNumber,
+  getNumberFormatted,
+  getNumberString,
+  isNumeric,
+  safestr,
+  timeDifferenceString,
+  urlJoin,
+} from './general.js'
 
 describe('Time Difference', () => {
   test('2s', () => {
@@ -71,4 +79,46 @@ describe('URL Join', () => {
 
     expect(url).toBe(`${baseUrl}`)
   })
+})
+
+test('isNumeric true', () => {
+  const str = '123,456,789.0123'
+
+  expect(isNumeric(str)).toBe(true)
+})
+
+test('isNumeric false', () => {
+  const str = '123,456,789.01abc'
+
+  expect(isNumeric(str)).toBe(false)
+})
+
+test('getAsNumber true', () => {
+  const str = '123,456,789.01'
+
+  expect(getAsNumber(str)).toBe(123456789.01)
+})
+
+test('getAsWholeNumber true', () => {
+  const str = '123,456,789'
+
+  expect(getAsNumber(str)).toBe(123456789)
+})
+
+test('getNumberFormatted true', () => {
+  const str = '123,456,789'
+
+  expect(getNumberFormatted(str)).toBe(123456789)
+})
+
+test('getNumberFormatted true', () => {
+  const num = '123456789.234'
+
+  expect(getNumberFormatted(num, 1, 1)).toBe(123456789.2)
+})
+
+test('getNumberString true', () => {
+  const num = 123456789.234
+
+  expect(getNumberString(num)).toBe('123,456,789')
 })

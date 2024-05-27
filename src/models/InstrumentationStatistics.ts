@@ -1,4 +1,3 @@
-import { MgmException } from './MgmExceptionTypes'
 import {
   isObject,
   isArray,
@@ -13,8 +12,9 @@ import {
   timeDifferenceStringFromMillis,
   pluralSuffix,
   pluralize,
-} from '../services/general'
-import { StringOrStringArray } from './types'
+} from '../services/general.js'
+import { GrayArrowException } from './GrayArrowException.js'
+import { StringOrStringArray } from './types.js'
 
 export default class InstrumentationStatistics {
   successes = 0
@@ -32,11 +32,7 @@ export default class InstrumentationStatistics {
   startTime = new Date()
   finishTime?: Date
 
-  constructor(
-    totalProcessed?: number,
-    numSuccesses?: number,
-    numFailures?: number
-  ) {
+  constructor(totalProcessed?: number, numSuccesses?: number, numFailures?: number) {
     this.totalProcessed = totalProcessed || 0
     this.successes = numSuccesses || 0
     this.failures = numFailures || 0
@@ -85,7 +81,7 @@ export default class InstrumentationStatistics {
     // }
 
     // return 0
-    throw new MgmException(
+    throw new GrayArrowException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
       '' + msg
@@ -156,17 +152,10 @@ export default class InstrumentationStatistics {
   }
   /** Gets the total processing time in seconds. */
   get processingTimeInSeconds() {
-    return timeDifferenceInSeconds(
-      this.startTime,
-      this.finishTime || new Date()
-    )
+    return timeDifferenceInSeconds(this.startTime, this.finishTime || new Date())
   }
   processingTimeString(longFormat: boolean) {
-    return timeDifferenceString(
-      this.startTime,
-      this.finishTime || new Date(),
-      longFormat
-    )
+    return timeDifferenceString(this.startTime, this.finishTime || new Date(), longFormat)
   }
 
   lineSeparator(isOneLine = false, multilineSeparator?: string) {
@@ -241,10 +230,7 @@ export default class InstrumentationStatistics {
     } else if (this.msg.length) {
       s += '\n\nMessages:'
 
-      s += this.msg.reduce(
-        (acc: string, cur: string) => (acc += `\n${cur}`),
-        ''
-      )
+      s += this.msg.reduce((acc: string, cur: string) => (acc += `\n${cur}`), '')
     }
 
     return s

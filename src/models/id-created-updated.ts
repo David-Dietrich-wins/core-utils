@@ -1,10 +1,8 @@
-import { isNullOrUndefined, isObject } from '../services/general'
-import { ICreatedBy, IId, IUpdatedBy } from './interfaces'
+import { isNullOrUndefined, isObject } from '../services/general.js'
+import { ICreatedBy, IId, IUpdatedBy } from './interfaces.js'
 
-export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy { }
-export interface IIdCreatedUpdated<Tid = string>
-  extends IIdCreated<Tid>,
-  IUpdatedBy { }
+export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
+export interface IIdCreatedUpdated<Tid = string> extends IIdCreated<Tid>, IUpdatedBy {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {
   id?: Tid

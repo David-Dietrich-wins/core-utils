@@ -1,4 +1,5 @@
-import { StringOrStringArray } from '../models/types.js'
+import { GrayArrowException } from '../models/GrayArrowException.js'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -334,7 +335,7 @@ export function getNumberFormatted(
   minDecimalPlaces?: number
 ): number {
   if (isString(num, 1)) {
-    const newnum = num.replace(',', '')
+    const newnum = num.replace(/,/g, '')
 
     if (isString(newnum, 1)) {
       num = +newnum
@@ -347,7 +348,7 @@ export function getNumberFormatted(
     (!isNullOrUndefined(maxDecimalPlaces) || !isNullOrUndefined(minDecimalPlaces))
   ) {
     const mystr = getNumberString(num, maxDecimalPlaces, minDecimalPlaces)
-    return parseFloat(mystr.replace(',', ''))
+    return parseFloat(mystr.replace(/,/g, ''))
   }
 
   return isNumber(num) ? num : 0
@@ -367,7 +368,7 @@ export function getNumberString(
   minDecimalPlaces?: number
 ): string {
   if (isString(num, 1)) {
-    const newnum = num.replace(',', '')
+    const newnum = num.replace(/,/g, '')
 
     if (isString(newnum, 1)) {
       num = +newnum
@@ -405,6 +406,15 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
       return arr
     }
   }
+}
+
+export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
+  const item = getObject(arr, index)
+  if (!item) {
+    throw new GrayArrowException('No object found.', getObjectWithException.name)
+  }
+
+  return item
 }
 
 /**
@@ -616,7 +626,8 @@ export function isNumber(
 }
 
 export function isNumeric(value?: string | number): boolean {
-  return !isNullOrUndefined(value) && value !== '' && !isNaN(Number(value.toString()))
+  const v = isString(value) ? value.replace(/,/g, '') : value
+  return !isNullOrUndefined(v) && v !== '' && !isNaN(Number(v.toString()))
 }
 
 /**
@@ -1140,7 +1151,7 @@ export function stringWrapParen(str: string): string {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string): string {
-  return stringWrap("'", str, "'")
+  return stringWrap('\'', str, '\'')
 }
 
 /**

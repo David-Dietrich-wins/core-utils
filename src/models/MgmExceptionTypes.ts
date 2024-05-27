@@ -1,5 +1,5 @@
-import MgmError from './MgmError'
-import { hasData } from '../services/general'
+import MgmError from './MgmError.js'
+import { hasData } from '../services/general.js'
 
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const
@@ -21,9 +21,7 @@ export class MgmException<Tobj = string> extends MgmError {
   constructor(m: string, functionNameSource: string, obj?: Tobj) {
     super(m)
 
-    this.functionNameSource = hasData(functionNameSource)
-      ? functionNameSource
-      : 'MgmException'
+    this.functionNameSource = hasData(functionNameSource) ? functionNameSource : 'MgmException'
     this.obj = obj
 
     Object.setPrototypeOf(this, new.target.prototype)
@@ -33,17 +31,8 @@ export class MgmException<Tobj = string> extends MgmError {
 export class MgmExceptionHttp<Tobj = Response> extends MgmException<Tobj> {
   httpStatusCode: number
 
-  constructor(
-    m: string,
-    functionNameSource: string,
-    httpStatusCode = 500,
-    response?: Tobj
-  ) {
-    super(
-      m,
-      hasData(functionNameSource) ? functionNameSource : 'MgmExceptionHttp',
-      response
-    )
+  constructor(m: string, functionNameSource: string, httpStatusCode = 500, response?: Tobj) {
+    super(m, hasData(functionNameSource) ? functionNameSource : 'MgmExceptionHttp', response)
 
     this.httpStatusCode = httpStatusCode
     Object.setPrototypeOf(this, new.target.prototype)

@@ -15,7 +15,12 @@ export default class UserState<T = any> implements IUserState<T> {
   id = ''
   disallowedPins = []
 
-  constructor(public name = 'User', public status: string, public statusCode = -1, public obj?: T) {
+  constructor(
+    public name = 'User',
+    public status: string,
+    public statusCode = -1,
+    public obj?: T
+  ) {
     this.id = name
   }
 }

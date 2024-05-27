@@ -1,4 +1,4 @@
-import InstrumentationStatistics from './InstrumentationStatistics'
+import InstrumentationStatistics from './InstrumentationStatistics.js'
 
 test('String message', () => {
   const msg = 'string'
@@ -38,6 +38,6 @@ test('Object message', () => {
   expect(istats.messageString()).toContain(`
 Messages:
 `)
-  expect(istats.messageString()).toContain(`"string"`)
-  expect(istats.messageString()).toContain(`"ts":2234443`)
+  expect(istats.messageString()).toContain('"string"')
+  expect(istats.messageString()).toContain('"ts":2234443')
 })

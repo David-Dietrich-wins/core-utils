@@ -1,6 +1,6 @@
 import CryptoJs from 'crypto-js'
 import crypto from 'crypto'
-import { MgmException } from '../models/MgmExceptionTypes'
+import { MgmException } from '../models/MgmExceptionTypes.js'
 const { TripleDES } = CryptoJs
 
 export interface ICryptoSettings {
