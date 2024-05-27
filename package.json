@@ -1,6 +1,6 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "type": "module",
@@ -27,7 +27,7 @@
     "node": ">=16.0"
   },
   "keywords": [
-    "GrayArrow",
+    "Intecore",
     "utilities",
     "TypeScript"
   ],

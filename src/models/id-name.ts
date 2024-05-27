@@ -1,5 +1,5 @@
 import { INameValue } from './name-value'
-import { IDate, IId, IName, IType } from './interfaces'
+import { IDate, IId, IName, ISlug, IType } from './interfaces'
 
 export interface IIdName<Tid = string, Tname = string> extends IId<Tid>, IName<Tname> {}
 
@@ -19,6 +19,8 @@ export type IdNameType<Tid = string, Tname = string> = {
   id: Tid
   name: Tname
 }
+
+export interface IdNameSlug<Tid = string, Tname = string> extends IdName<Tid, Tname>, ISlug {}
 
 export interface IdNameValue<Tvalue, Tid = string>
   extends IdName<Tid, string>,
