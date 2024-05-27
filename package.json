@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "buildesm": "rimraf dist && tsc",
-    "build": "rimraf dist && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
+    "build": "rimraf dist && tsc",
     "clean": "rimraf coverage dist node_modules yarn.lock package-lock.json",
     "clean:build": "npm run clean && npm install && npm run build",
     "coverage": "jest --coverage",
@@ -93,6 +93,5 @@
     "winston": "^3.12.0",
     "winston-daily-rotate-file": "^5.0.0",
     "xml2js": "^0.6.2"
-  },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  }
 }
