@@ -8,6 +8,9 @@ const config: Config = {
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   // collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
 }
 
 export default config
