@@ -9,7 +9,7 @@ const config: Config = {
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   // setupFiles: ['<rootDir>/__test__/setupTests'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setupAfterEnvGlobal.ts'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/__tests__/setupAfterEnvGlobal.ts'],
 
   // collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
   // transform: {
