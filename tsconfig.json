@@ -10,23 +10,21 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
-    "target": "ES2020",
-    "module": "ESNext",
+    "target": "ES6",
+    "module": "CommonJS",
     "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "pretty": true,
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     // "rootDir": "src",
     "outDir": "dist",
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "traceResolution": false,
-    "types": ["node", "jest"]
+    "traceResolution": false
   },
-  "compileOnSave": false,
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts", "jest.config.ts"]
 }

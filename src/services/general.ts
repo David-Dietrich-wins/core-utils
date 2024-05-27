@@ -32,11 +32,12 @@ export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] {
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
-export function deepCloneJson(obj: object, fname?: string) {
-  fname = fname || 'deepCloneJson'
+export function deepCloneJson<T>(obj: object, fname?: string) {
+  fname = fname || deepCloneJson.name
 
-  return safestrToJson(safeJsonToString(obj, fname), fname)
+  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
 }
+
 /**
  * Method to wrap deep object comparison. The changes are mapped and returned.
  * Generally used for checking in real-time form data changes.
