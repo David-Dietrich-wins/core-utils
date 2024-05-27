@@ -1,4 +1,4 @@
-import { DateHelper } from './DateHelper.js'
+import { DateHelper } from './DateHelper'
 
 const dateToTest = new Date()
 const dateInMillis = dateToTest.getTime()

@@ -1,4 +1,4 @@
-import { isObject } from '../services/general.js'
+import { isObject } from '../services/general'
 
 /** Custom API error to throw. */
 export default class MgmError<T = unknown> extends Error {

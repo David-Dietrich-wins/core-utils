@@ -1,5 +1,5 @@
 import jwt, { DecodeOptions, Secret, SignOptions, VerifyOptions } from 'jsonwebtoken'
-import { isString } from './general.js'
+import { isString } from './general'
 
 export interface IJwtExtended {
   ver: number

@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { hasData } from '../services/general.js'
+import { hasData } from '../services/general'
 
 export class GrayArrowException<Tobj = string> extends Error {
   functionNameSource: string

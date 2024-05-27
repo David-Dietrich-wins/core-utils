@@ -6,7 +6,7 @@ import {
   safestr,
   timeDifferenceString,
   urlJoin,
-} from './general.js'
+} from './general'
 
 describe('Time Difference', () => {
   test('2s', () => {

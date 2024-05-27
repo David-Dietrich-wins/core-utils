@@ -1,5 +1,5 @@
-import MgmError from './MgmError.js'
-import { hasData } from '../services/general.js'
+import MgmError from './MgmError'
+import { hasData } from '../services/general'
 
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const

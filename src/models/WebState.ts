@@ -1,7 +1,7 @@
-import { IServerState, IWebStateResponse } from './interfaces.js'
-import { safestr } from '../services/general.js'
-import { HTTP_Ok } from './MgmExceptionTypes.js'
-import { IUserState } from './UserState.js'
+import { IServerState, IWebStateResponse } from './interfaces'
+import { safestr } from '../services/general'
+import { HTTP_Ok } from './MgmExceptionTypes'
+import { IUserState } from './UserState'
 
 export interface ICryptoRequest {
   pin: string

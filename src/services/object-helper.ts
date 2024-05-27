@@ -1,8 +1,8 @@
 import util from 'util'
 import Axios, { AxiosError } from 'axios'
-import { hasData, safestrLowercase } from './general.js'
-import { MgmException } from '../models/MgmExceptionTypes.js'
-import { IId } from '../models/interfaces.js'
+import { hasData, safestrLowercase } from './general'
+import { MgmException } from '../models/MgmExceptionTypes'
+import { IId } from '../models/interfaces'
 
 export function CloneObjectWithId<T extends IId>(
   objectWithId: Readonly<T>,

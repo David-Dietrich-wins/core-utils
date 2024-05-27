@@ -1,5 +1,5 @@
-import { GrayArrowException } from '../models/GrayArrowException.js'
-import { ArrayOrSingle, StringOrStringArray } from '../models/types.js'
+import { GrayArrowException } from '../models/GrayArrowException'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -1151,7 +1151,7 @@ export function stringWrapParen(str: string): string {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string): string {
-  return stringWrap('\'', str, '\'')
+  return stringWrap("'", str, "'")
 }
 
 /**

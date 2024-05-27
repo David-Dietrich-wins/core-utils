@@ -1,7 +1,7 @@
 import fs from 'fs'
 import readline from 'readline'
-import { MgmLogger } from './MgmLogger.js'
-import { hasData, safestrTrim } from './general.js'
+import { MgmLogger } from './MgmLogger'
+import { hasData, safestrTrim } from './general'
 
 export type SingleLineFileProcessorConfig<T = unknown> = {
   fileName: string

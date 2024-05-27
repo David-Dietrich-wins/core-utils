@@ -1,4 +1,4 @@
-import { IWebState } from './WebState.js'
+import { IWebState } from './WebState'
 
 export interface ICreatedBy {
   createdby: string

@@ -1,5 +1,5 @@
-import { MgmLoggerLevel } from '../services/MgmLogger.js'
-import InstrumentationStatistics from './InstrumentationStatistics.js'
+import { MgmLoggerLevel } from '../services/MgmLogger'
+import InstrumentationStatistics from './InstrumentationStatistics'
 
 export type MgmApiResponse<T = unknown> = {
   code: number

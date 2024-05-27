@@ -1,12 +1,5 @@
-import { GrayArrowException } from '../models/GrayArrowException.js'
-import {
-  hasData,
-  isArray,
-  isObject,
-  safeJsonToString,
-  safestrToJson,
-  safestrTrim,
-} from './general.js'
+import { GrayArrowException } from '../models/GrayArrowException'
+import { hasData, isArray, isObject, safeJsonToString, safestrToJson, safestrTrim } from './general'
 
 class WebStorage {
   get storageProvider(): Storage {

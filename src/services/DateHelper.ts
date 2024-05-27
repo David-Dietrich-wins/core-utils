@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { safestr } from './general.js'
+import { safestr } from './general'
 
 export const DEFAULT_DateTimeFormatSeconds = 'YYYY/MM/DD HH:mm:ss'
 export const DEFAULT_DateTimeFormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'

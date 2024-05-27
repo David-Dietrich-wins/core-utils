@@ -1,6 +1,6 @@
-import { IIdName } from '../models/id-name.js'
-import { IId } from '../models/interfaces.js'
-import { INameValue } from '../models/name-value.js'
+import { IIdName } from '../models/id-name'
+import { IId } from '../models/interfaces'
+import { INameValue } from '../models/name-value'
 
 export interface IHeaderTickersConfig {
   tickers: string[]

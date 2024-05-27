@@ -1,3 +1,3 @@
-export * from './models/index.js'
-export * from './services/index.js'
-export * from './tplot/index.js'
+export * from './models/index'
+export * from './services/index'
+export * from './tplot/index'

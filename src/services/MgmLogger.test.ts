@@ -1,4 +1,4 @@
-import { MgmLogger } from './MgmLogger.js'
+import { MgmLogger } from './MgmLogger'
 
 test('Simple log', () => {
   const logger = new MgmLogger('KinectifyProcessor', 'aml-kinectify')

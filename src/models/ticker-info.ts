@@ -1,7 +1,7 @@
-import { IdName } from '../models/id-name.js'
-import { INameValue } from '../models/name-value.js'
-import { isObject } from '../services/general.js'
-import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from '../models/interfaces.js'
+import { IdName } from '../models/id-name'
+import { INameValue } from '../models/name-value'
+import { isObject } from '../services/general'
+import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from '../models/interfaces'
 
 export interface ISymbol {
   symbol: string
@@ -354,7 +354,7 @@ export interface IMarketHolidays {
   year: number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
-  'Washington\'s Birthday': string
+  "Washington's Birthday": string
   'Good Friday': string
   'Memorial Day': string
   'Juneteenth National Independence Day': string

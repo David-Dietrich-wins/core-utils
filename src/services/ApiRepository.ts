@@ -2,12 +2,12 @@
 import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import crypto from 'crypto'
 import https from 'https'
-import { safestr, urlJoin } from '../services/general.js'
-import { MgmLogger } from './MgmLogger.js'
-import { ApiWrapper } from './ApiWrapper.js'
-import { MgmExceptionHttp, MgmExceptionHttpNotAllowed } from '../models/MgmExceptionTypes.js'
-import { ApiProps } from '../models/types.js'
-import { IMgmErrorMessage } from '../models/interfaces.js'
+import { safestr, urlJoin } from '../services/general'
+import { MgmLogger } from './MgmLogger'
+import { ApiWrapper } from './ApiWrapper'
+import { MgmExceptionHttp, MgmExceptionHttpNotAllowed } from '../models/MgmExceptionTypes'
+import { ApiProps } from '../models/types'
+import { IMgmErrorMessage } from '../models/interfaces'
 
 export interface IApiRepository {
   logInfo(msg: string): void

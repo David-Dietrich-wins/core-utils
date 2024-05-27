@@ -1,5 +1,5 @@
 import { AxiosHeaders, AxiosRequestConfig } from 'axios'
-import { hasData } from './general.js'
+import { hasData } from './general'
 
 export function getHttpHeaderBearerToken(bearerToken?: string) {
   const headers = new AxiosHeaders()
