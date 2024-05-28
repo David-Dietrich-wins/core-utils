@@ -1,6 +1,6 @@
-import { IDate, IId, IName, ISlug } from './interfaces'
+import { IName, ISlug, I_Id } from './interfaces'
 import { INameValue } from './name-value'
-import { ITicker, ITickerSearch } from './ticker-info'
+import { ITickerSearch } from './ticker-info'
 import { Concrete } from './types'
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
@@ -11,20 +11,11 @@ export interface IHasPolitiscales {
   scales?: IPolitiscale[]
 }
 
-export interface ICompanyCityBase extends IDate, Concrete<IHasPolitiscales>, IName, ISlug, ITicker {
-  description: string
-  imageUrl: string
-  website: string
-}
-
-export interface ICity extends IId, Concrete<IHasPolitiscales> {
-  name: string
+export interface ICity extends I_Id, IName, Concrete<IHasPolitiscales>, ISlug {
   city: string
   description: string
   sourceUrl: string
   city_img: string
-  slug: string
-  scales: IPolitiscale[]
 }
 
 export interface ITickerSearchWithScales extends ITickerSearch, IHasPolitiscales {}
