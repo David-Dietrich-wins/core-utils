@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import sql, { ConnectionPool, IResult, connect } from 'mssql'
+import sql from 'mssql'
 import { hasData, isString } from './general.mjs'
 import { arrayFirst, arrayFirstNonEmpty } from './array-helper.mjs'
 
 const CONST_DefaultMaxRetryCount = 3
 
 export default class SqlServerHelper {
-  pool: ConnectionPool | undefined
+  pool: sql.ConnectionPool | undefined
 
   retryCount = 0
 
@@ -34,7 +34,7 @@ export default class SqlServerHelper {
         throw new Error('Connection string is required for connecting to SQL Server.')
       }
 
-      const poolOptions = ConnectionPool.parseConnectionString(this.connectionString)
+      const poolOptions = sql.ConnectionPool.parseConnectionString(this.connectionString)
 
       poolOptions.pool.min = this.minimumPooledConnections
       poolOptions.pool.max = this.maximumPooledConnections
@@ -43,7 +43,7 @@ export default class SqlServerHelper {
 
       const connectWrapper = async () => {
         try {
-          const ret = await connect(poolOptions)
+          const ret = await sql.connect(poolOptions)
           this.retryCount = 0 // Reset retry count upon successful connection
 
           return ret
@@ -76,14 +76,14 @@ export default class SqlServerHelper {
   }
 
   static getRow<T = unknown, TMapFrom = T>(
-    dbrows: IResult<TMapFrom>,
+    dbrows: sql.IResult<TMapFrom>,
     mapper?: (row: TMapFrom) => T
   ) {
     return arrayFirst(this.getRows(dbrows, mapper))
   }
 
   static getRows<T = unknown, TMapFrom = T>(
-    dbrows: IResult<TMapFrom>,
+    dbrows: sql.IResult<TMapFrom>,
     mapper?: (row: TMapFrom) => T
   ) {
     return Array.isArray(dbrows.recordsets) && dbrows.recordsets.length

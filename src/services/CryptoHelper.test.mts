@@ -1,4 +1,4 @@
-import { getAceConfig } from '../../__tests__/setupAfterEnvGlobal.mjs'
+import { getAceConfig } from '../tests/setupAfterEnvGlobal.mjs'
 import CryptoHelper from './CryptoHelper.mjs'
 
 const pinResetStartingPIN = '1233'

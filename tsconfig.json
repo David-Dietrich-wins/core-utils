@@ -7,24 +7,28 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "inlineSourceMap": false,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "listEmittedFiles": false,
-    "listFiles": false,
+    // "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    // "listEmittedFiles": false,
+    // "listFiles": false,
+
+    "lib": ["ESNext"],
     "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
-    "pretty": true,
-    "resolveJsonModule": false,
-    // "rootDir": "src",
-    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // "noEmit": true,
+
+    // "noFallthroughCasesInSwitch": true,
+    // "noImplicitAny": false,
+    // "pretty": true,
+    // "resolveJsonModule": true,
+    "rootDir": "./src",
+    // "rootDirs": ["src", "__tests__"],
+    "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    // "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "traceResolution": false
+    // "traceResolution": false
   },
-  "include": ["src/**/*.mts"],
-  "exclude": ["logs", "jest.config.ts"]
+  "exclude": ["./jest.config.ts"]
 }

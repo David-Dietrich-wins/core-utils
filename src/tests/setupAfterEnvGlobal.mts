@@ -2,11 +2,11 @@ import { jest } from '@jest/globals'
 import { HttpHandler, HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { JwtHeader, SignOptions } from 'jsonwebtoken'
-import CryptoHelper from '../src/services/CryptoHelper.mjs'
-import { ApiProps } from '../src/models/types.mjs'
-import { HTTP_Ok } from '../src/models/MgmExceptionTypes.mjs'
-import { MgmLogger } from '../src/services/MgmLogger.mjs'
-import { JwtSign } from '../src/services/jwt.mjs'
+import CryptoHelper from '../services/CryptoHelper.mjs'
+import { ApiProps } from '../models/types.mjs'
+import { HTTP_Ok } from '../models/MgmExceptionTypes.mjs'
+import { MgmLogger } from '../services/MgmLogger.mjs'
+import { JwtSign } from '../services/jwt.mjs'
 
 // Set to 60 seconds. We are going over Global VPN.
 jest.setTimeout(600000)
