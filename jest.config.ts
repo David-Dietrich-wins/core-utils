@@ -1,22 +1,20 @@
-import type { Config } from 'jest'
-import { defaults } from 'jest-config'
+import type { JestConfigWithTsJest } from 'ts-jest'
 
-const config: Config = {
-  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mts'],
-  // modulePathIgnorePatterns: ['<rootDir>/dist/'],
-  // preset: 'ts-jest',
-  // roots: ['<rootDir>/src/', '<rootDir>/__tests__/'],
-  testEnvironment: 'node',
-  // extensionsToTreatAsEsm: ['.ts', '.mts'],
-  moduleDirectories: ['node_modules', 'src', '__tests__'],
-  // setupFiles: ['<rootDir>/__test__/setupTests'],
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setupAfterEnvGlobal.mts'],
-  testMatch: ['<rootDir>/src/**/*.test.mts'],
-  // testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/__tests__/setupAfterEnvGlobal.ts'],
-
-  // collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/types/**/*.ts'],
+const config: JestConfigWithTsJest = {
+  verbose: true,
+  // testMatch: ['src/**/*.test.ts', 'src/**/*.test.mts'],
+  testMatch: ['**/__tests__/**/*.m[jt]s?(x)', '**/src/**/?(*.)+(spec|test).m[tj]s?(x)'],
   transform: {
-    '^.+\\.m+ts$': 'ts-jest',
+    '^.+\\.m+ts?$': [
+      'ts-jest',
+      {
+        useESM: true,
+      },
+    ],
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 }
 

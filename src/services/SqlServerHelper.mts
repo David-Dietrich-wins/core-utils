@@ -59,6 +59,8 @@ export default class SqlServerHelper {
             throw err
           }
         }
+
+        return undefined
       }
 
       while (!this.pool) {

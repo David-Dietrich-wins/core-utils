@@ -81,6 +81,8 @@ export class DateHelper {
     if (date) {
       return new Date(date).toISOString()
     }
+
+    return undefined
   }
 
   /**

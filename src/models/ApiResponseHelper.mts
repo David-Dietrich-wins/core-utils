@@ -7,7 +7,7 @@ import { HTTP_Forbidden } from './MgmExceptionTypes.mjs'
  * Used to wrap all API return calls in a standard wrapper.
  */
 export default abstract class ApiResponseHelper {
-  static respondWithError<T>(fname: string, req: Request, res: Response, obj?: T) {
+  static respondWithError<T>(fname: string, _: Request, res: Response, obj?: T) {
     console.log(fname, 'Error returned:', obj)
     // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 
@@ -21,6 +21,8 @@ export default abstract class ApiResponseHelper {
     }
 
     res.status(HTTP_Forbidden).json(crret)
+
+    return undefined
   }
 
   static respondWithSuccess<T>(res: Response, obj?: T) {

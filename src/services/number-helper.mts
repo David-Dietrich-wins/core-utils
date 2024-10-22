@@ -40,7 +40,7 @@ export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
  * @param divideBy The number to divide all members by.
  */
 export function divideByNumbers<T extends object = object>(obj: T, divideBy: number) {
-  return runOnAllMembers(obj, (key, val) => {
+  return runOnAllMembers(obj, (_: string, val) => {
     if (isString(val)) {
       val = parseFloat(val)
     }

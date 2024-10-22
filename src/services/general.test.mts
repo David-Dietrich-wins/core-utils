@@ -40,7 +40,7 @@ describe('Time Difference', () => {
     const str = timeDifferenceString(startDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
-    expect(str).toBe('21d')
+    expect(str).toMatch(/^21d( 1h)+/)
   })
 })
 

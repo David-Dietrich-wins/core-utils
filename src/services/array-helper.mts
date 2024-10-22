@@ -164,6 +164,8 @@ export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(arr?: Readonly<T>[
     if (cur?.id) {
       return cur.id
     }
+
+    return undefined
   })
 }
 

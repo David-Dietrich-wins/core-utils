@@ -64,6 +64,8 @@ export function ObjectFindKeyAndReturnValue<T = string>(
       }
     }
   }
+
+  return undefined
 }
 
 export function ObjectMustHaveKeyAndReturnValue<T = string>(

@@ -261,6 +261,8 @@ export function getAsNumberOrUndefined(
   if (hasData(stringOrNumber)) {
     return getNumberFormatted(stringOrNumber, maxDecimalPlaces, minDecimalPlaces)
   }
+
+  return undefined
 }
 
 /**
@@ -407,6 +409,8 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
       return arr
     }
   }
+
+  return undefined
 }
 
 export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
@@ -795,6 +799,8 @@ export function safestrToJson<T>(strjson?: string, fname?: string): T | undefine
   } catch (ex) {
     console.log(fname ? fname : 'safestrToJson', ex)
   }
+
+  return undefined
 }
 
 /**
@@ -1025,6 +1031,8 @@ export function splitToArray(
       if (e) {
         return e
       }
+
+      return undefined
     })
   }
 
@@ -1152,7 +1160,7 @@ export function stringWrapParen(str: string): string {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string): string {
-  return stringWrap('\'', str, '\'')
+  return stringWrap("'", str, "'")
 }
 
 /**
