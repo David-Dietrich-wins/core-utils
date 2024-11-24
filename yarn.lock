@@ -1385,10 +1385,10 @@ eslint-plugin-no-for-of-loops@^1.0.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-no-for-of-loops/-/eslint-plugin-no-for-of-loops-1.0.1.tgz#2ee3732d50c642b8d1bfacedbfe3b28f86222369"
   integrity sha512-uCotzBHt2W+HbLw2srRmqDJHOPbJGzeVLstKh8YyxS3ppduq2P50qdpJfHKoD+UGbnqA/zhy8NRgPH6p0y8bnA==
 
-eslint-plugin-no-loops@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-no-loops/-/eslint-plugin-no-loops-0.3.0.tgz#e81fecb4eaaf494a926d9caba9a7cd84d1fede7d"
-  integrity sha512-qI0oMgD0mA2Kpad2P/WncEqeVzvJKpHs/6+PA1SW4E6gXSXRmeV2cPv6+fnEgFwC7i+QtFRay2jUQ8DCH02nZg==
+eslint-plugin-no-loops@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-no-loops/-/eslint-plugin-no-loops-0.4.0.tgz#84094aaad586204a40afc4a5a2c737e0ee2388cb"
+  integrity sha512-cudfSMy9KLnyqQ5QPBuzuxtBqGvJOZ4SeeUuKbGMYc2opJzCUnkKKfUYI4bMErdgTwoJeguYscSWaWI5/2A8aA==
 
 eslint-plugin-node@^11.1.0:
   version "11.1.0"
