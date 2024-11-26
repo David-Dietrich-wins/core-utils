@@ -130,7 +130,7 @@ export function deepDiffMapper() {
         isObject(value, 'type') &&
         isObject(value, 'data') &&
         2 === Object.entries(value).length &&
-        // eslint-disable-next-line @typescript-eslint/dot-notation
+         
         'unchanged' !== value['type']
 
       return (
@@ -157,7 +157,6 @@ export function deepDiffMapper() {
       }
 
       const diff: Record<string, unknown> = {}
-      // eslint-disable-next-line no-loops/no-loops
       for (const key in obj1) {
         if (this.isFunction(obj1[key])) {
           continue
@@ -171,7 +170,6 @@ export function deepDiffMapper() {
         diff[key] = this.map(obj1[key], value2)
       }
 
-      // eslint-disable-next-line no-loops/no-loops
       for (const key in obj2) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
@@ -677,14 +675,14 @@ export function isNullOrUndefined(obj: unknown | null | undefined): obj is null 
 export function isObject(
   obj: unknown | null | undefined,
   minLengthOrContainsField: number | string = 0
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): obj is Record<string, any> {
   const isok = obj && 'object' === typeof obj && !isArray(obj)
   if (!isok) {
     return false
   }
 
-  if ('number' === typeof(minLengthOrContainsField)) {
+  if ('number' === typeof minLengthOrContainsField) {
     if (minLengthOrContainsField <= 0) {
       return true
     }
@@ -761,7 +759,7 @@ export function safeJsonToString(
   try {
     return JSON.stringify(safeObject(json), replacer, space)
   } catch (ex) {
-    // eslint-disable-next-line no-console
+     
     console.error(fname ? fname : 'safeJsonToString', ex)
   }
 
@@ -923,7 +921,7 @@ export function renameProperty(obj: any, oldKey: any, newKey: any) {
  * @param mustHaveValue If true, the property must have a value in order for func() to be called.
  * @returns The original object with function having been run on each property.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function runOnAllMembers<T extends object>(
   obj: T,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1306,12 +1304,18 @@ export function toHex(decimal: number, chars = 2) {
  */
 export function urlJoin(baseUrl: string, relativePath: string, addTrailingSlash = true) {
   // Remove any trailing slashes before adding a trailing slash.
-  let url = safestr(baseUrl)
-    .trimStart()
-    .replace(/[/]+[/]$/, '/')
+  let url = safestr(baseUrl).trimStart()
+  while (url.endsWith('/')) {
+    url = url.slice(0, -1)
+  }
+
   relativePath = safestr(relativePath)
-    .replace(/[/]+[/]$/, '/')
-    .replace(/^[/]+[/]/, '/')
+  while (relativePath.startsWith('/')) {
+    relativePath = relativePath.slice(1)
+  }
+  while (relativePath.endsWith('/')) {
+    relativePath = relativePath.slice(0, -1)
+  }
 
   if (!relativePath.startsWith('/') && !url.endsWith('/')) {
     url += '/'
