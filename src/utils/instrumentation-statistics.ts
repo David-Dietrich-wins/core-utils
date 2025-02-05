@@ -1,4 +1,4 @@
-import { GrayArrowException } from './exception-types.js'
+import { GrayArrowException } from './GrayArrowException.js'
 import GrayArrowObject from './GrayArrowObject.js'
 import {
   isObject,

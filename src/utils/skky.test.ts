@@ -1,4 +1,4 @@
-import { arrayFirst } from '../src'
+import { arrayFirst } from './skky.js'
 
 describe('index', () => {
   describe('myPackage', () => {

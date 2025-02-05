@@ -1,7 +1,7 @@
 import { isNullOrUndefined, isObject } from './skky.js'
-import { ICreatedBy, IId, IUpdatedBy } from './interfaces.js'
+import { ICreatedBy, Iid, IUpdatedBy } from './interfaces.js'
 
-export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
+export interface IIdCreated<Tid = string> extends Iid<Tid>, ICreatedBy {}
 export interface IIdCreatedUpdated<Tid = string> extends IIdCreated<Tid>, IUpdatedBy {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {

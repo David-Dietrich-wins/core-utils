@@ -1,7 +1,7 @@
 import { IdName } from './id-name.js'
 import { INameValue } from './name-value.js'
 import { isObject } from './skky.js'
-import { IDate, IName, IPrice, ISlug, IType, IVal, I_Id } from './interfaces.js'
+import { IDate, IName, IPrice, ISlug, IType, IVal, I_id } from './interfaces.js'
 
 export interface ISymbol {
   symbol: string
@@ -64,7 +64,7 @@ export interface ICompanyCityBase extends IDate, IHasPolitiscales, IName, ISlug,
   website: string
 }
 
-export interface IUsersWithCount<Tid = string> extends I_Id<Tid> {
+export interface IUsersWithCount<Tid = string> extends I_id<Tid> {
   email: string
   firstname: string
   lastname: string
@@ -165,7 +165,7 @@ export interface ICompanyFinancialRatios {
   priceFairValueTTM: number
 }
 
-export interface ICompanyInfo extends I_Id, IHasPolitiscales, IVal<IExchangeInfo>, IType {
+export interface ICompanyInfo extends I_id, IHasPolitiscales, IVal<IExchangeInfo>, IType {
   exchange: string
   industry: string
   minmov: number
@@ -177,7 +177,7 @@ export interface ICompanyInfo extends I_Id, IHasPolitiscales, IVal<IExchangeInfo
   updatedby: string
 }
 
-export interface ICompanyScales extends I_Id, IName, Required<IHasPolitiscales>, ITicker, IType {
+export interface ICompanyScales extends I_id, IName, Required<IHasPolitiscales>, ITicker, IType {
   description: string
   sector: string
   industry: string

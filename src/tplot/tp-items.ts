@@ -1,5 +1,5 @@
 import { IIdName } from '../utils/id-name.js'
-import { IId } from '../utils/interfaces.js'
+import { Iid } from '../utils/interfaces.js'
 
 export interface IHeaderTickersConfig {
   tickers: string[]
@@ -9,7 +9,7 @@ export interface IHeaderTickersIndexConfig {
   showCrypto: boolean
 }
 
-export interface IGridTileConfig extends IId {
+export interface IGridTileConfig extends Iid {
   name?: string
   value?: string
   index: number
@@ -19,6 +19,7 @@ export interface IGridTileConfig extends IId {
   color?: string
   cols: number
   rows: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config?: any
 }
 

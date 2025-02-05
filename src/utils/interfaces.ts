@@ -1,7 +1,10 @@
+import { Document, ObjectId } from 'bson'
 import { AnyFixLater } from './types.js'
 
+export type StringOrObjectId = string | ObjectId
+
 export interface IAnyStringItems {
-  [id: string]: AnyFixLater
+  [key: string]: AnyFixLater
 }
 
 export interface ICreatedBy {
@@ -26,12 +29,21 @@ export interface IDate<T = string> {
   date: T
 }
 
-export interface I_Id<T = string> {
+export interface Iid<T = string> {
+  id?: T
+}
+
+export interface I_id<T = ObjectId> {
   _id?: T
 }
 
-export interface IId<T = string> {
-  id?: T
+export interface ITableId extends Document, I_id {}
+
+export interface ITableIdUser extends ITableId {
+  userid: StringOrObjectId
+}
+export interface ITableIdUserOptional extends ITableId {
+  userid?: StringOrObjectId
 }
 
 export interface IName<T = string> {
