@@ -8,9 +8,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json",
-    "clean:build": "yarn clean && yarn && yarn build",
+    "clean:build": "npm run clean && npm i && npm run build",
     "lint": "eslint ./src/ --fix",
-    "prepare": "husky install",
     "semantic-release": "semantic-release",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
@@ -18,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grayarrow/core-utils.git"
+    "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
   },
   "engines": {
     "node": ">=12.0"
@@ -31,9 +30,9 @@
   "author": "David Dietrich",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grayarrow/core-utils/issues"
+    "url": "https://github.com/David-Dietrich-wins/core-utils/issues"
   },
-  "homepage": "https://github.com/grayarrow/core-utils#readme",
+  "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",
@@ -44,11 +43,8 @@
     "eslint-plugin-no-for-of-loops": "latest",
     "eslint-plugin-node": "latest",
     "eslint-plugin-prettier": "latest",
-    "husky": "^9.1.7",
     "jest": "^29.7.0",
-    "lint-staged": "^15.4.3",
     "prettier": "3.4.2",
-    "semantic-release": "^24.2.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "latest"
@@ -59,50 +55,9 @@
   "release": {
     "branches": [
       "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "conventionalcommits",
-          "releaseRules": [
-            {
-              "type": "build",
-              "scope": "deps",
-              "release": "patch"
-            }
-          ]
-        }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "conventionalcommits",
-          "presetConfig": {
-            "types": [
-              {
-                "type": "feat",
-                "section": "Features"
-              },
-              {
-                "type": "fix",
-                "section": "Bug Fixes"
-              },
-              {
-                "type": "build",
-                "section": "Dependencies and Other Build Updates",
-                "hidden": false
-              }
-            ]
-          }
-        }
-      ],
-      "@semantic-release/npm",
-      "@semantic-release/github"
     ]
   },
   "dependencies": {
     "bson": "^6.10.2"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
