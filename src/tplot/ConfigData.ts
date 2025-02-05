@@ -1,6 +1,6 @@
-import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSettings } from './tp-items.js'
+import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.js'
 
-export default class ConfigData {
+export class ConfigData {
   customData = ''
   useMinusEight = true
   openFirstPlot = true
@@ -19,5 +19,5 @@ export default class ConfigData {
 
   chartColorUp = '#00FF00'
   chartColorDown = '#FF0000'
-  dashboards?: IDashboardSettings
+  dashboards?: IDashboardSetting
 }

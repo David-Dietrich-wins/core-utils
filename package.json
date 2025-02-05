@@ -1,5 +1,6 @@
 {
   "name": "@grayarrow/core-utils",
+<<<<<<< HEAD
   "version": "1.0.48",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
@@ -11,8 +12,32 @@
     "clean:build": "npm run clean && npm i && npm run build",
     "lint": "eslint ./src/ --fix",
     "semantic-release": "semantic-release",
+=======
+  "version": "2.0.22",
+  "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
+  "private": false,
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/mjs/index.mjs",
+  "types": "./dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/mjs/index.mjs",
+      "types": "./dist/mjs/index.d.ts"
+    }
+  },
+  "scripts": {
+    "buildesm": "rm -fr dist/* && tsc",
+    "build": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && mv dist/mjs/index.js dist/mjs/index.mjs && ./fixup",
+    "clean": "rm -rf coverage dist/* node_modules yarn.lock package-lock.json",
+    "clean:build": "npm run clean && npm install && npm run build",
+    "coverage": "jest --coverage",
+    "lint": "eslint ./src/ --fix",
+    "prepare": "husky install",
+>>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
     "test:watch": "jest --watch",
-    "test": "jest --coverage",
+    "test": "jest",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
@@ -20,7 +45,7 @@
     "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
   },
   "engines": {
-    "node": ">=12.0"
+    "node": ">=16.0"
   },
   "keywords": [
     "GrayArrow",
@@ -34,6 +59,7 @@
   },
   "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "devDependencies": {
+<<<<<<< HEAD
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",
     "@typescript-eslint/eslint-plugin": "latest",
@@ -45,6 +71,24 @@
     "eslint-plugin-prettier": "latest",
     "jest": "^29.7.0",
     "prettier": "3.4.2",
+=======
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.15.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.9.4",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.12.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+>>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "latest"
@@ -52,6 +96,7 @@
   "lint-staged": {
     "*.ts": "eslint --cache --cache-location .eslintcache --fix"
   },
+<<<<<<< HEAD
   "release": {
     "branches": [
       "main"
@@ -60,4 +105,13 @@
   "dependencies": {
     "bson": "^6.10.2"
   }
+=======
+  "dependencies": {
+    "axios": "^1.7.8",
+    "crypto-js": "^4.2.0"
+  },
+  "files": [
+    "dist/"
+  ]
+>>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
 }

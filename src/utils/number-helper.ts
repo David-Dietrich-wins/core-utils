@@ -38,19 +38,37 @@ export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
  * @param obj Object to divide all members.
  * @param divideBy The number to divide all members by.
  */
+<<<<<<< HEAD
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function divideByNumbers<T extends object = any>(obj: T, divideBy: number) {
   return runOnAllMembers(obj, (_, val) => {
+=======
+export function divideByNumbers<T extends object = object>(obj: T, divideBy: number) {
+  return runOnAllMembers(obj, (key, val) => {
+>>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
     if (isString(val)) {
       val = parseFloat(val)
     }
 
+<<<<<<< HEAD
     return isNumber(val) && !isNaN(val) ? val / divideBy : val
   })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setMaxDecimalPlaces(obj: any, maxDecimalPlaces = 2, ignoreKeys: string[] = []) {
+=======
+    return isNumber(val) ? val / divideBy : val
+  })
+}
+
+export function setMaxDecimalPlaces(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any,
+  maxDecimalPlaces = 2,
+  ignoreKeys: string[] = []
+) {
+>>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   if (isNullOrUndefined(maxDecimalPlaces)) {
     throw new Error('Invalid number of decimal places.')
   }
