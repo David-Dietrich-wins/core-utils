@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Document, ObjectId } from 'bson'
 import { AnyFixLater } from './types.js'
 
@@ -8,8 +7,6 @@ export interface IAnyStringItems {
   [key: string]: AnyFixLater
 }
 
-=======
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
 export interface ICreatedBy {
   createdby: string
   created: Date
@@ -71,8 +68,4 @@ export interface IVal<T> {
 
 export interface IValue<T> {
   value: T
-}
-
-export interface IJwt {
-  jwt: string
 }

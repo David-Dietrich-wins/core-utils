@@ -1,7 +1,7 @@
 import { safeArray } from '../utils/skky.js'
-import { IDashboardScreenSetting, IDashboardSetting } from './tp-items.js'
+import { IDashboardScreenSetting, IDashboardSettings } from './tp-items.js'
 
-export class DashboardSetting implements IDashboardSetting {
+export default class DashboardSettings implements IDashboardSettings {
   constructor(public screens: IDashboardScreenSetting[] = []) {
     this.screens = safeArray(screens)
   }

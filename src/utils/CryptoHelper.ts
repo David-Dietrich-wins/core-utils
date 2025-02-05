@@ -30,19 +30,19 @@ export class CryptoHelper {
   }
 
   static aesDecrypt(data: string, key: string, iv: string) {
-    const cipher = CryptoJS.AES.decrypt(data, key, {
+    const cipher = CryptoJs.AES.decrypt(data, key, {
       iv: CryptoJs.enc.Utf8.parse(iv),
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
+      mode: CryptoJs.mode.CBC,
+      padding: CryptoJs.pad.Pkcs7,
     })
 
-    return cipher.toString(CryptoJS.enc.Utf8)
+    return cipher.toString(CryptoJs.enc.Utf8)
   }
   static aesEncrypt(data: string, key: string, iv: string) {
-    const cipher = CryptoJS.AES.encrypt(data, CryptoJS.enc.Utf8.parse(key), {
-      iv: CryptoJS.enc.Utf8.parse(iv),
-      padding: CryptoJS.pad.Pkcs7,
-      mode: CryptoJS.mode.CBC,
+    const cipher = CryptoJs.AES.encrypt(data, CryptoJs.enc.Utf8.parse(key), {
+      iv: CryptoJs.enc.Utf8.parse(iv),
+      padding: CryptoJs.pad.Pkcs7,
+      mode: CryptoJs.mode.CBC,
     })
 
     return cipher.toString()

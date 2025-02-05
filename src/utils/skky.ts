@@ -130,7 +130,7 @@ export function deepDiffMapper() {
         isObject(value, 'type') &&
         isObject(value, 'data') &&
         2 === Object.entries(value).length &&
-         
+        // eslint-disable-next-line @typescript-eslint/dot-notation
         'unchanged' !== value['type']
 
       return (
@@ -759,7 +759,7 @@ export function safeJsonToString(
   try {
     return JSON.stringify(safeObject(json), replacer, space)
   } catch (ex) {
-     
+    // eslint-disable-next-line no-console
     console.error(fname ? fname : 'safeJsonToString', ex)
   }
 
@@ -921,11 +921,7 @@ export function renameProperty(obj: any, oldKey: any, newKey: any) {
  * @param mustHaveValue If true, the property must have a value in order for func() to be called.
  * @returns The original object with function having been run on each property.
  */
-<<<<<<< HEAD
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-=======
- 
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
 export function runOnAllMembers<T extends object>(
   obj: T,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1180,7 +1176,7 @@ export function stringWrapParen(str: string) {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string) {
-  return stringWrap('\'', str, '\'')
+  return stringWrap("'", str, "'")
 }
 
 /**
@@ -1308,18 +1304,12 @@ export function toHex(decimal: number, chars = 2) {
  */
 export function urlJoin(baseUrl: string, relativePath: string, addTrailingSlash = true) {
   // Remove any trailing slashes before adding a trailing slash.
-  let url = safestr(baseUrl).trimStart()
-  while (url.endsWith('/')) {
-    url = url.slice(0, -1)
-  }
-
+  let url = safestr(baseUrl)
+    .trimStart()
+    .replace(/[/]+[/]$/, '/')
   relativePath = safestr(relativePath)
-  while (relativePath.startsWith('/')) {
-    relativePath = relativePath.slice(1)
-  }
-  while (relativePath.endsWith('/')) {
-    relativePath = relativePath.slice(0, -1)
-  }
+    .replace(/[/]+[/]$/, '/')
+    .replace(/^[/]+[/]/, '/')
 
   if (!relativePath.startsWith('/') && !url.endsWith('/')) {
     url += '/'

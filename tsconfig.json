@@ -1,7 +1,5 @@
 {
-  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-<<<<<<< HEAD
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
@@ -71,11 +69,5 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-=======
-    "module": "ES2022",
-    "outDir": "dist/mjs",
-    "target": "ES2022"
-  }
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
+  "exclude": ["node_modules", "dist", "test/**/*.(spec|test).ts"]
 }

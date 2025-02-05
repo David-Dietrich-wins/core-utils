@@ -1,6 +1,6 @@
-import { IId } from './interfaces.js'
+import { Iid } from './interfaces.js'
 
-export function CloneObjectWithId<T extends IId>(
+export function CloneObjectWithId<T extends Iid>(
   objectWithId: Readonly<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   overridesAndExtras?: Record<string, any>
@@ -10,7 +10,7 @@ export function CloneObjectWithId<T extends IId>(
   return newq
 }
 
-export function UpdateFieldValue<T extends IId>(
+export function UpdateFieldValue<T extends Iid>(
   parentObject: Readonly<T>,
   fieldName: string,
   fieldValue: unknown

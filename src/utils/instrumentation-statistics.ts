@@ -1,19 +1,23 @@
 import { GrayArrowException } from './GrayArrowException.js'
+import GrayArrowObject from './GrayArrowObject.js'
 import {
-  getNumberString,
-  hasData,
-  isArray,
   isObject,
+  isArray,
   isString,
-  safeArray,
-  safestr,
   timeDifference,
   timeDifferenceInSeconds,
   timeDifferenceString,
+  safestr,
+  getNumberString,
+  safeArray,
+  hasData,
 } from './skky.js'
 import { StringOrStringArray } from './types.js'
 
-export class InstrumentationStatistics {
+export default class InstrumentationStatistics extends GrayArrowObject {
+  successes = 0
+  failures = 0
+  totalProcessed = 0
   skipped = 0
 
   update = 0
@@ -24,32 +28,40 @@ export class InstrumentationStatistics {
   msg: string[] = []
 
   startTime = new Date()
-  finishTime: Date | undefined
+  finishTime?: Date
 
-  constructor(
-    public totalProcessed = 0,
-    public successes = 0,
-    public failures = 0
-  ) {}
+  constructor(totalProcessed?: number, numSuccesses?: number, numFailures?: number) {
+    super()
+
+    this.totalProcessed = totalProcessed || 0
+    this.successes = numSuccesses || 0
+    this.failures = numFailures || 0
+  }
+
+  get className() {
+    return 'InstrumentationStatistics'
+  }
 
   addStats(stats?: InstrumentationStatistics) {
     if (stats && isObject(stats)) {
-      this.successes += stats.successes ?? 0
-      this.failures += stats.failures ?? 0
-      this.totalProcessed += stats.totalProcessed ?? 0
+      this.successes += stats.successes || 0
+      this.failures += stats.failures || 0
+      this.totalProcessed += stats.totalProcessed || 0
 
-      this.skipped += stats.skipped ?? 0
+      this.skipped += stats.skipped || 0
 
-      this.add += stats.add ?? 0
-      this.delete += stats.delete ?? 0
-      this.update += stats.update ?? 0
-      this.upsert += stats.upsert ?? 0
+      this.add += stats.add || 0
+      this.delete += stats.delete || 0
+      this.update += stats.update || 0
+      this.upsert += stats.upsert || 0
 
       this.msg = this.msg.concat(safeArray(stats.msg))
     }
   }
 
-  addMessage(msg?: StringOrStringArray) {
+  addMessage(msg?: StringOrStringArray | object) {
+    const fname = 'addMessage'
+
     if (isArray(msg)) {
       this.msg = this.msg.concat(msg as string[])
 
@@ -71,7 +83,7 @@ export class InstrumentationStatistics {
     // return 0
     throw new GrayArrowException(
       'Message is not a string or set of strings.',
-      this.addMessage.name,
+      this.classMethodString(fname),
       '' + msg
     )
   }
@@ -121,7 +133,7 @@ export class InstrumentationStatistics {
     return this.upsert
   }
 
-  addProcessed(msg?: StringOrStringArray) {
+  addProcessed(msg?: string) {
     ++this.totalProcessed
 
     if (hasData(msg)) {
@@ -136,58 +148,63 @@ export class InstrumentationStatistics {
   }
 
   get processingTime() {
-    return timeDifference(this.startTime, this.finishTime ?? new Date())
+    return timeDifference(this.startTime, this.finishTime || new Date())
   }
   /** Gets the total processing time in seconds. */
   get processingTimeInSeconds() {
-    return timeDifferenceInSeconds(this.startTime, this.finishTime ?? new Date())
+    return timeDifferenceInSeconds(this.startTime, this.finishTime || new Date())
   }
   processingTimeString(longFormat: boolean) {
-    return timeDifferenceString(this.startTime, this.finishTime ?? new Date(), longFormat)
+    return timeDifferenceString(this.startTime, this.finishTime || new Date(), longFormat)
   }
 
-  messageString(isOneLine?: boolean) {
-    const lineSeparator = (isOneLine = false, multilineSeparator?: string) => {
-      if (isOneLine) {
-        return ', '
-      }
-
-      return safestr(multilineSeparator ?? '\n', '\n')
+  lineSeparator(isOneLine = false, multilineSeparator?: string) {
+    if (isOneLine) {
+      return ', '
     }
 
-    let s = `Processed ${getNumberString(this.totalProcessed)} items in ${this.processingTimeString(
-      true
-    )}${isOneLine ? '' : '.'}`
+    return safestr(multilineSeparator || '\n', '\n')
+  }
+
+  getNumberString(num: number) {
+    return getNumberString(num, 0)
+  }
+  messageString(isOneLine?: boolean) {
+    let s = `Processed ${this.getNumberString(
+      this.totalProcessed
+    )} items in ${this.processingTimeString(true)}${isOneLine ? '' : '.'}`
     if (this.add) {
-      s += `${lineSeparator(isOneLine)}Added: ${getNumberString(this.add)}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(isOneLine)}Added: ${this.getNumberString(this.add)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.update) {
-      s += `${lineSeparator(isOneLine)}Updated: ${getNumberString(this.update)}${
+      s += `${this.lineSeparator(isOneLine)}Updated: ${this.getNumberString(this.update)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.upsert) {
-      s += `${lineSeparator(isOneLine)}Upserted: ${getNumberString(this.upsert)}${
+      s += `${this.lineSeparator(isOneLine)}Upserted: ${this.getNumberString(this.upsert)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.delete) {
-      s += `${lineSeparator(isOneLine)}Deleted: ${getNumberString(this.delete)}${
+      s += `${this.lineSeparator(isOneLine)}Deleted: ${this.getNumberString(this.delete)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.skipped) {
-      s += `${lineSeparator(isOneLine)}Skipped: ${getNumberString(this.skipped)}${
+      s += `${this.lineSeparator(isOneLine)}Skipped: ${this.getNumberString(this.skipped)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.successes) {
-      s += `${lineSeparator(isOneLine)}Successes: ${getNumberString(this.successes)}${
+      s += `${this.lineSeparator(isOneLine)}Successes: ${this.getNumberString(this.successes)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.failures) {
-      s += `${lineSeparator(isOneLine)}Failures: ${getNumberString(this.failures)}${
+      s += `${this.lineSeparator(isOneLine)}Failures: ${this.getNumberString(this.failures)}${
         isOneLine ? '' : '.'
       }`
     }
@@ -197,7 +214,9 @@ export class InstrumentationStatistics {
     } else if (this.msg.length) {
       s += '\n\nMessages:'
 
-      s += this.msg.reduce((acc: string, cur: string) => (acc += `\n${cur}`), '')
+      this.msg.forEach((m) => {
+        s += `\n${m}`
+      })
     }
 
     return s

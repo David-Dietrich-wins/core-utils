@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import { hasData } from './skky.js'
 
 export class GrayArrowException<Tobj = string> extends Error {
@@ -18,7 +17,7 @@ export class GrayArrowException<Tobj = string> extends Error {
   }
 }
 
-export class GrayArrowExceptionHttp<Tobj = AxiosResponse> extends GrayArrowException<Tobj> {
+export class GrayArrowExceptionHttp<Tobj = Response> extends GrayArrowException<Tobj> {
   constructor(m: string, functionNameSource: string, response?: Tobj) {
     super(m, hasData(functionNameSource) ? functionNameSource : 'GrayArrowHttpError', response)
 

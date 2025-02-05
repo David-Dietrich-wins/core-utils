@@ -1,18 +1,10 @@
 import { GrayArrowException } from './GrayArrowException.js'
 import { IIdName } from './id-name.js'
-<<<<<<< HEAD
 import { Iid, IName } from './interfaces.js'
 import { safeArray, safestr, getObject, arrayLast } from './skky.js'
 import { ArrayOrSingle } from './types.js'
 
 export function arrayGetIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
-=======
-import { IId, IName } from './interfaces.js'
-import { safeArray, safestr, getObject, arrayLast } from './skky.js'
-import { ArrayOrSingle } from './types.js'
-
-export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   arr?: Readonly<T>[],
   callback?: (item: T) => Tid
 ) {
@@ -45,11 +37,7 @@ export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
  * @param id id to search for in the arrItems list.
  * @returns The object with the given name. If not found, undefined is returned.
  */
-<<<<<<< HEAD
 export function arrayFindById<T extends Iid<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
-=======
-export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   return id && safeArray(arrItems).find((x) => id === x.id)
 }
 
@@ -72,11 +60,7 @@ export function arrayFindNameById<T extends IIdName<Tid, Tname>, Tid = T['id'], 
  * @param ids The array of ids to find in arrItems.
  * @returns The object with the given name. If not found, an empty Array is returned.
  */
-<<<<<<< HEAD
 export function arrayFindByIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
-=======
-export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -92,11 +76,7 @@ export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
  * @param ids The array of ids to NOT find in arrItems.
  * @returns The object with the given name. If not found, and exception is thrown.
  */
-<<<<<<< HEAD
 export function arrayFindByNotIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
-=======
-export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -107,11 +87,7 @@ export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
   return safeArray(arrItems).filter((x) => !ids.includes(x.id))
 }
 
-<<<<<<< HEAD
 export function arrayMustFind<T extends Iid<Tid>, Tid = T['id']>(
-=======
-export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   arrItems: T[] | undefined,
   id: Tid,
   functionSourceName?: string
@@ -183,11 +159,7 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
   )
 }
 
-<<<<<<< HEAD
 export function arrayOfIds<T extends Iid<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
-=======
-export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   return arrayReduceArrayReturns(arr, (cur) => {
     if (cur?.id) {
       return cur.id
@@ -246,23 +218,12 @@ export function arrayLastNonEmpty<T>(
   )
 }
 
-<<<<<<< HEAD
 export function arrayForEachReturns<T>(arr: T[] | undefined, funcArrayResults: (item: T) => void) {
-=======
-export function arrayForEachReturns<T>(
-  arr: T[] | undefined,
-  funcArrayResults: (item: T) => void
-) {
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   safeArray(arr).forEach((cur) => funcArrayResults(cur))
 }
 
 export function ToSafeArray<T>(arrOrT?: Readonly<ArrayOrSingle<T>>): T[] {
-<<<<<<< HEAD
   if (!arrOrT) {
-=======
-  if(!arrOrT) {
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
     return []
   }
 
@@ -295,11 +256,7 @@ export function arrayReduceArrayReturns<T, TreturnType = T>(
   }, [])
 }
 
-<<<<<<< HEAD
 export function arraySwapItemsById<T extends Iid<Tid>, Tid = T['id']>(
-=======
-export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
->>>>>>> 5ed179635b17d3454802648186c6b4d535190e23
   arrItems: T[],
   sourceId: Tid,
   destId: Tid
