@@ -16,7 +16,7 @@ import {
 import { GrayArrowException } from './GrayArrowException'
 import { StringOrStringArray } from './types'
 
-export default class InstrumentationStatistics {
+export class InstrumentationStatistics {
   successes = 0
   failures = 0
   totalProcessed = 0

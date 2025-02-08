@@ -1,8 +1,7 @@
 import util from 'util'
-import Axios, { AxiosError } from 'axios'
 import { hasData, safestrLowercase } from './general'
-import { MgmException } from '../models/MgmExceptionTypes'
 import { IId } from '../models/interfaces'
+import { GrayArrowException } from '../models'
 
 export function CloneObjectWithId<T extends IId>(
   objectWithId: Readonly<T>,
@@ -77,7 +76,7 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
     return ret
   }
 
-  throw new MgmException(`key ${keyToFind} not found in object`, fname)
+  throw new GrayArrowException(`key ${keyToFind} not found in object`, fname)
 }
 
 export function ObjectTypesToString(
@@ -90,38 +89,6 @@ export function ObjectTypesToString(
 
   if (Array.isArray(e)) {
     return util.inspect(e, true, CONST_JsonDepth)
-  } else if (Axios.isAxiosError(e)) {
-    const axerr: AxiosError = e
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const axRetry = (axerr.config as any)?.['axios-retry']
-
-    const axiosJsonError: AxiosErrorWrapper = {
-      type: 'AxiosError',
-      name: axerr.name,
-      code: axerr.code,
-      method: axerr.config?.method,
-      url: axerr.config?.url,
-      message: axerr.message,
-      lastRequestTime: axRetry?.lastRequestTime,
-      retryCount: axRetry?.retryCount,
-      stack: axerr.stack,
-    }
-
-    if (axerr.response?.status ?? axerr.response?.headers?.status) {
-      axiosJsonError.status = axerr.response.status
-    }
-    if (axerr.response?.statusText ?? axerr.response?.headers?.statusText) {
-      axiosJsonError.statusText = axerr.response.statusText
-    }
-
-    if (saveHttpRequestData && axerr.config?.data) {
-      axiosJsonError.requestData = axerr.config.data
-    }
-    if (saveHttpResponseData && axerr.response?.data) {
-      axiosJsonError.responseData = axerr.response.data.toString()
-    }
-
-    return util.inspect(axiosJsonError, true, CONST_JsonDepth)
   } else if (e instanceof Error) {
     const jerr = {
       message: e.message,

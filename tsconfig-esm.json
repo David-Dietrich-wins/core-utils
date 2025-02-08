@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "ESNext",
     "outDir": "dist/mjs",
     "target": "ES2022"
   }

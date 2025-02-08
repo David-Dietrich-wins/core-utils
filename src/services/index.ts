@@ -1,4 +1,3 @@
-export * from './ApiRepository'
 export * from './ApiWrapper'
 export * from './array-helper'
 export * from './CaptureResponse'

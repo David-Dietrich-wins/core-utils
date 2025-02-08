@@ -1,6 +1,5 @@
 import { IServerState, IWebStateResponse } from './interfaces'
 import { safestr } from '../services/general'
-import { HTTP_Ok } from './MgmExceptionTypes'
 import { IUserState } from './UserState'
 
 export interface ICryptoRequest {
@@ -68,7 +67,7 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
     ready: true,
     state: 1,
     startTime: new Date('2023-11-27T20:36:04.932Z'),
-    statusCode: HTTP_Ok,
+    statusCode: 200,
     uptime: '2h 54m 40s',
   },
   version: `${safestr(process.env.npm_package_version)}-test`,

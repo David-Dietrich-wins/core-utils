@@ -1,86 +1,69 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "3.0.1",
+  "version": "1.0.48",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
-  "main": "dist/index.js",
-  "type": "commonjs",
-  "files": [
-    "dist"
-  ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "scripts": {
-    "build": "rimraf dist && tsc --build",
-    "clean": "rimraf coverage dist node_modules yarn.lock package-lock.json && npm install",
-    "clean:build": "npm run clean && npm run build",
-    "coverage": "jest --coverage",
+    "build": "npm run build:esm && npm run build:cjs && cp package.json dist && cp package.json dist/cjs && cp package.json dist/esm",
+    "build:esm": "tsc -p tsconfig-esm.json",
+    "build:cjs": "tsc -p tsconfig-cjs.json",
+    "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json",
+    "clean:build": "npm run clean && npm i && npm run build",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
-    "test": "jest",
+    "test": "jest --coverage",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grayarrow/core-utils.git"
+    "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
   },
   "engines": {
-    "node": ">=16.0"
+    "node": ">=12.0"
   },
   "keywords": [
-    "Intecore",
+    "GrayArrow",
     "utilities",
     "TypeScript"
   ],
   "author": "David Dietrich",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grayarrow/core-utils/issues"
+    "url": "https://github.com/David-Dietrich-wins/core-utils/issues"
   },
-  "homepage": "https://github.com/grayarrow/core-utils#readme",
+  "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
-    "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/mssql": "^9.1.5",
-    "@types/node": "^20.12.7",
-    "@types/uuid": "^9.0.8",
-    "@types/xml2js": "^0.4.14",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
-    "eslint": "^8.57.0",
-    "eslint-config-love": "^43.1.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-promise": "^6.1.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-no-for-of-loops": "latest",
+    "eslint-plugin-node": "latest",
+    "eslint-plugin-prettier": "latest",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.2",
-    "msw": "^2.3.0",
-    "prettier": "^3.2.5",
-    "ts-jest": "^29.1.2",
+    "prettier": "3.4.2",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "latest"
   },
-  "lint-staged": {
-    "*.ts": "eslint --cache --cache-location .eslintcache --fix"
-  },
   "dependencies": {
-    "@azure/eventgrid": "^5.3.0",
-    "@azure/functions": "^3.0.0",
-    "@azure/identity": "^4.0.1",
-    "@azure/keyvault-secrets": "^4.8.0",
-    "applicationinsights": "^2.9.5",
-    "axios": "^1.6.8",
     "bson": "^6.10.2",
     "crypto-js": "^4.2.0",
-    "express": "^4.19.1",
     "jsonwebtoken": "^9.0.2",
-    "mssql": "^10.0.2",
-    "uuid": "^9.0.1",
-    "winston": "^3.12.0",
-    "winston-daily-rotate-file": "^5.0.0",
-    "xml2js": "^0.6.2"
+    "moment": "^2.30.1",
+    "mssql": "^11.0.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

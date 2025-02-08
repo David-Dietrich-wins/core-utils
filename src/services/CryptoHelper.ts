@@ -1,6 +1,6 @@
 import CryptoJs from 'crypto-js'
 import crypto from 'crypto'
-import { MgmException } from '../models/MgmExceptionTypes'
+import { GrayArrowException } from '../models'
 const { TripleDES } = CryptoJs
 
 export interface ICryptoSettings {
@@ -56,7 +56,7 @@ export default class CryptoHelper {
       ++numberOfPinRetries
     }
 
-    throw new MgmException(
+    throw new GrayArrowException(
       `Could not generate a valid pin in ${numberOfPinRetries} tries.`,
       CryptoHelper.GenerateRandomPin.name
     )

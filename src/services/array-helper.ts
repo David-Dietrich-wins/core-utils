@@ -1,4 +1,4 @@
-import { MgmException } from '../models/MgmExceptionTypes'
+import { GrayArrowException } from '../models/GrayArrowException'
 import { IIdName } from '../models/id-name'
 import { IId, IName } from '../models/interfaces'
 import { ArrayOrSingle } from '../models/types'
@@ -94,7 +94,7 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
 ) {
   const foundItem = arrayFindById<T>(arrItems, id)
   if (!foundItem) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Unable to find ${safestr(functionSourceName, arrayFindById.name)} id: ${id}.`,
       arrayFindById.name,
       arrItems
@@ -134,7 +134,7 @@ export function arrayMustFindFunc<T>(
   const foundItem = arrayFind<T>(arrItems, findFunc)
 
   if (!foundItem) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Unable to find ${safestr(functionSourceName, arrayFind.name)}${
         exceptionSuffix ? ' ' + exceptionSuffix() : ''
       }.`,
@@ -186,7 +186,7 @@ export function arrayElementNonEmpty<T>(
     return item
   }
 
-  throw new MgmException(
+  throw new GrayArrowException(
     'Array has no items.',
     functionSourceName ?? arrayElementNonEmpty.name,
     customMessage
@@ -241,7 +241,7 @@ export function arrayLastNonEmpty<T>(
     return item
   }
 
-  throw new MgmException(
+  throw new GrayArrowException(
     'Array has no items.',
     functionSourceName ?? arrayLastNonEmpty.name,
     customMessage
@@ -297,7 +297,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
 
   const source = arrayFindById(arrItems, sourceId)
   if (!source || !source.id) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Invalid source id of ${sourceId} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
@@ -306,7 +306,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
 
   const dest = arrayFindById(arrItems, destId)
   if (!dest || !dest.id) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Invalid destination index of ${destId} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
@@ -325,14 +325,14 @@ export function arraySwapItems<T>(arrItems: T[], sourceIndex: number, destIndex:
   }
 
   if (sourceIndex < 0 || sourceIndex >= arrItems.length) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Invalid source index of ${sourceIndex} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
     )
   }
   if (destIndex < 0 || destIndex >= arrItems.length) {
-    throw new MgmException(
+    throw new GrayArrowException(
       `Invalid destination index of ${destIndex} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
