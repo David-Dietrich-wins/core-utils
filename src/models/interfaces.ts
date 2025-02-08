@@ -1,4 +1,8 @@
+import { Document, ObjectId } from 'bson'
 import { IWebState } from './WebState'
+import { Concrete } from './types'
+
+export type StringOrObjectId = string | ObjectId
 
 export interface ICreatedBy {
   createdby: string
@@ -22,9 +26,19 @@ export interface IDate<T = string> {
   date: T
 }
 
-export interface I_Id<T = string> {
+export interface ITableId<T = ObjectId> extends Document {
   _id?: T
 }
+
+export interface IUserIdOptional<T = StringOrObjectId> {
+  userid?: T
+}
+
+export interface IUserId<T = StringOrObjectId> extends Concrete<IUserIdOptional<T>> {}
+
+export interface ITableUserId extends ITableId, IUserId {}
+
+export interface IUserOptionalTable extends ITableId, IUserIdOptional {}
 
 export interface IId<T = string> {
   id?: T

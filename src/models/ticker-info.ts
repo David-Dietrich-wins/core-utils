@@ -1,7 +1,7 @@
 import { IdName } from '../models/id-name'
 import { isObject } from '../services/general'
-import { IDate, IName, IPrice, IType, IVal, I_Id } from '../models/interfaces'
-import { IHasPolitiscales } from './politagree'
+import { IDate, IId, IName, IPrice, IType, IVal } from '../models/interfaces'
+import { IHasPolitiscales } from '../politagree/politiscale'
 
 export interface ISymbol {
   symbol: string
@@ -51,7 +51,7 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolume, ISymbolName {
   timestamp: number // 1624635044
 }
 
-export interface IUsersWithCount<Tid = string> extends I_Id<Tid> {
+export interface IUsersWithCount<Tid = string> extends IId<Tid> {
   email: string
   firstname: string
   lastname: string
@@ -152,7 +152,7 @@ export interface ICompanyFinancialRatios {
   priceFairValueTTM: number
 }
 
-export interface ICompanyInfo extends I_Id, IHasPolitiscales, IVal<IExchangeInfo>, IType {
+export interface ICompanyInfo extends IId, IHasPolitiscales, IVal<IExchangeInfo>, IType {
   exchange: string
   industry: string
   minmov: number
@@ -164,7 +164,7 @@ export interface ICompanyInfo extends I_Id, IHasPolitiscales, IVal<IExchangeInfo
   updatedby: string
 }
 
-export interface ICompanyScales extends I_Id, IName, Required<IHasPolitiscales>, ITicker, IType {
+export interface ICompanyScales extends IId, IName, Required<IHasPolitiscales>, ITicker, IType {
   description: string
   sector: string
   industry: string

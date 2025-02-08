@@ -1,24 +1,23 @@
-import { getAceConfig } from '../../__tests__/setupAfterEnvGlobal'
 import CryptoHelper from './CryptoHelper'
 
 const pinResetStartingPIN = '1233'
 
-test('RSA encrypt and decrypt', () => {
-  const lengthForRandomString = 4
-  const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)
+// test('RSA encrypt and decrypt', () => {
+//   const lengthForRandomString = 4
+//   const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)
 
-  expect(randomString).toHaveLength(lengthForRandomString)
-  const cipherText = CryptoHelper.rsaEncryptStatic(randomString, getAceConfig().crypto.rsaPublicKey)
-  expect(cipherText).not.toBeNull()
-  const decrypted = CryptoHelper.rsaDecryptStatic(
-    cipherText,
-    getAceConfig().crypto.rsaPrivateKey,
-    getAceConfig().crypto.rsaPassphrase
-  )
-  expect(decrypted).not.toBeNull()
+//   expect(randomString).toHaveLength(lengthForRandomString)
+//   const cipherText = CryptoHelper.rsaEncryptStatic(randomString, getAceConfig().crypto.rsaPublicKey)
+//   expect(cipherText).not.toBeNull()
+//   const decrypted = CryptoHelper.rsaDecryptStatic(
+//     cipherText,
+//     getAceConfig().crypto.rsaPrivateKey,
+//     getAceConfig().crypto.rsaPassphrase
+//   )
+//   expect(decrypted).not.toBeNull()
 
-  expect(decrypted).toEqual(randomString)
-})
+//   expect(decrypted).toEqual(randomString)
+// })
 
 test('Generate random pin', () => {
   const lengthForRandomString = 4

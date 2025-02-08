@@ -20,7 +20,7 @@ export class MgmLogger {
     public logCallback?: (logLevel: MgmLoggerLevel, msg: string) => void
   ) {
     const logLineFormat = winston.format.printf(({ level, message }) => {
-      const msg = message
+      const msg = (message as any)
         .map((e: unknown) =>
           ObjectTypesToString(e, includeHttpResponseDataInTheLog, includeHttpRequestDataInTheLog)
         )

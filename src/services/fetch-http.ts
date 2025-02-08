@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ICaptureResponse } from './CaptureResponse.js'
+import { ICaptureResponse } from './CaptureResponse'
 import { hasData, isObject } from './general'
 import { getHttpHeaderJson } from './AxiosHelper'
 import { GrayArrowExceptionHttp } from '../models/GrayArrowException'

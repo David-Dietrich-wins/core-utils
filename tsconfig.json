@@ -2,12 +2,12 @@
   "compilerOptions": {
     // "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    // "baseUrl": "./src",
+    "baseUrl": "./src",
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
     "inlineSourceMap": false,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
     "target": "ESNext",
@@ -17,14 +17,14 @@
     "noImplicitAny": false,
     "pretty": true,
     "resolveJsonModule": false,
-    // "rootDir": "src",
-    "outDir": "dist",
+    "rootDir": "src",
+    "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "traceResolution": false
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts", "jest.config.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

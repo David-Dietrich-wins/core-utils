@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "build": "rimraf dist && tsc --build",
-    "clean": "rimraf coverage dist node_modules yarn.lock package-lock.json",
-    "clean:build": "npm run clean && npm install && npm run build",
+    "clean": "rimraf coverage dist node_modules yarn.lock package-lock.json && npm install",
+    "clean:build": "npm run clean && npm run build",
     "coverage": "jest --coverage",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
@@ -73,6 +73,7 @@
     "@azure/keyvault-secrets": "^4.8.0",
     "applicationinsights": "^2.9.5",
     "axios": "^1.6.8",
+    "bson": "^6.10.2",
     "crypto-js": "^4.2.0",
     "express": "^4.19.1",
     "jsonwebtoken": "^9.0.2",
