@@ -5,7 +5,7 @@ import { arrayFirst, arrayFirstNonEmpty } from './array-helper'
 
 const CONST_DefaultMaxRetryCount = 3
 
-export default class SqlServerHelper {
+export class SqlServerHelper {
   pool: ConnectionPool | undefined
 
   retryCount = 0
