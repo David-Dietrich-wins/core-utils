@@ -1,6 +1,5 @@
 import { IIdName } from '../models/id-name.mjs'
 import { IId } from '../models/interfaces.mjs'
-import { INameValue } from '../models/name-value.mjs'
 
 export interface IHeaderTickersConfig {
   tickers: string[]
@@ -10,10 +9,7 @@ export interface IHeaderTickersIndexConfig {
   showCrypto: boolean
 }
 
-export interface IGridTileConfig extends Iid {
-  name?: string
-  value?: string
-export interface IGridTileConfig extends Iid {
+export interface IGridTileConfig extends IId {
   name?: string
   value?: string
   index: number
@@ -31,8 +27,7 @@ export interface IDashboardScreenSetting extends IIdName<string, string> {
   tiles: IGridTileConfig[]
 }
 
-export interface IDashboardSettings {
-export interface IDashboardSettings {
+export interface IDashboardSetting {
   screens: IDashboardScreenSetting[]
 }
 
@@ -40,8 +35,7 @@ export interface IUserConfigData {
   chartColorDown: string
   chartColorUp: string
   customData: string
-  dashboards: IDashboardSettings
-  dashboards: IDashboardSettings
+  dashboards: IDashboardSetting
   headerTickerBarIndex: IHeaderTickersIndexConfig
   headerTickerBarUser: IHeaderTickersConfig
   hideTooltips: boolean
@@ -54,8 +48,7 @@ export interface IUserConfigData {
 export type PermittedUserConfigs = {
   chartColorDown: string
   chartColorUp: string
-  dashboards: IDashboardSettings
-  dashboards: IDashboardSettings
+  dashboards: IDashboardSetting
   useMinusEight: boolean
   headerTickerBarIndex: IHeaderTickersIndexConfig
   headerTickerBarUser: IHeaderTickersConfig

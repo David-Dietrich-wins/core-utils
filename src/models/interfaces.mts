@@ -34,6 +34,7 @@ export interface IUserIdOptional<T = StringOrObjectId> {
   userid?: T
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IUserId<T = StringOrObjectId> extends Concrete<IUserIdOptional<T>> {}
 
 export interface ITableUserId extends ITableId, IUserId {}
