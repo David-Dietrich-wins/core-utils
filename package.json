@@ -1,24 +1,31 @@
 {
   "name": "@grayarrow/core-utils",
-  "version": "1.0.48",
+  "version": "2.0.1",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "main": "src/index.js",
   "type": "module",
+  "exports": "./dist/index.mjs",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json",
-    "clean:build": "npm run clean && npm i && npm run build",
+    "buildboth": "npm run build:esm && npm run build:cjs && cp package.json dist && cp package.json dist/cjs && cp package.json dist/esm",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json && npm install",
+    "clean:build": "npm run clean && npm run build",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
+    "test": "jest --coverage",
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
+    "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
   },
   "engines": {
+    "node": ">=12.0"
     "node": ">=12.0"
   },
   "keywords": [
@@ -30,11 +37,15 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/David-Dietrich-wins/core-utils/issues"
+    "url": "https://github.com/David-Dietrich-wins/core-utils/issues"
   },
+  "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/mssql": "^9.1.7",
     "@types/node": "^22.13.1",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
@@ -46,12 +57,19 @@
     "jest": "^29.7.0",
     "prettier": "3.4.2",
     "ts-jest": "^29.2.5",
+    "prettier": "3.4.2",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "typescript": "latest"
     "typescript": "latest"
   },
   "dependencies": {
-    "axios": "^1.7.9",
     "bson": "^6.10.2",
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
+    "mssql": "^11.0.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

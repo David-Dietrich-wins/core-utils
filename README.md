@@ -16,7 +16,6 @@ Inspired by [node-module-boilerplate](https://github.com/sindresorhus/node-modul
 - [Codecov](https://about.codecov.io/)
 - [VSCode Launch Configurations](https://github.com/ryansonshine/typescript-npm-package-template/blob/main/.vscode/launch.json)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Husky](https://github.com/typicode/husky)
 - [Lint Staged](https://github.com/okonet/lint-staged)
 - [Commitizen](https://github.com/search?q=commitizen)
 - [Jest](https://jestjs.io/)
@@ -78,9 +77,9 @@ npm install my-package-name
 ## Usage
 
 ```ts
-import { myPackage } from 'my-package-name';
+import { myPackage } from 'my-package-name'
 
-myPackage('hello');
+myPackage('hello')
 //=> 'hello from my package'
 ```
 
