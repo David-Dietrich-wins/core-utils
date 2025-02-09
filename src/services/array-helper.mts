@@ -38,6 +38,7 @@ export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
  * @returns The object with the given name. If not found, undefined is returned.
  */
 export function arrayFindById<T extends Iid<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
+export function arrayFindById<T extends Iid<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
   return id && safeArray(arrItems).find((x) => id === x.id)
 }
 
@@ -61,6 +62,7 @@ export function arrayFindNameById<T extends IIdName<Tid, Tname>, Tid = T['id'], 
  * @returns The object with the given name. If not found, an empty Array is returned.
  */
 export function arrayFindByIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
+export function arrayFindByIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -77,6 +79,7 @@ export function arrayFindByIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
  * @returns The object with the given name. If not found, and exception is thrown.
  */
 export function arrayFindByNotIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
+export function arrayFindByNotIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -87,6 +90,7 @@ export function arrayFindByNotIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   return safeArray(arrItems).filter((x) => !ids.includes(x.id))
 }
 
+export function arrayMustFind<T extends Iid<Tid>, Tid = T['id']>(
 export function arrayMustFind<T extends Iid<Tid>, Tid = T['id']>(
   arrItems: T[] | undefined,
   id: Tid,
@@ -159,6 +163,7 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
   )
 }
 
+export function arrayOfIds<T extends Iid<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
 export function arrayOfIds<T extends Iid<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
   return arrayReduceArrayReturns(arr, (cur) => {
     if (cur?.id) {
@@ -287,6 +292,7 @@ export function arrayReduceArrayReturns<T, TreturnType = T>(
   }, [])
 }
 
+export function arraySwapItemsById<T extends Iid<Tid>, Tid = T['id']>(
 export function arraySwapItemsById<T extends Iid<Tid>, Tid = T['id']>(
   arrItems: T[],
   sourceId: Tid,

@@ -13,6 +13,9 @@ export interface IHeaderTickersIndexConfig {
 export interface IGridTileConfig extends Iid {
   name?: string
   value?: string
+export interface IGridTileConfig extends Iid {
+  name?: string
+  value?: string
   index: number
   typeid: number
   width?: string
@@ -29,6 +32,7 @@ export interface IDashboardScreenSetting extends IIdName<string, string> {
 }
 
 export interface IDashboardSettings {
+export interface IDashboardSettings {
   screens: IDashboardScreenSetting[]
 }
 
@@ -36,6 +40,7 @@ export interface IUserConfigData {
   chartColorDown: string
   chartColorUp: string
   customData: string
+  dashboards: IDashboardSettings
   dashboards: IDashboardSettings
   headerTickerBarIndex: IHeaderTickersIndexConfig
   headerTickerBarUser: IHeaderTickersConfig
@@ -49,6 +54,7 @@ export interface IUserConfigData {
 export type PermittedUserConfigs = {
   chartColorDown: string
   chartColorUp: string
+  dashboards: IDashboardSettings
   dashboards: IDashboardSettings
   useMinusEight: boolean
   headerTickerBarIndex: IHeaderTickersIndexConfig
