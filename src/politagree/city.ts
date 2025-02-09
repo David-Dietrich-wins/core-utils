@@ -1,7 +1,7 @@
-import { IName, ISlug } from '../models/interfaces'
-import { Concrete } from '../models/types'
-import { isObject } from '../services/general'
-import { IHasPolitiscales, IPolitiscale } from './politiscale'
+import { IName, ISlug } from '../models/interfaces.js'
+import { Concrete } from '../models/types.js'
+import { isObject } from '../services/general.js'
+import { IHasPolitiscales, IPolitiscale } from './politiscale.js'
 
 // export interface ICity extends I_Id, IName, Concrete<IHasPolitiscales>, ISlug {
 //   city: string

@@ -1,5 +1,5 @@
-import { GrayArrowException } from '../models/GrayArrowException'
-import { ArrayOrSingle, StringOrStringArray } from '../models/types'
+import { GrayArrowException } from '../models/GrayArrowException.js'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types.js'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.

@@ -1,3 +1,3 @@
-export * from './city'
-export * from './company'
-export * from './politiscale'
+export * from './city.js'
+export * from './company.js'
+export * from './politiscale.js'

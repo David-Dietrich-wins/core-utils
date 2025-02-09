@@ -1,6 +1,6 @@
 import { Document, ObjectId } from 'bson'
-import { IWebState } from './WebState'
-import { Concrete } from './types'
+import { IWebState } from './WebState.js'
+import { Concrete } from './types.js'
 
 export type StringOrObjectId = string | ObjectId
 

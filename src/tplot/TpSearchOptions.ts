@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson'
-import { JSONValue } from '../models/types'
+import { JSONValue } from '../models/types.js'
 
 export type TpSearchOptions =
   | string

@@ -1,4 +1,4 @@
-import { safeArray } from './general'
+import { safeArray } from './general.js'
 
 export type ColorRange = readonly [string, string]
 

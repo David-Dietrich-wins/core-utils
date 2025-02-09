@@ -1,7 +1,7 @@
-import { IdName } from '../models/id-name'
-import { isObject } from '../services/general'
-import { IDate, IId, IName, IPrice, IType, IVal } from '../models/interfaces'
-import { IHasPolitiscales } from '../politagree/politiscale'
+import { IdName } from '../models/id-name.js'
+import { isObject } from '../services/general.js'
+import { IDate, IId, IName, IPrice, IType, IVal } from '../models/interfaces.js'
+import { IHasPolitiscales } from '../politagree/politiscale.js'
 
 export interface ISymbol {
   symbol: string

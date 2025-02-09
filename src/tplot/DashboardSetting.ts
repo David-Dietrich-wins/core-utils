@@ -1,5 +1,5 @@
-import { safeArray } from '../services/general'
-import { IDashboardScreenSetting, IDashboardSetting } from './tp-items'
+import { safeArray } from '../services/general.js'
+import { IDashboardScreenSetting, IDashboardSetting } from './tp-items.js'
 
 export class DashboardSetting implements IDashboardSetting {
   constructor(public screens: IDashboardScreenSetting[] = []) {

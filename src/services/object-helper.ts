@@ -1,7 +1,7 @@
 import util from 'util'
-import { hasData, safestrLowercase } from './general'
-import { IId } from '../models/interfaces'
-import { GrayArrowException } from '../models/GrayArrowException'
+import { hasData, safestrLowercase } from './general.js'
+import { IId } from '../models/interfaces.js'
+import { GrayArrowException } from '../models/GrayArrowException.js'
 
 export function CloneObjectWithId<T extends IId>(
   objectWithId: Readonly<T>,

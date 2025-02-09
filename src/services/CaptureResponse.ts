@@ -1,5 +1,5 @@
-import { GrayArrowException } from '../models/GrayArrowException'
-import { isObject, safestrLowercase } from './general'
+import { GrayArrowException } from '../models/GrayArrowException.js'
+import { isObject, safestrLowercase } from './general.js'
 
 export interface ICaptureResponse<T> {
   id: number

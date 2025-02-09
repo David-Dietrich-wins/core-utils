@@ -1,4 +1,4 @@
-import { hasData } from '../services/general'
+import { hasData } from '../services/general.js'
 
 export class GrayArrowException<Tobj = string> extends Error {
   functionNameSource: string

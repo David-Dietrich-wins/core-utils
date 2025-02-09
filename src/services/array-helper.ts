@@ -1,8 +1,8 @@
-import { GrayArrowException } from '../models/GrayArrowException'
-import { IIdName } from '../models/id-name'
-import { IId, IName } from '../models/interfaces'
-import { ArrayOrSingle } from '../models/types'
-import { getObject, isArray, safeArray, safestr } from './general'
+import { GrayArrowException } from '../models/GrayArrowException.js'
+import { IIdName } from '../models/id-name.js'
+import { IId, IName } from '../models/interfaces.js'
+import { ArrayOrSingle } from '../models/types.js'
+import { getObject, isArray, safeArray, safestr } from './general.js'
 
 export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
   arr?: Readonly<T>[],

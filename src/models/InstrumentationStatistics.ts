@@ -12,9 +12,9 @@ import {
   timeDifferenceStringFromMillis,
   pluralSuffix,
   pluralize,
-} from '../services/general'
-import { GrayArrowException } from './GrayArrowException'
-import { StringOrStringArray } from './types'
+} from '../services/general.js'
+import { GrayArrowException } from './GrayArrowException.js'
+import { StringOrStringArray } from './types.js'
 
 export class InstrumentationStatistics {
   successes = 0

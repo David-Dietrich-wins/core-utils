@@ -1,4 +1,4 @@
-import { InstrumentationStatistics } from './InstrumentationStatistics'
+import { InstrumentationStatistics } from './InstrumentationStatistics.js'
 
 test('String message', () => {
   const msg = 'string'

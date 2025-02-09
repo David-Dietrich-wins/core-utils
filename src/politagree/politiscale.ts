@@ -1,6 +1,6 @@
-import { INameValue } from '../models/name-value'
-import { ITickerSearch } from '../models/ticker-info'
-import { isObject } from '../services/general'
+import { INameValue } from '../models/name-value.js'
+import { ITickerSearch } from '../models/ticker-info.js'
+import { isObject } from '../services/general.js'
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 

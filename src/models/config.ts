@@ -1,8 +1,8 @@
-import { IdCreatedUpdated, IIdCreatedUpdated } from '../models/id-created-updated'
-import { IIdName } from '../models/id-name'
-import { IIdVal } from '../models/id-val'
-import { NameValType } from '../models/name-val'
-import { isObject } from '../services/general'
+import { IdCreatedUpdated, IIdCreatedUpdated } from '../models/id-created-updated.js'
+import { IIdName } from '../models/id-name.js'
+import { IIdVal } from '../models/id-val.js'
+import { NameValType } from '../models/name-val.js'
+import { isObject } from '../services/general.js'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,

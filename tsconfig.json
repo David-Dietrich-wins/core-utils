@@ -4,15 +4,15 @@
     "allowSyntheticDefaultImports": true,
     // "baseUrl": "src",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "esModuleInterop": true,
     "inlineSourceMap": false,
-    "lib": ["ES2022"],
+    "lib": ["ES2020"],
     "listEmittedFiles": false,
     "listFiles": false,
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "target": "ES2020",
+    "module": "NodeNext",
+    // "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "outDir": "./dist",
@@ -22,9 +22,9 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "traceResolution": false
   },
-  "compileOnSave": false,
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

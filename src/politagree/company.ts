@@ -1,7 +1,7 @@
-import { IdCreatedUpdated, IIdCreatedUpdated } from '../models/id-created-updated'
-import { ITableId } from '../models/interfaces'
-import { isObject } from '../services/general'
-import { IHasPolitiscales, Politiscale } from './politiscale'
+import { IdCreatedUpdated, IIdCreatedUpdated } from '../models/id-created-updated.js'
+import { ITableId } from '../models/interfaces.js'
+import { isObject } from '../services/general.js'
+import { IHasPolitiscales, Politiscale } from './politiscale.js'
 
 export interface ICompany extends IIdCreatedUpdated, IHasPolitiscales {
   name: string

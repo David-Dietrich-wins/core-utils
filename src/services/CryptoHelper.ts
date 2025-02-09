@@ -1,6 +1,6 @@
 import CryptoJs from 'crypto-js'
 import crypto from 'crypto'
-import { GrayArrowException } from '../models/GrayArrowException'
+import { GrayArrowException } from '../models/GrayArrowException.js'
 const { TripleDES } = CryptoJs
 
 export interface ICryptoSettings {

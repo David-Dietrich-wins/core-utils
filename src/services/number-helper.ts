@@ -7,7 +7,7 @@ import {
   isObject,
   safeArray,
   isNumeric,
-} from './general'
+} from './general.js'
 
 /**
  * Individually adds all same member names who are number together.

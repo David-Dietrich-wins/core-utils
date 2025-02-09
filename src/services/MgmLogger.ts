@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import winston, { format, Logger, transport, transports } from 'winston'
 import DailyRotateFile, { DailyRotateFileTransportOptions } from 'winston-daily-rotate-file'
-import { hasData, safestrLowercase } from './general'
-import { DateHelper } from './DateHelper'
-import { ObjectTypesToString } from './object-helper'
+import { hasData, safestrLowercase } from './general.js'
+import { DateHelper } from './DateHelper.js'
+import { ObjectTypesToString } from './object-helper.js'
 
 export type MgmLoggerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
 
