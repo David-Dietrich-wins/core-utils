@@ -4,7 +4,7 @@
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": "./dist/index.mjs",
   "scripts": {
     "build": "tsc",
     "buildboth": "npm run build:esm && npm run build:cjs && cp package.json dist && cp package.json dist/cjs && cp package.json dist/esm",
