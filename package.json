@@ -15,8 +15,8 @@
     "clean:build": "npm run clean && npm run build",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
-    "test": "jest --coverage",
-    "test": "jest --coverage",
+    "test2": "jest --coverage",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
