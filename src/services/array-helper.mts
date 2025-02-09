@@ -4,7 +4,7 @@ import { IId, IName } from '../models/interfaces.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { getObject, isArray, safeArray, safestr } from './general.mjs'
 
-export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayGetIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   arr?: Readonly<T>[],
   callback?: (item: T) => Tid
 ) {
@@ -37,7 +37,7 @@ export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
  * @param id id to search for in the arrItems list.
  * @returns The object with the given name. If not found, undefined is returned.
  */
-export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
+export function arrayFindById<T extends Iid<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
   return id && safeArray(arrItems).find((x) => id === x.id)
 }
 
@@ -60,7 +60,7 @@ export function arrayFindNameById<T extends IIdName<Tid, Tname>, Tid = T['id'], 
  * @param ids The array of ids to find in arrItems.
  * @returns The object with the given name. If not found, an empty Array is returned.
  */
-export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayFindByIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -76,7 +76,7 @@ export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
  * @param ids The array of ids to NOT find in arrItems.
  * @returns The object with the given name. If not found, and exception is thrown.
  */
-export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayFindByNotIds<T extends Required<Iid<Tid>>, Tid = T['id']>(
   arrItems?: T[],
   ids?: Tid[]
 ) {
@@ -87,7 +87,7 @@ export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
   return safeArray(arrItems).filter((x) => !ids.includes(x.id))
 }
 
-export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
+export function arrayMustFind<T extends Iid<Tid>, Tid = T['id']>(
   arrItems: T[] | undefined,
   id: Tid,
   functionSourceName?: string
@@ -159,7 +159,7 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
   )
 }
 
-export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
+export function arrayOfIds<T extends Iid<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
   return arrayReduceArrayReturns(arr, (cur) => {
     if (cur?.id) {
       return cur.id
@@ -249,6 +249,7 @@ export function arrayLastNonEmpty<T>(
 }
 
 export function arrayForEachReturns<T>(arr: T[] | undefined, funcArrayResults: (item: T) => void) {
+export function arrayForEachReturns<T>(arr: T[] | undefined, funcArrayResults: (item: T) => void) {
   safeArray(arr).forEach((cur) => funcArrayResults(cur))
 }
 
@@ -286,7 +287,7 @@ export function arrayReduceArrayReturns<T, TreturnType = T>(
   }, [])
 }
 
-export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
+export function arraySwapItemsById<T extends Iid<Tid>, Tid = T['id']>(
   arrItems: T[],
   sourceId: Tid,
   destId: Tid

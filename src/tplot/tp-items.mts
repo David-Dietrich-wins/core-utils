@@ -10,7 +10,9 @@ export interface IHeaderTickersIndexConfig {
   showCrypto: boolean
 }
 
-export interface IGridTileConfig extends IId, INameValue {
+export interface IGridTileConfig extends Iid {
+  name?: string
+  value?: string
   index: number
   typeid: number
   width?: string
@@ -26,7 +28,7 @@ export interface IDashboardScreenSetting extends IIdName<string, string> {
   tiles: IGridTileConfig[]
 }
 
-export interface IDashboardSetting {
+export interface IDashboardSettings {
   screens: IDashboardScreenSetting[]
 }
 
@@ -34,7 +36,7 @@ export interface IUserConfigData {
   chartColorDown: string
   chartColorUp: string
   customData: string
-  dashboards: IDashboardSetting
+  dashboards: IDashboardSettings
   headerTickerBarIndex: IHeaderTickersIndexConfig
   headerTickerBarUser: IHeaderTickersConfig
   hideTooltips: boolean
@@ -47,7 +49,7 @@ export interface IUserConfigData {
 export type PermittedUserConfigs = {
   chartColorDown: string
   chartColorUp: string
-  dashboards: IDashboardSetting
+  dashboards: IDashboardSettings
   useMinusEight: boolean
   headerTickerBarIndex: IHeaderTickersIndexConfig
   headerTickerBarUser: IHeaderTickersConfig

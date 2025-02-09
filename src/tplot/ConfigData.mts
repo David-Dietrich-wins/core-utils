@@ -1,6 +1,6 @@
 import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.mjs'
 
-export class ConfigData {
+export default class ConfigData {
   customData = ''
   useMinusEight = true
   openFirstPlot = true
@@ -19,5 +19,5 @@ export class ConfigData {
 
   chartColorUp = '#00FF00'
   chartColorDown = '#FF0000'
-  dashboards?: IDashboardSetting
+  dashboards?: IDashboardSettings
 }

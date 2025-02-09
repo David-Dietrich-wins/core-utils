@@ -1,7 +1,7 @@
 import { INameValue } from './name-value.mjs'
 import { IDate, IId, IName, ISlug, IType } from './interfaces.mjs'
 
-export interface IIdName<Tid = string, Tname = string> extends IId<Tid>, IName<Tname> {}
+export interface IIdName<Tid = string, Tname = string> extends Iid<Tid>, IName<Tname> {}
 
 export class IdName<Tid = string, Tname = string> implements IIdName<Tid, Tname> {
   id: Tid
