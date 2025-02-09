@@ -1,8 +1,30 @@
 {
-  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "module": "ES2022",
-    "outDir": "dist/mjs",
-    "target": "ES2022"
-  }
+    // "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    // "baseUrl": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": false,
+    "lib": ["ES2022"],
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "outDir": "./dist",
+    "pretty": true,
+    "resolveJsonModule": true,
+    // "rootDir": "./src",
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "traceResolution": false
+  },
+  "compileOnSave": false,
+  "include": ["src/**/*"]
 }
