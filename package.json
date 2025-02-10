@@ -51,7 +51,7 @@
     "eslint-plugin-node": "latest",
     "eslint-plugin-prettier": "latest",
     "jest": "^29.7.0",
-    "prettier": "3.4.2",
+    "prettier": "3.5.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "latest"
