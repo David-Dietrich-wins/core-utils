@@ -1,7 +1,5 @@
 import CryptoHelper from './CryptoHelper.mjs'
 
-const pinResetStartingPIN = '1233'
-
 // test('RSA encrypt and decrypt', () => {
 //   const lengthForRandomString = 4
 //   const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)

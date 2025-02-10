@@ -79,6 +79,10 @@ export class MgmLogger {
     return this.logger.info(message)
   }
 
+  silly(...message: any[]) {
+    return this.logger.info(message)
+  }
+
   warn(...message: any[]) {
     return this.logger.warn(message)
   }

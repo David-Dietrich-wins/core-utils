@@ -46,3 +46,16 @@ export type FunctionAppResponse<TBody = unknown> = {
   httpStatus: number
   body: TBody
 }
+
+export type IResultWithStats<T> = {
+  result?: T
+  stats: InstrumentationStatistics
+}
+
+export type NonFunctionKeyNames<T extends object> = Exclude<
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  { [K in keyof T]: T[K] extends Function ? never : K }[keyof T],
+  undefined
+>
+
+export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>

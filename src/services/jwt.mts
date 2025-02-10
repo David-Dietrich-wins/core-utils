@@ -1,4 +1,11 @@
-import jwt, { DecodeOptions, Secret, SignOptions, VerifyOptions } from 'jsonwebtoken'
+import jwt, {
+  DecodeOptions,
+  JwtHeader,
+  JwtPayload,
+  Secret,
+  SignOptions,
+  VerifyOptions,
+} from 'jsonwebtoken'
 import { isString } from './general.mjs'
 
 export interface IJwtExtended {
@@ -14,26 +21,20 @@ export interface IJwtExtended {
   auth_time: number
   sub: string
   birthdate: string
-  'com.mgm.emailVerified': boolean
+  emailVerified: boolean
   groups: string[]
-  given_name: string
-  'com.mgm.id': string
-  mgm_role: 'guest'
-  'com.mgm.identity.verified': boolean
+  givenName: string
+  userId: string
+  role: 'user'
+  identityVerified: boolean
   name: string
-  'com.mgm.loyalty.perpetual_eligible': boolean
-  phone_number: string
-  mlife: string
-  'com.mgm.gse.id': string
-  'com.mgm.loyalty.perpetual_eligible_properties': []
-  family_name: string
-  'com.mgm.loyalty.freeplay_available': boolean
+  phoneNumber: string
+  familyName: string
   email: string
-  'com.mgm.mlife_number': string
 }
 
-export function JwtDecodeMgm(token: string) {
-  const decoded = jwt.decode(token)
+export function JwtDecode(token: string, options?: DecodeOptions) {
+  const decoded = jwt.decode(token, options)
   if (!decoded || isString(decoded)) {
     throw new Error('Invalid security token when attempting to retrieve the player id.')
   }
@@ -43,23 +44,10 @@ export function JwtDecodeMgm(token: string) {
   return jwtdata
 }
 
-export function JwtRetrievePlayerId(token: string) {
-  const jwtmgm = JwtDecodeMgm(token)
+export function JwtRetrieveUserId(token: string) {
+  const jwtmgm = JwtDecode(token)
 
-  return jwtmgm.mlife
-}
-
-/**
- * Synchronously sign the given payload into a JSON Web Token string
- * payload - Payload to sign, could be an literal, buffer or string
- * secretOrPrivateKey - Either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA.
- * [options] - Options for the signature
- * returns - The JSON Web Token string
- */
-export function JwtDecode(token: string, options?: DecodeOptions | undefined) {
-  const jwtToken = jwt.decode(token, options)
-
-  return jwtToken
+  return jwtmgm.userId
 }
 
 /**
@@ -77,6 +65,32 @@ export function JwtSign(
   const token = jwt.sign(payload, secretOrPrivateKey, options)
 
   return token
+}
+
+export function JwtTokenWithUserId(
+  userId: number,
+  secretOrPrivateKey: string,
+  overrides?: JwtPayload
+) {
+  const header: JwtHeader = {
+    alg: 'HS256',
+    typ: 'JWT',
+  }
+
+  const signOptions: SignOptions = {
+    header,
+  }
+
+  const payload: JwtPayload = {
+    ...{
+      userId,
+    },
+    ...overrides,
+  }
+
+  const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
+
+  return jwtToken
 }
 
 /**

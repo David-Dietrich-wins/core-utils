@@ -6,8 +6,9 @@ const config: Config = {
   // modulePathIgnorePatterns: ['<rootDir>/dist/'],
   // preset: 'ts-jest',
   testEnvironment: 'node',
-  // extensionsToTreatAsEsm: ['.ts', '.mts'],
+  extensionsToTreatAsEsm: ['.ts', '.mts'],
   // setupFiles: ['<rootDir>/__test__/setupTests'],
+  setupFilesAfterEnv: ['<rootDir>/dist/jest.setup.mjs'],
   // setupFilesAfterEnv: ['<rootDir>/__tests__/setupAfterEnvGlobal.ts'],
   // testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/__tests__/setupAfterEnvGlobal.ts'],
   transform: {
