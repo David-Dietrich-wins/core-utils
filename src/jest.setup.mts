@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithUserId } from './services/jwt.mjs'
+import { MgmLoggerOptions } from './index.mjs'
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 
@@ -10,7 +11,8 @@ jest.setTimeout(600000)
 
 export const CONST_RegexUptimeMatcher = new RegExp('^\\d+m*s$')
 export const CONST_RegexForElapsedTime = /^(\d+ seconds|1 second|\d+m?s)/
-export const CONST_RegexStringSecondsOrMilliseconds = '(\\d+ seconds|1 second|\\d+ms)'
+export const CONST_RegexStringSecondsOrMilliseconds =
+  '(\\d+ seconds|1 second|\\d+ms)'
 
 export const mockLoggerDebug = jest.fn()
 export const mockLoggerError = jest.fn()
@@ -35,14 +37,28 @@ jest.unstable_mockModule('./services/MgmLogger.mjs', () => ({
 
 const { MgmLogger } = await import('./services/MgmLogger.mjs')
 export function getGlobalLogger() {
-  return new MgmLogger('test', 'test.log')
+  const loggerOptions: MgmLoggerOptions = {
+    componentName: 'test',
+    includeHttpRequestDataInTheLog: true,
+    includeHttpResponseDataInTheLog: true,
+    logBaseFileName: 'test',
+    logFileName: 'test.log',
+    logLevel: 'all',
+    maxFiles: 10,
+    maxSize: 1000000,
+    rotateBaseFileName: 'test',
+    showConsole: true,
+    suffixDatePattern: 'YYYY-MM-DD-HH',
+  }
+
+  return new MgmLogger(loggerOptions)
 }
 
 // const mgmHandlers: HttpHandler[] = []
 
 // export const mockServer = setupServer(...mgmHandlers)
 
-const TEST_Parameters_DEV = {
+export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
   userIdGood: 123456789,
   userIdBad: 987654321,
@@ -70,11 +86,21 @@ beforeAll(() => {
   // })
 })
 
-export const mockConsoleDebug = jest.spyOn(console, 'debug').mockImplementation(() => {})
-export const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
-export const mockConsoleInfo = jest.spyOn(console, 'info').mockImplementation(() => {})
-export const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
-export const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+export const mockConsoleDebug = jest
+  .spyOn(console, 'debug')
+  .mockImplementation(() => {})
+export const mockConsoleError = jest
+  .spyOn(console, 'error')
+  .mockImplementation(() => {})
+export const mockConsoleInfo = jest
+  .spyOn(console, 'info')
+  .mockImplementation(() => {})
+export const mockConsoleLog = jest
+  .spyOn(console, 'log')
+  .mockImplementation(() => {})
+export const mockConsoleWarn = jest
+  .spyOn(console, 'warn')
+  .mockImplementation(() => {})
 
 const originalEnv = { ...process.env }
 
@@ -106,7 +132,10 @@ afterEach(() => {
 // })
 
 export function GenerateRandomPinEncrypted() {
-  return CryptoHelper.rsaEncryptStatic(CryptoHelper.GenerateRandomPin(4), 'rsaPublicKey')
+  return CryptoHelper.rsaEncryptStatic(
+    CryptoHelper.GenerateRandomPin(4),
+    'rsaPublicKey'
+  )
 }
 
 export function getAceApiParams() {

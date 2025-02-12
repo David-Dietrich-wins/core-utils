@@ -1,5 +1,9 @@
-import { GrayArrowException } from '../models/GrayArrowException.mjs'
-import { isNullOrUndefined, isObject, safestrLowercase } from './general.mjs'
+import { GrayArrowException } from './GrayArrowException.mjs'
+import {
+  isNullOrUndefined,
+  isObject,
+  safestrLowercase,
+} from '../services/general.mjs'
 
 export interface IApiWrapper<T = unknown> {
   id: number
