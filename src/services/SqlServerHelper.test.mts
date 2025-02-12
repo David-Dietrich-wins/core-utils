@@ -14,13 +14,13 @@ test('empty tests for now', async () => {
 //   const minPoolSize = 3
 //   const maxPoolSize = 3
 
-//   const dbMgmKinectify = new SqlServerHelper(
-//     sqlConnectionStringKinectifyDatabase,
+//   const dbTest = new SqlServerHelper(
+//     sqlConnectionString,
 //     poolRetryCount,
 //     minPoolSize,
 //     maxPoolSize
 //   )
-//   const sqlConnection = await dbMgmKinectify.connect()
+//   const sqlConnection = await dbTest.connect()
 
 //   const sqlQueryTest = 'SELECT * FROM [dbo].[PlayerProfile] WHERE playerID = @playerId'
 
@@ -75,10 +75,10 @@ test('empty tests for now', async () => {
 //         resultsExceptions.push(error)
 //       })
 //       .finally(async () => {
-//         await dbMgmKinectify.close()
+//         await dbTest.close()
 //       })
 //   } finally {
-//     await dbMgmKinectify.close()
+//     await dbTest.close()
 //   }
 
 //   expect(resultsGood).not.toBeUndefined()
@@ -87,35 +87,35 @@ test('empty tests for now', async () => {
 // })
 
 // test('queryOne good', async () => {
-//   const dbMgmKinectify = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
-//   await dbMgmKinectify.connect()
+//   const dbTest = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
+//   await dbTest.connect()
 
 //   try {
-//     const ret = await dbMgmKinectify.queryTableForOne({
+//     const ret = await dbTest.queryTableForOne({
 //       tableName: '[dbo].[GamingActivity]',
 //       where: [['externalTransactionId', 'E436A469-E0B7-4603-8D78-31A0053D3C4C']],
 //     })
 
 //     expect(ret).not.toBeUndefined()
 //   } finally {
-//     await dbMgmKinectify.close()
+//     await dbTest.close()
 //   }
 // })
 
 // test('queryByString good', async () => {
 //   const externalTransactionId = 'E436A469-E0B7-4603-8D78-31A0053D3C4C'
-//   const dbMgmKinectify = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
-//   await dbMgmKinectify.connect()
+//   const dbTest = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
+//   await dbTest.connect()
 
 //   const sql = 'SELECT * FROM [dbo].[GamingActivity] WHERE externalTransactionId = @value0'
 //   try {
-//     const ret = await dbMgmKinectify.queryOneByStringField(sql, 'value0', externalTransactionId)
+//     const ret = await dbTest.queryOneByStringField(sql, 'value0', externalTransactionId)
 
 //     expect(ret).not.toBeUndefined()
 //     expect((ret as { externalTransactionId: string }).externalTransactionId).toEqual(
 //       externalTransactionId
 //     )
 //   } finally {
-//     await dbMgmKinectify.close()
+//     await dbTest.close()
 //   }
 // })

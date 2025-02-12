@@ -23,7 +23,7 @@ import {
 } from '../jest.setup.mjs'
 import { ApiProps } from '../models/types.mjs'
 import { ApiRepository, saveApiCall } from './ApiRepository.mjs'
-import { MgmLogger } from './MgmLogger.mjs'
+import { LogManager } from './LogManager.mjs'
 
 type PostExceptionAxiosResponseData = {
   response: {
@@ -47,7 +47,7 @@ const logFilename = 'gaming-services-library.TEST.log'
 let mockCreateInstance: jest.Mock
 
 beforeEach(() => {
-  mockCreateInstance = MgmLogger.createInstance = jest.fn(() =>
+  mockCreateInstance = LogManager.createInstance = jest.fn(() =>
     getGlobalLogger()
   )
 })
@@ -452,24 +452,24 @@ test('handleAxiosError', async () => {
   }
 
   const apirepo = new ApiRepository(apiProps, 'abc')
-  const mgmex = apirepo.handleAxiosError(fname, axiosError, url, saveKey)
+  const retex = apirepo.handleAxiosError(fname, axiosError, url, saveKey)
 
-  expect(mgmex.message).toBe('Unauthorized')
-  expect(mgmex.functionNameSource).toBe(fname)
+  expect(retex.message).toBe('Unauthorized')
+  expect(retex.functionNameSource).toBe(fname)
 
-  expect(mgmex.obj?.code).toBe('401')
-  expect(mgmex.obj?.columnNumber).toBeUndefined()
-  expect(mgmex.obj?.config).toBeDefined()
-  expect(mgmex.obj?.description).toBeUndefined()
-  expect(mgmex.obj?.fileName).toBeUndefined()
-  expect(mgmex.obj?.lineNumber).toBeUndefined()
-  expect(mgmex.obj?.name).toBe('AxiosError')
-  expect(mgmex.obj?.number).toBeUndefined()
-  expect(mgmex.obj?.status).toBeUndefined()
-  expect(mgmex.obj?.stack).toMatch(/^AxiosError: Unauthorized/)
-  expect(mgmex.httpStatusCode).toBe(405)
-  // expect(mgmex.response).toBeUndefined()
-  expect(mgmex.stack).toMatch(/^Error: Unauthorized/)
+  expect(retex.obj?.code).toBe('401')
+  expect(retex.obj?.columnNumber).toBeUndefined()
+  expect(retex.obj?.config).toBeDefined()
+  expect(retex.obj?.description).toBeUndefined()
+  expect(retex.obj?.fileName).toBeUndefined()
+  expect(retex.obj?.lineNumber).toBeUndefined()
+  expect(retex.obj?.name).toBe('AxiosError')
+  expect(retex.obj?.number).toBeUndefined()
+  expect(retex.obj?.status).toBeUndefined()
+  expect(retex.obj?.stack).toMatch(/^AxiosError: Unauthorized/)
+  expect(retex.httpStatusCode).toBe(405)
+  // expect(retex.response).toBeUndefined()
+  expect(retex.stack).toMatch(/^Error: Unauthorized/)
 })
 
 describe('httpGetRaw', () => {

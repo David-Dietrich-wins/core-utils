@@ -1,12 +1,12 @@
 import { existsSync } from 'node:fs'
 import { open } from 'node:fs/promises'
-import { MgmLogger } from './MgmLogger.mjs'
+import { LogManager } from './LogManager.mjs'
 import { hasData, safestrTrim } from './general.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 
 export type SingleLineFileProcessorConfig<T = unknown> = {
   fileName: string
-  logger: MgmLogger
+  logger: LogManager
   typeName: string
   trimLine?: boolean
   action: (safeLine: string) => Promise<T>
@@ -42,9 +42,21 @@ export class SingleLineFileProcessor<T = unknown> {
         } else if (safeLine.startsWith('#')) {
           stats.addSkipped()
 
-          logger.info('Processing line', lineNumber, `${typeName}:`, safeLine, 'SKIP COMMENT LINE')
+          logger.info(
+            'Processing line',
+            lineNumber,
+            `${typeName}:`,
+            safeLine,
+            'SKIP COMMENT LINE'
+          )
         } else {
-          logger.info('Processing line', lineNumber, `${typeName}:`, safeLine, 'START')
+          logger.info(
+            'Processing line',
+            lineNumber,
+            `${typeName}:`,
+            safeLine,
+            'START'
+          )
 
           try {
             await action(trimLine ? safeLine : line)
@@ -56,14 +68,28 @@ export class SingleLineFileProcessor<T = unknown> {
             logger.error('Error processing line', lineNumber, error)
           }
 
-          logger.info('Processing line', lineNumber, `${typeName}:`, safeLine, 'END')
+          logger.info(
+            'Processing line',
+            lineNumber,
+            `${typeName}:`,
+            safeLine,
+            'END'
+          )
         }
 
         lineNumber++
       }
     }
 
-    logger.info('Finished processing', typeName, 'file:', fileName, 'with', lineNumber, 'lines')
+    logger.info(
+      'Finished processing',
+      typeName,
+      'file:',
+      fileName,
+      'with',
+      lineNumber,
+      'lines'
+    )
 
     return stats
   }

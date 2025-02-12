@@ -23,9 +23,7 @@ type PostExceptionAxiosResponseData = {
   }
 }
 
-const CONST_AceRestBaseUrl =
-  'https://gameng.lb.devtest.vegas/v2.3/bearer/PlayerTracking.svc'
-// const CONST_CrmAcresBaseUrl = 'https://pinresetacedev.mgmresorts.com/'
+const CONST_TestRestBaseUrl = 'http://localhost:3000'
 
 describe('ObjectFindKeyAndReturnValue', () => {
   test('default', () => {
@@ -206,7 +204,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status with data', async () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const mockRequestData: PostExceptionAxiosResponseData = {
       response: {
@@ -264,7 +262,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status with config with data', async () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const myHeaders = {
       'Content-Type': 'application/json',
@@ -310,7 +308,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status with config with data do not show', async () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const myHeaders = {
       'Content-Type': 'application/json',
@@ -356,7 +354,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status with no config', async () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const myHeaders = {
       'Content-Type': 'application/json',
@@ -410,7 +408,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status with config no data', async () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const myHeaders = {
       'Content-Type': 'application/json',
@@ -455,7 +453,7 @@ describe('ObjectTypesToString', () => {
   })
 
   test('AxiosError response status AxiosRetry', () => {
-    const url = `${CONST_AceRestBaseUrl}/Patrons/`
+    const url = `${CONST_TestRestBaseUrl}/Patrons/`
 
     const mockRequestData: PostExceptionAxiosResponseData = {
       response: {

@@ -12,16 +12,16 @@ const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH'
 const DEFAULT_RotateMaxFiles = 500
 const DEFAULT_RotateMaxSize = 1000000000 // 1GB
 
-export type MgmLoggerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
+export type LogManagerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
 
-export type MgmLoggerOptions = {
+export type LogManagerOptions = {
   componentName: string
   includeHttpRequestDataInTheLog: boolean
   includeHttpResponseDataInTheLog: boolean
-  logCallback?: (logLevel: MgmLoggerLevel, msg: string) => void
+  logCallback?: (logLevel: LogManagerLevel, msg: string) => void
   logBaseFileName: string
   logFileName: string
-  logLevel: MgmLoggerLevel
+  logLevel: LogManagerLevel
   maxFiles: number
   maxSize: number
   rotateBaseFileName: string
@@ -30,14 +30,14 @@ export type MgmLoggerOptions = {
 }
 
 /** Handles all forms of logging from Console logging, File Logging and context.log logging using the callback facility. */
-export class MgmLogger {
+export class LogManager {
   logger: Logger
 
   componentName: string
   includeHttpRequestDataInTheLog?: boolean
   includeHttpResponseDataInTheLog?: boolean
-  logCallback?: (logLevel: MgmLoggerLevel, msg: string) => void
-  logLevel: MgmLoggerLevel
+  logCallback?: (logLevel: LogManagerLevel, msg: string) => void
+  logLevel: LogManagerLevel
 
   constructor({
     componentName,
@@ -52,7 +52,7 @@ export class MgmLogger {
     rotateBaseFileName,
     showConsole,
     suffixDatePattern,
-  }: MgmLoggerOptions) {
+  }: LogManagerOptions) {
     this.componentName = componentName
     this.includeHttpRequestDataInTheLog = includeHttpRequestDataInTheLog
     this.includeHttpResponseDataInTheLog = includeHttpResponseDataInTheLog
@@ -66,7 +66,7 @@ export class MgmLogger {
     ) {
       throw new GrayArrowException(
         'You must provide a logBaseFileName, an explicit logFileName or a rotateBaseFileName.',
-        'MgmLogger'
+        LogManager.name
       )
     }
 
@@ -86,7 +86,7 @@ export class MgmLogger {
       }] [${level}] ${msg}`
     })
 
-    const transports: transport[] = MgmLogger.WinstonLogTransports(
+    const transports: transport[] = LogManager.WinstonLogTransports(
       logLevel,
       logFileName,
       logBaseFileName,
@@ -117,13 +117,13 @@ export class MgmLogger {
   }
 
   /**
-   * Used to create an MgmLogger instance.
-   * Do not use new MgmLogger() directly.
+   * Used to create an LogManager instance.
+   * Do not use new LogManager() directly.
    * @param options Object containing the options for the logger
-   * @returns A new MgmLogger instance
+   * @returns A new LogManager instance
    */
-  static createInstance(options?: Partial<MgmLoggerOptions>) {
-    return new MgmLogger(MgmLogger.MgmLoggerDefaultOptions(options))
+  static createInstance(options?: Partial<LogManagerOptions>) {
+    return new LogManager(LogManager.LogManagerDefaultOptions(options))
   }
 
   static DailyRotateFileLogger(
@@ -148,9 +148,9 @@ export class MgmLogger {
     return new DailyRotateFile(fileOptions)
   }
 
-  static MgmLoggerDefaultOptions(overrides?: Partial<MgmLoggerOptions>) {
-    const defaultOptions: MgmLoggerOptions = {
-      componentName: 'MgmLogger',
+  static LogManagerDefaultOptions(overrides?: Partial<LogManagerOptions>) {
+    const defaultOptions: LogManagerOptions = {
+      componentName: 'LogManager',
       includeHttpRequestDataInTheLog: false,
       includeHttpResponseDataInTheLog: false,
       logBaseFileName: '',
@@ -212,7 +212,7 @@ export class MgmLogger {
       hasData(safestrTrim(logFileName)) ||
       hasData(safestrTrim(logBaseFileName))
     ) {
-      const logfileTransportOptions = MgmLogger.TransportFileLogger(
+      const logfileTransportOptions = LogManager.TransportFileLogger(
         logFileName,
         logBaseFileName,
         suffixDatePattern,
@@ -225,7 +225,7 @@ export class MgmLogger {
     }
 
     if (hasData(safestrTrim(rotateBaseFileName))) {
-      const dailyRotateFile = MgmLogger.DailyRotateFileLogger(
+      const dailyRotateFile = LogManager.DailyRotateFileLogger(
         logLevel,
         rotateBaseFileName,
         suffixDatePattern,

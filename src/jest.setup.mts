@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithUserId } from './services/jwt.mjs'
-import { MgmLoggerOptions } from './index.mjs'
+import { LogManagerOptions } from './index.mjs'
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 
@@ -31,13 +31,13 @@ const globalLogger = jest.fn().mockImplementation(() => {
     warn: mockLoggerWarn,
   }
 })
-jest.unstable_mockModule('./services/MgmLogger.mjs', () => ({
-  MgmLogger: globalLogger,
+jest.unstable_mockModule('./services/LogManager.mjs', () => ({
+  LogManager: globalLogger,
 }))
 
-const { MgmLogger } = await import('./services/MgmLogger.mjs')
+const { LogManager } = await import('./services/LogManager.mjs')
 export function getGlobalLogger() {
-  const loggerOptions: MgmLoggerOptions = {
+  const loggerOptions: LogManagerOptions = {
     componentName: 'test',
     includeHttpRequestDataInTheLog: true,
     includeHttpResponseDataInTheLog: true,
@@ -51,12 +51,12 @@ export function getGlobalLogger() {
     suffixDatePattern: 'YYYY-MM-DD-HH',
   }
 
-  return new MgmLogger(loggerOptions)
+  return new LogManager(loggerOptions)
 }
 
-// const mgmHandlers: HttpHandler[] = []
+// const httpHandlers: HttpHandler[] = []
 
-// export const mockServer = setupServer(...mgmHandlers)
+// export const mockServer = setupServer(...httpHandlers)
 
 export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',

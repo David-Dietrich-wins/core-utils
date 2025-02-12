@@ -36,7 +36,9 @@ export interface IJwtExtended {
 export function JwtDecode(token: string, options?: DecodeOptions) {
   const decoded = jwt.decode(token, options)
   if (!decoded || isString(decoded)) {
-    throw new Error('Invalid security token when attempting to retrieve the player id.')
+    throw new Error(
+      'Invalid security token when attempting to retrieve the player id.'
+    )
   }
 
   const jwtdata = decoded as IJwtExtended
@@ -45,9 +47,9 @@ export function JwtDecode(token: string, options?: DecodeOptions) {
 }
 
 export function JwtRetrieveUserId(token: string) {
-  const jwtmgm = JwtDecode(token)
+  const jwtret = JwtDecode(token)
 
-  return jwtmgm.userId
+  return jwtret.userId
 }
 
 /**

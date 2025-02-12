@@ -44,7 +44,7 @@ describe('Time Difference', () => {
 })
 
 describe('URL Join', () => {
-  const baseUrl = 'https://mgmresorts.com'
+  const baseUrl = 'http://localhost'
 
   test('Slash relative path', () => {
     const path = '/'

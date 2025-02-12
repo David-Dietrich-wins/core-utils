@@ -1,7 +1,7 @@
-import { MgmLoggerLevel } from '../services/MgmLogger.mjs'
+import { LogManagerLevel } from '../services/LogManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
-export type MgmApiResponse<T = unknown> = {
+export type ApiResponse<T = unknown> = {
   code: number
   data?: T
   message: string
@@ -25,7 +25,12 @@ export type CreateMutable<Type> = {
   -readonly [Property in keyof Type]: Type[Property]
 }
 
-export type JSONValue = string | number | boolean | { [x: string]: JSONValue } | JSONValue[]
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | JSONValue[]
 
 export type ModifyType<T, R> = Omit<T, keyof R> & R
 export type Opaque<K, T = string> = T & { __TYPE__: K }
@@ -37,7 +42,7 @@ export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
 
 export type ApiProps = {
   baseUrl: string
-  logLevel?: MgmLoggerLevel
+  logLevel?: LogManagerLevel
   logFilename?: string
 }
 

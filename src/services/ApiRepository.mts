@@ -3,10 +3,11 @@ import crypto from 'crypto'
 import https from 'https'
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from 'axios'
 import { safestr, urlJoin } from '../services/general.mjs'
-import { MgmLogger } from './MgmLogger.mjs'
+import { LogManager } from './LogManager.mjs'
 import { ApiWrapper } from '../models/ApiWrapper.mjs'
 import { GrayArrowExceptionHttpNotAllowed } from '../models/GrayArrowException.mjs'
 import { ApiProps } from '../models/types.mjs'
+import { IErrorMessage } from '../models/interfaces.mjs'
 
 export interface IApiRepository {
   logInfo(msg: string): void
@@ -17,23 +18,23 @@ export interface IApiRepository {
     err: any,
     relativePath: string,
     saveKey: string,
-    requestBody: any
-    // errorMessage?: IMgmErrorMessage
+    requestBody: any,
+    errorMessage?: IErrorMessage
   ): GrayArrowExceptionHttpNotAllowed<Record<string, any>>
 
   httpGet<TResponse, TRequestConfig>(
     fname: string,
     keyForSaving: string,
     relativePath?: string,
-    requestConfig?: AxiosRequestConfig<TRequestConfig>
-    // errorMessage?: IMgmErrorMessage
+    requestConfig?: AxiosRequestConfig<TRequestConfig>,
+    errorMessage?: IErrorMessage
   ): Promise<TResponse>
   httpGetRaw<TResponse, TReguestConfig>(
     fname: string,
     keyForSaving: string,
     relativePath?: string,
-    requestConfig?: AxiosRequestConfig<TReguestConfig>
-    // errorMessage?: IMgmErrorMessage
+    requestConfig?: AxiosRequestConfig<TReguestConfig>,
+    errorMessage?: IErrorMessage
   ): Promise<AxiosResponse<TResponse>>
 
   httpPost<TResponse, TReguestBody>(
@@ -41,16 +42,16 @@ export interface IApiRepository {
     keyForSaving: string,
     relativePath: string | undefined,
     requestConfig: AxiosRequestConfig,
-    requestBody?: TReguestBody
-    // errorMessage?: IMgmErrorMessage
+    requestBody?: TReguestBody,
+    errorMessage?: IErrorMessage
   ): Promise<TResponse>
   httpPostRaw<TResponse, TRequestBody>(
     fname: string,
     keyForSaving: string,
     relativePath: string | undefined,
     requestConfig: AxiosRequestConfig,
-    requestBody?: TRequestBody
-    // errorMessage?: IMgmErrorMessage
+    requestBody?: TRequestBody,
+    errorMessage?: IErrorMessage
   ): Promise<AxiosResponse<TResponse>>
 }
 
@@ -96,7 +97,7 @@ export const saveApiCall = (
 }
 
 export class ApiRepository implements IApiRepository {
-  private logger: MgmLogger
+  private logger: LogManager
 
   constructor(
     public apiProps: ApiProps,
@@ -110,7 +111,7 @@ export class ApiRepository implements IApiRepository {
     //   )
     // }
 
-    this.logger = MgmLogger.createInstance({
+    this.logger = LogManager.createInstance({
       componentName: safestr(loggerComponentName, ApiRepository.name),
       rotateBaseFileName: apiProps.logFilename ?? 'gaming-services-library',
       logLevel: apiProps.logLevel,
@@ -228,9 +229,9 @@ export class ApiRepository implements IApiRepository {
 
       return apiResponse
     } catch (err) {
-      const mgmex = this.handleAxiosError(fname, err, url, saveKey)
+      const exception = this.handleAxiosError(fname, err, url, saveKey)
 
-      throw mgmex
+      throw exception
     }
   }
 
@@ -302,9 +303,9 @@ export class ApiRepository implements IApiRepository {
 
       return apiResponse
     } catch (err) {
-      const mgmex = this.handleAxiosError(fname, err, url, saveKey)
+      const ex = this.handleAxiosError(fname, err, url, saveKey)
 
-      throw mgmex
+      throw ex
     }
   }
 
