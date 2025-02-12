@@ -70,13 +70,13 @@ test('constructor', async () => {
 
   expect(fnaction).toHaveBeenCalledTimes(5)
 
-  expect(mockOpen).toHaveBeenCalledTimes(1)
+  expect(open).toHaveBeenCalledTimes(1)
 
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  expect(mockExistsSync).toHaveBeenCalledTimes(1)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
+  expect(closeSync).toHaveBeenCalledTimes(0)
+  expect(existsSync).toHaveBeenCalledTimes(1)
+  expect(openSync).toHaveBeenCalledTimes(0)
+  expect(unlinkSync).toHaveBeenCalledTimes(0)
+  expect(writeSync).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(0)
