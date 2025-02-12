@@ -1,7 +1,10 @@
-import { IdCreatedUpdated, IIdCreatedUpdated } from '../models/id-created-updated.mjs'
+import {
+  IdCreatedUpdated,
+  IIdCreatedUpdated,
+} from '../models/id-created-updated.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IIdVal } from '../models/id-val.mjs'
-import { NameValType } from '../models/name-val.mjs'
+import { NameVal } from '../models/name-val.mjs'
 import { isObject } from '../services/general.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>
@@ -48,7 +51,7 @@ export default class Config<Tid = string, Tval = boolean>
     this.val = dbtp.val
   }
 
-  api(): NameValType<Tval> {
+  api(): NameVal<Tval> {
     return {
       name: this.name,
       val: this.val,
