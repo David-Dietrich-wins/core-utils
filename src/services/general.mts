@@ -106,7 +106,9 @@ export function deepDiffMapper() {
 
       return (
         found ||
-        (isObject(value) && Object.entries(value).find(this.findTypeData, this) ? true : false)
+        (isObject(value) && Object.entries(value).find(this.findTypeData, this)
+          ? true
+          : false)
       )
     },
     /**
@@ -165,7 +167,11 @@ export function deepDiffMapper() {
         return this.VALUE_UNCHANGED
       }
 
-      if (this.isDate(value1) && this.isDate(value2) && value1.getTime() === value2.getTime()) {
+      if (
+        this.isDate(value1) &&
+        this.isDate(value2) &&
+        value1.getTime() === value2.getTime()
+      ) {
         return this.VALUE_UNCHANGED
       }
 
@@ -217,7 +223,9 @@ export function getBody(ret: unknown) {
  * @param stringOrArray The {@link StringOrStringArray} to flatten then separate by commas.
  * @returns The flattened, comma-separated string.
  */
-export function getCommaSeparatedList(stringOrArray: StringOrStringArray): string {
+export function getCommaSeparatedList(
+  stringOrArray: StringOrStringArray
+): string {
   if (isString(stringOrArray)) {
     return stringOrArray
   }
@@ -241,7 +249,9 @@ export function getCommaUpperList(stringOrArray: StringOrStringArray): string {
  * @param stringOrNumber The string or number to return as a number.
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
-export function getAsNumber(stringOrNumber: string | number | null | undefined): number {
+export function getAsNumber(
+  stringOrNumber: string | number | null | undefined
+): number {
   return getNumberFormatted(stringOrNumber)
 }
 
@@ -259,7 +269,11 @@ export function getAsNumberOrUndefined(
   minDecimalPlaces?: number
 ): number | undefined {
   if (hasData(stringOrNumber)) {
-    return getNumberFormatted(stringOrNumber, maxDecimalPlaces, minDecimalPlaces)
+    return getNumberFormatted(
+      stringOrNumber,
+      maxDecimalPlaces,
+      minDecimalPlaces
+    )
   }
 }
 
@@ -346,7 +360,8 @@ export function getNumberFormatted(
   if (
     !isNullOrUndefined(num) &&
     isNumber(num) &&
-    (!isNullOrUndefined(maxDecimalPlaces) || !isNullOrUndefined(minDecimalPlaces))
+    (!isNullOrUndefined(maxDecimalPlaces) ||
+      !isNullOrUndefined(minDecimalPlaces))
   ) {
     const mystr = getNumberString(num, maxDecimalPlaces, minDecimalPlaces)
     return parseFloat(mystr.replace(/,/g, ''))
@@ -412,7 +427,10 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
 export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
   const item = getObject(arr, index)
   if (!item) {
-    throw new GrayArrowException('No object found.', getObjectWithException.name)
+    throw new GrayArrowException(
+      'No object found.',
+      getObjectWithException.name
+    )
   }
 
   return item
@@ -564,7 +582,9 @@ export function isBoolean(obj: unknown): obj is boolean {
 export function isEmptyObject(obj: unknown) {
   return (
     null == obj ||
-    (isObject(obj) && safeArray(Object.keys(obj)).length === 0 && obj.constructor === Object)
+    (isObject(obj) &&
+      safeArray(Object.keys(obj)).length === 0 &&
+      obj.constructor === Object)
   )
 }
 
@@ -679,7 +699,10 @@ export function isObject(
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
 export function isString(obj: unknown, minlength = 0): obj is string {
-  return ('string' === typeof obj || obj instanceof String) && obj.length >= minlength
+  return (
+    ('string' === typeof obj || obj instanceof String) &&
+    obj.length >= minlength
+  )
 }
 
 /**
@@ -731,7 +754,11 @@ export function safeJsonToString(
   space?: string | number
 ): string {
   try {
-    return JSON.stringify(safeObject(json), replacer, space)
+    return JSON.stringify(
+      isArray(json) ? safeArray(json) : safeObject(json),
+      replacer,
+      space
+    )
   } catch (ex) {
     console.log(fname ? fname : 'safeJsonToString', ex)
   }
@@ -789,7 +816,10 @@ export function safestrLowercase(s?: string, trim = true): string {
  * @param fname The optional function name that is the source of the operation. Used for exception logging.
  * @returns A the JSON.parsed object or undefined if there was an exception.
  */
-export function safestrToJson<T>(strjson?: string, fname?: string): T | undefined {
+export function safestrToJson<T>(
+  strjson?: string,
+  fname?: string
+): T | undefined {
   try {
     return JSON.parse(safestr(strjson))
   } catch (ex) {
@@ -826,7 +856,8 @@ export function safestrUppercase(s?: string, trim = true): string {
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-export const pluralSuffix = (num: number, suffix = 's') => pluralize(num, '', suffix)
+export const pluralSuffix = (num: number, suffix = 's') =>
+  pluralize(num, '', suffix)
 
 /**
  * Returns an s if the number passed in should be pluralized.
@@ -834,7 +865,11 @@ export const pluralSuffix = (num: number, suffix = 's') => pluralize(num, '', su
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-export function pluralize(num: number, textIfSingle = '', textIfPlural = 's'): string {
+export function pluralize(
+  num: number,
+  textIfSingle = '',
+  textIfPlural = 's'
+): string {
   if (isNumber(num) && 1 === num) {
     return safestr(textIfSingle)
   }
@@ -875,14 +910,22 @@ export function prefixIfHasData(s: string, prefix = ', '): string {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renameProperty(obj: any, oldKey: any, newKey: any): object {
-  if (!isObject(obj) || !isString(oldKey, 1) || !isString(newKey, 1) || oldKey === newKey) {
+  if (
+    !isObject(obj) ||
+    !isString(oldKey, 1) ||
+    !isString(newKey, 1) ||
+    oldKey === newKey
+  ) {
     throw new Error('Cannot renameProperty. Invalid settings.')
   }
 
   Object.defineProperty(
     obj,
     newKey,
-    Object.getOwnPropertyDescriptor(obj, oldKey as PropertyKey) as PropertyDescriptor
+    Object.getOwnPropertyDescriptor(
+      obj,
+      oldKey as PropertyKey
+    ) as PropertyDescriptor
   )
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (obj as any)[oldKey]
@@ -1074,7 +1117,12 @@ export function splitToArrayOrStringIfOnlyOneToUpper(
   removeEmpties = true,
   trimStrings = true
 ): StringOrStringArray {
-  const arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties, trimStrings)
+  const arr = splitToArrayOrStringIfOnlyOne(
+    strOrArray,
+    splitter,
+    removeEmpties,
+    trimStrings
+  )
 
   if (isArray(arr)) {
     return arr.map((x) => x.toUpperCase())
@@ -1090,12 +1138,18 @@ export function splitToArrayOrStringIfOnlyOneToUpper(
  * @param valueWrapper An optional wrapper around the value. Usually a quote or double quote.
  * @returns The name=value string.
  */
-export function stringEquals(name: string, value: string, valueWrapper = ''): string {
+export function stringEquals(
+  name: string,
+  value: string,
+  valueWrapper = ''
+): string {
   if (hasData(name)) {
     return (
       name +
       '=' +
-      (hasData(valueWrapper) ? stringWrap(valueWrapper, value, valueWrapper) : safestr(value))
+      (hasData(valueWrapper)
+        ? stringWrap(valueWrapper, value, valueWrapper)
+        : safestr(value))
     )
   }
 
@@ -1108,12 +1162,18 @@ export function stringEquals(name: string, value: string, valueWrapper = ''): st
  * @param useSingleQuote True if you want to use a single quote, otherwise a double quote is used.
  * @returns The name="value" or name='value' string.
  */
-export function stringEqualsQuoted(name: string, value: string, useSingleQuote = true): string {
+export function stringEqualsQuoted(
+  name: string,
+  value: string,
+  useSingleQuote = true
+): string {
   if (hasData(name)) {
     return (
       name +
       '=' +
-      (useSingleQuote || false ? stringWrapSingleQuote(value) : stringWrapDoubleQuote(value))
+      (useSingleQuote || false
+        ? stringWrapSingleQuote(value)
+        : stringWrapDoubleQuote(value))
     )
   }
 
@@ -1152,6 +1212,7 @@ export function stringWrapParen(str: string): string {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string): string {
+  // eslint-disable-next-line quotes
   return stringWrap("'", str, "'")
 }
 
@@ -1246,7 +1307,9 @@ export function timeDifferenceStringFromMillis(
   const secondsModulo = seconds % 60
   if (secondsModulo > 0) {
     s += longFormat
-      ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(secondsModulo)}`
+      ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(
+          secondsModulo
+        )}`
       : `${prefixIfHasData(s, ' ')}${secondsModulo}s`
   }
 
@@ -1271,7 +1334,10 @@ export function toHex(decimal: number, chars = 2): string {
     chars = 2
   }
 
-  return ((decimal || 0) + Math.pow(16, chars)).toString(16).slice(-chars).toUpperCase()
+  return ((decimal || 0) + Math.pow(16, chars))
+    .toString(16)
+    .slice(-chars)
+    .toUpperCase()
 }
 
 /**
@@ -1282,7 +1348,11 @@ export function toHex(decimal: number, chars = 2): string {
  * @param addTrailingSlash Set to true to append a trailing / if this is a pure URL without variables.
  * @returns A safely constructed URL joined with a /.
  */
-export function urlJoin(baseUrl: string, relativePath?: string, addTrailingSlash = true) {
+export function urlJoin(
+  baseUrl: string,
+  relativePath?: string,
+  addTrailingSlash = true
+) {
   let url = safestr(baseUrl)
   relativePath = safestr(relativePath)
 
@@ -1303,7 +1373,12 @@ export function urlJoin(baseUrl: string, relativePath?: string, addTrailingSlash
     url += '/' + relativePath
   }
 
-  if (url.includes('?') || url.includes('&') || url.includes('#') || url.includes('=')) {
+  if (
+    url.includes('?') ||
+    url.includes('&') ||
+    url.includes('#') ||
+    url.includes('=')
+  ) {
     addTrailingSlash = false
   }
 
