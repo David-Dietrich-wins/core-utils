@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import { MgmLogger } from './services/MgmLogger.mjs'
 import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithUserId } from './services/jwt.mjs'
@@ -12,6 +11,32 @@ jest.setTimeout(600000)
 export const CONST_RegexUptimeMatcher = new RegExp('^\\d+m*s$')
 export const CONST_RegexForElapsedTime = /^(\d+ seconds|1 second|\d+m?s)/
 export const CONST_RegexStringSecondsOrMilliseconds = '(\\d+ seconds|1 second|\\d+ms)'
+
+export const mockLoggerDebug = jest.fn()
+export const mockLoggerError = jest.fn()
+export const mockLoggerInfo = jest.fn()
+export const mockLoggerLog = jest.fn()
+export const mockLoggerSilly = jest.fn()
+export const mockLoggerWarn = jest.fn()
+
+const globalLogger = jest.fn().mockImplementation(() => {
+  return {
+    debug: mockLoggerDebug,
+    error: mockLoggerError,
+    info: mockLoggerInfo,
+    log: mockLoggerLog,
+    silly: mockLoggerSilly,
+    warn: mockLoggerWarn,
+  }
+})
+jest.unstable_mockModule('./services/MgmLogger.mjs', () => ({
+  MgmLogger: globalLogger,
+}))
+
+const { MgmLogger } = await import('./services/MgmLogger.mjs')
+export function getGlobalLogger() {
+  return new MgmLogger('test', 'test.log')
+}
 
 // const mgmHandlers: HttpHandler[] = []
 
@@ -50,21 +75,6 @@ export const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(
 export const mockConsoleInfo = jest.spyOn(console, 'info').mockImplementation(() => {})
 export const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
 export const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {})
-
-export const mockLoggerDebug: jest.Mock<typeof MgmLogger.prototype.debug> = jest.fn()
-export const mockLoggerError: jest.Mock<typeof MgmLogger.prototype.error> = jest.fn()
-export const mockLoggerInfo: jest.Mock<typeof MgmLogger.prototype.info> = jest.fn()
-export const mockLoggerLog: jest.Mock<typeof MgmLogger.prototype.logToFile> = jest.fn()
-export const mockLoggerSilly: jest.Mock<typeof MgmLogger.prototype.silly> = jest.fn()
-export const mockLoggerWarn: jest.Mock<typeof MgmLogger.prototype.warn> = jest.fn()
-
-export const globalLogger = {
-  debug: mockLoggerDebug,
-  error: mockLoggerError,
-  info: mockLoggerInfo,
-  log: mockLoggerLog,
-  warn: mockLoggerWarn,
-} as unknown as MgmLogger
 
 const originalEnv = { ...process.env }
 

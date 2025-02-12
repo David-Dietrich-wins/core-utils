@@ -1,12 +1,13 @@
 import { jest } from '@jest/globals'
-// import {
-//   globalLogger,
-//   mockLoggerDebug,
-//   mockLoggerError,
-//   mockLoggerInfo,
-//   mockLoggerSilly,
-//   mockLoggerWarn,
-// } from '../jest.setup.mjs'
+import {
+  getGlobalLogger,
+  mockLoggerDebug,
+  mockLoggerError,
+  mockLoggerInfo,
+  mockLoggerLog,
+  mockLoggerSilly,
+  mockLoggerWarn,
+} from '../jest.setup.mjs'
 
 const CONST_DelayTime = 50000
 
@@ -32,20 +33,6 @@ const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
 
-jest.unstable_mockModule('./MgmLogger.mjs', () => ({
-  MgmLogger: jest.fn().mockImplementation(() => {
-    return {
-      debug: jest.fn(),
-      error: jest.fn(),
-      info: jest.fn(),
-      silly: jest.fn(),
-      warn: jest.fn(),
-    }
-  }),
-}))
-
-const { MgmLogger } = await import('./MgmLogger.mjs')
-
 test('constructor', async () => {
   const tmpFile = 'any-file.txt'
 
@@ -53,7 +40,7 @@ test('constructor', async () => {
   const config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
     fileName: tmpFile,
-    logger: new MgmLogger('test', 'test.log'),
+    logger: getGlobalLogger(),
     typeName: 'type',
   }
 
@@ -78,46 +65,47 @@ test('constructor', async () => {
   // mockUnlinkSync.mockRestore()
   // mockWriteSync.mockRestore()
 
-  // expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
-  // expect(mockLoggerError).toHaveBeenCalledTimes(0)
-  // expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
-  // expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
-  // expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
+  expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError).toHaveBeenCalledTimes(0)
+  expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
+  expect(mockLoggerLog).toHaveBeenCalledTimes(0)
+  expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
+  expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
 
-  // expect(mockLoggerInfo.mock.calls[0]).toStrictEqual(['Processing', 'type', 'file:', tmpFile])
+  expect(mockLoggerInfo.mock.calls[0]).toStrictEqual(['Processing', 'type', 'file:', tmpFile])
 
-  // expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
-  // expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
+  expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
+  expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
 
-  // expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
-  // expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
+  expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
+  expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
 
-  // expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
-  // expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
+  expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
+  expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
 
-  // expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
-  // expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
+  expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
+  expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
 
-  // expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
-  // expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
+  expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
+  expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
 
-  // expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
-  // expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
-  //   'Processing line',
-  //   7,
-  //   'type:',
-  //   '# comment',
-  //   'SKIP COMMENT LINE',
-  // ])
-  // expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
-  //   'Finished processing',
-  //   'type',
-  //   'file:',
-  //   tmpFile,
-  //   'with',
-  //   8,
-  //   'lines',
-  // ])
+  expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
+  expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
+    'Processing line',
+    7,
+    'type:',
+    '# comment',
+    'SKIP COMMENT LINE',
+  ])
+  expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
+    'Finished processing',
+    'type',
+    'file:',
+    tmpFile,
+    'with',
+    8,
+    'lines',
+  ])
 
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)

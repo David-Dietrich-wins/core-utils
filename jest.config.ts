@@ -18,6 +18,7 @@ const config: Config = {
   collectCoverageFrom: ['src/**/*.ts', 'src/**/*.mts', '!src/**/*.d.ts', '!src/**/*.d.mts'],
 
   extensionsToTreatAsEsm: ['.ts', '.mts'],
+  setupFilesAfterEnv: ['./src/jest.setup.mts'],
   transform: {
     '^.+\\.(mt|t|cj|j)s$': [
       'ts-jest',
