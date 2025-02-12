@@ -33,8 +33,7 @@ describe('Time Difference', () => {
   })
 
   test('21d', () => {
-    const dtNow = new Date()
-    const startDate = new Date(+dtNow)
+    const startDate = new Date()
 
     startDate.setDate(startDate.getDate() + 21)
     const str = timeDifferenceString(startDate)
