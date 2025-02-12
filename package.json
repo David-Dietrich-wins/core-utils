@@ -17,6 +17,7 @@
     "test:watch": "jest --watch",
     "test2": "jest --coverage",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
