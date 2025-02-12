@@ -23,7 +23,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": false,
-    "traceResolution": false
+    "traceResolution": false,
+    "types": ["node", "jest"],
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
