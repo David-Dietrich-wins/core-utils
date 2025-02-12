@@ -91,6 +91,7 @@ beforeEach(() => {
   mockLoggerError.mockClear()
   mockLoggerInfo.mockClear()
   mockLoggerLog.mockClear()
+  mockLoggerSilly.mockClear()
   mockLoggerWarn.mockClear()
 })
 

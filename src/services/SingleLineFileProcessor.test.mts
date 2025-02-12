@@ -11,27 +11,46 @@ import {
 
 const CONST_DelayTime = 50000
 
+const mockCloseSync = jest.fn()
+const mockExistsSync = jest.fn().mockReturnValue(5)
+const mockOpenSync = jest.fn().mockReturnValue(1)
+const mockUnlinkSync = jest.fn()
+const mockWriteSync = jest.fn(() => 2)
+
 jest.unstable_mockModule('node:fs', () => ({
-  existsSync: jest.fn().mockReturnValue(5),
-  // etc.
+  closeSync: mockCloseSync,
+  existsSync: mockExistsSync,
+  openSync: mockOpenSync,
+  unlinkSync: mockUnlinkSync,
+  writeSync: mockWriteSync,
 }))
+
+const mockOpen = jest.fn().mockImplementation(() => {
+  const r = {
+    readLines: jest.fn().mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
+  }
+
+  return Promise.resolve(r)
+})
 
 jest.unstable_mockModule('node:fs/promises', () => ({
-  open: jest.fn().mockImplementation(() => {
-    const r = {
-      readLines: jest.fn().mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
-    }
-
-    return Promise.resolve(r)
-  }),
-
-  // etc.
+  open: mockOpen,
 }))
 
+const { closeSync, existsSync, openSync, unlinkSync, writeSync } = await import('node:fs')
 const { open } = await import('node:fs/promises')
 const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
+
+beforeEach(() => {
+  mockOpen.mockClear()
+  mockCloseSync.mockClear()
+  mockExistsSync.mockClear()
+  mockOpenSync.mockClear()
+  mockUnlinkSync.mockClear()
+  mockWriteSync.mockClear()
+})
 
 test('constructor', async () => {
   const tmpFile = 'any-file.txt'
@@ -49,21 +68,15 @@ test('constructor', async () => {
 
   const stats = await processor.processFile()
 
-  expect(config.action).toHaveBeenCalledTimes(5)
+  expect(fnaction).toHaveBeenCalledTimes(5)
 
-  expect(open).toHaveBeenCalledTimes(1)
-  // mockOpen.mockRestore()
+  expect(mockOpen).toHaveBeenCalledTimes(1)
 
-  // expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(mockExistsSync).toHaveBeenCalledTimes(1)
-  // expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  // expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  // expect(mockWriteSync).toHaveBeenCalledTimes(0)
-  // mockCloseSync.mockRestore()
-  // mockExistsSync.mockRestore()
-  // mockOpenSync.mockRestore()
-  // mockUnlinkSync.mockRestore()
-  // mockWriteSync.mockRestore()
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
+  expect(mockExistsSync).toHaveBeenCalledTimes(1)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(0)
