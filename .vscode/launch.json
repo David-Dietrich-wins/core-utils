@@ -10,7 +10,12 @@
       "request": "launch",
       "runtimeExecutable": "node",
       "args": ["${relativeFile}"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "runtimeArgs": [
+        "--experimental-vm-modules",
+        "node_modules/.bin/jest",
+        "--inspect-brk",
+        "--runInBand"
+      ],
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",

@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { existsSync } from 'node:fs'
 import { open } from 'node:fs/promises'
 import { MgmLogger } from './MgmLogger.mjs'
 import { hasData, safestrTrim } from './general.mjs'
@@ -20,7 +20,7 @@ export class SingleLineFileProcessor<T = unknown> {
 
     const { action, fileName, logger, trimLine = true, typeName } = this.config
 
-    if (!fs.existsSync(fileName)) {
+    if (!existsSync(fileName)) {
       logger.error('File not found:', fileName)
 
       stats.addFailure(`File not found: ${fileName}.`)
