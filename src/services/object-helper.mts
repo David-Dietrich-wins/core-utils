@@ -1,7 +1,13 @@
 import util from 'util'
-import { hasData, safestrLowercase } from './general.mjs'
-import { IId } from '../models/interfaces.mjs'
+import Axios, { AxiosError } from 'axios'
+import {
+  hasData,
+  isNullOrUndefined,
+  safeJsonToString,
+  safestrLowercase,
+} from './general.mjs'
 import { GrayArrowException } from '../models/GrayArrowException.mjs'
+import { IId } from '../models/interfaces.mjs'
 
 export function CloneObjectWithId<T extends IId>(
   objectWithId: Readonly<T>,
@@ -52,11 +58,15 @@ export function ObjectFindKeyAndReturnValue<T = string>(
   keyToFind: string,
   matchLowercaseAndTrimKey = true
 ) {
-  const safekey = matchLowercaseAndTrimKey ? safestrLowercase(keyToFind, true) : keyToFind
+  const safekey = matchLowercaseAndTrimKey
+    ? safestrLowercase(keyToFind, true)
+    : keyToFind
   if (hasData(safekey)) {
     const keyValuePairs = Object.entries(obj)
     for (const [key, value] of keyValuePairs) {
-      const objkey = matchLowercaseAndTrimKey ? safestrLowercase(key, true) : key
+      const objkey = matchLowercaseAndTrimKey
+        ? safestrLowercase(key, true)
+        : key
 
       if (objkey === safekey) {
         return value
@@ -66,17 +76,25 @@ export function ObjectFindKeyAndReturnValue<T = string>(
 }
 
 export function ObjectMustHaveKeyAndReturnValue<T = string>(
+  fname: string,
   obj: Readonly<Record<string, T>>,
   keyToFind: string,
   matchLowercaseAndTrimKey = true
 ) {
-  const fname = 'ObjectMustHaveKeyAndReturnValue'
-  const ret = ObjectFindKeyAndReturnValue(obj, keyToFind, matchLowercaseAndTrimKey)
+  const ret = ObjectFindKeyAndReturnValue(
+    obj,
+    keyToFind,
+    matchLowercaseAndTrimKey
+  )
+
   if (ret) {
     return ret
   }
 
-  throw new GrayArrowException(`key ${keyToFind} not found in object`, fname)
+  throw new GrayArrowException(
+    `Key ${keyToFind} not found in ${fname} object: `,
+    fname
+  )
 }
 
 export function ObjectTypesToString(
@@ -85,10 +103,42 @@ export function ObjectTypesToString(
   saveHttpResponseData = false,
   saveHttpRequestData = false
 ) {
-  const etoString = e.toString()
+  const etoString: string = isNullOrUndefined(e) ? '' : e.toString()
 
   if (Array.isArray(e)) {
     return util.inspect(e, true, CONST_JsonDepth)
+  } else if (Axios.isAxiosError(e)) {
+    const axerr: AxiosError = e
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const axRetry = (axerr.config as any)?.['axios-retry']
+
+    const axiosJsonError: AxiosErrorWrapper = {
+      type: 'AxiosError',
+      name: axerr.name,
+      code: axerr.code,
+      method: axerr.config?.method,
+      url: axerr.config?.url,
+      message: axerr.message,
+      lastRequestTime: axRetry?.lastRequestTime,
+      retryCount: axRetry?.retryCount,
+      stack: axerr.stack,
+    }
+
+    if (axerr.response?.status) {
+      axiosJsonError.status = axerr.response.status
+    }
+    if (axerr.response?.statusText) {
+      axiosJsonError.statusText = axerr.response.statusText
+    }
+
+    if (saveHttpRequestData && axerr.config?.data) {
+      axiosJsonError.requestData = axerr.config.data
+    }
+    if (saveHttpResponseData && axerr.response?.data) {
+      axiosJsonError.responseData = safeJsonToString(axerr.response.data)
+    }
+
+    return util.inspect(axiosJsonError, true, CONST_JsonDepth)
   } else if (e instanceof Error) {
     const jerr = {
       message: e.message,
@@ -106,5 +156,5 @@ export function ObjectTypesToString(
     return util.inspect(e.toObject(), true, CONST_JsonDepth)
   }
 
-  return e
+  return etoString
 }
