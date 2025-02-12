@@ -1,7 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface IUserState<T = any> {
+export interface IUserState<T = unknown> {
   id: string
-  disallowedPins: string[]
   message?: string
   name: string
   obj?: T
@@ -10,10 +8,8 @@ export interface IUserState<T = any> {
 }
 
 // Custom API error to throw
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default class UserState<T = any> implements IUserState<T> {
+export default class UserState<T = unknown> implements IUserState<T> {
   id = ''
-  disallowedPins = []
 
   constructor(
     public name = 'User',

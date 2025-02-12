@@ -42,8 +42,8 @@ export default class WebState implements IWebState {
     public server: IServerState,
     public user: IUserState,
     public version = 'UNKNOWN',
-    public messages = [],
-    public errorMessages = []
+    public messages: string[] = [],
+    public errorMessages: string[] = []
   ) {}
 }
 
