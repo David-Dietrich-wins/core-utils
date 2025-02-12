@@ -31,6 +31,23 @@ test('IdCreated good with object', () => {
   expect(pr2.created).toBe(created)
 })
 
+test('IdCreated undefined id', () => {
+  const id = undefined
+  const createdBy = `test-create-${suffix}`
+  const created = new Date()
+
+  const pr = new IdCreated(id, createdBy, created)
+
+  expect(pr.id).toBe(id)
+  expect(pr.createdby).toBe(createdBy)
+  expect(pr.created).toBe(created)
+
+  const pr2 = new IdCreated(pr)
+  expect(pr2.id).toBe(id)
+  expect(pr2.createdby).toBe(createdBy)
+  expect(pr2.created).toBe(created)
+})
+
 test('IdCreatedUpdated good', () => {
   const id = 'id'
   const createdby = `test-create-${suffix}`

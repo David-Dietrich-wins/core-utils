@@ -19,21 +19,12 @@ export class ApiWrapper<T = unknown> implements IApiWrapper<T> {
   id = +new Date()
   ts = this.id
 
-  // constructor itemsskky
-  message = ''
-  responseCode = 0
-  result = ''
-
-  // General purpose
-  obj?: T
-
-  constructor(result = '', msg = '', responseCode = 0, obj?: T) {
-    this.result = result
-    this.message = msg
-    this.responseCode = responseCode
-
-    this.obj = obj
-  }
+  constructor(
+    public result = '',
+    public message = '',
+    public responseCode = 0,
+    public obj?: T
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setError(errobj?: any) {

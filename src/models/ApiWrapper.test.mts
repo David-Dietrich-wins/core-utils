@@ -18,6 +18,20 @@ test('Constructor empty', () => {
   expect(apiWrapper.obj).toBeUndefined()
 })
 
+test('Constructor one param', () => {
+  const result = CONST_success
+  const apiWrapper = new ApiWrapper()
+  apiWrapper.result = result + 'extra'
+
+  expect(apiWrapper.message).toBe('')
+  expect(apiWrapper.result).toBe(result + 'extra')
+  expect(apiWrapper.id).toBeGreaterThan(0)
+  expect(apiWrapper.ts).toBeGreaterThan(0)
+  expect(apiWrapper.responseCode).toBe(0)
+
+  expect(apiWrapper.obj).toBeUndefined()
+})
+
 test('message good', () => {
   const result = CONST_success
   const responseCode = 200
