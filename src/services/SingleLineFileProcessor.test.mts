@@ -42,6 +42,7 @@ const { open } = await import('node:fs/promises')
 const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
+import { safestr } from './general.mjs'
 
 beforeEach(() => {
   mockOpen.mockClear()
@@ -135,305 +136,249 @@ test('constructor', async () => {
   expect(stats.upsert).toBe(0)
 })
 
-// test('action exception', async () => {
-//   const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
-//   const mockUnlinkSync = jest.spyOn(fs, 'unlinkSync').mockReturnValue()
-//   const mockOpenSync = jest.spyOn(fs, 'openSync').mockReturnValue(1)
-//   const mockWriteSync = jest.spyOn(fs, 'writeSync').mockReturnValue(2)
-//   const mockCloseSync = jest.spyOn(fs, 'closeSync').mockReturnValue()
+test('action exception', async () => {
+  const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
 
-//   const mockOpen = jest.spyOn(fs.promises, 'open').mockImplementation(() => {
-//     return {
-//       readLines: jest.fn().mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
-//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     } as any
-//   })
+  const config: SingleLineFileProcessorConfig<number> = {
+    fileName: 'anything.txt',
+    logger: getGlobalLogger(),
+    typeName: 'type',
+    action: fnaction,
+  }
+  const processor = new SingleLineFileProcessor(config)
+  expect(processor.config).toBe(config)
 
-//   const config: SingleLineFileProcessorConfig<number> = {
-//     fileName: 'anything.txt',
-//     logger: globalLogger,
-//     typeName: 'type',
-//     action: () => Promise.resolve(1), //new Error('action exception')),
-//   }
-//   const processor = new SingleLineFileProcessor(config)
-//   expect(processor.config).toBe(config)
+  const stats = await processor.processFile()
 
-//   const stats = await processor.processFile()
+  expect(fnaction).toHaveBeenCalledTimes(5)
 
-//   expect(config.action).toHaveBeenCalledTimes(5)
+  expect(mockOpen).toHaveBeenCalledTimes(1)
 
-//   expect(mockOpen).toHaveBeenCalledTimes(1)
-//   mockOpen.mockRestore()
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
+  expect(mockExistsSync).toHaveBeenCalledTimes(1)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
-//   expect(mockCloseSync).toHaveBeenCalledTimes(0)
-//   expect(mockExistsSync).toHaveBeenCalledTimes(1)
-//   expect(mockOpenSync).toHaveBeenCalledTimes(0)
-//   expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-//   expect(mockWriteSync).toHaveBeenCalledTimes(0)
-//   mockCloseSync.mockRestore()
-//   mockExistsSync.mockRestore()
-//   mockOpenSync.mockRestore()
-//   mockUnlinkSync.mockRestore()
-//   mockWriteSync.mockRestore()
+  expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError).toHaveBeenCalledTimes(5)
+  expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
+  expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
+  expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
 
-//   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerError).toHaveBeenCalledTimes(5)
-//   expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
-//   expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
+  expect(stats.add).toBe(0)
+  expect(stats.delete).toBe(0)
+  expect(stats.failures).toBe(5)
+  expect(stats.finishTime).toBeUndefined()
+  expect(stats.msg).toStrictEqual([])
+  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.skipped).toBe(2)
+  expect(stats.successes).toBe(0)
+  expect(stats.suffixWhenPlural).toBe('s')
+  expect(stats.suffixWhenSingle).toBe('')
+  expect(stats.totalProcessed).toBe(7)
+  expect(stats.update).toBe(0)
+  expect(stats.upsert).toBe(0)
+})
 
-//   expect(stats.add).toBe(0)
-//   expect(stats.delete).toBe(0)
-//   expect(stats.failures).toBe(5)
-//   expect(stats.finishTime).toBeUndefined()
-//   expect(stats.msg).toStrictEqual([])
-//   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
-//   expect(stats.skipped).toBe(2)
-//   expect(stats.successes).toBe(0)
-//   expect(stats.suffixWhenPlural).toBe('s')
-//   expect(stats.suffixWhenSingle).toBe('')
-//   expect(stats.totalProcessed).toBe(7)
-//   expect(stats.update).toBe(0)
-//   expect(stats.upsert).toBe(0)
-// })
+test('action exception with trimline', async () => {
+  const fnaction = jest.fn((safeline: string) => {
+    return Promise.resolve(safestr(safeline).length)
+  })
+  const config: SingleLineFileProcessorConfig<number> = {
+    fileName: 'anything.txt',
+    logger: getGlobalLogger(),
+    typeName: 'type',
+    action: fnaction,
+    trimLine: false,
+  }
+  const processor = new SingleLineFileProcessor(config)
+  expect(processor.config).toBe(config)
 
-// test('action exception with trimline', async () => {
-//   const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
-//   const mockUnlinkSync = jest.spyOn(fs, 'unlinkSync').mockReturnValue()
-//   const mockOpenSync = jest.spyOn(fs, 'openSync').mockReturnValue(1)
-//   const mockWriteSync = jest.spyOn(fs, 'writeSync').mockReturnValue(2)
-//   const mockCloseSync = jest.spyOn(fs, 'closeSync').mockReturnValue()
+  const stats = await processor.processFile()
 
-//   const mockOpen = jest.spyOn(fs.promises, 'open').mockImplementation(() => {
-//     return {
-//       readLines: jest.fn().mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
-//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     } as any
-//   })
+  expect(mockOpen).toHaveBeenCalledTimes(1)
 
-//   const config: SingleLineFileProcessorConfig<number> = {
-//     fileName: 'anything.txt',
-//     logger: globalLogger,
-//     typeName: 'type',
-//     action: async (safeline: string) => {
-//       return safestr(safeline).length
-//     },
-//     trimLine: false,
-//   }
-//   const processor = new SingleLineFileProcessor(config)
-//   expect(processor.config).toBe(config)
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
+  expect(mockExistsSync).toHaveBeenCalledTimes(1)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
-//   const stats = await processor.processFile()
+  expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError).toHaveBeenCalledTimes(0)
+  expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
+  expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
+  expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
 
-//   expect(mockOpen).toHaveBeenCalledTimes(1)
-//   mockOpen.mockRestore()
+  expect(mockLoggerInfo.mock.calls[0]).toStrictEqual([
+    'Processing',
+    'type',
+    'file:',
+    'anything.txt',
+  ])
 
-//   expect(mockCloseSync).toHaveBeenCalledTimes(0)
-//   expect(mockExistsSync).toHaveBeenCalledTimes(1)
-//   expect(mockOpenSync).toHaveBeenCalledTimes(0)
-//   expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-//   expect(mockWriteSync).toHaveBeenCalledTimes(0)
-//   mockCloseSync.mockRestore()
-//   mockExistsSync.mockRestore()
-//   mockOpenSync.mockRestore()
-//   mockUnlinkSync.mockRestore()
-//   mockWriteSync.mockRestore()
+  expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
+  expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
 
-//   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerError).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
-//   expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
+  expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
+  expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[0]).toStrictEqual([
-//     'Processing',
-//     'type',
-//     'file:',
-//     'anything.txt',
-//   ])
+  expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
+  expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
-//   expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
+  expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
+  expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
-//   expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
+  expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
+  expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
-//   expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
+  expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
+  expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
+    'Processing line',
+    7,
+    'type:',
+    '# comment',
+    'SKIP COMMENT LINE',
+  ])
+  expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
+    'Finished processing',
+    'type',
+    'file:',
+    'anything.txt',
+    'with',
+    8,
+    'lines',
+  ])
 
-//   expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
-//   expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
+  expect(stats.add).toBe(0)
+  expect(stats.delete).toBe(0)
+  expect(stats.failures).toBe(0)
+  expect(stats.finishTime).toBeUndefined()
+  expect(stats.msg).toStrictEqual([])
+  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.skipped).toBe(2)
+  expect(stats.successes).toBe(5)
+  expect(stats.suffixWhenPlural).toBe('s')
+  expect(stats.suffixWhenSingle).toBe('')
+  expect(stats.totalProcessed).toBe(7)
+  expect(stats.update).toBe(0)
+  expect(stats.upsert).toBe(0)
+})
 
-//   expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
-//   expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
+test('processFile bad', async () => {
+  const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
 
-//   expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
-//   expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
-//     'Processing line',
-//     7,
-//     'type:',
-//     '# comment',
-//     'SKIP COMMENT LINE',
-//   ])
-//   expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
-//     'Finished processing',
-//     'type',
-//     'file:',
-//     'anything.txt',
-//     'with',
-//     8,
-//     'lines',
-//   ])
+  const tmpFile = 'abc'
 
-//   expect(stats.add).toBe(0)
-//   expect(stats.delete).toBe(0)
-//   expect(stats.failures).toBe(0)
-//   expect(stats.finishTime).toBeUndefined()
-//   expect(stats.msg).toStrictEqual([])
-//   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
-//   expect(stats.skipped).toBe(2)
-//   expect(stats.successes).toBe(5)
-//   expect(stats.suffixWhenPlural).toBe('s')
-//   expect(stats.suffixWhenSingle).toBe('')
-//   expect(stats.totalProcessed).toBe(7)
-//   expect(stats.update).toBe(0)
-//   expect(stats.upsert).toBe(0)
-// })
+  const config: SingleLineFileProcessorConfig<number> = {
+    action: fnaction,
+    fileName: tmpFile,
+    logger: getGlobalLogger(),
+    typeName: 'type',
+  }
+  const processor = new SingleLineFileProcessor(config)
+  expect(processor.config).toBe(config)
 
-// test('processFile bad', async () => {
-//   const mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true)
-//   const mockUnlinkSync = jest.spyOn(fs, 'unlinkSync').mockReturnValue()
-//   const mockOpenSync = jest.spyOn(fs, 'openSync').mockReturnValue(1)
-//   const mockWriteSync = jest.spyOn(fs, 'writeSync').mockReturnValue(2)
-//   const mockCloseSync = jest.spyOn(fs, 'closeSync').mockReturnValue()
+  const stats = await processor.processFile()
 
-//   const mockOpen = jest.spyOn(fs.promises, 'open').mockImplementation(() => {
-//     return {
-//       readLines: jest.fn().mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
-//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     } as any
-//   })
+  expect(fnaction).toHaveBeenCalledTimes(5)
 
-//   const tmpFile = 'abc'
+  expect(mockOpen).toHaveBeenCalledTimes(1)
 
-//   const config: SingleLineFileProcessorConfig<number> = {
-//     action: () => Promise.resolve(1),
-//     // jest.fn().mockImplementation(() => Promise.resolve(1)),
-//     // .mockImplementation(() => {
-//     // return Promise.resolve(1)
-//     // return Promise.reject(new Error('action exception'))
-//     fileName: tmpFile,
-//     logger: globalLogger,
-//     typeName: 'type',
-//   }
-//   const processor = new SingleLineFileProcessor(config)
-//   expect(processor.config).toBe(config)
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
+  expect(mockExistsSync).toHaveBeenCalledTimes(1)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
-//   const stats = await processor.processFile()
+  expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError).toHaveBeenCalledTimes(5)
+  expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
+  expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
+  expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
 
-//   expect(config.action).toHaveBeenCalledTimes(5)
+  expect(mockLoggerError.mock.calls[0][0]).toBe('Error processing line')
+  expect(mockLoggerError.mock.calls[0][1]).toBe(1)
+  let err = mockLoggerError.mock.calls[0][2] as Error
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBe('action exception')
+  expect(err.stack).toMatch(/^Error: action exception/)
 
-//   expect(mockOpen).toHaveBeenCalledTimes(1)
-//   mockOpen.mockRestore()
+  expect(mockLoggerError.mock.calls[1][0]).toBe('Error processing line')
+  expect(mockLoggerError.mock.calls[1][1]).toBe(2)
+  err = mockLoggerError.mock.calls[1][2] as Error
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBe('action exception')
+  expect(err.stack).toMatch(/^Error: action exception/)
 
-//   expect(mockCloseSync).toHaveBeenCalledTimes(0)
-//   expect(mockExistsSync).toHaveBeenCalledTimes(1)
-//   expect(mockOpenSync).toHaveBeenCalledTimes(0)
-//   expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-//   expect(mockWriteSync).toHaveBeenCalledTimes(0)
-//   mockCloseSync.mockRestore()
-//   mockExistsSync.mockRestore()
-//   mockOpenSync.mockRestore()
-//   mockUnlinkSync.mockRestore()
-//   mockWriteSync.mockRestore()
+  expect(mockLoggerError.mock.calls[2][0]).toBe('Error processing line')
+  expect(mockLoggerError.mock.calls[2][1]).toBe(3)
+  err = mockLoggerError.mock.calls[2][2] as Error
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBe('action exception')
+  expect(err.stack).toMatch(/^Error: action exception/)
 
-//   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerError).toHaveBeenCalledTimes(5)
-//   expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
-//   expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError.mock.calls[3][0]).toBe('Error processing line')
+  expect(mockLoggerError.mock.calls[3][1]).toBe(4)
+  err = mockLoggerError.mock.calls[3][2] as Error
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBe('action exception')
+  expect(err.stack).toMatch(/^Error: action exception/)
 
-//   expect(mockLoggerError.mock.calls[0][0]).toBe('Error processing line')
-//   expect(mockLoggerError.mock.calls[0][1]).toBe(1)
-//   let err = mockLoggerError.mock.calls[0][2]
-//   expect(err).toBeInstanceOf(Error)
-//   expect(err.message).toBe('action exception')
-//   expect(err.stack).toMatch(/^Error: action exception/)
+  expect(mockLoggerError.mock.calls[4][0]).toBe('Error processing line')
+  expect(mockLoggerError.mock.calls[4][1]).toBe(5)
+  err = mockLoggerError.mock.calls[4][2] as Error
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBe('action exception')
+  expect(err.stack).toMatch(/^Error: action exception/)
 
-//   expect(mockLoggerError.mock.calls[1][0]).toBe('Error processing line')
-//   expect(mockLoggerError.mock.calls[1][1]).toBe(2)
-//   err = mockLoggerError.mock.calls[1][2]
-//   expect(err).toBeInstanceOf(Error)
-//   expect(err.message).toBe('action exception')
-//   expect(err.stack).toMatch(/^Error: action exception/)
+  expect(mockLoggerInfo.mock.calls[0]).toStrictEqual(['Processing', 'type', 'file:', 'abc'])
 
-//   expect(mockLoggerError.mock.calls[2][0]).toBe('Error processing line')
-//   expect(mockLoggerError.mock.calls[2][1]).toBe(3)
-//   err = mockLoggerError.mock.calls[2][2]
-//   expect(err).toBeInstanceOf(Error)
-//   expect(err.message).toBe('action exception')
-//   expect(err.stack).toMatch(/^Error: action exception/)
+  expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
+  expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
 
-//   expect(mockLoggerError.mock.calls[3][0]).toBe('Error processing line')
-//   expect(mockLoggerError.mock.calls[3][1]).toBe(4)
-//   err = mockLoggerError.mock.calls[3][2]
-//   expect(err).toBeInstanceOf(Error)
-//   expect(err.message).toBe('action exception')
-//   expect(err.stack).toMatch(/^Error: action exception/)
+  expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
+  expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
 
-//   expect(mockLoggerError.mock.calls[4][0]).toBe('Error processing line')
-//   expect(mockLoggerError.mock.calls[4][1]).toBe(5)
-//   err = mockLoggerError.mock.calls[4][2]
-//   expect(err).toBeInstanceOf(Error)
-//   expect(err.message).toBe('action exception')
-//   expect(err.stack).toMatch(/^Error: action exception/)
+  expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
+  expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[0]).toStrictEqual(['Processing', 'type', 'file:', 'abc'])
+  expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
+  expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[1]).toStrictEqual(['Processing line', 1, 'type:', '1', 'START'])
-//   expect(mockLoggerInfo.mock.calls[2]).toStrictEqual(['Processing line', 1, 'type:', '1', 'END'])
+  expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
+  expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
 
-//   expect(mockLoggerInfo.mock.calls[3]).toStrictEqual(['Processing line', 2, 'type:', '2', 'START'])
-//   expect(mockLoggerInfo.mock.calls[4]).toStrictEqual(['Processing line', 2, 'type:', '2', 'END'])
+  expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
+  expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
+    'Processing line',
+    7,
+    'type:',
+    '# comment',
+    'SKIP COMMENT LINE',
+  ])
+  expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
+    'Finished processing',
+    'type',
+    'file:',
+    'abc',
+    'with',
+    8,
+    'lines',
+  ])
 
-//   expect(mockLoggerInfo.mock.calls[5]).toStrictEqual(['Processing line', 3, 'type:', '3', 'START'])
-//   expect(mockLoggerInfo.mock.calls[6]).toStrictEqual(['Processing line', 3, 'type:', '3', 'END'])
-
-//   expect(mockLoggerInfo.mock.calls[7]).toStrictEqual(['Processing line', 4, 'type:', '4', 'START'])
-//   expect(mockLoggerInfo.mock.calls[8]).toStrictEqual(['Processing line', 4, 'type:', '4', 'END'])
-
-//   expect(mockLoggerInfo.mock.calls[9]).toStrictEqual(['Processing line', 5, 'type:', '5', 'START'])
-//   expect(mockLoggerInfo.mock.calls[10]).toStrictEqual(['Processing line', 5, 'type:', '5', 'END'])
-
-//   expect(mockLoggerInfo.mock.calls[11]).toStrictEqual(['Processing line', 6, 'SKIP EMPTY LINE'])
-//   expect(mockLoggerInfo.mock.calls[12]).toStrictEqual([
-//     'Processing line',
-//     7,
-//     'type:',
-//     '# comment',
-//     'SKIP COMMENT LINE',
-//   ])
-//   expect(mockLoggerInfo.mock.calls[13]).toStrictEqual([
-//     'Finished processing',
-//     'type',
-//     'file:',
-//     'abc',
-//     'with',
-//     8,
-//     'lines',
-//   ])
-
-//   expect(stats.add).toBe(0)
-//   expect(stats.delete).toBe(0)
-//   expect(stats.failures).toBe(5)
-//   expect(stats.finishTime).toBeUndefined()
-//   expect(stats.msg).toStrictEqual([])
-//   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
-//   expect(stats.skipped).toBe(2)
-//   expect(stats.successes).toBe(0)
-//   expect(stats.suffixWhenPlural).toBe('s')
-//   expect(stats.suffixWhenSingle).toBe('')
-//   expect(stats.totalProcessed).toBe(7)
-//   expect(stats.update).toBe(0)
-//   expect(stats.upsert).toBe(0)
-// })
+  expect(stats.add).toBe(0)
+  expect(stats.delete).toBe(0)
+  expect(stats.failures).toBe(5)
+  expect(stats.finishTime).toBeUndefined()
+  expect(stats.msg).toStrictEqual([])
+  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.skipped).toBe(2)
+  expect(stats.successes).toBe(0)
+  expect(stats.suffixWhenPlural).toBe('s')
+  expect(stats.suffixWhenSingle).toBe('')
+  expect(stats.totalProcessed).toBe(7)
+  expect(stats.update).toBe(0)
+  expect(stats.upsert).toBe(0)
+})
