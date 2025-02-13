@@ -1,5 +1,15 @@
 import UserState from './UserState.mjs'
 
+test('default args', () => {
+  const userState = new UserState()
+
+  expect(userState.id).toBe('User')
+  expect(userState.name).toBe('User')
+  expect(userState.status).toBe('')
+  expect(userState.statusCode).toBe(-1)
+  expect(userState.obj).toBeUndefined()
+})
+
 test('good', () => {
   const userState = new UserState<{ data: string }>('User', 'success', 1, {
     data: 'hello',

@@ -1,7 +1,7 @@
-export interface IUserState<T = unknown> {
-  id: string
+import { IIdName } from './id-name.mjs'
+
+export interface IUserState<T = unknown> extends IIdName<string, string> {
   message?: string
-  name: string
   obj?: T
   status: string
   statusCode: number
@@ -13,7 +13,7 @@ export default class UserState<T = unknown> implements IUserState<T> {
 
   constructor(
     public name = 'User',
-    public status: string,
+    public status = '',
     public statusCode = -1,
     public obj?: T
   ) {
