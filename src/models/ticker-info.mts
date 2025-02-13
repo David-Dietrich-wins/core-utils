@@ -1,6 +1,13 @@
 import { IdName } from '../models/id-name.mjs'
 import { isObject } from '../services/general.mjs'
-import { IDate, IId, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
+import {
+  IDate,
+  IId,
+  IName,
+  IPrice,
+  IType,
+  IVal,
+} from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 
 export interface ISymbol {
@@ -152,7 +159,11 @@ export interface ICompanyFinancialRatios {
   priceFairValueTTM: number
 }
 
-export interface ICompanyInfo extends IId, IHasPolitiscales, IVal<IExchangeInfo>, IType {
+export interface ICompanyInfo
+  extends IId,
+    IHasPolitiscales,
+    IVal<IExchangeInfo>,
+    IType {
   exchange: string
   industry: string
   minmov: number
@@ -164,7 +175,12 @@ export interface ICompanyInfo extends IId, IHasPolitiscales, IVal<IExchangeInfo>
   updatedby: string
 }
 
-export interface ICompanyScales extends IId, IName, Required<IHasPolitiscales>, ITicker, IType {
+export interface ICompanyScales
+  extends IId,
+    IName,
+    Required<IHasPolitiscales>,
+    ITicker,
+    IType {
   description: string
   sector: string
   industry: string
@@ -243,8 +259,12 @@ export interface IPriceBar<Tdate = string> extends IDate<Tdate>, IVolume {
   close: number // 212.31,
   // volume: number    // 3866565,
 }
-export interface IPriceBarSymbol<Tdate = string> extends IPriceBar<Tdate>, ISymbol {}
-export interface IPriceBarTicker<Tdate = string> extends IPriceBar<Tdate>, ITicker {}
+export interface IPriceBarSymbol<Tdate = string>
+  extends IPriceBar<Tdate>,
+    ISymbol {}
+export interface IPriceBarTicker<Tdate = string>
+  extends IPriceBar<Tdate>,
+    ITicker {}
 
 export type IPriceHistory<Tdate = string> = IPriceBar<Tdate>
 
@@ -287,7 +307,7 @@ export class AssetQuoteShort implements ISymbolPriceVolume {
   price = 0
   volume = 0
 
-  constructor(obj: AssetQuoteShort) {
+  constructor(obj?: AssetQuoteShort) {
     if (isObject(obj)) {
       Object.assign(this, obj)
     }
@@ -338,7 +358,7 @@ export class ExchangeInfo implements IExchangeInfo {
 }
 
 export interface IMarketHolidays {
-  year: number
+  'year': number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
   // eslint-disable-next-line quotes
@@ -349,7 +369,7 @@ export interface IMarketHolidays {
   'Independence Day': string
   'Labor Day': string
   'Thanksgiving Day': string
-  Christmas: string
+  'Christmas': string
 }
 export interface IMarketOpenCloseHours {
   openingHour: string
@@ -381,7 +401,7 @@ export class PriceHistoricalResponse implements IPriceHistoricalFull {
   changeOverTime = 0 // -0.04002,
   datetime = 0 // 1624507200000
 
-  constructor(obj: IPriceHistoricalFull) {
+  constructor(obj?: IPriceHistoricalFull) {
     if (isObject(obj)) {
       Object.assign(this, obj)
     }
