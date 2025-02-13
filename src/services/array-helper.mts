@@ -1,8 +1,17 @@
 import { IntecoreException } from '../models/IntecoreException.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IId, IName } from '../models/interfaces.mjs'
-import { ArrayOrSingle } from '../models/types.mjs'
-import { getObject, isArray, safeArray, safestr } from './general.mjs'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import {
+  getObject,
+  isArray,
+  isNullOrUndefined,
+  isString,
+  safeArray,
+  safestr,
+  safestrTrim,
+  safestrUppercase,
+} from './general.mjs'
 
 export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
   arr?: Readonly<T>[],
@@ -149,7 +158,7 @@ export function arrayMustFindFunc<T>(
 
   if (!foundItem) {
     throw new IntecoreException(
-      `Unable to find ${safestr(functionSourceName, arrayFind.name)}${
+      `Unable to find ${safestr(functionSourceName, arrayMustFindFunc.name)}${
         exceptionSuffix ? ' ' + exceptionSuffix() : ''
       }.`,
       arrayFindByName.name,
@@ -280,6 +289,16 @@ export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
 
   return []
 }
+export function ToSafeArray2d<T = unknown>(
+  arrOrT?: Readonly<ArrayOrSingle<T>>
+) {
+  if (arrOrT) {
+    const arr = Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
+    return arr.every((x) => Array.isArray(x)) ? (arrOrT as T[]) : [arrOrT as T]
+  }
+
+  return []
+}
 
 /**
  * Helper function to reduce an array of objects or arrays.
@@ -372,4 +391,134 @@ export function arraySwapItems<T>(
   arrItems[sourceIndex] = temp
 
   return arrItems
+}
+
+export function shuffleArray<T>(array: T[], maxItems?: number) {
+  const shuffledArray = [...array]
+
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const rand = Math.floor(Math.random() * (i + 1))
+    ;[shuffledArray[i], shuffledArray[rand]] = [
+      shuffledArray[rand],
+      shuffledArray[i],
+    ]
+  }
+
+  return isNullOrUndefined(maxItems)
+    ? shuffledArray
+    : shuffledArray.slice(0, maxItems)
+}
+
+/**
+ * Takes a string or array of strings, iterates over each string and splits them according to the splitter provided.
+ * Each split string is then added to an array and the array of split strings is returned.
+ * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+ * @param splitter A string of what to split every string by.
+ * @param removeEmpties If true, remove all empty strings.
+ * @param trimStrings True if you want to remove any surrounding spaces on every string.
+ * @returns An array of every string split by splitter.
+ */
+export function splitToArray(
+  strOrArray?: StringOrStringArray,
+  splitter = ',',
+  removeEmpties = true,
+  trimStrings = true
+) {
+  let splitted: string[] = []
+  if (isNullOrUndefined(strOrArray)) {
+    return splitted
+  }
+
+  if (isString(strOrArray)) {
+    let str = safestrTrim(strOrArray)
+    if (str.startsWith('[')) {
+      str = safestrTrim(str.substring(1))
+    }
+    if (str.endsWith(']')) {
+      str = safestrTrim(str.substring(0, str.length - 1))
+    }
+
+    splitted = str.split(splitter)
+  } else if (isArray(strOrArray)) {
+    strOrArray.map((x) => (splitted = splitted.concat(x.split(splitter))))
+  } else {
+    throw 'Invalid type passed to splitToArray'
+  }
+
+  if (trimStrings) {
+    splitted = splitted.map((x) => safestrTrim(x))
+  }
+
+  if (removeEmpties) {
+    return splitted.filter(function (e) {
+      if (e) {
+        return e
+      }
+    })
+  }
+
+  return splitted
+}
+
+/**
+ * Calls splitToArray and if only one string is the array is returned, just that string is returned.
+ * Otherwise the array returned from splitToArray is returned intact.
+ * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+ * @param splitter A string of what to split every string by.
+ * @param removeEmpties If true, remove all empty strings.
+ * @param trimStrings True if you want to remove any surrounding spaces on every string.
+ * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray, the string itself is returned.
+ */
+export function splitToArrayOrStringIfOnlyOne(
+  strOrArray: StringOrStringArray,
+  splitter = ',',
+  removeEmpties = true,
+  trimStrings = true
+): StringOrStringArray {
+  const arr = splitToArray(strOrArray, splitter, removeEmpties, trimStrings)
+
+  if (isArray(arr, 2)) {
+    return arr
+  }
+
+  if (isArray(arr, 1)) {
+    return arr[0]
+  }
+
+  return ''
+}
+
+/**
+ * Calls splitToArray and if only one string is the array is returned, just that string is returned uppercase.
+ * Otherwise the array returned from splitToArray is returned with each string uppercased.
+ * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+ * @param splitter A string of what to split every string by.
+ * @param removeEmpties If true, remove all empty strings.
+ * @param trimStrings True if you want to remove any surrounding spaces on every string.
+ * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray with every string uppercased, the string itself is returned uppercase.
+ */
+export function splitToArrayOrStringIfOnlyOneToUpper(
+  strOrArray: StringOrStringArray,
+  splitter = ',',
+  removeEmpties = true,
+  trimStrings = true
+): StringOrStringArray {
+  const arr = splitToArrayOrStringIfOnlyOne(
+    strOrArray,
+    splitter,
+    removeEmpties,
+    trimStrings
+  )
+
+  if (isArray(arr)) {
+    return arr.map((x) => x.toUpperCase())
+  }
+
+  return safestrUppercase(arr)
+}
+
+export function splitToArrayOfIntegers(commaDelimitedString?: string) {
+  const trimmed = splitToArray(commaDelimitedString)
+
+  return trimmed.map((item) => parseInt(item, 10))
 }
