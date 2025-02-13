@@ -38,6 +38,14 @@ test('WebState good', () => {
   expect(webState.message).toBe('success')
 })
 
+test('WebState default constructor', () => {
+  const webState = new WebState()
+
+  expect(webState.totalFailures).toBe(0)
+  expect(webState.totalRequests).toBe(0)
+  expect(webState.message).toBe('success')
+})
+
 test('WebState constructor good', () => {
   const serverState = TestConfig.getTestServerState()
 
