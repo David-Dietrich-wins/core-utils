@@ -103,6 +103,28 @@ test('setError error object', () => {
   expect(apiWrapper.obj).toBe(obj)
 })
 
+test('setError exception', () => {
+  const result = CONST_success
+  const responseCode = 200
+  const message = CONST_success
+  const obj = { message: 'Found' }
+  const apiWrapper = new ApiWrapper(result, message, responseCode, obj)
+  const ge = new GrayArrowException(
+    'setError exception',
+    'not found',
+    CONST_ErrorNotFound
+  )
+
+  apiWrapper.setError(ge)
+  expect(apiWrapper.message.indexOf('setError exception')).toBe(0)
+  expect(apiWrapper.result.indexOf(CONST_DefaultError)).toBe(0)
+  expect(apiWrapper.id).toBeGreaterThan(0)
+  expect(apiWrapper.ts).toBeGreaterThan(0)
+  expect(apiWrapper.responseCode).toBe(CONST_DefaultErrorResponseCode)
+
+  expect(apiWrapper.obj).toBe('Not Found')
+})
+
 test('setError error number', () => {
   const result = CONST_success
   const responseCode = 200

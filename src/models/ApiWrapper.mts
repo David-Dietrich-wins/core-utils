@@ -33,9 +33,7 @@ export class ApiWrapper<T = unknown> implements IApiWrapper<T> {
 
     if (errobj) {
       if (isObject(errobj) && errobj instanceof GrayArrowException) {
-        if (!isNullOrUndefined(errobj.responseCode)) {
-          this.responseCode = errobj.responseCode ?? -1
-        }
+        this.responseCode = errobj.responseCode ?? -1
 
         if (errobj.message) {
           this.message = errobj.message
