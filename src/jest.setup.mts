@@ -60,6 +60,7 @@ export function getGlobalLogger() {
 
 export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
+  currentDate: 0,
   userIdGood: 123456789,
   userIdBad: 987654321,
   jwt: '',
@@ -85,11 +86,19 @@ beforeAll(() => {
   //   onUnhandledRequest: 'error',
   // })
 
-  Date.now = jest.fn(() => new Date().getTime())
+  TEST_Parameters_DEV.currentDate = new Date().getTime()
+  jest.useFakeTimers()
+  jest.setSystemTime(new Date(TEST_Parameters_DEV.currentDate))
+  // // Override Date.now() to return a fixed date for all objects
+  // Date.now = jest.fn(() => TEST_Parameters_DEV.currentDate)
+})
+
+afterAll(() => {
+  jest.useRealTimers()
 })
 
 export function getCurrentDate() {
-  return new Date(Date.now())
+  return new Date(TEST_Parameters_DEV.currentDate)
 }
 
 export const mockConsoleDebug = jest

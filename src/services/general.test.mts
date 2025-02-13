@@ -1,3 +1,4 @@
+import { getCurrentDate } from '../jest.setup.mjs'
 import {
   getAsNumber,
   getNumberFormatted,
@@ -21,7 +22,7 @@ describe('Time Difference', () => {
   })
 
   test('4h', () => {
-    const startDate = new Date(Date.now())
+    const startDate = getCurrentDate()
 
     startDate.setHours(startDate.getHours() + 4)
     const str = timeDifferenceString(startDate)
@@ -31,7 +32,7 @@ describe('Time Difference', () => {
   })
 
   test('21d', () => {
-    const startDate = new Date(Date.now())
+    const startDate = getCurrentDate()
 
     startDate.setDate(startDate.getDate() + 21)
     const str = timeDifferenceString(startDate)
