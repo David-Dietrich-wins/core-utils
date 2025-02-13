@@ -88,6 +88,10 @@ beforeAll(() => {
   Date.now = jest.fn(() => new Date().getTime())
 })
 
+export function getCurrentDate() {
+  return new Date(Date.now())
+}
+
 export const mockConsoleDebug = jest
   .spyOn(console, 'debug')
   .mockImplementation(() => {})

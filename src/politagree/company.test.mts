@@ -1,14 +1,13 @@
+import { getCurrentDate } from '../jest.setup.mjs'
 import { Company } from './company.mjs'
 
 test('constructor', () => {
-  const dateNow = new Date(Date.now())
-
   const company = new Company()
   expect(company).toEqual({
     address1: '',
     address2: '',
     city: '',
-    created: dateNow,
+    created: getCurrentDate(),
     createdby: 'IdCreatedUpdated',
     description: '',
     email: '',
@@ -20,20 +19,18 @@ test('constructor', () => {
     phone: '',
     scales: undefined,
     status: 0,
-    updated: dateNow,
+    updated: getCurrentDate(),
     updatedby: 'IdCreatedUpdated',
     zip: '',
   })
 })
 
 test('constructor with ICompany', () => {
-  const dateNow = new Date(Date.now())
-
   const ic = {
     address1: 'address1',
     address2: 'address2',
     city: 'city',
-    created: dateNow,
+    created: getCurrentDate(),
     createdby: 'createdby',
     description: 'description',
     email: 'email',
@@ -45,7 +42,7 @@ test('constructor with ICompany', () => {
     phone: 'phone',
     scales: [],
     status: 1,
-    updated: dateNow,
+    updated: getCurrentDate(),
     updatedby: 'updatedby',
     zip: 'zip',
   }
@@ -55,7 +52,7 @@ test('constructor with ICompany', () => {
     address1: 'address1',
     address2: 'address2',
     city: 'city',
-    created: dateNow,
+    created: getCurrentDate(),
     createdby: 'createdby',
     description: 'description',
     email: 'email',
@@ -67,7 +64,7 @@ test('constructor with ICompany', () => {
     phone: 'phone',
     scales: [],
     status: 1,
-    updated: dateNow,
+    updated: getCurrentDate(),
     updatedby: 'updatedby',
     zip: 'zip',
   })
