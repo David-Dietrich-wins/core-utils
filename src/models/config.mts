@@ -14,7 +14,7 @@ export interface IConfig<Tid = string, Tval = boolean>
   userid: Tid
 }
 
-export default class Config<Tid = string, Tval = boolean>
+export class Config<Tid = string, Tval = boolean>
   extends IdCreatedUpdated<Tid>
   implements IConfig<Tid, Tval>
 {
@@ -25,7 +25,7 @@ export default class Config<Tid = string, Tval = boolean>
   constructor(
     id: Tid | IConfig<Tid, Tval>,
     userid: Tid,
-    name = '',
+    name: string,
     val: Tval,
     updatedby = 'Config',
     updated = new Date(),
