@@ -10,13 +10,15 @@ export interface IHasPolitiscales {
   scales?: IPolitiscale[]
 }
 
-export interface ITickerSearchWithScales extends ITickerSearch, IHasPolitiscales {}
+export interface ITickerSearchWithScales
+  extends ITickerSearch,
+    IHasPolitiscales {}
 
 export class Politiscale implements IPolitiscale {
   name: PolitiscaleName = 'climate'
   value = 0
 
-  constructor(name: PolitiscaleName, value: number) {
+  constructor(name: PolitiscaleName | IPolitiscale, value: number) {
     if (isObject(name)) {
       Object.assign(this, name)
     } else {

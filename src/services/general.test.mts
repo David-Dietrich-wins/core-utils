@@ -10,8 +10,7 @@ import {
 
 describe('Time Difference', () => {
   test('2s', () => {
-    const dtNow = new Date()
-    const startDate = new Date(+dtNow)
+    const startDate = new Date(Date.now())
 
     startDate.setSeconds(startDate.getSeconds() - 2)
     const str = timeDifferenceString(startDate)
@@ -22,8 +21,7 @@ describe('Time Difference', () => {
   })
 
   test('4h', () => {
-    const dtNow = new Date()
-    const startDate = new Date(+dtNow)
+    const startDate = new Date(Date.now())
 
     startDate.setHours(startDate.getHours() + 4)
     const str = timeDifferenceString(startDate)
@@ -33,7 +31,7 @@ describe('Time Difference', () => {
   })
 
   test('21d', () => {
-    const startDate = new Date()
+    const startDate = new Date(Date.now())
 
     startDate.setDate(startDate.getDate() + 21)
     const str = timeDifferenceString(startDate)

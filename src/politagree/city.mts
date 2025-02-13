@@ -27,7 +27,7 @@ export class City implements ICity {
   slug = ''
   scales: IPolitiscale[] = []
 
-  constructor(obj?: unknown) {
+  constructor(obj?: ICity) {
     if (isObject(obj)) {
       Object.assign(this, obj)
     }

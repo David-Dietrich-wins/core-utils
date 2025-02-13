@@ -84,6 +84,8 @@ beforeAll(() => {
   //   // matching request handler.
   //   onUnhandledRequest: 'error',
   // })
+
+  Date.now = jest.fn(() => new Date().getTime())
 })
 
 export const mockConsoleDebug = jest
