@@ -12,7 +12,7 @@ export const HTTP_NotAcceptable = 406 as const
 export const HTTP_PreconditionRequired = 428 as const
 export const HTTP_NetworkAuthenticationRequired = 511 as const
 
-export class GrayArrowException<Tobj = string> extends Error {
+export class IntecoreException<Tobj = string> extends Error {
   functionNameSource: string
   obj?: Tobj
   responseCode?: number
@@ -22,16 +22,14 @@ export class GrayArrowException<Tobj = string> extends Error {
 
     this.functionNameSource = hasData(functionNameSource)
       ? functionNameSource
-      : 'GrayArrowException'
+      : 'IntecoreException'
     this.obj = obj
 
     Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
-export class GrayArrowExceptionHttp<
-  Tobj = Response
-> extends GrayArrowException<Tobj> {
+export class HttpException<Tobj = Response> extends IntecoreException<Tobj> {
   httpStatusCode: number
 
   constructor(
@@ -42,9 +40,7 @@ export class GrayArrowExceptionHttp<
   ) {
     super(
       m,
-      hasData(functionNameSource)
-        ? functionNameSource
-        : 'GrayArrowExceptionHttp',
+      hasData(functionNameSource) ? functionNameSource : 'HttpException',
       response
     )
 
@@ -53,9 +49,7 @@ export class GrayArrowExceptionHttp<
   }
 }
 
-export class GrayArrowExceptionHttpUnauthorized<
-  T
-> extends GrayArrowExceptionHttp<T> {
+export class HttpExceptionUnauthorized<T> extends HttpException<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_Unauthorized, response)
 
@@ -63,9 +57,7 @@ export class GrayArrowExceptionHttpUnauthorized<
   }
 }
 
-export class GrayArrowExceptionHttpForbidden<
-  T
-> extends GrayArrowExceptionHttp<T> {
+export class HttpExceptionForbidden<T> extends HttpException<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_Forbidden, response)
 
@@ -73,9 +65,7 @@ export class GrayArrowExceptionHttpForbidden<
   }
 }
 
-export class GrayArrowExceptionHttpNotAcceptable<
-  T
-> extends GrayArrowExceptionHttp<T> {
+export class HttpExceptionNotAcceptable<T> extends HttpException<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_NotAcceptable, response)
 
@@ -83,9 +73,7 @@ export class GrayArrowExceptionHttpNotAcceptable<
   }
 }
 
-export class GrayArrowExceptionHttpNotAllowed<
-  T
-> extends GrayArrowExceptionHttp<T> {
+export class HttpExceptionNotAllowed<T> extends HttpException<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_MethodNotAllowed, response)
 
@@ -93,9 +81,7 @@ export class GrayArrowExceptionHttpNotAllowed<
   }
 }
 
-export class GrayArrowExceptionHttpNotFound<
-  T
-> extends GrayArrowExceptionHttp<T> {
+export class HttpExceptionNotFound<T> extends HttpException<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_NotFound, response)
 

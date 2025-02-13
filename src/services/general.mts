@@ -1,4 +1,4 @@
-import { GrayArrowException } from '../models/GrayArrowException.mjs'
+import { IntecoreException } from '../models/IntecoreException.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 
 /**
@@ -427,10 +427,7 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
 export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
   const item = getObject(arr, index)
   if (!item) {
-    throw new GrayArrowException(
-      'No object found.',
-      getObjectWithException.name
-    )
+    throw new IntecoreException('No object found.', getObjectWithException.name)
   }
 
   return item

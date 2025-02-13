@@ -1,4 +1,4 @@
-import { GrayArrowException } from '../models/GrayArrowException.mjs'
+import { IntecoreException } from '../models/IntecoreException.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IId, IName } from '../models/interfaces.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
@@ -10,10 +10,11 @@ export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.id))
 }
-export function arrayGetIdNames<T extends IIdName<Tid, Tname>, Tid = T['id'], Tname = T['name']>(
-  arr?: Readonly<T>[],
-  callback?: (item: T) => IIdName<Tid, Tname>
-) {
+export function arrayGetIdNames<
+  T extends IIdName<Tid, Tname>,
+  Tid = T['id'],
+  Tname = T['name']
+>(arr?: Readonly<T>[], callback?: (item: T) => IIdName<Tid, Tname>) {
   return safeArray(arr).map((x) => {
     if (callback) {
       return callback(x)
@@ -37,7 +38,10 @@ export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
  * @param id id to search for in the arrItems list.
  * @returns The object with the given name. If not found, undefined is returned.
  */
-export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(arrItems?: T[], id?: Tid) {
+export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(
+  arrItems?: T[],
+  id?: Tid
+) {
   return id && safeArray(arrItems).find((x) => id === x.id)
 }
 
@@ -47,10 +51,11 @@ export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(arrItems?: T[],
  * @param id id to search for in the arrItems list.
  * @returns The name of the found item. If not found, undefined is returned.
  */
-export function arrayFindNameById<T extends IIdName<Tid, Tname>, Tid = T['id'], Tname = T['name']>(
-  arrItems?: T[],
-  id?: Tid
-) {
+export function arrayFindNameById<
+  T extends IIdName<Tid, Tname>,
+  Tid = T['id'],
+  Tname = T['name']
+>(arrItems?: T[], id?: Tid) {
   return arrayFindById(arrItems, id)?.name
 }
 
@@ -94,8 +99,11 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
 ) {
   const foundItem = arrayFindById<T>(arrItems, id)
   if (!foundItem) {
-    throw new GrayArrowException(
-      `Unable to find ${safestr(functionSourceName, arrayFindById.name)} id: ${id}.`,
+    throw new IntecoreException(
+      `Unable to find ${safestr(
+        functionSourceName,
+        arrayFindById.name
+      )} id: ${id}.`,
       arrayFindById.name,
       arrItems
     )
@@ -117,11 +125,17 @@ export function arrayFindByName<T extends IName<Tname>, Tname = T['name']>(
   return arrayFind(arrItems, (x) => x.name === name)
 }
 
-export function arrayFilter<T>(arrItems: T[] | undefined, filterFunc: (item: T) => boolean) {
+export function arrayFilter<T>(
+  arrItems: T[] | undefined,
+  filterFunc: (item: T) => boolean
+) {
   return safeArray(arrItems).filter(filterFunc)
 }
 
-export function arrayFind<T>(arrItems: T[] | undefined, findFunc: (item: T) => boolean) {
+export function arrayFind<T>(
+  arrItems: T[] | undefined,
+  findFunc: (item: T) => boolean
+) {
   return safeArray(arrItems).find(findFunc)
 }
 
@@ -134,7 +148,7 @@ export function arrayMustFindFunc<T>(
   const foundItem = arrayFind<T>(arrItems, findFunc)
 
   if (!foundItem) {
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Unable to find ${safestr(functionSourceName, arrayFind.name)}${
         exceptionSuffix ? ' ' + exceptionSuffix() : ''
       }.`,
@@ -159,7 +173,9 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
   )
 }
 
-export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(arr?: Readonly<T>[]) {
+export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(
+  arr?: Readonly<T>[]
+) {
   return arrayReduceArrayReturns(arr, (cur) => {
     if (cur?.id) {
       return cur.id
@@ -167,7 +183,9 @@ export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(arr?: Readonly<T>[
   })
 }
 
-export function arrayOfNames<T extends IName<Tname>, Tname = T['name']>(arr?: Readonly<T>[]) {
+export function arrayOfNames<T extends IName<Tname>, Tname = T['name']>(
+  arr?: Readonly<T>[]
+) {
   return safeArray(arr).reduce((acc: Tname[], cur) => {
     acc.push(cur.name)
 
@@ -186,7 +204,7 @@ export function arrayElementNonEmpty<T>(
     return item
   }
 
-  throw new GrayArrowException(
+  throw new IntecoreException(
     'Array has no items.',
     functionSourceName ?? arrayElementNonEmpty.name,
     customMessage
@@ -241,14 +259,17 @@ export function arrayLastNonEmpty<T>(
     return item
   }
 
-  throw new GrayArrowException(
+  throw new IntecoreException(
     'Array has no items.',
     functionSourceName ?? arrayLastNonEmpty.name,
     customMessage
   )
 }
 
-export function arrayForEachReturns<T>(arr: T[] | undefined, funcArrayResults: (item: T) => void) {
+export function arrayForEachReturns<T>(
+  arr: T[] | undefined,
+  funcArrayResults: (item: T) => void
+) {
   safeArray(arr).forEach((cur) => funcArrayResults(cur))
 }
 
@@ -270,7 +291,10 @@ export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
  */
 export function arrayReduceArrayReturns<T, TreturnType = T>(
   arr: Readonly<ArrayOrSingle<T>> | undefined,
-  funcArrayResults: (item: T, index: number) => ArrayOrSingle<TreturnType> | undefined
+  funcArrayResults: (
+    item: T,
+    index: number
+  ) => ArrayOrSingle<TreturnType> | undefined
 ) {
   return ToSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
     const res = funcArrayResults(cur, index)
@@ -297,7 +321,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
 
   const source = arrayFindById(arrItems, sourceId)
   if (!source || !source.id) {
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Invalid source id of ${sourceId} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
@@ -306,7 +330,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
 
   const dest = arrayFindById(arrItems, destId)
   if (!dest || !dest.id) {
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Invalid destination index of ${destId} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
@@ -319,20 +343,24 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
   return arraySwapItems(arrItems, sourceIndex, destIndex)
 }
 
-export function arraySwapItems<T>(arrItems: T[], sourceIndex: number, destIndex: number) {
+export function arraySwapItems<T>(
+  arrItems: T[],
+  sourceIndex: number,
+  destIndex: number
+) {
   if (!arrItems || sourceIndex === destIndex) {
     return []
   }
 
   if (sourceIndex < 0 || sourceIndex >= arrItems.length) {
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Invalid source index of ${sourceIndex} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
     )
   }
   if (destIndex < 0 || destIndex >= arrItems.length) {
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Invalid destination index of ${destIndex} when swapping array elements.`,
       arraySwapItems.name,
       arrItems

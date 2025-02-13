@@ -1,4 +1,4 @@
-import { GrayArrowException } from '../models/GrayArrowException.mjs'
+import { IntecoreException } from '../models/IntecoreException.mjs'
 import { isObject, safestrLowercase } from './general.mjs'
 
 export interface ICaptureResponse<T> {
@@ -36,7 +36,7 @@ export class CaptureResponse<T> implements ICaptureResponse<T> {
     this.responseCode = -1
 
     if (errobj) {
-      if (isObject(errobj) && errobj instanceof GrayArrowException) {
+      if (isObject(errobj) && errobj instanceof IntecoreException) {
         if (errobj.responseCode) {
           this.responseCode = errobj.responseCode
         }

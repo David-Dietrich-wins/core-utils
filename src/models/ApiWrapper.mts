@@ -1,4 +1,4 @@
-import { GrayArrowException } from './GrayArrowException.mjs'
+import { IntecoreException } from './IntecoreException.mjs'
 import { isObject, safestrLowercase } from '../services/general.mjs'
 
 export interface IApiWrapper<T = unknown> {
@@ -28,7 +28,7 @@ export class ApiWrapper<T = unknown> implements IApiWrapper<T> {
     this.responseCode = -1
 
     if (errobj) {
-      if (isObject(errobj) && errobj instanceof GrayArrowException) {
+      if (isObject(errobj) && errobj instanceof IntecoreException) {
         this.responseCode = errobj.responseCode ?? -1
 
         if (errobj.message) {

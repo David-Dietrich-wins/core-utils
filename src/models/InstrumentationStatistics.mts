@@ -15,9 +15,13 @@ import {
   timeDifferenceString,
   timeDifferenceStringFromMillis,
 } from '../services/general.mjs'
-import { ArrayOrSingle, StringOrStringArray, WithoutFunctions } from './types.mjs'
+import {
+  ArrayOrSingle,
+  StringOrStringArray,
+  WithoutFunctions,
+} from './types.mjs'
 import { ToSafeArray } from '../services/array-helper.mjs'
-import { GrayArrowException } from './GrayArrowException.mjs'
+import { IntecoreException } from './IntecoreException.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
@@ -40,7 +44,10 @@ export class InstrumentationStatistics {
     public failures = 0
   ) {}
 
-  addStats(statsToAdd?: Readonly<ArrayOrSingle<InstrumentationStatistics>>, concatMsg = true) {
+  addStats(
+    statsToAdd?: Readonly<ArrayOrSingle<InstrumentationStatistics>>,
+    concatMsg = true
+  ) {
     for (const stats of ToSafeArray(statsToAdd)) {
       this.successes += stats.successes
       this.failures += stats.failures
@@ -79,7 +86,7 @@ export class InstrumentationStatistics {
     // }
 
     // return 0
-    throw new GrayArrowException(
+    throw new IntecoreException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
       '' + msg
@@ -170,10 +177,17 @@ export class InstrumentationStatistics {
   }
   /** Gets the total processing time in seconds. */
   get processingTimeInSeconds() {
-    return timeDifferenceInSeconds(this.startTime, this.finishTime ?? new Date())
+    return timeDifferenceInSeconds(
+      this.startTime,
+      this.finishTime ?? new Date()
+    )
   }
   processingTimeString(longFormat: boolean) {
-    return timeDifferenceString(this.startTime, this.finishTime ?? new Date(), longFormat)
+    return timeDifferenceString(
+      this.startTime,
+      this.finishTime ?? new Date(),
+      longFormat
+    )
   }
 
   lineSeparator(isOneLine = false, multilineSeparator?: string) {
@@ -196,21 +210,33 @@ export class InstrumentationStatistics {
     showSkipped = false,
     recordsName = ''
   ) {
-    let msg = `${getNumberString(this.totalProcessed)} ${safestr(recordsName)}${pluralize(this.totalProcessed, this.suffixWhenSingle, this.suffixWhenPlural)}`
+    let msg = `${getNumberString(this.totalProcessed)} ${safestr(
+      recordsName
+    )}${pluralize(
+      this.totalProcessed,
+      this.suffixWhenSingle,
+      this.suffixWhenPlural
+    )}`
 
     if (showSuccessFailIf0 || this.successes || this.failures || showSkipped) {
       let successFailMsg = ''
 
       if (this.successes || showSuccessFailIf0) {
-        successFailMsg += `${prefixIfHasData(successFailMsg)}Success: ${getNumberString(this.successes)}`
+        successFailMsg += `${prefixIfHasData(
+          successFailMsg
+        )}Success: ${getNumberString(this.successes)}`
       }
 
       if (this.failures || showSuccessFailIf0) {
-        successFailMsg += `${prefixIfHasData(successFailMsg)}Fail: ${getNumberString(this.failures)}`
+        successFailMsg += `${prefixIfHasData(
+          successFailMsg
+        )}Fail: ${getNumberString(this.failures)}`
       }
 
       if (showSkipped && this.skipped) {
-        successFailMsg += `${prefixIfHasData(successFailMsg)}Skipped: ${getNumberString(this.skipped)}`
+        successFailMsg += `${prefixIfHasData(
+          successFailMsg
+        )}Skipped: ${getNumberString(this.skipped)}`
       }
 
       if (successFailMsg) {
@@ -254,12 +280,18 @@ export class InstrumentationStatistics {
         prev += ' and '
       }
 
-      prev += cur.messageTotalProcessedWithSuccessFail(showSuccessFailIf0, showSkipped)
+      prev += cur.messageTotalProcessedWithSuccessFail(
+        showSuccessFailIf0,
+        showSkipped
+      )
 
       return prev
     }, '')
 
-    msg += ` in ${timeDifferenceStringFromMillis(this.processingTime, true)}${suffix}`
+    msg += ` in ${timeDifferenceStringFromMillis(
+      this.processingTime,
+      true
+    )}${suffix}`
 
     return msg
   }
@@ -267,7 +299,9 @@ export class InstrumentationStatistics {
   messageString(isOneLine?: boolean) {
     let s = `Processed ${getNumberString(
       this.totalProcessed
-    )} item${pluralSuffix(this.totalProcessed)} in ${this.processingTimeString(true)}${isOneLine ? '' : '.'}`
+    )} item${pluralSuffix(this.totalProcessed)} in ${this.processingTimeString(
+      true
+    )}${isOneLine ? '' : '.'}`
     if (this.add) {
       s += `${this.lineSeparator(isOneLine)}Added: ${getNumberString(
         this.add
@@ -322,7 +356,9 @@ export class InstrumentationStatistics {
    */
   processedTimesArray() {
     let recordsPerSecond = this.totalProcessed
-    recordsPerSecond /= this.processingTimeInSeconds ? this.processingTimeInSeconds : 1
+    recordsPerSecond /= this.processingTimeInSeconds
+      ? this.processingTimeInSeconds
+      : 1
 
     return [
       getNumberString(this.totalProcessed),

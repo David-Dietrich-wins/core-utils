@@ -1,6 +1,6 @@
 import CryptoJs from 'crypto-js'
 import crypto from 'crypto'
-import { GrayArrowException } from '../models/GrayArrowException.mjs'
+import { IntecoreException } from '../models/IntecoreException.mjs'
 const { TripleDES } = CryptoJs
 
 export interface ICryptoSettings {
@@ -42,7 +42,10 @@ export default class CryptoHelper {
     return cipher.toString()
   }
 
-  static GenerateRandomPin(exactLength = 4, charsToUse = CryptoHelper.CONST_CharsNumbers) {
+  static GenerateRandomPin(
+    exactLength = 4,
+    charsToUse = CryptoHelper.CONST_CharsNumbers
+  ) {
     let numberOfPinRetries = 0
     while (numberOfPinRetries < 100) {
       const pin = CryptoHelper.GenerateRandomString(exactLength, charsToUse)
@@ -56,7 +59,7 @@ export default class CryptoHelper {
       ++numberOfPinRetries
     }
 
-    throw new GrayArrowException(
+    throw new IntecoreException(
       `Could not generate a valid pin in ${numberOfPinRetries} tries.`,
       CryptoHelper.GenerateRandomPin.name
     )
@@ -79,10 +82,17 @@ export default class CryptoHelper {
     )
   }
   rsaEncrypt(decryptedString: string) {
-    return CryptoHelper.rsaEncryptStatic(decryptedString, this.cryptoSettings.rsaPublicKey)
+    return CryptoHelper.rsaEncryptStatic(
+      decryptedString,
+      this.cryptoSettings.rsaPublicKey
+    )
   }
 
-  static rsaDecryptStatic(encryptedString: string, privateKey: string, passphrase?: string) {
+  static rsaDecryptStatic(
+    encryptedString: string,
+    privateKey: string,
+    passphrase?: string
+  ) {
     const buf = crypto.privateDecrypt(
       {
         key: privateKey,
@@ -98,7 +108,11 @@ export default class CryptoHelper {
 
     return buf.toString('utf8')
   }
-  static rsaEncryptStatic(decryptedString: string, publicKey: string, passphrase?: string) {
+  static rsaEncryptStatic(
+    decryptedString: string,
+    publicKey: string,
+    passphrase?: string
+  ) {
     const encryptedData = crypto.publicEncrypt(
       {
         key: publicKey,
@@ -117,7 +131,10 @@ export default class CryptoHelper {
     return encryptedString
   }
 
-  static tripleDesDecryptStatic(encryptedString: string, encryptionKey: string) {
+  static tripleDesDecryptStatic(
+    encryptedString: string,
+    encryptionKey: string
+  ) {
     const decryptedWordArray = TripleDES.decrypt(encryptedString, encryptionKey)
 
     const decryptedString = decryptedWordArray.toString(CryptoJs.enc.Utf8)
@@ -127,8 +144,14 @@ export default class CryptoHelper {
 
     return decryptedString
   }
-  static tripleDesEncryptStatic(decryptedString: string, encryptionKey: string) {
-    const encryptedCipherParams = TripleDES.encrypt(decryptedString, encryptionKey)
+  static tripleDesEncryptStatic(
+    decryptedString: string,
+    encryptionKey: string
+  ) {
+    const encryptedCipherParams = TripleDES.encrypt(
+      decryptedString,
+      encryptionKey
+    )
 
     const encryptedString = encryptedCipherParams.toString()
     console.log(

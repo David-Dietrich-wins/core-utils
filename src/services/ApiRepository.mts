@@ -5,7 +5,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from 'axios'
 import { safestr, urlJoin } from '../services/general.mjs'
 import { LogManager } from './LogManager.mjs'
 import { ApiWrapper } from '../models/ApiWrapper.mjs'
-import { GrayArrowExceptionHttpNotAllowed } from '../models/GrayArrowException.mjs'
+import { HttpExceptionNotAllowed } from '../models/IntecoreException.mjs'
 import { ApiProps } from '../models/types.mjs'
 import { IErrorMessage } from '../models/interfaces.mjs'
 
@@ -20,7 +20,7 @@ export interface IApiRepository {
     saveKey: string,
     requestBody: any,
     errorMessage?: IErrorMessage
-  ): GrayArrowExceptionHttpNotAllowed<Record<string, any>>
+  ): HttpExceptionNotAllowed<Record<string, any>>
 
   httpGet<TResponse, TRequestConfig>(
     fname: string,
@@ -171,7 +171,7 @@ export class ApiRepository implements IApiRepository {
   handleAxiosError(fname: string, err: any, url: string, saveKey: string) {
     const errCracked = this.handleAxiosErrorRaw(fname, err, url, saveKey)
     // console.log(error.config);
-    return new GrayArrowExceptionHttpNotAllowed(
+    return new HttpExceptionNotAllowed(
       errCracked.errmsg,
       fname,
       errCracked.jsonError

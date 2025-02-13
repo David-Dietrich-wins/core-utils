@@ -1,5 +1,5 @@
 export * from './config.mjs'
-export * from './GrayArrowException.mjs'
+export * from './IntecoreException.mjs'
 export * from './IntecoreObject.mjs'
 export * from './id-created-updated.mjs'
 export * from './id-name.mjs'

@@ -1,5 +1,5 @@
 import { ApiWrapper } from './ApiWrapper.mjs'
-import { GrayArrowException } from './GrayArrowException.mjs'
+import { IntecoreException } from './IntecoreException.mjs'
 
 const CONST_DefaultError = 'Error'
 const CONST_DefaultErrorResponseCode = -1
@@ -109,7 +109,7 @@ test('setError exception', () => {
   const message = CONST_success
   const obj = { message: 'Found' }
   const apiWrapper = new ApiWrapper(result, message, responseCode, obj)
-  const ge = new GrayArrowException(
+  const ge = new IntecoreException(
     'setError exception',
     'not found',
     CONST_ErrorNotFound
@@ -222,7 +222,7 @@ test('setError error object with GrayArrowException', () => {
   expect(apiWrapper.obj?.message.indexOf('Found')).toBe(0)
   expect(apiWrapper.obj).toBe(obj)
 
-  const errorObj = new GrayArrowException(
+  const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
     'setError error object with GrayArrowException',
     500
@@ -253,7 +253,7 @@ test('setError error object with GrayArrowException no object', () => {
   expect(apiWrapper.obj?.message.indexOf('Found')).toBe(0)
   expect(apiWrapper.obj).toBe(obj)
 
-  const errorObj = new GrayArrowException(
+  const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
     'setError error object with GrayArrowException'
   )
@@ -284,7 +284,7 @@ test('setError error GrayArrowException with response code', () => {
   expect(apiWrapper.obj).toBe(obj)
 
   const exceptionObject = { responseCode: 500, message: 'Not Found' }
-  const errorObj = new GrayArrowException(
+  const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
     'setError error object with GrayArrowException',
     exceptionObject
@@ -316,7 +316,7 @@ test('setError error GrayArrowException without response code', () => {
   expect(apiWrapper.obj).toBe(obj)
 
   const exceptionObject = { message: 'No responseCode' }
-  const errorObj = new GrayArrowException(
+  const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
     'setError error object with GrayArrowException',
     exceptionObject

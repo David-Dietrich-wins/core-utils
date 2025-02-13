@@ -1,4 +1,4 @@
-import { GrayArrowExceptionHttp } from '../models/GrayArrowException.mjs'
+import { HttpException } from '../models/IntecoreException.mjs'
 import { JSONValue } from '../models/types.mjs'
 import { ICaptureResponse } from './CaptureResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
@@ -70,18 +70,18 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
 
     response = await fetch(url, req)
   } catch (err) {
-    if (err instanceof GrayArrowExceptionHttp) {
+    if (err instanceof HttpException) {
       throw err
     }
 
-    throw new GrayArrowExceptionHttp(
+    throw new HttpException(
       err instanceof Error ? err.message : fetchHttp.name,
       fname
     )
   }
 
   if (!response) {
-    throw new GrayArrowExceptionHttp(
+    throw new HttpException(
       `${fname}: NO response in HTTP ${method} to URL: ${url}.`,
       fname
     )
@@ -98,7 +98,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
       }
     }
 
-    throw new GrayArrowExceptionHttp(
+    throw new HttpException(
       `${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`,
       fname,
       response.status,
