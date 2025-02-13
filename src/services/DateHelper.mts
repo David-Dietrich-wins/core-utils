@@ -3,6 +3,10 @@ import { safestr } from './general.mjs'
 
 export const DEFAULT_DateTimeFormatSeconds = 'YYYY/MM/DD HH:mm:ss'
 export const DEFAULT_DateTimeFormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
+export const DEFAULT_DateTimeFormatLocalWithoutTimezone =
+  'YYYY-MM-DDTHH:mm:ss.SSS'
+export const DEFAULT_DateTimeFormatForFiles = 'YYMMDD_HHmmss'
+
 export class DateHelper {
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
@@ -61,14 +65,20 @@ export class DateHelper {
     return DateHelper.addMillisToDate(daysToAdd * 24 * 60 * 60 * 1000, date)
   }
 
-  static FormatDateTime(format?: string, dateToFormat?: Date | number | string) {
+  static FormatDateTime(
+    format?: string,
+    dateToFormat?: Date | number | string
+  ) {
     return (dateToFormat ? moment(dateToFormat) : moment())
       .format(safestr(format, DEFAULT_DateTimeFormatSeconds))
       .trim()
   }
 
   static FormatDateTimeWithMillis(dateToFormat?: Date | number | string) {
-    return DateHelper.FormatDateTime(DEFAULT_DateTimeFormatWithMillis, dateToFormat)
+    return DateHelper.FormatDateTime(
+      DEFAULT_DateTimeFormatWithMillis,
+      dateToFormat
+    )
   }
 
   /**
@@ -81,6 +91,51 @@ export class DateHelper {
     if (date) {
       return new Date(date).toISOString()
     }
+  }
+
+  /**
+   * Takes a SQL date and time string and converts it to a UTC string. No translation is done.
+   *  2022-10-30 22:09:00.000 to 2022-10-30T22:09:00.000Z or 2022-10-30T22:09:000Z is stripMilliseconds is true
+   * @param sqlDateString The SQL date string in 2022-10-30 22:09:20.875 format
+   * @param stripMilliseconds If true, the milliseconds are removed from the string.
+   */
+  static SqlUtcToUtcString(sqlDateString: string, stripMilliseconds = true) {
+    let strToConvert = safestr(sqlDateString)
+    if (stripMilliseconds) {
+      strToConvert = strToConvert.replace(/\.\d{3}/, '')
+    }
+
+    strToConvert = strToConvert.replace(' ', 'T')
+
+    if (strToConvert.length >= 19 && strToConvert.includes('T')) {
+      strToConvert += 'Z'
+    }
+
+    return strToConvert
+  }
+
+  /**
+   * Converts a Date object to a string in ISO format.
+   * If there is no date provided, undefined is returned.
+   * @param date Any format of date that can be converted to a Date object.
+   * @returns A string formatted to example - '2023-09-06T14:52:01.690'
+.
+   */
+  static toLocalStringWithoutTimezone(date?: Date | number | string) {
+    return DateHelper.FormatDateTime(
+      DEFAULT_DateTimeFormatLocalWithoutTimezone,
+      date
+    )
+  }
+
+  /**
+   * Converts a Date object to a string in ISO format.
+   * If there is no date provided, undefined is returned.
+   * @param date Any format of date that can be converted to a Date object.
+   * @returns A string formatted to example - '230906_145201'
+   */
+  static fileDateTime(date?: Date | number | string) {
+    return DateHelper.FormatDateTime(DEFAULT_DateTimeFormatForFiles, date)
   }
 
   /**
