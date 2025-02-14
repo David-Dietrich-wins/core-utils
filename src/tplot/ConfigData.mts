@@ -1,12 +1,18 @@
-import { IHeaderTickersIndexConfig, IHeaderTickersConfig, IDashboardSetting } from './tp-items.mjs'
+import {
+  IHeaderTickersIndexConfig,
+  IHeaderTickersConfig,
+  IDashboardSetting,
+} from './tp-items.mjs'
 
 export class ConfigData {
-  customData = ''
-  useMinusEight = true
-  openFirstPlot = true
-  hideTooltips = false
-  hideTickerBar = false
-  showPriceChangeInTickerBar = false
+  constructor(
+    public customData = '',
+    public useMinusEight = true,
+    public openFirstPlot = true,
+    public hideTooltips = false,
+    public hideTickerBar = false,
+    public showPriceChangeInTickerBar = false
+  ) {}
 
   headerTickerBarIndex: IHeaderTickersIndexConfig = {
     showAsset: true,
