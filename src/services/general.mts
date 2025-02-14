@@ -1,5 +1,4 @@
-import { IntecoreException } from '../models/IntecoreException.mjs'
-import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import { StringOrStringArray } from '../models/types.mjs'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -8,7 +7,7 @@ import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
  * @param obj Array of items to add to listObjects.
  * @returns listObjects. If null, was passed, it is a new array.
  */
-export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] {
+export function addObjectToList<T>(listObjects: T[], obj: T[]) {
   if (isNullOrUndefined(obj)) {
     return []
   }
@@ -32,12 +31,11 @@ export function addObjectToList<T>(listObjects: T[], obj: T[]): T[] {
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
-export function deepCloneJson<T>(obj: object, fname?: string) {
-  fname = fname || deepCloneJson.name
+export function deepCloneJson(obj: object, fname?: string) {
+  fname = fname || 'deepCloneJson'
 
-  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
+  return safestrToJson(safeJsonToString(obj, fname), fname)
 }
-
 /**
  * Method to wrap deep object comparison. The changes are mapped and returned.
  * Generally used for checking in real-time form data changes.
@@ -57,7 +55,7 @@ export function deepDiffMapper() {
      * @param obj2 Second object to compare.
      * @returns True if any changes between the objects.
      */
-    anyChanges(obj1: unknown, obj2: unknown): boolean {
+    anyChanges(obj1: unknown, obj2: unknown) {
       const changed = this.getChanges(obj1, obj2)
 
       // console.log('skky.deepDiffMapper.anyChanges: changed:', changed, ', isNullOrUndefined:', isNullOrUndefined(changed));
@@ -104,12 +102,18 @@ export function deepDiffMapper() {
         2 === Object.entries(value).length &&
         'unchanged' !== (value as { type: string }).type
 
-      return (
-        found ||
-        (isObject(value) && Object.entries(value).find(this.findTypeData, this)
-          ? true
-          : false)
-      )
+      if (found) {
+        return true
+      }
+
+      // if (isObject(value)) {
+      //   const foundItems = Object.entries(value).find(this.findTypeData, this)
+      //   if (foundItems) {
+      //     return true
+      //   }
+      // }
+
+      return false
     },
     /**
      * Maps all changes between two objects.
@@ -162,7 +166,7 @@ export function deepDiffMapper() {
      * @returns A this.VALUE_xxx string describing the change or unchanged.
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    compareValues(value1: any, value2: any): string {
+    compareValues(value1: any, value2: any) {
       if (value1 === value2) {
         return this.VALUE_UNCHANGED
       }
@@ -185,10 +189,10 @@ export function deepDiffMapper() {
 
       return this.VALUE_UPDATED
     },
-    isFunction(x: unknown): boolean {
+    isFunction(x: unknown) {
       return Object.prototype.toString.call(x) === '[object Function]'
     },
-    isArray(x: unknown): boolean {
+    isArray(x: unknown) {
       return Object.prototype.toString.call(x) === '[object Array]'
     },
     isDate(x: unknown): x is Date {
@@ -197,7 +201,7 @@ export function deepDiffMapper() {
     isObject(x: unknown): x is object {
       return Object.prototype.toString.call(x) === '[object Object]'
     },
-    isValue(x: unknown): boolean {
+    isValue(x: unknown) {
       return !this.isObject(x) && !this.isArray(x)
     },
   }
@@ -223,9 +227,7 @@ export function getBody(ret: unknown) {
  * @param stringOrArray The {@link StringOrStringArray} to flatten then separate by commas.
  * @returns The flattened, comma-separated string.
  */
-export function getCommaSeparatedList(
-  stringOrArray: StringOrStringArray
-): string {
+export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
   if (isString(stringOrArray)) {
     return stringOrArray
   }
@@ -239,7 +241,7 @@ export function getCommaSeparatedList(
  * @param stringOrArray The {@link StringOrStringArray} to uppercase and separate by commas.
  * @returns The flattened, comma-separated string in uppercase.
  */
-export function getCommaUpperList(stringOrArray: StringOrStringArray): string {
+export function getCommaUpperList(stringOrArray: StringOrStringArray) {
   return safestrUppercase(getCommaSeparatedList(stringOrArray))
 }
 
@@ -251,7 +253,7 @@ export function getCommaUpperList(stringOrArray: StringOrStringArray): string {
  */
 export function getAsNumber(
   stringOrNumber: string | number | null | undefined
-): number {
+) {
   return getNumberFormatted(stringOrNumber)
 }
 
@@ -267,7 +269,7 @@ export function getAsNumberOrUndefined(
   stringOrNumber: string | number | null | undefined,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
-): number | undefined {
+) {
   if (hasData(stringOrNumber)) {
     return getNumberFormatted(
       stringOrNumber,
@@ -282,7 +284,7 @@ export function getAsNumberOrUndefined(
  * Use this method to convert any string, number or boolean to its boolean value;
  * @param b Any object to test if it can be converted to a boolean.
  */
-export function getBoolean(b: unknown): boolean {
+export function getBoolean(b: unknown) {
   if (!b) {
     return false
   }
@@ -322,7 +324,7 @@ export function getBoolean(b: unknown): boolean {
  * @param num The decimal number to get the mantissa for.
  * @returns The whole number value of the mantissa.
  */
-export function getMantissa(num: number): number {
+export function getMantissa(num: number) {
   if (!num) {
     return 0
   }
@@ -348,7 +350,7 @@ export function getNumberFormatted(
   num: any | null | undefined,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
-): number {
+) {
   if (isString(num, 1)) {
     const newnum = num.replace(/,/g, '')
 
@@ -382,7 +384,7 @@ export function getNumberString(
   num: any,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
-): string {
+) {
   if (isString(num, 1)) {
     const newnum = num.replace(/,/g, '')
 
@@ -408,7 +410,7 @@ export function getNumberString(
  * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
  * @returns The given object at arr[index], or undefined if it does not exist.
  */
-export function getObject<T>(arr: T | T[], index = 0): T | undefined {
+export function getObject<T>(arr: T | T[], index = 0) {
   if (!isNullOrUndefined(arr)) {
     index = index || 0
 
@@ -422,15 +424,6 @@ export function getObject<T>(arr: T | T[], index = 0): T | undefined {
       return arr
     }
   }
-}
-
-export function getObjectWithException<T>(arr: ArrayOrSingle<T>, index = 0) {
-  const item = getObject(arr, index)
-  if (!item) {
-    throw new IntecoreException('No object found.', getObjectWithException.name)
-  }
-
-  return item
 }
 
 /**
@@ -455,7 +448,7 @@ export function getObjectValue(obj: any, keyToFind: string) {
  * @param cur The new current number.
  * @returns The percentage number from -100 to 100.
  */
-export function getPercentChange(prev: number, cur: number): number {
+export function getPercentChange(prev: number, cur: number) {
   let percent = 0
   if (cur) {
     if (prev) {
@@ -484,11 +477,11 @@ export function getPercentChangeString(
   cur: number,
   showPercent = true,
   decimalPlaces = 2
-): string {
+) {
   const percent = getPercentChange(prev, cur)
 
   // return Math.floor(percent)
-  let ret = percent.toFixed(decimalPlaces ? decimalPlaces : 2)
+  let ret = percent.toFixed(decimalPlaces < 0 ? 0 : decimalPlaces)
   if (showPercent) {
     ret += '%'
   }
@@ -505,7 +498,7 @@ export function getPercentChangeString(
  * @returns True if the object meets the minimum length requirements.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function hasData(o: any | null | undefined, minlength = 1): boolean {
+export function hasData(o: any | null | undefined, minlength = 1) {
   // console.log('minlength: ' + minlength + ', o: ' + o)
   try {
     if (!o) {
@@ -576,6 +569,20 @@ export function isBoolean(obj: unknown): obj is boolean {
   return 'boolean' === typeof obj
 }
 
+/**
+ * Checks the date value passed in to see if the variable is a valid Date object.
+ * @param date Any value to test if it is a valid date.
+ * @returns true if the date is valid. false otherwise.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isDateObject(date: any) {
+  return date &&
+    Object.prototype.toString.call(date) === '[object Date]' &&
+    !isNaN(date)
+    ? true
+    : false
+}
+
 export function isEmptyObject(obj: unknown) {
   return (
     null == obj ||
@@ -593,18 +600,12 @@ export function isEmptyObject(obj: unknown) {
  * @returns True if the object s is an empty string.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isEmptyString(s: any, allowFunction = true): boolean {
-  try {
-    const testString = (str: unknown) => {
-      return !str || (isString(str) && '' === str)
-    }
-
-    return testString(s) || (allowFunction && isFunction(s) && testString(s()))
-  } catch (ex) {
-    console.log(isEmptyString.name, ex)
+export function isEmptyString(s: any, allowFunction = true) {
+  const testString = (str: unknown) => {
+    return !str || (isString(str) && '' === str)
   }
 
-  return true
+  return testString(s) || (allowFunction && isFunction(s) && testString(s()))
 }
 
 /**
@@ -633,19 +634,24 @@ export function isNumber(
     return false
   }
 
-  if (minValue && obj < minValue) {
-    return false
-  }
-  if (maxValue && obj > maxValue) {
-    return false
+  let bret = true
+  if (minValue) {
+    bret = obj >= minValue
   }
 
-  return true
+  if (bret && maxValue) {
+    bret = obj <= maxValue
+  }
+
+  return bret
 }
 
 export function isNumeric(value?: string | number): boolean {
-  const v = isString(value) ? value.replace(/,/g, '') : value
-  return !isNullOrUndefined(v) && v !== '' && !isNaN(Number(v.toString()))
+  return (
+    !isNullOrUndefined(value) &&
+    value !== '' &&
+    !isNaN(Number(value.toString()))
+  )
 }
 
 /**
@@ -706,7 +712,7 @@ export function isString(obj: unknown, minlength = 0): obj is string {
  * Returns a new global unique identifier (GUID).
  * @returns A global unique identifier as a 16 character string.
  */
-export function newGuid(): string {
+export function newGuid() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8
@@ -725,14 +731,14 @@ export function getNullObject<T>(obj: T) {
 
 /**
  * Tests if the passed in arr is in fact an array that is not undefined or null.
- * If it is, the ifNull value is used. If there is no ifNull passed in, an empty array is returned.
+ * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty array is returned.
  * @param arr An array to test for not being null or undefined. If it is an object, it is wrapped in an array.
- * @param ifNull If the array is null or undefined, return this value. Defaults to [].
- * @returns A guaranteed array to be nonNull. Returns ifNull when the array does not have data. Or [] if ifNull is not declared.
+ * @param ifEmpty If the array is null or undefined, return this value. Defaults to [].
+ * @returns A guaranteed array to be nonNull. Returns ifEmpty when the array does not have data. Or [] if ifEmpty is not declared.
  */
-export function safeArray<T>(arr?: T | T[], ifNull?: T[]): T[] {
+export function safeArray<T>(arr?: T | T[] | null, ifEmpty?: T[]) {
   if (isNullOrUndefined(arr)) {
-    return ifNull && isArray(ifNull) ? ifNull : []
+    return ifEmpty && isArray(ifEmpty) ? ifEmpty : []
   }
 
   return isArray(arr) ? arr : [arr]
@@ -749,7 +755,7 @@ export function safeJsonToString(
   fname?: string,
   replacer?: (number | string)[],
   space?: string | number
-): string {
+) {
   try {
     return JSON.stringify(
       isArray(json) ? safeArray(json) : safeObject(json),
@@ -765,32 +771,32 @@ export function safeJsonToString(
 
 /**
  * Tests if the passed in obj is in fact an object that is not undefined or null.
- * If it is, the ifNull value is used. If there is no ifNull passed in, an empty object with no members is returned.
+ * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
  * @param obj An object to test for not being null or undefined.
- * @param ifNull If the object is null or undefined, return this value. Defaults to {}.
- * @returns A guaranteed object to be nonnull. Returns ifNull if the object does not have data.
+ * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
+ * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
  */
-export function safeObject(obj?: object, ifNull?: object): object {
-  if (isObject(obj)) {
-    return obj ?? {}
+export function safeObject(obj?: object, ifEmpty?: object) {
+  if (obj && isObject(obj)) {
+    return obj
   }
 
-  return isObject(ifNull) ? ifNull : {}
+  return isObject(ifEmpty) ? ifEmpty : {}
 }
 
 /**
  * Tests if a string has data (is not undefined, null or empty string).
- * If the string is empty, the ifNull value is returned.
+ * If the string is empty, then the ifEmpty value is returned.
  * @param s A string to check for data.
- * @param ifNull If the string is null, return this value. Defaults to "".
- * @returns A guaranteed string to be nonnull. Returns ifNull if the string does not have data.
+ * @param ifEmpty If the string is empty(including ""), return this value. Defaults to "".
+ * @returns A guaranteed string. Returns ifEmpty if the string does not have data, or "" if an ifEmpty value is not provided.
  */
-export function safestr(s?: string, ifNull = ''): string {
+export function safestr(s?: string | null, ifEmpty = '') {
   if (hasData(s) && s) {
     return s
   }
 
-  return hasData(ifNull) ? ifNull : ''
+  return hasData(ifEmpty) ? ifEmpty : ''
 }
 
 /**
@@ -799,7 +805,7 @@ export function safestr(s?: string, ifNull = ''): string {
  * @param trim Optionally trim the string also.
  * @returns A guaranteed string to be nonnull and lowercase.
  */
-export function safestrLowercase(s?: string, trim = true): string {
+export function safestrLowercase(s?: string | null, trim = true) {
   if (trim) {
     s = safestrTrim(s)
   }
@@ -814,7 +820,7 @@ export function safestrLowercase(s?: string, trim = true): string {
  * @returns A the JSON.parsed object or undefined if there was an exception.
  */
 export function safestrToJson<T>(
-  strjson?: string,
+  strjson?: string | null,
   fname?: string
 ): T | undefined {
   try {
@@ -829,8 +835,8 @@ export function safestrToJson<T>(
  * @param s A string to set to lowercase. If null or undefined, empty string is returned.
  * @returns A guaranteed string to be nonnull and trimmed.
  */
-export function safestrTrim(s?: string): string {
-  return safestr(s).trim()
+export function safestrTrim(s?: string | null, ifEmpty = '') {
+  return safestr(s, ifEmpty).trim()
 }
 
 /**
@@ -839,7 +845,7 @@ export function safestrTrim(s?: string): string {
  * @param trim Optionally trim the string also.
  * @returns A guaranteed string to be nonnull and uppercase.
  */
-export function safestrUppercase(s?: string, trim = true): string {
+export function safestrUppercase(s?: string | null, trim = true) {
   if (trim) {
     s = safestrTrim(s)
   }
@@ -879,7 +885,7 @@ export function pluralize(
  * @param num The number to check for negative or positive.
  * @returns Empty string is num is 0, + if positive, or - if negative.
  */
-export function plusMinus(num: number): string {
+export function plusMinus(num: number) {
   if (!num) {
     return ''
   }
@@ -894,7 +900,7 @@ export function plusMinus(num: number): string {
  * @param prefix The prefix if the string is not empty.
  * @returns The prefix if the string is not empty.
  */
-export function prefixIfHasData(s: string, prefix = ', '): string {
+export function prefixIfHasData(s: string, prefix = ', ') {
   return hasData(s) ? safestr(prefix) : ''
 }
 
@@ -916,14 +922,12 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
     throw new Error('Cannot renameProperty. Invalid settings.')
   }
 
-  Object.defineProperty(
-    obj,
-    newKey,
-    Object.getOwnPropertyDescriptor(
-      obj,
-      oldKey as PropertyKey
-    ) as PropertyDescriptor
-  )
+  const propdesc = Object.getOwnPropertyDescriptor(obj, oldKey)
+  if (!propdesc) {
+    throw new Error(`Cannot renameProperty. Property: ${oldKey} not found.`)
+  }
+
+  Object.defineProperty(obj, newKey, propdesc)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (obj as any)[oldKey]
 
@@ -966,7 +970,7 @@ export function runOnAllMembers<T extends object = object>(
  * @param obj The object to look for the array.
  * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
  */
-export function searchObjectForArray<T = unknown>(obj: object): T[] {
+export function searchObjectForArray<T = unknown>(obj: object) {
   if (isArray(obj)) {
     return obj as T[]
   }
@@ -996,10 +1000,8 @@ export function sortFunction(
   b: any,
   isAsc: string | boolean = true,
   compareStringsLowercase = true
-): number {
-  if (isNullOrUndefined(isAsc)) {
-    isAsc = true
-  } else if (isString(isAsc)) {
+) {
+  if (isString(isAsc)) {
     isAsc = 'desc' !== safestrLowercase(isAsc)
   }
   const aEmpty = isNullOrUndefined(a)
@@ -1039,11 +1041,7 @@ export function sortFunction(
  * @param valueWrapper An optional wrapper around the value. Usually a quote or double quote.
  * @returns The name=value string.
  */
-export function stringEquals(
-  name: string,
-  value: string,
-  valueWrapper = ''
-): string {
+export function stringEquals(name: string, value: string, valueWrapper = '') {
   if (hasData(name)) {
     return (
       name +
@@ -1067,7 +1065,7 @@ export function stringEqualsQuoted(
   name: string,
   value: string,
   useSingleQuote = true
-): string {
+) {
   if (hasData(name)) {
     return (
       name +
@@ -1088,7 +1086,7 @@ export function stringEqualsQuoted(
  * @param right The suffix to put after str.
  * @returns A string of left + str + right. Guaranteed to be a safe string.
  */
-export function stringWrap(left: string, str: string, right: string): string {
+export function stringWrap(left: string, str: string, right: string) {
   return safestr(left) + safestr(str) + safestr(right)
 }
 /**
@@ -1096,7 +1094,7 @@ export function stringWrap(left: string, str: string, right: string): string {
  * @param str The string to wrap in double quotes.
  * @returns The "str" wrapped string.
  */
-export function stringWrapDoubleQuote(str: string): string {
+export function stringWrapDoubleQuote(str: string) {
   return stringWrap('"', str, '"')
 }
 /**
@@ -1104,7 +1102,7 @@ export function stringWrapDoubleQuote(str: string): string {
  * @param str The string to wrap in parentheses.
  * @returns The (str) wrapped string.
  */
-export function stringWrapParen(str: string): string {
+export function stringWrapParen(str: string) {
   return stringWrap('(', str, ')')
 }
 /**
@@ -1112,7 +1110,7 @@ export function stringWrapParen(str: string): string {
  * @param str The string to wrap in single quotes.
  * @returns The 'str' wrapped string.
  */
-export function stringWrapSingleQuote(str: string): string {
+export function stringWrapSingleQuote(str: string) {
   // eslint-disable-next-line quotes
   return stringWrap("'", str, "'")
 }
@@ -1158,7 +1156,7 @@ export function timeDifferenceString(
   endTime?: Date,
   longFormat = false,
   showMilliseconds = false
-): string {
+) {
   return timeDifferenceStringFromMillis(
     timeDifference(startTime, endTime),
     longFormat,
@@ -1178,7 +1176,7 @@ export function timeDifferenceStringFromMillis(
   longFormat = false,
   showMilliseconds = false,
   showMillisecondsIfUnderASecond = true
-): string {
+) {
   const totalSeconds = Math.floor(millis / 1000)
   const seconds = totalSeconds % 60
 
@@ -1230,7 +1228,7 @@ export function timeDifferenceStringFromMillis(
  * @param chars Number of chars to pad for leading zeros.
  * @returns
  */
-export function toHex(decimal: number, chars = 2): string {
+export function toHex(decimal?: number, chars = 2) {
   if (isNullOrUndefined(chars)) {
     chars = 2
   }
