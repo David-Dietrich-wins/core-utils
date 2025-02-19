@@ -13,7 +13,6 @@ import {
   getNullObject,
   getNumberFormatted,
   getNumberString,
-  getObject,
   getObjectValue,
   getPercentChange,
   getPercentChangeString,
@@ -799,18 +798,6 @@ test('getPercentChange', () => {
 test('getObjectValue', () => {
   expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
   expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
-})
-
-test('getObject', () => {
-  expect(getObject(undefined)).toBeUndefined()
-  expect(getObject(null)).toBeUndefined()
-  expect(getObject({})).toStrictEqual({})
-  expect(getObject({ a: 'a' })).toStrictEqual({ a: 'a' })
-
-  expect(getObject(['a', 'b'], 0)).toBe('a')
-  expect(getObject(['a', 'b'], 1)).toBe('b')
-  expect(getObject(['a', 'b'], -1)).toBe('b')
-  expect(getObject(['a', 'b'], 2)).toBeUndefined()
 })
 
 test('getNumberString', () => {

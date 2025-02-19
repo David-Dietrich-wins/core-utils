@@ -3,7 +3,6 @@ import { IIdName } from '../models/id-name.mjs'
 import { IId, IName } from '../models/interfaces.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 import {
-  getObject,
   isArray,
   isNullOrUndefined,
   isString,
@@ -202,13 +201,34 @@ export function arrayOfNames<T extends IName<Tname>, Tname = T['name']>(
   }, [])
 }
 
+/**
+ * Gets an object from an array at the given index.
+ * Or if it is not an array, just returns the object.
+ * Protects from empty objects and indexes that are out of bounds.
+ * @param arr An object array to get the index item of.
+ * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
+ * @returns The given object at arr[index], or undefined if it does not exist.
+ */
+export function arrayElement<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
+  const safearr = safeArray(arr)
+  if (safearr.length) {
+    index = index || 0
+
+    if (index >= 0 && safearr.length > index) {
+      return safearr[index]
+    } else if (index < 0 && safearr.length >= Math.abs(index)) {
+      return safearr[safearr.length - Math.abs(index)]
+    }
+  }
+}
+
 export function arrayElementNonEmpty<T>(
-  arr?: T[],
+  arr?: ArrayOrSingle<T> | null,
   index = 0,
   functionSourceName?: string,
   customMessage?: string
 ) {
-  const item = getObject(arr, index)
+  const item = arrayElement(arr, index)
   if (item) {
     return item
   }
@@ -227,13 +247,11 @@ export function arrayElementNonEmpty<T>(
  * @param defaultIfNone An optional default value if the array is empty.
  * @returns The first item in the array, or undefined or defaultIfNone if the array has no values.
  */
-export function arrayFirst<T>(tArray?: ArrayOrSingle<T>, defaultIfNone?: T) {
-  const arr = ToSafeArray(tArray)
-  if (arr.length) {
-    return arr[0]
-  }
-
-  return defaultIfNone
+export function arrayFirst<T>(
+  tArray?: ArrayOrSingle<T> | null,
+  defaultIfNone?: T
+) {
+  return arrayElement(tArray, 0) ?? defaultIfNone
 }
 
 export function arrayFirstNonEmpty<T>(
@@ -251,33 +269,23 @@ export function arrayFirstNonEmpty<T>(
  * @param defaultIfNone An optional default value if the array is empty.
  * @returns The last item in the array, or null or defaultIfNone if the array has no values.
  */
-export function arrayLast<T>(tArray?: T[], defaultIfNone?: T) {
-  if (isArray(tArray, 1)) {
-    return getObject(tArray, -1)
-  }
-
-  return defaultIfNone
+export function arrayLast<T>(
+  tArray?: ArrayOrSingle<T> | null,
+  defaultIfNone?: T
+) {
+  return arrayElement(tArray, -1) ?? defaultIfNone
 }
 
 export function arrayLastNonEmpty<T>(
-  arr?: T[],
+  arr?: ArrayOrSingle<T> | null,
   functionSourceName?: string,
   customMessage?: string
 ) {
-  const item = arrayLast(arr)
-  if (item) {
-    return item
-  }
-
-  throw new IntecoreException(
-    'Array has no items.',
-    functionSourceName ?? arrayLastNonEmpty.name,
-    customMessage
-  )
+  return arrayElementNonEmpty(arr, -1, functionSourceName, customMessage)
 }
 
 export function arrayForEachReturns<T>(
-  arr: T[] | undefined,
+  arr: ArrayOrSingle<T> | null | undefined,
   funcArrayResults: (item: T) => void
 ) {
   safeArray(arr).forEach((cur) => funcArrayResults(cur))

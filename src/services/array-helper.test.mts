@@ -1,6 +1,7 @@
 import { IdName, IIdName } from '../models/id-name.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 import {
+  arrayElement,
   arrayElementNonEmpty,
   arrayFilter,
   arrayFind,
@@ -273,6 +274,18 @@ test('arrayOfNames', () => {
   expect(arrayOfNames([])).toStrictEqual([])
   expect(arrayOfNames(undefined)).toStrictEqual([])
   expect(arrayOfNames(arr)).toStrictEqual(['name1', 'name2', 'name3'])
+})
+
+test('arrayElement', () => {
+  expect(arrayElement(undefined)).toBeUndefined()
+  expect(arrayElement(null)).toBeUndefined()
+  expect(arrayElement({})).toStrictEqual({})
+  expect(arrayElement({ a: 'a' })).toStrictEqual({ a: 'a' })
+
+  expect(arrayElement(['a', 'b'], 0)).toBe('a')
+  expect(arrayElement(['a', 'b'], 1)).toBe('b')
+  expect(arrayElement(['a', 'b'], -1)).toBe('b')
+  expect(arrayElement(['a', 'b'], 2)).toBeUndefined()
 })
 
 test('arrayElementNonEmpty', () => {

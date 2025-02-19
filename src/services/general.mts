@@ -1,5 +1,5 @@
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
-import { ToSafeArray } from './array-helper.mjs'
+import { arrayElement, ToSafeArray } from './array-helper.mjs'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -8,17 +8,18 @@ import { ToSafeArray } from './array-helper.mjs'
  * @param obj Array of items to add to listObjects.
  * @returns listObjects. If null, was passed, it is a new array.
  */
-export function addObjectToList<T>(listObjects: T[], obj: T[]) {
-  if (isNullOrUndefined(obj)) {
-    return []
-  }
-
+export function addObjectToList<T>(
+  listObjects: ArrayOrSingle<T>,
+  obj: ArrayOrSingle<T>
+) {
   listObjects = safeArray(listObjects)
 
-  for (let i = 0; getObject(obj, i); ++i) {
-    const objCurrent = getObject(obj, i)
-    if (objCurrent) {
-      listObjects.push(objCurrent)
+  if (!isNullOrUndefined(obj)) {
+    for (let i = 0; arrayElement(obj, i); ++i) {
+      const objCurrent = arrayElement(obj, i)
+      if (objCurrent) {
+        listObjects.push(objCurrent)
+      }
     }
   }
 
@@ -402,30 +403,6 @@ export function getNumberString(
     maximumFractionDigits: maxDecimalPlaces,
     minimumFractionDigits: minDecimalPlaces,
   }).format(num)
-}
-
-/**
- * Gets an object from an array at the given index.
- * Or if it is not an array, just returns the object.
- * Protects from empty objects and indexes that are out of bounds.
- * @param arr An object array to get the index item of.
- * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
- * @returns The given object at arr[index], or undefined if it does not exist.
- */
-export function getObject<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
-  if (!isNullOrUndefined(arr)) {
-    index = index || 0
-
-    if (isArray(arr)) {
-      if (index >= 0 && arr.length > index) {
-        return arr[index]
-      } else if (index < 0 && arr.length >= Math.abs(index)) {
-        return arr[arr.length - Math.abs(index)]
-      }
-    } else if (index === 0) {
-      return arr
-    }
-  }
 }
 
 /**
