@@ -4,7 +4,7 @@ import https from 'https'
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from 'axios'
 import { safestr, urlJoin } from '../services/general.mjs'
 import { LogManager } from './LogManager.mjs'
-import { ApiWrapper } from '../models/ApiWrapper.mjs'
+import { ApiResponse } from '../models/ApiResponse.mjs'
 import { HttpExceptionNotAllowed } from '../models/IntecoreException.mjs'
 import { ApiProps } from '../models/types.mjs'
 import { IErrorMessage } from '../models/interfaces.mjs'
@@ -324,7 +324,7 @@ export class ApiRepository implements IApiRepository {
     responseCode = 0,
     returnData?: T
   ) {
-    const apiwrap = new ApiWrapper<T>(result, msg, responseCode, returnData)
+    const apiwrap = new ApiResponse<T>(result, msg, responseCode, returnData)
 
     return apiwrap
   }

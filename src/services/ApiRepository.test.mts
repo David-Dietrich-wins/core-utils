@@ -552,7 +552,7 @@ describe('httpGetRaw', () => {
   //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   //   } catch (e: any) {
   //     expect(e).toBeInstanceOf(Error)
-  //     expect(e.message).toBe('Request failed with status code 404')
+  //     expect(e.msg).toBe('Request failed with status code 404')
   //     expect(e.stack).toMatch(/^Error: Request failed with status code 404/)
   //   }
   //   expect.assertions(3)
@@ -656,7 +656,7 @@ describe('httpGetRaw', () => {
 //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //     } catch (e: any) {
 //       expect(e).toBeInstanceOf(Error)
-//       expect(e.message).toBe('Request failed with status code 404')
+//       expect(e.msg).toBe('Request failed with status code 404')
 //       expect(e.stack).toMatch(/^Error: Request failed with status code 404/)
 //     }
 

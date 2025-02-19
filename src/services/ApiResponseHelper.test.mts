@@ -1,10 +1,10 @@
 import { jest } from '@jest/globals'
 import { Request, Response } from 'express'
-import { ApiWrapper } from '../models/ApiWrapper.mjs'
+import { ApiResponse } from '../models/ApiResponse.mjs'
 import ApiResponseHelper from './ApiResponseHelper.mjs'
 
-test('apiWrapperResponseSuccess', () => {
-  const resapi = ApiResponseHelper.apiWrapperResponseSuccess('test')
+test('ApiResponseResponseSuccess', () => {
+  const resapi = ApiResponseHelper.ApiResponseResponseSuccess('test')
 
   expect(resapi?.id).toBeGreaterThan(0)
   expect(resapi?.ts).toBeGreaterThan(0)
@@ -14,7 +14,7 @@ test('apiWrapperResponseSuccess', () => {
   expect(resapi?.obj).toBeUndefined()
 
   const obj = { a: 'test' }
-  const resobj = ApiResponseHelper.apiWrapperResponseSuccess(obj)
+  const resobj = ApiResponseHelper.ApiResponseResponseSuccess(obj)
 
   expect(resobj?.id).toBeGreaterThan(0)
   expect(resobj?.ts).toBeGreaterThan(0)
@@ -23,20 +23,20 @@ test('apiWrapperResponseSuccess', () => {
   expect(resobj?.result).toBe('success')
   expect(resobj?.obj).toBe(obj)
 
-  const newApiWrapper = new ApiWrapper<string>()
-  const resapiWrapper =
-    ApiResponseHelper.apiWrapperResponseSuccess(newApiWrapper)
+  const newApiResponse = new ApiResponse<string>()
+  const resApiResponse =
+    ApiResponseHelper.ApiResponseResponseSuccess(newApiResponse)
 
-  expect(resapiWrapper?.id).toBeGreaterThan(0)
-  expect(resapiWrapper?.ts).toBeGreaterThan(0)
-  expect(resapiWrapper?.message).toBe('')
-  expect(resapiWrapper?.responseCode).toBe(0)
-  expect(resapiWrapper?.result).toBe('success')
-  expect(resapiWrapper?.obj).toBeInstanceOf(ApiWrapper)
+  expect(resApiResponse?.id).toBeGreaterThan(0)
+  expect(resApiResponse?.ts).toBeGreaterThan(0)
+  expect(resApiResponse?.message).toBe('')
+  expect(resApiResponse?.responseCode).toBe(0)
+  expect(resApiResponse?.result).toBe('success')
+  expect(resApiResponse?.obj).toBeInstanceOf(ApiResponse)
 })
 
-test('apiWrapperResponseError', () => {
-  const resapi = ApiResponseHelper.apiWrapperResponseError('test')
+test('ApiResponseResponseError', () => {
+  const resapi = ApiResponseHelper.apiResponseError('test')
 
   expect(resapi?.id).toBeGreaterThan(0)
   expect(resapi?.ts).toBeGreaterThan(0)
@@ -45,15 +45,15 @@ test('apiWrapperResponseError', () => {
   expect(resapi?.result).toBe('Error')
   expect(resapi?.obj).toBeUndefined()
 
-  const newApiWrapper = new ApiWrapper<string>()
-  const resapiWrapper = ApiResponseHelper.apiWrapperResponseError(newApiWrapper)
+  const newApiResponse = new ApiResponse<string>()
+  const resApiResponse = ApiResponseHelper.apiResponseError(newApiResponse)
 
-  expect(resapiWrapper?.id).toBeGreaterThan(0)
-  expect(resapiWrapper?.ts).toBeGreaterThan(0)
-  expect(resapiWrapper?.message).toBe('')
-  expect(resapiWrapper?.responseCode).toBe(-1)
-  expect(resapiWrapper?.result).toBe('Error')
-  expect(resapiWrapper?.obj).toBeInstanceOf(ApiWrapper)
+  expect(resApiResponse?.id).toBeGreaterThan(0)
+  expect(resApiResponse?.ts).toBeGreaterThan(0)
+  expect(resApiResponse?.message).toBe('')
+  expect(resApiResponse?.responseCode).toBe(-1)
+  expect(resApiResponse?.result).toBe('Error')
+  expect(resApiResponse?.obj).toBeInstanceOf(ApiResponse)
 })
 
 test('respondWithSuccess', () => {

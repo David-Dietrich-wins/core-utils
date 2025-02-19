@@ -1,13 +1,6 @@
 import { LogManagerLevel } from '../services/LogManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
-export type ApiResponse<T = unknown> = {
-  code: number
-  data?: T
-  message: string
-  success: boolean
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GenericCallback<T = unknown> = (...args: any[]) => T
 

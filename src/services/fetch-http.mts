@@ -1,6 +1,6 @@
 import { HttpException } from '../models/IntecoreException.mjs'
 import { JSONValue } from '../models/types.mjs'
-import { ICaptureResponse } from './CaptureResponse.mjs'
+import { IApiResponse } from '../models/ApiResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
@@ -88,10 +88,10 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
   }
 
   if (!response.ok) {
-    let captureResponse: ICaptureResponse<unknown> | undefined
+    let captureResponse: IApiResponse<unknown> | undefined
     if (401 === response.status) {
       try {
-        captureResponse = (await response.json()) as ICaptureResponse<unknown>
+        captureResponse = (await response.json()) as IApiResponse<unknown>
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (ex) {
         /* empty */
