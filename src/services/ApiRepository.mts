@@ -92,7 +92,7 @@ export const saveApiCall = (
   )
 
   // if (isAxiosError(response)) {
-  //   throw new GrayArrowExceptionHttpNotAllowed(key, response.response?.data)
+  //   throw new HttpExceptionNotAllowed(key, response.response?.data)
   // }
 }
 
@@ -105,7 +105,7 @@ export class ApiRepository implements IApiRepository {
     public saveKeyPrefix = 'api-'
   ) {
     // if (!apiProps?.logFilename) {
-    //   throw new GrayArrowException(
+    //   throw new IntecoreException(
     //     'You must provide a log Filename for API logging.',
     //     ApiRepository.name
     //   )
@@ -218,7 +218,7 @@ export class ApiRepository implements IApiRepository {
       //   // if (res.data?.IsPINLocked) {
       //   //   this.logInfo(`Pin locked for user: ${loginRequest.UserName}.`)
 
-      //   //   throw new GrayArrowExceptionHttpForbidden('PIN Locked', this.login.name)
+      //   //   throw new HttpExceptionForbidden('PIN Locked', this.login.name)
       //   // }
 
       //   this.logInfo(
@@ -292,7 +292,7 @@ export class ApiRepository implements IApiRepository {
       //   // if (res.data?.IsPINLocked) {
       //   //   this.logInfo(`Pin locked for user: ${loginRequest.UserName}.`)
 
-      //   //   throw new GrayArrowExceptionHttpForbidden('PIN Locked', this.login.name)
+      //   //   throw new HttpExceptionForbidden('PIN Locked', this.login.name)
       //   // }
 
       //   this.logInfo(

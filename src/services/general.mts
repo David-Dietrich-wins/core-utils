@@ -31,10 +31,13 @@ export function addObjectToList<T>(listObjects: T[], obj: T[]) {
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
-export function deepCloneJson(obj: object, fname?: string) {
+export function deepCloneJson<T extends object | Array<T>>(
+  obj: T,
+  fname?: string
+) {
   fname = fname || 'deepCloneJson'
 
-  return safestrToJson(safeJsonToString(obj, fname), fname)
+  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
 }
 /**
  * Method to wrap deep object comparison. The changes are mapped and returned.

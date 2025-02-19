@@ -206,7 +206,7 @@ test('setError error object with response code', () => {
   expect(apiWrapper.obj).toBe(errorObj)
 })
 
-test('setError error object with GrayArrowException', () => {
+test('setError error object with IntecoreException', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -224,7 +224,7 @@ test('setError error object with GrayArrowException', () => {
 
   const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
-    'setError error object with GrayArrowException',
+    'setError error object with IntecoreException',
     500
   )
   apiWrapper.setError(errorObj)
@@ -237,7 +237,7 @@ test('setError error object with GrayArrowException', () => {
   expect(apiWrapper.obj).toBe(500)
 })
 
-test('setError error object with GrayArrowException no object', () => {
+test('setError error object with IntecoreException no object', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -255,7 +255,7 @@ test('setError error object with GrayArrowException no object', () => {
 
   const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
-    'setError error object with GrayArrowException'
+    'setError error object with IntecoreException'
   )
   apiWrapper.setError(errorObj)
   expect(apiWrapper.message.indexOf(CONST_ErrorNotFound)).toBe(0)
@@ -267,7 +267,7 @@ test('setError error object with GrayArrowException no object', () => {
   expect(apiWrapper.obj).toBe(obj)
 })
 
-test('setError error GrayArrowException with response code', () => {
+test('setError error IntecoreException with response code', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -286,7 +286,7 @@ test('setError error GrayArrowException with response code', () => {
   const exceptionObject = { responseCode: 500, message: 'Not Found' }
   const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
-    'setError error object with GrayArrowException',
+    'setError error object with IntecoreException',
     exceptionObject
   )
   apiWrapper.setError(errorObj)
@@ -299,7 +299,7 @@ test('setError error GrayArrowException with response code', () => {
   expect(apiWrapper.obj).toBe(exceptionObject)
 })
 
-test('setError error GrayArrowException without response code', () => {
+test('setError error IntecoreException without response code', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -318,7 +318,7 @@ test('setError error GrayArrowException without response code', () => {
   const exceptionObject = { message: 'No responseCode' }
   const errorObj = new IntecoreException(
     CONST_ErrorNotFound,
-    'setError error object with GrayArrowException',
+    'setError error object with IntecoreException',
     exceptionObject
   )
   apiWrapper.setError(errorObj)
