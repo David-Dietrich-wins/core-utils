@@ -60,7 +60,7 @@ export function getGlobalLogger() {
 
 export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
-  currentDate: 0,
+  currentDate: new Date('2025-12-01T12:00:00Z'),
   userIdGood: 123456789,
   userIdBad: 987654321,
   jwt: '',
@@ -86,11 +86,9 @@ beforeAll(() => {
   //   onUnhandledRequest: 'error',
   // })
 
-  TEST_Parameters_DEV.currentDate = new Date().getTime()
+  // https://stackoverflow.com/questions/29719631/how-do-i-set-a-mock-date-in-jest
   jest.useFakeTimers()
-  jest.setSystemTime(new Date(TEST_Parameters_DEV.currentDate))
-  // // Override Date.now() to return a fixed date for all objects
-  // Date.now = jest.fn(() => TEST_Parameters_DEV.currentDate)
+  jest.setSystemTime(TEST_Parameters_DEV.currentDate)
 })
 
 afterAll(() => {
@@ -98,7 +96,7 @@ afterAll(() => {
 })
 
 export function getCurrentDate() {
-  return new Date(TEST_Parameters_DEV.currentDate)
+  return TEST_Parameters_DEV.currentDate
 }
 
 export const mockConsoleDebug = jest

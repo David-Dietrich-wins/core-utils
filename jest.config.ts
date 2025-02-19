@@ -2,6 +2,9 @@ import type { Config } from 'jest'
 // import { defaults } from 'jest-config'
 
 const config: Config = {
+  fakeTimers: {
+    enableGlobally: true,
+  },
   testEnvironment: 'node',
   preset: 'ts-jest/presets/default-esm',
   // globals: {
@@ -15,7 +18,12 @@ const config: Config = {
   moduleFileExtensions: ['js', 'ts', 'mjs', 'mts'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(m)?ts$',
   coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.ts', 'src/**/*.mts', '!src/**/*.d.ts', '!src/**/*.d.mts'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    'src/**/*.mts',
+    '!src/**/*.d.ts',
+    '!src/**/*.d.mts',
+  ],
 
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   setupFilesAfterEnv: ['./src/jest.setup.mts'],
