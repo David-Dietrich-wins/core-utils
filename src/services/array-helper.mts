@@ -227,9 +227,10 @@ export function arrayElementNonEmpty<T>(
  * @param defaultIfNone An optional default value if the array is empty.
  * @returns The first item in the array, or undefined or defaultIfNone if the array has no values.
  */
-export function arrayFirst<T>(tArray?: T[], defaultIfNone?: T) {
-  if (isArray(tArray, 1)) {
-    return tArray[0]
+export function arrayFirst<T>(tArray?: ArrayOrSingle<T>, defaultIfNone?: T) {
+  const arr = ToSafeArray(tArray)
+  if (arr.length) {
+    return arr[0]
   }
 
   return defaultIfNone
