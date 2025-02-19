@@ -91,4 +91,4 @@ export class ApiResponse<T = unknown> implements IApiResponse<T> {
   }
 }
 
-// export type CaptureResponseType<T> = InstanceType<typeof CaptureResponse>
+// export type ApiResponseType<T> = InstanceType<typeof ApiResponse>
