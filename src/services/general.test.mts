@@ -47,6 +47,7 @@ import {
   toHex,
   urlJoin,
 } from './general.mjs'
+import { getCurrentDate } from '../jest.setup.mjs'
 
 test('safestr', () => {
   expect(safestr(undefined)).toBe('')
@@ -96,8 +97,8 @@ describe('timeDifferenceString', () => {
   })
 
   test('21d', () => {
-    const startDate = new Date()
-    const endDate = new Date(+startDate)
+    const startDate = getCurrentDate()
+    const endDate = new Date(startDate)
 
     endDate.setDate(endDate.getDate() + 21)
     const str = timeDifferenceString(startDate, endDate)
@@ -140,6 +141,20 @@ describe('timeDifferenceStringFromMillis', () => {
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds')
+  })
+
+  test('189ms', () => {
+    const str = timeDifferenceStringFromMillis(189)
+
+    expect(safestr(str).length).toBeGreaterThan(1)
+    expect(str).toBe('189ms')
+  })
+
+  test('189ms long format', () => {
+    const str = timeDifferenceStringFromMillis(189, true)
+
+    expect(safestr(str).length).toBeGreaterThan(1)
+    expect(str).toBe('189ms')
   })
 
   test('58m', () => {

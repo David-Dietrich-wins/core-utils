@@ -1,4 +1,5 @@
-import { StringOrStringArray } from '../models/types.mjs'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import { ToSafeArray } from './array-helper.mjs'
 
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
@@ -254,9 +255,7 @@ export function getCommaUpperList(stringOrArray: StringOrStringArray) {
  * @param stringOrNumber The string or number to return as a number.
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
-export function getAsNumber(
-  stringOrNumber: string | number | null | undefined
-) {
+export function getAsNumber(stringOrNumber?: string | number | null) {
   return getNumberFormatted(stringOrNumber)
 }
 
@@ -269,7 +268,7 @@ export function getAsNumber(
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
 export function getAsNumberOrUndefined(
-  stringOrNumber: string | number | null | undefined,
+  stringOrNumber?: string | number | null,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
 ) {
@@ -350,7 +349,7 @@ export function getMantissa(num: number) {
  */
 export function getNumberFormatted(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  num: any | null | undefined,
+  num?: any | null,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
 ) {
@@ -413,7 +412,7 @@ export function getNumberString(
  * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
  * @returns The given object at arr[index], or undefined if it does not exist.
  */
-export function getObject<T>(arr: T | T[], index = 0) {
+export function getObject<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
   if (!isNullOrUndefined(arr)) {
     index = index || 0
 
@@ -501,7 +500,7 @@ export function getPercentChangeString(
  * @returns True if the object meets the minimum length requirements.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function hasData(o: any | null | undefined, minlength = 1) {
+export function hasData(o?: any | null, minlength = 1) {
   // console.log('minlength: ' + minlength + ', o: ' + o)
   try {
     if (!o) {
@@ -545,7 +544,7 @@ export function hasData(o: any | null | undefined, minlength = 1) {
  * @returns True if arr is an array and meets any minimum requirements.
  */
 export function isArray<T = unknown>(
-  arr: T | T[],
+  arr?: ArrayOrSingle<T> | null,
   minLengthOrIncludes?: T | number
 ): arr is Array<T> {
   if (!arr || !Array.isArray(arr)) {
@@ -739,9 +738,12 @@ export function getNullObject<T>(obj: T) {
  * @param ifEmpty If the array is null or undefined, return this value. Defaults to [].
  * @returns A guaranteed array to be nonNull. Returns ifEmpty when the array does not have data. Or [] if ifEmpty is not declared.
  */
-export function safeArray<T>(arr?: T | T[] | null, ifEmpty?: T[]) {
+export function safeArray<T>(
+  arr?: ArrayOrSingle<T> | null,
+  ifEmpty?: ArrayOrSingle<T> | null
+) {
   if (isNullOrUndefined(arr)) {
-    return ifEmpty && isArray(ifEmpty) ? ifEmpty : []
+    return ifEmpty ? ToSafeArray(ifEmpty) : []
   }
 
   return isArray(arr) ? arr : [arr]
@@ -753,8 +755,8 @@ export function safeArray<T>(arr?: T | T[] | null, ifEmpty?: T[]) {
  * @param fname The optional function name that is the source of the operation. Used for exception logging.
  * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
  */
-export function safeJsonToString(
-  json: object,
+export function safeJsonToString<T extends object | Array<T>>(
+  json: T,
   fname?: string,
   replacer?: (number | string)[],
   space?: string | number
