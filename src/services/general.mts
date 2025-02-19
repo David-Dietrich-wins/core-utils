@@ -95,28 +95,36 @@ export function deepDiffMapper() {
       // We are dealing with a larger object or array comparison.
       return changeEntries.find(this.findTypeData, this)
     },
-    /**
-     * Looks for an object with key value pairs and returns if it found changes.
-     * @param param0 A key value pair to look for changes. Deep inspection
-     * @returns True if an object with type and data is found with changes present.
-     */
-    findTypeData([, value]: [string, unknown]): boolean {
+
+    findFunction(value: unknown) {
       const found =
         isObject(value, 'type') &&
         isObject(value, 'data') &&
         2 === Object.entries(value).length &&
         'unchanged' !== (value as { type: string }).type
 
+      return found
+    },
+
+    /**
+     * Looks for an object with key value pairs and returns if it found changes.
+     * @param param0 A key value pair to look for changes. Deep inspection
+     * @returns True if an object with type and data is found with changes present.
+     */
+    findTypeData([, value]: [string, unknown]) {
+      const found = this.findFunction(value)
       if (found) {
         return true
       }
 
-      // if (isObject(value)) {
-      //   const foundItems = Object.entries(value).find(this.findTypeData, this)
-      //   if (foundItems) {
-      //     return true
-      //   }
-      // }
+      if (isObject(value)) {
+        // const foundItems = Object.values(value).find(this.findFunction)
+        const foundItems = Object.entries(value).find(this.findTypeData, this)
+
+        if (foundItems) {
+          return true
+        }
+      }
 
       return false
     },
@@ -139,13 +147,13 @@ export function deepDiffMapper() {
         }
       }
 
-      let diff = {}
+      let diff: Record<string, unknown> = {}
       for (const key in obj1) {
         if (this.isFunction(obj1[key])) {
           continue
         }
 
-        let value2
+        let value2 = undefined
         if (obj2[key] !== undefined) {
           value2 = obj2[key]
         }
@@ -197,7 +205,7 @@ export function deepDiffMapper() {
     isFunction(x: unknown) {
       return Object.prototype.toString.call(x) === '[object Function]'
     },
-    isArray(x: unknown) {
+    isArray(x: unknown): x is Array<unknown> {
       return Object.prototype.toString.call(x) === '[object Array]'
     },
     isDate(x: unknown): x is Date {
@@ -667,7 +675,10 @@ export function isObject(
   }
 
   if (isString(minLengthOrContainsField)) {
-    return safeArray(Object.keys(obj)).includes(minLengthOrContainsField)
+    const keys = Object.keys(obj)
+    const incs = safeArray(keys).includes(minLengthOrContainsField)
+
+    return incs
   }
 
   return true

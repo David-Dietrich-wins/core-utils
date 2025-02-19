@@ -927,6 +927,39 @@ describe('deepDiffMapper', () => {
     expect(deepDiffMapper().compareValues(a, b)).toStrictEqual('updated')
   })
 
+  test('arrays', () => {
+    const a = [
+      { name: 'climate', value: 90 },
+      { name: 'freeSpeech', value: 80 },
+      { name: 'religion', value: 81 },
+    ]
+    const b = [
+      { name: 'climate', value: 90 },
+      { name: 'freeSpeech', value: 80 },
+      { name: 'religion', value: 82 },
+    ]
+
+    expect(deepDiffMapper().anyChanges(a, b)).toBe(true)
+
+    const c = [
+      {
+        a: { name: 'climate', value: 90 },
+        b: { name: 'freeSpeech', value: 80 },
+        c: { name: 'religion', value: 81 },
+      },
+    ]
+
+    const d = [
+      {
+        a: { name: 'climate', value: 90 },
+        b: { name: 'freeSpeech', value: 80 },
+        c: { name: 'religion', value: 83 },
+      },
+    ]
+
+    expect(deepDiffMapper().anyChanges(c, d)).toBe(true)
+  })
+
   test('findTypeData', () => {
     let b: Record<string, unknown> = { b: 'b' }
 
