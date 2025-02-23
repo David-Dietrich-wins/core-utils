@@ -1,15 +1,15 @@
+import { safeArray } from '../services/general.mjs'
+
 export interface IPagedResponse<T> {
   dataPage: T[]
   totalCount: number
 }
 
 export class PagedResponse<T> implements IPagedResponse<T> {
-  dataPage: T[] = []
-  totalCount = 0
-
-  constructor(dataPage: T[], totalCount: number) {
-    this.dataPage = dataPage
-    this.totalCount = totalCount
+  constructor(public dataPage: T[], public totalCount = 0) {
+    if (!totalCount) {
+      this.totalCount = safeArray(dataPage).length
+    }
   }
 }
 

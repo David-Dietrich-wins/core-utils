@@ -1,9 +1,13 @@
 import { INameValue } from './name-value.mjs'
 import { IDate, IId, IName, ISlug, IType } from './interfaces.mjs'
 
-export interface IIdName<Tid = string, Tname = string> extends IId<Tid>, IName<Tname> {}
+export interface IIdName<Tid = string, Tname = string>
+  extends IId<Tid>,
+    IName<Tname> {}
 
-export class IdName<Tid = string, Tname = string> implements IIdName<Tid, Tname> {
+export class IdName<Tid = string, Tname = string>
+  implements IIdName<Tid, Tname>
+{
   id: Tid
   name: Tname
 
@@ -20,7 +24,9 @@ export type IdNameType<Tid = string, Tname = string> = {
   name: Tname
 }
 
-export interface IdNameSlug<Tid = string, Tname = string> extends IdName<Tid, Tname>, ISlug {}
+export interface IdNameSlug<Tid = string, Tname = string>
+  extends IdName<Tid, Tname>,
+    ISlug {}
 
 export interface IdNameValue<Tvalue, Tid = string>
   extends IdName<Tid, string>,
@@ -43,7 +49,7 @@ export type ValueChangeHandler<Tvalue = string, TReturn = void> = (
   change: IValueChange<Tvalue>
 ) => TReturn
 
-export function createValueChange<T>(
+export function createValueChange<T = string>(
   id: string,
   name: string,
   value: T,
