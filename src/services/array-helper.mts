@@ -13,7 +13,7 @@ import {
 } from './general.mjs'
 
 export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
-  arr?: Readonly<T>[],
+  arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tid
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.id))
@@ -34,7 +34,7 @@ export function arrayGetIdNames<
   })
 }
 export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
-  arr?: Readonly<T>[],
+  arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tname
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.name))
@@ -47,7 +47,7 @@ export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
  * @returns The object with the given name. If not found, undefined is returned.
  */
 export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(
-  arrItems?: T[],
+  arrItems?: ArrayOrSingle<T> | null,
   id?: Tid
 ) {
   return id && safeArray(arrItems).find((x) => id === x.id)
@@ -74,7 +74,7 @@ export function arrayFindNameById<
  * @returns The object with the given name. If not found, an empty Array is returned.
  */
 export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
-  arrItems?: T[],
+  arrItems?: ArrayOrSingle<T> | null,
   ids?: Tid[]
 ) {
   if (!ids || !ids.length) {
@@ -90,7 +90,7 @@ export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
  * @returns The object with the given name. If not found, and exception is thrown.
  */
 export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
-  arrItems?: T[],
+  arrItems?: ArrayOrSingle<T> | null,
   ids?: Tid[]
 ) {
   if (!ids || !ids.length) {
@@ -101,7 +101,7 @@ export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
 }
 
 export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
-  arrItems: T[] | undefined,
+  arrItems: ArrayOrSingle<T> | null | undefined,
   id: Tid,
   functionSourceName?: string
 ) {
@@ -127,28 +127,28 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
  * @returns The object with the given name. If not found, and exception is thrown.
  */
 export function arrayFindByName<T extends IName<Tname>, Tname = T['name']>(
-  arrItems?: T[],
+  arrItems?: ArrayOrSingle<T> | null,
   name?: Tname
 ) {
   return arrayFind(arrItems, (x) => x.name === name)
 }
 
 export function arrayFilter<T>(
-  arrItems: T[] | undefined,
+  arrItems: ArrayOrSingle<T> | null | undefined,
   filterFunc: (item: T) => boolean
 ) {
   return safeArray(arrItems).filter(filterFunc)
 }
 
 export function arrayFind<T>(
-  arrItems: T[] | undefined,
+  arrItems: ArrayOrSingle<T> | null | undefined,
   findFunc: (item: T) => boolean
 ) {
   return safeArray(arrItems).find(findFunc)
 }
 
 export function arrayMustFindFunc<T>(
-  arrItems: T[],
+  arrItems: ArrayOrSingle<T> | null | undefined,
   findFunc: (item: T) => boolean,
   functionSourceName?: string,
   exceptionSuffix?: () => string
@@ -169,7 +169,7 @@ export function arrayMustFindFunc<T>(
 }
 
 export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
-  arrItems: T[],
+  arrItems: ArrayOrSingle<T> | null | undefined,
   name: Tname,
   functionSourceName?: string
 ) {
@@ -255,7 +255,7 @@ export function arrayFirst<T>(
 }
 
 export function arrayFirstNonEmpty<T>(
-  arr?: T[],
+  arr?: ArrayOrSingle<T> | null,
   functionSourceName?: string,
   customMessage?: string
 ) {
