@@ -163,7 +163,7 @@ export async function fetchDeleteJson<
 export async function fetchGet<Tret extends FetchDataTypesAllowed>(
   settings: HttpFetchRequestProps<Tret>
 ) {
-  return fetchJson<FetchDataTypesAllowed, Tret>('GET', settings)
+  return fetchJson<FetchDataTypesAllowed, IApiResponse<Tret>>('GET', settings)
 }
 
 /**
@@ -178,7 +178,7 @@ export async function fetchPatch<
   Tdata extends FetchDataTypesAllowed,
   Tret = undefined
 >(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, Tret>('PATCH', settings)
+  return fetchJson<Tdata, IApiResponse<Tret>>('PATCH', settings)
 }
 
 /**
@@ -192,9 +192,9 @@ export async function fetchPatch<
  */
 export async function fetchPost<
   Tdata extends FetchDataTypesAllowed,
-  Tret = undefined
+  Tret = Tdata
 >(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, Tret>('POST', settings)
+  return fetchJson<Tdata, IApiResponse<Tret>>('POST', settings)
 }
 
 /**
@@ -207,7 +207,7 @@ export async function fetchPost<
  */
 export async function fetchPut<
   Tdata extends FetchDataTypesAllowed,
-  Tret = undefined
+  Tret = Tdata
 >(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, Tret>('PUT', settings)
+  return fetchJson<Tdata, IApiResponse<Tret>>('PUT', settings)
 }
