@@ -2,9 +2,10 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "declarationMap": false,
+    "declarationMap": true,
     "esModuleInterop": true,
     "inlineSourceMap": false,
+    "sourceMap": true,
     "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
