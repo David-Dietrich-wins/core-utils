@@ -17,12 +17,18 @@ export interface IJwtExtended {
   exp: number
   cid: string
   uid: string
+  sid: string
+  tid: string
   scp: string[]
   auth_time: number
   sub: string
   birthdate: string
-  emailVerified: boolean
-  groups: string[]
+  authenticationType: string
+  email: string
+  email_verified: boolean
+  applicationId: string
+  scope: string
+  roles: string[]
   givenName: string
   userId: string
   role: 'user'
@@ -30,7 +36,6 @@ export interface IJwtExtended {
   name: string
   phoneNumber: string
   familyName: string
-  email: string
 }
 
 export function JwtDecode(token: string, options?: DecodeOptions) {
