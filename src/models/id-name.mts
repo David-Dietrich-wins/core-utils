@@ -61,7 +61,7 @@ export function createValueChange<T = string>(
     name,
     value,
     type: type ?? '',
-    date: date ?? +new Date(),
+    date: date ?? Date.now(),
   }
 
   return vc
