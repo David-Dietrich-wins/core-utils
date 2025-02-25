@@ -28,7 +28,7 @@ export interface IdNameSlug<Tid = string, Tname = string>
   extends IdName<Tid, Tname>,
     ISlug {}
 
-export interface IdNameValue<Tvalue, Tid = string>
+export interface IdNameValue<Tvalue = string, Tid = string>
   extends IdName<Tid, string>,
     INameValue<Tvalue> {}
 export interface IdNameValueType<Tvalue, Type = string, Tid = string>
