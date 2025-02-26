@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithUserId } from './services/jwt.mjs'
-import { LogManagerOptions } from './index.mjs'
+import { LogManagerOptions, safestr } from './index.mjs'
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 
@@ -64,6 +64,9 @@ export const TEST_Parameters_DEV = {
   userIdGood: 123456789,
   userIdBad: 987654321,
   jwt: '',
+  rsaPassphrase: safestr(process.env.rsaPassPhrase),
+  rsaPrivateKey: safestr(process.env.rsaPrivateKey),
+  rsaPublicKey: safestr(process.env.rsaPublicKey),
 }
 
 export function getSignedJwtTokenWithPlayerId(userId: number) {
@@ -143,7 +146,7 @@ afterEach(() => {
 
 export function GenerateRandomPinEncrypted() {
   return CryptoHelper.rsaEncryptStatic(
-    CryptoHelper.GenerateRandomPin(4),
+    CryptoHelper.GenerateRandomValue(4),
     'rsaPublicKey'
   )
 }
