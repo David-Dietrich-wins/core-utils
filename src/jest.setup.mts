@@ -72,9 +72,6 @@ export function getSignedJwtTokenWithPlayerId(userId: number) {
 
 beforeAll(() => {
   // process.env.NODE_ENV = 'test'
-  // process.env.APPLICATIONINSIGHTS_CONNECTION_STRING =
-  //   'InstrumentationKey=771cff7b-216b-4919-9aee-686918a3c877;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/'
-
   const jwtToken = getSignedJwtTokenWithPlayerId(TEST_Parameters_DEV.userIdGood)
 
   TEST_Parameters_DEV.jwt = jwtToken
