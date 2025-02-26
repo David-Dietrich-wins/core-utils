@@ -1,31 +1,131 @@
-import CryptoHelper from './CryptoHelper.mjs'
+import { TEST_Parameters_DEV } from '../jest.setup.mjs'
+import CryptoHelper, {
+  CONST_RegexRsaPrivateKeyPem,
+  CONST_RegexRsaPublicKeyPem,
+  ICryptoSettings,
+} from './CryptoHelper.mjs'
 
-// test('RSA encrypt and decrypt', () => {
-//   const lengthForRandomString = 4
-//   const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)
+/**
+ * Generate a 2048-bit RSA key pair
+ * openssl genrsa -out rsaKey.pem 2048
+ * openssl rsa -in rsaKey.pem -pubout > rsaKey.pub
+ *
+ * openssl genrsa -aes128 -passout "pass:${rsaPassPhrase}" -out rsaKey.pem 3072
+ * openssl rsa -in rsaKey.pem -passin "pass:${rsaPassPhrase}" -pubout -out rsaKey.pub
+ */
 
-//   expect(randomString).toHaveLength(lengthForRandomString)
-//   const cipherText = CryptoHelper.rsaEncryptStatic(randomString, getAceConfig().crypto.rsaPublicKey)
-//   expect(cipherText).not.toBeNull()
-//   const decrypted = CryptoHelper.rsaDecryptStatic(
-//     cipherText,
-//     getAceConfig().crypto.rsaPrivateKey,
-//     getAceConfig().crypto.rsaPassphrase
-//   )
-//   expect(decrypted).not.toBeNull()
+const pinResetStartingPIN = '1233'
 
-//   expect(decrypted).toEqual(randomString)
+test('Constructor', () => {
+  const cryptoSettings: ICryptoSettings = {
+    rsaPrivateKey: TEST_Parameters_DEV.rsaPrivateKey,
+    rsaPublicKey: TEST_Parameters_DEV.rsaPublicKey,
+    rsaPassphrase: TEST_Parameters_DEV.rsaPassphrase,
+  }
+  const ch = new CryptoHelper(cryptoSettings)
+
+  const encrypted = ch.rsaEncrypt(pinResetStartingPIN)
+  const decrypted = ch.rsaDecrypt(encrypted)
+
+  expect(decrypted).toBe(pinResetStartingPIN)
+})
+
+test('RSA generate key pair', () => {
+  const { rsaPublicKey, rsaPrivateKey } = CryptoHelper.GenerateRsaKeyPair()
+
+  expect(rsaPublicKey).toMatch(CONST_RegexRsaPublicKeyPem)
+  expect(rsaPrivateKey).toMatch(CONST_RegexRsaPrivateKeyPem)
+})
+
+test('RSA encrypt and decrypt', () => {
+  const lengthForRandomString = 4
+  const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)
+
+  expect(randomString).toHaveLength(lengthForRandomString)
+  const cipherText = CryptoHelper.rsaEncryptStatic(
+    randomString,
+    TEST_Parameters_DEV.rsaPublicKey
+  )
+  expect(cipherText).not.toBeNull()
+  const decrypted = CryptoHelper.rsaDecryptStatic(
+    cipherText,
+    TEST_Parameters_DEV.rsaPrivateKey,
+    TEST_Parameters_DEV.rsaPassphrase
+  )
+  expect(decrypted).not.toBeNull()
+
+  expect(decrypted).toEqual(randomString)
+})
+
+// describe('Generate random PIN', () => {
+//   test('length for random PIN', () => {
+//     const lengthForRandomString = 4
+//     const ranstr = CryptoHelper.GenerateRandomPin(lengthForRandomString)
+
+//     expect(ranstr).toHaveLength(lengthForRandomString)
+//   })
+//   test('using chars and numbers', () => {
+//     const lengthForRandomString = 4
+//     const ranstr = CryptoHelper.GenerateRandomPin(
+//       lengthForRandomString,
+//       CryptoHelper.CONST_CharsNumbers
+//     )
+
+//     expect(ranstr).toHaveLength(lengthForRandomString)
+//   })
+
+//   test('cannot verify', () => {
+//     const mockStaticF = jest.fn().mockReturnValue(true)
+//     AceApiHelper.verifyPin = mockStaticF
+
+//     const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockReturnValue()
+
+//     expect(AceApiHelper.verifyPin('1234')).toBeUndefined()
+
+//     // unnecessary in this case, putting it here just to illustrate how to "unmock" a method
+//     spy.mockRestore()
+//   })
+
+//   test('cannot verify, too long', () => {
+//     const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockImplementation(() => {
+//       throw new Error('Your PIN cannot be greater than 4 numbers.')
+//     })
+
+//     expect(spy).toThrow()
+
+//     const lengthForRandomString = 4
+//     expect(() =>
+//       CryptoHelper.GenerateRandomPin(
+//         lengthForRandomString,
+//         CryptoHelper.CONST_CharsNumbers
+//       )
+//     ).toThrow()
+
+//     // unnecessary in this case, putting it here just to illustrate how to "unmock" a method
+//     spy.mockRestore()
+//   })
 // })
 
-test('Generate random pin', () => {
-  const lengthForRandomString = 4
-  const ranstr = CryptoHelper.GenerateRandomPin(lengthForRandomString)
+describe('Generate random string', () => {
+  test('no params', () => {
+    const lengthForRandomString = 4
+    const ranstr = CryptoHelper.GenerateRandomString()
 
-  expect(ranstr).toHaveLength(lengthForRandomString)
-})
-test('Generate random string', () => {
-  const lengthForRandomString = 4
-  const ranstr = CryptoHelper.GenerateRandomString(lengthForRandomString)
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+  test('proper length', () => {
+    const lengthForRandomString = 4
+    const ranstr = CryptoHelper.GenerateRandomString(lengthForRandomString)
 
-  expect(ranstr).toHaveLength(lengthForRandomString)
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+  test('using chars and numbers', () => {
+    const lengthForRandomString = 4
+    const ranstr = CryptoHelper.GenerateRandomString(
+      lengthForRandomString,
+      CryptoHelper.CONST_CharsNumbers
+    )
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
 })

@@ -146,8 +146,9 @@ afterEach(() => {
 
 export function GenerateRandomPinEncrypted() {
   return CryptoHelper.rsaEncryptStatic(
-    CryptoHelper.GenerateRandomValue(4),
-    'rsaPublicKey'
+    CryptoHelper.GenerateRandomString(4),
+    TEST_Parameters_DEV.rsaPublicKey,
+    TEST_Parameters_DEV.rsaPassphrase
   )
 }
 
