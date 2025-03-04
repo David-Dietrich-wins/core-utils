@@ -59,10 +59,8 @@ export const saveApiCall = (
   fname: string,
   url: string,
   key: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // const saveInternal = (obj: any) => {
   //   if (obj && isObject(obj)) {
   //     if (obj instanceof AxiosError) {
