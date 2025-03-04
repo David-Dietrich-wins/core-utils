@@ -213,6 +213,60 @@ test('constructor', async () => {
   expect(stats.upsert).toBe(0)
 })
 
+test('constructor file not found', async () => {
+  const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+
+  const fnaction = jest.fn(() => Promise.resolve(1))
+  const config: SingleLineFileProcessorConfig<number> = {
+    action: fnaction,
+    fileName: 'notfound.txt',
+    logger: getGlobalLogger(),
+    typeName: 'type',
+  }
+
+  const processor = new SingleLineFileProcessor(config)
+  expect(processor.config).toBe(config)
+
+  const stats = await processor.processFile()
+
+  expect(closeSync).toHaveBeenCalledTimes(0)
+  // expect(existsSync).toHaveBeenCalledTimes(1)
+  // expect(existsSync).toHaveReturnedWith(true)
+  expect(openSync).toHaveBeenCalledTimes(0)
+  expect(unlinkSync).toHaveBeenCalledTimes(0)
+  expect(writeSync).toHaveBeenCalledTimes(0)
+
+  // expect(open).toHaveBeenCalledTimes(1)
+  expect(fnaction).toHaveBeenCalledTimes(0)
+
+  expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
+  expect(mockLoggerError).toHaveBeenCalledTimes(1)
+  expect(mockLoggerInfo).toHaveBeenCalledTimes(0)
+  expect(mockLoggerLog).toHaveBeenCalledTimes(0)
+  expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
+  expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
+
+  expect(mockLoggerError.mock.calls[0]).toStrictEqual([
+    'File not found:',
+    'notfound.txt',
+  ])
+
+  expect(stats.add).toBe(0)
+  expect(stats.delete).toBe(0)
+  expect(stats.failures).toBe(1)
+  expect(stats.finishTime).toBeUndefined()
+  expect(stats.msg).toStrictEqual(['File not found: notfound.txt.'])
+  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.skipped).toBe(0)
+  expect(stats.successes).toBe(0)
+  expect(stats.suffixWhenPlural).toBe('s')
+  expect(stats.suffixWhenSingle).toBe('')
+  expect(stats.totalProcessed).toBe(1)
+  expect(stats.update).toBe(0)
+  expect(stats.upsert).toBe(0)
+})
+
 test('action exception', async () => {
   const tmpFile = fileSync({
     mode: 0o644,
