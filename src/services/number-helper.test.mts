@@ -31,6 +31,18 @@ test('addNumbers', () => {
     f: { a: 2 },
   })
   expect(objret3).toEqual({ a: [2], b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
+
+  const io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } }
+  const objret4 = addNumbers(io4, {
+    a: [3],
+    b: 4,
+    c: [9],
+    d: '6',
+    e: ['c'],
+    f: { a: 2 },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any)
+  expect(objret4).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
 })
 
 test('divideByNumbers', () => {
@@ -61,5 +73,26 @@ describe('maxDecimalPlaces', () => {
       b: '3.00',
       c: '4.00',
     })
+  })
+
+  test('array', () => {
+    expect(setMaxDecimalPlaces([2.12], 2)).toEqual(['2.00'])
+  })
+
+  test('string', () => {
+    expect(setMaxDecimalPlaces('2.12', 2)).toEqual('2.00')
+  })
+
+  test('exception', () => {
+    try {
+      expect(setMaxDecimalPlaces(2.12, undefined)).toBe('2.00')
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setMaxDecimalPlaces(2.12, null as any)
+    } catch (e) {
+      expect(e).toEqual(new Error('Invalid number of decimal places.'))
+    }
+
+    expect.assertions(2)
   })
 })

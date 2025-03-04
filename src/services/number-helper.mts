@@ -15,8 +15,7 @@ import {
  * @param objLeft Adds all number members to the right.
  * @param objRight Adds all number members to the right.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
+export function addNumbers<T extends object>(objLeft: T, objRight: T) {
   return runOnAllMembers(
     objLeft,
     (key, val) => {
@@ -78,7 +77,7 @@ export function setMaxDecimalPlaces(
   }
 
   if (isString(obj)) {
-    if (!isNumeric(obj)) {
+    if (isNumeric(obj)) {
       return formatter(parseFloat(obj)).toString()
     }
   }
@@ -96,7 +95,7 @@ export function setMaxDecimalPlaces(
   if (isObject(obj)) {
     Object.entries(obj).forEach(([key, val]) => {
       if (!ignoreKeys.includes(key) && isNumeric(val)) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-extra-semi
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(obj as any)[key] = formatter(val as number)
       }
     })
