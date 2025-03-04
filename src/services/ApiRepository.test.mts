@@ -24,6 +24,7 @@ import {
 import { ApiProps } from '../models/types.mjs'
 import { ApiRepository, saveApiCall } from './ApiRepository.mjs'
 import { LogManager } from './LogManager.mjs'
+import { urlJoin } from './general.mjs'
 
 type PostExceptionAxiosResponseData = {
   response: {
@@ -714,4 +715,28 @@ test('sendApiSuccess', async () => {
   expect(apiWrapper.result).toBe('success')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
+})
+
+test('getApiUrl', async () => {
+  const apiProps: ApiProps = {
+    baseUrl,
+  }
+
+  const apirepo = new ApiRepository(apiProps)
+  expect(apirepo).toBeInstanceOf(ApiRepository)
+
+  expect(apirepo.getApiUrl('')).toBe(urlJoin(baseUrl, '/'))
+  expect(apirepo.getApiUrl('/')).toBe(urlJoin(baseUrl, '/'))
+  expect(apirepo.getApiUrl('test')).toBe(urlJoin(baseUrl, 'test'))
+})
+
+test('getKeyForSaving', async () => {
+  const apiProps: ApiProps = {
+    baseUrl,
+  }
+
+  const apirepo = new ApiRepository(apiProps, undefined, 'prefix-')
+  expect(apirepo).toBeInstanceOf(ApiRepository)
+
+  expect(apirepo.getKeyForSaving('test')).toBe('prefix-test')
 })
