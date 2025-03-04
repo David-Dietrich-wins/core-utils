@@ -20,9 +20,14 @@ export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
   return runOnAllMembers(
     objLeft,
     (key, val) => {
-      const lval = parseFloat(isString(val) ? val : '')
+      const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rval: any = (objRight as any)[key] ? parseFloat((objRight as any)[key]) : NaN
+      const robjval: any = (objRight as any)[key]
+      const rval = isNumber(robjval)
+        ? robjval
+        : isString(robjval)
+        ? parseFloat(robjval)
+        : NaN
 
       if (isNaN(lval)) {
         return isNaN(rval) ? val : rval
@@ -40,18 +45,26 @@ export function addNumbers<T extends object = any>(objLeft: T, objRight: T) {
  * @param divideBy The number to divide all members by.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function divideByNumbers<T extends object = any>(obj: T, divideBy: number) {
+export function divideByNumbers<T extends object = any>(
+  obj: T,
+  divideBy: number
+) {
   return runOnAllMembers(obj, (_, val) => {
+    let newval = val
     if (isString(val)) {
-      val = parseFloat(val)
+      newval = parseFloat(val)
     }
 
-    return isNumber(val) && !isNaN(val) ? val / divideBy : val
+    return isNumber(newval) && !isNaN(newval) ? newval / divideBy : val
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function setMaxDecimalPlaces(obj: any, maxDecimalPlaces = 2, ignoreKeys: string[] = []) {
+export function setMaxDecimalPlaces(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any,
+  maxDecimalPlaces = 2,
+  ignoreKeys: string[] = []
+) {
   if (isNullOrUndefined(maxDecimalPlaces)) {
     throw new Error('Invalid number of decimal places.')
   }
