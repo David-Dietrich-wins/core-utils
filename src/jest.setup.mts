@@ -87,7 +87,10 @@ beforeAll(() => {
   // })
 
   // https://stackoverflow.com/questions/29719631/how-do-i-set-a-mock-date-in-jest
-  jest.useFakeTimers()
+  jest.useFakeTimers({
+    doNotFake: ['queueMicrotask'],
+  })
+
   jest.setSystemTime(TEST_Parameters_DEV.currentDate)
 })
 
