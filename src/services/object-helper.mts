@@ -150,10 +150,10 @@ export function ObjectTypesToString(
     return util.inspect(jerr, true, CONST_JsonDepth)
   } else if (etoString === '[object Object]') {
     return util.inspect(e, true, CONST_JsonDepth)
-  } else if (etoString === '[object FileList]') {
-    return util.inspect(e.toArray(), true, CONST_JsonDepth)
-  } else if (etoString === '[object File]') {
-    return util.inspect(e.toObject(), true, CONST_JsonDepth)
+    // } else if (etoString === '[object FileList]') {
+    //   return util.inspect(e.toArray(), true, CONST_JsonDepth)
+    // } else if (etoString === '[object File]') {
+    //   return util.inspect(e.toObject(), true, CONST_JsonDepth)
   }
 
   return etoString
