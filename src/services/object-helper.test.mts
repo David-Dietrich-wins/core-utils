@@ -8,10 +8,13 @@ import {
   InternalAxiosRequestConfig,
 } from 'axios'
 import {
+  CloneObjectWithId,
   ObjectFindKeyAndReturnValue,
   ObjectMustHaveKeyAndReturnValue,
   ObjectTypesToString,
+  UpdateFieldValue,
 } from './object-helper.mjs'
+import { IId } from '../models/interfaces.mjs'
 
 type PostExceptionAxiosResponseData = {
   response: {
@@ -570,5 +573,25 @@ describe('ObjectTypesToString', () => {
 
     const ret = ObjectTypesToString(e, true, true)
     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
+  })
+})
+
+test('CloneObjectWithId', () => {
+  const obj: IId = {
+    id: 'abc1',
+  }
+
+  expect(CloneObjectWithId(obj)).toEqual(obj)
+})
+
+test('UpdateFieldValue', () => {
+  const obj: IId & { field: string } = {
+    id: 'abc1',
+    field: 'value',
+  }
+
+  expect(UpdateFieldValue(obj, 'field', 'newvalue')).toEqual({
+    ...obj,
+    field: 'newvalue',
   })
 })
