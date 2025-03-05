@@ -1,4 +1,7 @@
-import { getNumberString, timeDifferenceStringFromMillis } from '../services/general.mjs'
+import {
+  getNumberString,
+  timeDifferenceStringFromMillis,
+} from '../services/general.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 const CONST_DefaultSecondsMs = new RegExp('^(\\d+ seconds?|\\d+m?s)$')
@@ -48,13 +51,25 @@ Messages:
 test('messageSuccessFail good', () => {
   const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4)
 
-  const stats2 = new InstrumentationStatistics('Gaming activity', 'Gaming activities', 12, 10, 2)
+  const stats2 = new InstrumentationStatistics(
+    'Activity',
+    'Activities',
+    12,
+    10,
+    2
+  )
 
-  const stats3 = new InstrumentationStatistics('Transaction', 'Transactions', 6, 1, 5)
+  const stats3 = new InstrumentationStatistics(
+    'Transaction',
+    'Transactions',
+    6,
+    1,
+    5
+  )
 
   const msg = istats.messageSuccessFail({ individualStats: [stats2, stats3] })
   const stringResultShouldStartWith =
-    'Sent 24 records (Success: 20, Fail: 4), 12 Gaming activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
+    'Sent 24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
   const truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
@@ -62,16 +77,28 @@ test('messageSuccessFail good', () => {
 test('messageSuccessFail good without prefix', () => {
   const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4)
 
-  const stats2 = new InstrumentationStatistics('Gaming activity', 'Gaming activities', 12, 10, 2)
+  const stats2 = new InstrumentationStatistics(
+    'Activity',
+    'Activities',
+    12,
+    10,
+    2
+  )
 
-  const stats3 = new InstrumentationStatistics('Transaction', 'Transactions', 6, 1, 5)
+  const stats3 = new InstrumentationStatistics(
+    'Transaction',
+    'Transactions',
+    6,
+    1,
+    5
+  )
 
   const msg = istats.messageSuccessFail({
     individualStats: [stats2, stats3],
     prefix: '',
   })
   const stringResultShouldStartWith =
-    '24 records (Success: 20, Fail: 4), 12 Gaming activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
+    '24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
   const truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
@@ -92,7 +119,10 @@ Messages:
 
   istats.setSuffix('suffix', 'suffixes')
 
-  let msgTotalProcessed = istats.messageTotalProcessedWithSuccessFail(true, true)
+  let msgTotalProcessed = istats.messageTotalProcessedWithSuccessFail(
+    true,
+    true
+  )
   expect(msgTotalProcessed).toEqual('1 suffix (Success: 0, Fail: 0)')
 
   istats.addProcessed(arrMessages)
@@ -407,7 +437,8 @@ describe('addStats', () => {
     istats.addStats()
     const msg = istats.messageSuccessFail({ individualStats: [] })
 
-    const stringResultShouldStartWith = 'Sent 24 records (Success: 20, Fail: 4) in '
+    const stringResultShouldStartWith =
+      'Sent 24 records (Success: 20, Fail: 4) in '
     const truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
     expect(truncatedMsg).toEqual(stringResultShouldStartWith)
   })
@@ -415,15 +446,27 @@ describe('addStats', () => {
   test('good', () => {
     const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4)
 
-    const stats2 = new InstrumentationStatistics('Gaming activity', 'Gaming activities', 12, 10, 2)
+    const stats2 = new InstrumentationStatistics(
+      'Activity',
+      'Activities',
+      12,
+      10,
+      2
+    )
 
-    const stats3 = new InstrumentationStatistics('Transaction', 'Transactions', 6, 1, 5)
+    const stats3 = new InstrumentationStatistics(
+      'Transaction',
+      'Transactions',
+      6,
+      1,
+      5
+    )
 
     istats.addStats([stats2, stats3], true)
     const msg = istats.messageSuccessFail({ individualStats: [stats2, stats3] })
 
     const stringResultShouldStartWith =
-      'Sent 42 records (Success: 31, Fail: 11), 12 Gaming activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
+      'Sent 42 records (Success: 31, Fail: 11), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
     const truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
     expect(truncatedMsg).toEqual(stringResultShouldStartWith)
   })
@@ -431,15 +474,27 @@ describe('addStats', () => {
   test('concat msg false', () => {
     const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4)
 
-    const stats2 = new InstrumentationStatistics('Gaming activity', 'Gaming activities', 12, 10, 2)
+    const stats2 = new InstrumentationStatistics(
+      'Activity',
+      'Activities',
+      12,
+      10,
+      2
+    )
 
-    const stats3 = new InstrumentationStatistics('Transaction', 'Transactions', 6, 1, 5)
+    const stats3 = new InstrumentationStatistics(
+      'Transaction',
+      'Transactions',
+      6,
+      1,
+      5
+    )
 
     istats.addStats([stats2, stats3], false)
     const msg = istats.messageSuccessFail({ individualStats: [stats2, stats3] })
 
     const stringResultShouldStartWith =
-      'Sent 42 records (Success: 31, Fail: 11), 12 Gaming activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
+      'Sent 42 records (Success: 31, Fail: 11), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in '
     const truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
     expect(truncatedMsg).toEqual(stringResultShouldStartWith)
   })
@@ -449,8 +504,11 @@ describe('processedTimesArray', () => {
   test('good', () => {
     const stats = new InstrumentationStatistics()
 
-    const [totalRecordsProcessed, totalAvgRecordsPerSecond, totalAvgProcessingTimeString] =
-      stats.processedTimesArray()
+    const [
+      totalRecordsProcessed,
+      totalAvgRecordsPerSecond,
+      totalAvgProcessingTimeString,
+    ] = stats.processedTimesArray()
 
     expect(stats.processingTimeInSeconds).toBe(0)
     expect(totalRecordsProcessed).toBe('0')
@@ -488,10 +546,14 @@ describe('processedTimesArray', () => {
     stats.totalProcessed = totalProcessed
     stats.finishTime = new Date(+stats.startTime + secondsToAdvance * 1000)
 
-    const [totalRecordsProcessed, totalAvgRecordsPerSecond, totalAvgProcessingTimeString] =
-      stats.processedTimesArray()
+    const [
+      totalRecordsProcessed,
+      totalAvgRecordsPerSecond,
+      totalAvgProcessingTimeString,
+    ] = stats.processedTimesArray()
 
-    const avgRecordsPerSecond = totalProcessed / (secondsToAdvance ? secondsToAdvance : 1)
+    const avgRecordsPerSecond =
+      totalProcessed / (secondsToAdvance ? secondsToAdvance : 1)
 
     expect(stats.processingTimeInSeconds).toBe(
       Math.round((+(stats.finishTime ?? 0) - +stats.startTime) / 1000)

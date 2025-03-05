@@ -111,7 +111,7 @@ export class ApiRepository implements IApiRepository {
 
     this.logger = LogManager.createInstance({
       componentName: safestr(loggerComponentName, ApiRepository.name),
-      rotateBaseFileName: apiProps.logFilename ?? 'gaming-services-library',
+      rotateBaseFileName: apiProps.logFilename ?? 'core-utils',
       logLevel: apiProps.logLevel,
     })
   }

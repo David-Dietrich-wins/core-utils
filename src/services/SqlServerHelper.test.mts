@@ -1,8 +1,53 @@
-// import sql, { IResult } from 'mssql'
-// import SqlServerHelper from './SqlServerHelper'
+// import { jest } from '@jest/globals'
+// import {
+//   getGlobalLogger,
+//   mockLoggerDebug,
+//   mockLoggerError,
+//   mockLoggerInfo,
+//   mockLoggerLog,
+//   mockLoggerSilly,
+//   mockLoggerWarn,
+// } from '../jest.setup.mjs'
 
-// const sqlConnectionStringKinectifyDatabase =
-//   'Server=flight-manager-db.gameng.devtest.vegas;Database=Kinectify;User ID=Kinectify;Password=KinectifyR0ck$;TrustServerCertificate=True;'
+// const mockExecute = jest.fn()
+// const mockInput = jest.fn(() => ({ execute: mockExecute }))
+// const mockRequest = jest.fn(() => ({ input: mockInput }))
+// const mockConnectionPool = jest.fn(() => {
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   return Promise.resolve({ request: mockRequest } as any)
+// })
+
+// const mockConnect = jest.fn((config: string | config) => {
+//   console.log(config)
+//   const pool = {
+//     query: jest.fn(() => ({ recordset: [] })),
+//     close: jest.fn(),
+//   } as unknown as ConnectionPool
+
+//   return Promise.resolve(pool)
+// })
+
+// jest.unstable_mockModule('mssql', () => ({
+//   connect: mockConnect,
+//   // connect: jest.fn((config: string | config) => {
+//   //   console.log(config)
+//   //   return Promise.resolve({
+//   //     request: mockRequest,
+//   //   }) as unknown as Promise<ConnectionPool>
+//   // }),
+//   ConnectionPool: mockConnectionPool,
+//   Int: jest.fn(),
+
+//   NVarChar: jest.fn(),
+// }))
+// const sql = await import('mssql')
+// import type { config, ConnectionPool, IResult } from 'mssql'
+
+// const sshelper = await import('./SqlServerHelper.mjs')
+// const { SqlServerHelper } = sshelper
+
+// const sqlConnectionString =
+//   'Server=localhost;Database=mydb;User ID=user;Password=whatever;TrustServerCertificate=True;'
 
 test('empty tests for now', async () => {
   expect(true).toBeTruthy()
@@ -22,12 +67,12 @@ test('empty tests for now', async () => {
 //   )
 //   const sqlConnection = await dbTest.connect()
 
-//   const sqlQueryTest = 'SELECT * FROM [dbo].[PlayerProfile] WHERE playerID = @playerId'
+//   const sqlQueryTest = 'SELECT * FROM [dbo].[mytable] WHERE userID = @userId'
 
-//   const runQuery = async (sqlQuery: string, playerId: number) => {
+//   const runQuery = async (sqlQuery: string, userId: number) => {
 //     const result = await sqlConnection
 //       .request()
-//       .input('playerId', sql.Int, playerId)
+//       .input('userId', sql.Int, userId)
 //       .query(sqlQuery)
 
 //     console.log(
@@ -87,13 +132,13 @@ test('empty tests for now', async () => {
 // })
 
 // test('queryOne good', async () => {
-//   const dbTest = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
+//   const dbTest = new SqlServerHelper(sqlConnectionString)
 //   await dbTest.connect()
 
 //   try {
 //     const ret = await dbTest.queryTableForOne({
-//       tableName: '[dbo].[GamingActivity]',
-//       where: [['externalTransactionId', 'E436A469-E0B7-4603-8D78-31A0053D3C4C']],
+//       tableName: '[dbo].[mytable]',
+//       where: [['myUserId', 'E436A469-E0B7-4603-8D78-31A0053D3C4C']],
 //     })
 
 //     expect(ret).not.toBeUndefined()
@@ -104,10 +149,10 @@ test('empty tests for now', async () => {
 
 // test('queryByString good', async () => {
 //   const externalTransactionId = 'E436A469-E0B7-4603-8D78-31A0053D3C4C'
-//   const dbTest = new SqlServerHelper(sqlConnectionStringKinectifyDatabase)
+//   const dbTest = new SqlServerHelper(sqlConnectionString)
 //   await dbTest.connect()
 
-//   const sql = 'SELECT * FROM [dbo].[GamingActivity] WHERE externalTransactionId = @value0'
+//   const sql = 'SELECT * FROM [dbo].[mytable] WHERE externalTransactionId = @value0'
 //   try {
 //     const ret = await dbTest.queryOneByStringField(sql, 'value0', externalTransactionId)
 

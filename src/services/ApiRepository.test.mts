@@ -43,7 +43,7 @@ type PostExceptionAxiosResponseDataErrorMessage = {
 }
 
 const baseUrl = TEST_Parameters_DEV.apiBaseUrl
-const logFilename = 'gaming-services-library.TEST.log'
+const logFilename = 'api-repository.TEST.log'
 
 let mockCreateInstance: jest.Mock
 

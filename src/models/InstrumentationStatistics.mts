@@ -249,7 +249,7 @@ export class InstrumentationStatistics {
 
   /**
    * Returns a message string with the total processed, successes, and failures of all the stats provided.
-   * ex. 'Sent 24 records (Success: 20, Fail: 4), 12 Gaming Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in 4h 30m.'
+   * ex. 'Sent 24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in 4h 30m.'
    * @param prefix The prefix to start the message.
    * @param suffix The suffix to end the message.
    * @param individualStats One or more other stats for showing the individual stats that make up the total.
