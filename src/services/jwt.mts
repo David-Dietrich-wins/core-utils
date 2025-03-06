@@ -8,6 +8,7 @@ import jwt, {
 } from 'jsonwebtoken'
 import { hasData, isFunction, isString, safestr } from './general.mjs'
 import { IncomingHttpHeaders } from 'node:http'
+import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 
 export type WebRoles = 'user' | 'admin' | ''
 
@@ -41,17 +42,11 @@ export interface IJwtExtended {
   familyName: string
 }
 
-export function BearerTokenParse(token?: string) {
-  let bearerToken = safestr(token)
-  if (bearerToken.match(/^[Bb][Ee][Aa][Rr][Ee][Rr] /)) {
-    bearerToken = bearerToken.slice(7)
-  }
-
-  return bearerToken
-}
-
 export function JwtDecode(token?: string, options?: DecodeOptions) {
-  const decoded = jwt.decode(BearerTokenParse(token), options)
+  const decoded = jwt.decode(
+    HttpHeaderManagerBase.BearerTokenParse(token),
+    options
+  )
   if (!decoded || isString(decoded)) {
     throw new Error('Invalid security token when attempting to decode the JWT.')
   }

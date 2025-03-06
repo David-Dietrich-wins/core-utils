@@ -13,6 +13,15 @@ export const CONST_HttpHeaderAuthorization = 'authorization'
 export class HttpHeaderManagerBase {
   constructor(public headers: StringOrStringArrayObject) {}
 
+  static BearerTokenParse(token?: string) {
+    let bearerToken = safestr(token)
+    if (bearerToken.match(/^[Bb][Ee][Aa][Rr][Ee][Rr] /)) {
+      bearerToken = bearerToken.slice(7)
+    }
+
+    return bearerToken
+  }
+
   getBoolean(name: string) {
     return getBoolean(this.getHeader(name))
   }
@@ -33,9 +42,8 @@ export class HttpHeaderManagerBase {
   }
 
   get bearerToken() {
-    return this.getHeaderStringSafe(CONST_HttpHeaderAuthorization).replace(
-      'Bearer ',
-      ''
+    return HttpHeaderManagerBase.BearerTokenParse(
+      this.getHeaderStringSafe(CONST_HttpHeaderAuthorization)
     )
   }
   get jwtToken() {

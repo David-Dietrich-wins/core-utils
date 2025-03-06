@@ -120,3 +120,13 @@ test('showDebug', () => {
 
   expect(hm.showDebug).toBe(true)
 })
+
+test('BearerTokenParse', () => {
+  const val = TEST_Parameters_DEV.jwt
+
+  let bt = HttpHeaderManagerBase.BearerTokenParse(val)
+  expect(bt).toBe(val)
+
+  bt = HttpHeaderManagerBase.BearerTokenParse(`Bearer ${val}`)
+  expect(bt).toBe(val)
+})
