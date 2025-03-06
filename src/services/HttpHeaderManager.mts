@@ -4,6 +4,8 @@ import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
 import { IntecoreException, JwtHelper } from '../index.mjs'
 
+const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
+
 export const CONST_HttpHeaderShowDebug = 'ShowDebug'
 export const CONST_HttpHeaderAuthorization = 'authorization'
 
@@ -15,11 +17,20 @@ export class HttpHeaderManagerBase {
 
   static BearerTokenParse(token?: string) {
     let bearerToken = safestr(token)
-    if (bearerToken.match(/^[Bb][Ee][Aa][Rr][Ee][Rr] /)) {
+    if (bearerToken.match(REGEX_Bearer)) {
       bearerToken = bearerToken.slice(7)
     }
 
     return bearerToken
+  }
+
+  static BearerTokenParseStrict(token?: string) {
+    const bearerToken = safestr(token)
+    if (bearerToken.match(REGEX_Bearer)) {
+      return HttpHeaderManagerBase.BearerTokenParse(bearerToken)
+    }
+
+    return ''
   }
 
   getBoolean(name: string) {
@@ -41,12 +52,23 @@ export class HttpHeaderManagerBase {
     return Object.keys(this.headers).includes(name)
   }
 
+  _bearerTokenCache = ''
   get bearerToken() {
-    return HttpHeaderManagerBase.BearerTokenParse(
-      this.getHeaderStringSafe(CONST_HttpHeaderAuthorization)
-    )
+    if (!this._bearerTokenCache) {
+      this._bearerTokenCache = HttpHeaderManagerBase.BearerTokenParseStrict(
+        this.getHeaderStringSafe(CONST_HttpHeaderAuthorization)
+      )
+    }
+
+    return this._bearerTokenCache
   }
+
   get jwtToken() {
+    if (this.bearerToken) {
+      return JwtHelper.FromString(this.bearerToken)
+    }
+  }
+  get jwtTokenMustExistAndBeValid() {
     return JwtHelper.FromString(this.bearerToken)
   }
 
@@ -58,7 +80,7 @@ export class HttpHeaderManagerBase {
   }
 
   get userId() {
-    const jwt = this.jwtToken
+    const jwt = this.jwtTokenMustExistAndBeValid
 
     const userid = jwt.userId
     if (!userid) {

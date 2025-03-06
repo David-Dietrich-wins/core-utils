@@ -40,7 +40,7 @@ test('uppercase header name', () => {
   expect(bt).toBeDefined()
 })
 
-test('jwtToken', () => {
+test('jwtTokenMustExistAndBeValid', () => {
   const val = TEST_Parameters_DEV.jwt
 
   const init: StringOrStringArrayObject = {
@@ -48,8 +48,22 @@ test('jwtToken', () => {
   }
   const hm = new HttpHeaderManagerBase(init)
 
+  expect(() => hm.jwtTokenMustExistAndBeValid).toThrow(
+    'Invalid security token when attempting to decode the JWT.'
+  )
+})
+
+test('jwtToken', () => {
+  const init: StringOrStringArrayObject = {
+    [CONST_HttpHeaderAuthorization]: `Bearer ${TEST_Parameters_DEV.jwt}`,
+  }
+  const hm = new HttpHeaderManagerBase(init)
+
   const jwt = hm.jwtToken
-  expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  expect(jwt?.userId).toBe(TEST_Parameters_DEV.userIdGood)
+
+  init.authorization = ''
+  expect(new HttpHeaderManagerBase(init).jwtToken).toBeUndefined()
 })
 
 describe('userIdFromJwt', () => {
@@ -57,7 +71,7 @@ describe('userIdFromJwt', () => {
     const val = TEST_Parameters_DEV.jwt
 
     const init: StringOrStringArrayObject = {
-      [CONST_HttpHeaderAuthorization]: val,
+      [CONST_HttpHeaderAuthorization]: `Bearer ${val}`,
     }
     const hm = new HttpHeaderManagerBase(init)
 
@@ -68,7 +82,7 @@ describe('userIdFromJwt', () => {
   test('userId is 0', () => {
     const jwt = GenerateSignedJwtToken(0)
     const init: StringOrStringArrayObject = {
-      [CONST_HttpHeaderAuthorization]: jwt,
+      [CONST_HttpHeaderAuthorization]: `Bearer ${jwt}`,
     }
     const hm = new HttpHeaderManagerBase(init)
 
