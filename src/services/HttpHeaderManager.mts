@@ -2,7 +2,7 @@ import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { AppException, JwtHelper } from '../index.mjs'
+import { AppException, JwtAccessClient } from '../index.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
@@ -65,11 +65,11 @@ export class HttpHeaderManagerBase {
 
   get jwtToken() {
     if (this.bearerToken) {
-      return JwtHelper.FromString(this.bearerToken)
+      return JwtAccessClient.FromString(this.bearerToken)
     }
   }
   get jwtTokenMustExistAndBeValid() {
-    return JwtHelper.FromString(this.bearerToken)
+    return JwtAccessClient.FromString(this.bearerToken)
   }
 
   get showDebug() {

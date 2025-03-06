@@ -2,7 +2,7 @@ import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
 import {
   IJwtAccessClient,
   JwtDecode,
-  JwtHelper,
+  JwtAccessClient,
   JwtRetrieveUserId,
   JwtSign,
   JwtVerify,
@@ -112,26 +112,26 @@ test('JwtVerify good', () => {
   )
 })
 
-describe('JwtHelper', () => {
+describe('JwtAccessClient', () => {
   test('Constructor from token', () => {
     const jwtdata = JwtDecode(TEST_Parameters_DEV.jwt)
 
-    const jwt = new JwtHelper(jwtdata)
+    const jwt = new JwtAccessClient(jwtdata)
 
     expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
   test('Constructor from string', () => {
-    const jwt = new JwtHelper(TEST_Parameters_DEV.jwt)
+    const jwt = new JwtAccessClient(TEST_Parameters_DEV.jwt)
 
     expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
   test('Constructor from null', () => {
-    const jwt = new JwtHelper(null)
+    const jwt = new JwtAccessClient(null)
 
     expect(jwt.uid).toBe('')
   })
   test('Constructor default', () => {
-    const jwt = new JwtHelper()
+    const jwt = new JwtAccessClient()
 
     expect(jwt.uid).toBe('')
   })
@@ -141,7 +141,7 @@ describe('JwtHelper', () => {
       authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
     }
 
-    const jwt = JwtHelper.FromHeaders(headers)
+    const jwt = JwtAccessClient.FromHeaders(headers)
 
     expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
@@ -154,13 +154,13 @@ describe('JwtHelper', () => {
       },
     } as unknown as Headers
 
-    const jwt = JwtHelper.FromHeaders(headers)
+    const jwt = JwtAccessClient.FromHeaders(headers)
 
     expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
 
   test('FromString', () => {
-    const jwt = JwtHelper.FromString(`Bearer ${TEST_Parameters_DEV.jwt}`)
+    const jwt = JwtAccessClient.FromString(`Bearer ${TEST_Parameters_DEV.jwt}`)
 
     expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
@@ -169,7 +169,7 @@ describe('JwtHelper', () => {
     const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       iss: 'anything.com',
     })
-    const jhelper = new JwtHelper(jwt)
+    const jhelper = new JwtAccessClient(jwt)
 
     expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
     expect(jhelper.issuer).toBe('anything')
@@ -179,19 +179,19 @@ describe('JwtHelper', () => {
     let jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       roles: ['admin', 'user'],
     })
-    let jhelper = new JwtHelper(jwt)
+    let jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       roles: ['admin'],
     })
-    jhelper = new JwtHelper(jwt)
+    jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       roles: ['user'],
     })
-    jhelper = new JwtHelper(jwt)
+    jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
   })
 
@@ -204,7 +204,7 @@ describe('JwtHelper', () => {
       sub: 'my FusionAuthUserId',
       tid: 'tenant',
     })
-    const jhelper = new JwtHelper(jwt)
+    const jhelper = new JwtAccessClient(jwt)
 
     expect(jhelper.audience).toBe('anything')
     expect(jhelper.authenticationTime).toBe(123)

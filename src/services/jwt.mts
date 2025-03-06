@@ -85,7 +85,7 @@ export function JwtDecode(token?: string, options?: DecodeOptions) {
 export function JwtDecodeObject(token?: string, options?: DecodeOptions) {
   const decoded = JwtDecode(token, options)
 
-  return new JwtHelper(decoded)
+  return new JwtAccessClient(decoded)
 }
 
 export function JwtRetrieveUserId(token: string) {
@@ -183,7 +183,7 @@ const DEFAULT_JWT: IJwtAccessClient = {
   familyName: '',
 }
 
-export class JwtHelper implements IJwtAccessClient {
+export class JwtAccessClient implements IJwtAccessClient {
   ver = 0
   jti = ''
   iss = ''
