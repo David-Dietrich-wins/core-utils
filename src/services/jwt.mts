@@ -9,9 +9,15 @@ import jwt, {
 import { hasData, isFunction, isString, safestr } from './general.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
+import { AppException } from '../index.mjs'
 
 export type WebRoles = 'user' | 'admin' | ''
 
+/**
+ * Interface for the extended JWT token.
+ * This is the decoded token and it follows FusionAuth's JWT token format.
+ * https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
+ */
 export interface IJwtExtended {
   ver: number
   jti: string
@@ -21,10 +27,12 @@ export interface IJwtExtended {
   exp: number
   cid: string
   uid: string
+  // refresh_token
   sid: string
   tid: string
   scp: string[]
   auth_time: number
+  // The User’s unique Id in FusionAuth.
   sub: string
   birthdate: string
   authenticationType: string
@@ -48,12 +56,13 @@ export function JwtDecode(token?: string, options?: DecodeOptions) {
     options
   )
   if (!decoded || isString(decoded)) {
-    throw new Error('Invalid security token when attempting to decode the JWT.')
+    throw new AppException(
+      'Invalid security token when attempting to decode the JWT.',
+      'JwtDecode'
+    )
   }
 
-  const jwtdata = decoded as IJwtExtended
-
-  return jwtdata
+  return decoded as IJwtExtended
 }
 
 export function JwtDecodeObject(token?: string, options?: DecodeOptions) {

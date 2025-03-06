@@ -6,7 +6,7 @@ import DailyRotateFile, {
 import { hasData, safestr, safestrTrim } from './general.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
-import { IntecoreException } from '../models/IntecoreException.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH'
 const DEFAULT_RotateMaxFiles = 500
@@ -64,7 +64,7 @@ export class LogManager {
       !hasData(safestrTrim(logFileName)) &&
       !hasData(safestrTrim(rotateBaseFileName))
     ) {
-      throw new IntecoreException(
+      throw new AppException(
         'You must provide a logBaseFileName, an explicit logFileName or a rotateBaseFileName.',
         LogManager.name
       )

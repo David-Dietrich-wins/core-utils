@@ -1,4 +1,4 @@
-import { HttpException } from './IntecoreException.mjs'
+import { AppExceptionHttp } from './AppException.mjs'
 import { isObject, safestrLowercase } from '../services/general.mjs'
 
 export interface IApiResponse<T = unknown> {
@@ -28,7 +28,7 @@ export class ApiResponse<T = unknown> implements IApiResponse<T> {
     this.responseCode = -1
 
     if (errobj) {
-      if (isObject(errobj) && errobj instanceof HttpException) {
+      if (isObject(errobj) && errobj instanceof AppExceptionHttp) {
         if (errobj.responseCode) {
           this.responseCode = errobj.responseCode
         }

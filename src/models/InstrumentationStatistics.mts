@@ -21,7 +21,7 @@ import {
   WithoutFunctions,
 } from './types.mjs'
 import { ToSafeArray } from '../services/array-helper.mjs'
-import { IntecoreException } from './IntecoreException.mjs'
+import { AppException } from './AppException.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
@@ -86,7 +86,7 @@ export class InstrumentationStatistics {
     // }
 
     // return 0
-    throw new IntecoreException(
+    throw new AppException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
       '' + msg

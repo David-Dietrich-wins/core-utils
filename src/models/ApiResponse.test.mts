@@ -1,5 +1,5 @@
 import { ApiResponse } from './ApiResponse.mjs'
-import { HttpException, HttpExceptionNotFound } from './IntecoreException.mjs'
+import { AppExceptionHttp, AppExceptionHttpNotFound } from './AppException.mjs'
 
 const CONST_DefaultError = 'Error'
 const CONST_DefaultErrorResponseCode = -1
@@ -109,7 +109,7 @@ test('setError exception', () => {
   const message = CONST_success
   const obj = { message: 'Found' }
   const apiResponse = new ApiResponse(result, message, responseCode, obj)
-  const ge = new HttpException('setError exception', 'not found')
+  const ge = new AppExceptionHttp('setError exception', 'not found')
 
   apiResponse.setError(ge)
   expect(apiResponse.message.indexOf('setError exception')).toBe(0)
@@ -190,7 +190,7 @@ test('setError error object with response code', () => {
   expect(apiResponse.obj?.message.indexOf('Found')).toBe(0)
   expect(apiResponse.obj).toBe(obj)
 
-  const errorObj = new HttpException(
+  const errorObj = new AppExceptionHttp(
     'Not Found',
     'test',
     CONST_DefaultErrorResponseCode,
@@ -214,7 +214,7 @@ test('setError error object with response code', () => {
   })
 })
 
-test('setError error object with IntecoreException', () => {
+test('setError error object with AppException', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -230,14 +230,14 @@ test('setError error object with IntecoreException', () => {
   expect(apiResponse.obj?.message.indexOf('Found')).toBe(0)
   expect(apiResponse.obj).toBe(obj)
 
-  const errorObj = new HttpExceptionNotFound(
-    'setError error object with HttpExceptionNotFound',
+  const errorObj = new AppExceptionHttpNotFound(
+    'setError error object with AppExceptionHttpNotFound',
     'test'
   )
   apiResponse.setError(errorObj)
   expect(
     apiResponse.message.indexOf(
-      'setError error object with HttpExceptionNotFound'
+      'setError error object with AppExceptionHttpNotFound'
     )
   ).toBe(0)
   expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
@@ -248,7 +248,7 @@ test('setError error object with IntecoreException', () => {
   expect(apiResponse.obj).toStrictEqual(obj)
 })
 
-test('setError error object with IntecoreException no object', () => {
+test('setError error object with AppException no object', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -264,9 +264,9 @@ test('setError error object with IntecoreException no object', () => {
   expect(apiResponse.obj?.message.indexOf('Found')).toBe(0)
   expect(apiResponse.obj).toBe(obj)
 
-  const errorObj = new HttpException(
+  const errorObj = new AppExceptionHttp(
     CONST_ErrorNotFound,
-    'setError error object with IntecoreException'
+    'setError error object with AppException'
   )
   apiResponse.setError(errorObj)
   expect(apiResponse.message.indexOf(CONST_ErrorNotFound)).toBe(0)
@@ -278,7 +278,7 @@ test('setError error object with IntecoreException no object', () => {
   expect(apiResponse.obj).toBe(obj)
 })
 
-test('setError error IntecoreException with response code', () => {
+test('setError error AppException with response code', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -295,15 +295,15 @@ test('setError error IntecoreException with response code', () => {
   expect(apiResponse.obj).toBe(obj)
 
   const exceptionObject = { responseCode: 500, message: 'Not Found' }
-  const errorObj = new HttpExceptionNotFound(
-    'setError error object with HttpExceptionNotFound',
+  const errorObj = new AppExceptionHttpNotFound(
+    'setError error object with AppExceptionHttpNotFound',
     'test',
     exceptionObject
   )
   apiResponse.setError(errorObj)
   expect(
     apiResponse.message.indexOf(
-      'setError error object with HttpExceptionNotFound'
+      'setError error object with AppExceptionHttpNotFound'
     )
   ).toBe(0)
   expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
@@ -314,7 +314,7 @@ test('setError error IntecoreException with response code', () => {
   expect(apiResponse.obj).toBe(exceptionObject)
 })
 
-test('setError error IntecoreException without response code', () => {
+test('setError error AppException without response code', () => {
   const result = CONST_success
   const responseCode = 200
   const message = CONST_success
@@ -331,15 +331,15 @@ test('setError error IntecoreException without response code', () => {
   expect(apiResponse.obj).toBe(obj)
 
   const exceptionObject = { message: 'No responseCode' }
-  const errorObj = new HttpExceptionNotFound(
-    'setError error object with HttpExceptionNotFound',
+  const errorObj = new AppExceptionHttpNotFound(
+    'setError error object with AppExceptionHttpNotFound',
     'test',
     exceptionObject
   )
   apiResponse.setError(errorObj)
   expect(
     apiResponse.message.indexOf(
-      'setError error object with HttpExceptionNotFound'
+      'setError error object with AppExceptionHttpNotFound'
     )
   ).toBe(0)
   expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)

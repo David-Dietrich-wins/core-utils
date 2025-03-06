@@ -2,7 +2,7 @@ import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { IntecoreException, JwtHelper } from '../index.mjs'
+import { AppException, JwtHelper } from '../index.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
@@ -84,7 +84,7 @@ export class HttpHeaderManagerBase {
 
     const userid = jwt.userId
     if (!userid) {
-      throw new IntecoreException(
+      throw new AppException(
         'Error retrieving user information from JWT security token.',
         'userIdFromJwt'
       )

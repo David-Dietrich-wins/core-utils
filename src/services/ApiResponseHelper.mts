@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { isObject, isString } from '../services/general.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
-import { HTTP_Forbidden } from '../models/IntecoreException.mjs'
+import { HTTP_Forbidden } from '../models/AppException.mjs'
 
 /**
  * Used to wrap all API return calls in a standard wrapper.

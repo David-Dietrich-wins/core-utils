@@ -1,4 +1,4 @@
-import { HttpException } from '../models/IntecoreException.mjs'
+import { AppExceptionHttp } from '../models/AppException.mjs'
 import { JSONValue } from '../models/types.mjs'
 import { IApiResponse } from '../models/ApiResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
@@ -70,18 +70,18 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
 
     response = await fetch(url, req)
   } catch (err) {
-    if (err instanceof HttpException) {
+    if (err instanceof AppExceptionHttp) {
       throw err
     }
 
-    throw new HttpException(
+    throw new AppExceptionHttp(
       err instanceof Error ? err.message : fetchHttp.name,
       fname
     )
   }
 
   if (!response) {
-    throw new HttpException(
+    throw new AppExceptionHttp(
       `${fname}: NO response in HTTP ${method} to URL: ${url}.`,
       fname
     )
@@ -98,7 +98,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
       }
     }
 
-    throw new HttpException(
+    throw new AppExceptionHttp(
       `${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`,
       fname,
       response.status,

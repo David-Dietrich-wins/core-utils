@@ -1,6 +1,6 @@
 import { timeDifferenceString } from '../services/general.mjs'
 import { IServerState } from './ApplicationState.mjs'
-import { HTTP_Ok } from './IntecoreException.mjs'
+import { HTTP_Ok } from './AppException.mjs'
 import UserState from './UserState.mjs'
 import WebState from './WebState.mjs'
 

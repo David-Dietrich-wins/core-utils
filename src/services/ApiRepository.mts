@@ -5,7 +5,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from 'axios'
 import { safestr, urlJoin } from '../services/general.mjs'
 import { LogManager } from './LogManager.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
-import { HttpExceptionNotAllowed } from '../models/IntecoreException.mjs'
+import { AppExceptionHttpNotAllowed } from '../models/AppException.mjs'
 import { ApiProps } from '../models/types.mjs'
 import { IErrorMessage } from '../models/interfaces.mjs'
 
@@ -20,7 +20,7 @@ export interface IApiRepository {
     saveKey: string,
     requestBody: any,
     errorMessage?: IErrorMessage
-  ): HttpExceptionNotAllowed<Record<string, any>>
+  ): AppExceptionHttpNotAllowed<Record<string, any>>
 
   httpGet<TResponse, TRequestConfig>(
     fname: string,
@@ -90,7 +90,7 @@ export const saveApiCall = (
   )
 
   // if (isAxiosError(response)) {
-  //   throw new HttpExceptionNotAllowed(key, response.response?.data)
+  //   throw new AppExceptionHttpNotAllowed(key, response.response?.data)
   // }
 }
 
@@ -103,7 +103,7 @@ export class ApiRepository implements IApiRepository {
     public saveKeyPrefix = 'api-'
   ) {
     // if (!apiProps?.logFilename) {
-    //   throw new IntecoreException(
+    //   throw new AppException(
     //     'You must provide a log Filename for API logging.',
     //     ApiRepository.name
     //   )
@@ -169,7 +169,7 @@ export class ApiRepository implements IApiRepository {
   handleAxiosError(fname: string, err: any, url: string, saveKey: string) {
     const errCracked = this.handleAxiosErrorRaw(fname, err, url, saveKey)
     // console.log(error.config);
-    return new HttpExceptionNotAllowed(
+    return new AppExceptionHttpNotAllowed(
       errCracked.errmsg,
       fname,
       errCracked.jsonError
@@ -216,7 +216,7 @@ export class ApiRepository implements IApiRepository {
       //   // if (res.data?.IsPINLocked) {
       //   //   this.logInfo(`Pin locked for user: ${loginRequest.UserName}.`)
 
-      //   //   throw new HttpExceptionForbidden('PIN Locked', this.login.name)
+      //   //   throw new AppExceptionHttpForbidden('PIN Locked', this.login.name)
       //   // }
 
       //   this.logInfo(
@@ -290,7 +290,7 @@ export class ApiRepository implements IApiRepository {
       //   // if (res.data?.IsPINLocked) {
       //   //   this.logInfo(`Pin locked for user: ${loginRequest.UserName}.`)
 
-      //   //   throw new HttpExceptionForbidden('PIN Locked', this.login.name)
+      //   //   throw new AppExceptionHttpForbidden('PIN Locked', this.login.name)
       //   // }
 
       //   this.logInfo(

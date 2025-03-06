@@ -6,7 +6,7 @@ import {
   safeJsonToString,
   safestrLowercase,
 } from './general.mjs'
-import { IntecoreException } from '../models/IntecoreException.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/interfaces.mjs'
 
 export function CloneObjectWithId<T extends IId>(
@@ -91,7 +91,7 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
     return ret
   }
 
-  throw new IntecoreException(
+  throw new AppException(
     `Key ${keyToFind} not found in ${fname} object: `,
     fname
   )
