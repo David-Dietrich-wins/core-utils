@@ -84,7 +84,7 @@ describe('HttpHeaderManager', () => {
 
     req.headers = { 'my-test': 'my-test', 'my2': undefined }
 
-    const ab = new HttpHeaderManager(req)
+    const ab = new HttpHeaderManager(req.headers)
 
     expect(ab).toBeInstanceOf(HttpHeaderManager)
     expect(ab.headers).toEqual({ 'my-test': 'my-test', 'my2': '' })
@@ -104,7 +104,7 @@ describe('HttpHeaderManager', () => {
       'my-test3',
       'my-test3',
     ]
-    const ab = new HttpHeaderManager(req)
+    const ab = new HttpHeaderManager(req.headers)
     expect(ab).toBeInstanceOf(HttpHeaderManager)
   })
 })

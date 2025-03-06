@@ -1,4 +1,4 @@
-import { Request } from 'express'
+import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
@@ -65,19 +65,19 @@ export class HttpHeaderManagerBase {
 }
 
 export class HttpHeaderManager extends HttpHeaderManagerBase {
-  constructor(req: Request) {
+  constructor(req: IncomingHttpHeaders) {
     super(HttpHeaderManager.HeadersToStringOrStringObject(req))
   }
 
-  static HeadersToStringOrStringObject(req: Request) {
-    const headers: StringOrStringArrayObject = {}
+  static HeadersToStringOrStringObject(headers: IncomingHttpHeaders) {
+    const arrNormalizedHeaders: StringOrStringArrayObject = {}
 
-    if (isObject(req.headers)) {
-      for (const key in req.headers) {
-        headers[key] = req.headers[key] ?? ''
+    if (isObject(headers)) {
+      for (const key in headers) {
+        arrNormalizedHeaders[key] = headers[key] ?? ''
       }
     }
 
-    return headers
+    return arrNormalizedHeaders
   }
 }
