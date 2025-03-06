@@ -172,4 +172,44 @@ describe('JwtHelper', () => {
     expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
     expect(jhelper.issuer).toBe('anything')
   })
+
+  test('Application Roles', () => {
+    let jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+      roles: ['admin', 'user'],
+    })
+    let jhelper = new JwtHelper(jwt)
+    expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
+
+    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+      roles: ['admin'],
+    })
+    jhelper = new JwtHelper(jwt)
+    expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
+
+    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+      roles: ['user'],
+    })
+    jhelper = new JwtHelper(jwt)
+    expect(jhelper.ApplicationRoles).toEqual(['user'])
+  })
+
+  test('others', () => {
+    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+      aud: 'anything',
+      auth_time: 123,
+      iat: 2048,
+      sid: 'refresh',
+      sub: 'my FusionAuthUserId',
+      tid: 'tenant',
+    })
+    const jhelper = new JwtHelper(jwt)
+
+    expect(jhelper.audience).toBe('anything')
+    expect(jhelper.authenticationTime).toBe(123)
+    expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jhelper.FusionAuthUserId).toBe('my FusionAuthUserId')
+    expect(jhelper.issuedTime).toBe(2048)
+    expect(jhelper.refreshToken).toBe('refresh')
+    expect(jhelper.tenantId).toBe('tenant')
+  })
 })

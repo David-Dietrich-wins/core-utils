@@ -258,7 +258,7 @@ export class JwtHelper implements IJwtExtended {
       arrRoles.push('user')
     }
 
-    return this.roles
+    return arrRoles
   }
 
   get audience() {

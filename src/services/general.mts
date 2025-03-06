@@ -515,7 +515,7 @@ export function hasData(o?: any | null, minlength = 1) {
 
     return isArray(Object.keys(o), minlength)
   } catch (ex) {
-    console.log(hasData.name, ex)
+    console.error(hasData.name, ex)
   }
 
   return false
