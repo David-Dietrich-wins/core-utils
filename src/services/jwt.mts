@@ -6,7 +6,10 @@ import jwt, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { isString } from './general.mjs'
+import { hasData, isFunction, isString, safestr } from './general.mjs'
+import { IncomingHttpHeaders } from 'node:http'
+
+export type WebRoles = 'user' | 'admin' | ''
 
 export interface IJwtExtended {
   ver: number
@@ -31,24 +34,37 @@ export interface IJwtExtended {
   roles: string[]
   givenName: string
   userId: string
-  role: 'user'
+  role: WebRoles
   identityVerified: boolean
   name: string
   phoneNumber: string
   familyName: string
 }
 
-export function JwtDecode(token: string, options?: DecodeOptions) {
-  const decoded = jwt.decode(token, options)
+export function BearerTokenParse(token?: string) {
+  let bearerToken = safestr(token)
+  if (bearerToken.match(/^[Bb][Ee][Aa][Rr][Ee][Rr] /)) {
+    bearerToken = bearerToken.slice(7)
+  }
+
+  return bearerToken
+}
+
+export function JwtDecode(token?: string, options?: DecodeOptions) {
+  const decoded = jwt.decode(BearerTokenParse(token), options)
   if (!decoded || isString(decoded)) {
-    throw new Error(
-      'Invalid security token when attempting to retrieve the player id.'
-    )
+    throw new Error('Invalid security token when attempting to decode the JWT.')
   }
 
   const jwtdata = decoded as IJwtExtended
 
   return jwtdata
+}
+
+export function JwtDecodeObject(token?: string, options?: DecodeOptions) {
+  const decoded = JwtDecode(token, options)
+
+  return new JwtHelper(decoded)
 }
 
 export function JwtRetrieveUserId(token: string) {
@@ -115,4 +131,101 @@ export function JwtVerify(
   const jwtret = jwt.verify(token, secretOrPublicKey, options)
 
   return jwtret
+}
+
+const DEFAULT_JWT: IJwtExtended = {
+  ver: 0,
+  jti: '',
+  iss: '',
+  aud: '',
+  iat: 0,
+  exp: 0,
+  cid: '',
+  uid: '',
+  sid: '',
+  tid: '',
+  scp: [],
+  auth_time: 0,
+  sub: '',
+  birthdate: '',
+  authenticationType: '',
+  email: '',
+  email_verified: false,
+  applicationId: '',
+  scope: '',
+  roles: [],
+  givenName: '',
+  userId: '',
+  role: '' as WebRoles,
+  identityVerified: false,
+  name: '',
+  phoneNumber: '',
+  familyName: '',
+}
+
+export class JwtHelper implements IJwtExtended {
+  ver = 0
+  jti = ''
+  iss = ''
+  aud = ''
+  iat = 0
+  exp = 0
+  cid = ''
+  uid = ''
+  sid = ''
+  tid = ''
+  scp = []
+  auth_time = 0
+  sub = ''
+  birthdate = ''
+  authenticationType = ''
+  email = ''
+  email_verified = false
+  applicationId = ''
+  scope = ''
+  roles = []
+  givenName = ''
+  userId = ''
+  role = '' as WebRoles
+  identityVerified = false
+  name = ''
+  phoneNumber = ''
+  familyName = ''
+
+  constructor(token?: string | IJwtExtended | null) {
+    let jwtdata = DEFAULT_JWT
+    if (token && hasData(token)) {
+      if (isString(token)) {
+        jwtdata = JwtDecode(token)
+      } else {
+        jwtdata = { ...token }
+      }
+    }
+
+    Object.assign(this, { ...DEFAULT_JWT, ...jwtdata })
+  }
+
+  static FromHeaders(headers?: Headers | IncomingHttpHeaders | null) {
+    let authHeader = ''
+    const hHeaders = headers as Headers
+    const iHeaders = headers as IncomingHttpHeaders
+
+    if (hHeaders && isFunction(hHeaders.get)) {
+      authHeader = safestr(
+        hHeaders.get('Authorization') ?? hHeaders.get('authorization')
+      )
+    } else if (iHeaders) {
+      authHeader = safestr(iHeaders.authorization)
+    }
+
+    return JwtDecodeObject(authHeader)
+  }
+
+  static FromString(token?: string) {
+    return JwtDecodeObject(token)
+  }
+
+  get issuer() {
+    return safestr(this.iss).replace(new RegExp('.com$'), '')
+  }
 }

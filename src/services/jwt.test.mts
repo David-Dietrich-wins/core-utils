@@ -23,10 +23,10 @@ describe('JwtDecode', () => {
     } catch (e: any) {
       expect(e).toBeInstanceOf(Error)
       expect(e.message).toBe(
-        'Invalid security token when attempting to retrieve the player id.'
+        'Invalid security token when attempting to decode the JWT.'
       )
       expect(e.stack).toMatch(
-        /^Error: Invalid security token when attempting to retrieve the player id./
+        /^Error: Invalid security token when attempting to decode the JWT./
       )
     }
 
@@ -62,7 +62,7 @@ test('JwtSign', () => {
 
   const jwtToken = JwtSign(
     payload,
-    safestr(process.env.RsaPassPhrase),
+    safestr(TEST_Parameters_DEV.rsaPassPhrase),
     signOptions
   )
   expect(jwtToken.length).toBeGreaterThan(10)
@@ -73,7 +73,7 @@ test('JwtSign', () => {
 })
 
 test('JwtVerify bad', () => {
-  const secretOrPublicKey: Secret = safestr(process.env.RsaPassPhrase)
+  const secretOrPublicKey: Secret = 'anything'
 
   expect(() => JwtVerify(TEST_Parameters_DEV.jwt, secretOrPublicKey)).toThrow()
 })
@@ -94,7 +94,7 @@ test('JwtVerify good', () => {
 
   const jwtToken = JwtSign(
     payload,
-    safestr(process.env.RsaPassPhrase),
+    safestr(TEST_Parameters_DEV.rsaPassPhrase),
     signOptions
   )
   expect(jwtToken.length).toBeGreaterThan(10)
@@ -103,7 +103,7 @@ test('JwtVerify good', () => {
 
   expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
 
-  const secretOrPublicKey: Secret = safestr(process.env.RsaPassPhrase)
+  const secretOrPublicKey: Secret = safestr(TEST_Parameters_DEV.rsaPassPhrase)
 
   const verified = JwtVerify(jwtToken, secretOrPublicKey)
   expect((verified as IJwtExtended).userId).toBe(TEST_Parameters_DEV.userIdGood)

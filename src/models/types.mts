@@ -56,4 +56,12 @@ export type NonFunctionKeyNames<T extends object> = Exclude<
   undefined
 >
 
+export type SearchSortDirection =
+  | 1
+  | -1
+  | 'asc'
+  | 'desc'
+  | 'ascending'
+  | 'descending'
+
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>

@@ -64,18 +64,18 @@ export const TEST_Parameters_DEV = {
   userIdGood: 123456789,
   userIdBad: 987654321,
   jwt: '',
-  rsaPassphrase: safestr(process.env.rsaPassPhrase),
+  rsaPassPhrase: safestr(process.env.rsaPassPhrase),
   rsaPrivateKey: safestr(process.env.rsaPrivateKey),
   rsaPublicKey: safestr(process.env.rsaPublicKey),
 }
 
-export function getSignedJwtTokenWithPlayerId(userId: number) {
-  return JwtTokenWithUserId(userId, 'my passphrase')
+export function GenerateSignedJwtToken(userId: number) {
+  return JwtTokenWithUserId(userId, TEST_Parameters_DEV.rsaPassPhrase)
 }
 
 beforeAll(() => {
   // process.env.NODE_ENV = 'test'
-  const jwtToken = getSignedJwtTokenWithPlayerId(TEST_Parameters_DEV.userIdGood)
+  const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood)
 
   TEST_Parameters_DEV.jwt = jwtToken
 
@@ -151,7 +151,7 @@ export function GenerateRandomPinEncrypted() {
   return CryptoHelper.rsaEncryptStatic(
     CryptoHelper.GenerateRandomString(4),
     TEST_Parameters_DEV.rsaPublicKey,
-    TEST_Parameters_DEV.rsaPassphrase
+    TEST_Parameters_DEV.rsaPassPhrase
   )
 }
 

@@ -20,7 +20,7 @@ test('Constructor', () => {
   const cryptoSettings: ICryptoSettings = {
     rsaPrivateKey: TEST_Parameters_DEV.rsaPrivateKey,
     rsaPublicKey: TEST_Parameters_DEV.rsaPublicKey,
-    rsaPassphrase: TEST_Parameters_DEV.rsaPassphrase,
+    rsaPassPhrase: '',
   }
   const ch = new CryptoHelper(cryptoSettings)
 
@@ -50,7 +50,7 @@ test('RSA encrypt and decrypt', () => {
   const decrypted = CryptoHelper.rsaDecryptStatic(
     cipherText,
     TEST_Parameters_DEV.rsaPrivateKey,
-    TEST_Parameters_DEV.rsaPassphrase
+    '' //TEST_Parameters_DEV.rsaPassPhrase
   )
   expect(decrypted).not.toBeNull()
 

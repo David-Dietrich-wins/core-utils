@@ -15,7 +15,7 @@ export const CONST_RegexRsaPublicKey =
 export interface ICryptoSettings {
   rsaPrivateKey: string
   rsaPublicKey: string
-  rsaPassphrase?: string
+  rsaPassPhrase?: string
 }
 
 export default class CryptoHelper {
@@ -60,7 +60,7 @@ export default class CryptoHelper {
     return CryptoHelper.rsaDecryptStatic(
       encryptedString,
       this.cryptoSettings.rsaPrivateKey,
-      this.cryptoSettings.rsaPassphrase
+      this.cryptoSettings.rsaPassPhrase
     )
   }
   rsaEncrypt(decryptedString: string) {

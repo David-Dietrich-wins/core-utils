@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mssql": "^9.1.7",

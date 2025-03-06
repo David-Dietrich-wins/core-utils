@@ -1,6 +1,6 @@
 import { Document, ObjectId } from 'bson'
 import { IWebState } from './WebState.mjs'
-import { Concrete } from './types.mjs'
+import { Concrete, SearchSortDirection } from './types.mjs'
 
 export type StringOrObjectId = string | ObjectId
 
@@ -78,6 +78,23 @@ export interface IErrorMessage {
   errorMessage: string
 }
 
+export interface IEventLogin extends ICreatedBy, IUserId {
+  ip: string
+  logoutTime?: Date
+  sessionid: string
+}
+
+export interface ISearchRequestView {
+  term: string
+  filter: string
+  sortDirection: SearchSortDirection
+  limit: number
+  offset: number
+  exactMatch: boolean
+  pageIndex: number
+  pageSize: number
+}
+
 export interface IServerState<T = unknown> {
   currentTime: Date
   message: string
@@ -93,5 +110,5 @@ export interface IWebStateResponse extends IWebState {
   pinKey: string
   pinKeyVault?: string
   rsaPublicKey?: string
-  playerId?: string
+  userId?: string
 }

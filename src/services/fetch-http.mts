@@ -119,9 +119,9 @@ export async function fetchData<Tdata extends FetchDataTypesAllowed>(
 }
 
 export async function fetchJson<
-  Tdata extends FetchDataTypesAllowed = object,
-  Tret = object
->(method: HttpMethod, settings: HttpFetchRequestProps<Tdata>) {
+  TData extends FetchDataTypesAllowed = object,
+  Tret extends FetchDataTypesAllowed = TData
+>(method: HttpMethod, settings: HttpFetchRequestProps<TData>) {
   const resp = await fetchHttp(method, settings)
 
   return (await resp.json()) as Tret
@@ -146,10 +146,10 @@ export async function fetchDelete(settings: HttpFetchRequestProps) {
  * @returns The returned Response object in a Promise.
  */
 export async function fetchDeleteJson<
-  Tdata extends FetchDataTypesAllowed,
-  Tret = undefined
->(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, Tret>('DELETE', settings)
+  TData extends FetchDataTypesAllowed,
+  Tret extends FetchDataTypesAllowed = TData
+>(settings: HttpFetchRequestProps<TData>) {
+  return fetchJson<TData, IApiResponse<Tret>>('DELETE', settings)
 }
 
 /**
@@ -160,10 +160,11 @@ export async function fetchDeleteJson<
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns The returned JSON object.
  */
-export async function fetchGet<Tret extends FetchDataTypesAllowed>(
-  settings: HttpFetchRequestProps<Tret>
-) {
-  return fetchJson<FetchDataTypesAllowed, IApiResponse<Tret>>('GET', settings)
+export async function fetchGet<
+  Tret extends FetchDataTypesAllowed,
+  TData extends FetchDataTypesAllowed = Tret
+>(settings: HttpFetchRequestProps<TData>) {
+  return fetchJson<TData, IApiResponse<Tret>>('GET', settings)
 }
 
 /**
@@ -175,10 +176,10 @@ export async function fetchGet<Tret extends FetchDataTypesAllowed>(
  * @returns The returned Response object in a Promise.
  */
 export async function fetchPatch<
-  Tdata extends FetchDataTypesAllowed,
+  TData extends FetchDataTypesAllowed,
   Tret = undefined
->(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, IApiResponse<Tret>>('PATCH', settings)
+>(settings: HttpFetchRequestProps<TData>) {
+  return fetchJson<TData, IApiResponse<Tret>>('PATCH', settings)
 }
 
 /**
@@ -191,10 +192,10 @@ export async function fetchPatch<
  * @returns The returned JSON object.
  */
 export async function fetchPost<
-  Tdata extends FetchDataTypesAllowed,
-  Tret = Tdata
->(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, IApiResponse<Tret>>('POST', settings)
+  Tret extends FetchDataTypesAllowed,
+  TData extends FetchDataTypesAllowed = Tret
+>(settings: HttpFetchRequestProps<TData>) {
+  return fetchJson<TData, IApiResponse<Tret>>('POST', settings)
 }
 
 /**

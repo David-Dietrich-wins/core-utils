@@ -31,10 +31,14 @@ export class SqlServerHelper {
   async connect() {
     if (!this.pool?.connected) {
       if (!this.connectionString) {
-        throw new Error('Connection string is required for connecting to SQL Server.')
+        throw new Error(
+          'Connection string is required for connecting to SQL Server.'
+        )
       }
 
-      const poolOptions = sql.ConnectionPool.parseConnectionString(this.connectionString)
+      const poolOptions = sql.ConnectionPool.parseConnectionString(
+        this.connectionString
+      )
 
       poolOptions.pool.min = this.minimumPooledConnections
       poolOptions.pool.max = this.maximumPooledConnections
@@ -93,14 +97,20 @@ export class SqlServerHelper {
       : []
   }
 
-  async query<T = unknown, TMapFrom = T>(sqlQuery: string, mapper?: (row: TMapFrom) => T) {
+  async query<T = unknown, TMapFrom = T>(
+    sqlQuery: string,
+    mapper?: (row: TMapFrom) => T
+  ) {
     const request = await this.request()
     const dbrows = await request.query<TMapFrom>(sqlQuery)
 
     return SqlServerHelper.getRows(dbrows, mapper)
   }
 
-  async queryOne<T = unknown, TMapFrom = T>(sqlQuery: string, mapper?: (row: TMapFrom) => T) {
+  async queryOne<T = unknown, TMapFrom = T>(
+    sqlQuery: string,
+    mapper?: (row: TMapFrom) => T
+  ) {
     const request = await this.request()
     const dbrows = await request.query<TMapFrom>(sqlQuery)
 
@@ -126,40 +136,54 @@ export class SqlServerHelper {
     intValue: number,
     mapper?: (row: TMapFrom) => T
   ) {
-    return arrayFirst(await this.queryByIntField(sqlQuery, fieldName, intValue, mapper))
+    return arrayFirst(
+      await this.queryByIntField(sqlQuery, fieldName, intValue, mapper)
+    )
   }
 
-  async queryByPlayerId<T = unknown, TMapFrom = T>(
+  async queryByUserId<T = unknown, TMapFrom = T>(
     sqlQuery: string,
     intValue: number,
     mapper?: (row: TMapFrom) => T
   ) {
-    return await this.queryByIntField(sqlQuery, 'playerId', intValue, mapper)
+    return await this.queryByIntField(sqlQuery, 'userId', intValue, mapper)
   }
 
-  async queryOneByPlayerId<T = unknown, TMapFrom = T>(
+  async queryOneByUserId<T = unknown, TMapFrom = T>(
     sqlQuery: string,
     intValue: number,
     mapper?: (row: TMapFrom) => T
   ) {
-    return arrayFirst(await this.queryByIntField(sqlQuery, 'playerId', intValue, mapper))
+    return arrayFirst(
+      await this.queryByIntField(sqlQuery, 'userId', intValue, mapper)
+    )
   }
 
-  async queryByPlayerIdString<T = unknown, TMapFrom = T>(
+  async queryByUserIdString<T = unknown, TMapFrom = T>(
     sqlQuery: string,
     stringValue: string,
     mapper?: (row: TMapFrom) => T
   ) {
-    return await this.queryByStringField<T, TMapFrom>(sqlQuery, 'playerId', stringValue, mapper)
+    return await this.queryByStringField<T, TMapFrom>(
+      sqlQuery,
+      'userId',
+      stringValue,
+      mapper
+    )
   }
 
-  async queryOneByPlayerIdString<T = unknown, TMapFrom = T>(
+  async queryOneByUserIdString<T = unknown, TMapFrom = T>(
     sqlQuery: string,
     stringValue: string,
     mapper?: (row: TMapFrom) => T
   ) {
     return arrayFirst(
-      await this.queryByStringField<T, TMapFrom>(sqlQuery, 'playerId', stringValue, mapper)
+      await this.queryByStringField<T, TMapFrom>(
+        sqlQuery,
+        'userId',
+        stringValue,
+        mapper
+      )
     )
   }
 
@@ -182,7 +206,9 @@ export class SqlServerHelper {
     stringValue: string,
     mapper?: (row: TMapFrom) => T
   ) {
-    return arrayFirst(await this.queryByStringField(sqlQuery, fieldName, stringValue, mapper))
+    return arrayFirst(
+      await this.queryByStringField(sqlQuery, fieldName, stringValue, mapper)
+    )
   }
 
   async queryTable<T = unknown, TMapFrom = T>({
@@ -220,7 +246,11 @@ export class SqlServerHelper {
 
     for (let index = 0; index < where.length; index++) {
       const value = where[index][1]
-      request.input(`value${index}`, isString(value) ? sql.NVarChar : sql.Int, `value${index}`)
+      request.input(
+        `value${index}`,
+        isString(value) ? sql.NVarChar : sql.Int,
+        `value${index}`
+      )
     }
 
     const dbrows = await request.query<TMapFrom>(sqlQuery)
