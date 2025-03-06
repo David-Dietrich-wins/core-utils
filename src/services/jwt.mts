@@ -88,7 +88,7 @@ export function JwtSign(
 export function JwtTokenWithUserId(
   userId: number,
   secretOrPrivateKey: string,
-  overrides?: JwtPayload
+  overrides?: Partial<JwtPayload>
 ) {
   const header: JwtHeader = {
     alg: 'HS256',

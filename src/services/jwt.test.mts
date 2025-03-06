@@ -2,12 +2,13 @@ import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
 import {
   IJwtExtended,
   JwtDecode,
+  JwtHelper,
   JwtRetrieveUserId,
   JwtSign,
   JwtVerify,
 } from './jwt.mjs'
 import { safestr } from './general.mjs'
-import { TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 
 describe('JwtDecode', () => {
   test('good', () => {
@@ -107,4 +108,68 @@ test('JwtVerify good', () => {
 
   const verified = JwtVerify(jwtToken, secretOrPublicKey)
   expect((verified as IJwtExtended).userId).toBe(TEST_Parameters_DEV.userIdGood)
+})
+
+describe('JwtHelper', () => {
+  test('Constructor from token', () => {
+    const jwtdata = JwtDecode(TEST_Parameters_DEV.jwt)
+
+    const jwt = new JwtHelper(jwtdata)
+
+    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
+  test('Constructor from string', () => {
+    const jwt = new JwtHelper(TEST_Parameters_DEV.jwt)
+
+    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
+  test('Constructor from null', () => {
+    const jwt = new JwtHelper(null)
+
+    expect(jwt.uid).toBe('')
+  })
+  test('Constructor default', () => {
+    const jwt = new JwtHelper()
+
+    expect(jwt.uid).toBe('')
+  })
+
+  test('FromHeaders', () => {
+    const headers = {
+      authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
+    }
+
+    const jwt = JwtHelper.FromHeaders(headers)
+
+    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
+
+  test('FromHeaders Headers object', () => {
+    const headers = {
+      authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
+      get: (key: string) => {
+        return headers[key]
+      },
+    } as unknown as Headers
+
+    const jwt = JwtHelper.FromHeaders(headers)
+
+    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
+
+  test('FromString', () => {
+    const jwt = JwtHelper.FromString(`Bearer ${TEST_Parameters_DEV.jwt}`)
+
+    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
+
+  test('issuer', () => {
+    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+      iss: 'anything.com',
+    })
+    const jhelper = new JwtHelper(jwt)
+
+    expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jhelper.issuer).toBe('anything')
+  })
 })

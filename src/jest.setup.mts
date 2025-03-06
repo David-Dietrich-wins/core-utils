@@ -3,6 +3,7 @@ import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithUserId } from './services/jwt.mjs'
 import { LogManagerOptions, safestr } from './index.mjs'
+import { JwtPayload } from 'jsonwebtoken'
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 
@@ -69,8 +70,15 @@ export const TEST_Parameters_DEV = {
   rsaPublicKey: safestr(process.env.rsaPublicKey),
 }
 
-export function GenerateSignedJwtToken(userId: number) {
-  return JwtTokenWithUserId(userId, TEST_Parameters_DEV.rsaPassPhrase)
+export function GenerateSignedJwtToken(
+  userId: number,
+  overrides?: Partial<JwtPayload>
+) {
+  return JwtTokenWithUserId(
+    userId,
+    TEST_Parameters_DEV.rsaPassPhrase,
+    overrides
+  )
 }
 
 beforeAll(() => {
