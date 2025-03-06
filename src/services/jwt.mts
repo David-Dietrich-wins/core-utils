@@ -6,44 +6,61 @@ import jwt, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { hasData, isFunction, isString, safestr } from './general.mjs'
+import {
+  hasData,
+  isFunction,
+  isString,
+  safeArray,
+  safestr,
+} from './general.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../index.mjs'
 
-export type WebRoles = 'user' | 'admin' | ''
+export type WebRoles = 'user' | 'admin'
+
+export interface IJwtBase {
+  aud: string
+  // Expiration time expressed as UNIX time which is the number of seconds since Epoch
+  exp: number
+  // The instant that the JWT was issued, expressed as UNIX time which is the number of seconds since Epoch.
+  iat: number
+  // The issuer of the JWT. For FusionAuth, this is always the value defined in the tenant JWT configuration
+  iss: string
+  // The unique identifier for this JWT
+  jti: string
+  // The roles assigned to the User in the authenticated Application. This claim is only present if the User has a registration to the Application.
+  roles: string[]
+  // Contains the validated and consented OAuth scopes from the initial authentication request
+  scope: string
+}
 
 /**
  * Interface for the extended JWT token.
  * This is the decoded token and it follows FusionAuth's JWT token format.
  * https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
  */
-export interface IJwtExtended {
+export interface IJwtExtended extends IJwtBase {
   ver: number
-  jti: string
-  iss: string
-  aud: string
-  iat: number
-  exp: number
   cid: string
   uid: string
   // refresh_token
   sid: string
+  // UUID: The FusionAuth Tenant unique Id.
   tid: string
   scp: string[]
   auth_time: number
-  // The User’s unique Id in FusionAuth.
+  // UUID The subject of the access token.
+  // This value is equal to the recipient Entity’s unique Id in FusionAuth.
   sub: string
   birthdate: string
+  // Always JWT
   authenticationType: string
   email: string
   email_verified: boolean
   applicationId: string
-  scope: string
-  roles: string[]
   givenName: string
   userId: string
-  role: WebRoles
   identityVerified: boolean
   name: string
   phoneNumber: string
@@ -157,10 +174,9 @@ const DEFAULT_JWT: IJwtExtended = {
   email_verified: false,
   applicationId: '',
   scope: '',
-  roles: [],
+  roles: new Array<string>(),
   givenName: '',
   userId: '',
-  role: '' as WebRoles,
   identityVerified: false,
   name: '',
   phoneNumber: '',
@@ -229,7 +245,47 @@ export class JwtHelper implements IJwtExtended {
     return JwtDecodeObject(token)
   }
 
+  get ApplicationRoles() {
+    const arrRoles: WebRoles[] = []
+
+    const safeRoles = safeArray<string>(this.roles)
+    if (safeRoles.includes('admin')) {
+      arrRoles.push('admin')
+      arrRoles.push('user')
+    }
+
+    if (safeRoles.includes('user') && !arrRoles.includes('user')) {
+      arrRoles.push('user')
+    }
+
+    return this.roles
+  }
+
+  get audience() {
+    return this.aud
+  }
+
+  get authenticationTime() {
+    return this.auth_time
+  }
+
+  get FusionAuthUserId() {
+    return this.sub
+  }
+
   get issuer() {
     return safestr(this.iss).replace(new RegExp('.com$'), '')
+  }
+
+  get issuedTime() {
+    return this.iat
+  }
+
+  get refreshToken() {
+    return this.sid
+  }
+
+  get tenantId() {
+    return this.tid
   }
 }
