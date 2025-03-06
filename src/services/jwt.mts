@@ -40,7 +40,7 @@ export interface IJwtBase {
  * This is the decoded token and it follows FusionAuth's JWT token format.
  * https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
  */
-export interface IJwtExtended extends IJwtBase {
+export interface IJwtAccessClient extends IJwtBase {
   ver: number
   cid: string
   uid: string
@@ -79,7 +79,7 @@ export function JwtDecode(token?: string, options?: DecodeOptions) {
     )
   }
 
-  return decoded as IJwtExtended
+  return decoded as IJwtAccessClient
 }
 
 export function JwtDecodeObject(token?: string, options?: DecodeOptions) {
@@ -154,7 +154,7 @@ export function JwtVerify(
   return jwtret
 }
 
-const DEFAULT_JWT: IJwtExtended = {
+const DEFAULT_JWT: IJwtAccessClient = {
   ver: 0,
   jti: '',
   iss: '',
@@ -183,7 +183,7 @@ const DEFAULT_JWT: IJwtExtended = {
   familyName: '',
 }
 
-export class JwtHelper implements IJwtExtended {
+export class JwtHelper implements IJwtAccessClient {
   ver = 0
   jti = ''
   iss = ''
@@ -212,7 +212,7 @@ export class JwtHelper implements IJwtExtended {
   phoneNumber = ''
   familyName = ''
 
-  constructor(token?: string | IJwtExtended | null) {
+  constructor(token?: string | IJwtAccessClient | null) {
     let jwtdata = DEFAULT_JWT
     if (token && hasData(token)) {
       if (isString(token)) {

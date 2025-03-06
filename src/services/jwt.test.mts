@@ -1,6 +1,6 @@
 import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
 import {
-  IJwtExtended,
+  IJwtAccessClient,
   JwtDecode,
   JwtHelper,
   JwtRetrieveUserId,
@@ -107,7 +107,9 @@ test('JwtVerify good', () => {
   const secretOrPublicKey: Secret = safestr(TEST_Parameters_DEV.rsaPassPhrase)
 
   const verified = JwtVerify(jwtToken, secretOrPublicKey)
-  expect((verified as IJwtExtended).userId).toBe(TEST_Parameters_DEV.userIdGood)
+  expect((verified as IJwtAccessClient).userId).toBe(
+    TEST_Parameters_DEV.userIdGood
+  )
 })
 
 describe('JwtHelper', () => {
