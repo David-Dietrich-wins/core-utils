@@ -2,7 +2,7 @@ import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { AppException, JwtAccessClient } from '../index.mjs'
+import { AppException, FromBearerToken, JwtAccessToken } from '../index.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
@@ -65,11 +65,11 @@ export class HttpHeaderManagerBase {
 
   get jwtToken() {
     if (this.bearerToken) {
-      return JwtAccessClient.FromString(this.bearerToken)
+      return FromBearerToken(JwtAccessToken, this.bearerToken)
     }
   }
   get jwtTokenMustExistAndBeValid() {
-    return JwtAccessClient.FromString(this.bearerToken)
+    return FromBearerToken(JwtAccessToken, this.bearerToken)
   }
 
   get referrer() {
@@ -86,7 +86,7 @@ export class HttpHeaderManagerBase {
   get userId() {
     const jwt = this.jwtTokenMustExistAndBeValid
 
-    const userid = jwt.userId
+    const userid = jwt.FusionAuthUserId
     if (!userid) {
       throw new AppException(
         'Error retrieving user information from JWT security token.',

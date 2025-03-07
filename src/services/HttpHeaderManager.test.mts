@@ -60,7 +60,7 @@ test('jwtToken', () => {
   const hm = new HttpHeaderManagerBase(init)
 
   const jwt = hm.jwtToken
-  expect(jwt?.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  expect(jwt?.FusionAuthUserId).toBe(TEST_Parameters_DEV.userIdGoodEmail)
 
   init.authorization = ''
   expect(new HttpHeaderManagerBase(init).jwtToken).toBeUndefined()
@@ -80,7 +80,7 @@ describe('userIdFromJwt', () => {
   })
 
   test('userId is 0', () => {
-    const jwt = GenerateSignedJwtToken(0)
+    const jwt = GenerateSignedJwtToken('')
     const init: StringOrStringArrayObject = {
       [CONST_HttpHeaderAuthorization]: `Bearer ${jwt}`,
     }

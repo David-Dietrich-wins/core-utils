@@ -1,18 +1,22 @@
 import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
 import {
-  IJwtAccessClient,
   JwtDecode,
-  JwtAccessClient,
+  JwtAccessToken,
   JwtRetrieveUserId,
   JwtSign,
   JwtVerify,
+  JwtCreate,
+  IJwtWithUserId,
+  IJwtAccessToken,
+  FromHeaders,
+  FromBearerToken,
 } from './jwt.mjs'
 import { safestr } from './general.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 
 describe('JwtDecode', () => {
   test('good', () => {
-    const jwtdata = JwtDecode(TEST_Parameters_DEV.jwt)
+    const jwtdata = JwtDecode<IJwtWithUserId>(TEST_Parameters_DEV.jwt)
 
     expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
@@ -68,7 +72,7 @@ test('JwtSign', () => {
   )
   expect(jwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode(jwtToken)
+  const jwtdata = JwtDecode<IJwtWithUserId>(jwtToken)
 
   expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
 })
@@ -100,40 +104,35 @@ test('JwtVerify good', () => {
   )
   expect(jwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode(jwtToken)
+  const jwtdata = JwtDecode<IJwtWithUserId>(jwtToken)
 
   expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
 
   const secretOrPublicKey: Secret = safestr(TEST_Parameters_DEV.rsaPassPhrase)
 
   const verified = JwtVerify(jwtToken, secretOrPublicKey)
-  expect((verified as IJwtAccessClient).userId).toBe(
+  expect((verified as IJwtWithUserId).userId).toBe(
     TEST_Parameters_DEV.userIdGood
   )
 })
 
 describe('JwtAccessClient', () => {
   test('Constructor from token', () => {
-    const jwtdata = JwtDecode(TEST_Parameters_DEV.jwt)
+    const jwtdata = JwtDecode<IJwtAccessToken>(TEST_Parameters_DEV.jwt)
 
-    const jwt = new JwtAccessClient(jwtdata)
+    const jwt = new JwtAccessToken(jwtdata)
 
-    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwt.FusionAuthUserId).toBe(TEST_Parameters_DEV.userIdGood)
   })
   test('Constructor from string', () => {
-    const jwt = new JwtAccessClient(TEST_Parameters_DEV.jwt)
+    const jwt = JwtCreate(JwtAccessToken, TEST_Parameters_DEV.jwt)
 
-    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
   })
   test('Constructor from null', () => {
-    const jwt = new JwtAccessClient(null)
-
-    expect(jwt.uid).toBe('')
-  })
-  test('Constructor default', () => {
-    const jwt = new JwtAccessClient()
-
-    expect(jwt.uid).toBe('')
+    expect(JwtCreate(JwtAccessToken, '')).toThrow(
+      'Invalid security token when attempting to decode the JWT.'
+    )
   })
 
   test('FromHeaders', () => {
@@ -141,9 +140,9 @@ describe('JwtAccessClient', () => {
       authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
     }
 
-    const jwt = JwtAccessClient.FromHeaders(headers)
+    const jwt = FromHeaders(JwtAccessToken, headers)
 
-    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
   })
 
   test('FromHeaders Headers object', () => {
@@ -154,52 +153,53 @@ describe('JwtAccessClient', () => {
       },
     } as unknown as Headers
 
-    const jwt = JwtAccessClient.FromHeaders(headers)
-
-    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(FromHeaders(JwtAccessToken, headers)).toThrow(
+      'Invalid security token when attempting to decode the JWT.'
+    )
   })
 
   test('FromString', () => {
-    const jwt = JwtAccessClient.FromString(`Bearer ${TEST_Parameters_DEV.jwt}`)
-
-    expect(jwt.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(
+      FromBearerToken(JwtAccessToken, `Bearer ${TEST_Parameters_DEV.jwt}`).email
+    ).toBe(TEST_Parameters_DEV.userIdGoodEmail)
   })
 
   test('issuer', () => {
-    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       iss: 'anything.com',
     })
-    const jhelper = new JwtAccessClient(jwt)
+    const jhelper = FromBearerToken(JwtAccessToken, jwt)
 
-    expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jhelper.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
     expect(jhelper.issuer).toBe('anything')
   })
 
   test('Application Roles', () => {
-    let jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+    let jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
+      iss: 'anything.com',
       roles: ['admin', 'user'],
     })
-    let jhelper = new JwtAccessClient(jwt)
+    let jhelper = JwtCreate(JwtAccessToken, jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
 
-    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['admin'],
     })
-    jhelper = new JwtAccessClient(jwt)
+    jhelper = JwtCreate(JwtAccessToken, jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
 
-    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['user'],
     })
-    jhelper = new JwtAccessClient(jwt)
+    jhelper = JwtCreate(JwtAccessToken, jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
     expect(jhelper.isAdmin).toBeFalsy()
   })
 
   test('others', () => {
-    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
+    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       aud: 'anything',
       auth_time: 123,
       iat: 2048,
@@ -207,11 +207,11 @@ describe('JwtAccessClient', () => {
       sub: 'my FusionAuthUserId',
       tid: 'tenant',
     })
-    const jhelper = new JwtAccessClient(jwt)
+    const jhelper = FromBearerToken(JwtAccessToken, jwt)
 
     expect(jhelper.audience).toBe('anything')
     expect(jhelper.authenticationTime).toBe(123)
-    expect(jhelper.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jhelper.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
     expect(jhelper.FusionAuthUserId).toBe('my FusionAuthUserId')
     expect(jhelper.issuedTime).toBe(2048)
     expect(jhelper.refreshToken).toBe('refresh')

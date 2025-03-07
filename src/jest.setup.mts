@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import CryptoHelper from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
-import { JwtTokenWithUserId } from './services/jwt.mjs'
+import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions, safestr } from './index.mjs'
 import { JwtPayload } from 'jsonwebtoken'
 // import { HttpHandler } from 'msw'
@@ -63,6 +63,7 @@ export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
   currentDate: new Date('2025-12-01T12:00:00Z'),
   userIdGood: 123456789,
+  userIdGoodEmail: 'test@test.com',
   userIdBad: 987654321,
   jwt: '',
   rsaPassPhrase: safestr(process.env.rsaPassPhrase),
@@ -71,19 +72,15 @@ export const TEST_Parameters_DEV = {
 }
 
 export function GenerateSignedJwtToken(
-  userId: number,
+  email: string = TEST_Parameters_DEV.userIdGoodEmail,
   overrides?: Partial<JwtPayload>
 ) {
-  return JwtTokenWithUserId(
-    userId,
-    TEST_Parameters_DEV.rsaPassPhrase,
-    overrides
-  )
+  return JwtTokenWithEmail(email, TEST_Parameters_DEV.rsaPassPhrase, overrides)
 }
 
 beforeAll(() => {
   // process.env.NODE_ENV = 'test'
-  const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood)
+  const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail)
 
   TEST_Parameters_DEV.jwt = jwtToken
 

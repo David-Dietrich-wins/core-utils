@@ -6,18 +6,58 @@ import jwt, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import {
-  hasData,
-  isFunction,
-  isString,
-  safeArray,
-  safestr,
-} from './general.mjs'
+import { isFunction, isString, safeArray, safestr } from './general.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../index.mjs'
 
+// Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
+
+interface IJwtConstructor<TInterface extends IJwtBase, T extends JwtBase> {
+  new (arg: TInterface): T
+
+  // Or enforce default constructor
+  // new (): T;
+}
+
+export function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
+  type: IJwtConstructor<TInterface, T>,
+  token: string | TInterface,
+  options?: DecodeOptions
+): T {
+  const decoded = isString(token)
+    ? JwtDecode<TInterface>(token as string, options)
+    : token
+
+  return new type(decoded)
+}
+
+// function activator<T extends JwtBase>(type: IConstructor<T>): T {
+//   return new type()
+// }
+
 export type WebRoles = 'user' | 'admin'
+
+export const CONST_IssuerTradePlotter = 'tradeplotter.com'
+export const CONST_IssuerPolitagree = 'politagree.com'
+
+export interface IJwtHeader {
+  /**
+   * The list of grants in the order the grant occurred.
+   *
+   * For example, if the token was the result of an authorization_code grant,
+   *  the value will be [authorization_code].
+   *
+   * If the token was generated using a refresh token using the refresh_token grant,
+   *  the value will be [authorization_code, refresh_token]
+   *  if the initial grant used to obtain the refresh token was the authorization_code grant.
+   */
+  gty: string[]
+  // The unique key identifier that represents the key used to build the signature.
+  kid: string
+  //The type of token, this value is always JWT.
+  typ: string
+}
 
 export interface IJwtBase {
   aud: string
@@ -33,6 +73,22 @@ export interface IJwtBase {
   roles: string[]
   // Contains the validated and consented OAuth scopes from the initial authentication request
   scope: string
+  // UUID: The FusionAuth Tenant unique Id.
+  tid: string
+}
+
+export interface IJwtWithUserId extends IJwtBase {
+  userId: string
+}
+
+export interface IJwtWithSubject extends IJwtBase {
+  // UUID The subject of the access token.
+  // This value is equal to the recipient Entity’s unique Id in FusionAuth.
+  sub: string
+}
+
+export interface IJwtFusionAuthClientCredentials extends IJwtWithSubject {
+  permissions: string[]
 }
 
 /**
@@ -40,34 +96,37 @@ export interface IJwtBase {
  * This is the decoded token and it follows FusionAuth's JWT token format.
  * https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
  */
-export interface IJwtAccessClient extends IJwtBase {
-  ver: number
-  cid: string
-  uid: string
-  // refresh_token
-  sid: string
-  // UUID: The FusionAuth Tenant unique Id.
-  tid: string
-  scp: string[]
-  auth_time: number
-  // UUID The subject of the access token.
-  // This value is equal to the recipient Entity’s unique Id in FusionAuth.
-  sub: string
-  birthdate: string
+export interface IJwtAccessToken extends IJwtWithSubject {
+  applicationId: string
   // Always JWT
   authenticationType: string
+  auth_time: number
   email: string
   email_verified: boolean
-  applicationId: string
-  givenName: string
-  userId: string
-  identityVerified: boolean
-  name: string
-  phoneNumber: string
-  familyName: string
+  preferred_username: string
+  // refresh_token
+  sid: string
 }
 
-export function JwtDecode(token?: string, options?: DecodeOptions) {
+export interface IJwtFusionAuthIdToken extends IJwtAccessToken {
+  active: boolean
+  at_hash: string
+  authenticationType: string
+  birthdate: string
+  c_hash: string
+  family_name: string
+  given_name: string
+  middle_name: string
+  name: string
+  nonce: string
+  phone_number: string
+  picture: string
+}
+
+export function JwtDecode<T extends IJwtBase>(
+  token?: string,
+  options?: DecodeOptions
+) {
   const decoded = jwt.decode(
     HttpHeaderManagerBase.BearerTokenParse(token),
     options
@@ -79,17 +138,22 @@ export function JwtDecode(token?: string, options?: DecodeOptions) {
     )
   }
 
-  return decoded as IJwtAccessClient
+  return decoded as T
 }
 
-export function JwtDecodeObject(token?: string, options?: DecodeOptions) {
-  const decoded = JwtDecode(token, options)
-
-  return new JwtAccessClient(decoded)
-}
+// export function JwtDecodeObject<
+//   Tnew extends JwtBase,
+//   TInterface extends IJwtBase
+// >(
+//   theClass: { new (args: TInterface): Tnew },
+//   token: string | TInterface,
+//   options?: DecodeOptions
+// ): Tnew {
+//   return createInstanceWithParams<Tnew, TInterface>(theClass, token, options)
+// }
 
 export function JwtRetrieveUserId(token: string) {
-  const jwtret = JwtDecode(token)
+  const jwtret = JwtDecode<IJwtWithUserId>(token)
 
   return jwtret.userId
 }
@@ -137,6 +201,32 @@ export function JwtTokenWithUserId(
   return jwtToken
 }
 
+export function JwtTokenWithEmail(
+  email: string,
+  secretOrPrivateKey: string,
+  overrides?: Partial<JwtPayload>
+) {
+  const header: JwtHeader = {
+    alg: 'HS256',
+    typ: 'JWT',
+  }
+
+  const signOptions: SignOptions = {
+    header,
+  }
+
+  const payload: JwtPayload = {
+    ...{
+      email,
+    },
+    ...overrides,
+  }
+
+  const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
+
+  return jwtToken
+}
+
 /**
  * Synchronously verify given token using a secret or a public key to get a decoded token
  * token - JWT string to verify
@@ -154,95 +244,66 @@ export function JwtVerify(
   return jwtret
 }
 
-const DEFAULT_JWT: IJwtAccessClient = {
-  ver: 0,
-  jti: '',
-  iss: '',
-  aud: '',
-  iat: 0,
-  exp: 0,
-  cid: '',
-  uid: '',
-  sid: '',
-  tid: '',
-  scp: [],
-  auth_time: 0,
-  sub: '',
-  birthdate: '',
-  authenticationType: '',
-  email: '',
-  email_verified: false,
-  applicationId: '',
-  scope: '',
-  roles: new Array<string>(),
-  givenName: '',
-  userId: '',
-  identityVerified: false,
-  name: '',
-  phoneNumber: '',
-  familyName: '',
-}
+// const DEFAULT_JwtFusionAuthIdToken: IJwtFusionAuthIdToken = {
+//   applicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   email: 'grayarrow@gmail.com',
+//   email_verified: true,
+//   family_name: 'Dietrich',
+//   given_name: 'David',
+//   roles: ['admin'],
+//   scope: 'openid offline_access email profile',
+//   sid: '0ab2f927-4858-49da-952c-ada994c7a558',
+//   sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
+//   tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
+// }
 
-export class JwtAccessClient implements IJwtAccessClient {
-  ver = 0
-  jti = ''
-  iss = ''
+// const DEFAULT_JwtClient: IJwtFusionAuthIdToken = {
+//   active: true,
+//   applicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   aud: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   auth_time: 1741349501,
+//   authenticationType: 'PASSWORD',
+//   email: 'grayarrow@gmail.com',
+//   email_verified: true,
+//   exp: 1741353101,
+//   iat: 1741349501,
+//   iss: 'tradeplotter.com',
+//   jti: '7b47b2d8-0864-4163-939f-9a1d2ce9f946',
+//   roles: ['admin'],
+//   scope: 'openid offline_access email profile',
+//   sid: '0ab2f927-4858-49da-952c-ada994c7a558',
+//   sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
+//   tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
+// }
+
+export class JwtBase implements IJwtBase {
   aud = ''
-  iat = 0
   exp = 0
-  cid = ''
-  uid = ''
-  sid = ''
-  tid = ''
-  scp = []
-  auth_time = 0
-  sub = ''
-  birthdate = ''
-  authenticationType = ''
-  email = ''
-  email_verified = false
-  applicationId = ''
-  scope = ''
+  iat = 0
+  iss = ''
+  jti = ''
   roles = []
-  givenName = ''
-  userId = ''
-  role = '' as WebRoles
-  identityVerified = false
-  name = ''
-  phoneNumber = ''
-  familyName = ''
+  scope = ''
+  tid = ''
 
-  constructor(token?: string | IJwtAccessClient | null) {
-    let jwtdata = DEFAULT_JWT
-    if (token && hasData(token)) {
-      if (isString(token)) {
-        jwtdata = JwtDecode(token)
-      } else {
-        jwtdata = { ...token }
-      }
-    }
-
-    Object.assign(this, { ...DEFAULT_JWT, ...jwtdata })
+  constructor(token: IJwtBase) {
+    Object.assign(this, JwtBase.DefaultJwt(token))
   }
 
-  static FromHeaders(headers?: Headers | IncomingHttpHeaders | null) {
-    let authHeader = ''
-    const hHeaders = headers as Headers
-    const iHeaders = headers as IncomingHttpHeaders
-
-    if (hHeaders && isFunction(hHeaders.get)) {
-      authHeader = safestr(
-        hHeaders.get('Authorization') ?? hHeaders.get('authorization')
-      )
-    } else if (iHeaders) {
-      authHeader = safestr(iHeaders.authorization)
+  static DefaultJwt(overrides?: Partial<IJwtBase> | null) {
+    const jwt: IJwtBase = {
+      aud: '',
+      exp: 0,
+      iat: 0,
+      iss: '',
+      jti: '',
+      roles: [],
+      scope: '',
+      tid: '',
     }
 
-    return JwtDecodeObject(authHeader)
-  }
-
-  static FromString(token?: string) {
-    return JwtDecodeObject(token)
+    const ret: IJwtBase = { ...jwt, ...overrides }
+    return ret
   }
 
   get ApplicationRoles() {
@@ -265,31 +326,206 @@ export class JwtAccessClient implements IJwtAccessClient {
     return this.aud
   }
 
-  get authenticationTime() {
-    return this.auth_time
-  }
-
-  get FusionAuthUserId() {
-    return this.sub
+  get issuedTime() {
+    return this.iat
   }
 
   get isAdmin() {
     return this.ApplicationRoles.includes('admin')
   }
 
+  get isUser() {
+    return this.ApplicationRoles.includes('user')
+  }
+
   get issuer() {
     return safestr(this.iss).replace(new RegExp('.com$'), '')
   }
 
-  get issuedTime() {
-    return this.iat
+  get isAdminForTradePlotter() {
+    return this.isAdmin && this.issuer
+  }
+  get isPolitagree() {
+    return CONST_IssuerPolitagree === this.iss
+  }
+  get isPolitagreeAdmin() {
+    return this.isAdmin && this.isPolitagree
+  }
+  get isPolitagreeUser() {
+    return this.isUser && this.isPolitagree
+  }
+
+  get isTradePlotter() {
+    return CONST_IssuerTradePlotter === this.iss
+  }
+  get isTradePlotterAdmin() {
+    return this.isAdmin && this.isTradePlotter
+  }
+  get isTradePlotterUser() {
+    return this.isUser && this.isTradePlotter
+  }
+
+  get tenantId() {
+    return this.tid
+  }
+}
+
+export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
+  sub = ''
+
+  constructor(token: IJwtWithSubject) {
+    super(token)
+  }
+
+  static DefaultJwt(overrides?: Partial<IJwtWithSubject> | null) {
+    const jwt: IJwtWithSubject = {
+      ...super.DefaultJwt(),
+      ...{
+        sub: '',
+      },
+    }
+
+    const ret: IJwtWithSubject = { ...jwt, ...overrides }
+    return ret
+  }
+
+  get FusionAuthUserId() {
+    return this.sub
+  }
+}
+
+export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
+  applicationId = ''
+  auth_time = 0
+  authenticationType = ''
+  email = ''
+  email_verified = false
+  preferred_username = ''
+  sid = ''
+
+  constructor(token: IJwtAccessToken) {
+    super(JwtAccessToken.DefaultJwt(token))
+  }
+
+  static DefaultJwt(overrides?: Partial<IJwtAccessToken> | null) {
+    const jwt: IJwtAccessToken = {
+      ...super.DefaultJwt(),
+      ...{
+        applicationId: '',
+        auth_time: 0,
+        authenticationType: '',
+        email: '',
+        email_verified: false,
+        preferred_username: '',
+        sid: '',
+      },
+    }
+
+    const ret: IJwtAccessToken = { ...jwt, ...overrides }
+    return ret
+  }
+
+  get authenticationTime() {
+    return this.auth_time
   }
 
   get refreshToken() {
     return this.sid
   }
+}
 
-  get tenantId() {
-    return this.tid
+export class JwtFusionAuthClientCredentials
+  extends JwtWithSubject
+  implements IJwtFusionAuthClientCredentials
+{
+  permissions = []
+
+  constructor(token: IJwtFusionAuthClientCredentials) {
+    super(JwtAccessToken.DefaultJwt(token))
+  }
+
+  static DefaultJwt(
+    overrides?: Partial<IJwtFusionAuthClientCredentials> | null
+  ) {
+    const jwt: IJwtFusionAuthClientCredentials = {
+      ...super.DefaultJwt(),
+      ...{
+        permissions: [],
+      },
+    }
+
+    const ret: IJwtFusionAuthClientCredentials = { ...jwt, ...overrides }
+    return ret
+  }
+}
+
+export function FromHeaders<TInterface extends IJwtBase, TNew extends JwtBase>(
+  type: IJwtConstructor<TInterface, TNew>,
+  headers?: Headers | IncomingHttpHeaders | null
+) {
+  let bearerToken = ''
+  const hHeaders = headers as Headers
+  const iHeaders = headers as IncomingHttpHeaders
+
+  if (hHeaders && isFunction(hHeaders.get)) {
+    bearerToken = safestr(
+      hHeaders.get('Authorization') ?? hHeaders.get('authorization')
+    )
+  } else if (iHeaders) {
+    bearerToken = safestr(iHeaders.authorization)
+  }
+
+  return FromBearerToken(type, bearerToken)
+}
+
+export function FromBearerToken<
+  TInterface extends IJwtBase,
+  TNew extends JwtBase
+>(type: IJwtConstructor<TInterface, TNew>, token: string) {
+  return JwtCreate(type, token)
+}
+
+export class JwtFusionAuthIdToken
+  extends JwtAccessToken
+  implements IJwtFusionAuthIdToken
+{
+  active = false
+  at_hash = ''
+  authenticationType = ''
+  birthdate = ''
+  c_hash = ''
+  family_name = ''
+  given_name = ''
+  middle_name = ''
+  name = ''
+  nonce = ''
+  phone_number = ''
+  picture = ''
+
+  constructor(token: IJwtFusionAuthIdToken) {
+    super(JwtAccessToken.DefaultJwt(token))
+  }
+
+  static DefaultJwt(overrides?: Partial<IJwtFusionAuthIdToken> | null) {
+    const jwt: IJwtFusionAuthIdToken = {
+      ...super.DefaultJwt(),
+      ...{
+        active: false,
+        at_hash: '',
+        authenticationType: '',
+        birthdate: '',
+        c_hash: '',
+        family_name: '',
+        given_name: '',
+        middle_name: '',
+        name: '',
+        nonce: '',
+        phone_number: '',
+        picture: '',
+      },
+    }
+
+    const ret: IJwtFusionAuthIdToken = { ...jwt, ...overrides }
+    return ret
   }
 }
