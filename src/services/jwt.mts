@@ -273,6 +273,10 @@ export class JwtAccessClient implements IJwtAccessClient {
     return this.sub
   }
 
+  get isAdmin() {
+    return this.ApplicationRoles.includes('admin')
+  }
+
   get issuer() {
     return safestr(this.iss).replace(new RegExp('.com$'), '')
   }

@@ -72,6 +72,10 @@ export class HttpHeaderManagerBase {
     return JwtAccessClient.FromString(this.bearerToken)
   }
 
+  get referrer() {
+    return this.getHeaderStringSafe('referer')
+  }
+
   get showDebug() {
     return this.getBoolean(CONST_HttpHeaderShowDebug)
   }
