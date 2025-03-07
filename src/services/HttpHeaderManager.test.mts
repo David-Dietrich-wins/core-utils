@@ -144,3 +144,16 @@ test('BearerTokenParse', () => {
   bt = HttpHeaderManagerBase.BearerTokenParse(`Bearer ${val}`)
   expect(bt).toBe(val)
 })
+
+test('referrer', () => {
+  const req = {
+    body: { 'my-test': 'my-test' },
+  } as Request
+
+  req.headers = { referer: 'anything.com' }
+
+  const ab = new HttpHeaderManager(req.headers)
+
+  expect(ab).toBeInstanceOf(HttpHeaderManager)
+  expect(ab.referrer).toBe('anything.com')
+})

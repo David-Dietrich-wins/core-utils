@@ -181,18 +181,21 @@ describe('JwtAccessClient', () => {
     })
     let jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
+    expect(jhelper.isAdmin).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       roles: ['admin'],
     })
     jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
+    expect(jhelper.isAdmin).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGood, {
       roles: ['user'],
     })
     jhelper = new JwtAccessClient(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
+    expect(jhelper.isAdmin).toBeFalsy()
   })
 
   test('others', () => {
