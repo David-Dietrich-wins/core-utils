@@ -5,7 +5,6 @@ import {
   JwtRetrieveUserId,
   JwtSign,
   JwtVerify,
-  JwtCreate,
   IJwtWithUserId,
   IJwtAccessToken,
   FromHeaders,
@@ -125,12 +124,12 @@ describe('JwtAccessClient', () => {
     expect(jwt.FusionAuthUserId).toBe(TEST_Parameters_DEV.userIdGood)
   })
   test('Constructor from string', () => {
-    const jwt = JwtCreate(JwtAccessToken, TEST_Parameters_DEV.jwt)
+    const jwt = JwtAccessToken.Create(TEST_Parameters_DEV.jwt)
 
     expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
   })
   test('Constructor from null', () => {
-    expect(JwtCreate(JwtAccessToken, '')).toThrow(
+    expect(JwtAccessToken.Create('')).toThrow(
       'Invalid security token when attempting to decode the JWT.'
     )
   })
@@ -179,21 +178,21 @@ describe('JwtAccessClient', () => {
       iss: 'anything.com',
       roles: ['admin', 'user'],
     })
-    let jhelper = JwtCreate(JwtAccessToken, jwt)
+    let jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['admin'],
     })
-    jhelper = JwtCreate(JwtAccessToken, jwt)
+    jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['user'],
     })
-    jhelper = JwtCreate(JwtAccessToken, jwt)
+    jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
     expect(jhelper.isAdmin).toBeFalsy()
   })

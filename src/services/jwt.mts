@@ -20,7 +20,7 @@ interface IJwtConstructor<TInterface extends IJwtBase, T extends JwtBase> {
   // new (): T;
 }
 
-export function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
+function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
   type: IJwtConstructor<TInterface, T>,
   token: string | TInterface,
   options?: DecodeOptions
@@ -277,17 +277,29 @@ export function JwtVerify(
 // }
 
 export class JwtBase implements IJwtBase {
-  aud = ''
-  exp = 0
-  iat = 0
-  iss = ''
-  jti = ''
-  roles = []
-  scope = ''
-  tid = ''
+  aud: string
+  exp: number
+  iat: number
+  iss: string
+  jti: string
+  roles: string[]
+  scope: string
+  tid: string
 
   constructor(token: IJwtBase) {
+    this.aud = token.aud
+    this.exp = token.exp
+    this.iat = token.iat
+    this.iss = token.iss
+    this.jti = token.jti
+    this.roles = safeArray(token.roles)
+    this.scope = token.scope
+    this.tid = token.tid
     Object.assign(this, JwtBase.DefaultJwt(token))
+  }
+
+  static Create(token: string | IJwtBase) {
+    return JwtCreate(JwtBase, token)
   }
 
   static DefaultJwt(overrides?: Partial<IJwtBase> | null) {
@@ -335,7 +347,7 @@ export class JwtBase implements IJwtBase {
   }
 
   get isUser() {
-    return this.ApplicationRoles.includes('user')
+    return this.ApplicationRoles.includes('user') || this.isAdmin
   }
 
   get issuer() {
@@ -371,10 +383,16 @@ export class JwtBase implements IJwtBase {
 }
 
 export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
-  sub = ''
+  sub: string
 
   constructor(token: IJwtWithSubject) {
     super(token)
+    this.sub = token.sub
+    JwtWithSubject.DefaultJwt(token)
+  }
+
+  static Create(token: string | IJwtWithSubject) {
+    return JwtCreate(JwtWithSubject, token)
   }
 
   static DefaultJwt(overrides?: Partial<IJwtWithSubject> | null) {
@@ -395,16 +413,29 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
 }
 
 export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
-  applicationId = ''
-  auth_time = 0
-  authenticationType = ''
-  email = ''
-  email_verified = false
-  preferred_username = ''
-  sid = ''
+  applicationId: string
+  auth_time: number
+  authenticationType: string
+  email: string
+  email_verified: boolean
+  preferred_username: string
+  sid: string
 
   constructor(token: IJwtAccessToken) {
-    super(JwtAccessToken.DefaultJwt(token))
+    super(token)
+    this.applicationId = token.applicationId
+    this.auth_time = token.auth_time
+    this.authenticationType = token.authenticationType
+    this.email = token.email
+    this.email_verified = token.email_verified
+    this.preferred_username = token.preferred_username
+    this.sid = token.sid
+
+    JwtAccessToken.DefaultJwt(token)
+  }
+
+  static Create(token: string | IJwtAccessToken) {
+    return JwtCreate(JwtAccessToken, token)
   }
 
   static DefaultJwt(overrides?: Partial<IJwtAccessToken> | null) {
@@ -438,10 +469,16 @@ export class JwtFusionAuthClientCredentials
   extends JwtWithSubject
   implements IJwtFusionAuthClientCredentials
 {
-  permissions = []
+  permissions: string[]
 
   constructor(token: IJwtFusionAuthClientCredentials) {
-    super(JwtAccessToken.DefaultJwt(token))
+    super(token)
+    this.permissions = safeArray(token.permissions).map((x) => x.toLowerCase())
+    JwtFusionAuthClientCredentials.DefaultJwt(token)
+  }
+
+  static Create(token: string | IJwtFusionAuthClientCredentials) {
+    return JwtCreate(JwtFusionAuthClientCredentials, token)
   }
 
   static DefaultJwt(
@@ -489,21 +526,39 @@ export class JwtFusionAuthIdToken
   extends JwtAccessToken
   implements IJwtFusionAuthIdToken
 {
-  active = false
-  at_hash = ''
-  authenticationType = ''
-  birthdate = ''
-  c_hash = ''
-  family_name = ''
-  given_name = ''
-  middle_name = ''
-  name = ''
-  nonce = ''
-  phone_number = ''
-  picture = ''
+  active: boolean
+  at_hash: string
+  authenticationType: string
+  birthdate: string
+  c_hash: string
+  family_name: string
+  given_name: string
+  middle_name: string
+  name: string
+  nonce: string
+  phone_number: string
+  picture: string
 
   constructor(token: IJwtFusionAuthIdToken) {
-    super(JwtAccessToken.DefaultJwt(token))
+    super(token)
+    this.active = token.active
+    this.at_hash = token.at_hash
+    this.authenticationType = token.authenticationType
+    this.birthdate = token.birthdate
+    this.c_hash = token.c_hash
+    this.family_name = token.family_name
+    this.given_name = token.given_name
+    this.middle_name = token.middle_name
+    this.name = token.name
+    this.nonce = token.nonce
+    this.phone_number = token.phone_number
+    this.picture = token.picture
+
+    JwtFusionAuthIdToken.DefaultJwt(token)
+  }
+
+  static Create(token: string | IJwtFusionAuthIdToken) {
+    return JwtCreate(JwtFusionAuthIdToken, token)
   }
 
   static DefaultJwt(overrides?: Partial<IJwtFusionAuthIdToken> | null) {

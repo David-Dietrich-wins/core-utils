@@ -18,12 +18,12 @@ export default abstract class ApiResponseHelper {
     return crret
   }
 
-  static ApiResponseResponseSuccess<T = unknown>(obj?: T) {
+  static ApiResponseSuccess<T = unknown>(obj?: T) {
     const crret =
       isObject(obj) && obj instanceof ApiResponse ? obj : new ApiResponse<T>()
 
     if (isString(obj)) {
-      crret.message = obj as string
+      crret.message = obj
 
       crret.setSuccess()
     } else {
@@ -48,7 +48,7 @@ export default abstract class ApiResponseHelper {
   }
 
   static respondWithSuccess<T>(res: Response, obj?: T) {
-    const crret = ApiResponseHelper.ApiResponseResponseSuccess(obj)
+    const crret = ApiResponseHelper.ApiResponseSuccess(obj)
 
     res.json(crret)
   }

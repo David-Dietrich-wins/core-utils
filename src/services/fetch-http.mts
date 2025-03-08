@@ -1,6 +1,6 @@
 import { AppExceptionHttp } from '../models/AppException.mjs'
 import { JSONValue } from '../models/types.mjs'
-import { IApiResponse } from '../models/ApiResponse.mjs'
+import { ApiResponse, IApiResponse } from '../models/ApiResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
@@ -124,7 +124,9 @@ export async function fetchJson<
 >(method: HttpMethod, settings: HttpFetchRequestProps<TData>) {
   const resp = await fetchHttp(method, settings)
 
-  return (await resp.json()) as Tret
+  const ret = (await resp.json()) as IApiResponse<Tret>
+
+  return ApiResponse.CreateFromIApiResponse<Tret>(ret)
 }
 
 /**
@@ -149,7 +151,7 @@ export async function fetchDeleteJson<
   TData extends FetchDataTypesAllowed,
   Tret extends FetchDataTypesAllowed = TData
 >(settings: HttpFetchRequestProps<TData>) {
-  return fetchJson<TData, IApiResponse<Tret>>('DELETE', settings)
+  return fetchJson<TData, Tret>('DELETE', settings)
 }
 
 /**
@@ -164,7 +166,7 @@ export async function fetchGet<
   Tret extends FetchDataTypesAllowed,
   TData extends FetchDataTypesAllowed = Tret
 >(settings: HttpFetchRequestProps<TData>) {
-  return fetchJson<TData, IApiResponse<Tret>>('GET', settings)
+  return fetchJson<TData, Tret>('GET', settings)
 }
 
 /**
@@ -177,9 +179,9 @@ export async function fetchGet<
  */
 export async function fetchPatch<
   TData extends FetchDataTypesAllowed,
-  Tret = undefined
+  Tret extends FetchDataTypesAllowed = undefined
 >(settings: HttpFetchRequestProps<TData>) {
-  return fetchJson<TData, IApiResponse<Tret>>('PATCH', settings)
+  return fetchJson<TData, Tret>('PATCH', settings)
 }
 
 /**
@@ -195,7 +197,7 @@ export async function fetchPost<
   Tret extends FetchDataTypesAllowed,
   TData extends FetchDataTypesAllowed = Tret
 >(settings: HttpFetchRequestProps<TData>) {
-  return fetchJson<TData, IApiResponse<Tret>>('POST', settings)
+  return fetchJson<TData, Tret>('POST', settings)
 }
 
 /**
@@ -208,7 +210,7 @@ export async function fetchPost<
  */
 export async function fetchPut<
   Tdata extends FetchDataTypesAllowed,
-  Tret = Tdata
+  Tret extends FetchDataTypesAllowed = Tdata
 >(settings: HttpFetchRequestProps<Tdata>) {
-  return fetchJson<Tdata, IApiResponse<Tret>>('PUT', settings)
+  return fetchJson<Tdata, Tret>('PUT', settings)
 }

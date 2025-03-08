@@ -3,8 +3,8 @@ import { Request, Response } from 'express'
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import ApiResponseHelper from './ApiResponseHelper.mjs'
 
-test('ApiResponseResponseSuccess', () => {
-  const resapi = ApiResponseHelper.ApiResponseResponseSuccess('test')
+test('ApiResponseSuccess', () => {
+  const resapi = ApiResponseHelper.ApiResponseSuccess('test')
 
   expect(resapi?.id).toBeGreaterThan(0)
   expect(resapi?.ts).toBeGreaterThan(0)
@@ -14,7 +14,7 @@ test('ApiResponseResponseSuccess', () => {
   expect(resapi?.obj).toBeUndefined()
 
   const obj = { a: 'test' }
-  const resobj = ApiResponseHelper.ApiResponseResponseSuccess(obj)
+  const resobj = ApiResponseHelper.ApiResponseSuccess(obj)
 
   expect(resobj?.id).toBeGreaterThan(0)
   expect(resobj?.ts).toBeGreaterThan(0)
@@ -24,8 +24,7 @@ test('ApiResponseResponseSuccess', () => {
   expect(resobj?.obj).toBe(obj)
 
   const newApiResponse = new ApiResponse<string>()
-  const resApiResponse =
-    ApiResponseHelper.ApiResponseResponseSuccess(newApiResponse)
+  const resApiResponse = ApiResponseHelper.ApiResponseSuccess(newApiResponse)
 
   expect(resApiResponse?.id).toBeGreaterThan(0)
   expect(resApiResponse?.ts).toBeGreaterThan(0)

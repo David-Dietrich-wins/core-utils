@@ -1,5 +1,6 @@
 import { AppExceptionHttp } from './AppException.mjs'
 import { isObject, safestrLowercase } from '../services/general.mjs'
+import { FetchDataTypesAllowed } from '../index.mjs'
 
 export interface IApiResponse<T = unknown> {
   id: number
@@ -12,7 +13,7 @@ export interface IApiResponse<T = unknown> {
   obj?: T
 }
 
-export class ApiResponse<T = unknown> implements IApiResponse<T> {
+export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
   id = Date.now()
   ts = this.id
 
@@ -20,8 +21,30 @@ export class ApiResponse<T = unknown> implements IApiResponse<T> {
     public result = '',
     public message = '',
     public responseCode = 0,
-    public obj?: T
+    public obj?: TData
   ) {}
+
+  static CreateFromIApiResponse<T extends FetchDataTypesAllowed>(
+    iApiResponse: IApiResponse<T>
+  ) {
+    const crret = new ApiResponse<T>()
+    Object.assign(crret, iApiResponse)
+
+    return crret
+  }
+
+  get isGood() {
+    return ApiResponse.responseCodeIsGood(this)
+  }
+  get isError() {
+    return !this.isGood
+  }
+  get isErrorSignedOut() {
+    return this.responseCode === 401
+  }
+  get isSuccess() {
+    return this.isGood && ApiResponse.isSuccess(this)
+  }
 
   setError<TError = unknown>(errobj?: TError) {
     this.result = 'Error'
@@ -57,7 +80,7 @@ export class ApiResponse<T = unknown> implements IApiResponse<T> {
     }
   }
 
-  setSuccess(obj?: T) {
+  setSuccess(obj?: TData) {
     this.result = 'success'
 
     if (obj) {
