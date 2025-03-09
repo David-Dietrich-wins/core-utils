@@ -129,7 +129,7 @@ export function FirstCharCapitalFormatter(s: string): string {
 }
 
 export function formattedNumber(
-  val: number | string,
+  val?: number | string,
   toFixedLength = 2,
   prefix = '',
   suffix = ''
@@ -140,9 +140,9 @@ export function formattedNumber(
 
   let num = 0
   if (isString(val)) {
-    num = parseFloat(val as string)
+    num = parseFloat(val)
   } else {
-    num = val as number
+    num = val
   }
 
   if (num) {
@@ -157,7 +157,7 @@ export function formattedNumber(
   return ''
 }
 
-export function NumberFormatter(val: number, numDecimalPlaces = 2) {
+export function NumberFormatter(val?: number | string, numDecimalPlaces = 2) {
   return formattedNumber(val, numDecimalPlaces)
 }
 
@@ -169,8 +169,41 @@ export function DollarFormatter(val = 0, numDecimalPlaces = 2) {
   return toFixedPrefixed(val, numDecimalPlaces)
 }
 
+export function StockPriceFormatter(
+  price: number | string | null | undefined = 0,
+  showZeroValues = false,
+  numDecimalPlaces?: number
+) {
+  if (price || showZeroValues) {
+    return toFixedPrefixed(
+      price ?? 0,
+      isNullOrUndefined(numDecimalPlaces)
+        ? numDecimalPlaces
+        : price ?? 0 < 1
+        ? 4
+        : 2
+    )
+  }
+}
+
 export function PercentFormatter(val: number | string, numDecimalPlaces = 2) {
   return toFixedSuffixed(val, numDecimalPlaces, '%')
+}
+
+export function StockVolumeFormatter(
+  volume?: number | string,
+  showZeroValues = false,
+  numDecimalPlaces = 0
+) {
+  if (volume || showZeroValues) {
+    const num = NumberFormatter(
+      isNullOrUndefined(volume) ? 0 : volume,
+      numDecimalPlaces ?? 0
+    )
+    if (num || showZeroValues) {
+      return num
+    }
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

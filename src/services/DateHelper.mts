@@ -7,6 +7,7 @@ export const DEFAULT_DateTimeFormatLocalWithoutTimezone =
   'YYYY-MM-DDTHH:mm:ss.SSS'
 export const DEFAULT_DateTimeFormatForFiles = 'YYMMDD_HHmmss'
 export const DEFAULT_DateFormatForApiCalls = 'YYYY-MM-DD'
+export const DEFAULT_DateFormatForUi = 'D/M/YYYY'
 
 export class DateHelper {
   /**
@@ -147,6 +148,15 @@ export class DateHelper {
    */
   static DateFormatForApiCalls(date?: Date | number | string) {
     return DateHelper.FormatDateTime(DEFAULT_DateFormatForApiCalls, date)
+  }
+  /**
+   * Converts a Date object to a string in ISO format.
+   * If there is no date provided, undefined is returned.
+   * @param date Any format of date that can be converted to a Date object.
+   * @returns A string formatted to example - '230906_145201'
+   */
+  static DateFormatForUi(date?: Date | number | string) {
+    return DateHelper.FormatDateTime(DEFAULT_DateFormatForUi, date)
   }
 
   /**

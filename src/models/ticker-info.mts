@@ -33,12 +33,10 @@ export interface ISymbolSearch extends ISymbolName {
   exchangeShortName: string
 }
 
-export interface IAssetQuoteResponse extends ISymbolPriceVolume, ISymbolName {
+export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   // symbol: string    // GME,
   // name: string      // GameStop Corp.,
   // price: number     // 203.0601,
-  changesPercentage: number // -4.36,
-  change: number // -9.2499,
   dayLow: number // 201.35,
   dayHigh: number // 214.0353,
   yearHigh: number // 483,
@@ -227,9 +225,10 @@ export interface ICompanyProfile extends ISymbolPrice {
   ipoDate: string
 }
 
-export interface IGainerLoser extends ISymbolPrice, ISymbolName {
+export interface ISymbolPriceVolumeChanges extends ISymbolPrice, ISymbolName {
   change: number
   changesPercentage: number
+  volume: number
 }
 
 export interface IIpoCalendar extends ISymbol, IDate {
