@@ -7,7 +7,9 @@ import {
   isObject,
   safeArray,
   isNumeric,
+  safestr,
 } from './general.mjs'
+import { arrayElement, arrayFirst } from './array-helper.mjs'
 
 /**
  * Individually adds all same member names who are number together.
@@ -103,3 +105,229 @@ export function setMaxDecimalPlaces(
 
   return obj
 }
+
+export type FormatFunction = (val: unknown) => string
+
+export function toFixedPrefixed(
+  val: number | string,
+  toFixedLength = 2,
+  prefix = '$'
+): string {
+  return formattedNumber(val, toFixedLength, prefix, '')
+}
+
+export function toFixedSuffixed(
+  val: number | string,
+  toFixedLength = 2,
+  suffix = '%'
+): string {
+  return formattedNumber(val, toFixedLength, '', suffix)
+}
+
+export function FirstCharCapitalFormatter(s: string): string {
+  return (s || '').charAt(0).toUpperCase() + s.slice(1)
+}
+
+export function formattedNumber(
+  val: number | string,
+  toFixedLength = 2,
+  prefix = '',
+  suffix = ''
+): string {
+  if (isNullOrUndefined(val)) {
+    return ''
+  }
+
+  let num = 0
+  if (isString(val)) {
+    num = parseFloat(val as string)
+  } else {
+    num = val as number
+  }
+
+  if (num) {
+    const str = num.toFixed(toFixedLength)
+    if (str) {
+      const numToFix = parseFloat(str)
+
+      return `${prefix}${numToFix.toLocaleString()}${suffix}`
+    }
+  }
+
+  return ''
+}
+
+export function NumberFormatter(val: number, numDecimalPlaces = 2) {
+  return formattedNumber(val, numDecimalPlaces)
+}
+
+export function XFormatter(val: number | string, numDecimalPlaces = 2) {
+  return toFixedSuffixed(val, numDecimalPlaces, 'x')
+}
+
+export function DollarFormatter(val = 0, numDecimalPlaces = 2) {
+  return toFixedPrefixed(val, numDecimalPlaces)
+}
+
+export function PercentFormatter(val: number | string, numDecimalPlaces = 2) {
+  return toFixedSuffixed(val, numDecimalPlaces, '%')
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IConstructor<T> = new (...args: any[]) => T
+export type StringFunction = () => string
+
+/**
+ * Gets the top and left coordinates of the element passed in.
+ * Since there is no way to easily get the top and left,
+ * you need to add up all of the offsets to the top of the parent element chain.
+ * @param element An HTML or NativeElement to get top and left coordinates.
+ * @returns The top and left coordinates of element.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function elementTopLeftCoords(element: any): {
+  top: number
+  left: number
+} {
+  let top = 0
+  let left = 0
+  do {
+    top += element.offsetTop || 0
+    left += element.offsetLeft || 0
+    element = element.offsetParent
+  } while (element)
+
+  return {
+    top,
+    left,
+  }
+}
+
+export function getFirstNewWithException<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any[],
+  exceptionTextIfEmpty = ''
+): T {
+  const first = getInstance(theClass, arrayFirst(obj))
+  if (!first) {
+    throw new Error(
+      safestr(exceptionTextIfEmpty, 'Error getting first new object')
+    )
+  }
+
+  return first
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
+  return new theClass(...args)
+}
+
+export function getNewObject<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructorArgs: any[],
+  index = 0
+): T {
+  return (
+    getInstance(theClass, constructorArgs), arrayElement(constructorArgs, index)
+  )
+}
+
+/**
+ * Returns a number used for stock prices.
+ * This includes a minimum of 2 decimal places (if there is a mantissa).
+ * Will go 4 digits max on the mantissa.
+ * @param price The price or number to get a formatted stock price for.
+ * @return The formatted stock price.
+ */
+export function getStockPrice(
+  price: number,
+  maxDecimalPlaces?: number
+): string {
+  const defaultReturn = '0'
+
+  // const priceret = ''
+
+  if (!isNaN(price)) {
+    // if (price < 0) {
+    //   console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
+    // }
+
+    maxDecimalPlaces = maxDecimalPlaces ?? 4
+    const priceOriginal = +price
+    return new Intl.NumberFormat('en', {
+      maximumFractionDigits: maxDecimalPlaces,
+      minimumFractionDigits: maxDecimalPlaces > 1 ? 2 : maxDecimalPlaces,
+    }).format(priceOriginal)
+    // // Make sure we have something.
+    // const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
+    // // if (price < 0) {
+    // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
+    // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    // // }
+    // if (priceOriginalStr && priceOriginalStr.length) {
+    //   // split to get the mantissa.
+    //   let pricearr = priceOriginalStr.split('.');
+    //   // if (price < 0) {
+    //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //   // }
+    //   if (isArray(pricearr, 1)) {
+    //     // if (price < 0) {
+    //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //     // }
+    //     let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
+    //     let mantissalen = mantissa.length;
+
+    //     // Lop off any unneeded 0s.
+    //     if (mantissalen) {
+    //       // if (price < 0 && price > -1) {
+    //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //       // }
+    //       let lastchar = mantissa.charAt(mantissa.length - 1);
+    //       while ('0' === lastchar && mantissalen > 2) {
+    //         mantissa = mantissa.slice(0, -1);
+    //         mantissalen = mantissa.length;
+    //       }
+
+    //       if (hasData(mantissa) && mantissalen) {
+    //         // if (price < 0 && price > -1) {
+    //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
+    //         // }
+    //         priceret = priceOriginal.toFixed(mantissalen);
+    //       }
+    //     }
+
+    //     if (!priceret && hasData(pricearr[0])) {
+    //       priceret = priceOriginalStr;
+    //     }
+    //   }
+    // }
+  }
+
+  // if (priceret) {
+  //   // priceret = numberWithCommas(priceret);
+  //   // Lop off the .00 for now.
+  //   if (priceret.length > 3 && '.00' === priceret.substr(-3)) {
+  //     return priceret.substr(0, priceret.length - 3)
+  //   }
+
+  //   return priceret
+  // }
+
+  return defaultReturn
+}
+
+export function getStockPriceInDollars(
+  price: number,
+  maxDecimalPlaces = 4
+): string {
+  const dollar = '$' + getStockPrice(price, maxDecimalPlaces)
+
+  return dollar.replace('$-', '-$')
+}
+
+// export function numberWithCommas(x) {
+//   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+// }
