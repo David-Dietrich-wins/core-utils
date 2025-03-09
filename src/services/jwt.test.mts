@@ -8,6 +8,12 @@ import {
   IJwtWithUserId,
   FromHeaders,
   FromBearerToken,
+  JwtBase,
+  JwtWithSubject,
+  JwtFusionAuthClientCredentials,
+  JwtFusionAuthIdToken,
+  IJwtFusionAuthIdToken,
+  JwtTokenWithUserId,
 } from './jwt.mjs'
 import { safestr } from './general.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
@@ -199,13 +205,20 @@ describe('JwtAccessClient', () => {
     let jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
+    expect(jhelper.isUser).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['admin'],
     })
     jhelper = JwtAccessToken.Create(jwt)
-    expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
+    expect(jhelper.ApplicationRoles).toEqual(['admin'])
     expect(jhelper.isAdmin).toBeTruthy()
+    expect(jhelper.isUser).toBeTruthy()
+
+    jhelper = JwtAccessToken.Create({ ...jhelper, roles: ['user'] })
+    expect(jhelper.ApplicationRoles).toEqual(['user'])
+    expect(jhelper.isAdmin).toBeFalsy()
+    expect(jhelper.isUser).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
       roles: ['user'],
@@ -213,6 +226,7 @@ describe('JwtAccessClient', () => {
     jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
     expect(jhelper.isAdmin).toBeFalsy()
+    expect(jhelper.isUser).toBeTruthy()
   })
 
   test('others', () => {
@@ -234,4 +248,243 @@ describe('JwtAccessClient', () => {
     expect(jhelper.refreshToken).toBe('refresh')
     expect(jhelper.tenantId).toBe('tenant')
   })
+})
+
+test('JwtBase create', () => {
+  const jwtPayload = {
+    aud: 'audience',
+    exp: 123,
+    iat: 456,
+    iss: 'issuer',
+    jti: 'jti',
+    roles: ['user'],
+    scope: 'scope',
+    tid: 'tenant',
+  }
+
+  let jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+
+  let jhelper = JwtBase.Create(jwt)
+  expect(jhelper.audience).toBe('audience')
+  expect(jhelper.exp).toBe(123)
+  expect(jhelper.iat).toBe(456)
+  expect(jhelper.issuer).toBe('issuer')
+  expect(jhelper.jti).toBe('jti')
+  expect(jhelper.roles).toEqual(['user'])
+  expect(jhelper.scope).toBe('scope')
+  expect(jhelper.tenantId).toBe('tenant')
+
+  expect(jhelper.isAdmin).toBeFalsy()
+  expect(jhelper.isUser).toBeTruthy()
+
+  jwtPayload.iss = 'tradeplotter.com'
+  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jhelper = JwtBase.Create(jwt)
+
+  expect(jhelper.isAdmin).toBeFalsy()
+  expect(jhelper.isUser).toBeTruthy()
+  expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterUser).toBeTruthy()
+  expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeUser).toBeFalsy()
+
+  jwtPayload.roles = ['admin']
+  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jhelper = JwtBase.Create(jwt)
+
+  expect(jhelper.isAdmin).toBeTruthy()
+  expect(jhelper.isUser).toBeTruthy()
+  expect(jhelper.isTradePlotterAdmin).toBeTruthy()
+  expect(jhelper.isTradePlotterUser).toBeTruthy()
+  expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeUser).toBeFalsy()
+
+  jwtPayload.iss = 'politagree.com'
+  jwtPayload.roles = ['user']
+  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jhelper = JwtBase.Create(jwt)
+
+  expect(jhelper.isAdmin).toBeFalsy()
+  expect(jhelper.isUser).toBeTruthy()
+  expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterUser).toBeFalsy()
+  expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeUser).toBeTruthy()
+
+  jwtPayload.roles = ['admin']
+  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jhelper = JwtBase.Create(jwt)
+
+  expect(jhelper.isAdmin).toBeTruthy()
+  expect(jhelper.isUser).toBeTruthy()
+  expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterUser).toBeFalsy()
+  expect(jhelper.isPolitagreeAdmin).toBeTruthy()
+  expect(jhelper.isPolitagreeUser).toBeTruthy()
+})
+
+test('JwtWithSubject', () => {
+  const jwtPayload = {
+    aud: 'audience',
+    exp: 123,
+    iat: 456,
+    iss: 'issuer',
+    jti: 'jti',
+    roles: ['user'],
+    scope: 'scope',
+    tid: 'tenant',
+    sub: 'subject',
+  }
+
+  let jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+
+  let jhelper = JwtWithSubject.Create(jwt)
+  expect(jhelper.sub).toBe('subject')
+
+  jwtPayload.sub = 'new subject'
+  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jhelper = JwtWithSubject.Create(jwt)
+
+  expect(jhelper.sub).toBe('new subject')
+})
+
+test('JwtFusionAuthClientCredentials', () => {
+  const jwtPayload = {
+    aud: 'audience',
+    exp: 123,
+    iat: 456,
+    iss: 'tradeplotter.com',
+    jti: 'jti',
+    roles: ['user'],
+    permissions: ['user'],
+    scope: 'scope',
+    tid: 'tenant',
+    sub: 'subject',
+  }
+
+  const jwtsign = JwtSign(
+    jwtPayload,
+    safestr(TEST_Parameters_DEV.rsaPassPhrase)
+  )
+  const jwt = JwtFusionAuthClientCredentials.Create(jwtsign)
+
+  expect(jwt.permissions).toStrictEqual(['user'])
+  expect(jwt.roles).toStrictEqual(['user'])
+  expect(jwt.scope).toBe('scope')
+  expect(jwt.tenantId).toBe('tenant')
+  expect(jwt.sub).toBe('subject')
+  expect(jwt.audience).toBe('audience')
+  expect(jwt.exp).toBe(123)
+  expect(jwt.iat).toBe(456)
+  expect(jwt.iss).toBe('tradeplotter.com')
+  expect(jwt.issuer).toBe('tradeplotter')
+  expect(jwt.jti).toBe('jti')
+  expect(jwt.isAdmin).toBeFalsy()
+  expect(jwt.isUser).toBeTruthy()
+  expect(jwt.isTradePlotter).toBeTruthy()
+  expect(jwt.isTradePlotterAdmin).toBeFalsy()
+  expect(jwt.isTradePlotterUser).toBeTruthy()
+  expect(jwt.isPolitagree).toBeFalsy()
+  expect(jwt.isPolitagreeAdmin).toBeFalsy()
+  expect(jwt.isPolitagreeUser).toBeFalsy()
+})
+
+test('JwtFusionAuthIdToken with roles', () => {
+  const jwtPayload: IJwtFusionAuthIdToken = {
+    aud: 'audience',
+    exp: 123,
+    iat: 456,
+    iss: 'tradeplotter.com',
+    jti: 'jti',
+    roles: ['user'],
+    scope: 'scope',
+    tid: 'tenant',
+    sub: 'subject',
+
+    applicationId: 'application',
+    auth_time: 123,
+    sid: 'refresh',
+
+    active: true,
+    at_hash: 'at_hash',
+    authenticationType: 'JWT',
+    birthdate: '123',
+    c_hash: 'c_hash',
+    email: 'email',
+    email_verified: true,
+    family_name: 'family',
+    given_name: 'given',
+    middle_name: 'middle',
+    name: 'name',
+    nonce: 'nonce',
+    phone_number: 'phone',
+    picture: 'picture',
+    preferred_username: 'username',
+  }
+
+  const jwtsign = JwtSign(
+    jwtPayload,
+    safestr(TEST_Parameters_DEV.rsaPassPhrase)
+  )
+  const jwt = JwtFusionAuthIdToken.Create(jwtsign)
+  expect(jwt.applicationId).toBe('application')
+  expect(jwt.auth_time).toBe(123)
+  expect(jwt.sid).toBe('refresh')
+  expect(jwt.active).toBeTruthy()
+  expect(jwt.at_hash).toBe('at_hash')
+  expect(jwt.authenticationType).toBe('JWT')
+
+  expect(jwt.birthdate).toBe('123')
+  expect(jwt.c_hash).toBe('c_hash')
+  expect(jwt.email).toBe('email')
+  expect(jwt.email_verified).toBeTruthy()
+  expect(jwt.family_name).toBe('family')
+  expect(jwt.given_name).toBe('given')
+  expect(jwt.middle_name).toBe('middle')
+  expect(jwt.name).toBe('name')
+  expect(jwt.nonce).toBe('nonce')
+  expect(jwt.phone_number).toBe('phone')
+  expect(jwt.picture).toBe('picture')
+  expect(jwt.preferred_username).toBe('username')
+  expect(jwt.roles).toStrictEqual(['user'])
+  expect(jwt.scope).toBe('scope')
+  expect(jwt.tenantId).toBe('tenant')
+  expect(jwt.sub).toBe('subject')
+  expect(jwt.audience).toBe('audience')
+  expect(jwt.exp).toBe(123)
+  expect(jwt.iat).toBe(456)
+  expect(jwt.iss).toBe('tradeplotter.com')
+  expect(jwt.issuer).toBe('tradeplotter')
+  expect(jwt.jti).toBe('jti')
+  expect(jwt.isAdmin).toBeFalsy()
+  expect(jwt.isUser).toBeTruthy()
+  expect(jwt.isTradePlotter).toBeTruthy()
+  expect(jwt.isTradePlotterAdmin).toBeFalsy()
+  expect(jwt.isTradePlotterUser).toBeTruthy()
+  expect(jwt.isPolitagree).toBeFalsy()
+  expect(jwt.isPolitagreeAdmin).toBeFalsy()
+  expect(jwt.isPolitagreeUser).toBeFalsy()
+})
+
+test('JwtTokenWithUserId', () => {
+  const jwtPayload = {
+    aud: 'audience',
+    exp: 123,
+    iat: 456,
+    iss: 'tradeplotter.com',
+    jti: 'jti',
+    roles: ['user'],
+    scope: 'scope',
+    tid: 'tenant',
+  }
+
+  const jwtToken = JwtTokenWithUserId(
+    'myuserId',
+    TEST_Parameters_DEV.rsaPassPhrase,
+    jwtPayload
+  )
+
+  const jwt = JwtWithSubject.Create(jwtToken)
+
+  expect(jwt.FusionAuthUserId).toBe('myuserId')
 })

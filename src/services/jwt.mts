@@ -324,10 +324,9 @@ export class JwtBase implements IJwtBase {
     const safeRoles = safeArray<string>(this.roles)
     if (safeRoles.includes('admin')) {
       arrRoles.push('admin')
-      arrRoles.push('user')
     }
 
-    if (safeRoles.includes('user') && !arrRoles.includes('user')) {
+    if (safeRoles.includes('user')) {
       arrRoles.push('user')
     }
 
@@ -354,9 +353,6 @@ export class JwtBase implements IJwtBase {
     return safestr(this.iss).replace(new RegExp('.com$'), '')
   }
 
-  get isAdminForTradePlotter() {
-    return this.isAdmin && this.issuer
-  }
   get isPolitagree() {
     return CONST_IssuerPolitagree === this.iss
   }
