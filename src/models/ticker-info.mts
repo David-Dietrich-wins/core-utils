@@ -225,11 +225,14 @@ export interface ICompanyProfile extends ISymbolPrice {
   ipoDate: string
 }
 
-export interface ISymbolPriceVolumeChanges extends ISymbolPrice, ISymbolName {
+export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
   change: number
   changesPercentage: number
-  volume: number
 }
+
+export interface ISymbolPriceVolumeChanges<TVolume = number>
+  extends ISymbolPriceChanges,
+    IVolume<TVolume> {}
 
 export interface IIpoCalendar extends ISymbol, IDate {
   company: string

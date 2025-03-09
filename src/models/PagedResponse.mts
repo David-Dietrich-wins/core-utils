@@ -15,8 +15,26 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     }
   }
 
+  createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
+    return PagedResponse.CreateNewFromMap<T, Tout>(this, mapper)
+  }
+
+  static CreateFromIPagedResponse<T>(ret: IPagedResponse<T>) {
+    return new PagedResponse<T>(ret.dataPage, ret.totalCount)
+  }
+
   static CreateFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
     return new PagedResponse<T>(ret.obj?.dataPage, ret.obj?.totalCount)
+  }
+
+  static CreateNewFromMap<Tin, Tout>(
+    pagesIn: IPagedResponse<Tin>,
+    map: (pageIn: Tin) => Tout
+  ) {
+    return new PagedResponse<Tout>(
+      pagesIn.dataPage.map(map),
+      pagesIn.totalCount
+    )
   }
 
   static GetDataFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
