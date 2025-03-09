@@ -1,6 +1,7 @@
 import { Document, ObjectId } from 'bson'
 import { IWebState } from './WebState.mjs'
 import { Concrete, SearchSortDirection } from './types.mjs'
+import { ITicker } from './ticker-info.mjs'
 
 export type StringOrObjectId = string | ObjectId
 
@@ -111,4 +112,14 @@ export interface IWebStateResponse extends IWebState {
   pinKeyVault?: string
   rsaPublicKey?: string
   userId?: string
+}
+
+export interface IChartRunLogApiReturn extends ITicker {
+  frequency: string
+  period: string
+
+  startDate: number
+  endDate: number
+
+  created: Date
 }
