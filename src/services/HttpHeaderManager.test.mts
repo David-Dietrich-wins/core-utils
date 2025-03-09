@@ -7,6 +7,7 @@ import {
   HttpHeaderManagerBase,
 } from './HttpHeaderManager.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { JwtTokenWithUserId } from './jwt.mjs'
 
 test('getHeaderString', () => {
   const init: StringOrStringArrayObject = {
@@ -60,7 +61,7 @@ test('jwtToken', () => {
   const hm = new HttpHeaderManagerBase(init)
 
   const jwt = hm.jwtToken
-  expect(jwt?.FusionAuthUserId).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+  expect(jwt?.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
 
   init.authorization = ''
   expect(new HttpHeaderManagerBase(init).jwtToken).toBeUndefined()
@@ -68,7 +69,10 @@ test('jwtToken', () => {
 
 describe('userIdFromJwt', () => {
   test('raw header for JWT', () => {
-    const val = TEST_Parameters_DEV.jwt
+    const val = JwtTokenWithUserId(
+      TEST_Parameters_DEV.userIdGood.toString(),
+      TEST_Parameters_DEV.rsaPassPhrase
+    )
 
     const init: StringOrStringArrayObject = {
       [CONST_HttpHeaderAuthorization]: `Bearer ${val}`,
@@ -76,7 +80,7 @@ describe('userIdFromJwt', () => {
     const hm = new HttpHeaderManagerBase(init)
 
     const userid = hm.userId
-    expect(userid).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(userid).toBe(TEST_Parameters_DEV.userIdGood.toString())
   })
 
   test('userId is 0', () => {

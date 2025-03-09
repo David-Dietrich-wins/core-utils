@@ -24,7 +24,7 @@ export class HttpHeaderManagerBase {
     return bearerToken
   }
 
-  static BearerTokenParseStrict(token?: string) {
+  static BearerTokenParseStrict(token?: string | null) {
     const bearerToken = safestr(token)
     if (bearerToken.match(REGEX_Bearer)) {
       return HttpHeaderManagerBase.BearerTokenParse(bearerToken)

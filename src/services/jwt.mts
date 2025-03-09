@@ -176,7 +176,7 @@ export function JwtSign(
 }
 
 export function JwtTokenWithUserId(
-  userId: number,
+  userId: string,
   secretOrPrivateKey: string,
   overrides?: Partial<JwtPayload>
 ) {
@@ -191,7 +191,7 @@ export function JwtTokenWithUserId(
 
   const payload: JwtPayload = {
     ...{
-      userId,
+      sub: userId,
     },
     ...overrides,
   }
@@ -505,7 +505,7 @@ export function FromHeaders<TInterface extends IJwtBase, TNew extends JwtBase>(
   const iHeaders = headers as IncomingHttpHeaders
 
   if (hHeaders && isFunction(hHeaders.get)) {
-    bearerToken = safestr(
+    bearerToken = HttpHeaderManagerBase.BearerTokenParseStrict(
       hHeaders.get('Authorization') ?? hHeaders.get('authorization')
     )
   } else if (iHeaders) {

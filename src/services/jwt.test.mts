@@ -6,7 +6,6 @@ import {
   JwtSign,
   JwtVerify,
   IJwtWithUserId,
-  IJwtAccessToken,
   FromHeaders,
   FromBearerToken,
 } from './jwt.mjs'
@@ -14,8 +13,16 @@ import { safestr } from './general.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 
 describe('JwtDecode', () => {
+  let jwt = ''
+  beforeAll(() => {
+    jwt = JwtSign(
+      { userId: TEST_Parameters_DEV.userIdGood },
+      safestr(TEST_Parameters_DEV.rsaPassPhrase)
+    )
+  })
+
   test('good', () => {
-    const jwtdata = JwtDecode<IJwtWithUserId>(TEST_Parameters_DEV.jwt)
+    const jwtdata = JwtDecode<IJwtWithUserId>(jwt)
 
     expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
   })
@@ -36,18 +43,18 @@ describe('JwtDecode', () => {
 
     expect.assertions(3)
   })
-})
 
-test('JwtRetrieveUserId', () => {
-  const jwtdata = JwtRetrieveUserId(TEST_Parameters_DEV.jwt)
+  test('JwtRetrieveUserId', () => {
+    const jwtdata = JwtRetrieveUserId(jwt)
 
-  expect(jwtdata).toBe(TEST_Parameters_DEV.userIdGood)
-})
+    expect(jwtdata).toBe(TEST_Parameters_DEV.userIdGood)
+  })
 
-test('JwtDecode', () => {
-  const jwtdata: string | JwtPayload | null = JwtDecode(TEST_Parameters_DEV.jwt)
+  test('JwtDecode', () => {
+    const jwtdata: string | JwtPayload | null = JwtDecode(jwt)
 
-  expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  })
 })
 
 test('JwtSign', () => {
@@ -117,11 +124,9 @@ test('JwtVerify good', () => {
 
 describe('JwtAccessClient', () => {
   test('Constructor from token', () => {
-    const jwtdata = JwtDecode<IJwtAccessToken>(TEST_Parameters_DEV.jwt)
-
-    const jwt = new JwtAccessToken(jwtdata)
-
-    expect(jwt.FusionAuthUserId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(JwtAccessToken.Create(TEST_Parameters_DEV.jwt).email).toBe(
+      TEST_Parameters_DEV.userIdGoodEmail
+    )
   })
   test('Constructor from string', () => {
     const jwt = JwtAccessToken.Create(TEST_Parameters_DEV.jwt)
@@ -129,7 +134,7 @@ describe('JwtAccessClient', () => {
     expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
   })
   test('Constructor from null', () => {
-    expect(JwtAccessToken.Create('')).toThrow(
+    expect(() => JwtAccessToken.Create('')).toThrow(
       'Invalid security token when attempting to decode the JWT.'
     )
   })
@@ -152,7 +157,20 @@ describe('JwtAccessClient', () => {
       },
     } as unknown as Headers
 
-    expect(FromHeaders(JwtAccessToken, headers)).toThrow(
+    const jwt = FromHeaders(JwtAccessToken, headers)
+
+    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+  })
+
+  test('FromHeaders fail no Bearer', () => {
+    const headers = {
+      authorization: `${TEST_Parameters_DEV.jwt}`,
+      get: (key: string) => {
+        return headers[key]
+      },
+    } as unknown as Headers
+
+    expect(() => FromHeaders(JwtAccessToken, headers)).toThrow(
       'Invalid security token when attempting to decode the JWT.'
     )
   })
