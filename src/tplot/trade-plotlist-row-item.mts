@@ -2,7 +2,32 @@ import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { isObject, safeArray } from '../services/general.mjs'
 import { ITradePlot, TradePlot } from './trade-plot.mjs'
 
-export class TradePlotListRowItem extends TradePlot {
+export interface ITradePlotListRowItem extends ITradePlot {
+  profit?: number
+  patternCount?: number
+  targetLow?: number
+  targetHigh?: number
+  currentPrice?: number
+  previousClose?: number
+  openPrice?: number
+  quoteTimeInLong?: number
+  amountToTargetLow?: number
+  amountToTargetHigh?: number
+  percentToTargetLow?: number
+  percentToTargetHigh?: number
+  amountToGoal?: number
+  percentToGoal?: number
+  nextOrderNumber?: number
+  nextExpectedTriggerDate?: Date
+  prevExpectedTriggerDate?: Date
+  maxExpectedTriggerDate?: Date
+  minExpectedTriggerDate?: Date
+}
+
+export class TradePlotListRowItem
+  extends TradePlot
+  implements ITradePlotListRowItem
+{
   profit?: number
   patternCount = 0
   targetLow?: number
