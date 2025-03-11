@@ -1,13 +1,14 @@
 import { ICompany, PermittedUserConfigs } from '../index.mjs'
 
 export interface IUserInfo {
+  companies: ICompany[]
+  config: PermittedUserConfigs
   displayName: string
   email: string
   firstName: string
+  lastDashboardAccessed: string
   lastName: string
-  tickers: string[]
-  companies: ICompany[]
-  tokenExpireTime: number
   quoteEndpoint: string
-  config: PermittedUserConfigs
+  tickers: string[]
+  tokenExpireTime: number
 }
