@@ -7,7 +7,7 @@ export enum TileType {
   news = 'news',
   plotlist = 'plotlist',
   table = 'table',
-  ticker = 'ticker',
+  ticker = 'ticker-info',
 }
 
 export interface ITileConfig extends IId {

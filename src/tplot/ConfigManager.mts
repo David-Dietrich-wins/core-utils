@@ -112,6 +112,10 @@ export class ConfigManager {
     return safestr(ifNotExists)
   }
 
+  findScreen(screenName: string) {
+    return this.dashboards.screens.find((screen) => screen.name === screenName)
+  }
+
   static readonly allowedConfigs: PermittedUserConfigs = {
     useMinusEight: true,
     openFirstPlot: true,
