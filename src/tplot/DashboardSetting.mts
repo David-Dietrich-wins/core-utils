@@ -1,5 +1,9 @@
 import { safeArray } from '../services/general.mjs'
-import { IDashboardScreenSetting, IDashboardSetting } from './tp-items.mjs'
+import { IDashboardScreenSetting } from './DashboardScreenSetting.mjs'
+
+export interface IDashboardSetting {
+  screens: IDashboardScreenSetting[]
+}
 
 export class DashboardSetting implements IDashboardSetting {
   constructor(public screens: IDashboardScreenSetting[] = []) {

@@ -7,7 +7,6 @@ import {
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
 import { hasData, safestr } from '../services/general.mjs'
-import { PermittedUserConfigs } from '../index.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IConfigTable<T = any>
@@ -88,115 +87,5 @@ export class ConfigTable<TValue = boolean>
     const nv: NameVal<TValue> = { name: this.k, val: this.v }
 
     return nv
-  }
-}
-
-type PermittedConfigNames = keyof PermittedUserConfigs
-
-export class ConfigManager {
-  static readonly allowedConfigs: PermittedUserConfigs = {
-    useMinusEight: true,
-    openFirstPlot: true,
-    hideTickerBar: false,
-    showPriceChangeInTickerBar: false,
-    headerTickerBarIndex: { showAsset: true, showCrypto: true },
-    headerTickerBarUser: { tickers: ['AAPL'] },
-    hideTooltips: false,
-    chartColorUp: '#00ff00',
-    chartColorDown: '#ff0000',
-    dashboards: {
-      screens: [
-        {
-          id: 'default',
-          name: 'default',
-          tiles: [
-            {
-              id: 'initial-tile-left',
-              cols: 1,
-              name: 'Trade Plotter',
-              rows: 2,
-              color: 'white',
-              index: 0,
-              value: 'initial-tile-left',
-              typeid: 6,
-            },
-            {
-              id: 'initial-tile-right',
-              cols: 1,
-              name: 'Trade Plotter',
-              rows: 2,
-              color: 'white',
-              index: 0,
-              value: 'initial-tile-right',
-              typeid: 7,
-            },
-          ],
-        },
-        // Example for a chart and a plotlist.
-        // [
-        //   {
-        //     id: 'AAPL',
-        //     index: 0,
-        //     typeid: 3,
-        //     cols: 1,
-        //     rows: 2
-        //   },
-        //   {
-        //     id: 'Trade Plotter',
-        //     index: 2,
-        //     typeid: 1,
-        //     cols: 2,
-        //     rows: 2
-        //   }
-        // ],
-      ],
-    },
-  }
-
-  static readonly KEY_Dashboards = 'dashboards'
-
-  static permittedConfigNames = Object.keys(
-    ConfigManager.allowedConfigs
-  ) as PermittedConfigNames[]
-  static getDefaultValue(name: PermittedConfigNames) {
-    return ConfigManager.allowedConfigs[name]
-  }
-
-  static getDefaultConfig(
-    configName: PermittedConfigNames,
-    userid: StringOrObjectId,
-    updatedby?: string,
-    updated?: Date,
-    createdby?: string,
-    created?: Date
-  ) {
-    return ConfigManager.getNewConfig(
-      userid,
-      configName,
-      updatedby,
-      updated,
-      createdby,
-      created
-    )
-  }
-  static getNewConfig(
-    userid: StringOrObjectId,
-    name: PermittedConfigNames,
-    updatedby?: string,
-    updated?: Date,
-    createdby?: string,
-    created?: Date
-  ) {
-    const defval = ConfigManager.getDefaultValue(name)
-
-    return new ConfigTable<typeof defval>(
-      userid,
-      name as string,
-      defval,
-      updatedby,
-      updated,
-      createdby,
-      created
-    )
   }
 }
