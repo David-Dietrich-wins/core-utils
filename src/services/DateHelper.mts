@@ -200,10 +200,6 @@ export class DateHelper {
   }
 
   static UnixTimeFormatForTheDow(val: number) {
-    if (isNullOrUndefined(val)) {
-      return null
-    }
-
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
   }
 }

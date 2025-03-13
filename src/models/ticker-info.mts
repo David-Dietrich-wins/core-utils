@@ -593,3 +593,10 @@ export type AssetQuoteWithScore = AssetQuoteWithChanges & {
   matches: number
   scorePercentage?: number
 }
+
+export type CompanyAssetInfo = {
+  execs: ICompanyExecutive[]
+  info: ICompanyInfo
+  quote?: IAssetQuoteResponse
+  ratios?: IFinancialRatios
+}
