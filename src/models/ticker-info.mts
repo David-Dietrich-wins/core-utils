@@ -542,6 +542,70 @@ export interface IRatio extends ISymbol, IDate {
   priceFairValue: number
 }
 
+export interface IRatioNew extends ISymbol, IDate {
+  fiscalYear: string
+  period: string
+  reportedCurrency: string
+  grossProfitMargin: number
+  ebitMargin: number
+  ebitdaMargin: number
+  operatingProfitMargin: number
+  pretaxProfitMargin: number
+  continuousOperationsProfitMargin: number
+  netProfitMargin: number
+  bottomLineProfitMargin: number
+  receivablesTurnover: number
+  payablesTurnover: number
+  inventoryTurnover: number
+  fixedAssetTurnover: number
+  assetTurnover: number
+  currentRatio: number
+  quickRatio: number
+  solvencyRatio: number
+  cashRatio: number
+  priceToEarningsRatio: number
+  priceToEarningsGrowthRatio: number
+  forwardPriceToEarningsGrowthRatio: number
+  priceToBookRatio: number
+  priceToSalesRatio: number
+  priceToFreeCashFlowRatio: number
+  priceToOperatingCashFlowRatio: number
+  debtToAssetsRatio: number
+  debtToEquityRatio: number
+  debtToCapitalRatio: number
+  longTermDebtToCapitalRatio: number
+  financialLeverageRatio: number
+  workingCapitalTurnoverRatio: number
+  operatingCashFlowRatio: number
+  operatingCashFlowSalesRatio: number
+  freeCashFlowOperatingCashFlowRatio: number
+  debtServiceCoverageRatio: number
+  interestCoverageRatio: number
+  shortTermOperatingCashFlowCoverageRatio: number
+  operatingCashFlowCoverageRatio: number
+  capitalExpenditureCoverageRatio: number
+  dividendPaidAndCapexCoverageRatio: number
+  dividendPayoutRatio: number
+  dividendYield: number
+  dividendYieldPercentage: number
+  revenuePerShare: number
+  netIncomePerShare: number
+  interestDebtPerShare: number
+  cashPerShare: number
+  bookValuePerShare: number
+  tangibleBookValuePerShare: number
+  shareholdersEquityPerShare: number
+  operatingCashFlowPerShare: number
+  capexPerShare: number
+  freeCashFlowPerShare: number
+  netIncomePerEBT: number
+  ebtPerEbit: number
+  priceToFairValue: number
+  debtToMarketCap: number
+  effectiveTaxRate: number
+  enterpriseValueMultiple: number
+}
+
 export interface IFinancialRatios extends IDate {
   cashFlowIndicatorRatios: IRatioCashFlow
   debtRatios: IRatioDebt
@@ -598,5 +662,5 @@ export type CompanyAssetInfo = {
   execs: ICompanyExecutive[]
   info: ICompanyInfo
   quote?: IAssetQuoteResponse
-  ratios?: IFinancialRatios
+  ratios?: IRatio
 }

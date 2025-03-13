@@ -8,6 +8,7 @@ import {
   safeArray,
   isNumeric,
   safestr,
+  getAsNumber,
 } from './general.mjs'
 import { arrayElement, arrayFirst } from './array-helper.mjs'
 
@@ -133,7 +134,7 @@ export function formattedNumber(
   toFixedLength = 2,
   prefix = '',
   suffix = ''
-): string {
+) {
   if (isNullOrUndefined(val)) {
     return ''
   }
@@ -188,6 +189,13 @@ export function StockPriceFormatter(
 
 export function PercentFormatter(val: number | string, numDecimalPlaces = 2) {
   return toFixedSuffixed(val, numDecimalPlaces, '%')
+}
+
+export function PercentTimes100Formatter(
+  val: number | string,
+  numDecimalPlaces = 2
+) {
+  return PercentFormatter(getAsNumber(val) * 100, numDecimalPlaces)
 }
 
 export function StockVolumeFormatter(
