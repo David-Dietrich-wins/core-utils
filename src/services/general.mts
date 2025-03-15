@@ -407,7 +407,7 @@ export function getNumberString(
   maxDecimalPlaces = maxDecimalPlaces || 0
   minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
 
-  return new Intl.NumberFormat('en', {
+  return new Intl.NumberFormat('en-US', {
     maximumFractionDigits: maxDecimalPlaces,
     minimumFractionDigits: minDecimalPlaces,
   }).format(num)

@@ -1,5 +1,6 @@
 import {
   getAsNumber,
+  getNumberString,
   isArray,
   isNullOrUndefined,
   isNumber,
@@ -113,7 +114,7 @@ export function toFixedPrefixed(
   toFixedLength = 2,
   prefix = '$'
 ) {
-  return formattedNumber(val, toFixedLength, prefix, '')
+  return prefix + getNumberString(val, toFixedLength)
 }
 
 export function toFixedSuffixed(
@@ -121,7 +122,7 @@ export function toFixedSuffixed(
   toFixedLength = 2,
   suffix = '%'
 ) {
-  return formattedNumber(val, toFixedLength, '', suffix)
+  return getNumberString(val, toFixedLength) + suffix
 }
 
 export function FirstCharCapitalFormatter(s: string) {
