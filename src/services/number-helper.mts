@@ -1,16 +1,15 @@
 import {
-  runOnAllMembers,
-  isString,
-  isNumber,
-  isNullOrUndefined,
-  isArray,
-  isObject,
-  safeArray,
-  isNumeric,
-  safestr,
   getAsNumber,
+  isArray,
+  isNullOrUndefined,
+  isNumber,
+  isNumeric,
+  isObject,
+  isString,
+  runOnAllMembers,
+  safeArray,
 } from './general.mjs'
-import { arrayElement, arrayFirst } from './array-helper.mjs'
+import { capitalizeFirstLetter } from './string-helper.mjs'
 
 /**
  * Individually adds all same member names who are number together.
@@ -113,7 +112,7 @@ export function toFixedPrefixed(
   val: number | string,
   toFixedLength = 2,
   prefix = '$'
-): string {
+) {
   return formattedNumber(val, toFixedLength, prefix, '')
 }
 
@@ -121,12 +120,12 @@ export function toFixedSuffixed(
   val: number | string,
   toFixedLength = 2,
   suffix = '%'
-): string {
+) {
   return formattedNumber(val, toFixedLength, '', suffix)
 }
 
-export function FirstCharCapitalFormatter(s: string): string {
-  return (s || '').charAt(0).toUpperCase() + s.slice(1)
+export function FirstCharCapitalFormatter(s: string) {
+  return capitalizeFirstLetter(s)
 }
 
 export function formattedNumber(
@@ -149,9 +148,7 @@ export function formattedNumber(
   if (num) {
     const str = num.toFixed(toFixedLength)
     if (str) {
-      const numToFix = parseFloat(str)
-
-      return `${prefix}${numToFix.toLocaleString()}${suffix}`
+      return `${prefix}${str}${suffix}`
     }
   }
 
@@ -182,10 +179,10 @@ export function StockPriceFormatter(
     return toFixedPrefixed(
       price ?? 0,
       isNullOrUndefined(numDecimalPlaces)
-        ? numDecimalPlaces
-        : price ?? 0 < 1
-        ? 4
-        : 2
+        ? Math.abs(getAsNumber(price)) < 1
+          ? 4
+          : 2
+        : numDecimalPlaces
     )
   }
 }
@@ -217,10 +214,6 @@ export function StockVolumeFormatter(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IConstructor<T> = new (...args: any[]) => T
-export type StringFunction = () => string
-
 /**
  * Gets the top and left coordinates of the element passed in.
  * Since there is no way to easily get the top and left,
@@ -247,38 +240,6 @@ export function elementTopLeftCoords(element: any): {
   }
 }
 
-export function getFirstNewWithException<T>(
-  theClass: IConstructor<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obj: any[],
-  exceptionTextIfEmpty = ''
-): T {
-  const first = getInstance(theClass, arrayFirst(obj))
-  if (!first) {
-    throw new Error(
-      safestr(exceptionTextIfEmpty, 'Error getting first new object')
-    )
-  }
-
-  return first
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
-  return new theClass(...args)
-}
-
-export function getNewObject<T>(
-  theClass: IConstructor<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructorArgs: any[],
-  index = 0
-): T {
-  return (
-    getInstance(theClass, constructorArgs), arrayElement(constructorArgs, index)
-  )
-}
-
 /**
  * Returns a number used for stock prices.
  * This includes a minimum of 2 decimal places (if there is a mantissa).
@@ -286,10 +247,7 @@ export function getNewObject<T>(
  * @param price The price or number to get a formatted stock price for.
  * @return The formatted stock price.
  */
-export function getStockPrice(
-  price: number,
-  maxDecimalPlaces?: number
-): string {
+export function getStockPrice(price: number, maxDecimalPlaces?: number) {
   const defaultReturn = '0'
 
   // const priceret = ''
@@ -301,6 +259,7 @@ export function getStockPrice(
 
     maxDecimalPlaces = maxDecimalPlaces ?? 4
     const priceOriginal = +price
+
     return new Intl.NumberFormat('en', {
       maximumFractionDigits: maxDecimalPlaces,
       minimumFractionDigits: maxDecimalPlaces > 1 ? 2 : maxDecimalPlaces,
@@ -363,10 +322,7 @@ export function getStockPrice(
   return defaultReturn
 }
 
-export function getStockPriceInDollars(
-  price: number,
-  maxDecimalPlaces = 4
-): string {
+export function getStockPriceInDollars(price: number, maxDecimalPlaces = 4) {
   const dollar = '$' + getStockPrice(price, maxDecimalPlaces)
 
   return dollar.replace('$-', '-$')

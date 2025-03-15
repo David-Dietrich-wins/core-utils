@@ -6,6 +6,8 @@ export type GenericCallback<T = unknown> = (...args: any[]) => T
 
 export type ArrayOrSingle<T> = T | T[]
 
+export type StringFunction = () => string
+
 export type CreateImmutable<Type> = {
   +readonly [Property in keyof Type]: Type[Property]
 }
@@ -28,6 +30,9 @@ export type StringOrStringArray = ArrayOrSingle<string>
 
 // Function App and/or Express request header types.
 export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IConstructor<T> = new (...args: any[]) => T
 
 export type ApiProps = {
   baseUrl: string

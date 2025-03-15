@@ -4,10 +4,13 @@ import {
   hasData,
   isNullOrUndefined,
   safeJsonToString,
+  safestr,
   safestrLowercase,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/interfaces.mjs'
+import { IConstructor } from '../models/types.mjs'
+import { arrayElement, arrayFirst } from './array-helper.mjs'
 
 export function CloneObjectWithId<T extends IId>(
   objectWithId: Readonly<T>,
@@ -157,4 +160,36 @@ export function ObjectTypesToString(
   }
 
   return etoString
+}
+
+export function getFirstNewWithException<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any[],
+  exceptionTextIfEmpty = ''
+): T {
+  const first = getInstance(theClass, arrayFirst(obj))
+  if (!first) {
+    throw new Error(
+      safestr(exceptionTextIfEmpty, 'Error getting first new object')
+    )
+  }
+
+  return first
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
+  return new theClass(...args)
+}
+
+export function getNewObject<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructorArgs: any[],
+  index = 0
+): T {
+  return (
+    getInstance(theClass, constructorArgs), arrayElement(constructorArgs, index)
+  )
 }
