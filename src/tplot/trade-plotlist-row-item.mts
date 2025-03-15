@@ -5,6 +5,7 @@ import { ITradePlot, TradePlot } from './trade-plot.mjs'
 export interface ITradePlotListRowItem extends ITradePlot {
   profit?: number
   patternCount?: number
+  numSubplots: number
   targetLow?: number
   targetHigh?: number
   currentPrice?: number
@@ -29,7 +30,8 @@ export class TradePlotListRowItem
   implements ITradePlotListRowItem
 {
   profit?: number
-  patternCount = 0
+  patternCount: number
+  numSubplots: number
   targetLow?: number
   targetHigh?: number
   currentPrice?: number
@@ -78,6 +80,8 @@ export class TradePlotListRowItem
     this.prevExpectedTriggerDate = this.getPrevExpectedTriggerDate(dateNow)
     this.maxExpectedTriggerDate = this.getMaxExpectedTriggerDate(dateNow)
     this.minExpectedTriggerDate = this.getMinExpectedTriggerDate(dateNow)
+
+    this.numSubplots = safeArray(this.subplots).length
   }
 
   static GetProfitForRowItems(rows: TradePlotListRowItem[]) {
