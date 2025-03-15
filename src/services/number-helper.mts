@@ -139,18 +139,12 @@ export function formattedNumber(
     return ''
   }
 
-  let num = 0
-  if (isString(val)) {
-    num = parseFloat(val)
-  } else {
-    num = val
-  }
+  const num = isString(val) ? parseFloat(val) : val
 
   if (num) {
-    const str = num.toFixed(toFixedLength)
-    if (str) {
-      return `${prefix}${str}${suffix}`
-    }
+    const str = getNumberString(num, toFixedLength)
+
+    return `${prefix}${str}${suffix}`
   }
 
   return ''
@@ -158,6 +152,9 @@ export function formattedNumber(
 
 export function NumberFormatter(val?: number | string, numDecimalPlaces = 2) {
   return formattedNumber(val, numDecimalPlaces)
+}
+export function NumberFormatterNoDecimal(val?: number | string) {
+  return formattedNumber(val, 0)
 }
 
 export function XFormatter(val: number | string, numDecimalPlaces = 2) {
