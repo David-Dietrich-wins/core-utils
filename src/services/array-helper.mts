@@ -57,6 +57,25 @@ export function arrayFindById<T extends IId<Tid>, Tid = T['id']>(
  * Return the object with the given id from the array.
  * @param arrItems The array to search for the ids.
  * @param id id to search for in the arrItems list.
+ * @returns The object with the given name. If not found, undefined is returned.
+ */
+export function arrayFindIndexOf<T extends IId<Tid>, Tid = T['id']>(
+  arrItems?: ArrayOrSingle<T> | null,
+  id?: Tid
+) {
+  if (id) {
+    const index = safeArray(arrItems)
+      .map((x) => x.id)
+      .indexOf(id)
+
+    return index === -1 ? undefined : index
+  }
+}
+
+/**
+ * Return the object with the given id from the array.
+ * @param arrItems The array to search for the ids.
+ * @param id id to search for in the arrItems list.
  * @returns The name of the found item. If not found, undefined is returned.
  */
 export function arrayFindNameById<
