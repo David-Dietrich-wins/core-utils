@@ -166,7 +166,10 @@ export function XFormatter(val: number | string, numDecimalPlaces = 2) {
   return toFixedSuffixed(val, numDecimalPlaces, 'x')
 }
 
-export function DollarFormatter(val = 0, numDecimalPlaces = 2) {
+export function DollarFormatter(
+  val: number | string = 0,
+  numDecimalPlaces = 2
+) {
   return toFixedPrefixed(val, numDecimalPlaces)
 }
 
