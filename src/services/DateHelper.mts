@@ -7,7 +7,8 @@ export const DEFAULT_DateTimeFormatLocalWithoutTimezone =
   'YYYY-MM-DDTHH:mm:ss.SSS'
 export const DEFAULT_DateTimeFormatForFiles = 'YYMMDD_HHmmss'
 export const DEFAULT_DateFormatForApiCalls = 'YYYY-MM-DD'
-export const DEFAULT_DateFormatForUi = 'D/M/YYYY'
+export const DEFAULT_DateFormatForUi = 'M/D/YYYY'
+export const DEFAULT_DateFormatForUi2DigitYear = 'M/D/YY'
 
 export class DateHelper {
   /**
@@ -155,8 +156,13 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForUi(date?: Date | number | string) {
-    return DateHelper.FormatDateTime(DEFAULT_DateFormatForUi, date)
+  static DateFormatForUi(date?: Date | number | string, showFullYear = false) {
+    return DateHelper.FormatDateTime(
+      showFullYear
+        ? DEFAULT_DateFormatForUi
+        : DEFAULT_DateFormatForUi2DigitYear,
+      date
+    )
   }
 
   /**
