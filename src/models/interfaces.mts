@@ -87,7 +87,7 @@ export interface IEventLogin extends ICreatedBy, IUserId {
 
 export interface ISearchRequestView {
   term: string
-  filter: string
+  sortColumn: string
   sortDirection: SearchSortDirection
   limit: number
   offset: number

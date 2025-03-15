@@ -3,7 +3,7 @@ import { DefaultSearchRequestView } from './defaults.mjs'
 test('DefaultSearchRequestView', () => {
   expect(DefaultSearchRequestView()).toEqual({
     term: '',
-    filter: '',
+    sortColumn: '',
     sortDirection: 'asc',
     limit: 0,
     offset: 0,
@@ -15,7 +15,7 @@ test('DefaultSearchRequestView', () => {
   expect(
     DefaultSearchRequestView({
       term: 'term',
-      filter: 'filter',
+      sortColumn: 'filter',
       sortDirection: 'desc',
       limit: 1,
       offset: 2,
@@ -25,7 +25,7 @@ test('DefaultSearchRequestView', () => {
     })
   ).toStrictEqual({
     term: 'term',
-    filter: 'filter',
+    sortColumn: 'filter',
     sortDirection: 'desc',
     limit: 1,
     offset: 2,

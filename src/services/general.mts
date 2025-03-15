@@ -1241,8 +1241,8 @@ export function toHex(decimal?: number, chars = 2) {
  * @returns A safely constructed URL joined with a /.
  */
 export function urlJoin(
-  baseUrl: string,
-  relativePath?: string,
+  baseUrl?: string | null,
+  relativePath?: string | null,
   addTrailingSlash = true
 ) {
   let url = safestr(baseUrl)

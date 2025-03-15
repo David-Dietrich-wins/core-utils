@@ -5,7 +5,7 @@ export function DefaultSearchRequestView(
 ) {
   const DEFAULT_SearchRequestView: ISearchRequestView = {
     term: '',
-    filter: '',
+    sortColumn: '',
     sortDirection: 'asc',
     limit: 0,
     offset: 0,
