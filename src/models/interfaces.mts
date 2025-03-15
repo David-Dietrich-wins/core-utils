@@ -1,6 +1,6 @@
 import { Document, ObjectId } from 'bson'
 import { IWebState } from './WebState.mjs'
-import { Concrete, SearchSortDirection } from './types.mjs'
+import { SearchSortDirection } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 
 export type StringOrObjectId = string | ObjectId
@@ -37,7 +37,7 @@ export interface IUserIdOptional<T = StringOrObjectId> {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IUserId<T = StringOrObjectId>
-  extends Concrete<IUserIdOptional<T>> {}
+  extends Required<IUserIdOptional<T>> {}
 
 export interface ITableUserId extends ITableId, IUserId {}
 

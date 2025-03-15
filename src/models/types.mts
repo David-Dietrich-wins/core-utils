@@ -6,10 +6,6 @@ export type GenericCallback<T = unknown> = (...args: any[]) => T
 
 export type ArrayOrSingle<T> = T | T[]
 
-export type Concrete<Type> = {
-  [Property in keyof Type]-?: Type[Property]
-}
-
 export type CreateImmutable<Type> = {
   +readonly [Property in keyof Type]: Type[Property]
 }

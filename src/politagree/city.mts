@@ -1,9 +1,8 @@
 import { IName, ISlug } from '../models/interfaces.mjs'
-import { Concrete } from '../models/types.mjs'
 import { isObject } from '../services/general.mjs'
 import { IHasPolitiscales, IPolitiscale } from './politiscale.mjs'
 
-// export interface ICity extends I_Id, IName, Concrete<IHasPolitiscales>, ISlug {
+// export interface ICity extends I_Id, IName, Required<IHasPolitiscales>, ISlug {
 //   city: string
 //   description: string
 //   sourceUrl: string
@@ -11,7 +10,7 @@ import { IHasPolitiscales, IPolitiscale } from './politiscale.mjs'
 // }
 
 //  ITableId,
-export interface ICity extends IName, ISlug, Concrete<IHasPolitiscales> {
+export interface ICity extends IName, ISlug, Required<IHasPolitiscales> {
   city: string
   description: string
   sourceUrl: string
