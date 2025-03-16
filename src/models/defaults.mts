@@ -1,7 +1,8 @@
+import { DefaultWithOverrides } from '../index.mjs'
 import { ISearchRequestView } from './interfaces.mjs'
 
 export function DefaultSearchRequestView(
-  overrides?: Partial<ISearchRequestView>
+  overrides?: Partial<ISearchRequestView> | null
 ) {
   const DEFAULT_SearchRequestView: ISearchRequestView = {
     term: '',
@@ -14,6 +15,5 @@ export function DefaultSearchRequestView(
     pageSize: 0,
   }
 
-  const ret: ISearchRequestView = { ...DEFAULT_SearchRequestView, ...overrides }
-  return ret
+  return DefaultWithOverrides(DEFAULT_SearchRequestView, overrides)
 }

@@ -5,7 +5,7 @@ import DailyRotateFile, {
 } from 'winston-daily-rotate-file'
 import { hasData, safestr, safestrTrim } from './general.mjs'
 import { DateHelper } from './DateHelper.mjs'
-import { ObjectTypesToString } from './object-helper.mjs'
+import { DefaultWithOverrides, ObjectTypesToString } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 
 const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH'
@@ -161,10 +161,9 @@ export class LogManager {
       rotateBaseFileName: '',
       showConsole: true,
       suffixDatePattern: DEFAULT_RotateDatePattern,
-      ...overrides,
     }
 
-    return defaultOptions
+    return DefaultWithOverrides(defaultOptions, overrides)
   }
 
   static TransportFileLogger(

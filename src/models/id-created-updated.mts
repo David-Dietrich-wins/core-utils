@@ -1,25 +1,25 @@
-import { isNullOrUndefined, isObject } from '../services/general.mjs'
+import { isObject } from '../services/general.mjs'
 import { ICreatedBy, IId, IUpdatedBy } from './interfaces.mjs'
 
 export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
-export interface IIdCreatedUpdated<Tid = string> extends IIdCreated<Tid>, IUpdatedBy {}
+export interface IIdCreatedUpdated<Tid = string>
+  extends IIdCreated<Tid>,
+    IUpdatedBy {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {
-  id?: Tid
+  id!: Tid
   createdby = 'IdCreated'
   created = new Date()
 
   constructor(
-    id: Tid | IIdCreated<Tid> | undefined,
+    id: Tid | IIdCreated<Tid>,
     createdby = 'IdCreated',
     created = new Date()
   ) {
-    if (id && isObject(id)) {
+    if (isObject(id)) {
       this.copyFromDatabase(id as IIdCreated<Tid>)
     } else {
-      if (!isNullOrUndefined(id)) {
-        this.id = id as Tid
-      }
+      this.id = id as Tid
 
       this.created = created
       this.createdby = createdby
@@ -41,7 +41,7 @@ export class IdCreatedUpdated<Tid = string>
   updated = new Date()
 
   constructor(
-    id: Tid | IIdCreatedUpdated<Tid> | undefined,
+    id: Tid | IIdCreatedUpdated<Tid>,
     createdby = 'IdCreatedUpdated',
     created = new Date(),
     updatedby = 'IdCreatedUpdated',

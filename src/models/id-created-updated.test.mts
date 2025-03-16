@@ -32,7 +32,7 @@ test('IdCreated good with object', () => {
 })
 
 test('IdCreated undefined id', () => {
-  const id = undefined
+  const id = 0
   const createdBy = `test-create-${suffix}`
   const created = new Date()
 

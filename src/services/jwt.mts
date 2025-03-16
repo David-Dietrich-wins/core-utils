@@ -9,7 +9,8 @@ import jwt, {
 import { isFunction, isString, safeArray, safestr } from './general.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
-import { AppException } from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { DefaultWithOverrides } from './object-helper.mjs'
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
@@ -189,12 +190,14 @@ export function JwtTokenWithUserId(
     header,
   }
 
-  const payload: JwtPayload = {
-    ...{
-      sub: userId,
+  const payload = DefaultWithOverrides<JwtPayload>(
+    {
+      ...{
+        sub: userId,
+      },
     },
-    ...overrides,
-  }
+    overrides
+  )
 
   const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
 
@@ -215,12 +218,14 @@ export function JwtTokenWithEmail(
     header,
   }
 
-  const payload: JwtPayload = {
-    ...{
-      email,
+  const payload = DefaultWithOverrides<JwtPayload>(
+    {
+      ...{
+        email,
+      },
     },
-    ...overrides,
-  }
+    overrides
+  )
 
   const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
 
@@ -314,8 +319,7 @@ export class JwtBase implements IJwtBase {
       tid: '',
     }
 
-    const ret: IJwtBase = { ...jwt, ...overrides }
-    return ret
+    return DefaultWithOverrides(jwt, overrides)
   }
 
   get ApplicationRoles() {
@@ -399,8 +403,7 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
       },
     }
 
-    const ret: IJwtWithSubject = { ...jwt, ...overrides }
-    return ret
+    return DefaultWithOverrides(jwt, overrides)
   }
 
   get FusionAuthUserId() {
@@ -448,8 +451,7 @@ export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
       },
     }
 
-    const ret: IJwtAccessToken = { ...jwt, ...overrides }
-    return ret
+    return DefaultWithOverrides(jwt, overrides)
   }
 
   get authenticationTime() {
@@ -487,8 +489,7 @@ export class JwtFusionAuthClientCredentials
       },
     }
 
-    const ret: IJwtFusionAuthClientCredentials = { ...jwt, ...overrides }
-    return ret
+    return DefaultWithOverrides(jwt, overrides)
   }
 }
 
@@ -576,7 +577,6 @@ export class JwtFusionAuthIdToken
       },
     }
 
-    const ret: IJwtFusionAuthIdToken = { ...jwt, ...overrides }
-    return ret
+    return DefaultWithOverrides(jwt, overrides)
   }
 }

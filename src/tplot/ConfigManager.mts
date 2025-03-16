@@ -1,4 +1,10 @@
-import { AppException, arrayFirst } from '../index.mjs'
+import {
+  AppException,
+  arrayFirst,
+  IdName,
+  IdNameValue,
+  IKeyValueShort,
+} from '../index.mjs'
 import { ConfigTable, IConfigTable } from '../models/ConfigTable.mjs'
 import { StringOrObjectId } from '../models/interfaces.mjs'
 import {
@@ -10,6 +16,49 @@ import {
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { PermittedUserConfigs } from './tp-items.mjs'
+
+export type ConfigTickerInfo = {
+  selectedTab: string
+  selectedPeopleTab: string
+  selectedRatioTab: string
+}
+
+export type IdeasSelectedOptions =
+  | 'top-gainers'
+  | 'most-active'
+  | 'top-losers'
+  | 'etfs'
+  | 'spacs'
+  | 'wsb'
+export const IdeasSelectedType: IKeyValueShort<
+  IdName<number, IdeasSelectedOptions>
+> = {
+  k: 'idea-tab-selected',
+  v: { id: 0, name: 'most-active' },
+}
+
+export type CryptoIdeasSelectedOptions = 'crypto' | 'nft' | 'spac' | 'wsb'
+export const CryptoIdeasSelectedType: IKeyValueShort<CryptoIdeasSelectedOptions> =
+  {
+    k: 'idea-crypto-tab-selected',
+    v: 'crypto',
+  }
+
+export const TickerInfo: IdNameValue<ConfigTickerInfo> = {
+  id: 'ticker-info',
+  name: 'Ticker Info',
+  value: {
+    selectedTab: 'ticker',
+    selectedPeopleTab: '',
+    selectedRatioTab: 'Cash Flow',
+  },
+}
+
+export const TpConfigItems = {
+  TickerInfo,
+  IdeasSelectedType,
+  CryptoIdeasSelectedType,
+}
 
 export type PermittedConfigNames = keyof PermittedUserConfigs
 

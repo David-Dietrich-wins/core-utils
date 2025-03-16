@@ -8,7 +8,7 @@ import {
   InternalAxiosRequestConfig,
 } from 'axios'
 import {
-  CloneObjectWithId,
+  CloneObjectWithExtras,
   ObjectFindKeyAndReturnValue,
   ObjectMustHaveKeyAndReturnValue,
   ObjectTypesToString,
@@ -576,12 +576,12 @@ describe('ObjectTypesToString', () => {
   })
 })
 
-test('CloneObjectWithId', () => {
+test('CloneObjectWithExtras', () => {
   const obj: IId = {
     id: 'abc1',
   }
 
-  expect(CloneObjectWithId(obj)).toEqual(obj)
+  expect(CloneObjectWithExtras(obj)).toEqual(obj)
 })
 
 test('UpdateFieldValue', () => {

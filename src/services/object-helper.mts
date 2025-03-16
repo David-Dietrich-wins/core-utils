@@ -12,7 +12,7 @@ import { IId } from '../models/interfaces.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst } from './array-helper.mjs'
 
-export function CloneObjectWithId<T extends IId>(
+export function CloneObjectWithExtras<T extends IId>(
   objectWithId: Readonly<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   overridesAndExtras?: Record<string, any>
@@ -27,7 +27,7 @@ export function UpdateFieldValue<T extends IId>(
   fieldName: string,
   fieldValue: unknown
 ) {
-  return CloneObjectWithId(parentObject, { [fieldName]: fieldValue })
+  return CloneObjectWithExtras(parentObject, { [fieldName]: fieldValue })
 }
 
 const CONST_JsonDepth = 5
@@ -46,6 +46,16 @@ type AxiosErrorWrapper = {
   statusText?: string
   type: string
   url?: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function DefaultWithOverrides<T extends Record<string, any>>(
+  defaultObject: Readonly<T>,
+  overrides?: Partial<T> | null
+): T {
+  const ret: T = { ...defaultObject, ...overrides }
+
+  return ret
 }
 
 /**

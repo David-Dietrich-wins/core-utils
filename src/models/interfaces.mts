@@ -43,11 +43,11 @@ export interface ITableUserId extends ITableId, IUserId {}
 
 export interface IUserOptionalTable extends ITableId, IUserIdOptional {}
 
-export interface IId<T = string> {
+export interface IIdOptional<T = string> {
   id?: T
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IIdRequired<T = string> extends Required<IId<T>> {}
+export interface IId<T = string> extends Required<IIdOptional<T>> {}
 
 export interface IName<T = string> {
   name: T
