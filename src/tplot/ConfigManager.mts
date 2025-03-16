@@ -1,8 +1,8 @@
 import {
   AppException,
   arrayFirst,
+  DefaultWithOverrides,
   IdName,
-  IdNameValue,
   IKeyValueShort,
 } from '../index.mjs'
 import { ConfigTable, IConfigTable } from '../models/ConfigTable.mjs'
@@ -17,45 +17,53 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { PermittedUserConfigs } from './tp-items.mjs'
 
-export type ConfigTickerInfo = {
-  selectedTab: string
-  selectedPeopleTab: string
-  selectedRatioTab: string
-}
-
-export type IdeasSelectedOptions =
+export type IdeasTabNames =
   | 'top-gainers'
   | 'most-active'
   | 'top-losers'
   | 'etfs'
   | 'spacs'
   | 'wsb'
-export const IdeasSelectedType: IKeyValueShort<
-  IdName<number, IdeasSelectedOptions>
-> = {
-  k: 'idea-tab-selected',
-  v: { id: 0, name: 'most-active' },
-}
-
-export type CryptoIdeasSelectedOptions = 'crypto' | 'nft' | 'spac' | 'wsb'
-export const CryptoIdeasSelectedType: IKeyValueShort<CryptoIdeasSelectedOptions> =
+export const IdeasSelectedType: IKeyValueShort<IdName<number, IdeasTabNames>> =
   {
-    k: 'idea-crypto-tab-selected',
-    v: 'crypto',
+    k: 'idea-tab-selected',
+    v: { id: 0, name: 'most-active' },
   }
 
-export const TickerInfo: IdNameValue<ConfigTickerInfo> = {
-  id: 'ticker-info',
-  name: 'Ticker Info',
-  value: {
-    selectedTab: 'ticker',
-    selectedPeopleTab: '',
-    selectedRatioTab: 'Cash Flow',
-  },
+export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
+export const CryptoIdeasSelectedType: IKeyValueShort<
+  IdName<number, CryptoIdeasTabNames>
+> = {
+  k: 'idea-crypto-tab-selected',
+  v: { id: 0, name: 'crypto' },
 }
 
+export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
+export type ConfigTickerInfoTabSettings = {
+  selectedTab: ConfigTickerInfoTabNames
+  selectedPeopleTab: string
+  // selectedRatioTab: string
+}
+
+export function CreateConfigTickerInfoTabSettings(
+  overrides?: Partial<ConfigTickerInfoTabSettings>
+) {
+  const DEFAULT_TabSettings: ConfigTickerInfoTabSettings = {
+    selectedTab: 'asset',
+    selectedPeopleTab: '',
+    // selectedRatioTab: 'ratio',
+  }
+
+  return DefaultWithOverrides(DEFAULT_TabSettings, overrides)
+}
+
+export type ConfigTickerInfo<
+  Tticker extends string,
+  U = `tickerInfo-${Tticker}`
+> = IKeyValueShort<ConfigTickerInfoTabSettings, U>
+
 export const TpConfigItems = {
-  TickerInfo,
+  // TickerInfo,
   IdeasSelectedType,
   CryptoIdeasSelectedType,
 }
