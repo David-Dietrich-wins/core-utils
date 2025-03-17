@@ -1,7 +1,7 @@
 import { ObjectId } from 'bson'
 import { StringOrObjectId } from './interfaces.mjs'
 import { IKeyValueShort } from './key-val.mjs'
-import { INameVal, NameVal } from './name-val.mjs'
+import { INameVal } from './name-val.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
@@ -13,7 +13,8 @@ export interface IConfigTable<T = any>
   extends IUserCreatedUpdatedTable,
     IKeyValueShort<T> {}
 
-export class ConfigTable<TValue = boolean>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class ConfigTable<TValue = any>
   extends UserCreatedUpdatedTable
   implements IConfigTable<TValue>
 {
@@ -34,22 +35,22 @@ export class ConfigTable<TValue = boolean>
     this.v = val
   }
 
-  static fromApi(
-    currentConfig: IConfigTable | undefined,
-    nameVal: INameVal,
+  static fromApi<TFromApi = boolean>(
+    currentConfig: IConfigTable<TFromApi> | undefined,
+    nameVal: INameVal<TFromApi>,
     userid: StringOrObjectId,
     email: string
   ) {
     const config =
-      currentConfig ?? ConfigTable.fromNameVal(nameVal, userid, email)
+      currentConfig ?? ConfigTable.fromNameVal<TFromApi>(nameVal, userid, email)
 
     config.k = nameVal.name
     config.v = nameVal.val
 
     return config
   }
-  static fromNameVal(
-    nv: INameVal,
+  static fromNameVal<TFromNameVal = boolean>(
+    nv: INameVal<TFromNameVal>,
     userid: StringOrObjectId,
     email: string,
     curDate?: Date
@@ -59,7 +60,7 @@ export class ConfigTable<TValue = boolean>
     curDate = curDate ?? new Date()
     const userEmail = safestr(email, fname)
 
-    const config: IConfigTable = {
+    const config: IConfigTable<TFromNameVal> = {
       k: nv.name,
       v: nv.val,
       userid: new ObjectId(userid),
@@ -72,7 +73,7 @@ export class ConfigTable<TValue = boolean>
     return config
   }
 
-  copyFromDatabase(dbtp: IConfigTable) {
+  copyFromDatabase(dbtp: IConfigTable<TValue>) {
     super.copyFromDatabase(dbtp)
 
     if (hasData(dbtp.k)) {
@@ -84,7 +85,7 @@ export class ConfigTable<TValue = boolean>
   }
 
   api() {
-    const nv: NameVal<TValue> = { name: this.k, val: this.v }
+    const nv: INameVal<TValue> = { name: this.k, val: this.v }
 
     return nv
   }
