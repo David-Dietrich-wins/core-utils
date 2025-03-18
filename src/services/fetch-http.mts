@@ -61,11 +61,15 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
     }
 
     if (data && hasData(data)) {
-      req.body =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        isObject(data) || isArray(data as any)
-          ? JSON.stringify(data)
-          : String(data)
+      if ('GET' === method) {
+        url += `?${new URLSearchParams(data as Record<string, string>)}`
+      } else {
+        req.body =
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          isObject(data) || isArray(data as any)
+            ? JSON.stringify(data)
+            : String(data)
+      }
     }
 
     response = await fetch(url, req)
