@@ -125,3 +125,7 @@ export interface IChartRunLogApiReturn extends ITicker {
 
   created: Date
 }
+
+export interface IBearerToken {
+  bearerToken: string
+}
