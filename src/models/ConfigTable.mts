@@ -1,5 +1,3 @@
-import { ObjectId } from 'bson'
-import { StringOrObjectId } from './interfaces.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 import { INameVal } from './name-val.mjs'
 import {
@@ -22,7 +20,7 @@ export class ConfigTable<TValue = any>
   v: TValue
 
   constructor(
-    userid: StringOrObjectId,
+    userid: string,
     key: string,
     val: TValue,
     updatedby = 'Config',
@@ -38,7 +36,7 @@ export class ConfigTable<TValue = any>
   static fromApi<TFromApi = boolean>(
     currentConfig: IConfigTable<TFromApi> | undefined,
     nameVal: INameVal<TFromApi>,
-    userid: StringOrObjectId,
+    userid: string,
     email: string
   ) {
     const config =
@@ -51,7 +49,7 @@ export class ConfigTable<TValue = any>
   }
   static fromNameVal<TFromNameVal = boolean>(
     nv: INameVal<TFromNameVal>,
-    userid: StringOrObjectId,
+    userid: string,
     email: string,
     curDate?: Date
   ) {
@@ -63,7 +61,7 @@ export class ConfigTable<TValue = any>
     const config: IConfigTable<TFromNameVal> = {
       k: nv.name,
       v: nv.val,
-      userid: new ObjectId(userid),
+      userid,
       created: curDate,
       createdby: userEmail,
       updated: curDate,

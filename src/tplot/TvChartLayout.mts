@@ -1,4 +1,3 @@
-import { StringOrObjectId } from '../models/interfaces.mjs'
 import { ISymbolName } from '../models/ticker-info.mjs'
 import {
   IUserCreatedUpdatedTable,
@@ -37,7 +36,7 @@ export class TvChartLayout
   content = ''
 
   constructor(
-    userid?: StringOrObjectId | ITvChartLayout,
+    userid?: string | ITvChartLayout,
     updatedby = 'TvChartLayout',
     updated = new Date(),
     createdby = 'TvChartLayout',

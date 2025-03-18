@@ -1,27 +1,15 @@
-import { ObjectId } from 'bson'
-import {
-  ITableId,
-  ICreatedBy,
-  IUpdatedBy,
-  IUserId,
-  StringOrObjectId,
-} from './interfaces.mjs'
-import {
-  hasData,
-  isNullOrUndefined,
-  isObject,
-  isString,
-} from '../services/general.mjs'
+import { ICreatedBy, IId, IUpdatedBy, IUserId } from './interfaces.mjs'
+import { hasData, isNullOrUndefined, isObject } from '../services/general.mjs'
 
-export interface ICreatedTable extends ITableId, ICreatedBy {}
+export interface ICreatedTable extends IId, ICreatedBy {}
 export interface ICreatedUpdatedTable extends ICreatedTable, IUpdatedBy {}
 
-export interface IUserCreatedUpdatedTable
+export interface IUserCreatedUpdatedTable<T = string>
   extends ICreatedUpdatedTable,
-    IUserId {}
+    IUserId<T> {}
 
 export class CreatedTable implements ICreatedTable {
-  _id?: ObjectId | undefined
+  id?: undefined
   createdby!: string
   created = new Date()
 
@@ -85,14 +73,14 @@ export class CreatedUpdatedTable
   }
 }
 
-export class UserCreatedUpdatedTable
+export class UserCreatedUpdatedTable<T = string>
   extends CreatedUpdatedTable
-  implements IUserCreatedUpdatedTable
+  implements IUserCreatedUpdatedTable<T>
 {
-  userid = new ObjectId()
+  userid
 
   constructor(
-    userid?: StringOrObjectId | IUserCreatedUpdatedTable,
+    userid?: string | IUserCreatedUpdatedTable,
     updatedby = 'IdUserCreatedUpdated',
     updated?: Date,
     createdby = 'IdUserCreatedUpdated',
@@ -100,17 +88,17 @@ export class UserCreatedUpdatedTable
   ) {
     super(updatedby, updated, createdby, created)
 
-    if (isObject(userid) && !(userid instanceof ObjectId)) {
+    if (isObject(userid)) {
       this.copyFromDatabase(userid as IUserCreatedUpdatedTable)
     } else {
-      this.userid = new ObjectId(userid as StringOrObjectId)
+      this.userid = userid
     }
   }
 
   static fixupForUpsert(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     obj: any,
-    userid: StringOrObjectId,
+    // userid: string,
     username: string,
     dateToSetTo?: Date
   ): boolean {
@@ -140,9 +128,7 @@ export class UserCreatedUpdatedTable
     super.copyFromDatabase(dbtp)
 
     if (dbtp.userid) {
-      this.userid = isString(dbtp.userid)
-        ? new ObjectId(dbtp.userid)
-        : dbtp.userid
+      this.userid = dbtp.userid
     }
   }
 }

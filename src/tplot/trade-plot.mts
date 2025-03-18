@@ -11,7 +11,7 @@ import {
 import { getStockPriceInDollars } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 
-export interface ITradePlotApi<T>
+export interface ITradePlotApi<T = number>
   extends IId<T>,
     ITicker,
     ICreatedBy,

@@ -1,14 +1,9 @@
-import { ObjectId } from 'bson'
 import { isObject, safestr } from '../services/general.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
-import {
-  IChartRunLogApiReturn,
-  IUserId,
-  StringOrObjectId,
-} from '../models/interfaces.mjs'
+import { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
 
-export interface IChartRunLog extends IUserId, ITicker {
+export interface IChartRunLog<T = string> extends IUserId<T>, ITicker {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   settings?: any
   sessionid: string
@@ -47,7 +42,7 @@ export class ChartRunLog implements IChartRunLog {
   created = new Date()
 
   constructor(
-    userid: StringOrObjectId,
+    userid: string,
     ticker: string,
     sessionid: string,
     lang: string,
@@ -55,7 +50,7 @@ export class ChartRunLog implements IChartRunLog {
     ip: string,
     settings?: ChartSettings
   ) {
-    this.userid = new ObjectId(userid)
+    this.userid = userid
 
     this.ticker = ticker
     this.sessionid = safestr(sessionid)
@@ -77,7 +72,7 @@ export class ChartRunLog implements IChartRunLog {
 
   static fromDb(settings: IChartRunLog): ChartRunLog {
     const crl = new ChartRunLog(
-      settings.userid,
+      safestr(settings.userid),
       settings.ticker,
       settings.sessionid,
       settings.lang,

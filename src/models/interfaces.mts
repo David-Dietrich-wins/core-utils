@@ -1,9 +1,12 @@
-import { Document, ObjectId } from 'bson'
 import { IWebState } from './WebState.mjs'
 import { SearchSortDirection } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 
-export type StringOrObjectId = string | ObjectId
+export interface IId<T = string> {
+  id?: T
+}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
 export interface ICreatedBy {
   createdby: string
@@ -27,27 +30,9 @@ export interface IDate<T = string> {
   date: T
 }
 
-export interface ITableId<T = ObjectId> extends Document {
-  _id?: T
-}
-
-export interface IUserIdOptional<T = StringOrObjectId> {
+export interface IUserId<T = string> {
   userid?: T
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IUserId<T = StringOrObjectId>
-  extends Required<IUserIdOptional<T>> {}
-
-export interface ITableUserId extends ITableId, IUserId {}
-
-export interface IUserOptionalTable extends ITableId, IUserIdOptional {}
-
-export interface IIdOptional<T = string> {
-  id?: T
-}
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IId<T = string> extends Required<IIdOptional<T>> {}
 
 export interface IName<T = string> {
   name: T
@@ -81,10 +66,12 @@ export interface IErrorMessage {
   errorMessage: string
 }
 
-export interface IEventLogin extends ICreatedBy, IUserId {
+export interface IEventLogin<T = string>
+  extends IId<string>,
+    IUserId<T>,
+    ICreatedBy {
   ip: string
   logoutTime?: Date
-  sessionid: string
 }
 
 export interface ISearchRequestView {

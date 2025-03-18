@@ -1,4 +1,3 @@
-import { ObjectId } from 'bson'
 import { JSONValue } from '../models/types.mjs'
 
 export type TpSearchOptions =
@@ -8,10 +7,6 @@ export type TpSearchOptions =
   | [string, JSONValue]
   | [string, JSONValue][]
 export type TpSearchTerm = string | number
-
-export type ObjectOfObjectIds = {
-  [x: string]: ObjectId
-}
 
 export type ElementMatch = {
   $elemMatch: {

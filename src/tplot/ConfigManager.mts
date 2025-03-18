@@ -1,18 +1,16 @@
-import {
-  AppException,
-  arrayFirst,
-  DefaultWithOverrides,
-  IdName,
-  IKeyValueShort,
-} from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { IConfigShort } from '../models/config.mjs'
 import { ConfigTable, IConfigTable } from '../models/ConfigTable.mjs'
-import { StringOrObjectId } from '../models/interfaces.mjs'
+import { IdName } from '../models/id-name.mjs'
+import { IKeyValueShort } from '../models/key-val.mjs'
+import { arrayFirst } from '../services/array-helper.mjs'
 import {
   deepCloneJson,
   isArray,
   safeArray,
   safestr,
 } from '../services/general.mjs'
+import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { PermittedUserConfigs } from './tp-items.mjs'
@@ -73,7 +71,7 @@ export type PermittedConfigNames = keyof PermittedUserConfigs
 export class ConfigManager {
   static readonly KEY_Dashboards = 'dashboards'
 
-  constructor(public configs: IConfigTable<unknown>[]) {}
+  constructor(public configs: IConfigShort[]) {}
 
   get allConfigs() {
     const config: PermittedUserConfigs = {
@@ -104,7 +102,7 @@ export class ConfigManager {
     )
 
     const dashboard =
-      arrayFirst(d.map((cfg) => cfg.v as IDashboardSetting)) ??
+      arrayFirst(d.map((cfg) => cfg.v as unknown as IDashboardSetting)) ??
       deepCloneJson(ConfigManager.allowedConfigs.dashboards)
 
     if (!dashboard) {
@@ -116,20 +114,20 @@ export class ConfigManager {
 
   get headerTickerBarIndex() {
     const found = this.configs.find(
-      (config) => 'headerTickerBarIndex' === config.name
+      (config) => 'headerTickerBarIndex' === config.k
     )
     if (found) {
-      return found.value as { showAsset: boolean; showCrypto: boolean }
+      return found.v as unknown as { showAsset: boolean; showCrypto: boolean }
     }
 
     return { showAsset: true, showCrypto: true }
   }
   get headerTickerBarUser() {
     const found = this.configs.find(
-      (config) => 'headerTickerBarUser' === config.name
+      (config) => 'headerTickerBarUser' === config.k
     )
     if (found) {
-      return found.value as { tickers: string[] }
+      return found.v as unknown as { tickers: string[] }
     }
 
     return { tickers: [] }
@@ -153,17 +151,17 @@ export class ConfigManager {
   }
 
   FindBoolean(name: PermittedConfigNames, ifNotExists?: boolean) {
-    const found = this.configs.find((config) => name === config.name)
+    const found = this.configs.find((config) => name === config.k)
     if (!found) {
       return ifNotExists ?? false
     }
 
-    return found.value as boolean
+    return found.v as boolean
   }
   FindString(name: PermittedConfigNames, ifNotExists?: string) {
-    const found = this.configs.find((config) => name === config.name)
+    const found = this.configs.find((config) => name === config.k)
     if (found) {
-      return found.value as string
+      return found.v as unknown as string
     }
 
     return safestr(ifNotExists)
@@ -242,7 +240,7 @@ export class ConfigManager {
 
   static getDefaultConfig(
     configName: PermittedConfigNames,
-    userid: StringOrObjectId,
+    userid: string,
     updatedby?: string,
     updated?: Date,
     createdby?: string,
@@ -259,7 +257,7 @@ export class ConfigManager {
   }
 
   static getNewConfig(
-    userid: StringOrObjectId,
+    userid: string,
     name: PermittedConfigNames,
     updatedby?: string,
     updated?: Date,
@@ -279,10 +277,7 @@ export class ConfigManager {
     )
   }
 
-  static FindMissing(
-    userid: StringOrObjectId,
-    dataPage: IConfigTable<unknown>[]
-  ) {
+  static FindMissing(userid: string, dataPage: IConfigTable<unknown>[]) {
     const arrMissingConfigs: IConfigTable[] = []
     const arrUpdateConfigs: IConfigTable[] = []
 

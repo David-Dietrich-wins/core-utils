@@ -7,7 +7,7 @@ export interface IIdCreatedUpdated<Tid = string>
     IUpdatedBy {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {
-  id!: Tid
+  id?: Tid
   createdby = 'IdCreated'
   created = new Date()
 

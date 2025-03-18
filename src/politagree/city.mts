@@ -2,14 +2,6 @@ import { IName, ISlug } from '../models/interfaces.mjs'
 import { isObject } from '../services/general.mjs'
 import { IHasPolitiscales, IPolitiscale } from './politiscale.mjs'
 
-// export interface ICity extends I_Id, IName, Required<IHasPolitiscales>, ISlug {
-//   city: string
-//   description: string
-//   sourceUrl: string
-//   city_img: string
-// }
-
-//  ITableId,
 export interface ICity extends IName, ISlug, Required<IHasPolitiscales> {
   city: string
   description: string
