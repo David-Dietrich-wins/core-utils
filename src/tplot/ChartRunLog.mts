@@ -6,7 +6,6 @@ import { ITicker } from '../models/ticker-info.mjs'
 export interface IChartRunLog<T = string> extends IUserId<T>, ITicker {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   settings?: any
-  sessionid: string
   lang: string
   browser: string
   ip: string
@@ -24,7 +23,6 @@ export interface IChartRunLog<T = string> extends IUserId<T>, ITicker {
 export class ChartRunLog implements IChartRunLog {
   userid
   ticker = ''
-  sessionid = ''
   lang = ''
   browser = ''
   ip = ''
@@ -44,7 +42,6 @@ export class ChartRunLog implements IChartRunLog {
   constructor(
     userid: string,
     ticker: string,
-    sessionid: string,
     lang: string,
     browser: string,
     ip: string,
@@ -53,7 +50,6 @@ export class ChartRunLog implements IChartRunLog {
     this.userid = userid
 
     this.ticker = ticker
-    this.sessionid = safestr(sessionid)
     this.lang = safestr(lang)
     this.browser = safestr(browser)
     this.ip = safestr(ip)
@@ -74,7 +70,6 @@ export class ChartRunLog implements IChartRunLog {
     const crl = new ChartRunLog(
       safestr(settings.userid),
       settings.ticker,
-      settings.sessionid,
       settings.lang,
       settings.browser,
       settings.ip
