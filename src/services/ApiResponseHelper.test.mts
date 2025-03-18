@@ -11,7 +11,7 @@ test('ApiResponseSuccess', () => {
   expect(resapi?.message).toBe('test')
   expect(resapi?.responseCode).toBe(0)
   expect(resapi?.result).toBe('success')
-  expect(resapi?.obj).toBeUndefined()
+  expect(resapi?.data).toBeUndefined()
 
   const obj = { a: 'test' }
   const resobj = ApiResponseHelper.ApiResponseSuccess(obj)
@@ -21,9 +21,9 @@ test('ApiResponseSuccess', () => {
   expect(resobj?.message).toBe('')
   expect(resobj?.responseCode).toBe(0)
   expect(resobj?.result).toBe('success')
-  expect(resobj?.obj).toBe(obj)
+  expect(resobj?.data).toBe(obj)
 
-  const newApiResponse = new ApiResponse<string>()
+  const newApiResponse = new ApiResponse('')
   const resApiResponse = ApiResponseHelper.ApiResponseSuccess(newApiResponse)
 
   expect(resApiResponse?.id).toBeGreaterThan(0)
@@ -31,7 +31,7 @@ test('ApiResponseSuccess', () => {
   expect(resApiResponse?.message).toBe('')
   expect(resApiResponse?.responseCode).toBe(0)
   expect(resApiResponse?.result).toBe('success')
-  expect(resApiResponse?.obj).toBeInstanceOf(ApiResponse)
+  expect(resApiResponse?.data).toBeInstanceOf(ApiResponse)
 })
 
 test('ApiResponseResponseError', () => {
@@ -42,9 +42,9 @@ test('ApiResponseResponseError', () => {
   expect(resapi?.message).toBe('test')
   expect(resapi?.responseCode).toBe(-1)
   expect(resapi?.result).toBe('Error')
-  expect(resapi?.obj).toBeUndefined()
+  expect(resapi?.data).toBeUndefined()
 
-  const newApiResponse = new ApiResponse<string>()
+  const newApiResponse = new ApiResponse<string>('')
   const resApiResponse = ApiResponseHelper.apiResponseError(newApiResponse)
 
   expect(resApiResponse?.id).toBeGreaterThan(0)
@@ -52,7 +52,7 @@ test('ApiResponseResponseError', () => {
   expect(resApiResponse?.message).toBe('')
   expect(resApiResponse?.responseCode).toBe(-1)
   expect(resApiResponse?.result).toBe('Error')
-  expect(resApiResponse?.obj).toBeInstanceOf(ApiResponse)
+  expect(resApiResponse?.data).toBeInstanceOf(ApiResponse)
 })
 
 test('respondWithSuccess', () => {

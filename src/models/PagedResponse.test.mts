@@ -34,7 +34,7 @@ test('auto total count', () => {
 test('API response', () => {
   let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
-  const apiResponse = new ApiResponse('result', 'message', 20, pr)
+  const apiResponse = new ApiResponse(pr, 'result', 'message', 20)
   pr = PagedResponse.CreateFromApiResponse(apiResponse)
   expect(pr.totalCount).toBe(1)
   expect(pr.dataPage[0].data).toBe('hello')

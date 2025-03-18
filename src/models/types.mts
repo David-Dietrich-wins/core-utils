@@ -46,8 +46,8 @@ export type FunctionAppResponse<TBody = unknown> = {
   body: TBody
 }
 
-export type IResultWithStats<T> = {
-  result?: T
+export type IDataWithStats<T = unknown> = {
+  data: T
   stats: InstrumentationStatistics
 }
 

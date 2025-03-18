@@ -7,20 +7,24 @@ import { HTTP_Forbidden } from '../models/AppException.mjs'
  * Used to wrap all API return calls in a standard wrapper.
  */
 export default abstract class ApiResponseHelper {
-  static apiResponseError<T = unknown>(obj?: T) {
+  static apiResponseError<T = unknown>(obj: T) {
     // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 
     const crret =
-      isObject(obj) && obj instanceof ApiResponse ? obj : new ApiResponse<T>()
+      isObject(obj) && obj instanceof ApiResponse
+        ? obj
+        : new ApiResponse<T>(obj)
 
     crret.setError(obj)
 
     return crret
   }
 
-  static ApiResponseSuccess<T = unknown>(obj?: T) {
+  static ApiResponseSuccess<T = unknown>(obj: T) {
     const crret =
-      isObject(obj) && obj instanceof ApiResponse ? obj : new ApiResponse<T>()
+      isObject(obj) && obj instanceof ApiResponse
+        ? obj
+        : new ApiResponse<T>(obj)
 
     if (isString(obj)) {
       crret.message = obj

@@ -307,22 +307,22 @@ export class ApiRepository implements IApiRepository {
     }
   }
 
-  static sendApiSuccess<T>(returnData?: T) {
+  static sendApiSuccess<T>(returnData: T) {
     return ApiRepository.sendApiWrappedResponse(
+      returnData,
       'success',
       undefined,
-      undefined,
-      returnData
+      undefined
     )
   }
 
   static sendApiWrappedResponse<T = unknown>(
+    returnData: T,
     result = '',
     msg = '',
-    responseCode = 0,
-    returnData?: T
+    responseCode = 0
   ) {
-    const apiwrap = new ApiResponse<T>(result, msg, responseCode, returnData)
+    const apiwrap = new ApiResponse<T>(returnData, result, msg, responseCode)
 
     return apiwrap
   }

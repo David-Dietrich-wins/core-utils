@@ -1,16 +1,18 @@
 import { AppExceptionHttp } from './AppException.mjs'
 import { isObject, safestrLowercase } from '../services/general.mjs'
-import { FetchDataTypesAllowed } from '../index.mjs'
+import {
+  FetchDataTypesAllowed,
+  IDataWithStats,
+  InstrumentationStatistics,
+} from '../index.mjs'
 
-export interface IApiResponse<T = unknown> {
+export interface IApiResponse<T = unknown> extends IDataWithStats<T> {
   id: number
   ts: number
   code?: number
   message: string
   responseCode: number
   result: string
-
-  obj?: T
 }
 
 export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
@@ -18,17 +20,24 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
   ts = this.id
 
   constructor(
+    public data: TData,
     public result = '',
     public message = '',
     public responseCode = 0,
-    public obj?: TData
+    public stats: InstrumentationStatistics = new InstrumentationStatistics()
   ) {}
 
   static CreateFromIApiResponse<T extends FetchDataTypesAllowed>(
     iApiResponse: IApiResponse<T>
   ) {
-    const crret = new ApiResponse<T>()
-    Object.assign(crret, iApiResponse)
+    const crret = new ApiResponse<T>(
+      iApiResponse.data,
+      iApiResponse.result,
+      iApiResponse.message,
+      iApiResponse.responseCode,
+      iApiResponse.stats
+    )
+    // Object.assign(crret, iApiResponse)
 
     return crret
   }
@@ -61,7 +70,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
         }
 
         if (errobj.obj) {
-          this.obj = errobj.obj
+          this.data = errobj.obj
         }
       } else {
         switch (typeof errobj) {
@@ -73,7 +82,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
             break
           default:
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.obj = errobj as any
+            this.data = errobj as any
             break
         }
       }
@@ -84,7 +93,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     this.result = 'success'
 
     if (obj) {
-      this.obj = obj
+      this.data = obj
     }
   }
 

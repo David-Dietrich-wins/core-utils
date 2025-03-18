@@ -24,7 +24,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
   }
 
   static CreateFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
-    return new PagedResponse<T>(ret.obj?.dataPage, ret.obj?.totalCount)
+    return new PagedResponse<T>(ret.data.dataPage, ret.data.totalCount)
   }
 
   static CreateNewFromMap<Tin, Tout>(
@@ -38,7 +38,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
   }
 
   static GetDataFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
-    return safeArray(ret.obj?.dataPage)
+    return safeArray(ret.data.dataPage)
   }
 }
 

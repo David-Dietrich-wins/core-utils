@@ -1,7 +1,8 @@
-import { AppExceptionHttp } from '../models/AppException.mjs'
-import { JSONValue } from '../models/types.mjs'
+import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
+import { IDataWithStats, JSONValue } from '../models/types.mjs'
 import { ApiResponse, IApiResponse } from '../models/ApiResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
+import { InstrumentationStatistics } from '../index.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -45,12 +46,15 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
   method: HttpMethod,
   { url, data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
 ) {
+  const stats = new InstrumentationStatistics()
   if (!fname || !hasData(fname)) {
     fname = 'fetchHttp'
   }
 
   if (!hasData(url)) {
-    throw new Error(`${fname} passed an empty URL.`)
+    stats.addFailure()
+    stats.finished()
+    throw new AppException('Empty URL.', fname, stats)
   }
 
   let response: Response
@@ -74,21 +78,30 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
 
     response = await fetch(url, req)
   } catch (err) {
+    stats.addFailure()
+    stats.finished()
     if (err instanceof AppExceptionHttp) {
+      err.obj = stats
       throw err
     }
 
-    throw new AppExceptionHttp(
+    const ex = new AppExceptionHttp<InstrumentationStatistics>(
       err instanceof Error ? err.message : fetchHttp.name,
       fname
     )
+    ex.obj = stats
+    throw ex
   }
 
   if (!response) {
-    throw new AppExceptionHttp(
+    stats.addFailure()
+    stats.finished()
+    const ex = new AppExceptionHttp<InstrumentationStatistics>(
       `${fname}: NO response in HTTP ${method} to URL: ${url}.`,
       fname
     )
+    ex.obj = stats
+    throw ex
   }
 
   if (!response.ok) {
@@ -98,39 +111,73 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
         captureResponse = (await response.json()) as IApiResponse<unknown>
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (ex) {
+        stats.addFailure()
         /* empty */
       }
     }
 
+    stats.addFailure()
+    stats.finished()
     throw new AppExceptionHttp(
       `${fname}: Error in HTTP ${method} to URL: ${url} with status code ${response.status}.`,
       fname,
       response.status,
-      { response, captureResponse }
+      { response, captureResponse, stats }
     )
   }
 
-  return response
+  const irws: IDataWithStats<Response> = {
+    data: response,
+    stats,
+  }
+
+  return irws
 }
 
 export async function fetchData<Tdata extends FetchDataTypesAllowed>(
   method: HttpMethod,
   settings: HttpFetchRequestProps<Tdata>
 ) {
-  const resp = await fetchHttp(method, settings)
+  const stats = new InstrumentationStatistics()
 
-  return await resp.text()
+  const resp = await fetchHttp(method, settings)
+  stats.addStats(resp.stats)
+
+  const txt = await resp.data.text()
+
+  stats.addSuccess()
+  stats.finished()
+  const iws: IDataWithStats<string> = {
+    data: txt,
+    stats,
+  }
+
+  return iws
 }
 
 export async function fetchJson<
   TData extends FetchDataTypesAllowed = object,
   Tret extends FetchDataTypesAllowed = TData
 >(method: HttpMethod, settings: HttpFetchRequestProps<TData>) {
+  const stats = new InstrumentationStatistics()
+
   const resp = await fetchHttp(method, settings)
+  stats.addStats(resp.stats)
 
-  const ret = (await resp.json()) as IApiResponse<Tret>
+  const json = (await resp.data.json()) as IApiResponse<Tret>
 
-  return ApiResponse.CreateFromIApiResponse<Tret>(ret)
+  const ret = new ApiResponse<Tret>(
+    json.data,
+    json.result,
+    json.message,
+    json.responseCode,
+    stats
+  )
+
+  stats.addSuccess()
+  stats.finished()
+
+  return ret
 }
 
 /**
@@ -141,7 +188,13 @@ export async function fetchJson<
  * @returns The returned Response object in a Promise.
  */
 export async function fetchDelete(settings: HttpFetchRequestProps) {
-  return fetchHttp('DELETE', settings)
+  const stats = new InstrumentationStatistics()
+  const f = await fetchHttp('DELETE', settings)
+
+  stats.addStats(f.stats)
+  const ret = new ApiResponse('', 'Delete', '', 0, stats)
+
+  return ret
 }
 
 /**

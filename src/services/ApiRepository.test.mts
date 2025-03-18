@@ -672,24 +672,24 @@ test('sendApiWrappedResponse', async () => {
   const returnData = { hello: 'world' }
 
   let apiWrapper = ApiRepository.sendApiWrappedResponse(
+    returnData,
     result,
     msg,
-    responseCode,
-    returnData
+    responseCode
   )
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.obj).toEqual(returnData)
+  expect(apiWrapper.data).toEqual(returnData)
   expect(apiWrapper.result).toBe(result)
   expect(apiWrapper.message).toBe(msg)
   expect(apiWrapper.responseCode).toBe(responseCode)
 
-  apiWrapper = ApiRepository.sendApiWrappedResponse()
+  apiWrapper = ApiRepository.sendApiWrappedResponse(returnData)
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.obj).toBeUndefined()
+  expect(apiWrapper.data).toBeUndefined()
   expect(apiWrapper.result).toBe('')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
@@ -702,16 +702,16 @@ test('sendApiSuccess', async () => {
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.obj).toEqual(returnData)
+  expect(apiWrapper.data).toEqual(returnData)
   expect(apiWrapper.result).toBe('success')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
 
-  apiWrapper = ApiRepository.sendApiSuccess()
+  apiWrapper = ApiRepository.sendApiSuccess(returnData)
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.obj).toBeUndefined()
+  expect(apiWrapper.data).toBeUndefined()
   expect(apiWrapper.result).toBe('success')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
