@@ -1,4 +1,4 @@
-import { DEFAULT_DateTimeFormatSeconds, DateHelper } from './DateHelper.mjs'
+import { DateHelper } from './DateHelper.mjs'
 
 const dateToTest = new Date()
 const dateInMillis = dateToTest.getTime()
@@ -197,7 +197,7 @@ describe('FormatDateTime', () => {
   test('empty', () => {
     // const startDate = new Date()
 
-    const retDate = DateHelper.FormatDateTime(DEFAULT_DateTimeFormatSeconds)
+    const retDate = DateHelper.FormatDateTime(DateHelper.FormatSeconds)
     expect(retDate).toContain('/')
     expect(retDate).toContain(':')
   })
@@ -206,7 +206,7 @@ describe('FormatDateTime', () => {
     const startDate = new Date()
 
     const retDate = DateHelper.FormatDateTime(
-      DEFAULT_DateTimeFormatSeconds,
+      DateHelper.FormatSeconds,
       startDate
     )
     expect(retDate).toContain('/')
@@ -217,7 +217,7 @@ describe('FormatDateTime', () => {
     const startDate = new Date()
 
     const retDate = DateHelper.FormatDateTime(
-      DEFAULT_DateTimeFormatSeconds,
+      DateHelper.FormatSeconds,
       +startDate
     )
     expect(retDate).toContain('/')
@@ -228,7 +228,7 @@ describe('FormatDateTime', () => {
     const startDate = new Date()
 
     const retDate = DateHelper.FormatDateTime(
-      DEFAULT_DateTimeFormatSeconds,
+      DateHelper.FormatSeconds,
       startDate.toISOString()
     )
     expect(retDate).toContain('/')

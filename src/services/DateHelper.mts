@@ -1,16 +1,17 @@
 import moment, { DurationInputArg1, DurationInputArg2 } from 'moment'
 import { isNullOrUndefined, safestr } from './general.mjs'
 
-export const DEFAULT_DateTimeFormatSeconds = 'YYYY/MM/DD HH:mm:ss'
-export const DEFAULT_DateTimeFormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
-export const DEFAULT_DateTimeFormatLocalWithoutTimezone =
-  'YYYY-MM-DDTHH:mm:ss.SSS'
-export const DEFAULT_DateTimeFormatForFiles = 'YYMMDD_HHmmss'
-export const DEFAULT_DateFormatForApiCalls = 'YYYY-MM-DD'
-export const DEFAULT_DateFormatForUi = 'M/D/YYYY'
-export const DEFAULT_DateFormatForUi2DigitYear = 'M/D/YY'
-
 export class DateHelper {
+  static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
+  static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
+  static readonly FormatLocalWithoutTimezone = 'YYYY-MM-DDTHH:mm:ss.SSS'
+  static readonly FormatForFiles = 'YYMMDD_HHmmss'
+  static readonly FormatForApiCalls = 'YYYY-MM-DD'
+  static readonly FormatForUi = 'M/D/YYYY'
+  static readonly FormatForUiWithYear = 'M/D/YYYY HH:mm:ss a'
+  static readonly FormatForUi2DigitYear = 'M/D/YY'
+  static readonly FormatForUi2DigitYearWithTime = 'M/D/YY HH:mm:ss a'
+
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
    * If no Date is provided, the current Date now is used.
@@ -73,15 +74,12 @@ export class DateHelper {
     dateToFormat?: Date | number | string
   ) {
     return (dateToFormat ? moment(dateToFormat) : moment())
-      .format(safestr(format, DEFAULT_DateTimeFormatSeconds))
+      .format(safestr(format, DateHelper.FormatSeconds))
       .trim()
   }
 
   static FormatDateTimeWithMillis(dateToFormat?: Date | number | string) {
-    return DateHelper.FormatDateTime(
-      DEFAULT_DateTimeFormatWithMillis,
-      dateToFormat
-    )
+    return DateHelper.FormatDateTime(DateHelper.FormatWithMillis, dateToFormat)
   }
 
   /**
@@ -126,7 +124,7 @@ export class DateHelper {
    */
   static toLocalStringWithoutTimezone(date?: Date | number | string) {
     return DateHelper.FormatDateTime(
-      DEFAULT_DateTimeFormatLocalWithoutTimezone,
+      DateHelper.FormatLocalWithoutTimezone,
       date
     )
   }
@@ -138,7 +136,7 @@ export class DateHelper {
    * @returns A string formatted to example - '230906_145201'
    */
   static fileDateTime(date?: Date | number | string) {
-    return DateHelper.FormatDateTime(DEFAULT_DateTimeFormatForFiles, date)
+    return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date)
   }
 
   /**
@@ -148,8 +146,9 @@ export class DateHelper {
    * @returns A string formatted to example - '230906_145201'
    */
   static DateFormatForApiCalls(date?: Date | number | string) {
-    return DateHelper.FormatDateTime(DEFAULT_DateFormatForApiCalls, date)
+    return DateHelper.FormatDateTime(DateHelper.FormatForApiCalls, date)
   }
+
   /**
    * Converts a Date object to a string in ISO format.
    * If there is no date provided, undefined is returned.
@@ -158,9 +157,25 @@ export class DateHelper {
    */
   static DateFormatForUi(date?: Date | number | string, showFullYear = false) {
     return DateHelper.FormatDateTime(
+      showFullYear ? DateHelper.FormatForUi : DateHelper.FormatForUi2DigitYear,
+      date
+    )
+  }
+
+  /**
+   * Converts a Date object to a string in ISO format.
+   * If there is no date provided, undefined is returned.
+   * @param date Any format of date that can be converted to a Date object.
+   * @returns A string formatted to example - '230906_145201'
+   */
+  static DateFormatForUiWithTime(
+    date?: Date | number | string,
+    showFullYear = false
+  ) {
+    return DateHelper.FormatDateTime(
       showFullYear
-        ? DEFAULT_DateFormatForUi
-        : DEFAULT_DateFormatForUi2DigitYear,
+        ? DateHelper.FormatForUiWithYear
+        : DateHelper.FormatForUi2DigitYearWithTime,
       date
     )
   }
