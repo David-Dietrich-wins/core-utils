@@ -1,4 +1,4 @@
-import { DefaultWithOverrides } from '../index.mjs'
+import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { ISearchRequestView } from './interfaces.mjs'
 
 export function DefaultSearchRequestView(

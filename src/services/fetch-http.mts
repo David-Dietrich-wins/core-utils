@@ -2,7 +2,7 @@ import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
 import { IDataWithStats, JSONValue } from '../models/types.mjs'
 import { ApiResponse, IApiResponse } from '../models/ApiResponse.mjs'
 import { hasData, isArray, isObject } from './general.mjs'
-import { InstrumentationStatistics } from '../index.mjs'
+import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 

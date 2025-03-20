@@ -1,4 +1,4 @@
-import { City, ICity } from './index.mjs'
+import { City, ICity } from './city.mjs'
 
 test('constructor', () => {
   const city = new City()

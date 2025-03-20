@@ -1,10 +1,8 @@
 import { AppExceptionHttp } from './AppException.mjs'
 import { isObject, safestrLowercase } from '../services/general.mjs'
-import {
-  FetchDataTypesAllowed,
-  IDataWithStats,
-  InstrumentationStatistics,
-} from '../index.mjs'
+import { IDataWithStats } from './types.mjs'
+import { FetchDataTypesAllowed } from '../services/fetch-http.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 export interface IApiResponse<T = unknown> extends IDataWithStats<T> {
   id: number
@@ -24,7 +22,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     public result = '',
     public message = '',
     public responseCode = 0,
-    public stats: InstrumentationStatistics = new InstrumentationStatistics()
+    public stats = new InstrumentationStatistics()
   ) {}
 
   static CreateFromIApiResponse<T extends FetchDataTypesAllowed>(

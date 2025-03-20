@@ -2,7 +2,8 @@ import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { AppException, FromBearerToken, JwtAccessToken } from '../index.mjs'
+import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
