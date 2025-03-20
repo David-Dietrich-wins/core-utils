@@ -49,6 +49,7 @@ import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
+import { ITradePlot, ITradePlotApi } from '../index.mjs'
 
 const politagreeApiUrl = process.env.NEXT_PUBLIC_POLITAGREE_API_URL
 // const politagreeAdminApiUrl = process.env.NEXT_PUBLIC_POLITAGREEADMIN_API_URL
@@ -368,6 +369,27 @@ export const ExternalApis = {
         data: DefaultSearchRequestView(searchRequest),
       }
     ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+  },
+
+  async PlotGet(bearerToken: string, plotNumber: number) {
+    const fname = ExternalApis.PlotGet.name
+
+    return fetchGet<ITradePlot>({
+      url: urlJoin(tpApiUrl, `trade/${plotNumber}`),
+      fname,
+      bearerToken,
+    }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+  },
+
+  async PlotSave(bearerToken: string, plot: ITradePlot, plotNumber: number) {
+    const fname = ExternalApis.PlotGet.name
+
+    return fetchPost<ITradePlotApi, ITradePlot>({
+      url: urlJoin(tpApiUrl, `trade/${plotNumber}`),
+      fname,
+      bearerToken,
+      data: plot,
+    }).then((ret) => ExternalApis.verifySuccess(fname, ret))
   },
 
   async PlotList(
