@@ -1,15 +1,17 @@
 import { ICreatedBy, IId, IUpdatedBy, IUserId } from './interfaces.mjs'
 import { hasData, isNullOrUndefined, isObject } from '../services/general.mjs'
 
-export interface ICreatedTable extends IId, ICreatedBy {}
-export interface ICreatedUpdatedTable extends ICreatedTable, IUpdatedBy {}
+export interface ICreatedTable<Tid = string> extends IId<Tid>, ICreatedBy {}
+export interface ICreatedUpdatedTable<Tid = string>
+  extends ICreatedTable<Tid>,
+    IUpdatedBy {}
 
-export interface IUserCreatedUpdatedTable<T = string>
-  extends ICreatedUpdatedTable,
+export interface IUserCreatedUpdatedTable<T = string, Tid = string>
+  extends ICreatedUpdatedTable<Tid>,
     IUserId<T> {}
 
-export class CreatedTable implements ICreatedTable {
-  id?: undefined
+export class CreatedTable<Tid = string> implements ICreatedTable<Tid> {
+  id?: Tid
   createdby!: string
   created = new Date()
 
