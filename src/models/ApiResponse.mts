@@ -25,6 +25,14 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     public stats = new InstrumentationStatistics()
   ) {}
 
+  static CreateFromErrorMessage(
+    message: string,
+    data?: unknown,
+    stats?: InstrumentationStatistics
+  ) {
+    return new ApiResponse(data, 'Error', message, 200, stats)
+  }
+
   static CreateFromIApiResponse<T extends FetchDataTypesAllowed>(
     iApiResponse: IApiResponse<T>
   ) {

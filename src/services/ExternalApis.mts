@@ -66,7 +66,23 @@ const tpAssetEndpoint = urlJoin(tpApiUrl, 'asset', false)
  * @see https://www.tradingview.com/widget/advanced-chart/#symbol-search-result-item-symbol
  */
 
+/**
+ * ExternalApis is a collection of functions that interact with various external APIs.
+ * These functions handle fetching data from the APIs, processing the responses,
+ * and returning the relevant data or throwing exceptions in case of errors.
+ */
 export const ExternalApis = {
+  /**
+   * Checks if an error is a 403 Forbidden error and redirects to the sign-in page if so.
+   * This function is intended to be used as a global error handler for API calls.
+   * @param fname - The name of the function that is calling this error handler.
+   * This is used for logging purposes to identify where the error occurred.
+   * @param err The error object that was thrown. This can be any type of error, including
+   * custom errors like AppException or AppExceptionHttp.
+   * @param location The window.location object, which contains information about the current URL.
+   * @returns true if the error was handled (e.g., a 403 error that redirects to a sign-in page),
+   * false otherwise.
+   */
   errorHandler(
     fname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,10 +103,12 @@ export const ExternalApis = {
         //   '/api/auth/signin?callbackUrl=' +
         //     encodeURIComponent(window.location.href)
         // )
+
+        return true
       }
     }
 
-    throw err
+    return false
   },
 
   async allUsers(
