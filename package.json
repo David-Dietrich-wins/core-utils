@@ -8,11 +8,11 @@
   "exports": "./dist/index.mjs",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "buildboth": "npm run build:esm && npm run build:cjs && cp package.json dist && cp package.json dist/cjs && cp package.json dist/esm",
+    "build:both": "npm run build:esm && npm run build:cjs && cp package.json dist && cp package.json dist/cjs && cp package.json dist/esm",
+    "build:clean": "npm run clean && npm run build",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json && npm install",
-    "clean:build": "npm run clean && npm run build",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
     "test2": "jest --coverage",
