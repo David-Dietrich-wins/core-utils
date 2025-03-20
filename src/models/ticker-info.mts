@@ -66,7 +66,7 @@ export interface IUsersWithCount<Tid = string> extends IId<Tid> {
   lastlogin?: Date
   count: number
 }
-export interface ICompanyUsersWithCount extends IName {
+export interface ICompanyUsersWithCount extends IdName {
   total: number
   numusers: number
   status: number

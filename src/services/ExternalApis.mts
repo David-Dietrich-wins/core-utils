@@ -47,16 +47,18 @@ import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'
 import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
+import { IFacet } from '../tplot/Facet.mjs'
 import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
-import { ITradePlot, ITradePlotApi } from '../index.mjs'
+import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
 
 const politagreeApiUrl = process.env.NEXT_PUBLIC_POLITAGREE_API_URL
 // const politagreeAdminApiUrl = process.env.NEXT_PUBLIC_POLITAGREEADMIN_API_URL
 const tpApiUrl = process.env.NEXT_PUBLIC_TRADEPLOTTER_API_URL
+const tpAdminEndpoint = urlJoin(tpApiUrl, 'admin', false)
+const tpAssetEndpoint = urlJoin(tpApiUrl, 'asset', false)
 const tpConfigEndpoint = urlJoin(tpApiUrl, 'config', false)
 const tpUserEndpoint = urlJoin(tpApiUrl, 'user', false)
-const tpAssetEndpoint = urlJoin(tpApiUrl, 'asset', false)
 /**
  * Interface for the result of a symbol search.
  * This is a TradingView API response that contains information about a symbol.
@@ -142,12 +144,28 @@ export const ExternalApis = {
     ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
   },
 
-  async CompaniesWithUserCount(bearerToken: string) {
-    return fetchGet<IPagedResponse<ICompanyUsersWithCount>>({
-      url: `${tpApiUrl}admin/companies-with-count/`,
-      fname: ExternalApis.fetchCompaniesWithUserCount.name,
-      bearerToken,
-    }).then(PagedResponse.GetDataFromApiResponse)
+  admin: {
+    async CompaniesWithUserCount(bearerToken: string) {
+      const fname = ExternalApis.fetchCompaniesWithUserCount.name
+
+      return fetchGet<IPagedResponse<ICompanyUsersWithCount>>({
+        url: urlJoin(tpAdminEndpoint, 'companies-with-count'),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    async FacetSave(bearerToken: string, data: IFacet[]) {
+      const fname = ExternalApis.ChartRunLogs.name
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return fetchPost<any, IFacet[]>({
+        url: urlJoin(tpAdminEndpoint, 'facet'),
+        fname,
+        bearerToken,
+        data,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
   },
 
   async CompanyInfo(bearerToken: string, ticker: string) {
