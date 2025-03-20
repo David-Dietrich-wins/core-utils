@@ -7,14 +7,14 @@ import {
 import { hasData, safestr } from '../services/general.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface IConfigTable<T = any>
+export interface IUserConfig<T = any>
   extends IUserCreatedUpdatedTable,
     IKeyValueShort<T> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class ConfigTable<TValue = any>
+export class UserConfig<TValue = any>
   extends UserCreatedUpdatedTable
-  implements IConfigTable<TValue>
+  implements IUserConfig<TValue>
 {
   k = ''
   v: TValue
@@ -34,13 +34,13 @@ export class ConfigTable<TValue = any>
   }
 
   static fromApi<TFromApi = boolean>(
-    currentConfig: IConfigTable<TFromApi> | undefined,
+    currentConfig: IUserConfig<TFromApi> | undefined,
     nameVal: INameVal<TFromApi>,
     userid: string,
     email: string
   ) {
     const config =
-      currentConfig ?? ConfigTable.fromNameVal<TFromApi>(nameVal, userid, email)
+      currentConfig ?? UserConfig.fromNameVal<TFromApi>(nameVal, userid, email)
 
     config.k = nameVal.name
     config.v = nameVal.val
@@ -58,7 +58,7 @@ export class ConfigTable<TValue = any>
     curDate = curDate ?? new Date()
     const userEmail = safestr(email, fname)
 
-    const config: IConfigTable<TFromNameVal> = {
+    const config: IUserConfig<TFromNameVal> = {
       k: nv.name,
       v: nv.val,
       userid,
@@ -71,7 +71,7 @@ export class ConfigTable<TValue = any>
     return config
   }
 
-  copyFromDatabase(dbtp: IConfigTable<TValue>) {
+  copyFromDatabase(dbtp: IUserConfig<TValue>) {
     super.copyFromDatabase(dbtp)
 
     if (hasData(dbtp.k)) {

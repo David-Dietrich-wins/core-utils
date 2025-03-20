@@ -1,6 +1,6 @@
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
-import { ConfigTable, IConfigTable } from '../models/ConfigTable.mjs'
+import { UserConfig, IUserConfig } from '../models/UserConfig.mjs'
 import { IdName } from '../models/id-name.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { arrayFirst } from '../services/array-helper.mjs'
@@ -266,7 +266,7 @@ export class ConfigManager {
   ) {
     const defval = ConfigManager.getDefaultValue(name)
 
-    return new ConfigTable<typeof defval>(
+    return new UserConfig<typeof defval>(
       userid,
       name as string,
       defval,
@@ -277,9 +277,9 @@ export class ConfigManager {
     )
   }
 
-  static FindMissing(userid: string, dataPage: IConfigTable<unknown>[]) {
-    const arrMissingConfigs: IConfigTable[] = []
-    const arrUpdateConfigs: IConfigTable[] = []
+  static FindMissing(userid: string, dataPage: IUserConfig<unknown>[]) {
+    const arrMissingConfigs: IUserConfig[] = []
+    const arrUpdateConfigs: IUserConfig[] = []
 
     // Setup for the first time the default config settings.
     for (const configName of ConfigManager.permittedConfigNames) {
@@ -289,9 +289,9 @@ export class ConfigManager {
         arrUpdateConfigs.push(cfg)
       } else if (
         ConfigManager.KEY_Dashboards === found.k &&
-        !isArray((found as IConfigTable<IDashboardSetting>).v.screens, 1) &&
+        !isArray((found as IUserConfig<IDashboardSetting>).v.screens, 1) &&
         !isArray(
-          (found as IConfigTable<IDashboardSetting>).v.screens[0].tiles,
+          (found as IUserConfig<IDashboardSetting>).v.screens[0].tiles,
           1
         )
       ) {
