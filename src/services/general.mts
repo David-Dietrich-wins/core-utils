@@ -1,3 +1,4 @@
+import { AppException } from '../models/AppException.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 import { arrayElement, ToSafeArray } from './array-helper.mjs'
 
@@ -1242,11 +1243,23 @@ export function toHex(decimal?: number, chars = 2) {
  */
 export function urlJoin(
   baseUrl?: string | null,
-  relativePath?: string | null,
+  relativePath?: ArrayOrSingle<string | number | null | undefined> | null,
   addTrailingSlash = true
 ) {
   let url = safestr(baseUrl)
-  relativePath = safestr(relativePath)
+  let pathname = safeArray(relativePath)
+    .map((x) => {
+      if (isNullOrUndefined(x)) {
+        throw new AppException(
+          'urlJoin() relativePath cannot contain null or undefined values.',
+          'urlJoin',
+          safeArray(relativePath)
+        )
+      }
+
+      return isNumber(x) ? x.toString() : x
+    })
+    .join('/')
 
   // Remove any trailing slashes before adding a trailing slash.
   while (url.endsWith('/')) {
@@ -1254,15 +1267,15 @@ export function urlJoin(
   }
 
   // Strip front and end slashes, if any.
-  while (relativePath.startsWith('/')) {
-    relativePath = relativePath.slice(1)
+  while (pathname.startsWith('/')) {
+    pathname = pathname.slice(1)
   }
-  while (relativePath.endsWith('/')) {
-    relativePath = relativePath.slice(0, -1)
+  while (pathname.endsWith('/')) {
+    pathname = pathname.slice(0, -1)
   }
 
-  if (relativePath.length) {
-    url += '/' + relativePath
+  if (pathname.length) {
+    url += '/' + pathname
   }
 
   if (
