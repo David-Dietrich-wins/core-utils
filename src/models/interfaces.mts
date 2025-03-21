@@ -1,5 +1,5 @@
 import { IWebState } from './WebState.mjs'
-import { SearchSortDirection } from './types.mjs'
+import { SortOrder } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 
 export interface IId<T = string> {
@@ -77,7 +77,7 @@ export interface IEventLogin<T = string>
 export interface ISearchRequestView {
   term: string
   sortColumn: string
-  sortDirection: SearchSortDirection
+  sortDirection: SortOrder
   limit: number
   offset: number
   exactMatch: boolean

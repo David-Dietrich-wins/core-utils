@@ -582,6 +582,18 @@ export const ExternalApis = {
     ) {
       const fname = ExternalApis.user.PlotList.name
 
+      return ExternalApis.user
+        .PlotListRaw(bearerToken, searchRequest, name)
+        .then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    async PlotListRaw(
+      bearerToken: string,
+      searchRequest?: Partial<ISearchRequestView>,
+      name = 'main'
+    ) {
+      const fname = ExternalApis.user.PlotListRaw.name
+
       return fetchPost<
         IPagedResponseWithTotalValue<ITradePlotListRowItem>,
         ISearchRequestView
@@ -590,7 +602,7 @@ export const ExternalApis = {
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
-      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+      })
     },
 
     async ScreenData(
