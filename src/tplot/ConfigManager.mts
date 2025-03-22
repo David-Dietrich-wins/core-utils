@@ -13,7 +13,6 @@ import {
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
-import { PermittedUserConfigs } from './tp-items.mjs'
 
 export type IdeasTabNames =
   | 'top-gainers'
@@ -60,10 +59,27 @@ export type ConfigTickerInfo<
   U = `tickerInfo-${Tticker}`
 > = IKeyValueShort<ConfigTickerInfoTabSettings, U>
 
-export const TpConfigItems = {
-  // TickerInfo,
-  IdeasSelectedType,
-  CryptoIdeasSelectedType,
+export interface IHeaderTickersConfig {
+  tickers: string[]
+}
+export interface IHeaderTickersIndexConfig {
+  showAsset: boolean
+  showCrypto: boolean
+}
+
+export type PermittedUserConfigs = {
+  chartColorDown: string
+  chartColorUp: string
+  dashboards: IDashboardSetting
+  headerTickerBarIndex: IHeaderTickersIndexConfig
+  headerTickerBarUser: IHeaderTickersConfig
+  hideTickerBar: boolean
+  hideTooltips: boolean
+  openFirstPlot: boolean
+  showPriceChangeInTickerBar: boolean
+  useMinusEight: boolean
+  [IdeasSelectedType.k]: IdName<number, IdeasTabNames>
+  [CryptoIdeasSelectedType.k]: IdName<number, CryptoIdeasTabNames>
 }
 
 export type PermittedConfigNames = keyof PermittedUserConfigs
@@ -90,10 +106,10 @@ export class ConfigManager {
     return config
   }
   get chartColorDown() {
-    return this.FindString('chartColorDown', '#ff0000')
+    return this.FindString('chartColorDown', '#FF0000')
   }
   get chartColorUp() {
-    return this.FindString('chartColorUp', '#00ff00')
+    return this.FindString('chartColorUp', '#00FF00')
   }
 
   get dashboards() {
@@ -117,10 +133,11 @@ export class ConfigManager {
       (config) => 'headerTickerBarIndex' === config.k
     )
     if (found) {
-      return found.v as unknown as { showAsset: boolean; showCrypto: boolean }
+      return found.v as IHeaderTickersIndexConfig
     }
 
-    return { showAsset: true, showCrypto: true }
+    const ret: IHeaderTickersIndexConfig = { showAsset: true, showCrypto: true }
+    return ret
   }
   get headerTickerBarUser() {
     const found = this.configs.find(
@@ -130,7 +147,8 @@ export class ConfigManager {
       return found.v as unknown as { tickers: string[] }
     }
 
-    return { tickers: [] }
+    const ret: IHeaderTickersConfig = { tickers: [] }
+    return ret
   }
 
   get hideTickerBar() {

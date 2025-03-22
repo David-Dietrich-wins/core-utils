@@ -1,5 +1,5 @@
 import { ICompany } from '../politagree/company.mjs'
-import { PermittedUserConfigs } from './tp-items.mjs'
+import { PermittedUserConfigs } from './ConfigManager.mjs'
 
 export interface IUserInfo {
   companies: ICompany[]
