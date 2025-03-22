@@ -724,7 +724,7 @@ export const ExternalApis = {
 
       return ExternalApis.user
         .PlotListRaw(bearerToken, searchRequest, name)
-        .then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+        .then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
     async PlotListRaw(
