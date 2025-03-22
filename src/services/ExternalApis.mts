@@ -62,7 +62,11 @@ const CONST_EndpointAdmin = urlJoin(IntecoreApiUrl, 'admin', false)
 const CONST_EndpointAsset = urlJoin(IntecoreApiUrl, 'asset', false)
 const CONST_EndpointConfig = urlJoin(IntecoreApiUrl, 'config', false)
 const CONST_EndpointPolitagree = urlJoin(IntecoreApiUrl, 'politagree', false)
-// const CONST_EndpointPolitagreeAdmin = urlJoin(IntecoreApiUrl, 'politagree-admin', false)
+const CONST_EndpointPolitagreeAdmin = urlJoin(
+  IntecoreApiUrl,
+  'politagree-admin',
+  false
+)
 const CONST_EndpointTrade = urlJoin(IntecoreApiUrl, 'trade', false)
 const CONST_EndpointTv = urlJoin(IntecoreApiUrl, 'tv', false)
 const CONST_EndpointUser = urlJoin(IntecoreApiUrl, 'user', false)
@@ -568,20 +572,6 @@ export const ExternalApis = {
       )
     },
 
-    async CityUpdate(
-      bearerToken: string,
-      data: Partial<ICity> & Required<ISlug>
-    ) {
-      const fname = ExternalApis.politagree.CitySearch.name
-
-      return fetchPut<Partial<ICity>, ICity>({
-        url: urlJoin(CONST_EndpointPolitagree, 'city'),
-        fname,
-        data,
-        bearerToken,
-      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
-    },
-
     async CompaniesAll() {
       const fname = ExternalApis.politagree.CompaniesAll.name
 
@@ -618,20 +608,6 @@ export const ExternalApis = {
       )
     },
 
-    async CompanyUpdate(
-      bearerToken: string,
-      data: Partial<ISymbolDetail> & Required<ITicker>
-    ) {
-      const fname = ExternalApis.politagree.CompanySearch.name
-
-      return fetchPut<Partial<ISymbolDetail>, ISymbolDetail>({
-        url: urlJoin(CONST_EndpointPolitagree, 'company'),
-        fname,
-        data,
-        bearerToken,
-      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
-    },
-
     async TopSymbols(ticker: string) {
       const fname = ExternalApis.politagree.TopSymbols.name
 
@@ -646,6 +622,36 @@ export const ExternalApis = {
         (ret) =>
           ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
       )
+    },
+  },
+
+  politagreeAdmin: {
+    async CityUpdate(
+      bearerToken: string,
+      data: Partial<ICity> & Required<ISlug>
+    ) {
+      const fname = ExternalApis.politagreeAdmin.CityUpdate.name
+
+      return fetchPut<Partial<ICity>, ICity>({
+        url: urlJoin(CONST_EndpointPolitagreeAdmin, 'city'),
+        fname,
+        data,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    async CompanyUpdate(
+      bearerToken: string,
+      data: Partial<ISymbolDetail> & Required<ITicker>
+    ) {
+      const fname = ExternalApis.politagreeAdmin.CompanyUpdate.name
+
+      return fetchPut<Partial<ISymbolDetail>, ISymbolDetail>({
+        url: urlJoin(CONST_EndpointPolitagreeAdmin, 'company'),
+        fname,
+        data,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   },
 
