@@ -58,7 +58,7 @@ import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import {
   CONST_AppNamePolitagree,
-  CONST_AppNameTradePlotter,
+  // CONST_AppNameTradePlotter,
 } from './HttpHeaderManager.mjs'
 import {
   IPolitiscaleSearchParams,
@@ -66,6 +66,7 @@ import {
 } from '../politagree/politiscale.mjs'
 
 const IntecoreApiUrl = process.env.NEXT_PUBLIC_INTECORE_API_URL
+
 const CONST_EndpointAdmin = urlJoin(IntecoreApiUrl, 'admin', false)
 const CONST_EndpointAsset = urlJoin(IntecoreApiUrl, 'asset', false)
 const CONST_EndpointConfig = urlJoin(IntecoreApiUrl, 'config', false)
@@ -532,7 +533,7 @@ export const ExternalApis = {
       return fetchGet<IPagedResponse<ICity>>({
         url: urlJoin(CONST_EndpointPolitagree, 'city-all-slugs'),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -542,7 +543,7 @@ export const ExternalApis = {
       return fetchGet<ICity>({
         url: urlJoin(CONST_EndpointPolitagree, ['city', id]),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -552,7 +553,7 @@ export const ExternalApis = {
       return fetchGet<ICity>({
         url: urlJoin(CONST_EndpointPolitagree, ['city', slug]),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -566,7 +567,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'city-search'),
         fname,
         data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -579,7 +580,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'city-search-full-info'),
         fname,
         data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -591,7 +592,7 @@ export const ExternalApis = {
       return fetchGet<IPagedResponse<ITickerType>>({
         url: urlJoin(CONST_EndpointPolitagree, 'company-all-slugs'),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -603,6 +604,7 @@ export const ExternalApis = {
           url: urlJoin(CONST_EndpointPolitagree, 'company-search-full-info'),
           fname,
           data: srv,
+          headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
     },
@@ -617,7 +619,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'company-search'),
         fname,
         data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -632,7 +634,7 @@ export const ExternalApis = {
         data: {
           ticker, //: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
         },
-        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then(
         (ret) =>
           ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
@@ -652,6 +654,7 @@ export const ExternalApis = {
         fname,
         data,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -666,6 +669,7 @@ export const ExternalApis = {
         fname,
         data,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   },
