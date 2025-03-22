@@ -1,21 +1,20 @@
 import { Request } from 'express'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import {
-  CONST_HttpHeaderAuthorization,
-  CONST_HttpHeaderShowDebug,
   HttpHeaderManager,
   HttpHeaderManagerBase,
+  HttpHeaderNamesAllowed,
 } from './HttpHeaderManager.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 import { JwtTokenWithUserId } from './jwt.mjs'
 
 test('getHeaderString', () => {
   const init: StringOrStringArrayObject = {
-    [CONST_HttpHeaderAuthorization]: TEST_Parameters_DEV.jwt,
+    [HttpHeaderNamesAllowed.Authorization]: TEST_Parameters_DEV.jwt,
   }
   const hm = new HttpHeaderManagerBase(init)
 
-  const headerString = hm.getHeaderString(CONST_HttpHeaderAuthorization)
+  const headerString = hm.getHeaderString(HttpHeaderNamesAllowed.Authorization)
   expect(headerString).toBe(TEST_Parameters_DEV.jwt)
 })
 
@@ -23,7 +22,7 @@ test('bearerToken', () => {
   const val = TEST_Parameters_DEV.jwt
 
   const init: StringOrStringArrayObject = {
-    [CONST_HttpHeaderAuthorization]: val,
+    [HttpHeaderNamesAllowed.Authorization]: val,
   }
   const hm = new HttpHeaderManagerBase(init)
 
@@ -33,7 +32,8 @@ test('bearerToken', () => {
 
 test('uppercase header name', () => {
   const init: StringOrStringArrayObject = {
-    [CONST_HttpHeaderAuthorization.toUpperCase()]: TEST_Parameters_DEV.jwt,
+    [HttpHeaderNamesAllowed.Authorization.toUpperCase()]:
+      TEST_Parameters_DEV.jwt,
   }
   const hm = new HttpHeaderManagerBase(init)
 
@@ -45,7 +45,7 @@ test('jwtTokenMustExistAndBeValid', () => {
   const val = TEST_Parameters_DEV.jwt
 
   const init: StringOrStringArrayObject = {
-    [CONST_HttpHeaderAuthorization]: val,
+    [HttpHeaderNamesAllowed.Authorization]: val,
   }
   const hm = new HttpHeaderManagerBase(init)
 
@@ -56,7 +56,7 @@ test('jwtTokenMustExistAndBeValid', () => {
 
 test('jwtToken', () => {
   const init: StringOrStringArrayObject = {
-    [CONST_HttpHeaderAuthorization]: `Bearer ${TEST_Parameters_DEV.jwt}`,
+    [HttpHeaderNamesAllowed.Authorization]: `Bearer ${TEST_Parameters_DEV.jwt}`,
   }
   const hm = new HttpHeaderManagerBase(init)
 
@@ -75,7 +75,7 @@ describe('userIdFromJwt', () => {
     )
 
     const init: StringOrStringArrayObject = {
-      [CONST_HttpHeaderAuthorization]: `Bearer ${val}`,
+      [HttpHeaderNamesAllowed.Authorization]: `Bearer ${val}`,
     }
     const hm = new HttpHeaderManagerBase(init)
 
@@ -86,7 +86,7 @@ describe('userIdFromJwt', () => {
   test('userId is 0', () => {
     const jwt = GenerateSignedJwtToken('')
     const init: StringOrStringArrayObject = {
-      [CONST_HttpHeaderAuthorization]: `Bearer ${jwt}`,
+      [HttpHeaderNamesAllowed.Authorization]: `Bearer ${jwt}`,
     }
     const hm = new HttpHeaderManagerBase(init)
 
@@ -133,7 +133,9 @@ test('showDebug', () => {
 
   const val = 'true'
 
-  const init: StringOrStringArrayObject = { [CONST_HttpHeaderShowDebug]: val }
+  const init: StringOrStringArrayObject = {
+    [HttpHeaderNamesAllowed.ShowDebug]: val,
+  }
   const hm = new HttpHeaderManagerBase(init)
 
   expect(hm.showDebug).toBe(true)

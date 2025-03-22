@@ -4,11 +4,24 @@ import { getBoolean, isObject, safestr, safestrLowercase } from './general.mjs'
 import { arrayFirst } from './array-helper.mjs'
 import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { IdType } from '../models/id-name.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
-export const CONST_HttpHeaderShowDebug = 'ShowDebug'
-export const CONST_HttpHeaderAuthorization = 'authorization'
+export const CONST_AppNamePolitagree = 'Politagree'
+export const CONST_AppNameTradePlotter = 'TradePlotter'
+
+export enum HttpHeaderNamesAllowed {
+  Authorization = 'authorization',
+  ShowDebug = 'ShowDebug',
+  ApplicationName = 'x-application-name',
+}
+
+export const HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
+  { id: HttpHeaderNamesAllowed.ApplicationName, type: 'string' },
+  { id: HttpHeaderNamesAllowed.Authorization, type: 'string' },
+  { id: HttpHeaderNamesAllowed.ShowDebug, type: 'boolean' },
+] as const
 
 /**
  * Base class for managing HTTP Headers. Including JWT support for extracting data.
@@ -57,7 +70,7 @@ export class HttpHeaderManagerBase {
   get bearerToken() {
     if (!this._bearerTokenCache) {
       this._bearerTokenCache = HttpHeaderManagerBase.BearerTokenParseStrict(
-        this.getHeaderStringSafe(CONST_HttpHeaderAuthorization)
+        this.getHeaderStringSafe(HttpHeaderNamesAllowed.Authorization)
       )
     }
 
@@ -78,10 +91,10 @@ export class HttpHeaderManagerBase {
   }
 
   get showDebug() {
-    return this.getBoolean(CONST_HttpHeaderShowDebug)
+    return this.getBoolean(HttpHeaderNamesAllowed.ShowDebug)
   }
   get showDebugExists() {
-    return this.has(CONST_HttpHeaderShowDebug)
+    return this.has(HttpHeaderNamesAllowed.ShowDebug)
   }
 
   get userId() {

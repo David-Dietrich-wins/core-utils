@@ -24,6 +24,11 @@ export type IdNameType<Tid = string, Tname = string> = {
   name: Tname
 }
 
+export type IdType<Tid = string, Ttype = unknown> = {
+  id: Tid
+  type: Ttype
+}
+
 export interface IdNameValue<Tvalue = string, Tid = string>
   extends IdName<Tid, string>,
     INameValue<Tvalue> {}

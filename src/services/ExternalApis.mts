@@ -42,6 +42,7 @@ import {
   fetchPatch,
   fetchPut,
   fetchDelete,
+  GetHttpHeaderApplicationName,
 } from './fetch-http.mjs'
 import { urlJoin, hasData } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
@@ -55,7 +56,14 @@ import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
-import { IPolitiscaleSearchParams, ITickerSearchWithScales } from '../index.mjs'
+import {
+  CONST_AppNamePolitagree,
+  CONST_AppNameTradePlotter,
+} from './HttpHeaderManager.mjs'
+import {
+  IPolitiscaleSearchParams,
+  ITickerSearchWithScales,
+} from '../politagree/politiscale.mjs'
 
 const IntecoreApiUrl = process.env.NEXT_PUBLIC_INTECORE_API_URL
 const CONST_EndpointAdmin = urlJoin(IntecoreApiUrl, 'admin', false)
@@ -524,6 +532,7 @@ export const ExternalApis = {
       return fetchGet<IPagedResponse<ICity>>({
         url: urlJoin(CONST_EndpointPolitagree, 'city-all-slugs'),
         fname,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -533,6 +542,7 @@ export const ExternalApis = {
       return fetchGet<ICity>({
         url: urlJoin(CONST_EndpointPolitagree, ['city', id]),
         fname,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -542,6 +552,7 @@ export const ExternalApis = {
       return fetchGet<ICity>({
         url: urlJoin(CONST_EndpointPolitagree, ['city', slug]),
         fname,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -555,6 +566,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'city-search'),
         fname,
         data: srv,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -567,6 +579,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'city-search-full-info'),
         fname,
         data: srv,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -578,6 +591,7 @@ export const ExternalApis = {
       return fetchGet<IPagedResponse<ITickerType>>({
         url: urlJoin(CONST_EndpointPolitagree, 'company-all-slugs'),
         fname,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -603,6 +617,7 @@ export const ExternalApis = {
         url: urlJoin(CONST_EndpointPolitagree, 'company-search'),
         fname,
         data: srv,
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -614,10 +629,10 @@ export const ExternalApis = {
       return fetchPost<IPagedResponse<ISymbolDetail>, { ticker: string }>({
         url: urlJoin(CONST_EndpointPolitagree, 'top-symbols'),
         fname,
-
         data: {
           ticker, //: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
         },
+        headers: GetHttpHeaderApplicationName(CONST_AppNameTradePlotter),
       }).then(
         (ret) =>
           ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
@@ -830,6 +845,7 @@ export const ExternalApis = {
       url: urlJoin(IntecoreApiUrl, 'server-time'),
       fname,
       bearerToken,
+      headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
     })
       .then((ret) => ExternalApis.verifySuccess(fname, ret))
       .then((ret) => ret.serverTime / 1000)

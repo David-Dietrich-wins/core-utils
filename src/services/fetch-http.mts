@@ -1,8 +1,10 @@
 import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
-import { IDataWithStats, JSONValue } from '../models/types.mjs'
+import { ArrayOrSingle, IDataWithStats, JSONValue } from '../models/types.mjs'
 import { ApiResponse, IApiResponse } from '../models/ApiResponse.mjs'
-import { hasData, isArray, isObject } from './general.mjs'
+import { hasData, isArray, isObject, safeArray } from './general.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
+import { HttpHeaderNamesAllowed } from './HttpHeaderManager.mjs'
+import { ToSafeArray2d } from './array-helper.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -15,6 +17,7 @@ export type HttpFetchRequestProps<
   data?: Tdata
   fname?: string
   bearerToken?: string
+  headers?: ArrayOrSingle<Readonly<[string, string]>>
   statusCodesToBypassErrorHandler?: number[]
 }
 
@@ -23,14 +26,37 @@ export type HttpFetchRequestProps<
  * @param bearerToken An optional security token to add as Authorization to the HTTP header.
  * @returns A JSON ready header for HTTP calls.
  */
-export function getHttpHeaderJson(bearerToken?: string) {
-  const headers = new Headers({ 'Content-Type': 'application/json' })
+export function getHttpHeaderJson(
+  bearerToken?: string,
+  addHeaders?: ArrayOrSingle<Readonly<[string, string]>>
+) {
+  const headers: Array<Readonly<[string, string]>> = [
+    ['Content-Type', 'application/json'],
+    ...ToSafeArray2d<Readonly<[string, string]>>(addHeaders),
+  ]
 
   if (hasData(bearerToken)) {
-    headers.append('Authorization', `Bearer ${bearerToken}`)
+    headers.push(['Authorization', `Bearer ${bearerToken}`])
   }
 
-  return headers
+  return GetHttpHeaders(headers)
+}
+
+export function GetHttpHeaderApplicationName(appName: string) {
+  return [HttpHeaderNamesAllowed.ApplicationName, appName] as const
+}
+export function GetHttpHeaders(
+  headers: ArrayOrSingle<Readonly<[string, string]>>
+) {
+  const h = new Headers()
+
+  ToSafeArray2d<Readonly<[string, string]>>(headers).forEach((header) => {
+    if (isArray(header, 2)) {
+      h.append(header[0], header[1])
+    }
+  })
+
+  return h
 }
 
 /**
@@ -44,7 +70,7 @@ export function getHttpHeaderJson(bearerToken?: string) {
  */
 export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
   method: HttpMethod,
-  { url, data, fname, bearerToken }: HttpFetchRequestProps<Tdata>
+  { url, data, fname, bearerToken, headers }: HttpFetchRequestProps<Tdata>
 ) {
   const stats = new InstrumentationStatistics()
   if (!fname || !hasData(fname)) {
@@ -61,7 +87,7 @@ export async function fetchHttp<Tdata extends FetchDataTypesAllowed = object>(
   try {
     const req: RequestInit = {
       method,
-      headers: getHttpHeaderJson(bearerToken),
+      headers: getHttpHeaderJson(bearerToken, safeArray(headers)),
     }
 
     if (data && hasData(data)) {
