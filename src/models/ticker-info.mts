@@ -298,6 +298,10 @@ export interface ISpac extends ISymbolName {
   action: string
 }
 
+export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {
+  profile: CompanyProfile
+}
+
 export interface ISymbolPrices extends ISymbol {
   candles: IPriceHistoryWithDateTime[]
   midprice: number
@@ -660,7 +664,7 @@ export type AssetQuoteWithScore = AssetQuoteWithChanges & {
 
 export type CompanyAssetInfo = {
   execs: ICompanyExecutive[]
-  info: ICompanyInfo
+  info: ISymbolDetail
   quote?: IAssetQuoteResponse
   ratios?: IRatio
 }

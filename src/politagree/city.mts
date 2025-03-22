@@ -1,3 +1,4 @@
+import { IdName } from '../models/id-name.mjs'
 import { IName, ISlug } from '../models/interfaces.mjs'
 import { isObject } from '../services/general.mjs'
 import { IHasPolitiscales, IPolitiscale } from './politiscale.mjs'
@@ -24,3 +25,9 @@ export class City implements ICity {
     }
   }
 }
+
+export interface IdNameSlug<Tid = string, Tname = string>
+  extends IdName<Tid, Tname>,
+    ISlug {}
+
+export type IdNameSlugWithScales = IdNameSlug & IHasPolitiscales

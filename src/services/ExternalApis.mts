@@ -6,6 +6,7 @@ import {
   IChartRunLogApiReturn,
   IEventLogin,
   ISearchRequestView,
+  ISlug,
 } from '../models/interfaces.mjs'
 import { INameVal, NameVal } from '../models/name-val.mjs'
 import {
@@ -20,12 +21,14 @@ import {
   CompanyAssetInfo,
   IAssetQuoteResponse,
   ICompanyProfile,
-  ICompanyScales,
   ICompanyUsersWithCount,
   IIpoCalendar,
+  ISymbolDetail,
   ISymbolPrices,
   ISymbolPriceVolumeChanges,
+  ITicker,
   ITickerSearch,
+  ITickerType,
   IUsersWithCount,
 } from '../models/ticker-info.mjs'
 import {
@@ -40,7 +43,7 @@ import {
   fetchPut,
   fetchDelete,
 } from './fetch-http.mjs'
-import { urlJoin, hasData, safeArray } from './general.mjs'
+import { urlJoin, hasData } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
 import { ITradePlotListRowItem } from '../tplot/trade-plotlist-row-item.mjs'
 import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
@@ -51,6 +54,8 @@ import { IFacet } from '../tplot/Facet.mjs'
 import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
+import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
+import { IPolitiscaleSearchParams, ITickerSearchWithScales } from '../index.mjs'
 
 const IntecoreApiUrl = process.env.NEXT_PUBLIC_INTECORE_API_URL
 const CONST_EndpointAdmin = urlJoin(IntecoreApiUrl, 'admin', false)
@@ -509,28 +514,138 @@ export const ExternalApis = {
   },
 
   politagree: {
-    async TopSymbols() {
+    async CitiesAll() {
+      const fname = ExternalApis.politagree.CitiesAll.name
+
+      return fetchGet<IPagedResponse<ICity>>({
+        url: urlJoin(CONST_EndpointPolitagree, 'city-all-slugs'),
+        fname,
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    async CityById(id: string) {
+      const fname = ExternalApis.politagree.CityById.name
+
+      return fetchGet<ICity>({
+        url: urlJoin(CONST_EndpointPolitagree, ['city', id]),
+        fname,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
+    },
+
+    async CityBySlug(slug: string) {
+      const fname = ExternalApis.politagree.CityBySlug.name
+
+      return fetchGet<ICity>({
+        url: urlJoin(CONST_EndpointPolitagree, ['city', slug]),
+        fname,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
+    },
+
+    async CitySearch(srv: IPolitiscaleSearchParams) {
+      const fname = ExternalApis.politagree.CitySearch.name
+
+      return fetchPost<
+        IPagedResponse<IdNameSlugWithScales>,
+        IPolitiscaleSearchParams
+      >({
+        url: urlJoin(CONST_EndpointPolitagree, 'city-search'),
+        fname,
+        data: srv,
+      }).then((ret) =>
+        ExternalApis.verifySuccessPagedResponse(fname, ret, true)
+      )
+    },
+
+    async CitySearchFullInfo(srv: IPolitiscaleSearchParams) {
+      const fname = ExternalApis.politagree.CompaniesSearchFullInfo.name
+
+      return fetchPost<IPagedResponse<ICity>, IPolitiscaleSearchParams>({
+        url: urlJoin(CONST_EndpointPolitagree, 'city-search-full-info'),
+        fname,
+        data: srv,
+      }).then((ret) =>
+        ExternalApis.verifySuccessPagedResponse(fname, ret, true)
+      )
+    },
+
+    async CityUpdate(
+      bearerToken: string,
+      data: Partial<ICity> & Required<ISlug>
+    ) {
+      const fname = ExternalApis.politagree.CitySearch.name
+
+      return fetchPut<Partial<ICity>, ICity>({
+        url: urlJoin(CONST_EndpointPolitagree, 'city'),
+        fname,
+        data,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    async CompaniesAll() {
+      const fname = ExternalApis.politagree.CompaniesAll.name
+
+      return fetchGet<IPagedResponse<ITickerType>>({
+        url: urlJoin(CONST_EndpointPolitagree, 'company-all-slugs'),
+        fname,
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    async CompaniesSearchFullInfo(srv: IPolitiscaleSearchParams) {
+      const fname = ExternalApis.politagree.CompaniesSearchFullInfo.name
+
+      return fetchPost<IPagedResponse<ISymbolDetail>, IPolitiscaleSearchParams>(
+        {
+          url: urlJoin(CONST_EndpointPolitagree, 'company-search-full-info'),
+          fname,
+          data: srv,
+        }
+      ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
+    },
+
+    async CompanySearch(srv: IPolitiscaleSearchParams) {
+      const fname = ExternalApis.politagree.CompanySearch.name
+
+      return fetchPost<
+        IPagedResponse<ITickerSearchWithScales>,
+        IPolitiscaleSearchParams
+      >({
+        url: urlJoin(CONST_EndpointPolitagree, 'company-search'),
+        fname,
+        data: srv,
+      }).then((ret) =>
+        ExternalApis.verifySuccessPagedResponse(fname, ret, true)
+      )
+    },
+
+    async CompanyUpdate(
+      bearerToken: string,
+      data: Partial<ISymbolDetail> & Required<ITicker>
+    ) {
+      const fname = ExternalApis.politagree.CompanySearch.name
+
+      return fetchPut<Partial<ISymbolDetail>, ISymbolDetail>({
+        url: urlJoin(CONST_EndpointPolitagree, 'company'),
+        fname,
+        data,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    async TopSymbols(ticker: string) {
       const fname = ExternalApis.politagree.TopSymbols.name
 
-      try {
-        const ret = await fetchPost<
-          IPagedResponse<ICompanyScales>,
-          { ticker: string }
-        >({
-          url: urlJoin(CONST_EndpointPolitagree, 'top-symbols'),
-          fname,
+      return fetchPost<IPagedResponse<ISymbolDetail>, { ticker: string }>({
+        url: urlJoin(CONST_EndpointPolitagree, 'top-symbols'),
+        fname,
 
-          data: {
-            ticker: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
-          },
-        })
-
-        return safeArray(ret?.data?.dataPage)
-      } catch (e) {
-        console.error(fname, e)
-      }
-
-      return []
+        data: {
+          ticker, //: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
+        },
+      }).then(
+        (ret) =>
+          ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
+      )
     },
   },
 
@@ -714,24 +829,10 @@ export const ExternalApis = {
       .then((ret) => ret.serverTime / 1000)
   },
 
-  verifySuccess<T = unknown>(fname: string, ret: ApiResponse<T>) {
-    if (!ApiResponse.isSuccess(ret)) {
-      throw new AppException(
-        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
-        fname
-      )
-    }
-
-    if (!ret.data) {
-      throw new AppException('No data returned', fname)
-    }
-
-    return ret.data
-  },
-
-  verifySuccessPagedResponse<T = unknown>(
+  verifySuccess<T = unknown>(
     fname: string,
-    ret: ApiResponse<IPagedResponse<T>>
+    ret: ApiResponse<T>,
+    allowNoDataReturned = false
   ) {
     if (!ApiResponse.isSuccess(ret)) {
       throw new AppException(
@@ -740,7 +841,26 @@ export const ExternalApis = {
       )
     }
 
-    if (!ret.data) {
+    if (!allowNoDataReturned && !ret.data) {
+      throw new AppException('No data returned', fname)
+    }
+
+    return ret.data
+  },
+
+  verifySuccessPagedResponse<T = unknown>(
+    fname: string,
+    ret: ApiResponse<IPagedResponse<T>>,
+    allowNoDataReturned = false
+  ) {
+    if (!ApiResponse.isSuccess(ret)) {
+      throw new AppException(
+        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
+        fname
+      )
+    }
+
+    if (!allowNoDataReturned && !ret.data) {
       throw new AppException('No data returned', fname)
     }
 
