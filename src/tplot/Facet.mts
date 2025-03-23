@@ -12,6 +12,13 @@ export interface IFacet<T = any> extends IUserCreatedUpdatedTable, NameVal<T> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FacetSaveParameters<T = any> = {
+  symbol: string
+  resolution: string
+  facets: IFacet<T>[]
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Facet<T = any>
   extends UserCreatedUpdatedTable
   implements IFacet<T>

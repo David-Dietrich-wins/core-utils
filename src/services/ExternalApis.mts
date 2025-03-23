@@ -51,7 +51,7 @@ import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'
 import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
-import { IFacet } from '../tplot/Facet.mjs'
+import { FacetSaveParameters } from '../tplot/Facet.mjs'
 import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
@@ -160,11 +160,11 @@ export const ExternalApis = {
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async FacetSave(bearerToken: string, data: IFacet[]) {
+    async FacetSave(bearerToken: string, data: FacetSaveParameters) {
       const fname = ExternalApis.admin.FacetSave.name
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return fetchPost<any, IFacet[]>({
+      return fetchPost<any, FacetSaveParameters>({
         url: urlJoin(CONST_EndpointAdmin, 'facet'),
         fname,
         bearerToken,
