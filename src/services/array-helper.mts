@@ -421,6 +421,14 @@ export function arraySwapItems<T>(
   return arrItems
 }
 
+export function arrayMoveDown<T>(arrItems: T[], index: number) {
+  return arraySwapItems(arrItems, index, index + 1)
+}
+
+export function arrayMoveUp<T>(arrItems: T[], index: number) {
+  return arraySwapItems(arrItems, index - 1, index)
+}
+
 export function shuffleArray<T>(array: T[], maxItems?: number) {
   const shuffledArray = [...array]
 
