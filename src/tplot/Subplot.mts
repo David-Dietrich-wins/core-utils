@@ -1,5 +1,5 @@
 import { IId } from '../models/interfaces.mjs'
-import { isObject } from '../services/general.mjs'
+import { isObject, safeArray } from '../services/general.mjs'
 
 export interface ISubplot extends IId<number> {
   orderNumber: number
@@ -50,10 +50,10 @@ export class Subplot implements ISubplot {
     scaleInverted = false
   ) {
     if (isObject(id)) {
-      this.copyObject(id as ISubplot)
+      this.copyObject(id)
     } else {
       // constructor items
-      this.id = id as number
+      this.id = id
       this.orderNumber = orderNumber
       this.pattern = pattern
       this.timeframe = timeframe
@@ -67,6 +67,15 @@ export class Subplot implements ISubplot {
       this.useMinusEight = useMinusEight
       this.scaleInverted = scaleInverted
     }
+  }
+
+  static Renumber(subplots: ISubplot[]) {
+    safeArray(subplots).forEach((sp, index) => {
+      sp.id = index
+      sp.orderNumber = index
+    })
+
+    return subplots
   }
 
   copyObject(dbtp: ISubplot) {
