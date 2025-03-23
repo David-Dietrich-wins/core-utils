@@ -2,8 +2,7 @@ import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
 import { UserConfig, IUserConfig } from '../models/UserConfig.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
-import { arrayFirst } from '../services/array-helper.mjs'
-import { deepCloneJson, isArray, safeArray } from '../services/general.mjs'
+import { deepCloneJson, isArray } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
@@ -180,36 +179,30 @@ export class ConfigManager {
   }
 
   get dashboards() {
-    const d = safeArray(
-      this.configs.filter((cfg) => cfg.k === TpConfigNamesEnum.dashboards)
+    const dashboard = this.FindConfig<IDashboardSetting>(
+      TpConfigNamesEnum.dashboards
     )
 
-    const dashboard =
-      arrayFirst(d.map((cfg) => cfg.v as unknown as IDashboardSetting)) ??
-      deepCloneJson(ConfigManager.defaults.dashboards)
-
-    if (!dashboard) {
-      throw new AppException('Could not retrieve dashboard.', 'dashboards')
+    const clone = deepCloneJson(dashboard)
+    if (!clone) {
+      throw new AppException(
+        'Unable to clone the dashboard config.',
+        'ConfigManager.dashboards'
+      )
     }
 
-    return dashboard
+    return clone
   }
 
   get headerTickerBarIndex() {
-    const found = this.configs.find(
-      (config) => 'headerTickerBarIndex' === config.k
+    return this.FindConfig<IHeaderTickersIndexConfig>(
+      TpConfigNamesEnum.headerTickerBarIndex
     )
-    if (found) {
-      return found.v as IHeaderTickersIndexConfig
-    }
-
-    const ret: IHeaderTickersIndexConfig = { showAsset: true, showCrypto: true }
-    return ret
   }
   get headerTickerBarUser() {
-    return this.FindConfig(
+    return this.FindConfig<IHeaderTickersConfig>(
       TpConfigNamesEnum.headerTickerBarUser
-    ) as IHeaderTickersConfig
+    )
   }
 
   get hideTickerBar() {
@@ -220,10 +213,14 @@ export class ConfigManager {
   }
 
   get ideaTabSelected() {
-    return this.FindConfig(TpConfigNamesEnum.ideaTabSelected)
+    return this.FindConfig<IdName<number, IdeasTabNames>>(
+      TpConfigNamesEnum.ideaTabSelected
+    )
   }
   get ideaCryptoTabSelected() {
-    return this.FindConfig(TpConfigNamesEnum.ideaCryptoTabSelected)
+    return this.FindConfig<IdName<number, CryptoIdeasTabNames>>(
+      TpConfigNamesEnum.ideaCryptoTabSelected
+    )
   }
 
   get openFirstPlot() {
@@ -237,20 +234,26 @@ export class ConfigManager {
     return this.FindBoolean(TpConfigNamesEnum.useMinusEight)
   }
 
-  FindConfig(name: TpConfigNamesEnum) {
+  /**
+   * Searches all configs for the specified name and returns the value.
+   * If the config is not found, it returns the default value for that config.
+   * @param name - The name of the config to find.
+   * @returns The config if found, otherwise the default value for that config.
+   */
+  FindConfig<T = string>(name: TpConfigNamesEnum) {
     const found = this.configs.find((config) => name === config.k)
     if (found) {
-      return found.v as TpUserInfoAllConfigs[typeof name]
+      return found.v as T
     }
 
-    return ConfigManager.defaults[typeof name]
+    return ConfigManager.defaults[typeof name] as T
   }
 
   FindBoolean(name: TpConfigNamesEnum) {
-    return this.FindConfig(name)
+    return this.FindConfig<boolean>(name)
   }
   FindString(name: TpConfigNamesEnum) {
-    return this.FindConfig(name)
+    return this.FindConfig<string>(name)
   }
 
   findScreen(screenName: string) {
@@ -361,7 +364,7 @@ export class ConfigManager {
 
     return new UserConfig<typeof defval>(
       userid,
-      name as string,
+      name,
       defval,
       updatedby,
       updated,
