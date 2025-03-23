@@ -1,19 +1,16 @@
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
 import { UserConfig, IUserConfig } from '../models/UserConfig.mjs'
-import { IdName } from '../models/id-name.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { arrayFirst } from '../services/array-helper.mjs'
-import {
-  deepCloneJson,
-  isArray,
-  safeArray,
-  safestr,
-} from '../services/general.mjs'
+import { deepCloneJson, isArray, safeArray } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
+import { IdName } from '../models/id-name.mjs'
 
+export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
+export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
 export type IdeasTabNames =
   | 'top-gainers'
   | 'most-active'
@@ -21,43 +18,12 @@ export type IdeasTabNames =
   | 'etfs'
   | 'spacs'
   | 'wsb'
-export const IdeasSelectedType: IKeyValueShort<IdName<number, IdeasTabNames>> =
-  {
-    k: 'idea-tab-selected',
-    v: { id: 0, name: 'most-active' },
-  }
 
-export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
-export const CryptoIdeasSelectedType: IKeyValueShort<
-  IdName<number, CryptoIdeasTabNames>
-> = {
-  k: 'idea-crypto-tab-selected',
-  v: { id: 0, name: 'crypto' },
-}
-
-export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
 export type ConfigTickerInfoTabSettings = {
   selectedTab: ConfigTickerInfoTabNames
   selectedPeopleTab: string
   // selectedRatioTab: string
 }
-
-export function CreateConfigTickerInfoTabSettings(
-  overrides?: Partial<ConfigTickerInfoTabSettings>
-) {
-  const DEFAULT_TabSettings: ConfigTickerInfoTabSettings = {
-    selectedTab: 'asset',
-    selectedPeopleTab: '',
-    // selectedRatioTab: 'ratio',
-  }
-
-  return DefaultWithOverrides(DEFAULT_TabSettings, overrides)
-}
-
-export type ConfigTickerInfo<
-  Tticker extends string,
-  U = `tickerInfo-${Tticker}`
-> = IKeyValueShort<ConfigTickerInfoTabSettings, U>
 
 export interface IHeaderTickersConfig {
   tickers: string[]
@@ -67,139 +33,61 @@ export interface IHeaderTickersIndexConfig {
   showCrypto: boolean
 }
 
-export type PermittedUserConfigs = {
-  chartColorDown: string
-  chartColorUp: string
-  dashboards: IDashboardSetting
-  headerTickerBarIndex: IHeaderTickersIndexConfig
-  headerTickerBarUser: IHeaderTickersConfig
-  hideTickerBar: boolean
-  hideTooltips: boolean
-  openFirstPlot: boolean
-  showPriceChangeInTickerBar: boolean
-  useMinusEight: boolean
-  [IdeasSelectedType.k]: IdName<number, IdeasTabNames>
-  [CryptoIdeasSelectedType.k]: IdName<number, CryptoIdeasTabNames>
+export function CreateConfigTickerInfoTabSettings(
+  overrides?: Partial<ConfigTickerInfoTabSettings>
+) {
+  return DefaultWithOverrides(
+    ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
+    overrides
+  )
 }
 
-export type PermittedConfigNames = keyof PermittedUserConfigs
+export type ConfigTickerInfo<
+  Tticker extends string,
+  U = `tickerInfo-${Tticker}`
+> = IKeyValueShort<ConfigTickerInfoTabSettings, U>
+
+export enum TpConfigNamesEnum {
+  chartColorDown = 'chartColorDown',
+  chartColorUp = 'chartColorUp',
+  dashboards = 'dashboards',
+  headerTickerBarIndex = 'headerTickerBarIndex',
+  headerTickerBarUser = 'headerTickerBarUser',
+  hideTickerBar = 'hideTickerBar',
+  hideTooltips = 'hideTooltips',
+  ideaTabSelected = 'ideaTabSelected',
+  ideaCryptoTabSelected = 'ideaCryptoTabSelected',
+  openFirstPlot = 'openFirstPlot',
+  showPriceChangeInTickerBar = 'showPriceChangeInTickerBar',
+  useMinusEight = 'useMinusEight',
+  tickerInfo = 'tickerInfo',
+}
+
+export type TpUserInfoConfigs = {
+  [TpConfigNamesEnum.chartColorDown]: string
+  [TpConfigNamesEnum.chartColorUp]: string
+  [TpConfigNamesEnum.dashboards]: IDashboardSetting
+  [TpConfigNamesEnum.headerTickerBarIndex]: IHeaderTickersIndexConfig
+  [TpConfigNamesEnum.headerTickerBarUser]: IHeaderTickersConfig
+  [TpConfigNamesEnum.hideTickerBar]: boolean
+  [TpConfigNamesEnum.hideTooltips]: boolean
+  [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
+  [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
+  [TpConfigNamesEnum.openFirstPlot]: boolean
+  [TpConfigNamesEnum.showPriceChangeInTickerBar]: boolean
+  [TpConfigNamesEnum.useMinusEight]: boolean
+}
+export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
+  [TpConfigNamesEnum.tickerInfo]: ConfigTickerInfoTabSettings
+}
 
 export class ConfigManager {
-  static readonly KEY_Dashboards = 'dashboards'
-
   constructor(public configs: IConfigShort[]) {}
 
-  get allConfigs() {
-    const config: PermittedUserConfigs = {
-      chartColorUp: this.chartColorUp,
-      chartColorDown: this.chartColorDown,
-      dashboards: this.dashboards,
-      headerTickerBarIndex: this.headerTickerBarIndex,
-      headerTickerBarUser: this.headerTickerBarUser,
-      hideTickerBar: this.hideTickerBar,
-      hideTooltips: this.hideTooltips,
-      openFirstPlot: this.openFirstPlot,
-      showPriceChangeInTickerBar: this.showPriceChangeInTickerBar,
-      useMinusEight: this.useMinusEight,
-    }
-
-    return config
-  }
-  get chartColorDown() {
-    return this.FindString('chartColorDown', '#FF0000')
-  }
-  get chartColorUp() {
-    return this.FindString('chartColorUp', '#00FF00')
-  }
-
-  get dashboards() {
-    const d = safeArray(
-      this.configs.filter((cfg) => cfg.k === ConfigManager.KEY_Dashboards)
-    )
-
-    const dashboard =
-      arrayFirst(d.map((cfg) => cfg.v as unknown as IDashboardSetting)) ??
-      deepCloneJson(ConfigManager.allowedConfigs.dashboards)
-
-    if (!dashboard) {
-      throw new AppException('Could not retrieve dashboard.', 'dashboards')
-    }
-
-    return dashboard
-  }
-
-  get headerTickerBarIndex() {
-    const found = this.configs.find(
-      (config) => 'headerTickerBarIndex' === config.k
-    )
-    if (found) {
-      return found.v as IHeaderTickersIndexConfig
-    }
-
-    const ret: IHeaderTickersIndexConfig = { showAsset: true, showCrypto: true }
-    return ret
-  }
-  get headerTickerBarUser() {
-    const found = this.configs.find(
-      (config) => 'headerTickerBarUser' === config.k
-    )
-    if (found) {
-      return found.v as unknown as { tickers: string[] }
-    }
-
-    const ret: IHeaderTickersConfig = { tickers: [] }
-    return ret
-  }
-
-  get hideTickerBar() {
-    return this.FindBoolean('hideTickerBar', false)
-  }
-  get hideTooltips() {
-    return this.FindBoolean('hideTooltips', false)
-  }
-  get openFirstPlot() {
-    return this.FindBoolean('openFirstPlot', true)
-  }
-  get showPriceChangeInTickerBar() {
-    return this.FindBoolean('showPriceChangeInTickerBar', false)
-  }
-
-  get useMinusEight() {
-    return this.FindBoolean('useMinusEight', true)
-  }
-
-  FindBoolean(name: PermittedConfigNames, ifNotExists?: boolean) {
-    const found = this.configs.find((config) => name === config.k)
-    if (!found) {
-      return ifNotExists ?? false
-    }
-
-    return found.v as boolean
-  }
-  FindString(name: PermittedConfigNames, ifNotExists?: string) {
-    const found = this.configs.find((config) => name === config.k)
-    if (found) {
-      return found.v as unknown as string
-    }
-
-    return safestr(ifNotExists)
-  }
-
-  findScreen(screenName: string) {
-    return this.dashboards.screens.find((screen) => screen.name === screenName)
-  }
-
-  static readonly allowedConfigs: PermittedUserConfigs = {
-    useMinusEight: true,
-    openFirstPlot: true,
-    hideTickerBar: false,
-    showPriceChangeInTickerBar: false,
-    headerTickerBarIndex: { showAsset: true, showCrypto: true },
-    headerTickerBarUser: { tickers: ['AAPL'] },
-    hideTooltips: false,
-    chartColorUp: '#00ff00',
-    chartColorDown: '#ff0000',
-    dashboards: {
+  static readonly defaults: Readonly<TpUserInfoAllConfigs> = {
+    [TpConfigNamesEnum.chartColorDown]: '#FF0000',
+    [TpConfigNamesEnum.chartColorUp]: '#00FF00',
+    [TpConfigNamesEnum.dashboards]: {
       screens: [
         {
           id: 'default',
@@ -246,18 +134,205 @@ export class ConfigManager {
         // ],
       ],
     },
+
+    [TpConfigNamesEnum.headerTickerBarIndex]: {
+      showAsset: true,
+      showCrypto: true,
+    },
+    [TpConfigNamesEnum.headerTickerBarUser]: { tickers: ['AAPL'] },
+    [TpConfigNamesEnum.hideTickerBar]: false,
+    [TpConfigNamesEnum.hideTooltips]: false,
+    [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
+    [TpConfigNamesEnum.ideaCryptoTabSelected]: { id: 0, name: 'crypto' },
+    [TpConfigNamesEnum.openFirstPlot]: true,
+    [TpConfigNamesEnum.showPriceChangeInTickerBar]: false,
+    [TpConfigNamesEnum.useMinusEight]: true,
+    [TpConfigNamesEnum.tickerInfo]: {
+      selectedTab: 'asset',
+      selectedPeopleTab: '',
+      // selectedRatioTab: 'ratio',
+    },
+  } as const
+
+  get allTpUserInfoConfigs() {
+    const config: TpUserInfoConfigs = {
+      chartColorUp: this.chartColorUp,
+      chartColorDown: this.chartColorDown,
+      dashboards: this.dashboards,
+      headerTickerBarIndex: this.headerTickerBarIndex,
+      headerTickerBarUser: this.headerTickerBarUser,
+      hideTickerBar: this.hideTickerBar,
+      hideTooltips: this.hideTooltips,
+      ideaTabSelected: this.ideaTabSelected,
+      ideaCryptoTabSelected: this.ideaCryptoTabSelected,
+      openFirstPlot: this.openFirstPlot,
+      showPriceChangeInTickerBar: this.showPriceChangeInTickerBar,
+      useMinusEight: this.useMinusEight,
+    }
+
+    return config
+  }
+  get chartColorDown() {
+    return this.FindString(TpConfigNamesEnum.chartColorDown)
+  }
+  get chartColorUp() {
+    return this.FindString(TpConfigNamesEnum.chartColorUp)
   }
 
-  static permittedConfigNames = Object.keys(
-    ConfigManager.allowedConfigs
-  ) as PermittedConfigNames[]
+  get dashboards() {
+    const d = safeArray(
+      this.configs.filter((cfg) => cfg.k === TpConfigNamesEnum.dashboards)
+    )
 
-  static getDefaultValue(name: PermittedConfigNames) {
-    return ConfigManager.allowedConfigs[name]
+    const dashboard =
+      arrayFirst(d.map((cfg) => cfg.v as unknown as IDashboardSetting)) ??
+      deepCloneJson(ConfigManager.defaults.dashboards)
+
+    if (!dashboard) {
+      throw new AppException('Could not retrieve dashboard.', 'dashboards')
+    }
+
+    return dashboard
+  }
+
+  get headerTickerBarIndex() {
+    const found = this.configs.find(
+      (config) => 'headerTickerBarIndex' === config.k
+    )
+    if (found) {
+      return found.v as IHeaderTickersIndexConfig
+    }
+
+    const ret: IHeaderTickersIndexConfig = { showAsset: true, showCrypto: true }
+    return ret
+  }
+  get headerTickerBarUser() {
+    return this.FindConfig(
+      TpConfigNamesEnum.headerTickerBarUser
+    ) as IHeaderTickersConfig
+  }
+
+  get hideTickerBar() {
+    return this.FindBoolean(TpConfigNamesEnum.hideTickerBar)
+  }
+  get hideTooltips() {
+    return this.FindBoolean(TpConfigNamesEnum.hideTooltips)
+  }
+
+  get ideaTabSelected() {
+    return this.FindConfig(TpConfigNamesEnum.ideaTabSelected)
+  }
+  get ideaCryptoTabSelected() {
+    return this.FindConfig(TpConfigNamesEnum.ideaCryptoTabSelected)
+  }
+
+  get openFirstPlot() {
+    return this.FindBoolean(TpConfigNamesEnum.openFirstPlot)
+  }
+  get showPriceChangeInTickerBar() {
+    return this.FindBoolean(TpConfigNamesEnum.showPriceChangeInTickerBar)
+  }
+
+  get useMinusEight() {
+    return this.FindBoolean(TpConfigNamesEnum.useMinusEight)
+  }
+
+  FindConfig(name: TpConfigNamesEnum) {
+    const found = this.configs.find((config) => name === config.k)
+    if (found) {
+      return found.v as TpUserInfoAllConfigs[typeof name]
+    }
+
+    return ConfigManager.defaults[typeof name]
+  }
+
+  FindBoolean(name: TpConfigNamesEnum) {
+    return this.FindConfig(name)
+  }
+  FindString(name: TpConfigNamesEnum) {
+    return this.FindConfig(name)
+  }
+
+  findScreen(screenName: string) {
+    return this.dashboards.screens.find((screen) => screen.name === screenName)
+  }
+
+  // static readonly defaultConfigs: TpUserInfoAllConfigs = {
+  //   chartColorDown: '#ff0000',
+  //   chartColorUp: '#00ff00',
+  //   dashboards: {
+  //     screens: [
+  //       {
+  //         id: 'default',
+  //         name: 'default',
+  //         tiles: [
+  //           {
+  //             id: 'initial-tile-left',
+  //             cols: 1,
+  //             name: 'Trade Plotter',
+  //             rows: 2,
+  //             color: 'white',
+  //             index: 0,
+  //             value: TileType.empty,
+  //             typeid: 6,
+  //           },
+  //           {
+  //             id: 'initial-tile-right',
+  //             cols: 1,
+  //             name: 'Trade Plotter',
+  //             rows: 2,
+  //             color: 'white',
+  //             index: 0,
+  //             value: TileType.empty,
+  //             typeid: 7,
+  //           },
+  //         ],
+  //       },
+  //       // Example for a chart and a plotlist.
+  //       // [
+  //       //   {
+  //       //     id: 'AAPL',
+  //       //     index: 0,
+  //       //     typeid: 3,
+  //       //     cols: 1,
+  //       //     rows: 2
+  //       //   },
+  //       //   {
+  //       //     id: 'Trade Plotter',
+  //       //     index: 2,
+  //       //     typeid: 1,
+  //       //     cols: 2,
+  //       //     rows: 2
+  //       //   }
+  //       // ],
+  //     ],
+  //   },
+  //   headerTickerBarIndex: { showAsset: true, showCrypto: true },
+  //   headerTickerBarUser: { tickers: ['AAPL'] },
+  //   hideTickerBar: false,
+  //   hideTooltips: false,
+  //   ideaCryptoTabSelected: { id: 0, name: 'crypto' },
+  //   ideaTabSelected: { id: 0, name: 'most-active' },
+  //   openFirstPlot: true,
+  //   showPriceChangeInTickerBar: false,
+  //   tickerInfo: {
+  //     selectedTab: 'asset',
+  //     selectedPeopleTab: '',
+  //     // selectedRatioTab: 'ratio',
+  //   },
+  //   useMinusEight: true,
+  // }
+
+  static userInfoConfigNames = Object.keys(ConfigManager.defaults).filter(
+    (x) => 'TickerInfo' != x
+  ) as TpConfigNamesEnum[]
+
+  static getDefaultValue(name: TpConfigNamesEnum) {
+    return ConfigManager.defaults[typeof name]
   }
 
   static getDefaultConfig(
-    configName: PermittedConfigNames,
+    configName: TpConfigNamesEnum,
     userid: string,
     updatedby?: string,
     updated?: Date,
@@ -276,7 +351,7 @@ export class ConfigManager {
 
   static getNewConfig(
     userid: string,
-    name: PermittedConfigNames,
+    name: TpConfigNamesEnum,
     updatedby?: string,
     updated?: Date,
     createdby?: string,
@@ -300,13 +375,13 @@ export class ConfigManager {
     const arrUpdateConfigs: IUserConfig[] = []
 
     // Setup for the first time the default config settings.
-    for (const configName of ConfigManager.permittedConfigNames) {
+    for (const configName of ConfigManager.userInfoConfigNames) {
       const found = dataPage.find((dbConfig) => configName === dbConfig.k)
       if (!found) {
         const cfg = ConfigManager.getNewConfig(userid, configName)
         arrUpdateConfigs.push(cfg)
       } else if (
-        ConfigManager.KEY_Dashboards === found.k &&
+        TpConfigNamesEnum.dashboards === found.k &&
         !isArray((found as IUserConfig<IDashboardSetting>).v.screens, 1) &&
         !isArray(
           (found as IUserConfig<IDashboardSetting>).v.screens[0].tiles,
@@ -315,7 +390,10 @@ export class ConfigManager {
       ) {
         // Not a valid dashboard config saved.
         // Overwrite what's in the db with the default.
-        const cfg = ConfigManager.getNewConfig(userid, found.k)
+        const cfg = ConfigManager.getNewConfig(
+          userid,
+          TpConfigNamesEnum.dashboards
+        )
         arrMissingConfigs.push(cfg)
       }
     }

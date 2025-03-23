@@ -1,9 +1,9 @@
 import { ICompany } from '../politagree/company.mjs'
-import { PermittedUserConfigs } from './ConfigManager.mjs'
+import { TpUserInfoConfigs } from './ConfigManager.mjs'
 
 export interface IUserInfo {
   companies: ICompany[]
-  config: PermittedUserConfigs
+  config: TpUserInfoConfigs
   displayName: string
   email: string
   firstName: string
