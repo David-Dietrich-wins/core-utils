@@ -1,7 +1,9 @@
-import { AppException } from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/interfaces.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
+
+const CONST_DefaultTicker = 'AAPL'
 
 export enum TileType {
   chart = 'chart',
@@ -43,7 +45,7 @@ export class TileConfig implements ITileConfig {
   static CreateFromString(type: string, id: string | number) {
     switch (safestrLowercase(type)) {
       case 'chart':
-        return TileConfig.CreateChart('AAPL', { id })
+        return TileConfig.CreateChart(CONST_DefaultTicker, { id })
 
       case 'content':
         return TileConfig.CreateContent({ id })
@@ -61,7 +63,8 @@ export class TileConfig implements ITileConfig {
         return TileConfig.CreateTable({ id })
 
       case 'ticker':
-        return TileConfig.CreateTicker('MSFT', { id })
+      case 'ticker-info':
+        return TileConfig.CreateTicker(CONST_DefaultTicker, { id })
 
       default:
         throw new AppException(
