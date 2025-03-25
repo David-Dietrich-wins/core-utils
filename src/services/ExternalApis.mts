@@ -1,4 +1,3 @@
-import process from 'process'
 import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
 import { DefaultSearchRequestView } from '../models/defaults.mjs'
 import { IIdName } from '../models/id-name.mjs'
@@ -66,21 +65,6 @@ import {
 } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../index.mjs'
 
-const IntecoreApiUrl = process.env.NEXT_PUBLIC_INTECORE_API_URL
-
-const CONST_EndpointAdmin = urlJoin(IntecoreApiUrl, 'admin', false)
-const CONST_EndpointAsset = urlJoin(IntecoreApiUrl, 'asset', false)
-const CONST_EndpointConfig = urlJoin(IntecoreApiUrl, 'config', false)
-const CONST_EndpointPolitagree = urlJoin(IntecoreApiUrl, 'politagree', false)
-const CONST_EndpointPolitagreeAdmin = urlJoin(
-  IntecoreApiUrl,
-  'politagree-admin',
-  false
-)
-const CONST_EndpointTrade = urlJoin(IntecoreApiUrl, 'trade', false)
-const CONST_EndpointTv = urlJoin(IntecoreApiUrl, 'tv', false)
-const CONST_EndpointUser = urlJoin(IntecoreApiUrl, 'user', false)
-
 /**
  * Interface for the result of a symbol search.
  * This is a TradingView API response that contains information about a symbol.
@@ -96,7 +80,31 @@ const CONST_EndpointUser = urlJoin(IntecoreApiUrl, 'user', false)
  * These functions handle fetching data from the APIs, processing the responses,
  * and returning the relevant data or throwing exceptions in case of errors.
  */
-export const ExternalApis = {
+export class ExternalApis {
+  readonly CONST_EndpointAdmin: string
+  readonly CONST_EndpointAsset: string
+  readonly CONST_EndpointConfig: string
+  readonly CONST_EndpointPolitagree: string
+  readonly CONST_EndpointPolitagreeAdmin: string
+  readonly CONST_EndpointTrade: string
+  readonly CONST_EndpointTv: string
+  readonly CONST_EndpointUser: string
+
+  constructor(public baseUrl: string) {
+    this.CONST_EndpointAdmin = urlJoin(baseUrl, 'admin', false)
+    this.CONST_EndpointAsset = urlJoin(baseUrl, 'asset', false)
+    this.CONST_EndpointConfig = urlJoin(baseUrl, 'config', false)
+    this.CONST_EndpointPolitagree = urlJoin(baseUrl, 'politagree', false)
+    this.CONST_EndpointPolitagreeAdmin = urlJoin(
+      baseUrl,
+      'politagree-admin',
+      false
+    )
+    this.CONST_EndpointTrade = urlJoin(baseUrl, 'trade', false)
+    this.CONST_EndpointTv = urlJoin(baseUrl, 'tv', false)
+    this.CONST_EndpointUser = urlJoin(baseUrl, 'user', false)
+  }
+
   /**
    * Checks if an error is a 403 Forbidden error and redirects to the sign-in page if so.
    * This function is intended to be used as a global error handler for API calls.
@@ -108,7 +116,7 @@ export const ExternalApis = {
    * @returns true if the error was handled (e.g., a 403 error that redirects to a sign-in page),
    * false otherwise.
    */
-  errorHandler(
+  static errorHandler(
     fname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,
@@ -134,91 +142,128 @@ export const ExternalApis = {
     }
 
     return false
-  },
+  }
+  static verifySuccess<T = unknown>(
+    fname: string,
+    ret: ApiResponse<T>,
+    allowNoDataReturned = false
+  ) {
+    if (!ApiResponse.isSuccess(ret)) {
+      throw new AppException(
+        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
+        fname
+      )
+    }
 
-  admin: {
-    async allUsers(
+    if (!allowNoDataReturned && !ret.data) {
+      throw new AppException('No data returned', fname)
+    }
+
+    return ret.data
+  }
+
+  static verifySuccessPagedResponse<T = unknown>(
+    fname: string,
+    ret: ApiResponse<IPagedResponse<T>>,
+    allowNoDataReturned = false
+  ) {
+    if (!ApiResponse.isSuccess(ret)) {
+      throw new AppException(
+        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
+        fname
+      )
+    }
+
+    if (!allowNoDataReturned && !ret.data) {
+      throw new AppException('No data returned', fname)
+    }
+
+    return PagedResponse.CreateFromApiResponse(ret)
+  }
+
+  admin = {
+    allUsers: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.admin.allUsers.name
+    ) => {
+      const fname = this.admin.allUsers.name
 
       return fetchPost<IPagedResponse<IUsersWithCount>, ISearchRequestView>({
-        url: urlJoin(CONST_EndpointAdmin, 'all-users'),
+        url: urlJoin(this.CONST_EndpointAdmin, 'all-users'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async CompaniesWithUserCount(bearerToken: string) {
-      const fname = ExternalApis.admin.CompaniesWithUserCount.name
+    CompaniesWithUserCount: async (bearerToken: string) => {
+      const fname = this.admin.CompaniesWithUserCount.name
 
       return fetchGet<IPagedResponse<ICompanyUsersWithCount>>({
-        url: urlJoin(CONST_EndpointAdmin, 'companies-with-count'),
+        url: urlJoin(this.CONST_EndpointAdmin, 'companies-with-count'),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async FacetSave(bearerToken: string, data: FacetSaveParameters) {
-      const fname = ExternalApis.admin.FacetSave.name
+    FacetSave: async (bearerToken: string, data: FacetSaveParameters) => {
+      const fname = this.admin.FacetSave.name
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return fetchPost<any, FacetSaveParameters>({
-        url: urlJoin(CONST_EndpointAdmin, 'facet'),
+        url: urlJoin(this.CONST_EndpointAdmin, 'facet'),
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
-  },
+  }
 
-  asset: {
-    async ChartPlots(
+  asset = {
+    ChartPlots: async (
       bearerToken: string,
       chartId: string,
       settings?: ChartSettings
-    ) {
-      const fname = ExternalApis.asset.ChartPlots.name
+    ) => {
+      const fname = this.asset.ChartPlots.name
 
       return fetchPost<ChartPlotReturn, ChartSettings>({
-        url: urlJoin(CONST_EndpointAsset, ['chart-plots', chartId]),
+        url: urlJoin(this.CONST_EndpointAsset, ['chart-plots', chartId]),
         fname,
         bearerToken,
         data: settings,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async CompanyInfo(bearerToken: string, ticker: string) {
-      const fname = ExternalApis.asset.CompanyInfo.name
+    CompanyInfo: async (bearerToken: string, ticker: string) => {
+      const fname = this.asset.CompanyInfo.name
 
       return fetchGet<CompanyAssetInfo>({
-        url: urlJoin(CONST_EndpointAsset, ['company-info', ticker]),
+        url: urlJoin(this.CONST_EndpointAsset, ['company-info', ticker]),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async CompanyProfile(bearerToken: string, ticker: string) {
-      const fname = ExternalApis.asset.CompanyProfile.name
+    CompanyProfile: async (bearerToken: string, ticker: string) => {
+      const fname = this.asset.CompanyProfile.name
 
       return fetchGet<ICompanyProfile>({
-        url: urlJoin(CONST_EndpointAsset, ['companyprofile', ticker]),
+        url: urlJoin(this.CONST_EndpointAsset, ['companyprofile', ticker]),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async CryptoQuotes(
+    CryptoQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.CryptoQuotes.name
+    ) => {
+      const fname = this.asset.CryptoQuotes.name
 
       return fetchPost<IPagedResponse<IAssetQuoteResponse>, ISearchRequestView>(
         {
-          url: urlJoin(CONST_EndpointAsset, 'crypto-quotes'),
+          url: urlJoin(this.CONST_EndpointAsset, 'crypto-quotes'),
           fname,
           bearerToken,
           data: DefaultSearchRequestView(searchRequest),
@@ -226,15 +271,15 @@ export const ExternalApis = {
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async EtfQuotes(
+    EtfQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.EtfQuotes.name
+    ) => {
+      const fname = this.asset.EtfQuotes.name
 
       return fetchPost<IPagedResponse<IAssetQuoteResponse>, ISearchRequestView>(
         {
-          url: urlJoin(CONST_EndpointAsset, 'etf-quotes'),
+          url: urlJoin(this.CONST_EndpointAsset, 'etf-quotes'),
           fname,
           bearerToken,
           data: DefaultSearchRequestView(searchRequest),
@@ -242,17 +287,17 @@ export const ExternalApis = {
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async IpoCalendar(
+    IpoCalendar: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>,
       fromDate: Date,
       toDate: Date
-    ) {
-      const fname = ExternalApis.asset.IpoCalendar.name
+    ) => {
+      const fname = this.asset.IpoCalendar.name
 
       return fetchPost<IPagedResponse<IIpoCalendar>, ISearchRequestView>({
         url: urlJoin(
-          CONST_EndpointAsset,
+          this.CONST_EndpointAsset,
           `ipo-calendar/?from=${+fromDate}&to=${+toDate}`
         ),
         fname,
@@ -261,89 +306,89 @@ export const ExternalApis = {
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async MostActive(
+    MostActive: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.MostActive.name
+    ) => {
+      const fname = this.asset.MostActive.name
 
       return fetchPost<
         IPagedResponse<ISymbolPriceVolumeChanges>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointAsset, 'most-active'),
+        url: urlJoin(this.CONST_EndpointAsset, 'most-active'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async NftQuotes(
+    NftQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.NftQuotes.name
+    ) => {
+      const fname = this.asset.NftQuotes.name
 
       return fetchPost<
         IPagedResponse<AssetQuoteWithChanges>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointAsset, 'nft-ideas-quotes'),
+        url: urlJoin(this.CONST_EndpointAsset, 'nft-ideas-quotes'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async PriceHistory(
+    PriceHistory: async (
       bearerToken: string,
       symbol: string,
       chartSettings: ChartSettings
-    ) {
-      const fname = ExternalApis.asset.PriceHistory.name
+    ) => {
+      const fname = this.asset.PriceHistory.name
 
       if (!hasData(symbol)) {
         throw new AppException('Missing symbol', fname)
       }
 
       return fetchPost<ISymbolPrices, ChartSettings>({
-        url: urlJoin(CONST_EndpointAsset, ['pricehistory', symbol]),
+        url: urlJoin(this.CONST_EndpointAsset, ['pricehistory', symbol]),
         fname,
         bearerToken,
         data: chartSettings,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async SpacQuotes(
+    SpacQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.SpacQuotes.name
+    ) => {
+      const fname = this.asset.SpacQuotes.name
 
       return fetchPost<
         IPagedResponse<AssetQuoteWithIpoDate>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointAsset, 'spac-quotes'),
+        url: urlJoin(this.CONST_EndpointAsset, 'spac-quotes'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async TickerSearch(
+    TickerSearch: async (
       bearerToken: string,
       ticker: string,
       limit: number,
       exchange: string
-    ) {
-      const fname = ExternalApis.asset.TickerSearch.name
+    ) => {
+      const fname = this.asset.TickerSearch.name
 
       return fetchGet<
         PagedResponse<ITickerSearch>,
         { term: string; limit: number; exchange: string }
       >({
-        url: urlJoin(CONST_EndpointAsset, 'ticker-search'),
+        url: urlJoin(this.CONST_EndpointAsset, 'ticker-search'),
         fname,
         bearerToken,
         data: { term: ticker, limit, exchange },
@@ -365,68 +410,71 @@ export const ExternalApis = {
         })
     },
 
-    async TopGainers(
+    TopGainers: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.TopGainers.name
+    ) => {
+      const fname = this.asset.TopGainers.name
 
       return fetchPost<
         IPagedResponse<ISymbolPriceVolumeChanges>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointAsset, 'gainers'),
+        url: urlJoin(this.CONST_EndpointAsset, 'gainers'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async TopLosers(
+    TopLosers: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.TopLosers.name
+    ) => {
+      const fname = this.asset.TopLosers.name
 
       return fetchPost<
         IPagedResponse<ISymbolPriceVolumeChanges>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointAsset, 'losers'),
+        url: urlJoin(this.CONST_EndpointAsset, 'losers'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async WallStreetBetsQuotes(
+    WallStreetBetsQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.asset.WallStreetBetsQuotes.name
+    ) => {
+      const fname = this.asset.WallStreetBetsQuotes.name
 
       return fetchPost<IPagedResponse<AssetQuoteWithScore>, ISearchRequestView>(
         {
-          url: urlJoin(CONST_EndpointAsset, 'wsb-quotes'),
+          url: urlJoin(this.CONST_EndpointAsset, 'wsb-quotes'),
           fname,
           bearerToken,
           data: DefaultSearchRequestView(searchRequest),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
-  },
+  }
 
-  config: {
-    async DashboardPeopleTabSave(
+  config = {
+    DashboardPeopleTabSave: async (
       bearerToken: string,
       ticker: string,
       name: string | number
-    ) {
-      const fname = ExternalApis.config.DashboardPeopleTabSave.name
+    ) => {
+      const fname = this.config.DashboardPeopleTabSave.name
 
       return fetchPatch<{ name: number | string }, ConfigTickerInfoTabSettings>(
         {
-          url: urlJoin(CONST_EndpointUser, `dashboard-people-tab/${ticker}`),
+          url: urlJoin(
+            this.CONST_EndpointUser,
+            `dashboard-people-tab/${ticker}`
+          ),
           fname,
           bearerToken,
           data: { name },
@@ -434,12 +482,12 @@ export const ExternalApis = {
       ).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async GetOrSetTabSettings<T extends string>(
+    GetOrSetTabSettings: async <T extends string>(
       bearerToken: string,
       configKeyName: string,
       settings: IIdName<number, T>
-    ) {
-      const fname = ExternalApis.config.GetOrSetTickerInfoTabSettings.name
+    ) => {
+      const fname = this.config.GetOrSetTickerInfoTabSettings.name
 
       const data = new NameVal<IIdName<number, T>, string>(
         configKeyName,
@@ -450,19 +498,19 @@ export const ExternalApis = {
         INameVal<IIdName<number, T>>,
         INameVal<IIdName<number, T>>
       >({
-        url: CONST_EndpointConfig,
+        url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async UpsertTabSettings<T extends string>(
+    UpsertTabSettings: async <T extends string>(
       bearerToken: string,
       configKeyName: string,
       settings: IIdName<number, T>
-    ) {
-      const fname = ExternalApis.config.UpsertTickerInfoTabSettings.name
+    ) => {
+      const fname = this.config.UpsertTickerInfoTabSettings.name
 
       const data = new NameVal<IIdName<number, T>, string>(
         configKeyName,
@@ -473,19 +521,19 @@ export const ExternalApis = {
         INameVal<IIdName<number, T>>,
         IConfig<string, IIdName<number, T>>
       >({
-        url: CONST_EndpointConfig,
+        url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async GetOrSetTickerInfoTabSettings(
+    GetOrSetTickerInfoTabSettings: async (
       bearerToken: string,
       ticker: string,
       settings?: Partial<ConfigTickerInfoTabSettings>
-    ) {
-      const fname = ExternalApis.config.GetOrSetTickerInfoTabSettings.name
+    ) => {
+      const fname = this.config.GetOrSetTickerInfoTabSettings.name
 
       const data = new NameVal<ConfigTickerInfoTabSettings>(
         `tickerInfo-${ticker}`,
@@ -496,19 +544,19 @@ export const ExternalApis = {
         IConfig<string, ConfigTickerInfoTabSettings>,
         INameVal<ConfigTickerInfoTabSettings>
       >({
-        url: CONST_EndpointConfig,
+        url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async UpsertTickerInfoTabSettings(
+    UpsertTickerInfoTabSettings: async (
       bearerToken: string,
       ticker: string,
       settings: Partial<ConfigTickerInfoTabSettings>
-    ) {
-      const fname = ExternalApis.config.UpsertTickerInfoTabSettings.name
+    ) => {
+      const fname = this.config.UpsertTickerInfoTabSettings.name
 
       const data = new NameVal<ConfigTickerInfoTabSettings>(
         `tickerInfo-${ticker}`,
@@ -519,53 +567,53 @@ export const ExternalApis = {
         INameVal<ConfigTickerInfoTabSettings>,
         IConfig<string, ConfigTickerInfoTabSettings>
       >({
-        url: CONST_EndpointConfig,
+        url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
-  },
+  }
 
-  politagree: {
-    async CitiesAll() {
-      const fname = ExternalApis.politagree.CitiesAll.name
+  politagree = {
+    CitiesAll: async () => {
+      const fname = this.politagree.CitiesAll.name
 
       return fetchGet<IPagedResponse<ICity>>({
-        url: urlJoin(CONST_EndpointPolitagree, 'city-all-slugs'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'city-all-slugs'),
         fname,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async CityById(id: string) {
-      const fname = ExternalApis.politagree.CityById.name
+    CityById: async (id: string) => {
+      const fname = this.politagree.CityById.name
 
       return fetchGet<ICity>({
-        url: urlJoin(CONST_EndpointPolitagree, ['city', id]),
+        url: urlJoin(this.CONST_EndpointPolitagree, ['city', id]),
         fname,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
-    async CityBySlug(slug: string) {
-      const fname = ExternalApis.politagree.CityBySlug.name
+    CityBySlug: async (slug: string) => {
+      const fname = this.politagree.CityBySlug.name
 
       return fetchGet<ICity>({
-        url: urlJoin(CONST_EndpointPolitagree, ['city', slug]),
+        url: urlJoin(this.CONST_EndpointPolitagree, ['city', slug]),
         fname,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
-    async CitySearch(srv: IPolitiscaleSearchParams) {
-      const fname = ExternalApis.politagree.CitySearch.name
+    CitySearch: async (srv: IPolitiscaleSearchParams) => {
+      const fname = this.politagree.CitySearch.name
 
       return fetchPost<
         IPagedResponse<IdNameSlugWithScales>,
         IPolitiscaleSearchParams
       >({
-        url: urlJoin(CONST_EndpointPolitagree, 'city-search'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'city-search'),
         fname,
         data: srv,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
@@ -574,11 +622,11 @@ export const ExternalApis = {
       )
     },
 
-    async CitySearchFullInfo(srv: IPolitiscaleSearchParams) {
-      const fname = ExternalApis.politagree.CompaniesSearchFullInfo.name
+    CitySearchFullInfo: async (srv: IPolitiscaleSearchParams) => {
+      const fname = this.politagree.CompaniesSearchFullInfo.name
 
       return fetchPost<IPagedResponse<ICity>, IPolitiscaleSearchParams>({
-        url: urlJoin(CONST_EndpointPolitagree, 'city-search-full-info'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'city-search-full-info'),
         fname,
         data: srv,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
@@ -587,22 +635,25 @@ export const ExternalApis = {
       )
     },
 
-    async CompaniesAll() {
-      const fname = ExternalApis.politagree.CompaniesAll.name
+    CompaniesAll: async () => {
+      const fname = this.politagree.CompaniesAll.name
 
       return fetchGet<IPagedResponse<ITickerType>>({
-        url: urlJoin(CONST_EndpointPolitagree, 'company-all-slugs'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'company-all-slugs'),
         fname,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async CompaniesSearchFullInfo(srv: IPolitiscaleSearchParams) {
-      const fname = ExternalApis.politagree.CompaniesSearchFullInfo.name
+    CompaniesSearchFullInfo: async (srv: IPolitiscaleSearchParams) => {
+      const fname = this.politagree.CompaniesSearchFullInfo.name
 
       return fetchPost<IPagedResponse<ISymbolDetail>, IPolitiscaleSearchParams>(
         {
-          url: urlJoin(CONST_EndpointPolitagree, 'company-search-full-info'),
+          url: urlJoin(
+            this.CONST_EndpointPolitagree,
+            'company-search-full-info'
+          ),
           fname,
           data: srv,
           headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
@@ -610,14 +661,14 @@ export const ExternalApis = {
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
     },
 
-    async CompanySearch(srv: IPolitiscaleSearchParams) {
-      const fname = ExternalApis.politagree.CompanySearch.name
+    CompanySearch: async (srv: IPolitiscaleSearchParams) => {
+      const fname = this.politagree.CompanySearch.name
 
       return fetchPost<
         IPagedResponse<ITickerSearchWithScales>,
         IPolitiscaleSearchParams
       >({
-        url: urlJoin(CONST_EndpointPolitagree, 'company-search'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'company-search'),
         fname,
         data: srv,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
@@ -626,11 +677,11 @@ export const ExternalApis = {
       )
     },
 
-    async TopSymbols(ticker: string) {
-      const fname = ExternalApis.politagree.TopSymbols.name
+    TopSymbols: async (ticker: string) => {
+      const fname = this.politagree.TopSymbols.name
 
       return fetchPost<IPagedResponse<ISymbolDetail>, { ticker: string }>({
-        url: urlJoin(CONST_EndpointPolitagree, 'top-symbols'),
+        url: urlJoin(this.CONST_EndpointPolitagree, 'top-symbols'),
         fname,
         data: {
           ticker, //: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
@@ -641,17 +692,17 @@ export const ExternalApis = {
           ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
       )
     },
-  },
+  }
 
-  politagreeAdmin: {
-    async CityUpdate(
+  politagreeAdmin = {
+    CityUpdate: async (
       bearerToken: string,
       data: Partial<ICity> & Required<ISlug>
-    ) {
-      const fname = ExternalApis.politagreeAdmin.CityUpdate.name
+    ) => {
+      const fname = this.politagreeAdmin.CityUpdate.name
 
       return fetchPut<Partial<ICity>, ICity>({
-        url: urlJoin(CONST_EndpointPolitagreeAdmin, 'city'),
+        url: urlJoin(this.CONST_EndpointPolitagreeAdmin, 'city'),
         fname,
         data,
         bearerToken,
@@ -659,249 +710,218 @@ export const ExternalApis = {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async CompanyUpdate(
+    CompanyUpdate: async (
       bearerToken: string,
       data: Partial<ISymbolDetail> & Required<ITicker>
-    ) {
-      const fname = ExternalApis.politagreeAdmin.CompanyUpdate.name
+    ) => {
+      const fname = this.politagreeAdmin.CompanyUpdate.name
 
       return fetchPut<Partial<ISymbolDetail>, ISymbolDetail>({
-        url: urlJoin(CONST_EndpointPolitagreeAdmin, 'company'),
+        url: urlJoin(this.CONST_EndpointPolitagreeAdmin, 'company'),
         fname,
         data,
         bearerToken,
         headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
-  },
+  }
 
-  trade: {
-    async ChartRunLogs(
+  trade = {
+    ChartRunLogs: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.trade.ChartRunLogs.name
+    ) => {
+      const fname = this.trade.ChartRunLogs.name
 
       return fetchPost<
         IPagedResponse<IChartRunLogApiReturn>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointTrade, 'chartrunlogs'),
+        url: urlJoin(this.CONST_EndpointTrade, 'chartrunlogs'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async PlotGet(bearerToken: string, plotNumber: number) {
-      const fname = ExternalApis.trade.PlotGet.name
+    PlotGet: async (bearerToken: string, plotNumber: number) => {
+      const fname = this.trade.PlotGet.name
 
       return fetchGet<ITradePlot>({
-        url: urlJoin(CONST_EndpointTrade, plotNumber),
+        url: urlJoin(this.CONST_EndpointTrade, plotNumber),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async PlotSave(bearerToken: string, plot: ITradePlot, plotNumber: number) {
-      const fname = ExternalApis.trade.PlotGet.name
+    PlotSave: async (
+      bearerToken: string,
+      plot: ITradePlot,
+      plotNumber: number
+    ) => {
+      const fname = this.trade.PlotGet.name
 
       return fetchPost<ITradePlotApi, ITradePlot>({
-        url: urlJoin(CONST_EndpointTrade, plotNumber),
+        url: urlJoin(this.CONST_EndpointTrade, plotNumber),
         fname,
         bearerToken,
         data: plot,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
-  },
+  }
 
-  tv: {
-    async TvChart(bearerToken: string, chartId: string | number) {
-      const fname = ExternalApis.tv.TvChart.name
+  tv = {
+    TvChart: async (bearerToken: string, chartId: string | number) => {
+      const fname = this.tv.TvChart.name
 
       return fetchGet<string>({
-        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
+        url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async GetAllCharts(bearerToken: string) {
-      const fname = ExternalApis.tv.GetAllCharts.name
+    GetAllCharts: async (bearerToken: string) => {
+      const fname = this.tv.GetAllCharts.name
 
       return fetchGet<PagedResponse<ITvChartLayout>>({
-        url: urlJoin(CONST_EndpointTv, 'charts'),
+        url: urlJoin(this.CONST_EndpointTv, 'charts'),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    async RemoveChart(bearerToken: string, chartId: number | string) {
-      const fname = ExternalApis.tv.RemoveChart.name
+    RemoveChart: async (bearerToken: string, chartId: number | string) => {
+      const fname = this.tv.RemoveChart.name
 
       return fetchDelete({
-        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
+        url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
         fname,
         bearerToken,
       }).then(() => undefined)
     },
 
-    async SaveChart(bearerToken: string, data: ChartData) {
-      const fname = ExternalApis.tv.SaveChart.name
+    SaveChart: async (bearerToken: string, data: ChartData) => {
+      const fname = this.tv.SaveChart.name
 
       return fetchPost<string, ChartData>({
-        url: urlJoin(CONST_EndpointTv, 'chart'),
+        url: urlJoin(this.CONST_EndpointTv, 'chart'),
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
-  },
+  }
 
-  user: {
-    async PlotList(
+  user = {
+    PlotList: async (
       bearerToken: string,
       searchRequest?: Partial<ISearchRequestView>,
       name = 'main'
-    ) {
-      const fname = ExternalApis.user.PlotList.name
+    ) => {
+      const fname = this.user.PlotList.name
 
-      return ExternalApis.user
+      return this.user
         .PlotListRaw(bearerToken, searchRequest, name)
         .then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
-    async PlotListRaw(
+    PlotListRaw: async (
       bearerToken: string,
       searchRequest?: Partial<ISearchRequestView>,
       name = 'main'
-    ) {
-      const fname = ExternalApis.user.PlotListRaw.name
+    ) => {
+      const fname = this.user.PlotListRaw.name
 
       return fetchPost<
         IPagedResponseWithTotalValue<ITradePlotListRowItem>,
         ISearchRequestView
       >({
-        url: urlJoin(CONST_EndpointUser, ['plot-list', name]),
+        url: urlJoin(this.CONST_EndpointUser, ['plot-list', name]),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       })
     },
 
-    async ScreenData(
+    ScreenData: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>,
       name: string
-    ) {
-      const fname = ExternalApis.user.ScreenData.name
+    ) => {
+      const fname = this.user.ScreenData.name
 
       return fetchPost<ScreenData, ISearchRequestView>({
-        url: urlJoin(CONST_EndpointUser, ['screen-data', name]),
+        url: urlJoin(this.CONST_EndpointUser, ['screen-data', name]),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async ScreenSave(bearerToken: string, screen: IDashboardScreenSetting) {
-      const fname = ExternalApis.user.ScreenSave.name
+    ScreenSave: async (
+      bearerToken: string,
+      screen: IDashboardScreenSetting
+    ) => {
+      const fname = this.user.ScreenSave.name
 
       return fetchPatch<IDashboardScreenSetting, IDashboardSetting>({
-        url: urlJoin(CONST_EndpointUser, 'save-dashboard-item'),
+        url: urlJoin(this.CONST_EndpointUser, 'save-dashboard-item'),
         fname,
         bearerToken,
         data: screen,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async UserInfo(bearerToken: string) {
-      const fname = ExternalApis.user.UserInfo.name
+    UserInfo: async (bearerToken: string) => {
+      const fname = this.user.UserInfo.name
 
       return fetchGet<IUserInfo>({
-        url: urlJoin(CONST_EndpointUser, 'info'),
+        url: urlJoin(this.CONST_EndpointUser, 'info'),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async UserLogDashboardAccess(
+    UserLogDashboardAccess: async (
       bearerToken: string,
       data: IDashboardScreenSetting
-    ) {
-      const fname = ExternalApis.user.UserLogDashboardAccess.name
+    ) => {
+      const fname = this.user.UserLogDashboardAccess.name
 
       return fetchPost<string, IDashboardScreenSetting>({
-        url: urlJoin(CONST_EndpointUser, 'log-dashboard-access'),
+        url: urlJoin(this.CONST_EndpointUser, 'log-dashboard-access'),
         fname,
         bearerToken,
         data,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    async UserLogins(
+    UserLogins: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
-    ) {
-      const fname = ExternalApis.user.UserLogins.name
+    ) => {
+      const fname = this.user.UserLogins.name
 
       return fetchPost<IPagedResponse<IEventLogin>, ISearchRequestView>({
-        url: urlJoin(CONST_EndpointUser, 'logins'),
+        url: urlJoin(this.CONST_EndpointUser, 'logins'),
         fname,
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
-  },
+  }
 
   async ServerTime(bearerToken: string) {
-    const fname = ExternalApis.ServerTime.name
+    const fname = this.ServerTime.name
 
     return fetchGet<{ serverTime: number }>({
-      url: urlJoin(IntecoreApiUrl, 'server-time'),
+      url: urlJoin(this.baseUrl, 'server-time'),
       fname,
       bearerToken,
       headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
     })
       .then((ret) => ExternalApis.verifySuccess(fname, ret))
       .then((ret) => ret.serverTime / 1000)
-  },
-
-  verifySuccess<T = unknown>(
-    fname: string,
-    ret: ApiResponse<T>,
-    allowNoDataReturned = false
-  ) {
-    if (!ApiResponse.isSuccess(ret)) {
-      throw new AppException(
-        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
-        fname
-      )
-    }
-
-    if (!allowNoDataReturned && !ret.data) {
-      throw new AppException('No data returned', fname)
-    }
-
-    return ret.data
-  },
-
-  verifySuccessPagedResponse<T = unknown>(
-    fname: string,
-    ret: ApiResponse<IPagedResponse<T>>,
-    allowNoDataReturned = false
-  ) {
-    if (!ApiResponse.isSuccess(ret)) {
-      throw new AppException(
-        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
-        fname
-      )
-    }
-
-    if (!allowNoDataReturned && !ret.data) {
-      throw new AppException('No data returned', fname)
-    }
-
-    return PagedResponse.CreateFromApiResponse(ret)
-  },
+  }
 }
