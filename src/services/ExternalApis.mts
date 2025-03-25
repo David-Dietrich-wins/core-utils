@@ -64,6 +64,7 @@ import {
   IPolitiscaleSearchParams,
   ITickerSearchWithScales,
 } from '../politagree/politiscale.mjs'
+import { IDashboardSetting } from '../index.mjs'
 
 const IntecoreApiUrl = process.env.NEXT_PUBLIC_INTECORE_API_URL
 
@@ -714,6 +715,49 @@ export const ExternalApis = {
     },
   },
 
+  tv: {
+    async TvChart(bearerToken: string, chartId: string | number) {
+      const fname = ExternalApis.tv.TvChart.name
+
+      return fetchGet<string>({
+        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    async GetAllCharts(bearerToken: string) {
+      const fname = ExternalApis.tv.GetAllCharts.name
+
+      return fetchGet<PagedResponse<ITvChartLayout>>({
+        url: urlJoin(CONST_EndpointTv, 'charts'),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    async RemoveChart(bearerToken: string, chartId: number | string) {
+      const fname = ExternalApis.tv.RemoveChart.name
+
+      return fetchDelete({
+        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
+        fname,
+        bearerToken,
+      }).then(() => undefined)
+    },
+
+    async SaveChart(bearerToken: string, data: ChartData) {
+      const fname = ExternalApis.tv.SaveChart.name
+
+      return fetchPost<string, ChartData>({
+        url: urlJoin(CONST_EndpointTv, 'chart'),
+        fname,
+        bearerToken,
+        data,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+  },
+
   user: {
     async PlotList(
       bearerToken: string,
@@ -760,6 +804,17 @@ export const ExternalApis = {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
+    async ScreenSave(bearerToken: string, screen: IDashboardScreenSetting) {
+      const fname = ExternalApis.user.ScreenSave.name
+
+      return fetchPatch<IDashboardScreenSetting, IDashboardSetting>({
+        url: urlJoin(CONST_EndpointUser, 'save-dashboard-item'),
+        fname,
+        bearerToken,
+        data: screen,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
     async UserInfo(bearerToken: string) {
       const fname = ExternalApis.user.UserInfo.name
 
@@ -796,49 +851,6 @@ export const ExternalApis = {
         bearerToken,
         data: DefaultSearchRequestView(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
-    },
-  },
-
-  tv: {
-    async TvChart(bearerToken: string, chartId: string | number) {
-      const fname = ExternalApis.tv.TvChart.name
-
-      return fetchGet<string>({
-        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
-        fname,
-        bearerToken,
-      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
-    },
-
-    async GetAllCharts(bearerToken: string) {
-      const fname = ExternalApis.tv.GetAllCharts.name
-
-      return fetchGet<PagedResponse<ITvChartLayout>>({
-        url: urlJoin(CONST_EndpointTv, 'charts'),
-        fname,
-        bearerToken,
-      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
-    },
-
-    async RemoveChart(bearerToken: string, chartId: number | string) {
-      const fname = ExternalApis.tv.RemoveChart.name
-
-      return fetchDelete({
-        url: urlJoin(CONST_EndpointTv, ['chart', chartId]),
-        fname,
-        bearerToken,
-      }).then(() => undefined)
-    },
-
-    async SaveChart(bearerToken: string, data: ChartData) {
-      const fname = ExternalApis.tv.SaveChart.name
-
-      return fetchPost<string, ChartData>({
-        url: urlJoin(CONST_EndpointTv, 'chart'),
-        fname,
-        bearerToken,
-        data,
-      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   },
 
