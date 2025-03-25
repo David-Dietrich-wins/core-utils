@@ -59,6 +59,8 @@ export interface ITileConfig<Tvalue = any>
   color?: string
   cols: number
   rows: number
+  x?: number
+  y?: number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
