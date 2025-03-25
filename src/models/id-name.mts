@@ -1,47 +1,50 @@
 import { INameValue } from './name-value.mjs'
-import { IDate, IId, IName, IType } from './interfaces.mjs'
+import { IDate, IIdRequired, IName, IType } from './interfaces.mjs'
 
 export interface IIdName<Tid = string, Tname = string>
-  extends IId<Tid>,
+  extends IIdRequired<Tid>,
     IName<Tname> {}
 
 export class IdName<Tid = string, Tname = string>
   implements IIdName<Tid, Tname>
 {
-  id: Tid
-  name: Tname
+  constructor(public id: Tid, public name: Tname) {}
+}
 
-  constructor(id: Tid, name: Tname) {
-    this.id = id
-    this.name = name
+export interface IIdNameValue<Tvalue = string, Tid = string>
+  extends IdName<Tid, string>,
+    INameValue<Tvalue> {}
+
+export class IdNameValue<Tvalue = string, Tid = string>
+  extends IdName<Tid>
+  implements IIdNameValue<Tvalue, Tid>
+{
+  constructor(id: Tid, name: string, public value: Tvalue) {
+    super(id, name)
   }
 }
 
-export class IdNameNumber extends IdName<number> {}
+export type IdType<Tid = string, Ttype = unknown> = IIdRequired<Tid> &
+  IType<Ttype>
 
-export type IdNameType<Tid = string, Tname = string> = {
-  id: Tid
-  name: Tname
+export interface IIdNameValueType<Tvalue = string, Ttype = string, Tid = string>
+  extends IIdNameValue<Tvalue, Tid>,
+    IType<Ttype> {}
+
+export class IdNameValueType<Tvalue = string, Type = string, Tid = string>
+  extends IdNameValue<Tvalue, Tid>
+  implements IIdNameValueType<Tvalue, Type, Tid>
+{
+  constructor(id: Tid, name: string, public value: Tvalue, public type: Type) {
+    super(id, name, value)
+  }
 }
-
-export type IdType<Tid = string, Ttype = unknown> = {
-  id: Tid
-  type: Ttype
-}
-
-export interface IdNameValue<Tvalue = string, Tid = string>
-  extends IdName<Tid, string>,
-    INameValue<Tvalue> {}
-export interface IdNameValueType<Tvalue, Type = string, Tid = string>
-  extends IdName<Tid, string>,
-    INameValue<Tvalue>,
-    IType<Type> {}
 
 /**
  * Used for sending data to a parent handler in a structured way with contextual id and name.
  */
 export interface IValueChange<Tvalue = string>
-  extends IdNameValueType<Tvalue, string, string>,
+  extends IIdNameValueType<Tvalue, string, string>,
     IDate<number> {}
 /**
  * Used to pass structured data back to a caller. Especially for event handlers.

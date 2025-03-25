@@ -2,16 +2,15 @@ import {
   IdCreatedUpdated,
   IIdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
-import { IIdName } from '../models/id-name.mjs'
 import { IIdVal } from '../models/id-val.mjs'
 import { NameVal } from '../models/name-val.mjs'
 import { isObject } from '../services/general.mjs'
-import { IId } from './interfaces.mjs'
+import { IId, IName } from './interfaces.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,
-    IIdName<Tid, string>,
+    IName<string>,
     IIdCreatedUpdated<Tid> {
   userid: Tid
 }

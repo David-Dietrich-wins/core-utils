@@ -1,5 +1,5 @@
 import { AppException } from '../models/AppException.mjs'
-import { IId } from '../models/interfaces.mjs'
+import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 
@@ -15,56 +15,55 @@ export enum TileType {
   ticker = 'ticker-info',
 }
 
-export interface ITileConfig extends Required<IId<string | number>> {
-  name?: string
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ITileConfig<Tvalue = any>
+  extends IIdNameValueType<Tvalue, TileType, string> {
   // The type of the tile
-  value: TileType
   index: number
-  typeid: number
-  width?: string
-  height?: string
   color?: string
   cols: number
   rows: number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  config?: any
 }
 
-export class TileConfig implements ITileConfig {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class TileConfig<Tvalue = any>
+  extends IdNameValueType<Tvalue, TileType, string>
+  implements ITileConfig<Tvalue>
+{
   constructor(
-    public id: string | number,
+    id: string,
+    name: string,
+    value: Tvalue,
+    type: TileType,
     public index: number,
     public cols: number,
-    public rows: number,
-    public typeid: number,
-    public value: TileType,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public config?: any
-  ) {}
+    public rows: number
+  ) {
+    super(id, name, value, type)
+  }
 
-  static CreateFromString(type: string, id: string | number) {
-    switch (safestrLowercase(type)) {
-      case 'chart':
-        return TileConfig.CreateChart(CONST_DefaultTicker, { id })
+  static CreateFromTileType(type: TileType, overrides?: Partial<ITileConfig>) {
+    switch (type) {
+      case TileType.chart:
+        return TileConfig.CreateChart(CONST_DefaultTicker, overrides)
 
-      case 'content':
-        return TileConfig.CreateContent({ id })
+      case TileType.content:
+        return TileConfig.CreateContent(overrides)
 
-      case 'empty':
-        return TileConfig.CreateEmpty({ id })
+      case TileType.empty:
+        return TileConfig.CreateEmpty(overrides)
 
-      case 'news':
-        return TileConfig.CreateNews({ id })
+      case TileType.news:
+        return TileConfig.CreateNews(overrides)
 
-      case 'plotlist':
-        return TileConfig.CreatePlotlist({ id })
+      case TileType.plotlist:
+        return TileConfig.CreatePlotlist(overrides)
 
-      case 'table':
-        return TileConfig.CreateTable({ id })
+      case TileType.table:
+        return TileConfig.CreateTable(overrides)
 
-      case 'ticker':
-      case 'ticker-info':
-        return TileConfig.CreateTicker(CONST_DefaultTicker, { id })
+      case TileType.ticker:
+        return TileConfig.CreateTicker(CONST_DefaultTicker, overrides)
 
       default:
         throw new AppException(
@@ -74,14 +73,49 @@ export class TileConfig implements ITileConfig {
     }
   }
 
+  static TileTypeFromString(type: string) {
+    const ltype = safestrLowercase(type)
+
+    switch (ltype) {
+      case 'chart':
+        return TileType.chart
+
+      case 'content':
+        return TileType.content
+
+      case 'empty':
+        return TileType.empty
+
+      case 'news':
+        return TileType.news
+
+      case 'plotlist':
+        return TileType.plotlist
+
+      case 'table':
+        return TileType.table
+
+      default:
+        if (ltype.startsWith('ticker')) {
+          return TileType.ticker
+        }
+    }
+
+    throw new AppException(
+      `Unknown tile type '${type}'`,
+      'TileConfig.TileTypeFromString'
+    )
+  }
+
   static CreateITileConfig(overrides?: Partial<ITileConfig> | null) {
     const DEFAULT_TileConfig: ITileConfig = {
       id: newGuid(),
+      name: '',
+      value: {},
+      type: TileType.empty,
       index: 0,
       cols: 1,
       rows: 1,
-      typeid: 0,
-      value: TileType.empty,
     }
 
     const itile = DefaultWithOverrides(DEFAULT_TileConfig, overrides)
@@ -94,12 +128,12 @@ export class TileConfig implements ITileConfig {
 
     const tile = new TileConfig(
       itile.id,
+      itile.name,
+      itile.value,
+      itile.type,
       itile.index,
       itile.cols,
-      itile.rows,
-      itile.typeid,
-      itile.value,
-      itile.config
+      itile.rows
     )
 
     return tile
@@ -108,63 +142,63 @@ export class TileConfig implements ITileConfig {
   static CreateChart(ticker: string, overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      config: { ticker },
-      value: TileType.chart,
+      type: TileType.chart,
+      value: { ticker },
     })
   }
 
   static CreateContent(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      value: TileType.content,
+      type: TileType.content,
     })
   }
 
   static CreateEmpty(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      value: TileType.empty,
+      type: TileType.empty,
     })
   }
 
   static CreateNews(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      value: TileType.news,
+      type: TileType.news,
     })
   }
 
   static CreatePlotlist(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      value: TileType.plotlist,
+      type: TileType.plotlist,
     })
   }
 
   static CreateTable(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      value: TileType.table,
+      type: TileType.table,
     })
   }
 
   static CreateTicker(ticker: string, overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      config: { ticker },
-      value: TileType.ticker,
+      type: TileType.ticker,
+      value: { ticker },
     })
   }
 
   get ITileConfig() {
     const itile: ITileConfig = {
       id: this.id,
+      name: this.name,
+      value: this.value,
+      type: this.type,
       index: this.index,
       cols: this.cols,
       rows: this.rows,
-      typeid: this.typeid,
-      value: this.value,
-      config: this.config,
     }
 
     return itile
