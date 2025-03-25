@@ -14,6 +14,42 @@ export enum TileType {
   table = 'table',
   ticker = 'ticker-info',
 }
+export type TileConfigTicker = {
+  frequency: number
+  frequencyType: string
+  period: number
+  periodType: string
+  ticker: string
+  useProfileColors?: boolean
+}
+export function TileConfigTickerDefault(overrides?: Partial<TileConfigTicker>) {
+  const ret: TileConfigTicker = {
+    frequency: 1,
+    frequencyType: 'daily',
+    period: 1,
+    periodType: 'year',
+    ticker: CONST_DefaultTicker,
+    ...overrides,
+  }
+
+  return ret
+}
+
+export type TileConfigContent = {
+  header?: string
+  body?: string
+  footer?: string
+}
+
+export type TileTypes = {
+  [TileType.chart]: TileConfigTicker
+  [TileType.content]: TileConfigContent
+  [TileType.empty]: TileConfigContent
+  [TileType.news]: TileConfigContent
+  [TileType.plotlist]: TileConfigContent
+  [TileType.table]: TileConfigContent
+  [TileType.ticker]: TileConfigTicker
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ITileConfig<Tvalue = any>
@@ -110,7 +146,7 @@ export class TileConfig<Tvalue = any>
   static CreateITileConfig(overrides?: Partial<ITileConfig> | null) {
     const DEFAULT_TileConfig: ITileConfig = {
       id: newGuid(),
-      name: '',
+      name: 'Trade Plotter',
       value: {},
       type: TileType.empty,
       index: 0,
@@ -141,9 +177,9 @@ export class TileConfig<Tvalue = any>
 
   static CreateChart(ticker: string, overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
+      value: TileConfigTickerDefault({ ticker }),
       ...overrides,
       type: TileType.chart,
-      value: { ticker },
     })
   }
 
@@ -170,7 +206,9 @@ export class TileConfig<Tvalue = any>
 
   static CreatePlotlist(overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
+      value: {},
       ...overrides,
+      cols: 12,
       type: TileType.plotlist,
     })
   }
@@ -184,9 +222,9 @@ export class TileConfig<Tvalue = any>
 
   static CreateTicker(ticker: string, overrides?: Partial<ITileConfig> | null) {
     return TileConfig.CreateTileConfig({
+      value: TileConfigTickerDefault({ ticker }),
       ...overrides,
       type: TileType.ticker,
-      value: { ticker },
     })
   }
 
