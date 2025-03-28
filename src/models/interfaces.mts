@@ -1,5 +1,5 @@
 import { IWebState } from './WebState.mjs'
-import { SortOrder } from './types.mjs'
+import { ArrayOrSingle, SortOrder } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 
 export interface IId<T = string> {
@@ -83,6 +83,7 @@ export interface ISearchRequestView {
   exactMatch: boolean
   pageIndex: number
   pageSize: number
+  searchColumns?: ArrayOrSingle<string>
 }
 
 export interface IServerState<T = unknown> {
