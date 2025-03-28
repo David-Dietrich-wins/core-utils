@@ -59,10 +59,7 @@ import {
   CONST_AppNamePolitagree,
   // CONST_AppNameTradePlotter,
 } from './HttpHeaderManager.mjs'
-import {
-  IPolitiscaleSearchParams,
-  ITickerSearchWithScales,
-} from '../politagree/politiscale.mjs'
+import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../index.mjs'
 
 /**
@@ -664,17 +661,14 @@ export class ExternalApis {
     CompanySearch: async (srv: IPolitiscaleSearchParams) => {
       const fname = this.politagree.CompanySearch.name
 
-      return fetchPost<
-        IPagedResponse<ITickerSearchWithScales>,
-        IPolitiscaleSearchParams
-      >({
-        url: urlJoin(this.CONST_EndpointPolitagree, 'company-search'),
-        fname,
-        data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
-      }).then((ret) =>
-        ExternalApis.verifySuccessPagedResponse(fname, ret, true)
-      )
+      return fetchPost<IPagedResponse<ITickerSearch>, IPolitiscaleSearchParams>(
+        {
+          url: urlJoin(this.CONST_EndpointPolitagree, 'company-search'),
+          fname,
+          data: srv,
+          headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        }
+      ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
     },
 
     TopSymbols: async (ticker: string) => {

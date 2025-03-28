@@ -1,6 +1,5 @@
 import { ISearchRequestView } from '../models/interfaces.mjs'
 import { INameValue } from '../models/name-value.mjs'
-import { ITickerSearch } from '../models/ticker-info.mjs'
 import { isObject } from '../services/general.mjs'
 import { ICity } from './city.mjs'
 import { ICompany } from './company.mjs'
@@ -14,7 +13,7 @@ export type IPolitiscales = {
 }
 
 export interface IPolitiscaleSearchParams
-  extends Partial<ISearchRequestView>,
+  extends ISearchRequestView,
     IPolitiscales {}
 
 export function CreatePolitiscaleSearchParams(
@@ -23,10 +22,15 @@ export function CreatePolitiscaleSearchParams(
   const DEFAULT_params: IPolitiscaleSearchParams = {
     term: '',
     climate: 0,
+    exactMatch: false,
     freeSpeech: 0,
     religion: 0,
     limit: 0,
     offset: 0,
+    pageIndex: 0,
+    pageSize: 0,
+    sortColumn: '',
+    sortDirection: 'asc',
   }
 
   const ret: IPolitiscaleSearchParams = {
@@ -51,10 +55,6 @@ export function PolitiscalesCreateAll(overrides?: Partial<IPolitiscales>) {
 export interface IHasPolitiscales {
   scales?: IPolitiscale[]
 }
-
-export interface ITickerSearchWithScales
-  extends ITickerSearch,
-    IHasPolitiscales {}
 
 export class Politiscale implements IPolitiscale {
   name: PolitiscaleName = 'climate'

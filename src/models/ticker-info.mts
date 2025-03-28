@@ -645,10 +645,16 @@ export interface ISectorsHistorical extends IDate {
   technologyChangesPercentage: number
 }
 
-export interface ITickerSearch extends ISymbolName, ITicker, IType {
-  full_name: string
+export interface ITickerSearch
+  extends IId,
+    ISymbolName,
+    ITicker,
+    IType,
+    IHasPolitiscales {
   description: string
   exchange: string
+  imageUrl?: string
+  full_name: string
 }
 
 export interface ITickerType extends IdName, ITicker, IType {}
