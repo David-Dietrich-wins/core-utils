@@ -3,6 +3,31 @@ import { IFacet } from './Facet.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
 import { hasData, safestr, safestrLowercase } from '../services/general.mjs'
+import { IIdName } from '../models/id-name.mjs'
+
+export const ChartTimeFrameOptions: IIdName[] = [
+  { id: '1m', name: '1 minute' },
+  { id: '2m', name: '2 minute' },
+  { id: '3m', name: '3 minute' },
+  { id: '5m', name: '5 minute' },
+  { id: '10m', name: '10 minute' },
+  { id: '15m', name: '15 minute' },
+  { id: '30m', name: '30 minute' },
+  { id: '1h', name: '1 hour' },
+  { id: '4h', name: '4 hour' },
+  { id: '1d', name: '1 day' },
+  { id: '1w', name: '1 week' },
+  { id: '1M', name: '1 month' },
+] as const
+
+export const ChartPatternOptions: Required<IIdName>[] = [
+  { id: 'b28', name: 'Back to the 8' },
+  { id: 'ra200', name: 'Resistance at the 200' },
+  { id: 'ra50', name: 'Resistance at the 50' },
+  { id: 'spt200', name: 'Support at the 200' },
+  { id: 'spt50', name: 'Support at the 50' },
+  { id: 'x8x21', name: '8 and 21 cross' },
+] as const
 
 export interface IPlotMsg {
   symbol: string
@@ -39,7 +64,19 @@ export class ChartPlotReturn {
   positions: IShapePosition[] = []
 }
 
-export class ChartSettings {
+export interface IChartData {
+  ticker: string
+  period: number
+  periodType: string
+  frequency: number
+  frequencyType: string
+  granularity?: string
+  needExtendedHoursTrading?: boolean
+  startDate?: number // as milliseconds since epoch
+  endDate?: number // as milliseconds since epoch
+}
+
+export class ChartSettings implements IChartData {
   static CONST_FmpYearFormat = 'YYYY-MM-DD'
 
   ticker = ''
@@ -95,7 +132,7 @@ export class ChartSettings {
    */
   startDate?: number
   #_startMoment?: Moment
-  #_startMillis
+  #_startMillis?: number
 
   /**
    * End date as milliseconds since epoch. If startDate and endDate are provided,
@@ -103,7 +140,7 @@ export class ChartSettings {
    */
   endDate?: number
   #_endMoment?: Moment
-  #_endMillis
+  #_endMillis?: number
 
   constructor(
     ticker: string,

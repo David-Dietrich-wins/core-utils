@@ -1,5 +1,6 @@
 import { IId } from '../models/interfaces.mjs'
 import { isObject, safeArray } from '../services/general.mjs'
+import { ChartPatternOptions } from './ChartSettings.mjs'
 
 export interface ISubplot extends IId<number> {
   orderNumber: number
@@ -67,6 +68,21 @@ export class Subplot implements ISubplot {
       this.useMinusEight = useMinusEight
       this.scaleInverted = scaleInverted
     }
+  }
+
+  static GetNewWithNextPattern(subplots: ISubplot[] = []) {
+    let pattern = 'b28' // default pattern
+
+    const subplotPatterns = safeArray(subplots).map((sp) => sp.pattern)
+    for (let i = 0; i < ChartPatternOptions.length; i++) {
+      if (!subplotPatterns.includes(ChartPatternOptions[i].id)) {
+        pattern = ChartPatternOptions[i].id
+
+        break
+      }
+    }
+
+    return new Subplot(0, 0, pattern, '1d', 0, 0, 1000)
   }
 
   static Renumber(subplots: ISubplot[]) {
