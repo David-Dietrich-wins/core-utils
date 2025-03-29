@@ -15,11 +15,18 @@ export enum TileType {
   table = 'table',
   ticker = 'ticker-info',
 }
-export type TileConfigTicker = IChartData & {
+
+export type TileConfigChart = IChartData & {
   useProfileColors?: boolean
 }
-export function TileConfigTickerDefault(overrides?: Partial<TileConfigTicker>) {
-  const ret: TileConfigTicker = {
+
+export type TileConfigTicker = {
+  ticker: string
+  useProfileColors?: boolean
+}
+
+export function TileConfigChartDefault(overrides?: Partial<TileConfigChart>) {
+  const ret: TileConfigChart = {
     frequency: 1,
     frequencyType: 'daily',
     period: 1,
@@ -38,7 +45,7 @@ export type TileConfigContent = {
 }
 
 export type TileTypes = {
-  [TileType.chart]: TileConfigTicker
+  [TileType.chart]: TileConfigChart
   [TileType.content]: TileConfigContent
   [TileType.empty]: TileConfigContent
   [TileType.news]: TileConfigContent
@@ -104,6 +111,27 @@ export class TileConfig<Tvalue = any>
           `TileConfig.CreateFromString: Unknown tile type '${type}'`,
           'TileConfig.CreateFromString'
         )
+    }
+  }
+
+  static TileText(tile: ITileConfig) {
+    switch (tile.type) {
+      case TileType.plotlist:
+        return 'PlotList'
+      case TileType.chart:
+        return `Chart: ${tile.value.ticker}`
+      case TileType.table:
+        return 'Table:'
+      case TileType.ticker:
+        return `Ticker: ${tile.value.ticker}`
+      case TileType.news:
+        return 'News:'
+      case TileType.content:
+        return `Content: ${tile.value?.content}`
+      case TileType.empty:
+        return 'Empty:'
+      default:
+        return `Unknown: ${tile.value} - ${tile.value?.content}`
     }
   }
 
@@ -173,36 +201,47 @@ export class TileConfig<Tvalue = any>
     return tile
   }
 
-  static CreateChart(ticker: string, overrides?: Partial<ITileConfig> | null) {
+  static CreateChart(
+    ticker: string,
+    overrides?: Partial<ITileConfig<TileConfigChart>> | null
+  ) {
     return TileConfig.CreateTileConfig({
-      value: TileConfigTickerDefault({ ticker }),
+      value: TileConfigChartDefault({ ticker }),
       ...overrides,
       type: TileType.chart,
     })
   }
 
-  static CreateContent(overrides?: Partial<ITileConfig> | null) {
+  static CreateContent(
+    overrides?: Partial<ITileConfig<TileConfigContent>> | null
+  ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
       type: TileType.content,
     })
   }
 
-  static CreateEmpty(overrides?: Partial<ITileConfig> | null) {
+  static CreateEmpty(
+    overrides?: Partial<ITileConfig<TileConfigContent>> | null
+  ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
       type: TileType.empty,
     })
   }
 
-  static CreateNews(overrides?: Partial<ITileConfig> | null) {
+  static CreateNews(
+    overrides?: Partial<ITileConfig<TileConfigContent>> | null
+  ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
       type: TileType.news,
     })
   }
 
-  static CreatePlotlist(overrides?: Partial<ITileConfig> | null) {
+  static CreatePlotlist(
+    overrides?: Partial<ITileConfig<TileConfigContent>> | null
+  ) {
     return TileConfig.CreateTileConfig({
       value: {},
       ...overrides,
@@ -211,16 +250,21 @@ export class TileConfig<Tvalue = any>
     })
   }
 
-  static CreateTable(overrides?: Partial<ITileConfig> | null) {
+  static CreateTable(
+    overrides?: Partial<ITileConfig<TileConfigContent>> | null
+  ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
       type: TileType.table,
     })
   }
 
-  static CreateTicker(ticker: string, overrides?: Partial<ITileConfig> | null) {
+  static CreateTicker(
+    ticker: string,
+    overrides?: Partial<ITileConfig<TileConfigTicker>> | null
+  ) {
     return TileConfig.CreateTileConfig({
-      value: TileConfigTickerDefault({ ticker }),
+      value: { ticker },
       ...overrides,
       type: TileType.ticker,
     })

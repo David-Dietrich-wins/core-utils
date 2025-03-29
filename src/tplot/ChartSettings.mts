@@ -190,6 +190,22 @@ export class ChartSettings implements IChartData {
     }
   }
 
+  static DefaultChartData(overrides?: Partial<IChartData>) {
+    // Default chart data settings
+    const defaultChartData: IChartData = {
+      ticker: 'AAPL', // Default ticker
+      period: 1, // Default period
+      periodType: 'day', // Default period type
+      frequency: 1, // Default frequency
+      frequencyType: '1d', // Default frequency type
+      // granularity: '1min', // Default granularity
+      // needExtendedHoursTrading: true, // Default to true for extended hours trading
+      ...overrides,
+    }
+
+    return defaultChartData
+  }
+
   static fromToForFmpStatic(startMoment?: Moment, endMoment?: Moment) {
     let s = '&from=' + startMoment?.format(ChartSettings.CONST_FmpYearFormat)
     s += '&to=' + endMoment?.format(ChartSettings.CONST_FmpYearFormat)
