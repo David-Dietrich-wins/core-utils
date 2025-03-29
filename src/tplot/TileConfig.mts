@@ -2,6 +2,7 @@ import { AppException } from '../models/AppException.mjs'
 import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
+import { IChartData } from './ChartSettings.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
@@ -14,12 +15,7 @@ export enum TileType {
   table = 'table',
   ticker = 'ticker-info',
 }
-export type TileConfigTicker = {
-  frequency: number
-  frequencyType: string
-  period: number
-  periodType: string
-  ticker: string
+export type TileConfigTicker = IChartData & {
   useProfileColors?: boolean
 }
 export function TileConfigTickerDefault(overrides?: Partial<TileConfigTicker>) {
