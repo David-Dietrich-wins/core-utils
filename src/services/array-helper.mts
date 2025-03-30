@@ -422,6 +422,47 @@ export function arraySwapItems<T>(
   return arrItems
 }
 
+export function arrayAdd<T extends IId>(
+  arrItems: T[],
+  item: T,
+  index?: number
+) {
+  const len = arrItems.length
+  if (isNullOrUndefined(index) || index < 0 || !len || index >= len) {
+    arrItems.push(item)
+  } else {
+    arrItems.splice(index, 0, item)
+  }
+
+  return arrItems
+}
+
+export function arrayRemove<T extends IId>(arrItems: T[], item: T) {
+  return arrayRemoveById(arrItems, item.id)
+}
+export function arrayRemoveById<T extends IId>(arrItems: T[], id: T['id']) {
+  arrItems = arrItems.filter((x) => x.id !== id)
+
+  return arrItems
+}
+
+export function arrayUpdateOrAdd<T extends IId>(
+  arrItems: T[],
+  item: T,
+  insertAtFront = false
+) {
+  const foundIndex = arrItems.findIndex((x) => item.id === x.id)
+
+  // If the index is out of bounds, just push the item to the end of the array.
+  if (!insertAtFront || arrItems.length === 0 || foundIndex === -1) {
+    arrItems.push(item)
+  } else {
+    arrItems.splice(foundIndex, 1, item) // Remove the existing item from the array if it exists.
+  }
+
+  return arrItems
+}
+
 export function arrayMoveDown<T>(arrItems: T[], index: number) {
   return arraySwapItems(arrItems, index, index + 1)
 }
