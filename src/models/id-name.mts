@@ -1,5 +1,4 @@
-import { INameValue } from './name-value.mjs'
-import { IDate, IName, IType } from './interfaces.mjs'
+import { IDate, IName, IType, IValue } from './interfaces.mjs'
 import { IIdRequired } from './IdManager.mjs'
 
 export interface IIdName<Tid = string, Tname = string>
@@ -12,9 +11,9 @@ export class IdName<Tid = string, Tname = string>
   constructor(public id: Tid, public name: Tname) {}
 }
 
-export interface IIdNameValue<Tvalue = string, Tid = string>
-  extends IdName<Tid, string>,
-    INameValue<Tvalue> {}
+export interface IIdNameValue<Tvalue = string, Tid = string, Tname = string>
+  extends IIdName<Tid, Tname>,
+    IValue<Tvalue> {}
 
 export class IdNameValue<Tvalue = string, Tid = string>
   extends IdName<Tid>

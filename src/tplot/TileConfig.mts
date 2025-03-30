@@ -38,9 +38,10 @@ export function TileConfigChartDefault(overrides?: Partial<TileConfigChart>) {
   return ret
 }
 
-export type TileConfigContent = {
+export type TileConfigContent<T = string> = {
   header?: string
   body?: string
+  content?: T
   footer?: string
 }
 
@@ -54,8 +55,7 @@ export type TileTypes = {
   [TileType.ticker]: TileConfigTicker
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface ITileConfig<Tvalue = any>
+export interface ITileConfig<Tvalue = unknown>
   extends IIdNameValueType<Tvalue, TileType, string> {
   // The type of the tile
   index: number
@@ -83,28 +83,47 @@ export class TileConfig<Tvalue = any>
     super(id, name, value, type)
   }
 
-  static CreateFromTileType(type: TileType, overrides?: Partial<ITileConfig>) {
+  static CreateFromTileType(
+    type: TileType,
+    overrides?: Partial<ITileConfig> | null
+  ) {
     switch (type) {
       case TileType.chart:
-        return TileConfig.CreateChart(CONST_DefaultTicker, overrides)
+        return TileConfig.CreateChart(
+          CONST_DefaultTicker,
+          overrides as Partial<ITileConfig<TileConfigChart>>
+        )
 
       case TileType.content:
-        return TileConfig.CreateContent(overrides)
+        return TileConfig.CreateContent(
+          overrides as Partial<ITileConfig<TileConfigContent>>
+        )
 
       case TileType.empty:
-        return TileConfig.CreateEmpty(overrides)
+        return TileConfig.CreateEmpty(
+          overrides as Partial<ITileConfig<TileConfigContent>>
+        )
 
       case TileType.news:
-        return TileConfig.CreateNews(overrides)
+        return TileConfig.CreateNews(
+          overrides as Partial<ITileConfig<TileConfigContent>>
+        )
 
       case TileType.plotlist:
-        return TileConfig.CreatePlotlist(overrides)
+        return TileConfig.CreatePlotlist(
+          overrides as Partial<ITileConfig<TileConfigContent>>
+        )
 
       case TileType.table:
-        return TileConfig.CreateTable(overrides)
+        return TileConfig.CreateTable(
+          overrides as Partial<ITileConfig<TileConfigContent>>
+        )
 
       case TileType.ticker:
-        return TileConfig.CreateTicker(CONST_DefaultTicker, overrides)
+        return TileConfig.CreateTicker(
+          CONST_DefaultTicker,
+          overrides as Partial<ITileConfig<TileConfigTicker>>
+        )
 
       default:
         throw new AppException(
@@ -119,19 +138,21 @@ export class TileConfig<Tvalue = any>
       case TileType.plotlist:
         return 'PlotList'
       case TileType.chart:
-        return `Chart: ${tile.value.ticker}`
+        return `Chart: ${(tile.value as TileConfigChart).ticker}`
       case TileType.table:
         return 'Table:'
       case TileType.ticker:
-        return `Ticker: ${tile.value.ticker}`
+        return `Ticker: ${(tile.value as TileConfigTicker).ticker}`
       case TileType.news:
         return 'News:'
       case TileType.content:
-        return `Content: ${tile.value?.content}`
+        return `Content: ${(tile.value as TileConfigContent)?.content}`
       case TileType.empty:
         return 'Empty:'
       default:
-        return `Unknown: ${tile.value} - ${tile.value?.content}`
+        return `Unknown: ${tile.value} - ${
+          (tile.value as TileConfigContent)?.content
+        }`
     }
   }
 
@@ -185,7 +206,9 @@ export class TileConfig<Tvalue = any>
     return itile
   }
 
-  static CreateTileConfig(overrides?: Partial<ITileConfig> | null) {
+  static CreateTileConfig<T = unknown>(
+    overrides?: Partial<ITileConfig<T>> | null
+  ) {
     const itile = TileConfig.CreateITileConfig(overrides)
 
     const tile = new TileConfig(

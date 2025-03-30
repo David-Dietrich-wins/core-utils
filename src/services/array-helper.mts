@@ -437,11 +437,17 @@ export function arrayAdd<T extends IId>(
   return arrItems
 }
 
-export function arrayRemove<T extends IId>(arrItems: T[], item: T) {
+export function arrayRemove<T extends IId>(
+  arrItems: T[] | undefined | null,
+  item: T
+) {
   return arrayRemoveById(arrItems, item.id)
 }
-export function arrayRemoveById<T extends IId>(arrItems: T[], id: T['id']) {
-  arrItems = arrItems.filter((x) => x.id !== id)
+export function arrayRemoveById<T extends IId>(
+  arrItems: T[] | undefined | null,
+  id: T['id']
+) {
+  arrItems = safeArray(arrItems).filter((x) => x.id !== id)
 
   return arrItems
 }
