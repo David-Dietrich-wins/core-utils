@@ -1,7 +1,5 @@
-import { AppException } from '../models/AppException.mjs'
 import { deepCloneJson, deepDiffMapper } from './general.mjs'
 
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 export type ReducerChanges = {
   anyChangesFromLastOperation: boolean
   anyChangesSinceInitial: boolean
@@ -32,30 +30,92 @@ const result = wrappedAdd(2, 3); // Output: Before add, After add, 5
  * Wraps a function with before and after callbacks.
  * This allows you to execute additional logic before and after the original function is called.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function wrap<T extends (...args: any[]) => any>(
-  func: T,
-  before?: Function,
-  after?: Function
-): T {
-  return function wrappedFunction(...args: Parameters<T>): ReturnType<T> {
-    before?.()
-    const result = func(...args)
-    after?.()
+// e slint-disable-next-line @typescript-eslint/no-explicit-any
+// function wrap<T extends (...args: any[]) => any>(
+//   func: T,
+//   before: Function,
+//   after: Function
+// ) {
+//   return function wrappedFunction(...args: Parameters<T>): ReturnType<T> {
+//     before()
+//     const result = func(...args)
+//     after()
 
-    return result
-  } as T
-}
+//     return result
+//   } as T
+// }
+
+// e slint-disable-next-line @typescript-eslint/no-explicit-any
+// function wrapReducerState<T extends object, U extends any[]>(
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   func: (updatedCopy: T, args: U) => void,
+//   before: () => ReducerState<T>,
+//   after: (dcState: ReducerState<T>, updated: T) => ReducerState<T>
+// ) {
+//   return function wrappedFunction(args: Parameters<U>) {
+//     const dcState = before()
+
+//     const updated = deepCloneJson(dcState.current)
+//     if (!updated) {
+//       throw new AppException(
+//         'ReducerState clone: Could not create a copy of the current state.'
+//       )
+//     }
+
+//     func(updated, ...args)
+
+//     const result = after(dcState, updated)
+
+//     return result
+//   }
+// }
 
 export class ReducerHelper {
+  // e slint-disable-next-line @typescript-eslint/no-explicit-any
+  static RunWithDeepCopy<T extends object>(
+    state: ReducerState<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    func: (currentState: T, ...args: any[]) => T,
+    funcIfAnyChangesSinceLastOperation?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean,
+    funcIfAnyChangesSinceInitial?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean
+  ) {
+    const dcState = deepCloneJson(state)
+
+    const tupdates = func(deepCloneJson(dcState.current))
+
+    const changes = ReducerHelper.getChanges(
+      dcState,
+      tupdates,
+      funcIfAnyChangesSinceLastOperation,
+      funcIfAnyChangesSinceInitial
+    )
+
+    const newstate: ReducerState<T> = {
+      ...dcState,
+      current: tupdates,
+      ...changes,
+    }
+
+    return newstate
+  }
+
   static getChanges<T extends object>(
     state: ReducerState<T>,
     updated: T,
     funcIfAnyChangesSinceLastOperation?: (
       update: T,
       state: ReducerState<T>
-    ) => void,
-    funcIfAnyChangesSinceInitial?: (update: T, state: ReducerState<T>) => void
+    ) => boolean,
+    funcIfAnyChangesSinceInitial?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean
   ) {
     const anyChangesFromLastOperation = deepDiffMapper().anyChanges(
       state,
@@ -79,7 +139,7 @@ export class ReducerHelper {
       'changes: From This Operation:',
       anyChangesFromLastOperation,
       ', changesSinceLastSave:',
-      deepDiffMapper().getChanges(state.initial, updated)
+      deepDiffMapper().getChanges(state, updated)
     )
 
     const changes: ReducerChanges = {
@@ -90,67 +150,59 @@ export class ReducerHelper {
     return changes
   }
 
-  static ChangesWrapper<T extends object>(
-    state: ReducerState<T>,
-    func: (update: T) => T,
-    funcIfAnyChangesSinceLastOperation?: (
-      update: T,
-      state: ReducerState<T>
-    ) => void,
-    funcIfAnyChangesSinceInitial?: (update: T, state: ReducerState<T>) => void
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): (state: ReducerState<T>, ...args: any[]) => ReducerState<T> {
-    let deepCopy: ReducerState<T>
-    let updated: T
+  // static ChangesWrapper<T extends object>(
+  //   state: ReducerState<T>,
+  //   func: (update: T) => T,
+  //   funcIfAnyChangesSinceLastOperation?: (
+  //     update: T,
+  //     state: ReducerState<T>
+  //   ) => void,
+  //   funcIfAnyChangesSinceInitial?: (update: T, state: ReducerState<T>) => void
+  // ) {
+  //   let deepCopy: ReducerState<T>
+  //   let updated: T
 
-    const before = () => {
-      const dc = deepCloneJson(state)
+  //   const before = () => {
+  //     const dc = deepCloneJson(state)
 
-      if (!dc) {
-        throw new AppException('ReducerState clone: Could not create a copy.')
-      }
+  //     if (!dc) {
+  //       throw new AppException('ReducerState clone: Could not create a copy.')
+  //     }
 
-      const dcUpdated = deepCloneJson(dc.current)
-      if (!dcUpdated) {
-        throw new AppException(
-          'ReducerState clone: Could not create a copy of the current state.'
-        )
-      }
+  //     const dcUpdated = deepCloneJson(dc.current)
+  //     if (!dcUpdated) {
+  //       throw new AppException(
+  //         'ReducerState clone: Could not create a copy of the current state.'
+  //       )
+  //     }
 
-      // Store the deep copy of the current state
-      deepCopy = dc
-      updated = dcUpdated
-    }
+  //     // Store the deep copy of the current state
+  //     deepCopy = dc
+  //     updated = dcUpdated
+  //   }
 
-    let newstate: ReducerState<T> | undefined = undefined
-    const after = () => {
-      const changes = ReducerHelper.getChanges(
-        state,
-        updated,
-        funcIfAnyChangesSinceLastOperation,
-        funcIfAnyChangesSinceInitial
-      )
+  //   const after = () => {
+  //     const changes = ReducerHelper.getChanges(
+  //       state,
+  //       updated,
+  //       funcIfAnyChangesSinceLastOperation,
+  //       funcIfAnyChangesSinceInitial
+  //     )
 
-      newstate = {
-        ...deepCopy,
-        current: updated,
-        ...changes,
-      }
+  //     const newstate: ReducerState<T> = {
+  //       ...deepCopy,
+  //       current: updated,
+  //       ...changes,
+  //     }
 
-      return newstate
-    }
+  //     return newstate
+  //   }
 
-    // Wrap the function with before and after callbacks
-    wrap(() => func(updated), before, after)
+  //   // Wrap the function with before and after callbacks
+  //   const ret = wrapReducer(() => func(state.current), before, after)
 
-    if (!newstate) {
-      throw new AppException(
-        'ReducerState: After function was not called. This should not happen.'
-      )
-    }
-
-    return newstate
-  }
+  //   return ret
+  // }
 
   static updateCurrent<T extends object>(state: ReducerState<T>, updated: T) {
     const changes = ReducerHelper.getChanges(state, updated)

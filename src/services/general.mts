@@ -34,14 +34,29 @@ export function addObjectToList<T>(
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
+export function deepCloneJsonWithUndefined<T extends object | Array<T>>(
+  obj: T,
+  fname?: string
+) {
+  fname = fname || 'deepCloneJsonWithUndefined'
+
+  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
+}
+
 export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
   fname?: string
 ) {
   fname = fname || 'deepCloneJson'
+  const ret = safestrToJson<T>(safeJsonToString(obj, fname), fname)
 
-  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
+  if (!ret) {
+    throw new AppException('Unable to parse JSON', fname)
+  }
+
+  return ret
 }
+
 /**
  * Method to wrap deep object comparison. The changes are mapped and returned.
  * Generally used for checking in real-time form data changes.
