@@ -1,5 +1,6 @@
-import { ICreatedBy, IId, IUpdatedBy, IUserId } from './interfaces.mjs'
+import { ICreatedBy, IUpdatedBy, IUserId } from './interfaces.mjs'
 import { hasData, isNullOrUndefined, isObject } from '../services/general.mjs'
+import { IId } from './IdManager.mjs'
 
 export interface ICreatedTable<Tid = string> extends IId<Tid>, ICreatedBy {}
 export interface ICreatedUpdatedTable<Tid = string>

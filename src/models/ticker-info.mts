@@ -1,14 +1,8 @@
 import { IdName } from '../models/id-name.mjs'
 import { isObject } from '../services/general.mjs'
-import {
-  IDate,
-  IId,
-  IName,
-  IPrice,
-  IType,
-  IVal,
-} from '../models/interfaces.mjs'
+import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
+import { IId } from './IdManager.mjs'
 
 export interface ISymbol {
   symbol: string

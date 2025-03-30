@@ -1,4 +1,5 @@
-import { ICreatedBy, IId, IUpdatedBy } from '../models/interfaces.mjs'
+import { IId } from '../models/IdManager.mjs'
+import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
 import {
   getAsNumber,

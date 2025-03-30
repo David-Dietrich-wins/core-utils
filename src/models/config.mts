@@ -5,7 +5,8 @@ import {
 import { IIdVal } from '../models/id-val.mjs'
 import { NameVal } from '../models/name-val.mjs'
 import { isObject } from '../services/general.mjs'
-import { IId, IName } from './interfaces.mjs'
+import { IId } from './IdManager.mjs'
+import { IName } from './interfaces.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>

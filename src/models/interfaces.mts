@@ -1,12 +1,7 @@
 import { IWebState } from './WebState.mjs'
 import { ArrayOrSingle, SortOrder } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
-
-export interface IId<T = string> {
-  id?: T
-}
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IIdRequired<T = string> extends Required<IId<T>> {}
+import { IId } from './IdManager.mjs'
 
 export interface ICreatedBy {
   createdby: string

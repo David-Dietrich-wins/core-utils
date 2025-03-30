@@ -1,8 +1,13 @@
-import { IId, IValue } from './interfaces.mjs'
+import { IId } from './IdManager.mjs'
+import { IValue } from './interfaces.mjs'
 
-export interface IIdValue<Tid = string, Tvalue = string> extends IId<Tid>, IValue<Tvalue> {}
+export interface IIdValue<Tid = string, Tvalue = string>
+  extends IId<Tid>,
+    IValue<Tvalue> {}
 
-export class IdValue<Tid = string, Tvalue = string> implements IIdValue<Tid, Tvalue> {
+export class IdValue<Tid = string, Tvalue = string>
+  implements IIdValue<Tid, Tvalue>
+{
   id: Tid
   value: Tvalue
 

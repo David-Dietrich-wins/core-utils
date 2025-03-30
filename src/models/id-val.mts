@@ -1,4 +1,5 @@
-import { IId, IVal } from './interfaces.mjs'
+import { IId } from './IdManager.mjs'
+import { IVal } from './interfaces.mjs'
 
 export interface IIdVal<Tid = string, Tval = string>
   extends IId<Tid>,

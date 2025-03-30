@@ -14,7 +14,7 @@ import {
   ObjectTypesToString,
   UpdateFieldValue,
 } from './object-helper.mjs'
-import { IId } from '../models/interfaces.mjs'
+import { IId } from '../models/IdManager.mjs'
 
 type PostExceptionAxiosResponseData = {
   response: {

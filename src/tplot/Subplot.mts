@@ -1,4 +1,4 @@
-import { IId } from '../models/interfaces.mjs'
+import { IId } from '../models/IdManager.mjs'
 import { isObject, safeArray } from '../services/general.mjs'
 import { ChartPatternOptions } from './ChartSettings.mjs'
 

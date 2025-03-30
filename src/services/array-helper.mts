@@ -1,6 +1,7 @@
 import { AppException } from '../models/AppException.mjs'
 import { IIdName } from '../models/id-name.mjs'
-import { IId, IName } from '../models/interfaces.mjs'
+import { IId, IIdRequired } from '../models/IdManager.mjs'
+import { IName } from '../models/interfaces.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 import {
   isArray,
@@ -12,7 +13,7 @@ import {
   safestrUppercase,
 } from './general.mjs'
 
-export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayGetIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tid
 ) {
@@ -92,7 +93,7 @@ export function arrayFindNameById<
  * @param ids The array of ids to find in arrItems.
  * @returns The object with the given name. If not found, an empty Array is returned.
  */
-export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayFindByIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arrItems?: ArrayOrSingle<T> | null,
   ids?: Tid[]
 ) {
@@ -108,7 +109,7 @@ export function arrayFindByIds<T extends Required<IId<Tid>>, Tid = T['id']>(
  * @param ids The array of ids to NOT find in arrItems.
  * @returns The object with the given name. If not found, and exception is thrown.
  */
-export function arrayFindByNotIds<T extends Required<IId<Tid>>, Tid = T['id']>(
+export function arrayFindByNotIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arrItems?: ArrayOrSingle<T> | null,
   ids?: Tid[]
 ) {

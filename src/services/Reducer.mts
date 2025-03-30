@@ -45,31 +45,6 @@ const result = wrappedAdd(2, 3); // Output: Before add, After add, 5
 //   } as T
 // }
 
-// e slint-disable-next-line @typescript-eslint/no-explicit-any
-// function wrapReducerState<T extends object, U extends any[]>(
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   func: (updatedCopy: T, args: U) => void,
-//   before: () => ReducerState<T>,
-//   after: (dcState: ReducerState<T>, updated: T) => ReducerState<T>
-// ) {
-//   return function wrappedFunction(args: Parameters<U>) {
-//     const dcState = before()
-
-//     const updated = deepCloneJson(dcState.current)
-//     if (!updated) {
-//       throw new AppException(
-//         'ReducerState clone: Could not create a copy of the current state.'
-//       )
-//     }
-
-//     func(updated, ...args)
-
-//     const result = after(dcState, updated)
-
-//     return result
-//   }
-// }
-
 export class ReducerHelper {
   // e slint-disable-next-line @typescript-eslint/no-explicit-any
   static RunWithDeepCopy<T extends object>(
@@ -89,20 +64,12 @@ export class ReducerHelper {
 
     const tupdates = func(deepCloneJson(dcState.current))
 
-    const changes = ReducerHelper.getChanges(
-      dcState,
+    return ReducerHelper.CheckForChangesAndReturnNewState(
+      state,
       tupdates,
       funcIfAnyChangesSinceLastOperation,
       funcIfAnyChangesSinceInitial
     )
-
-    const newstate: ReducerState<T> = {
-      ...dcState,
-      current: tupdates,
-      ...changes,
-    }
-
-    return newstate
   }
 
   static getChanges<T extends object>(
@@ -139,7 +106,7 @@ export class ReducerHelper {
       'changes: From This Operation:',
       anyChangesFromLastOperation,
       ', changesSinceLastSave:',
-      deepDiffMapper().getChanges(state, updated)
+      deepDiffMapper().getChanges(state.initial, updated)
     )
 
     const changes: ReducerChanges = {
@@ -204,11 +171,30 @@ export class ReducerHelper {
   //   return ret
   // }
 
-  static updateCurrent<T extends object>(state: ReducerState<T>, updated: T) {
-    const changes = ReducerHelper.getChanges(state, updated)
+  static CheckForChangesAndReturnNewState<T extends object>(
+    state: ReducerState<T>,
+    updated: T,
+    funcIfAnyChangesSinceLastOperation?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean,
+    funcIfAnyChangesSinceInitial?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean
+  ) {
+    // This method will return the changes along with the new state.
+    // It will call the getChanges method to determine if there are any changes.
+    const changes = ReducerHelper.getChanges(
+      state,
+      updated,
+      funcIfAnyChangesSinceLastOperation,
+      funcIfAnyChangesSinceInitial
+    )
 
+    // Create a new state object with the updated values and changes.
     const newstate: ReducerState<T> = {
-      initial: state.initial,
+      ...state,
       current: { ...updated },
       ...changes,
     }

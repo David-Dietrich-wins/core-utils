@@ -1,4 +1,5 @@
-import { IId, IUserId } from '../models/interfaces.mjs'
+import { IId } from '../models/IdManager.mjs'
+import { IUserId } from '../models/interfaces.mjs'
 import { ITradePlot } from './trade-plot.mjs'
 
 export interface IPlotList extends IId, IUserId {

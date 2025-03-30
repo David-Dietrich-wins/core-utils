@@ -1,5 +1,6 @@
 import { isObject } from '../services/general.mjs'
-import { ICreatedBy, IId, IUpdatedBy } from './interfaces.mjs'
+import { IId } from './IdManager.mjs'
+import { ICreatedBy, IUpdatedBy } from './interfaces.mjs'
 
 export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
 export interface IIdCreatedUpdated<Tid = string>

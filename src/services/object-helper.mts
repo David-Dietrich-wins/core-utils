@@ -8,9 +8,9 @@ import {
   safestrLowercase,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IId } from '../models/interfaces.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst } from './array-helper.mjs'
+import { IId } from '../models/IdManager.mjs'
 
 export function CloneObjectWithExtras<T extends IId>(
   objectWithId: Readonly<T>,

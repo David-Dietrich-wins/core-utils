@@ -60,7 +60,7 @@ import {
   // CONST_AppNameTradePlotter,
 } from './HttpHeaderManager.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
-import { IDashboardSetting } from '../index.mjs'
+import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
 
 /**
  * Interface for the result of a symbol search.
