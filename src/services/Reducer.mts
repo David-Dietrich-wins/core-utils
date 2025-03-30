@@ -1,3 +1,4 @@
+import { IId } from '../index.mjs'
 import { deepCloneJson, deepDiffMapper } from './general.mjs'
 
 export type ReducerChanges = {
@@ -5,13 +6,12 @@ export type ReducerChanges = {
   anyChangesSinceInitial: boolean
 }
 
-export type ReducerStateOnly<T extends object> = {
+export type ReducerStateOnly<T extends IId> = {
   initial: T
   current: T
 }
 
-export type ReducerState<T extends object> = ReducerChanges &
-  ReducerStateOnly<T>
+export type ReducerState<T extends IId> = ReducerChanges & ReducerStateOnly<T>
 
 /*
     Example usage of the wrap function:
