@@ -46,76 +46,11 @@ const result = wrappedAdd(2, 3); // Output: Before add, After add, 5
 //   } as T
 // }
 
-export class ReducerHelper {
-  // e slint-disable-next-line @typescript-eslint/no-explicit-any
-  static RunWithDeepCopy<T extends object>(
-    state: ReducerState<T>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    func: (currentState: T, ...args: any[]) => T,
-    funcIfAnyChangesSinceLastOperation?: (
-      update: T,
-      state: ReducerState<T>
-    ) => boolean,
-    funcIfAnyChangesSinceInitial?: (
-      update: T,
-      state: ReducerState<T>
-    ) => boolean
-  ) {
-    const dcState = deepCloneJson(state)
+export class ReducerHelperBase<T extends object> {
+  state: ReducerState<T>
 
-    const tupdates = func(deepCloneJson(dcState.current))
-
-    return ReducerHelper.CheckForChangesAndReturnNewState(
-      state,
-      tupdates,
-      funcIfAnyChangesSinceLastOperation,
-      funcIfAnyChangesSinceInitial
-    )
-  }
-
-  static getChanges<T extends object>(
-    state: ReducerState<T>,
-    updated: T,
-    funcIfAnyChangesSinceLastOperation?: (
-      update: T,
-      state: ReducerState<T>
-    ) => boolean,
-    funcIfAnyChangesSinceInitial?: (
-      update: T,
-      state: ReducerState<T>
-    ) => boolean
-  ) {
-    const anyChangesFromLastOperation = deepDiffMapper().anyChanges(
-      state,
-      updated
-    )
-
-    if (anyChangesFromLastOperation) {
-      funcIfAnyChangesSinceLastOperation?.(updated, state)
-    }
-
-    const anyChangesSinceInitial = deepDiffMapper().anyChanges(
-      state.initial,
-      updated
-    )
-
-    if (anyChangesSinceInitial) {
-      funcIfAnyChangesSinceInitial?.(updated, state)
-    }
-
-    console.log(
-      'changes: From This Operation:',
-      anyChangesFromLastOperation,
-      ', changesSinceLastSave:',
-      deepDiffMapper().getChanges(state.initial, updated)
-    )
-
-    const changes: ReducerChanges = {
-      anyChangesFromLastOperation,
-      anyChangesSinceInitial,
-    }
-
-    return changes
+  public constructor(state: ReducerState<T>) {
+    this.state = deepCloneJson(state)
   }
 
   // static ChangesWrapper<T extends object>(
@@ -172,8 +107,7 @@ export class ReducerHelper {
   //   return ret
   // }
 
-  static CheckForChangesAndReturnNewState<T extends object>(
-    state: ReducerState<T>,
+  checkForChangesAndReturnNewState(
     updated: T,
     funcIfAnyChangesSinceLastOperation?: (
       update: T,
@@ -186,8 +120,7 @@ export class ReducerHelper {
   ) {
     // This method will return the changes along with the new state.
     // It will call the getChanges method to determine if there are any changes.
-    const changes = ReducerHelper.getChanges(
-      state,
+    const changes = this.getChanges(
       updated,
       funcIfAnyChangesSinceLastOperation,
       funcIfAnyChangesSinceInitial
@@ -195,11 +128,88 @@ export class ReducerHelper {
 
     // Create a new state object with the updated values and changes.
     const newstate: ReducerState<T> = {
-      ...state,
+      ...this.state,
       current: { ...updated },
       ...changes,
     }
 
     return newstate
+  }
+
+  getChanges(
+    updated: T,
+    funcIfAnyChangesSinceLastOperation?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean,
+    funcIfAnyChangesSinceInitial?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean
+  ) {
+    const anyChangesFromLastOperation = deepDiffMapper().anyChanges(
+      this.state,
+      updated
+    )
+
+    if (anyChangesFromLastOperation) {
+      funcIfAnyChangesSinceLastOperation?.(updated, this.state)
+    }
+
+    const anyChangesSinceInitial = deepDiffMapper().anyChanges(
+      this.state.initial,
+      updated
+    )
+
+    if (anyChangesSinceInitial) {
+      funcIfAnyChangesSinceInitial?.(updated, this.state)
+    }
+
+    console.log(
+      'changes: From This Operation:',
+      anyChangesFromLastOperation,
+      ', changesSinceLastSave:',
+      deepDiffMapper().getChanges(this.state.initial, updated)
+    )
+
+    const changes: ReducerChanges = {
+      anyChangesFromLastOperation,
+      anyChangesSinceInitial,
+    }
+
+    return changes
+  }
+
+  reset(item: T) {
+    const newstate: ReducerState<T> = {
+      initial: deepCloneJson(item),
+      current: deepCloneJson(item),
+      anyChangesFromLastOperation: false, // Reset to false since we're resetting the state
+      anyChangesSinceInitial: false, // Reset to false since we're resetting the state
+    }
+
+    this.state = newstate
+    return newstate
+  }
+
+  runWithDeepCopy(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    func: (currentState: T, ...args: any[]) => T,
+    funcIfAnyChangesSinceLastOperation?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean,
+    funcIfAnyChangesSinceInitial?: (
+      update: T,
+      state: ReducerState<T>
+    ) => boolean
+  ) {
+    const tupdates = func(deepCloneJson(this.state.current))
+
+    return this.checkForChangesAndReturnNewState(
+      tupdates,
+      funcIfAnyChangesSinceLastOperation,
+      funcIfAnyChangesSinceInitial
+    )
   }
 }
