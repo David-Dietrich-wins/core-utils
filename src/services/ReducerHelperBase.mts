@@ -192,6 +192,23 @@ export class ReducerHelperBase<T extends object> {
     return newstate
   }
 
+  resetToInitial() {
+    // This method resets the current state to the initial state.
+    // It will create a new state object with the initial values and reset the changes.
+    // Create a new state object with the initial values.
+    const newstate: ReducerState<T> = {
+      ...this.state, // Spread the existing state to keep any other properties
+      current: deepCloneJson(this.state.initial), // Set the current state to the initial state
+      anyChangesFromLastOperation: false, // Reset to false since we're resetting the state
+      anyChangesSinceInitial: false, // Reset to false since we're resetting the state
+    }
+    // Update the state with the new state object.
+    this.state = newstate
+    // Return the new state object.
+    // This allows you to see the new state after the reset.
+    return newstate
+  }
+
   runWithDeepCopy(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     func: (currentState: T, ...args: any[]) => T,
