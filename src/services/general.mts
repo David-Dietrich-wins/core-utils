@@ -1,5 +1,10 @@
 import { AppException } from '../models/AppException.mjs'
-import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import {
+  ArrayOrSingle,
+  SortOrder,
+  SortOrderAsBoolean,
+  StringOrStringArray,
+} from '../models/types.mjs'
 import { arrayElement, ToSafeArray } from './array-helper.mjs'
 
 /**
@@ -1007,12 +1012,11 @@ export function sortFunction(
   a: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   b: any,
-  isAsc: string | boolean = true,
+  sortOrder: SortOrder = true,
   compareStringsLowercase = true
 ) {
-  if (isString(isAsc)) {
-    isAsc = 'desc' !== safestrLowercase(isAsc)
-  }
+  const isAsc = SortOrderAsBoolean(sortOrder)
+
   const aEmpty = isNullOrUndefined(a)
   const bEmpty = isNullOrUndefined(b)
   if (aEmpty && bEmpty) {

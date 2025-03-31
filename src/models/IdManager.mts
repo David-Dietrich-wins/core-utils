@@ -1,4 +1,5 @@
-import { arrayAdd, arrayRemove } from '../index.mjs'
+import { arrayAdd, arrayRemove } from '../services/array-helper.mjs'
+import { safeArray } from '../services/general.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 export interface IId<T = string> {
@@ -7,28 +8,30 @@ export interface IId<T = string> {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
-export class IdManager<Tid extends IId> {
+export class IdManager<T extends IId> {
   constructor(
-    public list: Tid[] = [],
+    public list: T[] = [],
     public stats?: InstrumentationStatistics
   ) {}
 
-  static Create<T extends IId>(arr: T[] = []) {
-    return new IdManager(arr)
+  static Create<T extends IId>(
+    arr: T[] | null | undefined,
+    stats?: InstrumentationStatistics
+  ) {
+    return new IdManager(safeArray(arr), stats)
   }
 
-  add(item: Tid, index?: number): IdManager<Tid> {
+  add(item: T, index?: number) {
     arrayAdd(this.list, item, index)
 
     this.stats?.addSuccess()
     return this
   }
 
-  remove(idObj: Tid): IdManager<Tid> {
+  remove(idObj: T) {
     arrayRemove(this.list, idObj)
 
     this.stats?.deleted()
-
     return this
   }
 }

@@ -1,5 +1,5 @@
 import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
-import { DefaultSearchRequestView } from '../models/defaults.mjs'
+import { SearchRequestViewDefault } from '../models/defaults.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import {
   IChartRunLogApiReturn,
@@ -189,7 +189,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAdmin, 'all-users'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -263,7 +263,7 @@ export class ExternalApis {
           url: urlJoin(this.CONST_EndpointAsset, 'crypto-quotes'),
           fname,
           bearerToken,
-          data: DefaultSearchRequestView(searchRequest),
+          data: SearchRequestViewDefault(searchRequest),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -279,7 +279,7 @@ export class ExternalApis {
           url: urlJoin(this.CONST_EndpointAsset, 'etf-quotes'),
           fname,
           bearerToken,
-          data: DefaultSearchRequestView(searchRequest),
+          data: SearchRequestViewDefault(searchRequest),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -299,7 +299,7 @@ export class ExternalApis {
         ),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -316,7 +316,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, 'most-active'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -333,7 +333,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, 'nft-ideas-quotes'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -369,7 +369,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, 'spac-quotes'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -420,7 +420,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, 'gainers'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -437,7 +437,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, 'losers'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -452,7 +452,7 @@ export class ExternalApis {
           url: urlJoin(this.CONST_EndpointAsset, 'wsb-quotes'),
           fname,
           bearerToken,
-          data: DefaultSearchRequestView(searchRequest),
+          data: SearchRequestViewDefault(searchRequest),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -734,7 +734,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTrade, 'chartrunlogs'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -834,7 +834,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointUser, ['plot-list', name]),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       })
     },
 
@@ -849,7 +849,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointUser, ['screen-data', name]),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -901,7 +901,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointUser, 'logins'),
         fname,
         bearerToken,
-        data: DefaultSearchRequestView(searchRequest),
+        data: SearchRequestViewDefault(searchRequest),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
   }

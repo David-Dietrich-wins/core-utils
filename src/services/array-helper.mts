@@ -438,13 +438,13 @@ export function arrayAdd<T extends IId>(
 }
 
 export function arrayRemove<T extends IId>(
-  arrItems: T[] | undefined | null,
+  arrItems: T[] | null | undefined,
   item: T
 ) {
   return arrayRemoveById(arrItems, item.id)
 }
 export function arrayRemoveById<T extends IId>(
-  arrItems: T[] | undefined | null,
+  arrItems: T[] | null | undefined,
   id: T['id']
 ) {
   arrItems = safeArray(arrItems).filter((x) => x.id !== id)

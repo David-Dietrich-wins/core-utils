@@ -1,7 +1,7 @@
-import { DefaultSearchRequestView } from './defaults.mjs'
+import { SearchRequestViewDefault } from './defaults.mjs'
 
-test('DefaultSearchRequestView', () => {
-  expect(DefaultSearchRequestView()).toEqual({
+test('SearchRequestViewDefault', () => {
+  expect(SearchRequestViewDefault()).toEqual({
     term: '',
     sortColumn: '',
     sortDirection: 'asc',
@@ -13,7 +13,7 @@ test('DefaultSearchRequestView', () => {
   })
 
   expect(
-    DefaultSearchRequestView({
+    SearchRequestViewDefault({
       term: 'term',
       sortColumn: 'filter',
       sortDirection: 'desc',
