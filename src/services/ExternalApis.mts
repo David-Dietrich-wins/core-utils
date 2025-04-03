@@ -748,15 +748,11 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    PlotSave: async (
-      bearerToken: string,
-      plot: ITradePlot,
-      plotNumber: number
-    ) => {
+    PlotSave: async (bearerToken: string, plot: ITradePlot) => {
       const fname = this.trade.PlotGet.name
 
-      return fetchPost<ITradePlotApi, ITradePlot>({
-        url: urlJoin(this.CONST_EndpointTrade, plotNumber),
+      return fetchPut<ITradePlotApi, ITradePlot>({
+        url: urlJoin(this.CONST_EndpointTrade, plot.id),
         fname,
         bearerToken,
         data: plot,

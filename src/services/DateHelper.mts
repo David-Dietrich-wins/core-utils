@@ -71,15 +71,26 @@ export class DateHelper {
 
   static FormatDateTime(
     format?: string,
-    dateToFormat?: Date | number | string
+    dateToFormat?: Date | number | string,
+    isUtc = false
   ) {
-    return (dateToFormat ? moment(dateToFormat) : moment())
-      .format(safestr(format, DateHelper.FormatSeconds))
-      .trim()
+    let m = dateToFormat ? moment(dateToFormat) : moment()
+    if (isUtc) {
+      m = m.utc()
+    }
+
+    return m.format(safestr(format, DateHelper.FormatSeconds)).trim()
   }
 
-  static FormatDateTimeWithMillis(dateToFormat?: Date | number | string) {
-    return DateHelper.FormatDateTime(DateHelper.FormatWithMillis, dateToFormat)
+  static FormatDateTimeWithMillis(
+    dateToFormat?: Date | number | string,
+    isUtc = false
+  ) {
+    return DateHelper.FormatDateTime(
+      DateHelper.FormatWithMillis,
+      dateToFormat,
+      isUtc
+    )
   }
 
   /**
@@ -135,8 +146,8 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static fileDateTime(date?: Date | number | string) {
-    return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date)
+  static fileDateTime(date?: Date | number | string, isUtc = false) {
+    return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date, isUtc)
   }
 
   /**
@@ -145,8 +156,8 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForApiCalls(date?: Date | number | string) {
-    return DateHelper.FormatDateTime(DateHelper.FormatForApiCalls, date)
+  static DateFormatForApiCalls(date?: Date | number | string, isUtc = false) {
+    return DateHelper.FormatDateTime(DateHelper.FormatForApiCalls, date, isUtc)
   }
 
   /**
@@ -155,10 +166,15 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForUi(date?: Date | number | string, showFullYear = false) {
+  static DateFormatForUi(
+    date?: Date | number | string,
+    showFullYear = false,
+    isUtc = false
+  ) {
     return DateHelper.FormatDateTime(
       showFullYear ? DateHelper.FormatForUi : DateHelper.FormatForUi2DigitYear,
-      date
+      date,
+      isUtc
     )
   }
 
@@ -170,13 +186,15 @@ export class DateHelper {
    */
   static DateFormatForUiWithTime(
     date?: Date | number | string,
-    showFullYear = false
+    showFullYear = false,
+    isUtc = false
   ) {
     return DateHelper.FormatDateTime(
       showFullYear
         ? DateHelper.FormatForUiWithYear
         : DateHelper.FormatForUi2DigitYearWithTime,
-      date
+      date,
+      isUtc
     )
   }
 
@@ -192,9 +210,10 @@ export class DateHelper {
 
   static getFormattedTime(
     units: DurationInputArg1,
-    timeframe: DurationInputArg2
+    timeframe: DurationInputArg2,
+    isUtc = false
   ) {
-    const mom = moment()
+    const mom = isUtc ? moment().utc() : moment()
     if (units && timeframe) {
       mom.add(units, timeframe)
     }
