@@ -42,6 +42,7 @@ import {
   fetchPut,
   fetchDelete,
   GetHttpHeaderApplicationName,
+  fetchDeleteJson,
 } from './fetch-http.mjs'
 import { urlJoin, hasData } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
@@ -849,6 +850,19 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
+    ScreenDelete: async (
+      bearerToken: string,
+      screenId: IDashboardScreenSetting['id']
+    ) => {
+      const fname = this.user.ScreenDelete.name
+
+      return fetchDeleteJson<undefined, IDashboardSetting>({
+        url: urlJoin(this.CONST_EndpointUser, ['screen', screenId]),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
     ScreenSave: async (
       bearerToken: string,
       screen: IDashboardScreenSetting
@@ -856,7 +870,7 @@ export class ExternalApis {
       const fname = this.user.ScreenSave.name
 
       return fetchPatch<IDashboardScreenSetting, IDashboardSetting>({
-        url: urlJoin(this.CONST_EndpointUser, 'save-dashboard-item'),
+        url: urlJoin(this.CONST_EndpointUser, 'screen'),
         fname,
         bearerToken,
         data: screen,
