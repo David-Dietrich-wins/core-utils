@@ -606,3 +606,21 @@ export function splitToArrayOfIntegers(commaDelimitedString?: string) {
 
   return trimmed.map((item) => parseInt(item, 10))
 }
+
+export function ToIIdNameArray<T extends IIdName<string, string>>(
+  arr: Readonly<T | string>[] | null | undefined
+) {
+  return safeArray(arr).map((x) => {
+    let inv: IIdName
+    if (isString(x)) {
+      inv = {
+        id: x,
+        name: x,
+      }
+    } else {
+      inv = x
+    }
+
+    return inv
+  })
+}
