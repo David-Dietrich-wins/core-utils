@@ -1,17 +1,24 @@
-export interface IUserMainDatabase {
+import { IIdRequired } from './IdManager.mjs'
+
+export interface IUserMainDatabase extends IIdRequired<string> {
   active?: boolean
   birthDate?: string
   // description: string
   email: string
   firstName: string
   fullName: string
-  id: string
   imageUrl: string
+  insertInstant?: number
+  lastLoginInstant?: number
+  lastUpdateInstant?: number
   lastName: string
   middleName: string
   mobilePhone: string
+  passwordChangeRequired?: boolean
+  passwordLastUpdateInstant?: number
   // newUserDbId: string
   phone1: string
+  usernameStatus?: string
   verified: boolean
 
   roles: string[]
