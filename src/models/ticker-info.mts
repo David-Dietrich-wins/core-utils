@@ -302,6 +302,29 @@ export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {
   profile: CompanyProfile
 }
 
+export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
+  const isd: ISymbolDetail = {
+    name: '',
+    profile: new CompanyProfile(),
+    ticker: '',
+    scales: [],
+    type: '',
+    sector: '',
+    industry: '',
+    exchange: '',
+    id: '',
+    minmov: 0,
+    minmov2: 0,
+    pricescale: 0,
+    createdby: '',
+    updatedby: '',
+    val: new ExchangeInfo(),
+    ...overrides,
+  }
+
+  return isd
+}
+
 export interface ISymbolPrices extends ISymbol {
   candles: IPriceHistoryWithDateTime[]
   midprice: number

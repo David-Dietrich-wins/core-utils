@@ -24,6 +24,21 @@ export class City implements ICity {
       Object.assign(this, obj)
     }
   }
+
+  static CreateICity(overrides?: Partial<ICity>): ICity {
+    const icity: ICity = {
+      city: '',
+      city_img: '',
+      description: '',
+      name: '',
+      scales: [],
+      slug: '',
+      sourceUrl: '',
+      ...overrides,
+    }
+
+    return icity
+  }
 }
 
 export interface IdNameSlug<Tid = string, Tname = string>
