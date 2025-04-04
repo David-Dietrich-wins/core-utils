@@ -56,10 +56,6 @@ import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
-import {
-  CONST_AppNamePolitagree,
-  // CONST_AppNameTradePlotter,
-} from './HttpHeaderManager.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
 import { ICompany } from '../politagree/company.mjs'
@@ -89,7 +85,7 @@ export class ExternalApis {
   readonly CONST_EndpointTv: string
   readonly CONST_EndpointUser: string
 
-  constructor(public baseUrl: string) {
+  constructor(public baseUrl: string, public appName: string) {
     this.CONST_EndpointAdmin = urlJoin(baseUrl, 'admin', false)
     this.CONST_EndpointAsset = urlJoin(baseUrl, 'asset', false)
     this.CONST_EndpointConfig = urlJoin(baseUrl, 'config', false)
@@ -277,6 +273,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, ['company-info', ticker]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -617,7 +614,7 @@ export class ExternalApis {
       return fetchGet<IPagedResponse<ICity>>({
         url: urlJoin(this.CONST_EndpointPolitagree, 'city-all-slugs'),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -627,7 +624,7 @@ export class ExternalApis {
       return fetchGet<ICity>({
         url: urlJoin(this.CONST_EndpointPolitagree, ['city', id]),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -637,7 +634,7 @@ export class ExternalApis {
       return fetchGet<ICity>({
         url: urlJoin(this.CONST_EndpointPolitagree, ['city', slug]),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret, true))
     },
 
@@ -651,7 +648,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointPolitagree, 'city-search'),
         fname,
         data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -664,7 +661,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointPolitagree, 'city-search-full-info'),
         fname,
         data: srv,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) =>
         ExternalApis.verifySuccessPagedResponse(fname, ret, true)
       )
@@ -676,7 +673,7 @@ export class ExternalApis {
       return fetchGet<IPagedResponse<ITickerType>>({
         url: urlJoin(this.CONST_EndpointPolitagree, 'company-all-slugs'),
         fname,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -691,7 +688,7 @@ export class ExternalApis {
           ),
           fname,
           data: srv,
-          headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
     },
@@ -704,7 +701,7 @@ export class ExternalApis {
           url: urlJoin(this.CONST_EndpointPolitagree, 'company-search'),
           fname,
           data: srv,
-          headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret, true))
     },
@@ -718,7 +715,7 @@ export class ExternalApis {
         data: {
           ticker, //: 'aapl,fb,tsla,goog,nflx,mcd,wmt,dis,ko,amzn',
         },
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then(
         (ret) =>
           ExternalApis.verifySuccessPagedResponse(fname, ret, true).dataPage
@@ -738,7 +735,7 @@ export class ExternalApis {
         fname,
         data,
         bearerToken,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -753,7 +750,7 @@ export class ExternalApis {
         fname,
         data,
         bearerToken,
-        headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   }
@@ -982,7 +979,7 @@ export class ExternalApis {
       url: urlJoin(this.baseUrl, 'server-time'),
       fname,
       bearerToken,
-      headers: GetHttpHeaderApplicationName(CONST_AppNamePolitagree),
+      headers: GetHttpHeaderApplicationName(this.appName),
     })
       .then((ret) => ExternalApis.verifySuccess(fname, ret))
       .then((ret) => ret.serverTime / 1000)
