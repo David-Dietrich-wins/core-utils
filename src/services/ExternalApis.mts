@@ -44,7 +44,7 @@ import {
   GetHttpHeaderApplicationName,
   fetchDeleteJson,
 } from './fetch-http.mjs'
-import { urlJoin, hasData } from './general.mjs'
+import { urlJoin, hasData, safeArray } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
 import { ITradePlotListRowItem } from '../tplot/trade-plotlist-row-item.mjs'
 import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
@@ -817,6 +817,28 @@ export class ExternalApis {
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    PriceHistory: async (
+      bearerToken: string,
+      symbol: string,
+      chartSettings: ChartSettings
+    ) => {
+      return this.asset
+        .PriceHistory(bearerToken, symbol, chartSettings)
+        .then((ret) => {
+          // console.log('getBars: data:', ret);
+          return safeArray(ret?.candles).map((x) => {
+            return {
+              time: x.datetime,
+              open: x.open,
+              close: x.close,
+              high: x.high,
+              low: x.low,
+              volume: x.volume,
+            }
+          })
+        })
     },
 
     RemoveChart: async (bearerToken: string, chartId: number | string) => {

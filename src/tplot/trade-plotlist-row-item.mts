@@ -1,5 +1,7 @@
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
-import { isObject, safeArray } from '../services/general.mjs'
+import { isNullOrUndefined, isObject, safeArray } from '../services/general.mjs'
+import { getStockPriceInDollars } from '../services/number-helper.mjs'
+import { IPlotMsg } from './ChartSettings.mjs'
 import { ITradePlot, TradePlot } from './trade-plot.mjs'
 
 export interface ITradePlotListRowItem extends ITradePlot {
@@ -89,5 +91,33 @@ export class TradePlotListRowItem
       (acc, tprow) => (acc || 0) + (tprow?.profit || 0),
       0
     )
+  }
+
+  static MapToPlotMsg(x: TradePlotListRowItem) {
+    {
+      let msg = ''
+      if (isNullOrUndefined(x.profit)) {
+        msg = 'Please setup targets in your trade plot.'
+      } else if (!x.profit) {
+        msg = 'Current break even.'
+      } else if (x.profit > 0) {
+        msg = `Currently up ${getStockPriceInDollars(x.profit)}!`
+      } else {
+        msg = `Currently down ${getStockPriceInDollars(x.profit)}.`
+      }
+
+      const pl: IPlotMsg = {
+        symbol: x.ticker,
+        price: x.purchase,
+        quantity: x.shares,
+        lineColor: x.isShort ? '#f2c200' : '#00ff00',
+        msgText: msg,
+      }
+
+      return pl
+    }
+  }
+  static MapToPlotMsgs(x: TradePlotListRowItem[]) {
+    return safeArray(x).map(TradePlotListRowItem.MapToPlotMsg)
   }
 }

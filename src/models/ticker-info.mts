@@ -1,5 +1,11 @@
+import moment from 'moment'
 import { IdName } from '../models/id-name.mjs'
-import { isObject } from '../services/general.mjs'
+import {
+  isObject,
+  isString,
+  safeArray,
+  safestrUppercase,
+} from '../services/general.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'
@@ -692,6 +698,10 @@ export function IAssetQuoteResponseToAssetQuoteWithChanges(
   return aqr
 }
 
+export function IAssetQuotesWithChanges(assetQuotes: IAssetQuoteResponse[]) {
+  return safeArray(assetQuotes).map(IAssetQuoteResponseToAssetQuoteWithChanges)
+}
+
 export function IAssetQuoteResponseToAssetQuoteWithIpoDate(
   x: IAssetQuoteResponse
 ) {
@@ -703,4 +713,72 @@ export function IAssetQuoteResponseToAssetQuoteWithIpoDate(
   }
 
   return aqr
+}
+
+export function IAssetQuotesWithIpoDate(
+  fname: string,
+  assetQuotes: IAssetQuoteResponse[],
+  retobj: { ipoDate: string; symbol: string }[]
+) {
+  return safeArray(assetQuotes).map((aqr) => {
+    const aqripo = IAssetQuoteResponseToAssetQuoteWithIpoDate(aqr)
+
+    try {
+      const found = retobj.find((spac) => aqr.symbol === spac.symbol)
+      if (found && isString(found?.ipoDate, 1)) {
+        const t = moment(found.ipoDate, 'M-D-YYYY')
+        aqripo.ipoDate = t.valueOf()
+      }
+    } catch (ex) {
+      console.error(fname, ex)
+    }
+
+    return aqripo
+  })
+}
+
+export function IAssetQuoteResponseToAssetQuoteWithScore(
+  x: IAssetQuoteResponse,
+  matches: number,
+  scorePercentage?: number
+) {
+  const aqr: AssetQuoteWithScore = {
+    ...x,
+    changes: x.change,
+    companyName: x.name,
+    matches,
+    ticker: x.symbol,
+    scorePercentage,
+  }
+
+  return aqr
+}
+
+export function IAssetQuotesWithScore(
+  iaqrs: IAssetQuoteResponse[],
+  retobj: { [key: string]: { matches: number; score?: number } }
+) {
+  const totalScore = Object.values(retobj).reduce((acc, cur) => {
+    acc += cur.score || 0
+
+    return acc
+  }, 0)
+
+  return safeArray(iaqrs).map((iaqr) => {
+    const symbol = safestrUppercase(iaqr.symbol)
+
+    const dictsym = retobj[symbol]
+    let scorePercentage = 0
+    let matches = 0
+    if (isObject(dictsym) && totalScore) {
+      scorePercentage = dictsym.score ? dictsym.score / totalScore : 0
+      matches = dictsym.matches
+    }
+
+    return IAssetQuoteResponseToAssetQuoteWithScore(
+      iaqr,
+      matches,
+      scorePercentage
+    )
+  })
 }
