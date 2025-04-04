@@ -668,3 +668,39 @@ export type CompanyAssetInfo = {
   quote?: IAssetQuoteResponse
   ratios?: IRatio
 }
+
+export function IAssetQuoteResponseToAssetQuote(
+  obj: IAssetQuoteResponse
+): AssetQuoteShort {
+  return new AssetQuoteShort({
+    symbol: obj.symbol,
+    price: obj.price,
+    volume: obj.volume,
+  })
+}
+
+export function IAssetQuoteResponseToAssetQuoteWithChanges(
+  x: IAssetQuoteResponse
+) {
+  const aqr: AssetQuoteWithChanges = {
+    ...x,
+    changes: x.change,
+    companyName: x.name,
+    ticker: x.symbol,
+  }
+
+  return aqr
+}
+
+export function IAssetQuoteResponseToAssetQuoteWithIpoDate(
+  x: IAssetQuoteResponse
+) {
+  const aqr: AssetQuoteWithIpoDate = {
+    ...x,
+    changes: x.change,
+    companyName: x.name,
+    ticker: x.symbol,
+  }
+
+  return aqr
+}
