@@ -62,6 +62,7 @@ import {
 } from './HttpHeaderManager.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
+import { ICompany } from '../politagree/company.mjs'
 
 /**
  * Interface for the result of a symbol search.
@@ -202,6 +203,42 @@ export class ExternalApis {
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    CompanyCreate: async (bearerToken: string, company: ICompany) => {
+      const fname = this.admin.CompanyCreate.name
+
+      return fetchPost<ICompany, ICompany>({
+        url: urlJoin(this.CONST_EndpointAdmin, 'company'),
+        fname,
+        bearerToken,
+        data: company,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    CompanyDelete: async (bearerToken: string, id: ICompany['id']) => {
+      const fname = this.admin.CompanyDelete.name
+
+      return fetchDeleteJson<ICompany>({
+        url: urlJoin(this.CONST_EndpointAdmin, ['company', id]),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    CompanyUpdate: async (
+      bearerToken: string,
+      companyId: ICompany['id'],
+      company: Partial<ICompany>
+    ) => {
+      const fname = this.admin.CompanyUpdate.name
+
+      return fetchPatch<Partial<ICompany>, ICompany>({
+        url: urlJoin(this.CONST_EndpointAdmin, ['company', companyId]),
+        fname,
+        bearerToken,
+        data: company,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     FacetSave: async (bearerToken: string, data: FacetSaveParameters) => {
