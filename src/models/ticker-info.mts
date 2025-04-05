@@ -266,7 +266,7 @@ export interface IRelativeStrengthIndicator {
   rsi: number
 }
 
-export interface IPriceVolumeBar<Tdate = string> extends IDate<Tdate>, IVolume {
+export interface IQuoteBar<Tdate = string> extends IDate<Tdate>, IVolume {
   // date: string      // 2021-06-24,
   open: number // 221.16,
   high: number // 227.45,
@@ -274,21 +274,13 @@ export interface IPriceVolumeBar<Tdate = string> extends IDate<Tdate>, IVolume {
   close: number // 212.31,
   // volume: number    // 3866565,
 }
-export interface IPriceBarSymbol<Tdate = string>
-  extends IPriceVolumeBar<Tdate>,
-    ISymbol {}
-export interface IPriceBarTicker<Tdate = string>
-  extends IPriceVolumeBar<Tdate>,
-    ITicker {}
 
-export interface IQuoteBarEma extends IPriceVolumeBar, IExtendedMovingAverage {}
-export interface IQuoteBarSma extends IPriceVolumeBar, ISimpleMovingAverage {}
-export interface IQuoteBarWma extends IPriceVolumeBar, IWeightedMovingAverage {}
-export interface IQuoteBarRsi
-  extends IPriceVolumeBar,
-    IRelativeStrengthIndicator {}
+export interface IQuoteBarEma extends IQuoteBar, IExtendedMovingAverage {}
+export interface IQuoteBarSma extends IQuoteBar, ISimpleMovingAverage {}
+export interface IQuoteBarWma extends IQuoteBar, IWeightedMovingAverage {}
+export interface IQuoteBarRsi extends IQuoteBar, IRelativeStrengthIndicator {}
 
-export interface IPriceHistoricalFull extends IPriceVolumeBar {
+export interface IPriceHistoricalFull extends IQuoteBar {
   adjClose: number // 212.31,
   unadjustedVolume: number // 3866565,
   change: number // -8.85,
@@ -298,7 +290,7 @@ export interface IPriceHistoricalFull extends IPriceVolumeBar {
   changeOverTime: number // -0.04002,
 }
 
-export interface IPriceVolumeBarWithDateTime extends IPriceVolumeBar {
+export interface IQuoteBarWithDateTime extends IQuoteBar {
   datetime: number // 1624507200000
 }
 
@@ -350,7 +342,7 @@ export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
 }
 
 export interface ISymbolPrices extends ISymbol {
-  candles: IPriceVolumeBarWithDateTime[]
+  candles: IQuoteBarWithDateTime[]
   midprice: number
   requestDate: number
 }
