@@ -1,4 +1,4 @@
-import moment, { DurationInputArg1, DurationInputArg2 } from 'moment'
+import moment, { DurationInputArg1, DurationInputArg2, Moment } from 'moment'
 import { isNullOrUndefined, safestr } from './general.mjs'
 
 export class DateHelper {
@@ -71,7 +71,7 @@ export class DateHelper {
 
   static FormatDateTime(
     format?: string,
-    dateToFormat?: Date | number | string,
+    dateToFormat?: Moment | Date | number | string,
     isUtc = false
   ) {
     let m = dateToFormat ? moment(dateToFormat) : moment()
@@ -83,7 +83,7 @@ export class DateHelper {
   }
 
   static FormatDateTimeWithMillis(
-    dateToFormat?: Date | number | string,
+    dateToFormat?: Moment | Date | number | string,
     isUtc = false
   ) {
     return DateHelper.FormatDateTime(
@@ -133,7 +133,7 @@ export class DateHelper {
    * @returns A string formatted to example - '2023-09-06T14:52:01.690'
 .
    */
-  static toLocalStringWithoutTimezone(date?: Date | number | string) {
+  static toLocalStringWithoutTimezone(date?: Moment | Date | number | string) {
     return DateHelper.FormatDateTime(
       DateHelper.FormatLocalWithoutTimezone,
       date
@@ -146,7 +146,7 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static fileDateTime(date?: Date | number | string, isUtc = false) {
+  static fileDateTime(date?: Moment | Date | number | string, isUtc = false) {
     return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date, isUtc)
   }
 
@@ -156,7 +156,10 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForApiCalls(date?: Date | number | string, isUtc = false) {
+  static DateFormatForApiCalls(
+    date?: Moment | Date | number | string,
+    isUtc = false
+  ) {
     return DateHelper.FormatDateTime(DateHelper.FormatForApiCalls, date, isUtc)
   }
 
@@ -167,7 +170,7 @@ export class DateHelper {
    * @returns A string formatted to example - '230906_145201'
    */
   static DateFormatForUi(
-    date?: Date | number | string,
+    date?: Moment | Date | number | string,
     showFullYear = false,
     isUtc = false
   ) {
@@ -185,7 +188,7 @@ export class DateHelper {
    * @returns A string formatted to example - '230906_145201'
    */
   static DateFormatForUiWithTime(
-    date?: Date | number | string,
+    date?: Moment | Date | number | string,
     showFullYear = false,
     isUtc = false
   ) {

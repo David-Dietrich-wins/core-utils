@@ -4,6 +4,7 @@ import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
 import { hasData, safestr, safestrLowercase } from '../services/general.mjs'
 import { IIdName } from '../models/id-name.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 
 export const ChartTimeFrameOptions: IIdName[] = [
   { id: '1m', name: '1 minute' },
@@ -77,8 +78,6 @@ export interface IChartData {
 }
 
 export class ChartSettings implements IChartData {
-  static CONST_FmpYearFormat = 'YYYY-MM-DD'
-
   ticker = ''
   /**
    * The number of periods to show.
@@ -207,8 +206,8 @@ export class ChartSettings implements IChartData {
   }
 
   static fromToForFmpStatic(startMoment?: Moment, endMoment?: Moment) {
-    let s = '&from=' + startMoment?.format(ChartSettings.CONST_FmpYearFormat)
-    s += '&to=' + endMoment?.format(ChartSettings.CONST_FmpYearFormat)
+    let s = '&from=' + DateHelper.DateFormatForApiCalls(startMoment)
+    s += '&to=' + DateHelper.DateFormatForApiCalls(endMoment)
 
     return s
   }
@@ -325,10 +324,10 @@ export class ChartSettings implements IChartData {
     let s = this.frequencyTypeFriendlyString
 
     const fromDateStr = this.startDate
-      ? this.startMoment!.format(ChartSettings.CONST_FmpYearFormat)
+      ? DateHelper.DateFormatForApiCalls(this.startMoment)
       : ''
     const toDateStr = this.endDate
-      ? this.endMoment!.format(ChartSettings.CONST_FmpYearFormat)
+      ? DateHelper.DateFormatForApiCalls(this.endMoment)
       : ''
 
     if (fromDateStr && toDateStr) {

@@ -9,6 +9,7 @@ import {
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'
+import { FromTo } from './types.mjs'
 
 export interface ISymbol {
   symbol: string
@@ -280,6 +281,13 @@ export interface IPriceBarTicker<Tdate = string>
   extends IPriceVolumeBar<Tdate>,
     ITicker {}
 
+export interface IQuoteBarEma extends IPriceVolumeBar, IExtendedMovingAverage {}
+export interface IQuoteBarSma extends IPriceVolumeBar, ISimpleMovingAverage {}
+export interface IQuoteBarWma extends IPriceVolumeBar, IWeightedMovingAverage {}
+export interface IQuoteBarRsi
+  extends IPriceVolumeBar,
+    IRelativeStrengthIndicator {}
+
 export interface IPriceHistoricalFull extends IPriceVolumeBar {
   adjClose: number // 212.31,
   unadjustedVolume: number // 3866565,
@@ -293,6 +301,12 @@ export interface IPriceHistoricalFull extends IPriceVolumeBar {
 export interface IPriceVolumeBarWithDateTime extends IPriceVolumeBar {
   datetime: number // 1624507200000
 }
+
+export type FmpIndicatorQueryParams = ISymbol &
+  Partial<FromTo<Date>> & {
+    periodLength: number
+    timeframe: string
+  }
 
 export interface ISpac extends ISymbolName {
   ipoDate: string

@@ -56,6 +56,11 @@ export type NonFunctionKeyNames<T extends object> = Exclude<
   undefined
 >
 
+export type FromTo<T = number> = {
+  from: T
+  to: T
+}
+
 export type OmitUserId<T extends { userid?: unknown }> = Omit<T, 'userid'>
 
 export type Opaque<K, T = string> = T & { __TYPE__: K }
