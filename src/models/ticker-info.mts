@@ -252,8 +252,20 @@ export interface IPlotPricesWithMidpoint extends ISymbol {
   requestDate: number
 }
 
-export interface IPriceBar<Tdate = string> extends IDate<Tdate>, IVolume {
-  // symbol: string
+export interface IExtendedMovingAverage {
+  ema: number
+}
+export interface ISimpleMovingAverage {
+  sma: number
+}
+export interface IWeightedMovingAverage {
+  wma: number
+}
+export interface IRelativeStrengthIndicator {
+  rsi: number
+}
+
+export interface IPriceVolumeBar<Tdate = string> extends IDate<Tdate>, IVolume {
   // date: string      // 2021-06-24,
   open: number // 221.16,
   high: number // 227.45,
@@ -262,15 +274,13 @@ export interface IPriceBar<Tdate = string> extends IDate<Tdate>, IVolume {
   // volume: number    // 3866565,
 }
 export interface IPriceBarSymbol<Tdate = string>
-  extends IPriceBar<Tdate>,
+  extends IPriceVolumeBar<Tdate>,
     ISymbol {}
 export interface IPriceBarTicker<Tdate = string>
-  extends IPriceBar<Tdate>,
+  extends IPriceVolumeBar<Tdate>,
     ITicker {}
 
-export type IPriceHistory<Tdate = string> = IPriceBar<Tdate>
-
-export interface IPriceHistoricalFull extends IPriceHistory {
+export interface IPriceHistoricalFull extends IPriceVolumeBar {
   adjClose: number // 212.31,
   unadjustedVolume: number // 3866565,
   change: number // -8.85,
@@ -280,7 +290,7 @@ export interface IPriceHistoricalFull extends IPriceHistory {
   changeOverTime: number // -0.04002,
 }
 
-export interface IPriceHistoryWithDateTime extends IPriceHistory {
+export interface IPriceVolumeBarWithDateTime extends IPriceVolumeBar {
   datetime: number // 1624507200000
 }
 
@@ -326,7 +336,7 @@ export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
 }
 
 export interface ISymbolPrices extends ISymbol {
-  candles: IPriceHistoryWithDateTime[]
+  candles: IPriceVolumeBarWithDateTime[]
   midprice: number
   requestDate: number
 }
