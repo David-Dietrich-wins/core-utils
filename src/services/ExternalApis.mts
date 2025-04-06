@@ -26,6 +26,7 @@ import {
   IQuoteBar,
   IQuoteBarEma,
   IQuoteBarRsi,
+  IQuoteBarSma,
   IQuoteBarWma,
   ISymbolDetail,
   ISymbolPrices,
@@ -413,7 +414,7 @@ export class ExternalApis {
     },
 
     Sma: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
-      return this.asset.TechnicalIndicator<IQuoteBarWma>(
+      return this.asset.TechnicalIndicator<IQuoteBarSma>(
         bearerToken,
         fmp,
         'sma'
