@@ -52,7 +52,7 @@ type AxiosErrorWrapper = {
 export function DefaultWithOverrides<T extends Record<string, any>>(
   defaultObject: Readonly<T>,
   overrides?: Partial<T> | null
-): T {
+) {
   const ret: T = { ...defaultObject, ...overrides }
 
   return ret
@@ -177,7 +177,7 @@ export function getFirstNewWithException<T>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any[],
   exceptionTextIfEmpty = ''
-): T {
+) {
   const first = getInstance(theClass, arrayFirst(obj))
   if (!first) {
     throw new Error(

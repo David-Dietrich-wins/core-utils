@@ -104,7 +104,7 @@ export class UserCreatedUpdatedTable<T = string>
     // userid: string,
     username: string,
     dateToSetTo?: Date
-  ): boolean {
+  ) {
     const isUpdate = false
 
     if (isNullOrUndefined(obj)) {

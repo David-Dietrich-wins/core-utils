@@ -18,10 +18,15 @@ import {
   AssetQuoteWithIpoDate,
   AssetQuoteWithScore,
   CompanyAssetInfo,
+  FmpIndicatorQueryParams,
   IAssetQuoteResponse,
   ICompanyProfile,
   ICompanyUsersWithCount,
   IIpoCalendar,
+  IQuoteBar,
+  IQuoteBarEma,
+  IQuoteBarRsi,
+  IQuoteBarWma,
   ISymbolDetail,
   ISymbolPrices,
   ISymbolPriceVolumeChanges,
@@ -319,6 +324,14 @@ export class ExternalApis {
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
+    Ema: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
+      return this.asset.TechnicalIndicator<IQuoteBarEma>(
+        bearerToken,
+        fmp,
+        'ema'
+      )
+    },
+
     IpoCalendar: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>,
@@ -391,6 +404,22 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
+    Rsi: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
+      return this.asset.TechnicalIndicator<IQuoteBarRsi>(
+        bearerToken,
+        fmp,
+        'rsi'
+      )
+    },
+
+    Sma: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
+      return this.asset.TechnicalIndicator<IQuoteBarWma>(
+        bearerToken,
+        fmp,
+        'sma'
+      )
+    },
+
     SpacQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
@@ -405,6 +434,22 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    TechnicalIndicator: async <TIndicator extends IQuoteBar>(
+      bearerToken: string,
+      fmp: FmpIndicatorQueryParams,
+      endpoint: string
+    ) => {
+      const fname = endpoint
+
+      return fetchPost<IPagedResponse<TIndicator>, FmpIndicatorQueryParams>({
+        url: urlJoin(this.CONST_EndpointAsset, endpoint),
+        fname,
+        bearerToken,
+        data: fmp,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -490,6 +535,14 @@ export class ExternalApis {
           data: SearchRequestViewDefault(searchRequest),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
+    Wma: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
+      return this.asset.TechnicalIndicator<IQuoteBarWma>(
+        bearerToken,
+        fmp,
+        'wma'
+      )
     },
   }
 

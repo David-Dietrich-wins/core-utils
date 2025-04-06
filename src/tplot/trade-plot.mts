@@ -85,8 +85,8 @@ export class TradePlot implements ITradePlot {
     )
   }
 
-  toApi(): ITradePlotApi<number> {
-    return {
+  toApi() {
+    const ret: ITradePlotApi<number> = {
       id: this.id,
       ticker: this.ticker,
       description: this.description,
@@ -100,6 +100,8 @@ export class TradePlot implements ITradePlot {
       createdby: this.createdby,
       created: this.created,
     }
+
+    return ret
   }
 
   getPatternCount() {
@@ -194,7 +196,7 @@ export class TradePlot implements ITradePlot {
     }
   }
 
-  getMaxExpectedTriggerDate(dateNow: number): Date | undefined {
+  getMaxExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       if (cur.expectedTriggerDate && acc < +cur.expectedTriggerDate) {
         acc = +cur.expectedTriggerDate
@@ -208,7 +210,7 @@ export class TradePlot implements ITradePlot {
     }
   }
 
-  getMinExpectedTriggerDate(dateNow: number): Date | undefined {
+  getMinExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       if (cur.expectedTriggerDate && acc > +cur.expectedTriggerDate) {
         acc = +cur.expectedTriggerDate
@@ -222,7 +224,7 @@ export class TradePlot implements ITradePlot {
     }
   }
 
-  getNextExpectedTriggerDate(dateNow: number): Date | undefined {
+  getNextExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       if (
         cur.expectedTriggerDate &&
@@ -250,7 +252,7 @@ export class TradePlot implements ITradePlot {
     }
   }
 
-  getPrevExpectedTriggerDate(dateNow: number): Date | undefined {
+  getPrevExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       if (
         cur.expectedTriggerDate &&

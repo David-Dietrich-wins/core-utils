@@ -714,9 +714,7 @@ export type CompanyAssetInfo = {
   ratios?: IRatio
 }
 
-export function IAssetQuoteResponseToAssetQuote(
-  obj: IAssetQuoteResponse
-): AssetQuoteShort {
+export function IAssetQuoteResponseToAssetQuote(obj: IAssetQuoteResponse) {
   return new AssetQuoteShort({
     symbol: obj.symbol,
     price: obj.price,

@@ -882,11 +882,7 @@ export const pluralSuffix = (num: number, suffix = 's') =>
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-export function pluralize(
-  num: number,
-  textIfSingle = '',
-  textIfPlural = 's'
-): string {
+export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
   if (isNumber(num) && 1 === num) {
     return safestr(textIfSingle)
   }

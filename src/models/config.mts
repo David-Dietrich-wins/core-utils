@@ -3,7 +3,7 @@ import {
   IIdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
 import { IIdVal } from '../models/id-val.mjs'
-import { NameVal } from '../models/name-val.mjs'
+import { INameVal } from '../models/name-val.mjs'
 import { isObject } from '../services/general.mjs'
 import { IId } from './IdManager.mjs'
 import { IName } from './interfaces.mjs'
@@ -53,11 +53,13 @@ export class Config<Tid = string, Tval = boolean>
     this.val = dbtp.val
   }
 
-  api(): NameVal<Tval> {
-    return {
+  api() {
+    const ret: INameVal<Tval> = {
       name: this.name,
       val: this.val,
     }
+
+    return ret
   }
 }
 
@@ -107,10 +109,12 @@ export class ConfigShort<Tid = string, Tval = unknown>
     this.v = dbtp.v
   }
 
-  api(): NameVal<Tval, Tid> {
-    return {
+  api() {
+    const ret: INameVal<Tval, Tid> = {
       name: this.k,
       val: this.v,
     }
+
+    return ret
   }
 }

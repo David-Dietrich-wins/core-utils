@@ -216,7 +216,7 @@ export class ChartSettings implements IChartData {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isToday(date?: any): boolean {
+  static isToday(date?: any) {
     if (!date) {
       return false
     }
@@ -226,7 +226,7 @@ export class ChartSettings implements IChartData {
 
     return mtoday.isSame(mdate, 'day')
   }
-  static isYesterday(date: Date): boolean {
+  static isYesterday(date: Date) {
     if (!date) {
       return false
     }
