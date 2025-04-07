@@ -49,8 +49,10 @@ export class TradePlot implements ITradePlot {
   createdby = 'TradePlot'
   created = new Date()
 
-  constructor(obj: ITradePlot) {
-    this.copyObject(obj)
+  constructor(obj?: ITradePlot) {
+    if (obj) {
+      this.copyObject(obj)
+    }
   }
 
   copyObject(obj: ITradePlot) {
@@ -116,15 +118,16 @@ export class TradePlot implements ITradePlot {
   }
   getTargetLow() {
     const arr = this.subplots.map((x) => x.targetLow ?? 0).filter((x) => x > 0)
+
     return Math.min(...arr)
   }
 
   investmentAmountGain(currentPrice: number) {
-    return isNullOrUndefined(this.investmentAmountStart) ||
-      isNullOrUndefined(this.investmentAmountGainPercent(currentPrice))
-      ? undefined
-      : (this.investmentAmountStart ?? 0) *
+    return !isNullOrUndefined(this.investmentAmountStart) &&
+      !isNullOrUndefined(this.investmentAmountGainPercent(currentPrice))
+      ? (this.investmentAmountStart ?? 0) *
           (this.investmentAmountGainPercent(currentPrice) ?? 0)
+      : undefined
   }
   investmentAmountGainDisplay(currentPrice: number, maxDecimalPlaces: number) {
     const gain = this.investmentAmountGain(currentPrice)
@@ -153,9 +156,9 @@ export class TradePlot implements ITradePlot {
   }
 
   get investmentAmountStart() {
-    return !this.purchase || !this.shares
-      ? undefined
-      : this.purchase * this.shares
+    return !isNullOrUndefined(this.purchase) && !isNullOrUndefined(this.shares)
+      ? this.purchase * this.shares
+      : undefined
   }
   get investmentAmountStartDisplay() {
     if (!this.investmentAmountStart) {
@@ -166,24 +169,23 @@ export class TradePlot implements ITradePlot {
   }
 
   get startingInvestment() {
-    return !this.purchase || !this.shares
-      ? undefined
-      : this.purchase * this.shares
+    return this.purchase && this.shares ? this.purchase * this.shares : 0
   }
 
   getAmountToGoal(price?: number) {
     return price && this.goal ? price - this.goal : undefined
   }
   getPercentToGoal(price?: number) {
-    return price && this.goal ? (price - this.goal) / this.goal : undefined
+    const a2goal = this.getAmountToGoal(price)
+    return !isNullOrUndefined(a2goal) && this.goal && this.goal !== 0
+      ? a2goal / this.goal
+      : undefined
   }
 
   getProfit(price?: number) {
     if (
       price &&
       price > 0 &&
-      !isNullOrUndefined(this.purchase) &&
-      !isNullOrUndefined(this.shares) &&
       this.purchase &&
       this.purchase > 0 &&
       this.shares &&
@@ -272,27 +274,23 @@ export class TradePlot implements ITradePlot {
   }
 
   getAmountToTargetLow(price?: number) {
-    return isNullOrUndefined(this.getTargetLow()) ||
-      !price ||
-      isNullOrUndefined(price)
-      ? undefined
-      : price - this.getTargetLow()
+    return !isNullOrUndefined(this.getTargetLow()) && !isNullOrUndefined(price)
+      ? price - this.getTargetLow()
+      : undefined
   }
   getAmountToTargetHigh(price?: number) {
-    return isNullOrUndefined(this.getTargetHigh()) ||
-      !price ||
-      isNullOrUndefined(price)
-      ? undefined
-      : this.getTargetHigh() - price
+    return !isNullOrUndefined(this.getTargetHigh()) && !isNullOrUndefined(price)
+      ? this.getTargetHigh() - price
+      : undefined
   }
   getPercentToTargetLow(price?: number) {
-    return isNullOrUndefined(this.getTargetLow()) || !price
-      ? undefined
-      : (price - this.getTargetLow()) / price
+    return !isNullOrUndefined(this.getTargetLow()) && price
+      ? (price - this.getTargetLow()) / price
+      : undefined
   }
   getPercentToTargetHigh(price?: number) {
-    return isNullOrUndefined(this.getTargetHigh()) || !price
-      ? undefined
-      : (this.getTargetHigh() - price) / price
+    return !isNullOrUndefined(this.getTargetHigh()) && price
+      ? (this.getTargetHigh() - price) / price
+      : undefined
   }
 }

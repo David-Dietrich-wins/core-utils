@@ -915,36 +915,6 @@ export class ExternalApis {
   }
 
   user = {
-    PlotList: async (
-      bearerToken: string,
-      searchRequest?: Partial<ISearchRequestView>,
-      name = 'main'
-    ) => {
-      const fname = this.user.PlotList.name
-
-      return this.user
-        .PlotListRaw(bearerToken, searchRequest, name)
-        .then((ret) => ExternalApis.verifySuccess(fname, ret, true))
-    },
-
-    PlotListRaw: async (
-      bearerToken: string,
-      searchRequest?: Partial<ISearchRequestView>,
-      name = 'main'
-    ) => {
-      const fname = this.user.PlotListRaw.name
-
-      return fetchPost<
-        IPagedResponseWithTotalValue<ITradePlotListRowItem>,
-        ISearchRequestView
-      >({
-        url: urlJoin(this.CONST_EndpointUser, ['plot-list', name]),
-        fname,
-        bearerToken,
-        data: SearchRequestViewDefault(searchRequest),
-      })
-    },
-
     ScreenData: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>,
@@ -985,6 +955,51 @@ export class ExternalApis {
         bearerToken,
         data: screen,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    TradePlot: async (
+      bearerToken: string,
+      tradePlot: ITradePlot,
+      name = 'main'
+    ) => {
+      const fname = this.user.TradePlot.name
+
+      return fetchPost<ITradePlotListRowItem, ITradePlot>({
+        url: urlJoin(this.CONST_EndpointUser, ['tradeplot', name]),
+        fname,
+        bearerToken,
+        data: tradePlot,
+      })
+    },
+
+    TradePlotList: async (
+      bearerToken: string,
+      searchRequest?: Partial<ISearchRequestView>,
+      name = 'main'
+    ) => {
+      const fname = this.user.TradePlotList.name
+
+      return this.user
+        .TradePlotListRaw(bearerToken, searchRequest, name)
+        .then((ret) => ExternalApis.verifySuccess(fname, ret, true))
+    },
+
+    TradePlotListRaw: async (
+      bearerToken: string,
+      searchRequest?: Partial<ISearchRequestView>,
+      name = 'main'
+    ) => {
+      const fname = this.user.TradePlotListRaw.name
+
+      return fetchPost<
+        IPagedResponseWithTotalValue<ITradePlotListRowItem>,
+        ISearchRequestView
+      >({
+        url: urlJoin(this.CONST_EndpointUser, ['tradeplot-list', name]),
+        fname,
+        bearerToken,
+        data: SearchRequestViewDefault(searchRequest),
+      })
     },
 
     UserInfo: async (bearerToken: string) => {
