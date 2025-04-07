@@ -5,29 +5,50 @@ import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
 import { hasData, safestr, safestrLowercase } from '../services/general.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
+import { arrayFindByIds } from '../index.mjs'
 
-export const ChartTimeFrameOptions: IIdName[] = [
-  { id: '1m', name: '1 minute' },
-  { id: '2m', name: '2 minute' },
-  { id: '3m', name: '3 minute' },
-  { id: '5m', name: '5 minute' },
-  { id: '10m', name: '10 minute' },
-  { id: '15m', name: '15 minute' },
-  { id: '30m', name: '30 minute' },
-  { id: '1h', name: '1 hour' },
-  { id: '4h', name: '4 hour' },
-  { id: '1d', name: '1 day' },
-  { id: '1w', name: '1 week' },
-  { id: '1M', name: '1 month' },
+export const ChartTimeFrameOptions: (IIdName<string> & {
+  fmpTimeFrame: string
+})[] = [
+  { id: '1m', name: '1 minute', fmpTimeFrame: '1min' },
+  { id: '2m', name: '2 minute', fmpTimeFrame: '2min' },
+  { id: '3m', name: '3 minute', fmpTimeFrame: '3min' },
+  { id: '5m', name: '5 minute', fmpTimeFrame: '5min' },
+  { id: '10m', name: '10 minute', fmpTimeFrame: '10min' },
+  { id: '15m', name: '15 minute', fmpTimeFrame: '15min' },
+  { id: '30m', name: '30 minute', fmpTimeFrame: '30min' },
+  { id: '1h', name: '1 hour', fmpTimeFrame: '1hour' },
+  { id: '4h', name: '4 hour', fmpTimeFrame: '4hour' },
+  { id: '1d', name: '1 day', fmpTimeFrame: '1day' },
+  { id: '1w', name: '1 week', fmpTimeFrame: '1week' },
+  { id: '1M', name: '1 month', fmpTimeFrame: '1month' },
+  { id: '1y', name: '1 year', fmpTimeFrame: '1year' },
 ] as const
 
-export const ChartPatternOptions: Required<IIdName>[] = [
-  { id: 'b28', name: 'Back to the 8' },
-  { id: 'ra200', name: 'Resistance at the 200' },
-  { id: 'ra50', name: 'Resistance at the 50' },
-  { id: 'spt200', name: 'Support at the 200' },
-  { id: 'spt50', name: 'Support at the 50' },
-  { id: 'x8x21', name: '8 and 21 cross' },
+export type ChartTimeFrameOption = (typeof ChartTimeFrameOptions)[number]['id']
+
+export const TradeSubplotTimeFrames: ChartTimeFrameOption[] = [
+  '15m',
+  '30m',
+  '1h',
+  '4h',
+  '1d',
+] as const
+
+export const TradeSubplotTimeFrameOptions = arrayFindByIds(
+  ChartTimeFrameOptions,
+  TradeSubplotTimeFrames
+)
+
+export const ChartPatternOptions: (IIdName<string> & {
+  periodLength: number
+})[] = [
+  { id: 'b28', name: 'Back to the 8', periodLength: 8 },
+  { id: 'ra200', name: 'Resistance at the 200', periodLength: 200 },
+  { id: 'ra50', name: 'Resistance at the 50', periodLength: 50 },
+  { id: 'spt200', name: 'Support at the 200', periodLength: 200 },
+  { id: 'spt50', name: 'Support at the 50', periodLength: 50 },
+  { id: 'x8x21', name: '8 and 21 cross', periodLength: 21 },
 ] as const
 
 export interface IPlotMsg {

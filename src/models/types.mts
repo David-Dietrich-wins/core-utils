@@ -57,8 +57,8 @@ export type NonFunctionKeyNames<T extends object> = Exclude<
 >
 
 export type FromTo<T = number> = {
-  from: T
-  to: T
+  from?: T
+  to?: T
 }
 
 export type OmitUserId<T extends { userid?: unknown }> = Omit<T, 'userid'>

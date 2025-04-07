@@ -1,8 +1,8 @@
-import { IId } from '../models/IdManager.mjs'
-import { isObject, safeArray } from '../services/general.mjs'
+import { IIdRequired } from '../models/IdManager.mjs'
+import { isObject, newGuid, safeArray } from '../services/general.mjs'
 import { ChartPatternOptions } from './ChartSettings.mjs'
 
-export interface ISubplot extends IId<number> {
+export interface ISubplot extends IIdRequired<string> {
   orderNumber: number
   pattern: string
   timeframe: string
@@ -21,7 +21,7 @@ export interface ISubplot extends IId<number> {
  * A view of the Subplot for a TradePlot.
  */
 export class Subplot implements ISubplot {
-  id = 0
+  id = newGuid()
   orderNumber = 0
   pattern = ''
   timeframe = ''
@@ -36,7 +36,7 @@ export class Subplot implements ISubplot {
   scaleInverted = false
 
   constructor(
-    id: number | ISubplot = 0,
+    id: ISubplot['id'] | ISubplot,
     orderNumber = 0,
     pattern = '',
     timeframe = '',
@@ -82,12 +82,11 @@ export class Subplot implements ISubplot {
       }
     }
 
-    return new Subplot(0, 0, pattern, '1d', 0, 0, 1000)
+    return new Subplot(newGuid(), 0, pattern, '1d', 0, 0, 1000)
   }
 
   static Renumber(subplots: ISubplot[]) {
     safeArray(subplots).forEach((sp, index) => {
-      sp.id = index
       sp.orderNumber = index
     })
 
@@ -95,7 +94,7 @@ export class Subplot implements ISubplot {
   }
 
   copyObject(dbtp: ISubplot) {
-    this.id = dbtp.id || 0
+    this.id = dbtp.id ?? newGuid()
     this.orderNumber = dbtp.orderNumber
     this.pattern = dbtp.pattern
     this.timeframe = dbtp.timeframe

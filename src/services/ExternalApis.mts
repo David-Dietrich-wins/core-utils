@@ -445,13 +445,13 @@ export class ExternalApis {
     ) => {
       const fname = endpoint
 
-      return fetchPost<IPagedResponse<TIndicator>, FmpIndicatorQueryParams>({
+      return fetchPost<TIndicator[], FmpIndicatorQueryParams>({
         url: urlJoin(this.CONST_EndpointAsset, endpoint),
         fname,
         bearerToken,
         data: fmp,
         headers: GetHttpHeaderApplicationName(this.appName),
-      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     TickerSearch: async (

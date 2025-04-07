@@ -294,8 +294,8 @@ export interface IQuoteBarWithDateTime extends IQuoteBar {
   datetime: number // 1624507200000
 }
 
-export type FmpIndicatorQueryParams = ISymbol &
-  Partial<FromTo<Date>> & {
+export type FmpIndicatorQueryParams<TFromTo = Date> = ISymbol &
+  FromTo<TFromTo> & {
     periodLength: number
     timeframe: string
   }

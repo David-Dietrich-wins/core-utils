@@ -95,7 +95,7 @@ export function arrayFindNameById<
  */
 export function arrayFindByIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arrItems?: ArrayOrSingle<T> | null,
-  ids?: Tid[]
+  ids?: Readonly<Tid[]>
 ) {
   if (!ids || !ids.length) {
     return []

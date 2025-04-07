@@ -1,4 +1,4 @@
-import { IId } from '../models/IdManager.mjs'
+import { IIdRequired } from '../models/IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
 import {
@@ -7,13 +7,14 @@ import {
   getPercentChangeString,
   isNullOrUndefined,
   isObject,
+  newGuid,
   safeArray,
 } from '../services/general.mjs'
 import { getStockPriceInDollars } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 
-export interface ITradePlotApi<T = number>
-  extends IId<T>,
+export interface ITradePlotApi<T = string>
+  extends IIdRequired<T>,
     ITicker,
     ICreatedBy,
     IUpdatedBy {
@@ -26,7 +27,7 @@ export interface ITradePlotApi<T = number>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ITradePlot extends ITradePlotApi<number> {}
+export interface ITradePlot extends ITradePlotApi<string> {}
 
 /**
  * A view of the trade table for a TradePlot.
@@ -34,7 +35,7 @@ export interface ITradePlot extends ITradePlotApi<number> {}
  * Use toApi() to convert to camel case for the outside world.
  */
 export class TradePlot implements ITradePlot {
-  id = 0
+  id = newGuid()
   ticker = ''
   description = ''
   goal?: number
@@ -86,7 +87,7 @@ export class TradePlot implements ITradePlot {
   }
 
   toApi() {
-    const ret: ITradePlotApi<number> = {
+    const ret: ITradePlot = {
       id: this.id,
       ticker: this.ticker,
       description: this.description,
