@@ -1,8 +1,6 @@
-import { IId } from '../models/IdManager.mjs'
-import { IUserId } from '../models/interfaces.mjs'
+import { IIdName } from '../models/id-name.mjs'
 import { ITradePlot } from './trade-plot.mjs'
 
-export interface IPlotList extends IId, IUserId {
-  name: string
+export interface IPlotList extends IIdName<ITradePlot['id']> {
   plots: ITradePlot[]
 }
