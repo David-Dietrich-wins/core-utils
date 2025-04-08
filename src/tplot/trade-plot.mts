@@ -1,5 +1,5 @@
-import { IIdValue, ITradePlotListRowItem } from '../index.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { IIdValue } from '../models/id-value.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
 import {
@@ -18,6 +18,7 @@ import {
 } from '../services/general.mjs'
 import { getStockPriceInDollars } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
+import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 
 export interface ITradePlotApi<T = string>
   extends IIdRequired<T>,
@@ -325,9 +326,9 @@ export class TradePlot implements ITradePlot {
   }
 }
 
-export type ITradePlotProfitizer = {
+export type ITradePlotProfitizerWithContext = {
   emas: IIdValue<ISubplot['id'], IQuoteBarEma[]>[]
-  profitizer?: ITradePlotListRowItem
+  profitizer?: ITradePlotProfitizer
   quote?: IAssetQuoteResponse
   tradePlot: ITradePlot
 }

@@ -52,7 +52,6 @@ import {
 } from './fetch-http.mjs'
 import { urlJoin, hasData, safeArray } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
-import { ITradePlotListRowItem } from '../tplot/trade-plotlist-row-item.mjs'
 import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'
 import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
@@ -63,13 +62,14 @@ import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import {
   ITradePlot,
   ITradePlotApi,
-  ITradePlotProfitizer,
+  ITradePlotProfitizerWithContext,
 } from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
 import { ICompany } from '../politagree/company.mjs'
 import { IPlotList } from '../tplot/PlotList.mjs'
+import { ITradePlotProfitizer } from '../tplot/TradePlotProfitizer.mjs'
 
 /**
  * Interface for the result of a symbol search.
@@ -840,7 +840,7 @@ export class ExternalApis {
       const fname = this.trade.TradePlotDelete.name
 
       return fetchPost<
-        ITradePlotProfitizer,
+        ITradePlotProfitizerWithContext,
         { plotListName?: string; ticker: string }
       >({
         url: urlJoin(this.CONST_EndpointTrade),
@@ -863,7 +863,7 @@ export class ExternalApis {
     TradePlotGet: async (bearerToken: string, plotId: ITradePlot['id']) => {
       const fname = this.trade.TradePlotGet.name
 
-      return fetchGet<ITradePlotProfitizer>({
+      return fetchGet<ITradePlotProfitizerWithContext>({
         url: urlJoin(this.CONST_EndpointTrade, plotId),
         fname,
         bearerToken,
@@ -873,7 +873,7 @@ export class ExternalApis {
     TradePlotSave: async (bearerToken: string, plot: ITradePlot) => {
       const fname = this.trade.TradePlotSave.name
 
-      return fetchPut<ITradePlotApi, ITradePlotProfitizer>({
+      return fetchPut<ITradePlotApi, ITradePlotProfitizerWithContext>({
         url: urlJoin(this.CONST_EndpointTrade, plot.id),
         fname,
         bearerToken,
@@ -997,7 +997,7 @@ export class ExternalApis {
     ) => {
       const fname = this.user.TradePlot.name
 
-      return fetchPost<ITradePlotListRowItem, ITradePlot>({
+      return fetchPost<ITradePlotProfitizer, ITradePlot>({
         url: urlJoin(this.CONST_EndpointUser, ['tradeplot', name]),
         fname,
         bearerToken,
@@ -1025,7 +1025,7 @@ export class ExternalApis {
       const fname = this.user.TradePlotListRaw.name
 
       return fetchPost<
-        IPagedResponseWithTotalValue<ITradePlotListRowItem>,
+        IPagedResponseWithTotalValue<ITradePlotProfitizer>,
         ISearchRequestView
       >({
         url: urlJoin(this.CONST_EndpointUser, ['tradeplot-list', name]),

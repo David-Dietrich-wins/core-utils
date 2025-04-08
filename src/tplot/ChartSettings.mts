@@ -5,7 +5,7 @@ import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
 import { hasData, safestr, safestrLowercase } from '../services/general.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
-import { arrayFindByIds } from '../index.mjs'
+import { arrayFindByIds } from '../services/array-helper.mjs'
 
 export const ChartTimeFrameOptions: (IIdName<string> & {
   fmpTimeFrame: string

@@ -15,7 +15,7 @@ import {
 import { IPlotMsg } from './ChartSettings.mjs'
 import { ITradePlot, TradePlot } from './trade-plot.mjs'
 
-export interface ITradePlotListRowItem extends ITradePlot {
+export interface ITradePlotProfitizer extends ITradePlot {
   profit?: number
   patternCount?: number
   numSubplots: number
@@ -38,9 +38,9 @@ export interface ITradePlotListRowItem extends ITradePlot {
   minExpectedTriggerDate?: Date
 }
 
-export class TradePlotListRowItem
+export class TradePlotProfitizer
   extends TradePlot
-  implements ITradePlotListRowItem
+  implements ITradePlotProfitizer
 {
   profit?: number
   patternCount = 0
@@ -63,7 +63,7 @@ export class TradePlotListRowItem
   maxExpectedTriggerDate?: Date
   minExpectedTriggerDate?: Date
 
-  constructor(obj?: ITradePlotListRowItem) {
+  constructor(obj?: ITradePlotProfitizer) {
     super(obj)
 
     if (obj) {
@@ -75,7 +75,7 @@ export class TradePlotListRowItem
   }
 
   static Create(obj: ITradePlot, tprice?: IAssetQuoteResponse) {
-    const tplot = new TradePlotListRowItem()
+    const tplot = new TradePlotProfitizer()
     if (isObject(obj)) {
       tplot.copyObject(obj)
     }
@@ -109,14 +109,14 @@ export class TradePlotListRowItem
     return tplot
   }
 
-  static GetProfitForRowItems(rows: TradePlotListRowItem[]) {
+  static GetProfitForRowItems(rows: TradePlotProfitizer[]) {
     return safeArray(rows).reduce(
       (acc, tprow) => (acc || 0) + (tprow?.profit || 0),
       0
     )
   }
 
-  static MapToPlotMsg(x: TradePlotListRowItem) {
+  static MapToPlotMsg(x: TradePlotProfitizer) {
     {
       let msg = ''
       if (isNullOrUndefined(x.profit)) {
@@ -140,8 +140,8 @@ export class TradePlotListRowItem
       return pl
     }
   }
-  static MapToPlotMsgs(x: TradePlotListRowItem[]) {
-    return safeArray(x).map(TradePlotListRowItem.MapToPlotMsg)
+  static MapToPlotMsgs(x: TradePlotProfitizer[]) {
+    return safeArray(x).map(TradePlotProfitizer.MapToPlotMsg)
   }
 
   get currentPriceDisplay() {
