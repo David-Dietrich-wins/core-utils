@@ -20,8 +20,8 @@ import { getStockPriceInDollars } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 
-export interface ITradePlotApi<T = string>
-  extends IIdRequired<T>,
+export interface ITradePlot
+  extends IIdRequired<string>,
     ITicker,
     ICreatedBy,
     IUpdatedBy {
@@ -32,9 +32,6 @@ export interface ITradePlotApi<T = string>
   shares?: number
   subplots: ISubplot[]
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ITradePlot extends ITradePlotApi<string> {}
 
 /**
  * A view of the trade table for a TradePlot.
@@ -128,7 +125,7 @@ export class TradePlot implements ITradePlot {
       isShort: this.isShort,
       purchase: this.purchase,
       shares: this.shares,
-      subplots: this.subplots.map((x) => new Subplot(x)),
+      subplots: this.subplots.map((subplot) => subplot.toApi()),
       updatedby: this.updatedby,
       updated: this.updated,
       createdby: this.createdby,

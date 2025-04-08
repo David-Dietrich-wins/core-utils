@@ -61,7 +61,6 @@ import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import {
   ITradePlot,
-  ITradePlotApi,
   ITradePlotProfitizerWithContext,
 } from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
@@ -199,6 +198,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -209,6 +209,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAdmin, 'companies-with-count'),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -220,6 +221,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: company,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -230,6 +232,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAdmin, ['company', id]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -245,6 +248,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: company,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -257,6 +261,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   }
@@ -274,6 +279,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: settings,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -295,6 +301,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointAsset, ['companyprofile', ticker]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -310,6 +317,7 @@ export class ExternalApis {
           fname,
           bearerToken,
           data: SearchRequestViewDefault(searchRequest),
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -326,6 +334,7 @@ export class ExternalApis {
           fname,
           bearerToken,
           data: SearchRequestViewDefault(searchRequest),
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -354,6 +363,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -371,6 +381,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -388,6 +399,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -407,6 +419,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: chartSettings,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -440,6 +453,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -475,6 +489,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: { term: ticker, limit, exchange },
+        headers: GetHttpHeaderApplicationName(this.appName),
       })
         .then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
         .then((ret) => {
@@ -507,6 +522,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -524,6 +540,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -539,6 +556,7 @@ export class ExternalApis {
           fname,
           bearerToken,
           data: SearchRequestViewDefault(searchRequest),
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
@@ -569,6 +587,7 @@ export class ExternalApis {
           fname,
           bearerToken,
           data: { name },
+          headers: GetHttpHeaderApplicationName(this.appName),
         }
       ).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
@@ -593,6 +612,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -616,6 +636,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -639,6 +660,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -662,6 +684,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   }
@@ -829,6 +852,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -847,6 +871,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: { plotListName, ticker },
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -857,6 +882,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTrade, plotId),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -867,17 +893,19 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTrade, plotId),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     TradePlotSave: async (bearerToken: string, plot: ITradePlot) => {
       const fname = this.trade.TradePlotSave.name
 
-      return fetchPut<ITradePlotApi, ITradePlotProfitizerWithContext>({
+      return fetchPut<ITradePlot, ITradePlotProfitizerWithContext>({
         url: urlJoin(this.CONST_EndpointTrade, plot.id),
         fname,
         bearerToken,
         data: plot,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   }
@@ -890,6 +918,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -900,6 +929,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTv, 'charts'),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
@@ -932,6 +962,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then(() => undefined)
     },
 
@@ -943,6 +974,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
   }
@@ -960,6 +992,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -973,6 +1006,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointUser, ['screen', screenId]),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -987,6 +1021,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: screen,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -1042,6 +1077,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointUser, 'info'),
         fname,
         bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -1056,6 +1092,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data,
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
@@ -1070,6 +1107,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
   }

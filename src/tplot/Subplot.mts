@@ -132,21 +132,23 @@ export class Subplot implements ISubplot {
     this.scaleInverted = dbtp.scaleInverted
   }
 
-  // toApi() {
-  //   return {
-  //     id: this.id,
-  //     orderNumber: this.orderNumber,
-  //     pattern: this.pattern,
-  //     timeframe: this.timeframe,
-  //     total: this.total,
-  //     targetLow: this.targetLow,
-  //     targetHigh: this.targetHigh,
-  //     expectedTriggerDate: this.expectedTriggerDate,
-  //     patcomment: this.comment,
-  //     lossFloorPercent: this.lossFloorPercent,
-  //     gainCeilingPercent: this.gainCeilingPercent,
-  //     useMinusEight: this.useMinusEight,
-  //     scaleInverted: this.scaleInverted
-  //   }
-  // }
+  toApi() {
+    const ret: ISubplot = {
+      id: this.id,
+      orderNumber: this.orderNumber,
+      pattern: this.pattern,
+      timeframe: this.timeframe,
+      total: this.total,
+      targetLow: this.targetLow,
+      targetHigh: this.targetHigh,
+      expectedTriggerDate: this.expectedTriggerDate,
+      comment: this.comment,
+      lossFloorPercent: this.lossFloorPercent,
+      gainCeilingPercent: this.gainCeilingPercent,
+      useMinusEight: this.useMinusEight,
+      scaleInverted: this.scaleInverted,
+    }
+
+    return ret
+  }
 }
