@@ -184,6 +184,16 @@ export class TradePlotListRowItem
   }
 
   get goalStatusText() {
+    if (!this.shares) {
+      return 'Please provide Number of Shares.'
+    }
+    if (!this.goal) {
+      return 'Please provide a goal.'
+    }
+    if (!this.purchase) {
+      return 'Please provide a purchase price that you paid per share.'
+    }
+
     const percent2goal = getPercentChange(
       this.goalStart,
       this.investmentAmountCurrent
