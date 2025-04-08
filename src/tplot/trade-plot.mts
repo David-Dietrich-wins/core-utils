@@ -1,3 +1,4 @@
+import { AppException } from '../models/AppException.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
@@ -53,6 +54,29 @@ export class TradePlot implements ITradePlot {
     if (obj) {
       this.copyObject(obj)
     }
+  }
+
+  static CreateFromTicker(ticker: string, email: string) {
+    if (!ticker) {
+      throw new AppException(
+        'You must specify a ticker to create a TradePlot.',
+        'TradePlot.CreateFromTicker'
+      )
+    }
+    if (!email) {
+      throw new AppException(
+        'You must specify an email to create a TradePlot.',
+        'TradePlot.CreateFromTicker'
+      )
+    }
+
+    const tp = new TradePlot()
+    tp.ticker = ticker
+
+    tp.updatedby = email
+    tp.createdby = email
+
+    return tp
   }
 
   copyObject(obj: ITradePlot) {

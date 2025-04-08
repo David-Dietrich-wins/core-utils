@@ -828,6 +828,21 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
+    TradePlotCreate: async (
+      bearerToken: string,
+      plotListName: string | undefined,
+      ticker: string
+    ) => {
+      const fname = this.trade.TradePlotDelete.name
+
+      return fetchPost<ITradePlot, { plotListName?: string; ticker: string }>({
+        url: urlJoin(this.CONST_EndpointTrade),
+        fname,
+        bearerToken,
+        data: { plotListName, ticker },
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
     TradePlotDelete: async (bearerToken: string, plotId: ITradePlot['id']) => {
       const fname = this.trade.TradePlotDelete.name
 
