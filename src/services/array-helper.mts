@@ -452,6 +452,10 @@ export function arrayRemoveById<T extends IId>(
   return arrItems
 }
 
+export function arrayUnique<T>(arrItems: T[] | null | undefined) {
+  return [...new Set(safeArray(arrItems))]
+}
+
 export function arrayUpdateOrAdd<T extends IId>(
   arrItems: T[],
   item: T,
