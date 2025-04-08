@@ -72,6 +72,7 @@ export class TradePlot implements ITradePlot {
 
     const tp = new TradePlot()
     tp.ticker = ticker
+    tp.subplots = [Subplot.GetNewWithNextPattern()]
 
     tp.updatedby = email
     tp.createdby = email
