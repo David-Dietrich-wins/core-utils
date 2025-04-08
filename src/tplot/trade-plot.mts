@@ -229,11 +229,11 @@ export class TradePlot implements ITradePlot {
 
   getMaxExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
-      if (cur.expectedTriggerDate && acc < +cur.expectedTriggerDate) {
-        acc = +cur.expectedTriggerDate
-      }
+      const triggerDateNum = cur.expectedTriggerDate
+        ? +cur.expectedTriggerDate
+        : 0
 
-      return acc
+      return acc < triggerDateNum ? triggerDateNum : acc
     }, 0)
 
     if (dateNum >= dateNow) {
@@ -243,11 +243,11 @@ export class TradePlot implements ITradePlot {
 
   getMinExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
-      if (cur.expectedTriggerDate && acc > +cur.expectedTriggerDate) {
-        acc = +cur.expectedTriggerDate
-      }
+      const triggerDateNum = cur.expectedTriggerDate
+        ? +cur.expectedTriggerDate
+        : 0
 
-      return acc
+      return acc > triggerDateNum ? triggerDateNum : acc
     }, 0)
 
     if (dateNum >= dateNow) {
@@ -257,15 +257,13 @@ export class TradePlot implements ITradePlot {
 
   getNextExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
-      if (
-        cur.expectedTriggerDate &&
-        dateNow <= +cur.expectedTriggerDate &&
-        acc < +cur.expectedTriggerDate
-      ) {
-        acc = +cur.expectedTriggerDate
-      }
+      const triggerDateNum = cur.expectedTriggerDate
+        ? +cur.expectedTriggerDate
+        : 0
 
-      return acc
+      return dateNow <= triggerDateNum && acc < triggerDateNum
+        ? triggerDateNum
+        : acc
     }, 0)
 
     if (dateNum) {
@@ -285,15 +283,13 @@ export class TradePlot implements ITradePlot {
 
   getPrevExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
-      if (
-        cur.expectedTriggerDate &&
-        dateNow > +cur.expectedTriggerDate &&
-        acc < +cur.expectedTriggerDate
-      ) {
-        acc = +cur.expectedTriggerDate
-      }
+      const triggerDateNum = cur.expectedTriggerDate
+        ? +cur.expectedTriggerDate
+        : 0
 
-      return acc
+      return dateNow > triggerDateNum && acc < triggerDateNum
+        ? triggerDateNum
+        : acc
     }, 0)
 
     if (dateNum) {
