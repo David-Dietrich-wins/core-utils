@@ -110,10 +110,7 @@ export class TradePlotProfitizer
   }
 
   static GetProfitForRowItems(rows: TradePlotProfitizer[]) {
-    return safeArray(rows).reduce(
-      (acc, tprow) => (acc || 0) + (tprow?.profit || 0),
-      0
-    )
+    return safeArray(rows).reduce((acc, tprow) => acc + (tprow?.profit || 0), 0)
   }
 
   static MapToPlotMsg(x: TradePlotProfitizer) {
@@ -180,7 +177,7 @@ export class TradePlotProfitizer
   }
 
   get goalStart() {
-    return (this.goal ?? 0) * (this.shares ?? 0)
+    return (this.goal ?? 0) * this.shares
   }
 
   get goalStatusText() {
@@ -225,7 +222,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountCurrent() {
-    return (this.currentPrice ?? 0) * (this.shares ?? 0)
+    return (this.currentPrice ?? 0) * this.shares
   }
 
   get investmentAmountDisplay() {
@@ -238,7 +235,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountStart() {
-    return (this.purchase ?? 0) * (this.shares ?? 0)
+    return (this.purchase ?? 0) * this.shares
   }
   get investmentAmountStartDisplay() {
     if (!this.investmentAmountStart) {

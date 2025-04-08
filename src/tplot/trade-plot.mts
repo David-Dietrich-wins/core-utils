@@ -8,7 +8,6 @@ import {
   ITicker,
 } from '../models/ticker-info.mjs'
 import {
-  getAsNumber,
   getNumberFormatted,
   getPercentChangeString,
   isNullOrUndefined,
@@ -29,7 +28,7 @@ export interface ITradePlot
   goal?: number
   isShort: boolean
   purchase?: number
-  shares?: number
+  shares: number
   subplots: ISubplot[]
 }
 
@@ -45,7 +44,7 @@ export class TradePlot implements ITradePlot {
   goal?: number
   isShort = false
   purchase?: number
-  shares?: number
+  shares = 0
   subplots: Subplot[] = []
 
   updatedby = 'TradePlot'
@@ -102,9 +101,8 @@ export class TradePlot implements ITradePlot {
     if (!isNullOrUndefined(obj.purchase)) {
       this.purchase = getNumberFormatted(obj.purchase, 2, 2)
     }
-    if (!isNullOrUndefined(obj.shares)) {
-      this.shares = getAsNumber(obj.shares)
-    }
+
+    this.shares = obj.shares
 
     this.updatedby = obj.updatedby || 'TradePlot'
     this.updated = obj.updated || new Date()
@@ -184,7 +182,7 @@ export class TradePlot implements ITradePlot {
   }
 
   get investmentAmountStart() {
-    return !isNullOrUndefined(this.purchase) && !isNullOrUndefined(this.shares)
+    return !isNullOrUndefined(this.purchase)
       ? this.purchase * this.shares
       : undefined
   }
@@ -197,7 +195,7 @@ export class TradePlot implements ITradePlot {
   }
 
   get startingInvestment() {
-    return this.purchase && this.shares ? this.purchase * this.shares : 0
+    return this.purchase ? this.purchase * this.shares : 0
   }
 
   getAmountToGoal(price?: number) {
@@ -216,7 +214,6 @@ export class TradePlot implements ITradePlot {
       price > 0 &&
       this.purchase &&
       this.purchase > 0 &&
-      this.shares &&
       this.shares > 0
     ) {
       const profit = this.isShort
