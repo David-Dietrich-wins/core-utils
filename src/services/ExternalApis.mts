@@ -65,6 +65,7 @@ import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
 import { ICompany } from '../politagree/company.mjs'
+import { IPlotList } from '../tplot/PlotList.mjs'
 
 /**
  * Interface for the result of a symbol search.
@@ -827,18 +828,28 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
-    PlotGet: async (bearerToken: string, plotNumber: number) => {
-      const fname = this.trade.PlotGet.name
+    TradePlotDelete: async (bearerToken: string, plotId: ITradePlot['id']) => {
+      const fname = this.trade.TradePlotDelete.name
 
-      return fetchGet<ITradePlot>({
-        url: urlJoin(this.CONST_EndpointTrade, plotNumber),
+      return fetchDeleteJson<IPlotList>({
+        url: urlJoin(this.CONST_EndpointTrade, plotId),
         fname,
         bearerToken,
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    PlotSave: async (bearerToken: string, plot: ITradePlot) => {
-      const fname = this.trade.PlotGet.name
+    TradePlotGet: async (bearerToken: string, plotId: ITradePlot['id']) => {
+      const fname = this.trade.TradePlotGet.name
+
+      return fetchGet<ITradePlot>({
+        url: urlJoin(this.CONST_EndpointTrade, plotId),
+        fname,
+        bearerToken,
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    TradePlotSave: async (bearerToken: string, plot: ITradePlot) => {
+      const fname = this.trade.TradePlotSave.name
 
       return fetchPut<ITradePlotApi, ITradePlot>({
         url: urlJoin(this.CONST_EndpointTrade, plot.id),
