@@ -1,7 +1,12 @@
+import { IIdValue, ITradePlotListRowItem } from '../index.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
-import { ITicker } from '../models/ticker-info.mjs'
+import {
+  IAssetQuoteResponse,
+  IQuoteBarEma,
+  ITicker,
+} from '../models/ticker-info.mjs'
 import {
   getAsNumber,
   getNumberFormatted,
@@ -318,4 +323,11 @@ export class TradePlot implements ITradePlot {
       ? (this.getTargetHigh() - price) / price
       : undefined
   }
+}
+
+export type ITradePlotProfitizer = {
+  emas: IIdValue<ISubplot['id'], IQuoteBarEma[]>[]
+  profitizer?: ITradePlotListRowItem
+  quote?: IAssetQuoteResponse
+  tradePlot: ITradePlot
 }

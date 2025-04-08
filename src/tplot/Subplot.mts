@@ -1,6 +1,12 @@
 import { IIdRequired } from '../models/IdManager.mjs'
+import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
+import { arrayMustFind } from '../services/array-helper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
-import { ChartPatternOptions } from './ChartSettings.mjs'
+import {
+  ChartPatternOptions,
+  TradeSubplotTimeFrameOptions,
+} from './ChartSettings.mjs'
 
 export interface ISubplot extends IIdRequired<string> {
   orderNumber: number
@@ -68,6 +74,23 @@ export class Subplot implements ISubplot {
       this.useMinusEight = useMinusEight
       this.scaleInverted = scaleInverted
     }
+  }
+
+  static GetFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
+    const periodLength = arrayMustFind(
+      ChartPatternOptions,
+      subplot.pattern
+    ).periodLength
+
+    const fmp: FmpIndicatorQueryParams = {
+      periodLength,
+      symbol,
+      timeframe: arrayMustFind(TradeSubplotTimeFrameOptions, subplot.timeframe)
+        .fmpTimeFrame,
+      from: DateHelper.addDaysToDate(-5),
+    }
+
+    return fmp
   }
 
   static GetNewWithNextPattern(subplots: ISubplot[] = []) {

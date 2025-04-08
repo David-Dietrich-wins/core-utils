@@ -60,7 +60,11 @@ import { ApiResponse } from '../models/ApiResponse.mjs'
 import { FacetSaveParameters } from '../tplot/Facet.mjs'
 import { IUserInfo } from '../tplot/UserInfo.mjs'
 import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
-import { ITradePlot, ITradePlotApi } from '../tplot/trade-plot.mjs'
+import {
+  ITradePlot,
+  ITradePlotApi,
+  ITradePlotProfitizer,
+} from '../tplot/trade-plot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
@@ -835,7 +839,10 @@ export class ExternalApis {
     ) => {
       const fname = this.trade.TradePlotDelete.name
 
-      return fetchPost<ITradePlot, { plotListName?: string; ticker: string }>({
+      return fetchPost<
+        ITradePlotProfitizer,
+        { plotListName?: string; ticker: string }
+      >({
         url: urlJoin(this.CONST_EndpointTrade),
         fname,
         bearerToken,
@@ -856,7 +863,7 @@ export class ExternalApis {
     TradePlotGet: async (bearerToken: string, plotId: ITradePlot['id']) => {
       const fname = this.trade.TradePlotGet.name
 
-      return fetchGet<ITradePlot>({
+      return fetchGet<ITradePlotProfitizer>({
         url: urlJoin(this.CONST_EndpointTrade, plotId),
         fname,
         bearerToken,
@@ -866,7 +873,7 @@ export class ExternalApis {
     TradePlotSave: async (bearerToken: string, plot: ITradePlot) => {
       const fname = this.trade.TradePlotSave.name
 
-      return fetchPut<ITradePlotApi, ITradePlot>({
+      return fetchPut<ITradePlotApi, ITradePlotProfitizer>({
         url: urlJoin(this.CONST_EndpointTrade, plot.id),
         fname,
         bearerToken,
