@@ -628,3 +628,7 @@ export function ToIIdNameArray<T extends IIdName<string, string>>(
     return inv
   })
 }
+
+export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
+  return safeArray(arr).map((x) => x.name)
+}
