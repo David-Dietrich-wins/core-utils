@@ -1,6 +1,7 @@
 export * from './array-helper.mjs'
 export * from './CryptoHelper.mjs'
 export * from './DateHelper.mjs'
+export * from './EventManager.mjs'
 export * from './ExternalApis.mjs'
 export * from './fetch-http.mjs'
 export * from './general.mjs'
