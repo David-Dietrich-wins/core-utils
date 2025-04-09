@@ -1,5 +1,4 @@
 import EventEmitter from 'events'
-import { IIdNameValue } from '../models/id-name.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventMap = Record<string, any>
@@ -13,7 +12,7 @@ interface Emitter<T extends EventMap> {
   emit<K extends EventKey<T>>(eventName: K, params: T[K]): void
 }
 
-class EventManager<T extends EventMap> implements Emitter<T> {
+class EmitterManager<T extends EventMap> implements Emitter<T> {
   private emitter = new EventEmitter()
 
   on<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>) {
@@ -29,24 +28,19 @@ class EventManager<T extends EventMap> implements Emitter<T> {
   }
 }
 
-function CreateEventManager<T>(name: string) {
-  const eventManager = new EventManager<{ [name]: T }>()
+export function CreateEmitterManager<T>(name: string) {
+  const emitterManager = new EmitterManager<{ [name]: T }>()
 
   return {
     on: (fn: EventReceiver<T>) => {
-      eventManager.on(`${name}`, fn)
+      emitterManager.on(`${name}`, fn)
     },
     off(fn: EventReceiver<T>) {
-      eventManager.off(name, fn)
+      emitterManager.off(name, fn)
     },
 
     emit(event: T) {
-      eventManager.emit(name, event)
+      emitterManager.emit(name, event)
     },
   }
 }
-
-export const EventManagerIdNameValue =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  CreateEventManager<IIdNameValue<any>>('idNameValue')
-export const EventManagerLock = CreateEventManager<boolean>('lock')
