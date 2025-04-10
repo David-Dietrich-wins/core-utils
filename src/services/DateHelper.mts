@@ -8,9 +8,9 @@ export class DateHelper {
   static readonly FormatForFiles = 'YYMMDD_HHmmss'
   static readonly FormatForApiCalls = 'YYYY-MM-DD'
   static readonly FormatForUi = 'M/D/YYYY'
-  static readonly FormatForUiWithYear = 'M/D/YYYY HH:mm:ss a'
+  static readonly FormatForUiWithYear = 'M/D/YYYY h:mm:ss a'
   static readonly FormatForUi2DigitYear = 'M/D/YY'
-  static readonly FormatForUi2DigitYearWithTime = 'M/D/YY HH:mm:ss a'
+  static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
 
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
