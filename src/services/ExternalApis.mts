@@ -475,20 +475,19 @@ export class ExternalApis {
 
     TickerSearch: async (
       bearerToken: string,
-      ticker: string,
-      limit: number,
+      srv: IPolitiscaleSearchParams,
       exchange: string
     ) => {
       const fname = this.asset.TickerSearch.name
 
       return fetchGet<
         PagedResponse<ITickerSearch>,
-        { term: string; limit: number; exchange: string }
+        IPolitiscaleSearchParams & { exchange: string }
       >({
         url: urlJoin(this.CONST_EndpointAsset, 'ticker-search'),
         fname,
         bearerToken,
-        data: { term: ticker, limit, exchange },
+        data: { ...srv, exchange },
         headers: GetHttpHeaderApplicationName(this.appName),
       })
         .then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
