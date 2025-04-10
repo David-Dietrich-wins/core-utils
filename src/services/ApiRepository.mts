@@ -6,7 +6,7 @@ import { safestr, urlJoin } from '../services/general.mjs'
 import { LogManager } from './LogManager.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import { AppExceptionHttpNotAllowed } from '../models/AppException.mjs'
-import { ApiProps } from '../models/types.mjs'
+import { AnyRecord, ApiProps } from '../models/types.mjs'
 import { IErrorMessage } from '../models/interfaces.mjs'
 
 export interface IApiRepository {
@@ -20,7 +20,7 @@ export interface IApiRepository {
     saveKey: string,
     requestBody: any,
     errorMessage?: IErrorMessage
-  ): AppExceptionHttpNotAllowed<Record<string, any>>
+  ): AppExceptionHttpNotAllowed<AnyRecord>
 
   httpGet<TResponse, TRequestConfig>(
     fname: string,
@@ -129,7 +129,7 @@ export class ApiRepository implements IApiRepository {
   }
 
   handleAxiosErrorRaw(fname: string, err: any, url: string, saveKey: string) {
-    let jsonError: Record<string, any> | undefined
+    let jsonError: AnyRecord | undefined
 
     let errmsg = safestr(err.message)
     this.logger.error(`${fname}: ${errmsg}`)

@@ -8,14 +8,13 @@ import {
   safestrLowercase,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IConstructor } from '../models/types.mjs'
+import { AnyRecord, IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst } from './array-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
 
 export function CloneObjectWithExtras<T extends IId>(
   objectWithId: Readonly<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  overridesAndExtras?: Record<string, any>
+  overridesAndExtras?: AnyRecord
 ) {
   const newq: T = { ...objectWithId, ...overridesAndExtras }
 
@@ -48,8 +47,7 @@ type AxiosErrorWrapper = {
   url?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function DefaultWithOverrides<T extends Record<string, any>>(
+export function DefaultWithOverrides<T extends AnyRecord>(
   defaultObject: Readonly<T>,
   overrides?: Partial<T> | null
 ) {

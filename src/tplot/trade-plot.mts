@@ -7,7 +7,7 @@ import {
   IQuoteBarEma,
   ITicker,
 } from '../models/ticker-info.mjs'
-import { FormObjectStatus } from '../models/types.mjs'
+import { FormStatusManager } from '../models/types.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -116,19 +116,27 @@ export class TradePlot implements ITradePlot {
   }
 
   createErrorStatus() {
-    const ret: FormObjectStatus<ITradePlot> = {
+    const ret: FormStatusManager<ITradePlot> = {
+      topLevelStatus: {
+        anyChangesSinceInitial: false,
+        anyChangesSinceLastOperation: false,
+        messages: [],
+        errorStatus: { error: false, text: '' },
+        resetEnabled: false,
+        saveEnabled: false,
+      },
       id: this.id,
-      ticker: { error: false, text: '' },
+      subplots: safeArray(this.subplots).map((x) => x.createErrorStatus()),
+      created: { error: false, text: '' },
+      createdby: { error: false, text: '' },
       description: { error: false, text: '' },
       goal: { error: false, text: '' },
       isShort: { error: false, text: '' },
       purchase: { error: false, text: '' },
       shares: { error: false, text: '' },
-      subplots: safeArray(this.subplots).map((x) => x.createErrorStatus()),
-      updatedby: { error: false, text: '' },
+      ticker: { error: false, text: '' },
       updated: { error: false, text: '' },
-      createdby: { error: false, text: '' },
-      created: { error: false, text: '' },
+      updatedby: { error: false, text: '' },
     }
 
     return ret

@@ -9,6 +9,11 @@ import { LogManagerLevel } from '../services/LogManager.mjs'
 import { IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyRecord<T = any> = Record<string, T>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyObject<T = any> = { [key: string]: T }
+
 export type ApiProps = {
   baseUrl: string
   logLevel?: LogManagerLevel
@@ -30,31 +35,41 @@ export type StringFunction = () => string
 export type StringOrStringArray = ArrayOrSingle<string>
 
 // Function App and/or Express request header types.
-export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
+export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
 
 export type FormItemStatus = {
   error: boolean
   text: StringOrStringArray
 }
+
+export type FormStatusTopLevel = {
+  anyChangesSinceInitial: boolean
+  anyChangesSinceLastOperation: boolean
+  messages: StringOrStringArray
+  errorStatus: FormItemStatus
+  resetEnabled: boolean
+  saveEnabled: boolean
+}
+export type FormStatusChildLevel = Partial<FormStatusTopLevel>
+
 //export type NotDate<T> = T extends Date ? never : T extends object ? T : never
 export type TisIId<T extends object> = T extends IId ? T : never
 
 export type ConvertToType<
   T,
   R extends object,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TopLevelAdd extends Record<string, any> = object
+  TChildAdd extends AnyRecord = object
 > = {
   [Tprop in keyof T]: T[Tprop] extends Array<T[Tprop]>
-    ? ConvertToType<T[Tprop], R, TopLevelAdd>[]
+    ? ConvertToType<T[Tprop], R, TChildAdd>[]
     : T[Tprop] extends IId
-    ? ConvertToType<Omit<T[Tprop], 'id'>, R, TopLevelAdd> &
-        Pick<T[Tprop], 'id'> &
-        TopLevelAdd
+    ? ConvertToType<Omit<T[Tprop], 'id'>, R, TChildAdd> &
+        IId<T[Tprop]['id']> &
+        TChildAdd
     : T[Tprop] extends object
     ? T[Tprop] extends Date
       ? R
-      : ConvertToType<T[Tprop], R, TopLevelAdd>
+      : ConvertToType<T[Tprop], R, TChildAdd>
     : R
 }
 
@@ -62,15 +77,26 @@ export type ConvertToType<
  * Takes any object and converts it to a FormItemStatus object
  *  with each item, except id, transformed into a FormItemStatus.
  */
-export type FormObjectStatus<
+export type FormStatusChild<
   T extends object,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TopLevelAdd extends Record<string, any> = {
-    additionalErrors?: FormItemStatus
-  }
+  TChildAdd extends AnyRecord = { childStatus?: FormStatusChildLevel }
 > = T extends IId
-  ? ConvertToType<Omit<T, 'id'>, FormItemStatus> & Pick<T, 'id'> & TopLevelAdd
-  : ConvertToType<T, FormItemStatus, TopLevelAdd>
+  ? ConvertToType<Omit<T, 'id'>, FormItemStatus, TChildAdd> &
+      IId<T['id']> &
+      TChildAdd
+  : ConvertToType<T, FormItemStatus, TChildAdd> & TChildAdd
+
+export type FormStatusManager<
+  T extends object,
+  TopLevelAdd extends AnyRecord = {
+    topLevelStatus: FormStatusTopLevel
+  },
+  TChildAdd extends AnyRecord = { childStatus?: FormStatusChildLevel }
+> = T extends IId
+  ? ConvertToType<Omit<T, 'id'>, FormItemStatus, TChildAdd> &
+      IId<T['id']> &
+      TopLevelAdd
+  : ConvertToType<T, FormItemStatus, TChildAdd> & TopLevelAdd
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics
