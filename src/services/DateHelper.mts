@@ -1,6 +1,6 @@
 import moment, { DurationInputArg1, DurationInputArg2, Moment } from 'moment'
-import { isNullOrUndefined, safestr } from './general.mjs'
-
+import { isNullOrUndefined, isString, safestr } from './general.mjs'
+import { AppException } from '../models/AppException.mjs'
 export class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
   static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
@@ -91,6 +91,39 @@ export class DateHelper {
       dateToFormat,
       isUtc
     )
+  }
+
+  static Midnight(date: Date | string | null | undefined) {
+    if (date) {
+      if (isString(date)) {
+        const num = Date.parse(date)
+        if (!isNaN(num)) {
+          const d = new Date(num)
+
+          d.setUTCHours(0, 0, 0, 0)
+          return d
+        }
+      } else {
+        const d = Date.UTC(
+          date.getUTCFullYear(),
+          date.getUTCMonth(),
+          date.getUTCDate()
+        )
+
+        return new Date(d)
+      }
+    }
+  }
+  static MidnightSafe(date: Date | string | null | undefined) {
+    const d = DateHelper.Midnight(date)
+    if (!d) {
+      throw new AppException(
+        'Invalid date passed in',
+        'DateHelper.getMidnightSafe'
+      )
+    }
+
+    return d
   }
 
   /**
