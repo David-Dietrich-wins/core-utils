@@ -82,18 +82,18 @@ export class Subplot implements ISubplot {
 
     const sperr: FormStatusChild<ISubplot> = {
       id,
-      orderNumber: { error: false, text: '' },
-      pattern: { error: false, text: '' },
-      timeframe: { error: false, text: '' },
-      total: { error: false, text: '' },
-      targetLow: { error: false, text: '' },
-      targetHigh: { error: false, text: '' },
-      expectedTriggerDate: { error: false, text: '' },
-      comment: { error: false, text: '' },
-      lossFloorPercent: { error: false, text: '' },
-      gainCeilingPercent: { error: false, text: '' },
-      useMinusEight: { error: false, text: '' },
-      scaleInverted: { error: false, text: '' },
+      orderNumber: { error: false, text: [] },
+      pattern: { error: false, text: [] },
+      timeframe: { error: false, text: [] },
+      total: { error: false, text: [] },
+      targetLow: { error: false, text: [] },
+      targetHigh: { error: false, text: [] },
+      expectedTriggerDate: { error: false, text: [] },
+      comment: { error: false, text: [] },
+      lossFloorPercent: { error: false, text: [] },
+      gainCeilingPercent: { error: false, text: [] },
+      useMinusEight: { error: false, text: [] },
+      scaleInverted: { error: false, text: [] },
     }
 
     return sperr
