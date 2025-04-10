@@ -15,8 +15,6 @@ export type ApiProps = {
   logFilename?: string
 }
 
-export type ArrayOrSingle<T> = T | T[]
-
 export type CreateImmutable<Type> = {
   +readonly [Property in keyof Type]: Type[Property]
 }
@@ -25,28 +23,48 @@ export type CreateMutable<Type> = {
   -readonly [Property in keyof Type]: Type[Property]
 }
 
+export type ArrayOrSingle<T> = T | T[]
+
+export type StringFunction = () => string
+
+export type StringOrStringArray = ArrayOrSingle<string>
+
+// Function App and/or Express request header types.
+export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
+
 export type ErrorText = {
   error: boolean
-  text: string
+  text: StringOrStringArray
 }
 //export type NotDate<T> = T extends Date ? never : T extends object ? T : never
 export type TisIId<T extends object> = T extends IId ? T : never
 
-export type ConvertToType<T, R extends object> = {
+export type ConvertToType<
+  T,
+  R extends object,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TopLevelAdd extends Record<string, any> = object
+> = {
   [Tprop in keyof T]: T[Tprop] extends Array<T[Tprop]>
-    ? ConvertToType<T[Tprop], R>[]
+    ? ConvertToType<T[Tprop], R, TopLevelAdd>[]
     : T[Tprop] extends IId
-    ? ConvertToType<Omit<T[Tprop], 'id'>, R> & Pick<T[Tprop], 'id'>
+    ? ConvertToType<Omit<T[Tprop], 'id'>, R, TopLevelAdd> &
+        Pick<T[Tprop], 'id'> &
+        TopLevelAdd
     : T[Tprop] extends object
     ? T[Tprop] extends Date
       ? R
-      : ConvertToType<T[Tprop], R>
+      : ConvertToType<T[Tprop], R, TopLevelAdd>
     : R
 }
 
-export type FormErrorStatus<T extends object> = T extends IId
-  ? ConvertToType<Omit<T, 'id'>, ErrorText> & Pick<T, 'id'>
-  : ConvertToType<T, ErrorText>
+export type FormErrorStatus<
+  T extends object,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TopLevelAdd extends Record<string, any> = { additionalErrors?: ErrorText }
+> = T extends IId
+  ? ConvertToType<Omit<T, 'id'>, ErrorText> & Pick<T, 'id'> & TopLevelAdd
+  : ConvertToType<T, ErrorText, TopLevelAdd>
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics
@@ -123,12 +141,5 @@ export function SortOrderAsNumeric(order?: SortOrder) {
 export function SortOrderAsString(order?: SortOrder) {
   return SortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
-
-export type StringFunction = () => string
-
-export type StringOrStringArray = ArrayOrSingle<string>
-
-// Function App and/or Express request header types.
-export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
 
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
