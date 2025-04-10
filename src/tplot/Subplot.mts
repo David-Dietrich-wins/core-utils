@@ -1,6 +1,6 @@
 import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
-import { FormErrorStatus } from '../models/types.mjs'
+import { FormObjectStatus } from '../models/types.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
@@ -80,7 +80,7 @@ export class Subplot implements ISubplot {
   createErrorStatus() {
     const id = this.id ?? newGuid()
 
-    const sperr: FormErrorStatus<ISubplot> = {
+    const sperr: FormObjectStatus<ISubplot> = {
       id,
       orderNumber: { error: false, text: '' },
       pattern: { error: false, text: '' },

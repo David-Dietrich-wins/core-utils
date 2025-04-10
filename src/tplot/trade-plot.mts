@@ -7,7 +7,7 @@ import {
   IQuoteBarEma,
   ITicker,
 } from '../models/ticker-info.mjs'
-import { FormErrorStatus } from '../models/types.mjs'
+import { FormObjectStatus } from '../models/types.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -116,7 +116,7 @@ export class TradePlot implements ITradePlot {
   }
 
   createErrorStatus() {
-    const ret: FormErrorStatus<ITradePlot> = {
+    const ret: FormObjectStatus<ITradePlot> = {
       id: this.id,
       ticker: { error: false, text: '' },
       description: { error: false, text: '' },

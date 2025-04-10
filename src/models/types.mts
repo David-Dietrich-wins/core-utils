@@ -32,7 +32,7 @@ export type StringOrStringArray = ArrayOrSingle<string>
 // Function App and/or Express request header types.
 export type StringOrStringArrayObject = { [name: string]: StringOrStringArray }
 
-export type ErrorText = {
+export type FormItemStatus = {
   error: boolean
   text: StringOrStringArray
 }
@@ -58,13 +58,19 @@ export type ConvertToType<
     : R
 }
 
-export type FormErrorStatus<
+/**
+ * Takes any object and converts it to a FormItemStatus object
+ *  with each item, except id, transformed into a FormItemStatus.
+ */
+export type FormObjectStatus<
   T extends object,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TopLevelAdd extends Record<string, any> = { additionalErrors?: ErrorText }
+  TopLevelAdd extends Record<string, any> = {
+    additionalErrors?: FormItemStatus
+  }
 > = T extends IId
-  ? ConvertToType<Omit<T, 'id'>, ErrorText> & Pick<T, 'id'> & TopLevelAdd
-  : ConvertToType<T, ErrorText, TopLevelAdd>
+  ? ConvertToType<Omit<T, 'id'>, FormItemStatus> & Pick<T, 'id'> & TopLevelAdd
+  : ConvertToType<T, FormItemStatus, TopLevelAdd>
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics
