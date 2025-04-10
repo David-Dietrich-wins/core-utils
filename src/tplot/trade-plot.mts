@@ -7,6 +7,7 @@ import {
   IQuoteBarEma,
   ITicker,
 } from '../models/ticker-info.mjs'
+import { FormErrorStatus } from '../models/types.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -112,6 +113,25 @@ export class TradePlot implements ITradePlot {
     this.subplots = safeArray(obj.subplots).map(
       (subplot) => new Subplot(subplot)
     )
+  }
+
+  createErrorStatus() {
+    const ret: FormErrorStatus<ITradePlot> = {
+      id: this.id,
+      ticker: { error: false, text: '' },
+      description: { error: false, text: '' },
+      goal: { error: false, text: '' },
+      isShort: { error: false, text: '' },
+      purchase: { error: false, text: '' },
+      shares: { error: false, text: '' },
+      subplots: safeArray(this.subplots).map((x) => x.createErrorStatus()),
+      updatedby: { error: false, text: '' },
+      updated: { error: false, text: '' },
+      createdby: { error: false, text: '' },
+      created: { error: false, text: '' },
+    }
+
+    return ret
   }
 
   toApi() {

@@ -1,5 +1,6 @@
 import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
+import { FormErrorStatus } from '../models/types.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
@@ -76,6 +77,27 @@ export class Subplot implements ISubplot {
     }
   }
 
+  createErrorStatus() {
+    const id = this.id ?? newGuid()
+
+    const sperr: FormErrorStatus<ISubplot> = {
+      id,
+      orderNumber: { error: false, text: '' },
+      pattern: { error: false, text: '' },
+      timeframe: { error: false, text: '' },
+      total: { error: false, text: '' },
+      targetLow: { error: false, text: '' },
+      targetHigh: { error: false, text: '' },
+      expectedTriggerDate: { error: false, text: '' },
+      comment: { error: false, text: '' },
+      lossFloorPercent: { error: false, text: '' },
+      gainCeilingPercent: { error: false, text: '' },
+      useMinusEight: { error: false, text: '' },
+      scaleInverted: { error: false, text: '' },
+    }
+
+    return sperr
+  }
   static GetFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
     const periodLength = arrayMustFind(
       ChartPatternOptions,

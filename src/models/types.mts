@@ -6,6 +6,7 @@ import {
   safestrLowercase,
 } from '../services/general.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
+import { IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 export type ApiProps = {
@@ -23,6 +24,29 @@ export type CreateImmutable<Type> = {
 export type CreateMutable<Type> = {
   -readonly [Property in keyof Type]: Type[Property]
 }
+
+export type ErrorText = {
+  error: boolean
+  text: string
+}
+//export type NotDate<T> = T extends Date ? never : T extends object ? T : never
+export type TisIId<T extends object> = T extends IId ? T : never
+
+export type ConvertToType<T, R extends object> = {
+  [Tprop in keyof T]: T[Tprop] extends Array<T[Tprop]>
+    ? ConvertToType<T[Tprop], R>[]
+    : T[Tprop] extends IId
+    ? ConvertToType<Omit<T[Tprop], 'id'>, R> & Pick<T[Tprop], 'id'>
+    : T[Tprop] extends object
+    ? T[Tprop] extends Date
+      ? R
+      : ConvertToType<T[Tprop], R>
+    : R
+}
+
+export type FormErrorStatus<T extends object> = T extends IId
+  ? ConvertToType<Omit<T, 'id'>, ErrorText> & Pick<T, 'id'>
+  : ConvertToType<T, ErrorText>
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics
