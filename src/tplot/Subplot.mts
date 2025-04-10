@@ -77,7 +77,7 @@ export class Subplot implements ISubplot {
     }
   }
 
-  createErrorStatus() {
+  createFormStatus() {
     const id = this.id ?? newGuid()
 
     const sperr: FormStatusChild<ISubplot> = {
@@ -88,7 +88,9 @@ export class Subplot implements ISubplot {
       total: { error: false, text: [] },
       targetLow: { error: false, text: [] },
       targetHigh: { error: false, text: [] },
-      expectedTriggerDate: { error: false, text: [] },
+      expectedTriggerDate: DateHelper.DateBeforeMidnightToday(
+        this.expectedTriggerDate
+      ),
       comment: { error: false, text: [] },
       lossFloorPercent: { error: false, text: [] },
       gainCeilingPercent: { error: false, text: [] },

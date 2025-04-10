@@ -7,7 +7,10 @@ import {
   IQuoteBarEma,
   ITicker,
 } from '../models/ticker-info.mjs'
-import { FormStatusManager } from '../models/types.mjs'
+import {
+  CreateFormStatusTopLevel,
+  FormStatusManager,
+} from '../models/types.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -115,18 +118,11 @@ export class TradePlot implements ITradePlot {
     )
   }
 
-  createErrorStatus() {
+  createFormStatus() {
     const ret: FormStatusManager<ITradePlot> = {
-      topLevelStatus: {
-        anyChangesSinceInitial: false,
-        anyChangesSinceLastOperation: false,
-        messages: [],
-        errorStatus: { error: false, text: [] },
-        resetEnabled: false,
-        saveEnabled: false,
-      },
+      topLevelStatus: CreateFormStatusTopLevel(),
       id: this.id,
-      subplots: safeArray(this.subplots).map((x) => x.createErrorStatus()),
+      subplots: safeArray(this.subplots).map((x) => x.createFormStatus()),
       created: { error: false, text: [] },
       createdby: { error: false, text: [] },
       description: { error: false, text: [] },
@@ -138,6 +134,31 @@ export class TradePlot implements ITradePlot {
       updated: { error: false, text: [] },
       updatedby: { error: false, text: [] },
     }
+
+    let errMain = false
+    let arrErrors: string[] = []
+    Object.keys(ret).forEach((key) => {
+      const item = ret[key as keyof ITradePlot]
+      if (item) {
+        if (isObject(item) && 'error' in item && item.error) {
+          errMain = true
+          arrErrors = arrErrors.concat(safeArray(item.text))
+        }
+      }
+    })
+
+    safeArray(ret.subplots).forEach((cur) => {
+      Object.keys(cur).forEach((key) => {
+        const item = cur[key as keyof ISubplot]
+        if (item && isObject(item) && 'error' in item && item.error) {
+          errMain = true
+          arrErrors = arrErrors.concat(safeArray(item.text))
+        }
+      })
+    })
+
+    ret.topLevelStatus.errorStatus.error = errMain
+    ret.topLevelStatus.errorStatus.text = arrErrors
 
     return ret
   }

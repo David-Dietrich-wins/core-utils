@@ -278,4 +278,27 @@ export class DateHelper {
   static UnixTimeFormatForTheDow(val: number) {
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
   }
+
+  static DateBeforeMidnightToday(date: string | Date | null | undefined) {
+    if (date) {
+      const dateNow = DateHelper.MidnightSafe(new Date())
+      const mydate = DateHelper.Midnight(date)
+
+      // console.log(
+      //   'dateNow',
+      //   dateNow.toUTCString(),
+      //   ', mydate',
+      //   mydate?.toUTCString(),
+      //   ', mydatestr:',
+      //   date
+      // )
+      if (!mydate) {
+        return { error: true, text: ['Invalid date'] }
+      } else if (mydate.getTime() < dateNow.getTime()) {
+        return { error: true, text: ['Date in the past'] }
+      }
+    }
+
+    return { error: false, text: [] }
+  }
 }

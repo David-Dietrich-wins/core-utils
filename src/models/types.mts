@@ -52,6 +52,22 @@ export type FormStatusTopLevel = {
 }
 export type FormStatusChildLevel = Partial<FormStatusTopLevel>
 
+export function CreateFormStatusTopLevel(
+  overrides?: Partial<FormStatusTopLevel>
+) {
+  const topLevelStatus = {
+    anyChangesSinceInitial: false,
+    anyChangesSinceLastOperation: false,
+    messages: [],
+    errorStatus: { error: false, text: [] },
+    resetEnabled: false,
+    saveEnabled: false,
+    ...overrides,
+  }
+
+  return topLevelStatus
+}
+
 //export type NotDate<T> = T extends Date ? never : T extends object ? T : never
 export type TisIId<T extends object> = T extends IId ? T : never
 

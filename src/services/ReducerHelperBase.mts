@@ -1,18 +1,13 @@
+import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/IdManager.mjs'
+import { FormStatusManager } from '../models/types.mjs'
 import { deepCloneJson, deepDiffMapper } from './general.mjs'
 
-export type ReducerChanges = {
-  anyChangesFromLastOperation: boolean
-  anyChangesSinceInitial: boolean
-}
-
-export type ReducerStateOnly<T extends IId<Tid>, Tid = T['id']> = {
+export type ReducerState<T extends IId<Tid>, Tid = T['id']> = {
   initial: T
   current: T
+  formStatus: FormStatusManager<T>
 }
-
-export type ReducerState<T extends IId<Tid>, Tid = T['id']> = ReducerChanges &
-  ReducerStateOnly<T, Tid>
 
 /*
     Example usage of the wrap function:
@@ -120,7 +115,7 @@ export class ReducerHelperBase<T extends object> {
   ) {
     // This method will return the changes along with the new state.
     // It will call the getChanges method to determine if there are any changes.
-    const changes = this.getChanges(
+    const formStatus = this.getChanges(
       updated,
       funcIfAnyChangesSinceLastOperation,
       funcIfAnyChangesSinceInitial
@@ -130,7 +125,7 @@ export class ReducerHelperBase<T extends object> {
     const newstate: ReducerState<T> = {
       ...this.state,
       current: { ...updated },
-      ...changes,
+      formStatus,
     }
 
     return newstate
@@ -172,20 +167,38 @@ export class ReducerHelperBase<T extends object> {
       deepDiffMapper().getChanges(this.state.initial, updated)
     )
 
-    const changes: ReducerChanges = {
-      anyChangesFromLastOperation,
-      anyChangesSinceInitial,
+    const formStatus = this.createFormStatusManager(updated)
+
+    formStatus.topLevelStatus.anyChangesSinceLastOperation =
+      anyChangesFromLastOperation
+    formStatus.topLevelStatus.anyChangesSinceInitial = anyChangesSinceInitial
+
+    formStatus.topLevelStatus.resetEnabled = anyChangesSinceInitial
+    if (formStatus.topLevelStatus.errorStatus.error) {
+      formStatus.topLevelStatus.saveEnabled = false
+    } else {
+      formStatus.topLevelStatus.saveEnabled = anyChangesSinceInitial
     }
 
-    return changes
+    return formStatus
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  createFormStatusManager(update: T): FormStatusManager<T> {
+    throw new AppException(
+      'createFormStatusManager: Not implemented in base class.',
+      'ReducerHelperBase.createFormStatusManager'
+    )
   }
 
   reset(item: T) {
     const newstate: ReducerState<T> = {
       initial: deepCloneJson(item),
       current: deepCloneJson(item),
-      anyChangesFromLastOperation: false, // Reset to false since we're resetting the state
-      anyChangesSinceInitial: false, // Reset to false since we're resetting the state
+      formStatus: this.createFormStatusManager(item),
+
+      // anyChangesFromLastOperation: false, // Reset to false since we're resetting the state
+      // anyChangesSinceInitial: false, // Reset to false since we're resetting the state
     }
 
     this.state = newstate
@@ -199,11 +212,12 @@ export class ReducerHelperBase<T extends object> {
     const newstate: ReducerState<T> = {
       ...this.state, // Spread the existing state to keep any other properties
       current: deepCloneJson(this.state.initial), // Set the current state to the initial state
-      anyChangesFromLastOperation: false, // Reset to false since we're resetting the state
-      anyChangesSinceInitial: false, // Reset to false since we're resetting the state
+      formStatus: this.createFormStatusManager(this.state.initial),
     }
-    // Update the state with the new state object.
+
     this.state = newstate
+
+    // Update the state with the new state object.
     // Return the new state object.
     // This allows you to see the new state after the reset.
     return newstate

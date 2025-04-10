@@ -1,5 +1,6 @@
 import { AppException } from '../models/AppException.mjs'
 import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
+import { FormStatusChild } from '../models/types.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IChartData } from './ChartSettings.mjs'
@@ -291,6 +292,21 @@ export class TileConfig<Tvalue = any>
       ...overrides,
       type: TileType.ticker,
     })
+  }
+
+  createFormStatus() {
+    const ret: FormStatusChild<ITileConfig> = {
+      id: this.id,
+      color: { error: false, text: [] },
+      cols: { error: false, text: [] },
+      index: { error: false, text: [] },
+      name: { error: false, text: [] },
+      rows: { error: false, text: [] },
+      type: { error: false, text: [] },
+      value: { error: false, text: [] },
+    }
+
+    return ret
   }
 
   get ITileConfig() {
