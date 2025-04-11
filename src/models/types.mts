@@ -6,8 +6,18 @@ import {
   safestrLowercase,
 } from '../services/general.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
+import { IIdNameValueType } from './id-name.mjs'
 import { IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+
+export const enum DigicrewTypes {
+  FormStatusItem = 'FormStatusItem',
+  FormStatusTopLevel = 'FormStatusTopLevel',
+  FormStatusChildLevel = 'FormStatusChildLevel',
+  FormStatusManager = 'FormStatusManager',
+}
+
+export type DigicrewType<T = string> = IIdNameValueType<T, DigicrewTypes>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyRecord<T = any> = Record<string, T>
@@ -37,39 +47,8 @@ export type StringOrStringArray = ArrayOrSingle<string>
 // Function App and/or Express request header types.
 export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
 
-export type FormItemStatus = {
-  error: boolean
-  text: StringOrStringArray
-}
-
-export type FormStatusTopLevel = {
-  anyChangesSinceInitial: boolean
-  anyChangesSinceLastOperation: boolean
-  messages: StringOrStringArray
-  errorStatus: FormItemStatus
-  resetEnabled: boolean
-  saveEnabled: boolean
-}
-export type FormStatusChildLevel = Partial<FormStatusTopLevel>
-
-export function CreateFormStatusTopLevel(
-  overrides?: Partial<FormStatusTopLevel>
-) {
-  const topLevelStatus = {
-    anyChangesSinceInitial: false,
-    anyChangesSinceLastOperation: false,
-    messages: [],
-    errorStatus: { error: false, text: [] },
-    resetEnabled: false,
-    saveEnabled: false,
-    ...overrides,
-  }
-
-  return topLevelStatus
-}
-
 //export type NotDate<T> = T extends Date ? never : T extends object ? T : never
-export type TisIId<T extends object> = T extends IId ? T : never
+// export type TisIId<T extends object> = T extends IId ? T : never
 
 export type ConvertToType<
   T,
@@ -88,31 +67,6 @@ export type ConvertToType<
       : ConvertToType<T[Tprop], R, TChildAdd>
     : R
 }
-
-/**
- * Takes any object and converts it to a FormItemStatus object
- *  with each item, except id, transformed into a FormItemStatus.
- */
-export type FormStatusChild<
-  T extends object,
-  TChildAdd extends AnyRecord = { childStatus?: FormStatusChildLevel }
-> = T extends IId
-  ? ConvertToType<Omit<T, 'id'>, FormItemStatus, TChildAdd> &
-      IId<T['id']> &
-      TChildAdd
-  : ConvertToType<T, FormItemStatus, TChildAdd> & TChildAdd
-
-export type FormStatusManager<
-  T extends object,
-  TopLevelAdd extends AnyRecord = {
-    topLevelStatus: FormStatusTopLevel
-  },
-  TChildAdd extends AnyRecord = { childStatus?: FormStatusChildLevel }
-> = T extends IId
-  ? ConvertToType<Omit<T, 'id'>, FormItemStatus, TChildAdd> &
-      IId<T['id']> &
-      TopLevelAdd
-  : ConvertToType<T, FormItemStatus, TChildAdd> & TopLevelAdd
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics

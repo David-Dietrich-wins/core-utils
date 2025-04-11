@@ -1,8 +1,11 @@
 import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
-import { FormStatusChild } from '../models/types.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
+import {
+  CreateFormStatusItem,
+  FormStatusChild,
+} from '../services/FormStatus.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
 import {
   ChartPatternOptions,
@@ -82,20 +85,20 @@ export class Subplot implements ISubplot {
 
     const sperr: FormStatusChild<ISubplot> = {
       id,
-      orderNumber: { error: false, text: [] },
-      pattern: { error: false, text: [] },
-      timeframe: { error: false, text: [] },
-      total: { error: false, text: [] },
-      targetLow: { error: false, text: [] },
-      targetHigh: { error: false, text: [] },
+      orderNumber: CreateFormStatusItem(),
+      pattern: CreateFormStatusItem(),
+      timeframe: CreateFormStatusItem(),
+      total: CreateFormStatusItem(),
+      targetLow: CreateFormStatusItem(),
+      targetHigh: CreateFormStatusItem(),
       expectedTriggerDate: DateHelper.DateBeforeMidnightToday(
         this.expectedTriggerDate
       ),
-      comment: { error: false, text: [] },
-      lossFloorPercent: { error: false, text: [] },
-      gainCeilingPercent: { error: false, text: [] },
-      useMinusEight: { error: false, text: [] },
-      scaleInverted: { error: false, text: [] },
+      comment: CreateFormStatusItem(),
+      lossFloorPercent: CreateFormStatusItem(),
+      gainCeilingPercent: CreateFormStatusItem(),
+      useMinusEight: CreateFormStatusItem(),
+      scaleInverted: CreateFormStatusItem(),
     }
 
     return sperr

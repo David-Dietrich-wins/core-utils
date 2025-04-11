@@ -1,7 +1,8 @@
 import {
   CreateFormStatusTopLevel,
+  FormStatusFindErrors,
   FormStatusManager,
-} from '../models/types.mjs'
+} from '../services/FormStatus.mjs'
 import { safeArray } from '../services/general.mjs'
 import {
   DashboardScreenSetting,
@@ -29,6 +30,7 @@ export class DashboardSetting implements IDashboardSetting {
       ),
     }
 
+    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
     return ret
   }
 }

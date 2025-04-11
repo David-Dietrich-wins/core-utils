@@ -8,9 +8,11 @@ import {
   ITicker,
 } from '../models/ticker-info.mjs'
 import {
+  CreateFormStatusItem,
   CreateFormStatusTopLevel,
+  FormStatusFindErrors,
   FormStatusManager,
-} from '../models/types.mjs'
+} from '../services/FormStatus.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -123,43 +125,19 @@ export class TradePlot implements ITradePlot {
       topLevelStatus: CreateFormStatusTopLevel(),
       id: this.id,
       subplots: safeArray(this.subplots).map((x) => x.createFormStatus()),
-      created: { error: false, text: [] },
-      createdby: { error: false, text: [] },
-      description: { error: false, text: [] },
-      goal: { error: false, text: [] },
-      isShort: { error: false, text: [] },
-      purchase: { error: false, text: [] },
-      shares: { error: false, text: [] },
-      ticker: { error: false, text: [] },
-      updated: { error: false, text: [] },
-      updatedby: { error: false, text: [] },
+      created: CreateFormStatusItem(),
+      createdby: CreateFormStatusItem(),
+      description: CreateFormStatusItem(),
+      goal: CreateFormStatusItem(),
+      isShort: CreateFormStatusItem(),
+      purchase: CreateFormStatusItem(),
+      shares: CreateFormStatusItem(),
+      ticker: CreateFormStatusItem(),
+      updated: CreateFormStatusItem(),
+      updatedby: CreateFormStatusItem(),
     }
 
-    let errMain = false
-    let arrErrors: string[] = []
-    Object.keys(ret).forEach((key) => {
-      const item = ret[key as keyof ITradePlot]
-      if (item) {
-        if (isObject(item) && 'error' in item && item.error) {
-          errMain = true
-          arrErrors = arrErrors.concat(safeArray(item.text))
-        }
-      }
-    })
-
-    safeArray(ret.subplots).forEach((cur) => {
-      Object.keys(cur).forEach((key) => {
-        const item = cur[key as keyof ISubplot]
-        if (item && isObject(item) && 'error' in item && item.error) {
-          errMain = true
-          arrErrors = arrErrors.concat(safeArray(item.text))
-        }
-      })
-    })
-
-    ret.topLevelStatus.errorStatus.error = errMain
-    ret.topLevelStatus.errorStatus.text = arrErrors
-
+    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
     return ret
   }
 

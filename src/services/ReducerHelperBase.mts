@@ -1,6 +1,6 @@
 import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/IdManager.mjs'
-import { FormStatusManager } from '../models/types.mjs'
+import { FormStatusManager } from './FormStatus.mjs'
 import { deepCloneJson, deepDiffMapper } from './general.mjs'
 
 export type ReducerState<T extends IId<Tid>, Tid = T['id']> = {
@@ -174,7 +174,7 @@ export class ReducerHelperBase<T extends object> {
     formStatus.topLevelStatus.anyChangesSinceInitial = anyChangesSinceInitial
 
     formStatus.topLevelStatus.resetEnabled = anyChangesSinceInitial
-    if (formStatus.topLevelStatus.errorStatus.error) {
+    if (formStatus.topLevelStatus.errorStatus.hasError) {
       formStatus.topLevelStatus.saveEnabled = false
     } else {
       formStatus.topLevelStatus.saveEnabled = anyChangesSinceInitial

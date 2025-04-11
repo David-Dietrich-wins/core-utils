@@ -1,8 +1,10 @@
 import { IIdName } from '../models/id-name.mjs'
 import {
+  CreateFormStatusItem,
   CreateFormStatusTopLevel,
+  FormStatusFindErrors,
   FormStatusManager,
-} from '../models/types.mjs'
+} from '../services/FormStatus.mjs'
 import { isArray } from '../services/general.mjs'
 import { ITileConfig, TileConfig } from './TileConfig.mjs'
 
@@ -23,7 +25,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
     const ret: FormStatusManager<IDashboardScreenSetting> = {
       topLevelStatus: CreateFormStatusTopLevel(),
       id: this.id,
-      name: { error: false, text: [] },
+      name: CreateFormStatusItem(),
       tiles: this.tiles.map((x) =>
         new TileConfig(
           x.id,
@@ -37,6 +39,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
       ),
     }
 
+    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
     return ret
   }
 

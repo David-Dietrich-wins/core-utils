@@ -1,6 +1,9 @@
 import { AppException } from '../models/AppException.mjs'
 import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
-import { FormStatusChild } from '../models/types.mjs'
+import {
+  CreateFormStatusItem,
+  FormStatusChild,
+} from '../services/FormStatus.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IChartData } from './ChartSettings.mjs'
@@ -82,6 +85,74 @@ export class TileConfig<Tvalue = any>
     public rows: number
   ) {
     super(id, name, value, type)
+  }
+
+  tickerMustHaveValue(ticker: string) {
+    const ret = CreateFormStatusItem()
+
+    if (!ticker) {
+      ret.hasError = true
+      ret.errors = ['Ticker must have a value']
+    }
+
+    return ret
+  }
+  createFormStatusValueChart() {
+    const chart = this.value as TileConfigChart
+    const chartErrors: FormStatusChild<TileConfigChart> = {
+      ticker: this.tickerMustHaveValue(chart.ticker),
+      frequency: CreateFormStatusItem(),
+      frequencyType: CreateFormStatusItem(),
+      period: CreateFormStatusItem(),
+      periodType: CreateFormStatusItem(),
+      useProfileColors: CreateFormStatusItem(),
+    }
+
+    return chartErrors
+  }
+  createFormStatusValueTicker() {
+    const chart = this.value as TileConfigTicker
+    const chartErrors: FormStatusChild<TileConfigTicker> = {
+      ticker: this.tickerMustHaveValue(chart.ticker),
+      useProfileColors: CreateFormStatusItem(),
+    }
+
+    return chartErrors
+  }
+  createFormStatusValueContent() {
+    const chartErrors: FormStatusChild<TileConfigContent> = {
+      header: CreateFormStatusItem(),
+      body: CreateFormStatusItem(),
+      content: CreateFormStatusItem(),
+      footer: CreateFormStatusItem(),
+    }
+
+    return chartErrors
+  }
+
+  createFormStatusValue() {
+    switch (this.type) {
+      case TileType.chart:
+        return this.createFormStatusValueChart()
+
+      case TileType.ticker:
+        return this.createFormStatusValueTicker()
+
+      case TileType.empty:
+        return this.createFormStatusValueContent()
+
+      case TileType.news:
+        return this.createFormStatusValueContent()
+
+      case TileType.plotlist:
+        return this.createFormStatusValueContent()
+
+      case TileType.table:
+        return this.createFormStatusValueContent()
+
+      default:
+        return this.createFormStatusValueContent()
+    }
   }
 
   static CreateFromTileType(
@@ -297,13 +368,13 @@ export class TileConfig<Tvalue = any>
   createFormStatus() {
     const ret: FormStatusChild<ITileConfig> = {
       id: this.id,
-      color: { error: false, text: [] },
-      cols: { error: false, text: [] },
-      index: { error: false, text: [] },
-      name: { error: false, text: [] },
-      rows: { error: false, text: [] },
-      type: { error: false, text: [] },
-      value: { error: false, text: [] },
+      color: CreateFormStatusItem(),
+      cols: CreateFormStatusItem(),
+      index: CreateFormStatusItem(),
+      name: CreateFormStatusItem(),
+      rows: CreateFormStatusItem(),
+      type: CreateFormStatusItem(),
+      value: { ...this.createFormStatusValue(), ...CreateFormStatusItem() },
     }
 
     return ret
