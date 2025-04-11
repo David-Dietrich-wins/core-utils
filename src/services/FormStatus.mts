@@ -5,7 +5,7 @@ import {
   DigicrewType,
   DigicrewTypes,
 } from '../models/types.mjs'
-import { isObject, newGuid } from './general.mjs'
+import { isArray, isObject, newGuid } from './general.mjs'
 
 export type FormStatusItem = DigicrewType & {
   hasError: boolean
@@ -15,8 +15,8 @@ export type FormStatusItem = DigicrewType & {
 export type FormStatusTopLevel = DigicrewType & {
   anyChangesSinceInitial: boolean
   anyChangesSinceLastOperation: boolean
-  errorStatus: FormStatusItem
-  messages: []
+  errorStatus: FormStatusItem[]
+  messages: string[]
   resetEnabled: boolean
   saveEnabled: boolean
 }
@@ -104,7 +104,7 @@ export function CreateFormStatusTopLevel(
     anyChangesSinceInitial: false,
     anyChangesSinceLastOperation: false,
     messages: [],
-    errorStatus: CreateFormStatusItem(),
+    errorStatus: [],
     resetEnabled: false,
     saveEnabled: false,
     ...overrides,
@@ -121,36 +121,28 @@ const FormStatusPropertiesToIgnore = ['topLevelStatus', 'id', 'digicrew']
  * @returns A FormStatusItem object with all errors in the errors field
  */
 export function FormStatusFindErrors(obj: Readonly<object>) {
-  let fsiReturn = CreateFormStatusItem()
-
-  Object.keys(obj).forEach((key) => {
+  return Object.entries(obj).reduce((acc: FormStatusItem[], [key, prop]) => {
     if (FormStatusPropertiesToIgnore.includes(key)) {
-      return
+      return acc
     }
 
-    const item = obj[key]
-    if (item) {
-      if (isObject(item) && 'hasError' in item && item.hasError) {
-        fsiReturn = FormStatusItemsJoin(fsiReturn, item as FormStatusItem)
-      } else if (isObject(item)) {
-        fsiReturn = FormStatusItemsJoin(fsiReturn, FormStatusFindErrors(item))
-      } else if (Array.isArray(item)) {
-        item.forEach((child) => {
-          fsiReturn = FormStatusItemsJoin(
-            fsiReturn,
-            FormStatusFindErrors(child)
-          )
-        })
-      }
+    if (isObject(prop) && 'hasError' in prop && prop.hasError) {
+      acc.push(prop as FormStatusItem)
+    } else if (isObject(prop)) {
+      acc = acc.concat(FormStatusFindErrors(prop))
+    } else if (isArray(prop, 1)) {
+      prop.forEach((child) => {
+        acc = acc.concat(FormStatusFindErrors(child))
+      })
     }
-  })
 
-  return fsiReturn
+    return acc
+  }, [])
 }
 
-export function FormStatusItemsJoin(fs1: FormStatusItem, fs2: FormStatusItem) {
-  const hasError = fs1.hasError || fs2.hasError
-  const errors = fs1.errors.concat(fs2.errors)
+// export function FormStatusItemsJoin(fs1: FormStatusItem, fs2: FormStatusItem) {
+//   const hasError = fs1.hasError || fs2.hasError
+//   const errors = fs1.errors.concat(fs2.errors)
 
-  return CreateFormStatusItem({ hasError, errors })
-}
+//   return CreateFormStatusItem({ hasError, errors })
+// }

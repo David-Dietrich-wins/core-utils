@@ -174,7 +174,7 @@ export class ReducerHelperBase<T extends object> {
     formStatus.topLevelStatus.anyChangesSinceInitial = anyChangesSinceInitial
 
     formStatus.topLevelStatus.resetEnabled = anyChangesSinceInitial
-    if (formStatus.topLevelStatus.errorStatus.hasError) {
+    if (formStatus.topLevelStatus.errorStatus.length) {
       formStatus.topLevelStatus.saveEnabled = false
     } else {
       formStatus.topLevelStatus.saveEnabled = anyChangesSinceInitial
