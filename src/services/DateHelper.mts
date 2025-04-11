@@ -294,18 +294,18 @@ export class DateHelper {
       //   date
       // )
       if (!mydate) {
-        return CreateFormStatusItem({
+        return CreateFormStatusItem('', {
           hasError: true,
           errors: ['Invalid date'],
         })
       } else if (mydate.getTime() < dateNow.getTime()) {
-        return CreateFormStatusItem({
+        return CreateFormStatusItem('', {
           hasError: true,
           errors: ['Date in the past'],
         })
       }
     }
 
-    return CreateFormStatusItem()
+    return CreateFormStatusItem('')
   }
 }

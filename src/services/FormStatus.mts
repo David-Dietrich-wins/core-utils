@@ -8,8 +8,9 @@ import {
 import { isArray, isObject, newGuid } from './general.mjs'
 
 export type FormStatusItem = DigicrewType & {
-  hasError: boolean
   errors: string[]
+  hasError: boolean
+  querySelector: string
 }
 
 export type FormStatusTopLevel = DigicrewType & {
@@ -78,14 +79,18 @@ export function CreateFormStatusChild<T extends object = object>(
   return ret
 }
 
-export function CreateFormStatusItem(overrides?: Partial<FormStatusItem>) {
+export function CreateFormStatusItem(
+  querySelector: string,
+  overrides?: Partial<FormStatusItem>
+) {
   const formItemStatus: FormStatusItem = {
     id: newGuid(),
     name: DigicrewTypes.FormStatusItem,
     type: DigicrewTypes.FormStatusItem,
     value: '',
-    hasError: false,
     errors: [],
+    hasError: false,
+    querySelector,
     ...overrides,
   }
 

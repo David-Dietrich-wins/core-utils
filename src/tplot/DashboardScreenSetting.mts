@@ -25,7 +25,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
     const ret: FormStatusManager<IDashboardScreenSetting> = {
       topLevelStatus: CreateFormStatusTopLevel(),
       id: this.id,
-      name: CreateFormStatusItem(),
+      name: CreateFormStatusItem('input[name="name"]'),
       tiles: this.tiles.map((x) =>
         new TileConfig(
           x.id,

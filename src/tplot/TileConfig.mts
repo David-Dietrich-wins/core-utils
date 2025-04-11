@@ -88,7 +88,7 @@ export class TileConfig<Tvalue = any>
   }
 
   tickerMustHaveValue(ticker: string) {
-    const ret = CreateFormStatusItem()
+    const ret = CreateFormStatusItem('input[name="ticker"]')
 
     if (!ticker) {
       ret.hasError = true
@@ -101,11 +101,11 @@ export class TileConfig<Tvalue = any>
     const chart = this.value as TileConfigChart
     const chartErrors: FormStatusChild<TileConfigChart> = {
       ticker: this.tickerMustHaveValue(chart.ticker),
-      frequency: CreateFormStatusItem(),
-      frequencyType: CreateFormStatusItem(),
-      period: CreateFormStatusItem(),
-      periodType: CreateFormStatusItem(),
-      useProfileColors: CreateFormStatusItem(),
+      frequency: CreateFormStatusItem('input[name="frequency"]'),
+      frequencyType: CreateFormStatusItem('input[name="frequencyType"]'),
+      period: CreateFormStatusItem('input[name="period"]'),
+      periodType: CreateFormStatusItem('input[name="periodType"]'),
+      useProfileColors: CreateFormStatusItem('input[name="useProfileColors"]'),
     }
 
     return chartErrors
@@ -114,17 +114,17 @@ export class TileConfig<Tvalue = any>
     const chart = this.value as TileConfigTicker
     const chartErrors: FormStatusChild<TileConfigTicker> = {
       ticker: this.tickerMustHaveValue(chart.ticker),
-      useProfileColors: CreateFormStatusItem(),
+      useProfileColors: CreateFormStatusItem('input[name="useProfileColors"]'),
     }
 
     return chartErrors
   }
   createFormStatusValueContent() {
     const chartErrors: FormStatusChild<TileConfigContent> = {
-      header: CreateFormStatusItem(),
-      body: CreateFormStatusItem(),
-      content: CreateFormStatusItem(),
-      footer: CreateFormStatusItem(),
+      header: CreateFormStatusItem('input[name="header]"'),
+      body: CreateFormStatusItem('input[name="body"]'),
+      content: CreateFormStatusItem('input[name="content"]'),
+      footer: CreateFormStatusItem('input[name="footer"]'),
     }
 
     return chartErrors
@@ -368,13 +368,13 @@ export class TileConfig<Tvalue = any>
   createFormStatus() {
     const ret: FormStatusChild<ITileConfig> = {
       id: this.id,
-      color: CreateFormStatusItem(),
-      cols: CreateFormStatusItem(),
-      index: CreateFormStatusItem(),
-      name: CreateFormStatusItem(),
-      rows: CreateFormStatusItem(),
-      type: CreateFormStatusItem(),
-      value: { ...this.createFormStatusValue(), ...CreateFormStatusItem() },
+      color: CreateFormStatusItem('input[name="color"]'),
+      cols: CreateFormStatusItem('input[name="cols"]'),
+      index: CreateFormStatusItem(''),
+      name: CreateFormStatusItem('input[name="name"]'),
+      rows: CreateFormStatusItem('input[name="rows"]'),
+      type: CreateFormStatusItem('input[name="type"]'),
+      value: { ...this.createFormStatusValue(), ...CreateFormStatusItem('') },
     }
 
     return ret

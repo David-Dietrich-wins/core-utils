@@ -85,20 +85,22 @@ export class Subplot implements ISubplot {
 
     const sperr: FormStatusChild<ISubplot> = {
       id,
-      orderNumber: CreateFormStatusItem(),
-      pattern: CreateFormStatusItem(),
-      timeframe: CreateFormStatusItem(),
-      total: CreateFormStatusItem(),
-      targetLow: CreateFormStatusItem(),
-      targetHigh: CreateFormStatusItem(),
+      orderNumber: CreateFormStatusItem(''),
+      pattern: CreateFormStatusItem('input[name="pattern"]'),
+      timeframe: CreateFormStatusItem('input[name="timeframe"]'),
+      total: CreateFormStatusItem('input[name="total"]'),
+      targetLow: CreateFormStatusItem('input[name="targetLow"]'),
+      targetHigh: CreateFormStatusItem('input[name="targetHigh"]'),
       expectedTriggerDate: DateHelper.DateBeforeMidnightToday(
         this.expectedTriggerDate
       ),
-      comment: CreateFormStatusItem(),
-      lossFloorPercent: CreateFormStatusItem(),
-      gainCeilingPercent: CreateFormStatusItem(),
-      useMinusEight: CreateFormStatusItem(),
-      scaleInverted: CreateFormStatusItem(),
+      comment: CreateFormStatusItem('input[name="comment"]'),
+      lossFloorPercent: CreateFormStatusItem('input[name="lossFloorPercent"]'),
+      gainCeilingPercent: CreateFormStatusItem(
+        'input[name="gainCeilingPercent"]'
+      ),
+      useMinusEight: CreateFormStatusItem('input[name="useMinusEight"]'),
+      scaleInverted: CreateFormStatusItem('input[name="scaleInverted"]'),
     }
 
     return sperr
