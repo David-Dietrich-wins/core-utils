@@ -1,3 +1,4 @@
+import { FindObjectWithField } from '../index.mjs'
 import { arrayAdd, arrayRemove } from '../services/array-helper.mjs'
 import { safeArray } from '../services/general.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
@@ -19,6 +20,13 @@ export class IdManager<T extends IId> {
     stats?: InstrumentationStatistics
   ) {
     return new IdManager(safeArray(arr), stats)
+  }
+
+  static FindObjectWithId<T extends object = object>(
+    obj: T,
+    id: string | number
+  ) {
+    return FindObjectWithField(obj, 'id', id)
   }
 
   add(item: T, index?: number) {

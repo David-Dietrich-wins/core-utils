@@ -2,7 +2,9 @@ import util from 'util'
 import Axios, { AxiosError } from 'axios'
 import {
   hasData,
+  isArray,
   isNullOrUndefined,
+  isObject,
   safeJsonToString,
   safestr,
   safestrLowercase,
@@ -200,4 +202,39 @@ export function getNewObject<T>(
   return (
     getInstance(theClass, constructorArgs), arrayElement(constructorArgs, index)
   )
+}
+
+export function FindObjectWithField(
+  obj: object,
+  fieldName: string,
+  value: string | number | boolean,
+  depth = 0
+): object | undefined {
+  if (depth > 100) {
+    return
+  }
+
+  let found: object | undefined = undefined
+  Object.keys(obj).forEach((key) => {
+    if (found) {
+      return
+    }
+
+    if (isObject(obj[key])) {
+      found = FindObjectWithField(obj[key], fieldName, value, depth + 1)
+    } else if (isArray(obj[key], 1)) {
+      if (isObject(obj[key][0])) {
+        obj[key].forEach((child) => {
+          found = FindObjectWithField(child, fieldName, value, depth + 1)
+          if (found) {
+            return
+          }
+        })
+      }
+    } else if (fieldName === key && obj[fieldName] === value) {
+      found = obj
+    }
+  })
+
+  return found
 }
