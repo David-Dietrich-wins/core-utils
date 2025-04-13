@@ -22,10 +22,12 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   }
 
   createFormStatus() {
+    const topLevelStatus = CreateFormStatusTopLevel()
+    const parentId = topLevelStatus.id
     const ret: FormStatusManager<IDashboardScreenSetting> = {
-      topLevelStatus: CreateFormStatusTopLevel(),
+      topLevelStatus,
       id: this.id,
-      name: CreateFormStatusItem('input[name="name"]'),
+      name: CreateFormStatusItem('input[name="name"]', parentId, this.id),
       tiles: this.tiles.map((x) =>
         new TileConfig(
           x.id,
@@ -35,7 +37,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
           x.index,
           x.cols,
           x.rows
-        ).createFormStatus()
+        ).createFormStatus(topLevelStatus.id)
       ),
     }
 

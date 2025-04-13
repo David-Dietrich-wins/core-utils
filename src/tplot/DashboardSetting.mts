@@ -23,8 +23,10 @@ export class DashboardSetting implements IDashboardSetting {
   }
 
   createFormStatus() {
+    const topLevelStatus = CreateFormStatusTopLevel()
+    // const parentId = topLevelStatus.id
     const ret: FormStatusManager<IDashboardSetting> = {
-      topLevelStatus: CreateFormStatusTopLevel(),
+      topLevelStatus,
       screens: this.screens.map((x) =>
         new DashboardScreenSetting(x.name, x.tiles).createFormStatus()
       ),

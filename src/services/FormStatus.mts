@@ -10,6 +10,7 @@ import { isArray, isObject, newGuid } from './general.mjs'
 export type FormStatusItem = DigicrewType & {
   errors: string[]
   hasError: boolean
+  parentId?: FormStatusItem['id']
   querySelector: string
 }
 
@@ -21,7 +22,9 @@ export type FormStatusTopLevel = DigicrewType & {
   resetEnabled: boolean
   saveEnabled: boolean
 }
-export type FormStatusChildLevel = Partial<FormStatusTopLevel>
+export type FormStatusChildLevel = Partial<FormStatusTopLevel> & {
+  parentId: string
+}
 
 /**
  * Takes any object and converts it to a FormItemStatus object
@@ -62,34 +65,44 @@ export type FormStatusManager<
 //   return chartErrors
 // }
 
+// type FormStatusRemoveIdField<T> = {
+//   [Property in keyof T as Exclude<Property, 'id'>]: FormStatusItem
+// }
+
 export function CreateFormStatusChild<T extends object = object>(
-  obj: T,
+  objectId: string,
+  formStatusParentId: string,
+  // children: FormStatusRemoveIdField<T>,
   overrides?: Partial<FormStatusChild<T>>
 ) {
   const ret: FormStatusChild<T> = {
-    // id: newGuid(),
+    id: objectId,
+    parentId: formStatusParentId,
     // name: DigicrewTypes.FormStatusChildLevel,
     // type: DigicrewTypes.FormStatusChildLevel,
     // value: '',
     // errorStatus: CreateFormStatusItem(),
-    ...obj,
+    // ...children,
     ...overrides,
-  }
+  } as unknown as FormStatusChild<T>
 
   return ret
 }
 
 export function CreateFormStatusItem(
   querySelector: string,
+  formStatusParentId: FormStatusItem['id'],
+  nearestFormId: string,
   overrides?: Partial<FormStatusItem>
 ) {
   const formItemStatus: FormStatusItem = {
     id: newGuid(),
     name: DigicrewTypes.FormStatusItem,
     type: DigicrewTypes.FormStatusItem,
-    value: '',
+    value: nearestFormId,
     errors: [],
     hasError: false,
+    parentId: formStatusParentId,
     querySelector,
     ...overrides,
   }

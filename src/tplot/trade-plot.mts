@@ -121,20 +121,32 @@ export class TradePlot implements ITradePlot {
   }
 
   createFormStatus() {
+    const topLevelStatus = CreateFormStatusTopLevel()
+    const parentId = topLevelStatus.id
     const ret: FormStatusManager<ITradePlot> = {
-      topLevelStatus: CreateFormStatusTopLevel(),
+      topLevelStatus,
       id: this.id,
-      subplots: safeArray(this.subplots).map((x) => x.createFormStatus()),
-      created: CreateFormStatusItem(''),
-      createdby: CreateFormStatusItem(''),
-      description: CreateFormStatusItem('input[name="description"]'),
-      goal: CreateFormStatusItem('input[name="goal"]'),
-      isShort: CreateFormStatusItem('input[name="isShort"]'),
-      purchase: CreateFormStatusItem('input[name="purchase"]'),
-      shares: CreateFormStatusItem('input[name="shares"]'),
-      ticker: CreateFormStatusItem('input[name="ticker"]'),
-      updated: CreateFormStatusItem(''),
-      updatedby: CreateFormStatusItem(''),
+      subplots: safeArray(this.subplots).map((x) =>
+        x.createFormStatus(parentId)
+      ),
+      created: CreateFormStatusItem('', parentId, this.id),
+      createdby: CreateFormStatusItem('', parentId, this.id),
+      description: CreateFormStatusItem(
+        'input[name="description"]',
+        parentId,
+        this.id
+      ),
+      goal: CreateFormStatusItem('input[name="goal"]', parentId, this.id),
+      isShort: CreateFormStatusItem('input[name="isShort"]', parentId, this.id),
+      purchase: CreateFormStatusItem(
+        'input[name="purchase"]',
+        parentId,
+        this.id
+      ),
+      shares: CreateFormStatusItem('input[name="shares"]', parentId, this.id),
+      ticker: CreateFormStatusItem('input[name="ticker"]', parentId, this.id),
+      updated: CreateFormStatusItem('', parentId, this.id),
+      updatedby: CreateFormStatusItem('', parentId, this.id),
     }
 
     ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)

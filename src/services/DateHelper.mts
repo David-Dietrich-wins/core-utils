@@ -1,7 +1,7 @@
 import moment, { DurationInputArg1, DurationInputArg2, Moment } from 'moment'
 import { isNullOrUndefined, isString, safestr } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { CreateFormStatusItem } from './FormStatus.mjs'
+import { CreateFormStatusItem, FormStatusItem } from './FormStatus.mjs'
 export class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
   static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
@@ -280,7 +280,12 @@ export class DateHelper {
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
   }
 
-  static DateBeforeMidnightToday(date: string | Date | null | undefined) {
+  static DateBeforeMidnightToday(
+    querySelector: string,
+    date: string | Date | null | undefined,
+    parentId: FormStatusItem['id'],
+    nearestFormId: string
+  ) {
     if (date) {
       const dateNow = DateHelper.MidnightSafe(new Date())
       const mydate = DateHelper.Midnight(date)
@@ -294,18 +299,18 @@ export class DateHelper {
       //   date
       // )
       if (!mydate) {
-        return CreateFormStatusItem('', {
+        return CreateFormStatusItem(querySelector, parentId, nearestFormId, {
           hasError: true,
           errors: ['Invalid date'],
         })
       } else if (mydate.getTime() < dateNow.getTime()) {
-        return CreateFormStatusItem('', {
+        return CreateFormStatusItem(querySelector, parentId, nearestFormId, {
           hasError: true,
           errors: ['Date in the past'],
         })
       }
     }
 
-    return CreateFormStatusItem('')
+    return CreateFormStatusItem(querySelector, parentId, nearestFormId)
   }
 }

@@ -3,8 +3,9 @@ import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import {
+  CreateFormStatusChild,
   CreateFormStatusItem,
-  FormStatusChild,
+  FormStatusItem,
 } from '../services/FormStatus.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
 import {
@@ -80,28 +81,54 @@ export class Subplot implements ISubplot {
     }
   }
 
-  createFormStatus() {
-    const id = this.id ?? newGuid()
-
-    const sperr: FormStatusChild<ISubplot> = {
-      id,
-      orderNumber: CreateFormStatusItem(''),
-      pattern: CreateFormStatusItem('input[name="pattern"]'),
-      timeframe: CreateFormStatusItem('input[name="timeframe"]'),
-      total: CreateFormStatusItem('input[name="total"]'),
-      targetLow: CreateFormStatusItem('input[name="targetLow"]'),
-      targetHigh: CreateFormStatusItem('input[name="targetHigh"]'),
+  createFormStatus(parentId: FormStatusItem['id']) {
+    const sperr = CreateFormStatusChild<ISubplot>(this.id, parentId, {
+      orderNumber: CreateFormStatusItem('', parentId, this.id),
+      pattern: CreateFormStatusItem('input[name="pattern"]', parentId, this.id),
+      timeframe: CreateFormStatusItem(
+        'input[name="timeframe"]',
+        parentId,
+        this.id
+      ),
+      total: CreateFormStatusItem('input[name="total"]', parentId, this.id),
+      targetLow: CreateFormStatusItem(
+        'input[name="targetLow"]',
+        parentId,
+        this.id
+      ),
+      targetHigh: CreateFormStatusItem(
+        'input[name="targetHigh"]',
+        parentId,
+        this.id
+      ),
       expectedTriggerDate: DateHelper.DateBeforeMidnightToday(
-        this.expectedTriggerDate
+        'input[name="expectedTriggerDate"]',
+        this.expectedTriggerDate,
+        parentId,
+        this.id
       ),
-      comment: CreateFormStatusItem('input[name="comment"]'),
-      lossFloorPercent: CreateFormStatusItem('input[name="lossFloorPercent"]'),
+      comment: CreateFormStatusItem('input[name="comment"]', parentId, this.id),
+      lossFloorPercent: CreateFormStatusItem(
+        'input[name="lossFloorPercent"]',
+        parentId,
+        this.id
+      ),
       gainCeilingPercent: CreateFormStatusItem(
-        'input[name="gainCeilingPercent"]'
+        'input[name="gainCeilingPercent"]',
+        parentId,
+        this.id
       ),
-      useMinusEight: CreateFormStatusItem('input[name="useMinusEight"]'),
-      scaleInverted: CreateFormStatusItem('input[name="scaleInverted"]'),
-    }
+      useMinusEight: CreateFormStatusItem(
+        'input[name="useMinusEight"]',
+        parentId,
+        this.id
+      ),
+      scaleInverted: CreateFormStatusItem(
+        'input[name="scaleInverted"]',
+        parentId,
+        this.id
+      ),
+    })
 
     return sperr
   }
