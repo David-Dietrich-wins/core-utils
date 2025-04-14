@@ -210,31 +210,34 @@ export function FindObjectWithField(
   value: string | number | boolean,
   depth = 0
 ): object | undefined {
+  let found: object | undefined = undefined
+
   if (depth > 100) {
-    return
+    return found
   }
 
-  let found: object | undefined = undefined
-  Object.keys(obj).forEach((key) => {
-    if (found) {
-      return
-    }
-
+  for (const key in obj) {
     if (isObject(obj[key])) {
       found = FindObjectWithField(obj[key], fieldName, value, depth + 1)
-    } else if (isArray(obj[key], 1)) {
-      if (isObject(obj[key][0])) {
-        obj[key].forEach((child) => {
-          found = FindObjectWithField(child, fieldName, value, depth + 1)
+    } else if (isArray(obj[key])) {
+      const arr: unknown[] = obj[key]
+      if (arr.length && isObject(arr[0])) {
+        const arrobj = arr as object[]
+        for (let i = 0; i < arrobj.length; ++i) {
+          found = FindObjectWithField(arrobj[i], fieldName, value, depth + 1)
           if (found) {
-            return
+            break
           }
-        })
+        }
       }
     } else if (fieldName === key && obj[fieldName] === value) {
       found = obj
     }
-  })
+
+    if (found) {
+      break
+    }
+  }
 
   return found
 }
