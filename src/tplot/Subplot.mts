@@ -101,7 +101,7 @@ export class Subplot implements ISubplot {
         parentId,
         this.id
       ),
-      expectedTriggerDate: DateHelper.DateBeforeMidnightToday(
+      expectedTriggerDate: FormStatus.DateBeforeMidnightToday(
         'input[name="expectedTriggerDate"]',
         this.expectedTriggerDate,
         parentId,

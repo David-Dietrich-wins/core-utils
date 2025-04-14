@@ -5,6 +5,7 @@ import {
   DigicrewType,
   DigicrewTypes,
 } from '../models/types.mjs'
+import { DateHelper } from './DateHelper.mjs'
 import { isArray, isObject, newGuid } from './general.mjs'
 import { ReducerState } from './ReducerHelperBase.mjs'
 
@@ -77,6 +78,8 @@ export type FormStatusManager<
 // }
 
 export class FormStatus {
+  static readonly PropertiesToIgnore = ['topLevelStatus', 'id', 'digicrew']
+
   static CreateChild<T extends object = object>(
     objectId: string,
     formStatusParentId: string,
@@ -137,7 +140,39 @@ export class FormStatus {
     return topLevelStatus
   }
 
-  static readonly PropertiesToIgnore = ['topLevelStatus', 'id', 'digicrew']
+  static DateBeforeMidnightToday(
+    querySelector: string,
+    date: string | Date | null | undefined,
+    parentId: FormStatusItem['id'],
+    nearestFormId: string
+  ) {
+    if (date) {
+      const dateNow = DateHelper.MidnightSafe(new Date())
+      const mydate = DateHelper.Midnight(date)
+
+      // console.log(
+      //   'dateNow',
+      //   dateNow.toUTCString(),
+      //   ', mydate',
+      //   mydate?.toUTCString(),
+      //   ', mydatestr:',
+      //   date
+      // )
+      if (!mydate) {
+        return FormStatus.CreateItem(querySelector, parentId, nearestFormId, {
+          hasError: true,
+          errors: ['Invalid date'],
+        })
+      } else if (mydate.getTime() < dateNow.getTime()) {
+        return FormStatus.CreateItem(querySelector, parentId, nearestFormId, {
+          hasError: true,
+          errors: ['Date in the past'],
+        })
+      }
+    }
+
+    return FormStatus.CreateItem(querySelector, parentId, nearestFormId)
+  }
 
   /**
    * Aggregates all errors into a single FormStatusItem object
