@@ -62,7 +62,7 @@ import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import {
   ITradePlot,
   ITradePlotProfitizerWithContext,
-} from '../tplot/trade-plot.mjs'
+} from '../tplot/TradePlot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
 import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'

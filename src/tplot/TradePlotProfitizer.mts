@@ -13,7 +13,7 @@ import {
   getStockPriceInDollars,
 } from '../services/number-helper.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
-import { ITradePlot, TradePlot } from './trade-plot.mjs'
+import { ITradePlot, TradePlot } from './TradePlot.mjs'
 
 export interface ITradePlotProfitizer extends ITradePlot {
   profit?: number
