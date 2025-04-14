@@ -2,11 +2,7 @@ import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
-import {
-  CreateFormStatusChild,
-  CreateFormStatusItem,
-  FormStatusItem,
-} from '../services/FormStatus.mjs'
+import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
 import { isObject, newGuid, safeArray } from '../services/general.mjs'
 import {
   ChartPatternOptions,
@@ -82,21 +78,25 @@ export class Subplot implements ISubplot {
   }
 
   createFormStatus(parentId: FormStatusItem['id']) {
-    const sperr = CreateFormStatusChild<ISubplot>(this.id, parentId, {
-      orderNumber: CreateFormStatusItem('', parentId, this.id),
-      pattern: CreateFormStatusItem('input[name="pattern"]', parentId, this.id),
-      timeframe: CreateFormStatusItem(
+    const sperr = FormStatus.CreateChild<ISubplot>(this.id, parentId, {
+      orderNumber: FormStatus.CreateItem('', parentId, this.id),
+      pattern: FormStatus.CreateItem(
+        'input[name="pattern"]',
+        parentId,
+        this.id
+      ),
+      timeframe: FormStatus.CreateItem(
         'input[name="timeframe"]',
         parentId,
         this.id
       ),
-      total: CreateFormStatusItem('input[name="total"]', parentId, this.id),
-      targetLow: CreateFormStatusItem(
+      total: FormStatus.CreateItem('input[name="total"]', parentId, this.id),
+      targetLow: FormStatus.CreateItem(
         'input[name="targetLow"]',
         parentId,
         this.id
       ),
-      targetHigh: CreateFormStatusItem(
+      targetHigh: FormStatus.CreateItem(
         'input[name="targetHigh"]',
         parentId,
         this.id
@@ -107,23 +107,27 @@ export class Subplot implements ISubplot {
         parentId,
         this.id
       ),
-      comment: CreateFormStatusItem('input[name="comment"]', parentId, this.id),
-      lossFloorPercent: CreateFormStatusItem(
+      comment: FormStatus.CreateItem(
+        'input[name="comment"]',
+        parentId,
+        this.id
+      ),
+      lossFloorPercent: FormStatus.CreateItem(
         'input[name="lossFloorPercent"]',
         parentId,
         this.id
       ),
-      gainCeilingPercent: CreateFormStatusItem(
+      gainCeilingPercent: FormStatus.CreateItem(
         'input[name="gainCeilingPercent"]',
         parentId,
         this.id
       ),
-      useMinusEight: CreateFormStatusItem(
+      useMinusEight: FormStatus.CreateItem(
         'input[name="useMinusEight"]',
         parentId,
         this.id
       ),
-      scaleInverted: CreateFormStatusItem(
+      scaleInverted: FormStatus.CreateItem(
         'input[name="scaleInverted"]',
         parentId,
         this.id

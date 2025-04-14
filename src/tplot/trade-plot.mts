@@ -7,12 +7,7 @@ import {
   IQuoteBarEma,
   ITicker,
 } from '../models/ticker-info.mjs'
-import {
-  CreateFormStatusItem,
-  CreateFormStatusTopLevel,
-  FormStatusFindErrors,
-  FormStatusManager,
-} from '../services/FormStatus.mjs'
+import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import {
   getNumberFormatted,
   getPercentChangeString,
@@ -121,7 +116,7 @@ export class TradePlot implements ITradePlot {
   }
 
   createFormStatus() {
-    const topLevelStatus = CreateFormStatusTopLevel()
+    const topLevelStatus = FormStatus.CreateTopLevel()
     const parentId = topLevelStatus.id
     const ret: FormStatusManager<ITradePlot> = {
       topLevelStatus,
@@ -129,27 +124,31 @@ export class TradePlot implements ITradePlot {
       subplots: safeArray(this.subplots).map((x) =>
         x.createFormStatus(parentId)
       ),
-      created: CreateFormStatusItem('', parentId, this.id),
-      createdby: CreateFormStatusItem('', parentId, this.id),
-      description: CreateFormStatusItem(
+      created: FormStatus.CreateItem('', parentId, this.id),
+      createdby: FormStatus.CreateItem('', parentId, this.id),
+      description: FormStatus.CreateItem(
         'input[name="description"]',
         parentId,
         this.id
       ),
-      goal: CreateFormStatusItem('input[name="goal"]', parentId, this.id),
-      isShort: CreateFormStatusItem('input[name="isShort"]', parentId, this.id),
-      purchase: CreateFormStatusItem(
+      goal: FormStatus.CreateItem('input[name="goal"]', parentId, this.id),
+      isShort: FormStatus.CreateItem(
+        'input[name="isShort"]',
+        parentId,
+        this.id
+      ),
+      purchase: FormStatus.CreateItem(
         'input[name="purchase"]',
         parentId,
         this.id
       ),
-      shares: CreateFormStatusItem('input[name="shares"]', parentId, this.id),
-      ticker: CreateFormStatusItem('input[name="ticker"]', parentId, this.id),
-      updated: CreateFormStatusItem('', parentId, this.id),
-      updatedby: CreateFormStatusItem('', parentId, this.id),
+      shares: FormStatus.CreateItem('input[name="shares"]', parentId, this.id),
+      ticker: FormStatus.CreateItem('input[name="ticker"]', parentId, this.id),
+      updated: FormStatus.CreateItem('', parentId, this.id),
+      updatedby: FormStatus.CreateItem('', parentId, this.id),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
     return ret
   }
 

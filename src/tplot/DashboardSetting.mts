@@ -1,8 +1,4 @@
-import {
-  CreateFormStatusTopLevel,
-  FormStatusFindErrors,
-  FormStatusManager,
-} from '../services/FormStatus.mjs'
+import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import { safeArray } from '../services/general.mjs'
 import {
   DashboardScreenSetting,
@@ -23,7 +19,7 @@ export class DashboardSetting implements IDashboardSetting {
   }
 
   createFormStatus() {
-    const topLevelStatus = CreateFormStatusTopLevel()
+    const topLevelStatus = FormStatus.CreateTopLevel()
     // const parentId = topLevelStatus.id
     const ret: FormStatusManager<IDashboardSetting> = {
       topLevelStatus,
@@ -32,7 +28,7 @@ export class DashboardSetting implements IDashboardSetting {
       ),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
     return ret
   }
 }

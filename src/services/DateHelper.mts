@@ -1,7 +1,7 @@
 import moment, { DurationInputArg1, DurationInputArg2, Moment } from 'moment'
 import { isNullOrUndefined, isString, safestr } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { CreateFormStatusItem, FormStatusItem } from './FormStatus.mjs'
+import { FormStatus, FormStatusItem } from './FormStatus.mjs'
 export class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
   static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
@@ -299,18 +299,18 @@ export class DateHelper {
       //   date
       // )
       if (!mydate) {
-        return CreateFormStatusItem(querySelector, parentId, nearestFormId, {
+        return FormStatus.CreateItem(querySelector, parentId, nearestFormId, {
           hasError: true,
           errors: ['Invalid date'],
         })
       } else if (mydate.getTime() < dateNow.getTime()) {
-        return CreateFormStatusItem(querySelector, parentId, nearestFormId, {
+        return FormStatus.CreateItem(querySelector, parentId, nearestFormId, {
           hasError: true,
           errors: ['Date in the past'],
         })
       }
     }
 
-    return CreateFormStatusItem(querySelector, parentId, nearestFormId)
+    return FormStatus.CreateItem(querySelector, parentId, nearestFormId)
   }
 }

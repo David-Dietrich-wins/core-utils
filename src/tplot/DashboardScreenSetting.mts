@@ -1,10 +1,5 @@
 import { IIdName } from '../models/id-name.mjs'
-import {
-  CreateFormStatusItem,
-  CreateFormStatusTopLevel,
-  FormStatusFindErrors,
-  FormStatusManager,
-} from '../services/FormStatus.mjs'
+import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import { isArray } from '../services/general.mjs'
 import { ITileConfig, TileConfig } from './TileConfig.mjs'
 
@@ -22,12 +17,12 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   }
 
   createFormStatus() {
-    const topLevelStatus = CreateFormStatusTopLevel()
+    const topLevelStatus = FormStatus.CreateTopLevel()
     const parentId = topLevelStatus.id
     const ret: FormStatusManager<IDashboardScreenSetting> = {
       topLevelStatus,
       id: this.id,
-      name: CreateFormStatusItem('input[name="name"]', parentId, this.id),
+      name: FormStatus.CreateItem('input[name="name"]', parentId, this.id),
       tiles: this.tiles.map((x) =>
         new TileConfig(
           x.id,
@@ -41,7 +36,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
       ),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatusFindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
     return ret
   }
 

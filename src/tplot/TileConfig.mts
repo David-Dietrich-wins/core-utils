@@ -1,10 +1,6 @@
 import { AppException } from '../models/AppException.mjs'
 import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
-import {
-  CreateFormStatusChild,
-  CreateFormStatusItem,
-  FormStatusItem,
-} from '../services/FormStatus.mjs'
+import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IChartData } from './ChartSettings.mjs'
@@ -93,7 +89,7 @@ export class TileConfig<Tvalue = any>
     parentId: FormStatusItem['id'],
     nearestFormId: string
   ) {
-    const ret = CreateFormStatusItem(
+    const ret = FormStatus.CreateItem(
       'input[name="ticker"]',
       parentId,
       nearestFormId
@@ -109,28 +105,32 @@ export class TileConfig<Tvalue = any>
   createFormStatusValueChart(parentId: FormStatusItem['id']) {
     const chart = this.value as TileConfigChart
 
-    const chartErrors = CreateFormStatusChild<TileConfigChart>(
+    const chartErrors = FormStatus.CreateChild<TileConfigChart>(
       this.id,
       parentId,
       {
         ticker: this.tickerMustHaveValue(chart.ticker, parentId, this.id),
-        frequency: CreateFormStatusItem(
+        frequency: FormStatus.CreateItem(
           'input[name="frequency"]',
           parentId,
           this.id
         ),
-        frequencyType: CreateFormStatusItem(
+        frequencyType: FormStatus.CreateItem(
           'input[name="frequencyType"]',
           parentId,
           this.id
         ),
-        period: CreateFormStatusItem('input[name="period"]', parentId, this.id),
-        periodType: CreateFormStatusItem(
+        period: FormStatus.CreateItem(
+          'input[name="period"]',
+          parentId,
+          this.id
+        ),
+        periodType: FormStatus.CreateItem(
           'input[name="periodType"]',
           parentId,
           this.id
         ),
-        useProfileColors: CreateFormStatusItem(
+        useProfileColors: FormStatus.CreateItem(
           'input[name="useProfileColors"]',
           parentId,
           this.id
@@ -143,12 +143,12 @@ export class TileConfig<Tvalue = any>
   createFormStatusValueTicker(parentId: FormStatusItem['id']) {
     const chart = this.value as TileConfigTicker
 
-    const chartErrors = CreateFormStatusChild<TileConfigTicker>(
+    const chartErrors = FormStatus.CreateChild<TileConfigTicker>(
       this.id,
       parentId,
       {
         ticker: this.tickerMustHaveValue(chart.ticker, parentId, this.id),
-        useProfileColors: CreateFormStatusItem(
+        useProfileColors: FormStatus.CreateItem(
           'input[name="useProfileColors"]',
           parentId,
           this.id
@@ -159,18 +159,26 @@ export class TileConfig<Tvalue = any>
     return chartErrors
   }
   createFormStatusValueContent(parentId: FormStatusItem['id']) {
-    const chartErrors = CreateFormStatusChild<TileConfigContent>(
+    const chartErrors = FormStatus.CreateChild<TileConfigContent>(
       this.id,
       parentId,
       {
-        header: CreateFormStatusItem('input[name="header]"', parentId, this.id),
-        body: CreateFormStatusItem('input[name="body"]', parentId, this.id),
-        content: CreateFormStatusItem(
+        header: FormStatus.CreateItem(
+          'input[name="header]"',
+          parentId,
+          this.id
+        ),
+        body: FormStatus.CreateItem('input[name="body"]', parentId, this.id),
+        content: FormStatus.CreateItem(
           'input[name="content"]',
           parentId,
           this.id
         ),
-        footer: CreateFormStatusItem('input[name="footer"]', parentId, this.id),
+        footer: FormStatus.CreateItem(
+          'input[name="footer"]',
+          parentId,
+          this.id
+        ),
       }
     )
 
@@ -415,16 +423,16 @@ export class TileConfig<Tvalue = any>
   createFormStatus(parentId: FormStatusItem['id']) {
     const valueId = newGuid()
 
-    const ret = CreateFormStatusChild<ITileConfig>(this.id, parentId, {
-      color: CreateFormStatusItem('input[name="color"]', this.id, this.id),
-      cols: CreateFormStatusItem('input[name="cols"]', this.id, this.id),
-      index: CreateFormStatusItem('', this.id, this.id),
-      name: CreateFormStatusItem('input[name="name"]', this.id, this.id),
-      rows: CreateFormStatusItem('input[name="rows"]', this.id, this.id),
-      type: CreateFormStatusItem('input[name="type"]', this.id, this.id),
+    const ret = FormStatus.CreateChild<ITileConfig>(this.id, parentId, {
+      color: FormStatus.CreateItem('input[name="color"]', this.id, this.id),
+      cols: FormStatus.CreateItem('input[name="cols"]', this.id, this.id),
+      index: FormStatus.CreateItem('', this.id, this.id),
+      name: FormStatus.CreateItem('input[name="name"]', this.id, this.id),
+      rows: FormStatus.CreateItem('input[name="rows"]', this.id, this.id),
+      type: FormStatus.CreateItem('input[name="type"]', this.id, this.id),
       value: {
         ...this.createFormStatusForValues(valueId),
-        ...CreateFormStatusItem(valueId, parentId, this.id),
+        ...FormStatus.CreateItem(valueId, parentId, this.id),
       },
     })
 
