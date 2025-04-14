@@ -99,8 +99,6 @@ export class TileConfig<Tvalue = any>
       nearestFormId
     )
 
-    ticker = ''
-
     if (!ticker) {
       ret.hasError = true
       ret.errors = ['Ticker must have a value']
