@@ -36,7 +36,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
       ),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindAllErrorsFromChildren(ret)
     return ret
   }
 

@@ -148,7 +148,7 @@ export class TradePlot implements ITradePlot {
       updatedby: FormStatus.CreateItem('', parentId, this.id),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindAllErrorsFromChildren(ret)
     return ret
   }
 

@@ -144,7 +144,7 @@ export class FormStatus {
    * @param obj Any FormStatusIten object to search for all errors for every item, object and array in its properties
    * @returns A FormStatusItem object with all errors in the errors field
    */
-  static FindErrors(obj: Readonly<object>) {
+  static FindAllErrorsFromChildren(obj: Readonly<object>) {
     return Object.entries(obj).reduce((acc: FormStatusItem[], [key, prop]) => {
       if (FormStatus.PropertiesToIgnore.includes(key)) {
         return acc
@@ -153,10 +153,10 @@ export class FormStatus {
       if (isObject(prop) && 'hasError' in prop && prop.hasError) {
         acc.push(prop as FormStatusItem)
       } else if (isObject(prop)) {
-        acc = acc.concat(FormStatus.FindErrors(prop))
+        acc = acc.concat(FormStatus.FindAllErrorsFromChildren(prop))
       } else if (isArray(prop, 1)) {
         prop.forEach((child) => {
-          acc = acc.concat(FormStatus.FindErrors(child))
+          acc = acc.concat(FormStatus.FindAllErrorsFromChildren(child))
         })
       }
 

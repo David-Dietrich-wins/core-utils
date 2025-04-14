@@ -28,7 +28,7 @@ export class DashboardSetting implements IDashboardSetting {
       ),
     }
 
-    ret.topLevelStatus.errorStatus = FormStatus.FindErrors(ret)
+    ret.topLevelStatus.errorStatus = FormStatus.FindAllErrorsFromChildren(ret)
     return ret
   }
 }
