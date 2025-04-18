@@ -37,7 +37,7 @@ export class IdManager<T extends IId> {
   }
 
   remove(idObj: T) {
-    arrayRemove(this.list, idObj)
+    this.list = arrayRemove(this.list, idObj)
 
     this.stats?.deleted()
     return this
