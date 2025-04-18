@@ -1,5 +1,7 @@
-import { ApiResponse } from './ApiResponse.mjs'
+import e from 'express'
+import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
 import { AppExceptionHttp, AppExceptionHttpNotFound } from './AppException.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 const CONST_DefaultError = 'Error'
 const CONST_DefaultErrorResponseCode = -1
@@ -429,4 +431,76 @@ describe('isSuccess', () => {
 
     expect(ret).toBe(false)
   })
+
+  test('isGood', () => {
+    const result = CONST_success
+    const responseCode = 200
+    const message = CONST_success
+    const obj = { message: 'Found', responseCode: 1 }
+    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+
+    expect(apiResponse.isGood).toBe(true)
+    expect(apiResponse.isSuccess).toBe(true)
+    expect(apiResponse.isError).toBe(false)
+    expect(apiResponse.isErrorSignedOut).toBe(false)
+  })
+
+  test('isError', () => {
+    const result = CONST_success
+    const responseCode = 401
+    const message = CONST_success
+    const obj = { message: 'Found', responseCode: 1 }
+    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+
+    expect(apiResponse.isGood).toBe(false)
+    expect(apiResponse.isSuccess).toBe(false)
+    expect(apiResponse.isError).toBe(true)
+    expect(apiResponse.isErrorSignedOut).toBe(true)
+  })
+})
+
+test('CreateFromErrorMessage', () => {
+  const ret = ApiResponse.CreateFromErrorMessage(
+    'error message',
+    { some: 'data' },
+    new InstrumentationStatistics()
+  )
+
+  expect(ret).toBeInstanceOf(ApiResponse)
+  expect(ret.message).toBe('error message')
+  expect(ret.result).toBe(CONST_DefaultError)
+  expect(ret.id).toBeGreaterThan(0)
+  expect(ret.ts).toBeGreaterThan(0)
+  expect(ret.responseCode).toBe(200)
+  expect(ret.data).toStrictEqual({ some: 'data' })
+  expect(ret.stats).toBeInstanceOf(InstrumentationStatistics)
+  expect(ret.stats.failures).toBe(0)
+  expect(ret.stats.successes).toBe(0)
+  expect(ret.stats.totalProcessed).toBe(0)
+})
+
+test('CreateFromIApiResponse', () => {
+  const iapi: IApiResponse<{ some: string }> = {
+    message: 'error message',
+    result: CONST_DefaultError,
+    id: 123,
+    ts: 123456789,
+    responseCode: 200,
+    data: { some: 'data' },
+    stats: new InstrumentationStatistics(),
+  }
+
+  const ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
+
+  expect(ret).toBeInstanceOf(ApiResponse)
+  expect(ret.message).toBe('error message')
+  expect(ret.result).toBe(CONST_DefaultError)
+  expect(ret.id).toBeGreaterThan(0)
+  expect(ret.ts).toBeGreaterThan(0)
+  expect(ret.responseCode).toBe(200)
+  expect(ret.data).toStrictEqual({ some: 'data' })
+  expect(ret.stats).toBeInstanceOf(InstrumentationStatistics)
+  expect(ret.stats.failures).toBe(0)
+  expect(ret.stats.successes).toBe(0)
+  expect(ret.stats.totalProcessed).toBe(0)
 })
