@@ -1,7 +1,8 @@
 import { TEST_Parameters_DEV } from '../jest.setup.mjs'
-import CryptoHelper, {
+import {
   CONST_RegexRsaPrivateKeyPem,
   CONST_RegexRsaPublicKeyPem,
+  CryptoHelper,
   ICryptoSettings,
 } from './CryptoHelper.mjs'
 
@@ -14,7 +15,7 @@ import CryptoHelper, {
  * openssl rsa -in rsaKey.pem -passin "pass:${rsaPassPhrase}" -pubout -out rsaKey.pub
  */
 
-const pinResetStartingPIN = '1233'
+const StringToEncrypt = '1233'
 
 test('Constructor', () => {
   const cryptoSettings: ICryptoSettings = {
@@ -24,10 +25,10 @@ test('Constructor', () => {
   }
   const ch = new CryptoHelper(cryptoSettings)
 
-  const encrypted = ch.rsaEncrypt(pinResetStartingPIN)
+  const encrypted = ch.rsaEncrypt(StringToEncrypt)
   const decrypted = ch.rsaDecrypt(encrypted)
 
-  expect(decrypted).toBe(pinResetStartingPIN)
+  expect(decrypted).toBe(StringToEncrypt)
 })
 
 test('RSA generate key pair', () => {
@@ -39,7 +40,7 @@ test('RSA generate key pair', () => {
 
 test('RSA encrypt and decrypt', () => {
   const lengthForRandomString = 4
-  const randomString = pinResetStartingPIN // CryptoHelper.GenerateRandomPin(lengthForRandomString)
+  const randomString = StringToEncrypt // CryptoHelper.GenerateRandomPin(lengthForRandomString)
 
   expect(randomString).toHaveLength(lengthForRandomString)
   const cipherText = CryptoHelper.rsaEncryptStatic(

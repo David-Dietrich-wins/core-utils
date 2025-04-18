@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import CryptoHelper from './services/CryptoHelper.mjs'
+import { CryptoHelper } from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { JwtPayload } from 'jsonwebtoken'

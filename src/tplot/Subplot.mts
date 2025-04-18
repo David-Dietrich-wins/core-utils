@@ -147,7 +147,7 @@ export class Subplot implements ISubplot {
       symbol,
       timeframe: arrayMustFind(TradeSubplotTimeFrameOptions, subplot.timeframe)
         .fmpTimeFrame,
-      from: DateHelper.addDaysToDate(-5),
+      from: DateHelper.addDaysToDate(-5).getTime(),
     }
 
     return fmp

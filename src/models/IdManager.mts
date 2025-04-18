@@ -1,6 +1,6 @@
-import { FindObjectWithField } from '../index.mjs'
 import { arrayAdd, arrayRemove } from '../services/array-helper.mjs'
 import { safeArray } from '../services/general.mjs'
+import { FindObjectWithField } from '../services/object-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 export interface IId<T = string> {

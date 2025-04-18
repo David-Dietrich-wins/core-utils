@@ -8,6 +8,7 @@ import {
   safeJsonToString,
   safestr,
   safestrLowercase,
+  safestrToJson,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { AnyRecord, IConstructor } from '../models/types.mjs'
@@ -240,4 +241,26 @@ export function FindObjectWithField(
   }
 
   return found
+}
+
+export class ObjectHelper {
+  static CloneAlphabetizedObject<T>(obj: Readonly<T>): T {
+    const sortedObj = Object.fromEntries(
+      Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+    )
+
+    return sortedObj as T
+  }
+
+  static DecodeBase64ToObject<T = object>(base64String: string) {
+    const decodedString = Buffer.from(base64String, 'base64')
+
+    return safestrToJson<T>(decodedString.toString())
+  }
+  static EncodeObjectToBase64(obj: object) {
+    const jsonString = JSON.stringify(ObjectHelper.CloneAlphabetizedObject(obj))
+    const encodedString = Buffer.from(jsonString)
+
+    return encodedString.toString('base64')
+  }
 }

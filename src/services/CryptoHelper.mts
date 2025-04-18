@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { safeJsonToString, safestrToJson } from './general.mjs'
 
 export const CONST_RegexRsaPrivateKeyPem =
   /-----BEGIN RSA PRIVATE KEY-----(\n|\r|\r\n)([0-9a-zA-Z+/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z+/=]{1,63}(\n|\r|\r\n))?-----END RSA PRIVATE KEY-----/
@@ -18,7 +19,7 @@ export interface ICryptoSettings {
   rsaPassPhrase?: string
 }
 
-export default class CryptoHelper {
+export class CryptoHelper {
   public static readonly CONST_CharsNumbers = '0123456789'
   public static readonly CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz'
   public static readonly CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -70,6 +71,19 @@ export default class CryptoHelper {
     )
   }
 
+  static rsaDecryptStaticObject<T = object>(
+    encryptedString: string,
+    privateKey: string,
+    passphrase?: string
+  ) {
+    const decrypted = CryptoHelper.rsaDecryptStatic(
+      JSON.stringify(encryptedString),
+      privateKey,
+      passphrase
+    )
+
+    return safestrToJson<T>(decrypted)
+  }
   static rsaDecryptStatic(
     encryptedString: string,
     privateKey: string,
@@ -89,6 +103,18 @@ export default class CryptoHelper {
     )
 
     return buf.toString('utf8')
+  }
+
+  static rsaEncryptStaticObject(
+    decryptedObject: object,
+    publicKey: string,
+    passphrase?: string
+  ) {
+    return CryptoHelper.rsaEncryptStatic(
+      safeJsonToString(decryptedObject),
+      publicKey,
+      passphrase
+    )
   }
   static rsaEncryptStatic(
     decryptedString: string,

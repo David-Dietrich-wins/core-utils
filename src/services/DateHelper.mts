@@ -1,4 +1,9 @@
-import moment, { DurationInputArg1, DurationInputArg2, Moment } from 'moment'
+import moment, {
+  DurationInputArg1,
+  DurationInputArg2,
+  Moment,
+  unitOfTime,
+} from 'moment'
 import { isNullOrUndefined, isString, safestr } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
 
@@ -278,5 +283,54 @@ export class DateHelper {
 
   static UnixTimeFormatForTheDow(val: number) {
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
+  }
+
+  static TimeframeToStartOf(timeframe: string) {
+    switch (timeframe) {
+      case 'd':
+        return 'day'
+      case 'h':
+        return 'hour'
+      case 'm':
+        return 'minute'
+      case 's':
+        return 'second'
+      case 'w':
+        return 'week'
+      case 'M':
+        return 'month'
+      case 'y':
+        return 'year'
+    }
+
+    return timeframe
+    // throw new AppException(
+    //   `Invalid timeframe: ${timeframe}`,
+    //   'DateHelper.NextBoundaryUp'
+    // )
+  }
+
+  static LocalToUtc(date: Date | string | number | null | undefined) {
+    date = date ? new Date(date) : new Date()
+
+    const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
+
+    return utc
+  }
+
+  static NextBoundaryUp(
+    date: Readonly<Date | string | number>,
+    unit: DurationInputArg1,
+    units: number = 1
+  ) {
+    const mom = moment.utc(date)
+
+    const timeframe = DateHelper.TimeframeToStartOf(unit as string)
+    const smom = mom.utc().startOf(timeframe as moment.unitOfTime.StartOf)
+
+    const newmom = smom
+      .utc()
+      .add(units, timeframe as unitOfTime.DurationConstructor)
+    return newmom.utc().toDate()
   }
 }

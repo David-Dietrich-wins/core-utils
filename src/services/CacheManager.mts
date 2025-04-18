@@ -1,7 +1,7 @@
 import { IIdValue } from '../models/id-value.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { isNullOrUndefined, safeArray, safeJsonToString } from './general.mjs'
+import { isNullOrUndefined, safeArray } from './general.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }
 
@@ -35,25 +35,24 @@ export class CacheManager<T = object, Tkey = string> {
 
     const expiredKeys = arrKeys.filter((key) => {
       const cacheObj = this.cache.get(key)
-      if (!cacheObj || cacheObj.expire < now) {
-        return true
-      }
+
+      return !cacheObj || cacheObj.expire < now
     })
 
-    console.log(
-      `CacheManager (${this.name}):`,
-      expiredKeys.length,
-      'expired',
-      arrKeys.length,
-      'total.',
-      'Keys:',
-      safeJsonToString(this.keys.join)
-    )
+    // console.log(
+    //   `CacheManager (${this.name}):`,
+    //   expiredKeys.length,
+    //   'expired',
+    //   arrKeys.length,
+    //   'total.',
+    //   'Keys:',
+    //   safeJsonToString(this.keys.join)
+    // )
     const expire = now + this.cacheTimeInSeconds * 1000
 
     const ret = await fnData(expiredKeys)
     safeArray(ret).forEach((item) => {
-      console.log('CacheManager:', this.name, 'set', item.id)
+      // console.log('CacheManager:', this.name, 'set', item.id)
       this.set(item.id, expire, item.value)
     })
 
