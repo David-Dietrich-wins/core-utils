@@ -35,3 +35,26 @@ test('constructor with ICity', () => {
     scales: [],
   })
 })
+
+test('CreateICity', () => {
+  const ic: ICity = {
+    name: 'name',
+    city: 'city',
+    description: 'description',
+    sourceUrl: 'sourceUrl',
+    city_img: 'city_img',
+    slug: 'slug',
+    scales: [],
+  }
+
+  const city = City.CreateICity(ic)
+  expect(city).toEqual({
+    name: 'name',
+    city: 'city',
+    description: 'description',
+    sourceUrl: 'sourceUrl',
+    city_img: 'city_img',
+    slug: 'slug',
+    scales: [],
+  })
+})
