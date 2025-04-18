@@ -689,7 +689,7 @@ test('sendApiWrappedResponse', async () => {
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.data).toBeUndefined()
+  expect(apiWrapper.data).toBe(returnData)
   expect(apiWrapper.result).toBe('')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
@@ -711,7 +711,7 @@ test('sendApiSuccess', async () => {
 
   expect(apiWrapper.id).toBeGreaterThan(0)
   expect(apiWrapper.ts).toBeGreaterThan(0)
-  expect(apiWrapper.data).toBeUndefined()
+  expect(apiWrapper.data).toBe(returnData)
   expect(apiWrapper.result).toBe('success')
   expect(apiWrapper.message).toBe('')
   expect(apiWrapper.responseCode).toBe(0)
