@@ -1,4 +1,6 @@
 import { IIdValue } from '../models/id-value.mjs'
+import { ArrayOrSingle } from '../models/types.mjs'
+import { arrayFirst } from './array-helper.mjs'
 import { isNullOrUndefined, safeArray } from './general.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }
@@ -15,12 +17,22 @@ export class CacheManager<T = object, Tkey = string> {
     })
   }
 
-  get(key: Tkey) {
-    return this.cache.get(key)
+  async get(
+    key: Tkey,
+    fnData: (
+      arrTickers: ArrayOrSingle<Tkey>
+    ) => Promise<ArrayOrSingle<IIdValue<Tkey, T>>>
+  ) {
+    const items = await this.getAll(key, fnData)
+
+    return arrayFirst(items)
   }
+
   async getAll(
     keys: Tkey | Tkey[],
-    fnData: (arrTickers: Tkey | Tkey[]) => Promise<IIdValue<Tkey, T>[]>
+    fnData: (
+      arrTickers: ArrayOrSingle<Tkey>
+    ) => Promise<ArrayOrSingle<IIdValue<Tkey, T>>>
   ) {
     const arrKeys = safeArray(keys)
     const now = Date.now()
@@ -38,13 +50,13 @@ export class CacheManager<T = object, Tkey = string> {
     const expire = now + this.cacheTimeInSeconds * 1000
 
     const ret = await fnData(expiredKeys)
-    ret.forEach((item) => {
+    safeArray(ret).forEach((item) => {
       this.set(expire, item.id, item.value)
     })
 
     return arrKeys
       .map((key) => this.cache.get(key)?.obj)
-      .filter((x) => x && !isNullOrUndefined(x)) as T[]
+      .filter((x) => !isNullOrUndefined(x)) as T[]
   }
 
   has(key: Tkey) {
