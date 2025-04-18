@@ -1,4 +1,9 @@
-import { IdName, createValueChange } from './id-name.mjs'
+import {
+  IdName,
+  IdNameValue,
+  IdNameValueType,
+  createValueChange,
+} from './id-name.mjs'
 
 test('IdName good', () => {
   const id = 'id'
@@ -35,4 +40,27 @@ test('createValueChange good without type and date', () => {
   expect(pr.value).toBe(value)
   expect(pr.type).toBe('')
   expect(Date.now() - +pr.date).toBeLessThan(1000)
+})
+
+test('IdNameValue good', () => {
+  const id = 'id'
+  const name = 'name'
+  const value = { id: 'id', name: 'name' }
+  const pr = new IdNameValue(id, name, value)
+
+  expect(pr.id).toBe(id)
+  expect(pr.name).toBe(name)
+  expect(pr.value).toBe(value)
+})
+
+test('IdNameValueType good', () => {
+  const id = 'id'
+  const name = 'name'
+  const value = { id: 'id', name: 'name' }
+  const pr = new IdNameValueType(id, name, value, 'string')
+
+  expect(pr.id).toBe(id)
+  expect(pr.name).toBe(name)
+  expect(pr.value).toBe(value)
+  expect(pr.type).toBe('string')
 })
