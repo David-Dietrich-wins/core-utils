@@ -51,12 +51,26 @@ test('HttpUnauthorized default', () => {
   expect(hex.functionNameSource).toBe('AppExceptionHttp')
   expect(hex.httpStatusCode).toBe(401)
 })
+test('HttpUnauthorized', () => {
+  const hex = new AppExceptionHttpUnauthorized('Test', 'myFunction', 'abc')
+  expect(hex.message).toBe('Test')
+  expect(hex.functionNameSource).toBe('myFunction')
+  expect(hex.httpStatusCode).toBe(401)
+  expect(hex.obj).toBe('abc')
+})
 
 test('AppExceptionHttpForbidden default', () => {
   const hex = new AppExceptionHttpForbidden('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttp')
   expect(hex.httpStatusCode).toBe(403)
+})
+test('AppExceptionHttpForbidden', () => {
+  const hex = new AppExceptionHttpForbidden('Test', 'myFunction', 'abc')
+  expect(hex.message).toBe('Test')
+  expect(hex.functionNameSource).toBe('myFunction')
+  expect(hex.httpStatusCode).toBe(403)
+  expect(hex.obj).toBe('abc')
 })
 
 test('AppExceptionHttpNotAcceptable default', () => {
