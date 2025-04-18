@@ -112,7 +112,7 @@ export type Opaque<K, T = string> = T & { __TYPE__: K }
 export type SortOrderString = 'asc' | 'desc'
 export type SortOrderNumeric = 1 | -1
 export type SortOrder = SortOrderString | SortOrderNumeric | boolean
-export function SortOrderAsBoolean(order?: SortOrder) {
+export function SortOrderAsBoolean(order?: SortOrder | null) {
   if (isNullOrUndefined(order)) {
     return true
   }
@@ -132,7 +132,7 @@ export function SortOrderAsBoolean(order?: SortOrder) {
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsNumeric(order?: SortOrder) {
+export function SortOrderAsNumeric(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 1 : -1
 }
 /**
@@ -140,7 +140,7 @@ export function SortOrderAsNumeric(order?: SortOrder) {
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsString(order?: SortOrder) {
+export function SortOrderAsString(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
 
