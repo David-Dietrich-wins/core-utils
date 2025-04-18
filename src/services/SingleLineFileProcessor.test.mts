@@ -214,9 +214,9 @@ test('constructor', async () => {
 })
 
 test('constructor file not found', async () => {
-  const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
-
+  // const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  // fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  mockExistsSync.mockReturnValueOnce(false)
   const fnaction = jest.fn(() => Promise.resolve(1))
   const config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
