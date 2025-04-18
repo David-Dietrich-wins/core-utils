@@ -1,4 +1,3 @@
-import e from 'express'
 import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
 import { AppExceptionHttp, AppExceptionHttpNotFound } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
