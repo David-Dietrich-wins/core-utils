@@ -1,4 +1,5 @@
 export * from './array-helper.mjs'
+export * from './CacheManager.mjs'
 export * from './CryptoHelper.mjs'
 export * from './DateHelper.mjs'
 export * from './EmitterManager.mjs'
