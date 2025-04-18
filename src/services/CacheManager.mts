@@ -1,16 +1,16 @@
 import { IIdValue } from '../models/id-value.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { isNullOrUndefined, safeArray } from './general.mjs'
+import { isNullOrUndefined, safeArray, safeJsonToString } from './general.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }
 
 export class CacheManager<T = object, Tkey = string> {
   private cache: Map<Tkey, CacheManagerObject<T>> = new Map()
 
-  constructor(public cacheTimeInSeconds: number) {}
+  constructor(private name: string, public cacheTimeInSeconds: number) {}
 
-  set(expire: number, key: Tkey, obj: T) {
+  set(key: Tkey, expire: number, obj: T) {
     this.cache.set(key, {
       expire,
       obj,
@@ -19,9 +19,7 @@ export class CacheManager<T = object, Tkey = string> {
 
   async get(
     key: Tkey,
-    fnData: (
-      arrTickers: ArrayOrSingle<Tkey>
-    ) => Promise<ArrayOrSingle<IIdValue<Tkey, T>>>
+    fnData: (arrKeys: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const items = await this.getAll(key, fnData)
 
@@ -29,10 +27,8 @@ export class CacheManager<T = object, Tkey = string> {
   }
 
   async getAll(
-    keys: Tkey | Tkey[],
-    fnData: (
-      arrTickers: ArrayOrSingle<Tkey>
-    ) => Promise<ArrayOrSingle<IIdValue<Tkey, T>>>
+    keys: ArrayOrSingle<Tkey>,
+    fnData: (arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const arrKeys = safeArray(keys)
     const now = Date.now()
@@ -45,13 +41,20 @@ export class CacheManager<T = object, Tkey = string> {
     })
 
     console.log(
-      `CacheManager: ${expiredKeys.length} expired keys, ${arrKeys.length} total keys`
+      `CacheManager (${this.name}):`,
+      expiredKeys.length,
+      'expired',
+      arrKeys.length,
+      'total.',
+      'Keys:',
+      safeJsonToString(this.keys.join)
     )
     const expire = now + this.cacheTimeInSeconds * 1000
 
     const ret = await fnData(expiredKeys)
     safeArray(ret).forEach((item) => {
-      this.set(expire, item.id, item.value)
+      console.log('CacheManager:', this.name, 'set', item.id)
+      this.set(item.id, expire, item.value)
     })
 
     return arrKeys
