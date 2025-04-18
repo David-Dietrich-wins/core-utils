@@ -39,15 +39,17 @@ export class CacheManager<T = object, Tkey = string> {
       return !cacheObj || cacheObj.expire < now
     })
 
-    // console.log(
-    //   `CacheManager (${this.name}):`,
-    //   expiredKeys.length,
-    //   'expired',
-    //   arrKeys.length,
-    //   'total.',
-    //   'Keys:',
-    //   safeJsonToString(this.keys.join)
-    // )
+    console.log(
+      `CacheManager (${this.name}):`,
+      expiredKeys.length,
+      'expired, ',
+      arrKeys.length,
+      'local, ',
+      this.keys.length,
+      'total.'
+      // 'Keys:',
+      // safeJsonToString(this.keys.join)
+    )
     const expire = now + this.cacheTimeInSeconds * 1000
 
     const ret = await fnData(expiredKeys)
