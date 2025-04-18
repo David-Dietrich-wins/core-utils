@@ -10,6 +10,7 @@ import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'
 import { FromTo } from './types.mjs'
+import { AppException } from './AppException.mjs'
 
 export interface ISymbol {
   symbol: string
@@ -764,7 +765,14 @@ export function IAssetQuotesWithIpoDate(
       const found = retobj.find((spac) => aqr.symbol === spac.symbol)
       if (found && isString(found?.ipoDate, 1)) {
         const t = moment(found.ipoDate, 'M-D-YYYY')
-        aqripo.ipoDate = t.valueOf()
+        const val = t.valueOf()
+        if (isNaN(val)) {
+          throw new AppException(
+            `IAssetQuotesWithIpoDate: ${fname} - Invalid IPO date for symbol ${aqr.symbol}`
+          )
+        }
+
+        aqripo.ipoDate = val
       }
     } catch (ex) {
       console.error(fname, ex)
