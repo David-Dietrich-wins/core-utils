@@ -264,8 +264,20 @@ test('toLocalStringWithoutTimezone', () => {
   expect(ret).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}/)
 })
 
-test('DateFormatForUi', () => {
-  const ret = DateHelper.DateFormatForUi()
+describe('DateFormatForUi', () => {
+  test('default', () => {
+    const ret = DateHelper.DateFormatForUi()
 
-  expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{2}/)
+  })
+  test('show full year', () => {
+    const ret = DateHelper.DateFormatForUi(undefined, true)
+
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
+  })
+  test('utc', () => {
+    const ret = DateHelper.DateFormatForUi(Date.now(), true, true)
+
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
+  })
 })
