@@ -320,7 +320,11 @@ export function FmpIndicatorParamsSetDateBoundary(
       fmpNew.from = +DateHelper.NextBoundaryUp(from, unit, +units)
     }
 
-    fmpNew.to = +DateHelper.NextBoundaryUp(Date.now(), unit, +units)
+    fmpNew.to = +DateHelper.NextBoundaryUp(
+      fmpNew.to ? fmpNew.to : Date.now(),
+      unit,
+      +units
+    )
   }
 
   return fmpNew
