@@ -26,6 +26,27 @@ export class CacheManager<T = object, Tkey = string> {
     return arrayFirst(items)
   }
 
+  async getSingle(
+    key: Tkey,
+    fnData: (key: Tkey) => Promise<IIdValue<Tkey, T>>
+  ) {
+    const fnall = async (symbols: ArrayOrSingle<Tkey>) => {
+      const items: IIdValue<Tkey, T>[] = []
+
+      for await (const symbol of safeArray(symbols)) {
+        const idv = await fnData(symbol)
+
+        items.push(idv)
+      }
+
+      return items
+    }
+
+    const allItems = await this.getAll([key], fnall)
+
+    return arrayFirst(allItems)
+  }
+
   async getAll(
     keys: ArrayOrSingle<Tkey>,
     fnData: (arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
