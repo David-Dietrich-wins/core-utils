@@ -1,5 +1,5 @@
 import { ICompany } from '../politagree/company.mjs'
-import { TpUserInfoConfigs } from './ConfigManager.mjs'
+import { ConfigManager, TpUserInfoConfigs } from './ConfigManager.mjs'
 
 export interface IUserInfo {
   companies: ICompany[]
@@ -12,4 +12,23 @@ export interface IUserInfo {
   quoteEndpoint: string
   tickers: string[]
   tokenExpireTime: number
+}
+
+export class UserInfo implements IUserInfo {
+  companies = []
+  config = { ...ConfigManager.defaults }
+  displayName = ''
+  email = ''
+  firstName = ''
+  lastDashboardAccessed = ''
+  lastName = ''
+  quoteEndpoint = ''
+  tickers = []
+  tokenExpireTime = 0
+
+  constructor(obj?: IUserInfo) {
+    if (obj) {
+      Object.assign(this, obj)
+    }
+  }
 }
