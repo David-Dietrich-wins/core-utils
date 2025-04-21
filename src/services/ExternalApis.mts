@@ -52,7 +52,7 @@ import {
 } from './fetch-http.mjs'
 import { urlJoin, hasData, safeArray } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
-import { ChartPlotReturn, ChartSettings } from '../tplot/ChartSettings.mjs'
+import { ChartPlotReturn, IChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'
 import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
@@ -267,15 +267,14 @@ export class ExternalApis {
   }
 
   asset = {
-    ChartPlots: async (
-      bearerToken: string,
-      chartId: string,
-      settings?: ChartSettings
-    ) => {
+    ChartPlots: async (bearerToken: string, settings: IChartSettings) => {
       const fname = this.asset.ChartPlots.name
 
-      return fetchPost<ChartPlotReturn, ChartSettings>({
-        url: urlJoin(this.CONST_EndpointAsset, ['chart-plots', chartId]),
+      return fetchPost<ChartPlotReturn, IChartSettings>({
+        url: urlJoin(this.CONST_EndpointAsset, [
+          'chart-plots',
+          settings.ticker,
+        ]),
         fname,
         bearerToken,
         data: settings,
@@ -405,17 +404,19 @@ export class ExternalApis {
 
     PriceHistory: async (
       bearerToken: string,
-      symbol: string,
-      chartSettings: ChartSettings
+      chartSettings: IChartSettings
     ) => {
       const fname = this.asset.PriceHistory.name
 
-      if (!hasData(symbol)) {
+      if (!hasData(chartSettings.ticker)) {
         throw new AppException('Missing symbol', fname)
       }
 
-      return fetchPost<ISymbolPrices, ChartSettings>({
-        url: urlJoin(this.CONST_EndpointAsset, ['pricehistory', symbol]),
+      return fetchPost<ISymbolPrices, IChartSettings>({
+        url: urlJoin(this.CONST_EndpointAsset, [
+          'pricehistory',
+          chartSettings.ticker,
+        ]),
         fname,
         bearerToken,
         data: chartSettings,
@@ -934,24 +935,21 @@ export class ExternalApis {
 
     PriceHistory: async (
       bearerToken: string,
-      symbol: string,
-      chartSettings: ChartSettings
+      chartSettings: IChartSettings
     ) => {
-      return this.asset
-        .PriceHistory(bearerToken, symbol, chartSettings)
-        .then((ret) => {
-          // console.log('getBars: data:', ret);
-          return safeArray(ret?.candles).map((x) => {
-            return {
-              time: x.datetime,
-              open: x.open,
-              close: x.close,
-              high: x.high,
-              low: x.low,
-              volume: x.volume,
-            }
-          })
+      return this.asset.PriceHistory(bearerToken, chartSettings).then((ret) => {
+        // console.log('getBars: data:', ret);
+        return safeArray(ret?.candles).map((x) => {
+          return {
+            time: x.datetime,
+            open: x.open,
+            close: x.close,
+            high: x.high,
+            low: x.low,
+            volume: x.volume,
+          }
         })
+      })
     },
 
     RemoveChart: async (bearerToken: string, chartId: number | string) => {

@@ -3,7 +3,7 @@ import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
 import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
 import { newGuid, safestrLowercase } from '../services/general.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
-import { IChartData } from './ChartSettings.mjs'
+import { IChartSettings } from './ChartSettings.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
@@ -17,7 +17,7 @@ export enum TileType {
   ticker = 'ticker-info',
 }
 
-export type TileConfigChart = IChartData & {
+export type TileConfigChart = IChartSettings & {
   useProfileColors?: boolean
 }
 

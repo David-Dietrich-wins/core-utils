@@ -2,7 +2,12 @@ import moment, { Moment } from 'moment'
 import { IFacet } from './Facet.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
-import { hasData, safestr, safestrLowercase } from '../services/general.mjs'
+import {
+  hasData,
+  safestr,
+  safestrLowercase,
+  safestrUppercase,
+} from '../services/general.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { arrayFindByIds } from '../services/array-helper.mjs'
@@ -86,19 +91,19 @@ export class ChartPlotReturn {
   positions: IShapePosition[] = []
 }
 
-export interface IChartData {
+export interface IChartSettings {
   ticker: string
   period: number
   periodType: string
   frequency: number
   frequencyType: string
   granularity?: string
-  needExtendedHoursTrading?: boolean
+  extendedHoursTrading?: boolean
   startDate?: number // as milliseconds since epoch
   endDate?: number // as milliseconds since epoch
 }
 
-export class ChartSettings implements IChartData {
+export class ChartSettings implements IChartSettings {
   ticker = ''
   /**
    * The number of periods to show.
@@ -144,7 +149,7 @@ export class ChartSettings implements IChartData {
   granularity = ''
 
   /** true to return extended hours data, false for regular market hours only. Defaults to true. */
-  needExtendedHoursTrading = false
+  extendedHoursTrading = false
 
   /**
    * Start date as milliseconds since epoch.
@@ -164,16 +169,16 @@ export class ChartSettings implements IChartData {
 
   constructor(
     ticker: string,
-    period: number,
-    periodType: string,
-    frequency: number,
-    frequencyType: string,
-    granularity: string,
-    startDate: number,
-    endDate: number,
-    needExtendedHoursTrading: boolean
+    period?: number,
+    periodType?: string,
+    frequency?: number,
+    frequencyType?: string,
+    granularity?: string,
+    startDate?: number,
+    endDate?: number,
+    extendedHoursTrading = false
   ) {
-    this.ticker = safestr(ticker)
+    this.ticker = safestrUppercase(ticker)
 
     this.period = period ?? 1
     this.periodType = safestr(periodType)
@@ -205,14 +210,40 @@ export class ChartSettings implements IChartData {
       this.#_endMillis = this.#_endMoment.valueOf()
     }
 
-    if (needExtendedHoursTrading) {
-      this.needExtendedHoursTrading = needExtendedHoursTrading
+    if (extendedHoursTrading) {
+      this.extendedHoursTrading = extendedHoursTrading
     }
   }
 
-  static DefaultChartData(overrides?: Partial<IChartData>) {
+  static Create(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
-    const defaultChartData: IChartData = {
+    const csettings = ChartSettings.CreateISettings({
+      ticker: 'AAPL', // Default ticker
+      period: 1, // Default period
+      periodType: 'day', // Default period type
+      frequency: 1, // Default frequency
+      frequencyType: '1d', // Default frequency type
+      // granularity: '1min', // Default granularity
+      // needExtendedHoursTrading: true, // Default to true for extended hours trading
+      ...overrides,
+    })
+
+    return new ChartSettings(
+      csettings.ticker,
+      csettings.period,
+      csettings.periodType,
+      csettings.frequency,
+      csettings.frequencyType,
+      safestr(csettings.granularity),
+      csettings.startDate ?? 0,
+      csettings.endDate ?? 0,
+      csettings.extendedHoursTrading ?? false
+    )
+  }
+
+  static CreateISettings(overrides?: Partial<IChartSettings>) {
+    // Default chart data settings
+    const ret: IChartSettings = {
       ticker: 'AAPL', // Default ticker
       period: 1, // Default period
       periodType: 'day', // Default period type
@@ -223,7 +254,44 @@ export class ChartSettings implements IChartData {
       ...overrides,
     }
 
-    return defaultChartData
+    ret.ticker = safestrUppercase(ret.ticker)
+    return ret
+  }
+
+  static CreateForTradingView(
+    ticker: string,
+    startDate?: number,
+    endDate?: number,
+    resolution?: string,
+    extendedHoursTrading = true
+  ) {
+    return ChartSettings.Create({
+      ticker,
+      period: 1,
+      periodType: 'day',
+      frequency: 1,
+      frequencyType: 'minute',
+      granularity: resolution,
+      startDate,
+      endDate,
+      extendedHoursTrading,
+    }).toISettings()
+  }
+
+  toISettings(): IChartSettings {
+    const ret: IChartSettings = {
+      ticker: safestrUppercase(this.ticker),
+      period: this.period,
+      periodType: this.periodType,
+      frequency: this.frequency,
+      frequencyType: this.frequencyType,
+      granularity: this.granularity,
+      extendedHoursTrading: this.extendedHoursTrading,
+      startDate: this.startDate,
+      endDate: this.endDate,
+    }
+
+    return ret
   }
 
   static fromToForFmpStatic(startMoment?: Moment, endMoment?: Moment) {
@@ -433,25 +501,5 @@ export class ChartSettings implements IChartData {
   }
   static oneMonth(ticker: string) {
     return new ChartSettings(ticker, 10, 'year', 1, 'monthly', '1', 0, 0, false)
-  }
-
-  static CreateForTradingView(
-    ticker: string,
-    startDate: number,
-    endDate: number,
-    resolution: string,
-    extendedHours = true
-  ) {
-    return new ChartSettings(
-      ticker,
-      1,
-      'day',
-      1,
-      'minute',
-      resolution,
-      startDate,
-      endDate,
-      extendedHours
-    )
   }
 }
