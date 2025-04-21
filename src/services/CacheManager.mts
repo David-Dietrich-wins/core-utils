@@ -1,4 +1,4 @@
-import { IIdValue } from '../models/id-value.mjs'
+import { IIdValue } from '../models/IdValueManager.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { arrayFirst } from './array-helper.mjs'
 import { isNullOrUndefined, safeArray } from './general.mjs'

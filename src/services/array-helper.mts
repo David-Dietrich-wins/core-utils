@@ -422,7 +422,7 @@ export function arraySwapItems<T>(
   return arrItems
 }
 
-export function arrayAdd<T extends IId>(
+export function arrayAdd<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[],
   item: T,
   index?: number
@@ -437,13 +437,13 @@ export function arrayAdd<T extends IId>(
   return arrItems
 }
 
-export function arrayRemove<T extends IId>(
+export function arrayRemove<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[] | null | undefined,
   item: T
 ) {
   return arrayRemoveById(arrItems, item.id)
 }
-export function arrayRemoveById<T extends IId>(
+export function arrayRemoveById<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[] | null | undefined,
   id: T['id']
 ) {
@@ -456,7 +456,7 @@ export function arrayUnique<T>(arrItems: T[] | null | undefined) {
   return [...new Set(safeArray(arrItems))]
 }
 
-export function arrayUpdateOrAdd<T extends IId>(
+export function arrayUpdateOrAdd<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[],
   item: T,
   insertAtFront = false

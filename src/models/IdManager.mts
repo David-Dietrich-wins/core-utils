@@ -9,13 +9,13 @@ export interface IId<T = string> {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
-export class IdManager<T extends IId> {
+export class IdManager<T extends IId<Tid>, Tid = T['id']> {
   constructor(
     public list: T[] = [],
     public stats?: InstrumentationStatistics
   ) {}
 
-  static Create<T extends IId>(
+  static CreateIdManager<T extends IId<Tid>, Tid = T['id']>(
     arr: T[] | null | undefined,
     stats?: InstrumentationStatistics
   ) {

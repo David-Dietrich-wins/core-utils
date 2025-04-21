@@ -1,4 +1,4 @@
-import { IdValue } from './id-value.mjs'
+import { IdValue } from './IdValueManager.mjs'
 
 test('IdValue good', () => {
   const id = 'id'

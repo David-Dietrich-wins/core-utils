@@ -37,7 +37,7 @@ test('default constructor', () => {
 test('IdManager.Create', () => {
   const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }]
 
-  const idm = IdManager.Create(ids, new InstrumentationStatistics())
+  const idm = IdManager.CreateIdManager(ids, new InstrumentationStatistics())
 
   expect(idm.list).toBe(ids)
   expect(idm.stats?.totalProcessed).toBe(0)

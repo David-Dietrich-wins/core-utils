@@ -1,0 +1,52 @@
+import { safeArray } from '../services/general.mjs'
+import { IdManager, IIdRequired } from './IdManager.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { IValue } from './interfaces.mjs'
+
+export interface IIdValue<Tid = string, Tvalue = string>
+  extends IIdRequired<Tid>,
+    IValue<Tvalue> {}
+
+export class IdValue<Tid = string, Tvalue = string>
+  implements IIdValue<Tid, Tvalue>
+{
+  id: Tid
+  value: Tvalue
+
+  constructor(id: Tid, value: Tvalue) {
+    this.id = id
+    this.value = value
+  }
+}
+
+export type IdValueType<Tid = string, Tvalue = string> = {
+  id: Tid
+  value: Tvalue
+}
+
+export class IdValueManager<Tid = string, Tvalue = string> extends IdManager<
+  IIdValue<Tid, Tvalue>
+> {
+  constructor(
+    public list: IIdValue<Tid, Tvalue>[] = [],
+    public stats?: InstrumentationStatistics
+  ) {
+    super(list, stats)
+  }
+
+  static CreateIdValueManager<Tid = string, Tvalue = string>(
+    arr: IIdValue<Tid, Tvalue>[] | null | undefined,
+    stats?: InstrumentationStatistics
+  ) {
+    return new IdValueManager(safeArray(arr), stats)
+  }
+
+  static CreateIIdValue<Tid = string, Tvalue = string>(
+    id: Tid,
+    value: Tvalue
+  ): IIdValue<Tid, Tvalue> {
+    const item: IIdValue<Tid, Tvalue> = new IdValue(id, value)
+
+    return item
+  }
+}
