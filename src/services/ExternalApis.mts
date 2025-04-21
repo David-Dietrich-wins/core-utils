@@ -50,7 +50,7 @@ import {
   GetHttpHeaderApplicationName,
   fetchDeleteJson,
 } from './fetch-http.mjs'
-import { urlJoin, hasData, safeArray } from './general.mjs'
+import { hasData, isArray, safeArray, safestr, urlJoin } from './general.mjs'
 import { IConfig } from '../models/config.mjs'
 import { ChartPlotReturn, IChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'
@@ -424,6 +424,30 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
+    Quote: async (bearerToken: string, ticker: string) => {
+      const fname = this.asset.Quote.name
+
+      return this.asset.Quotes(bearerToken, [ticker]).then((ret) => {
+        if (!isArray(ret, 1)) {
+          throw new AppException('No data returned', fname)
+        }
+
+        return ret[0]
+      })
+    },
+
+    Quotes: async (bearerToken: string, tickers: string[]) => {
+      const fname = this.asset.Quotes.name
+
+      return fetchPost<IAssetQuoteResponse[], { tickers: string[] }>({
+        url: urlJoin(this.CONST_EndpointAsset, 'quotes'),
+        fname,
+        bearerToken,
+        data: { tickers },
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
     Rsi: async (bearerToken: string, fmp: FmpIndicatorQueryParams) => {
       return this.asset.TechnicalIndicator<IQuoteBarRsi>(
         bearerToken,
@@ -496,7 +520,7 @@ export class ExternalApis {
           return ret.dataPage.map((item) => {
             const ssr: SearchSymbolResultItem = {
               description: item.description,
-              exchange: item.exchange,
+              exchange: safestr(item.exchange),
               full_name: item.full_name,
               symbol: item.symbol,
               ticker: item.ticker,
