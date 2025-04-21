@@ -1,5 +1,5 @@
 import { ISearchRequestView } from '../models/interfaces.mjs'
-import { INameValue } from '../models/name-value.mjs'
+import { INameValue } from '../models/NameValueManager.mjs'
 import { isObject } from '../services/general.mjs'
 import { ICity } from './city.mjs'
 import { ICompany } from './company.mjs'

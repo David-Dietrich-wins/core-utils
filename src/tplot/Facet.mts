@@ -1,4 +1,4 @@
-import { NameVal } from '../models/name-val.mjs'
+import { NameVal } from '../models/NameValManager.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,

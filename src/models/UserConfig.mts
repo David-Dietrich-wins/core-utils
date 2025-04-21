@@ -1,5 +1,5 @@
 import { IKeyValueShort } from './key-val.mjs'
-import { INameVal } from './name-val.mjs'
+import { INameVal } from './NameValManager.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,

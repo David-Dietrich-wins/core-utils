@@ -1,4 +1,4 @@
-import { NameVal, NameValType } from './name-val.mjs'
+import { NameVal, NameValType } from './NameValManager.mjs'
 
 test('NameVal good', () => {
   const name = 'name'

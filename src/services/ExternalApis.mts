@@ -7,7 +7,7 @@ import {
   ISearchRequestView,
   ISlug,
 } from '../models/interfaces.mjs'
-import { INameVal, NameVal } from '../models/name-val.mjs'
+import { INameVal, NameVal } from '../models/NameValManager.mjs'
 import {
   IPagedResponse,
   IPagedResponseWithTotalValue,
@@ -1001,6 +1001,21 @@ export class ExternalApis {
   }
 
   user = {
+    ConfigSet: async (
+      bearerToken: string,
+      nameVal: INameVal<unknown, string>
+    ) => {
+      const fname = this.user.ConfigSet.name
+
+      return fetchPut<INameVal<unknown, string>, INameVal<unknown, string>>({
+        url: this.CONST_EndpointConfig,
+        fname,
+        bearerToken,
+        data: nameVal,
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
     ScreenData: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>,

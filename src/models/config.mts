@@ -3,7 +3,7 @@ import {
   IIdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
 import { IIdVal } from '../models/id-val.mjs'
-import { INameVal } from '../models/name-val.mjs'
+import { INameVal } from './NameValManager.mjs'
 import { isObject } from '../services/general.mjs'
 import { IId } from './IdManager.mjs'
 import { IName } from './interfaces.mjs'
