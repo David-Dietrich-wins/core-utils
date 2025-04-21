@@ -5,6 +5,7 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "sourceMap": true,
+    "inlineSources": true,
     "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
