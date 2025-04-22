@@ -1,7 +1,5 @@
-import {
-  getNumberString,
-  timeDifferenceStringFromMillis,
-} from '../services/general.mjs'
+import { timeDifferenceStringFromMillis } from '../services/DateHelper.mjs'
+import { getNumberString } from '../services/number-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 const CONST_DefaultSecondsMs = new RegExp('^(\\d+ seconds?|\\d+m?s)$')

@@ -9,13 +9,13 @@ import {
 } from '../models/ticker-info.mjs'
 import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import {
-  getNumberFormatted,
   getPercentChangeString,
   isNullOrUndefined,
-  isObject,
   newGuid,
-  safeArray,
 } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { getNumberFormatted } from '../services/number-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { getStockPriceInDollars } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'

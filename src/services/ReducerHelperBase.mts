@@ -1,7 +1,8 @@
 import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { FormStatusManager } from './FormStatus.mjs'
-import { deepCloneJson, deepDiffMapper } from './general.mjs'
+import { deepCloneJson } from './object-helper.mjs'
+import { deepDiffMapper } from './object-helper.mjs'
 
 export type ReducerState<T extends IId<Tid>, Tid = T['id']> = {
   initial: T

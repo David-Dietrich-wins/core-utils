@@ -1,4 +1,4 @@
-import { safeArray } from './general.mjs'
+import { safeArray } from './array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
 
@@ -23,8 +23,12 @@ export function InterpolateColorRange(colorRange: ColorRange, percent: number) {
   const startMatch = startColor.match(/.{1,2}/g)
   const endMatch = endColor.match(/.{1,2}/g)
 
-  const n0 = startMatch ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent)) : []
-  const n1 = endMatch ? safeArray(endMatch).map((oct) => parseInt(oct, 16) * percent) : []
+  const n0 = startMatch
+    ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent))
+    : []
+  const n1 = endMatch
+    ? safeArray(endMatch).map((oct) => parseInt(oct, 16) * percent)
+    : []
 
   const ci = [0, 1, 2].map((i) => Math.min(Math.round(n0[i] + n1[i]), 255))
 

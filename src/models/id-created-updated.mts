@@ -1,4 +1,4 @@
-import { isObject } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from './interfaces.mjs'
 

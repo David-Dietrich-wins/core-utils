@@ -3,7 +3,9 @@ import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
 import { arrayMustFind } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
-import { isObject, newGuid, safeArray } from '../services/general.mjs'
+import { newGuid } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,

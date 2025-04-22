@@ -1,7 +1,8 @@
 import { AppException } from '../models/AppException.mjs'
 import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
 import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
-import { newGuid, safestrLowercase } from '../services/general.mjs'
+import { newGuid } from '../services/general.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IChartSettings } from './ChartSettings.mjs'
 

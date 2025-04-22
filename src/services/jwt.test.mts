@@ -15,7 +15,7 @@ import {
   IJwtFusionAuthIdToken,
   JwtTokenWithUserId,
 } from './jwt.mjs'
-import { safestr } from './general.mjs'
+import { safestr } from './string-helper.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 
 describe('JwtDecode', () => {

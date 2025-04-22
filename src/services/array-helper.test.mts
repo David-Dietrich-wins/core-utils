@@ -26,6 +26,8 @@ import {
   arrayReduceArrayReturns,
   arraySwapItems,
   arraySwapItemsById,
+  isArray,
+  safeArray,
   shuffleArray,
   splitToArray,
   splitToArrayOfIntegers,
@@ -777,4 +779,22 @@ describe('splitToArray', () => {
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
+})
+test('safeArray', () => {
+  expect(safeArray()).toStrictEqual([])
+  expect(safeArray(1)).toStrictEqual([1])
+  expect(safeArray([1])).toStrictEqual([1])
+  expect(safeArray(undefined, [1])).toStrictEqual([1])
+})
+test('isArray', () => {
+  expect(isArray(undefined)).toBe(false)
+  expect(isArray(null)).toBe(false)
+  expect(isArray([])).toBe(true)
+  expect(isArray([], 0)).toBe(true)
+  expect(isArray([], 1)).toBe(false)
+  expect(isArray([1, 2], 1)).toBe(true)
+  expect(isArray(['a', 'b'], 'd')).toBe(false)
+  expect(isArray(['a', 'b'], 'a')).toBe(true)
+  expect(isArray(['a', 'b'], 'a')).toBe(true)
+  expect(isArray(['a', 'b'], 'b')).toBe(true)
 })

@@ -1,5 +1,6 @@
 import { AppExceptionHttp } from './AppException.mjs'
-import { isObject, safestrLowercase } from '../services/general.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
+import { isObject } from '../services/object-helper.mjs'
 import { IDataWithStats } from './types.mjs'
 import { FetchDataTypesAllowed } from '../services/fetch-http.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'

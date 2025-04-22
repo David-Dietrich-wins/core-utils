@@ -1,4 +1,5 @@
-import { isObject, safestr } from '../services/general.mjs'
+import { safestr } from '../services/string-helper.mjs'
+import { isObject } from '../services/object-helper.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
 import { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
 import { ITicker } from '../models/ticker-info.mjs'

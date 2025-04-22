@@ -1,6 +1,6 @@
 import { IdName } from '../models/id-name.mjs'
 import { IName, ISlug } from '../models/interfaces.mjs'
-import { isObject } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
 import { IHasPolitiscales, IPolitiscale } from './politiscale.mjs'
 
 export interface ICity extends IName, ISlug, Required<IHasPolitiscales> {

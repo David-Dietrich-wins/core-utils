@@ -4,7 +4,7 @@ import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { JwtPayload } from 'jsonwebtoken'
 import { LogManagerOptions } from './services/LogManager.mjs'
-import { safestr } from './services/general.mjs'
+import { safestr } from './services/string-helper.mjs'
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 

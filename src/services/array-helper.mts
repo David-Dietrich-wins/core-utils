@@ -3,15 +3,28 @@ import { IIdName } from '../models/id-name.mjs'
 import { IId, IIdRequired } from '../models/IdManager.mjs'
 import { IName } from '../models/interfaces.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
-import {
-  isArray,
-  isNullOrUndefined,
-  isString,
-  safeArray,
-  safestr,
-  safestrTrim,
-  safestrUppercase,
-} from './general.mjs'
+import { isNullOrUndefined } from './general.mjs'
+import { safestr, safestrTrim, safestrUppercase } from './string-helper.mjs'
+import { isString } from './string-helper.mjs'
+import { isNumber } from './number-helper.mjs'
+/**
+ * Tests if the passed in arr is in fact an array that is not undefined or null.
+ * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty array is returned.
+ * @param arr An array to test for not being null or undefined. If it is an object, it is wrapped in an array.
+ * @param ifEmpty If the array is null or undefined, return this value. Defaults to [].
+ * @returns A guaranteed array to be nonNull. Returns ifEmpty when the array does not have data. Or [] if ifEmpty is not declared.
+ */
+
+export function safeArray<T>(
+  arr?: ArrayOrSingle<T> | null,
+  ifEmpty?: ArrayOrSingle<T> | null
+) {
+  if (isNullOrUndefined(arr)) {
+    return ifEmpty ? ToSafeArray(ifEmpty) : []
+  }
+
+  return isArray(arr) ? arr : [arr]
+}
 
 export function arrayGetIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arr?: ArrayOrSingle<T> | null,
@@ -631,4 +644,30 @@ export function ToIIdNameArray<T extends IIdName<string, string>>(
 
 export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
   return safeArray(arr).map((x) => x.name)
+}
+/**
+ * Checks an object if it is an array. If so, then tests if there is an optional minimum number of items.
+ * If minLengthOrIncludes is not a number, checks that the array includes the item.
+ * @param arr Any object to test if it is an array.
+ * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
+ * @returns True if arr is an array and meets any minimum requirements.
+ */
+
+export function isArray<T = unknown>(
+  arr?: ArrayOrSingle<T> | null,
+  minLengthOrIncludes?: T | number
+): arr is Array<T> {
+  if (!arr || !Array.isArray(arr)) {
+    return false
+  }
+
+  if (isNullOrUndefined(minLengthOrIncludes)) {
+    return true
+  }
+
+  if (isNumber(minLengthOrIncludes)) {
+    return arr.length >= minLengthOrIncludes
+  }
+
+  return arr.includes(minLengthOrIncludes)
 }

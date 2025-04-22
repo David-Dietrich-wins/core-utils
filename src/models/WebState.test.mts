@@ -1,4 +1,4 @@
-import { timeDifferenceString } from '../services/general.mjs'
+import { timeDifferenceString } from '../services/DateHelper.mjs'
 import { IServerState } from './ApplicationState.mjs'
 import { HTTP_Ok } from './AppException.mjs'
 import UserState from './UserState.mjs'

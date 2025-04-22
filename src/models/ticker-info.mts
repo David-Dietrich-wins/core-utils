@@ -1,15 +1,14 @@
 import moment from 'moment'
 import { IdName } from '../models/id-name.mjs'
+import { safestr, safestrUppercase } from '../services/string-helper.mjs'
+import { isString } from '../services/string-helper.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { isArray } from '../services/array-helper.mjs'
 import {
   getAsNumber,
   getAsNumberOrUndefined,
-  isArray,
-  isObject,
-  isString,
-  safeArray,
-  safestr,
-  safestrUppercase,
-} from '../services/general.mjs'
+} from '../services/number-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'

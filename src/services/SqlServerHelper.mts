@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import sql from 'mssql'
-import { hasData, isString } from './general.mjs'
+import { hasData } from './general.mjs'
+import { isString } from './string-helper.mjs'
 import { arrayFirst, arrayFirstNonEmpty } from './array-helper.mjs'
 
 const CONST_DefaultMaxRetryCount = 3

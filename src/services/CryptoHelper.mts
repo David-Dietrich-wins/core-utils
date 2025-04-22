@@ -1,5 +1,6 @@
 import crypto from 'crypto'
-import { safeJsonToString, safestrToJson } from './general.mjs'
+import { safestrToJson } from './string-helper.mjs'
+import { safeJsonToString } from './object-helper.mjs'
 
 export const CONST_RegexRsaPrivateKeyPem =
   /-----BEGIN RSA PRIVATE KEY-----(\n|\r|\r\n)([0-9a-zA-Z+/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z+/=]{1,63}(\n|\r|\r\n))?-----END RSA PRIVATE KEY-----/

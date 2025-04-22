@@ -1,5 +1,5 @@
 import { IServerState, IWebStateResponse } from './interfaces.mjs'
-import { safestr } from '../services/general.mjs'
+import { safestr } from '../services/string-helper.mjs'
 import { IUserState } from './UserState.mjs'
 
 export interface ICryptoRequest {

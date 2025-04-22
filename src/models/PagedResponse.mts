@@ -1,4 +1,4 @@
-import { safeArray } from '../services/general.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse } from './ApiResponse.mjs'
 
 export interface IPagedResponse<T> {

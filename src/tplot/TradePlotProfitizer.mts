@@ -4,10 +4,10 @@ import {
   getPercentChangeString,
   hasData,
   isNullOrUndefined,
-  isObject,
-  safeArray,
-  safestrLowercase,
 } from '../services/general.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import {
   getStockPrice,
   getStockPriceInDollars,

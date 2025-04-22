@@ -1,6 +1,9 @@
 import fs from 'node:fs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import { isArray, isObject, safeArray, safestr } from './general.mjs'
+import { safestr } from './string-helper.mjs'
+import { isObject } from './object-helper.mjs'
+import { isArray } from './array-helper.mjs'
+import { safeArray } from './array-helper.mjs'
 
 export class FileHelper {
   fsid = 0

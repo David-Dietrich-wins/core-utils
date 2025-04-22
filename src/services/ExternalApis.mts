@@ -50,7 +50,10 @@ import {
   GetHttpHeaderApplicationName,
   fetchDeleteJson,
 } from './fetch-http.mjs'
-import { hasData, isArray, safeArray, safestr, urlJoin } from './general.mjs'
+import { hasData, urlJoin } from './general.mjs'
+import { safestr } from './string-helper.mjs'
+import { isArray } from './array-helper.mjs'
+import { safeArray } from './array-helper.mjs'
 import { IConfig } from '../models/config.mjs'
 import { ChartPlotReturn, IChartSettings } from '../tplot/ChartSettings.mjs'
 import { ScreenData } from '../tplot/ScreenData.mjs'

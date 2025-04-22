@@ -1,6 +1,13 @@
 import {
   addNumbers,
   divideByNumbers,
+  getAsNumber,
+  getAsNumberOrUndefined,
+  getMantissa,
+  getNumberFormatted,
+  getNumberString,
+  isNumber,
+  isNumeric,
   setMaxDecimalPlaces,
 } from './number-helper.mjs'
 
@@ -95,4 +102,96 @@ describe('maxDecimalPlaces', () => {
 
     expect.assertions(2)
   })
+})
+describe('Number formatting', () => {
+  test('String from a number with commas added', () => {
+    const num = 123456789
+    const str = getNumberString(num)
+
+    expect(str).toBe('123,456,789')
+  })
+
+  test('Number from string with commas', () => {
+    const num = '123,456,789'
+    const str = getAsNumberOrUndefined(num)
+
+    expect(str).toBe(123456789)
+  })
+
+  test('getAsNumber', () => {
+    const num = '123,456,789'
+    const str = getAsNumber(num)
+
+    expect(str).toBe(123456789)
+  })
+})
+
+test('isNumeric', () => {
+  expect(isNumeric()).toBe(false)
+  expect(isNumeric(1)).toBe(true)
+  expect(isNumeric('1')).toBe(true)
+  expect(isNumeric('1.11')).toBe(true)
+  expect(isNumeric('1.11.1')).toBe(false)
+  expect(isNumeric('12q')).toBe(false)
+  expect(isNumeric('a2q')).toBe(false)
+})
+test('isNumber', () => {
+  expect(isNumber(undefined)).toBe(false)
+  expect(isNumber(null)).toBe(false)
+  expect(isNumber(-1)).toBe(true)
+  expect(isNumber(0)).toBe(true)
+  expect(isNumber(1)).toBe(true)
+  expect(isNumber('1')).toBe(false)
+  expect(isNumber([1])).toBe(false)
+  expect(isNumber({ 1: 1 })).toBe(false)
+
+  expect(isNumber(1000, 999)).toBe(true)
+  expect(isNumber(1000, 1000)).toBe(true)
+  expect(isNumber(1000, 1001)).toBe(false)
+
+  expect(isNumber(1000, undefined, 999)).toBe(false)
+  expect(isNumber(1000, undefined, 1000)).toBe(true)
+  expect(isNumber(1000, undefined, 1001)).toBe(true)
+
+  expect(isNumber(998, 999, 1001)).toBe(false)
+  expect(isNumber(999, 999, 1001)).toBe(true)
+  expect(isNumber(1000, 999, 1001)).toBe(true)
+  expect(isNumber(1001, 999, 1001)).toBe(true)
+  expect(isNumber(1002, 999, 1001)).toBe(false)
+
+  expect(isNumber(998, 1001, 999)).toBe(false)
+  expect(isNumber(999, 1001, 999)).toBe(false)
+  expect(isNumber(1000, 1001, 999)).toBe(false)
+  expect(isNumber(1001, 1001, 999)).toBe(false)
+  expect(isNumber(1002, 1001, 999)).toBe(false)
+})
+test('getNumberString', () => {
+  expect(getNumberString(0)).toBe('0')
+  expect(getNumberString('1,249')).toBe('1,249')
+
+  expect(getNumberString('1,249', 2)).toBe('1,249.00')
+  expect(getNumberString('1,249.999', 2)).toBe('1,250.00')
+  expect(getNumberString('1,249.9', 2)).toBe('1,249.90')
+
+  expect(getNumberString('38,459,238,231,249.999', 2)).toBe(
+    '38,459,238,231,250.00'
+  )
+})
+test('getNumberFormatted', () => {
+  expect(getNumberFormatted(0)).toBe(0)
+
+  expect(getNumberFormatted('1,249', 2)).toBe(1249)
+  expect(getNumberFormatted('1,249.999', 2)).toBe(1250)
+  expect(getNumberFormatted('1,249.9', 2)).toBe(1249.9)
+  expect(getNumberFormatted(1249.9, 2)).toBe(1249.9)
+  expect(getNumberFormatted(undefined, 2)).toBe(0)
+})
+test('getMantissa', () => {
+  expect(getMantissa(0)).toBe(0)
+  expect(getMantissa(1000)).toBe(0)
+  expect(getMantissa(0.1)).toBe(1)
+  expect(getMantissa(-4234.99)).toBe(99)
+  expect(getMantissa(34.012)).toBe(12)
+
+  expect(getMantissa(34)).toBe(0)
 })

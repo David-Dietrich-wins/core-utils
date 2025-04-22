@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs'
 import { open } from 'node:fs/promises'
 import { LogManager } from './LogManager.mjs'
-import { hasData, safestrTrim } from './general.mjs'
+import { hasData } from './general.mjs'
+import { safestrTrim } from './string-helper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 
 export type SingleLineFileProcessorConfig<T = unknown> = {

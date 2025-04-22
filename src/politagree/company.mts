@@ -2,7 +2,7 @@ import {
   IdCreatedUpdated,
   IIdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
-import { isObject } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
 import { IHasPolitiscales, Politiscale } from './politiscale.mjs'
 
 export interface ICompany extends IIdCreatedUpdated, IHasPolitiscales {

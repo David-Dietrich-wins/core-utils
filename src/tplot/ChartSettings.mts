@@ -2,12 +2,12 @@ import moment, { Moment } from 'moment'
 import { IFacet } from './Facet.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
+import { hasData } from '../services/general.mjs'
 import {
-  hasData,
   safestr,
   safestrLowercase,
   safestrUppercase,
-} from '../services/general.mjs'
+} from '../services/string-helper.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { arrayFindByIds } from '../services/array-helper.mjs'

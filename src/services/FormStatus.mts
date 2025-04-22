@@ -6,7 +6,9 @@ import {
   DigicrewTypes,
 } from '../models/types.mjs'
 import { DateHelper } from './DateHelper.mjs'
-import { isArray, isObject, newGuid } from './general.mjs'
+import { newGuid } from './general.mjs'
+import { isObject } from './object-helper.mjs'
+import { isArray } from './array-helper.mjs'
 import { ReducerState } from './ReducerHelperBase.mjs'
 
 export type FormStatusItem = DigicrewType & {

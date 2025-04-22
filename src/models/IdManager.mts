@@ -1,5 +1,5 @@
 import { arrayAdd, arrayRemove } from '../services/array-helper.mjs'
-import { safeArray } from '../services/general.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { FindObjectWithField } from '../services/object-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 

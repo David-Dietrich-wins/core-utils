@@ -45,7 +45,7 @@ const { closeSync, openSync, unlinkSync, writeSync } = await import('node:fs')
 const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
-import { safestr } from './general.mjs'
+import { safestr } from './string-helper.mjs'
 import { fileSync, setGracefulCleanup } from 'tmp'
 
 // Cleanup files created by tmp

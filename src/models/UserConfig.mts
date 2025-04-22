@@ -4,7 +4,8 @@ import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
-import { hasData, safestr } from '../services/general.mjs'
+import { hasData } from '../services/general.mjs'
+import { safestr } from '../services/string-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IUserConfig<T = any>

@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import tmp from 'tmp'
 import { FileHelper } from './FileHelper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import { safeJsonToString } from './general.mjs'
+import { safeJsonToString } from './object-helper.mjs'
 
 describe('DeleteFileIfExists', () => {
   test('good', () => {

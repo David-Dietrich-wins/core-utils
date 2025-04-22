@@ -1,4 +1,4 @@
-import { safeArray } from '../services/general.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IName, IType, IValue } from './interfaces.mjs'
 

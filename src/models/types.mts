@@ -1,10 +1,8 @@
-import {
-  getAsNumber,
-  isNullOrUndefined,
-  isNumber,
-  isString,
-  safestrLowercase,
-} from '../services/general.mjs'
+import { isNullOrUndefined } from '../services/general.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
+import { isString } from '../services/string-helper.mjs'
+import { isNumber } from '../services/number-helper.mjs'
+import { getAsNumber } from '../services/number-helper.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
 import { IIdNameValueType } from './id-name.mjs'
 import { IId } from './IdManager.mjs'

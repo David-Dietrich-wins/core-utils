@@ -6,7 +6,10 @@ import jwt, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { isFunction, isString, safeArray, safestr } from './general.mjs'
+import { isFunction } from './general.mjs'
+import { safestr } from './string-helper.mjs'
+import { isString } from './string-helper.mjs'
+import { safeArray } from './array-helper.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../models/AppException.mjs'

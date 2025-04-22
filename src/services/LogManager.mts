@@ -3,7 +3,8 @@ import winston, { format, Logger, transport, transports } from 'winston'
 import DailyRotateFile, {
   DailyRotateFileTransportOptions,
 } from 'winston-daily-rotate-file'
-import { hasData, safestr, safestrTrim } from './general.mjs'
+import { hasData } from './general.mjs'
+import { safestr, safestrTrim } from './string-helper.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { DefaultWithOverrides, ObjectTypesToString } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'

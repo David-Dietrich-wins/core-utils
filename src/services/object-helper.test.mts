@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+import { jest } from '@jest/globals'
 // import { HttpResponse, http } from 'msw'
 // import { mockServer } from '../jest.setup.mjs'
 import {
@@ -9,12 +10,21 @@ import {
 } from 'axios'
 import {
   CloneObjectWithExtras,
+  getNullObject,
+  getObjectValue,
+  isObject,
   ObjectFindKeyAndReturnValue,
   ObjectMustHaveKeyAndReturnValue,
   ObjectTypesToString,
+  renameProperty,
+  runOnAllMembers,
+  safeJsonToString,
+  safeObject,
+  searchObjectForArray,
   UpdateFieldValue,
 } from './object-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
+import { pluralize, plusMinus } from './string-helper.mjs'
 
 type PostExceptionAxiosResponseData = {
   response: {
@@ -594,4 +604,174 @@ test('UpdateFieldValue', () => {
     ...obj,
     field: 'newvalue',
   })
+})
+test('searchObjectForArray', () => {
+  const obj: Record<string, unknown> = {
+    a: 'a',
+    b: 'b',
+    c: 'c',
+  }
+
+  expect(searchObjectForArray(obj)).toEqual([])
+
+  obj.anything = ['a', 'b', 'c']
+  expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
+
+  obj.anythingElse = ['c', 'b', 'a']
+  expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
+
+  obj.anything = 'a'
+  expect(searchObjectForArray(obj)).toEqual(['c', 'b', 'a'])
+
+  expect(searchObjectForArray(['c', 'b', 'a'])).toEqual(['c', 'b', 'a'])
+})
+test('runOnAllMembers', () => {
+  expect(() =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    runOnAllMembers(1 as any, (key: string, value: unknown) => {
+      return key + value
+    })
+  ).toThrow('runOnAllMembers() received an empty object.')
+
+  expect(() =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    runOnAllMembers({ a: 'a' }, null as any)
+  ).toThrow('runOnAllMembers() received an empty function operator.')
+
+  const funcToRunOnAllMembers = (key: string, value: unknown) => {
+    return key + value
+  }
+
+  expect(
+    runOnAllMembers({ a: 'a', b: 'b' }, funcToRunOnAllMembers)
+  ).toStrictEqual({
+    a: 'aa',
+    b: 'bb',
+  })
+
+  expect(
+    runOnAllMembers(
+      { a: 'a', b: 'b', c: undefined },
+      funcToRunOnAllMembers,
+      true
+    )
+  ).toStrictEqual({
+    a: 'aa',
+    b: 'bb',
+    c: undefined,
+  })
+
+  expect(
+    runOnAllMembers(
+      { a: 'a', b: 'b', c: undefined },
+      funcToRunOnAllMembers,
+      false
+    )
+  ).toStrictEqual({
+    a: 'aa',
+    b: 'bb',
+    c: 'cundefined',
+  })
+})
+test('renameProperty', () => {
+  let obj = { a: 'a', b: 'b', c: 'c' }
+  let retobj = { b: 'b', c: 'c', d: 'a' }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let oldKey: any = 'a'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let newKey: any = 'd'
+
+  renameProperty(obj, oldKey, newKey)
+  expect(obj).toStrictEqual(retobj)
+
+  oldKey = null
+  newKey = null
+  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+    'Cannot renameProperty. Invalid settings.'
+  )
+
+  oldKey = 'a'
+  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+    'Cannot renameProperty. Invalid settings.'
+  )
+
+  oldKey = 'notToBeFound'
+  newKey = 'd'
+  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+    `Cannot renameProperty. Property: ${oldKey} not found.`
+  )
+
+  obj = { a: 'a', b: 'b', c: 'c' }
+  oldKey = 'a'
+  newKey = 'd'
+  retobj = { b: 'b', c: 'c', d: 'a' }
+  expect(renameProperty(obj, oldKey, newKey)).toStrictEqual(retobj)
+})
+test('pluralize', () => {
+  expect(pluralize(0)).toBe('s')
+  expect(pluralize(1)).toBe('')
+  expect(pluralize(2)).toBe('s')
+
+  expect(pluralize(0, 'ab')).toBe('s')
+  expect(pluralize(1, 'ab')).toBe('ab')
+  expect(pluralize(2, 'ab')).toBe('s')
+
+  expect(pluralize(0, 'activity', 'activities')).toBe('activities')
+  expect(pluralize(1, 'activity', 'activities')).toBe('activity')
+  expect(pluralize(2, 'activity', 'activities')).toBe('activities')
+})
+test('plusMinus', () => {
+  expect(plusMinus(0)).toBe('')
+  expect(plusMinus(1)).toBe('+')
+  expect(plusMinus(-1)).toBe('-')
+})
+
+test('safeObject', () => {
+  expect(safeObject()).toStrictEqual({})
+  expect(safeObject({ a: 1 })).toStrictEqual({ a: 1 })
+  expect(safeObject(undefined, { a: 1 })).toStrictEqual({ a: 1 })
+})
+
+test('safeJsonToString', () => {
+  expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect(safeJsonToString(4 as any)).toBe('{}')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect(safeJsonToString(undefined as any)).toBe('{}')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect(safeJsonToString(null as any)).toBe('{}')
+
+  // Circular reference so JSON.stringify will fail
+  const obj: Record<string, unknown> = {}
+  obj.a = { b: obj }
+  expect(safeJsonToString(obj)).toBe('')
+
+  console.log = jest.fn()
+
+  expect(safeJsonToString(obj, 'functionName:')).toBe('')
+  expect(console.log).toHaveBeenCalledTimes(1)
+})
+
+test('getNullObject', () => {
+  expect(getNullObject({})).toBeNull()
+  expect(getNullObject({ a: 'a' })).toStrictEqual({ a: 'a' })
+})
+test('isObject', () => {
+  expect(isObject({})).toBe(true)
+  expect(isObject([])).toBe(false)
+  expect(isObject(1)).toBe(false)
+  expect(isObject('')).toBe(false)
+
+  expect(isObject({}, 1)).toBe(false)
+  expect(isObject({ a: 'a' }, -1)).toBe(true)
+  expect(isObject({ a: 'a' }, 0)).toBe(true)
+  expect(isObject({ a: 'a' }, 1)).toBe(true)
+  expect(isObject({ a: 'a' }, 'a')).toBe(true)
+  expect(isObject({ a: 'a' }, 'b')).toBe(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
+})
+test('getObjectValue', () => {
+  expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
+  expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
 })

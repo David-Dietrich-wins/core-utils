@@ -3,7 +3,7 @@ import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
-import { isObject } from '../services/general.mjs'
+import { isObject } from '../services/object-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IFacet<T = any> extends IUserCreatedUpdatedTable, NameVal<T> {

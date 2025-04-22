@@ -1,7 +1,8 @@
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { isNullOrUndefined, safeArray } from './general.mjs'
+import { isNullOrUndefined } from './general.mjs'
+import { safeArray } from './array-helper.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }
 
