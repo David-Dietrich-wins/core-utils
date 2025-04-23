@@ -8,6 +8,8 @@ import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { IdName } from '../models/id-name.mjs'
+import { newGuid } from '../services/general.mjs'
+import { IContext } from '../services/ContextManager.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
 export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
@@ -25,12 +27,14 @@ export type ConfigTickerInfoTabSettings = {
   // selectedRatioTab: string
 }
 
-export interface IHeaderTickersConfig {
+export interface IContextTickers extends IContext {
   tickers: string[]
 }
-export interface IHeaderTickersIndexConfig {
-  showAsset: boolean
-  showCrypto: boolean
+
+export interface ITickerBarsConfig {
+  context: IContext
+  asset: IContextTickers
+  crypto: IContextTickers
 }
 
 export function CreateConfigTickerInfoTabSettings(
@@ -51,9 +55,7 @@ export enum TpConfigNamesEnum {
   chartColorDown = 'chartColorDown',
   chartColorUp = 'chartColorUp',
   dashboards = 'dashboards',
-  headerTickerBarIndex = 'headerTickerBarIndex',
   headerTickerBarUser = 'headerTickerBarUser',
-  hideTickerBar = 'hideTickerBar',
   hideTooltips = 'hideTooltips',
   ideaTabSelected = 'ideaTabSelected',
   ideaCryptoTabSelected = 'ideaCryptoTabSelected',
@@ -67,9 +69,7 @@ export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.chartColorDown]: string
   [TpConfigNamesEnum.chartColorUp]: string
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
-  [TpConfigNamesEnum.headerTickerBarIndex]: IHeaderTickersIndexConfig
-  [TpConfigNamesEnum.headerTickerBarUser]: IHeaderTickersConfig
-  [TpConfigNamesEnum.hideTickerBar]: boolean
+  [TpConfigNamesEnum.headerTickerBarUser]: ITickerBarsConfig
   [TpConfigNamesEnum.hideTooltips]: boolean
   [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
@@ -135,12 +135,11 @@ export class ConfigManager {
       ],
     },
 
-    [TpConfigNamesEnum.headerTickerBarIndex]: {
-      showAsset: true,
-      showCrypto: true,
+    [TpConfigNamesEnum.headerTickerBarUser]: {
+      context: { id: newGuid() },
+      asset: { id: newGuid(), tickers: ['AAPL'] },
+      crypto: { id: newGuid(), tickers: ['BTCUSD', 'ETHUSD'] },
     },
-    [TpConfigNamesEnum.headerTickerBarUser]: { tickers: ['AAPL'] },
-    [TpConfigNamesEnum.hideTickerBar]: false,
     [TpConfigNamesEnum.hideTooltips]: false,
     [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
     [TpConfigNamesEnum.ideaCryptoTabSelected]: { id: 0, name: 'crypto' },
@@ -159,9 +158,7 @@ export class ConfigManager {
       chartColorUp: this.chartColorUp,
       chartColorDown: this.chartColorDown,
       dashboards: this.dashboards,
-      headerTickerBarIndex: this.headerTickerBarIndex,
       headerTickerBarUser: this.headerTickerBarUser,
-      hideTickerBar: this.hideTickerBar,
       hideTooltips: this.hideTooltips,
       ideaTabSelected: this.ideaTabSelected,
       ideaCryptoTabSelected: this.ideaCryptoTabSelected,
@@ -195,20 +192,12 @@ export class ConfigManager {
     return clone
   }
 
-  get headerTickerBarIndex() {
-    return this.FindConfig<IHeaderTickersIndexConfig>(
-      TpConfigNamesEnum.headerTickerBarIndex
-    )
-  }
   get headerTickerBarUser() {
-    return this.FindConfig<IHeaderTickersConfig>(
+    return this.FindConfig<ITickerBarsConfig>(
       TpConfigNamesEnum.headerTickerBarUser
     )
   }
 
-  get hideTickerBar() {
-    return this.FindBoolean(TpConfigNamesEnum.hideTickerBar)
-  }
   get hideTooltips() {
     return this.FindBoolean(TpConfigNamesEnum.hideTooltips)
   }
