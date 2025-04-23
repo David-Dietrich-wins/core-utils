@@ -319,7 +319,6 @@ export function runOnAllMembers<T extends object = object>(
  * @returns The original object with the renamed key.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 export function renameProperty(obj: any, oldKey: any, newKey: any): object {
   if (
     !isObject(obj) ||
@@ -526,7 +525,6 @@ export function deepDiffMapper() {
  * @returns The value from the obj[keyToFind]. undefined if not found.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 export function getObjectValue(obj: any, keyToFind: string) {
   if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
     return obj[keyToFind]
