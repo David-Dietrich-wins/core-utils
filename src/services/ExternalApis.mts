@@ -324,6 +324,21 @@ export class ExternalApis {
       ).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
     },
 
+    CryptoSearch: async (
+      bearerToken: string,
+      searchRequest: ISearchRequestView
+    ) => {
+      const fname = this.asset.CryptoQuotes.name
+
+      return fetchPost<IPagedResponse<ITickerSearch>, ISearchRequestView>({
+        url: urlJoin(this.CONST_EndpointAsset, 'crypto-search'),
+        fname,
+        bearerToken,
+        data: SearchRequestViewDefault(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccessPagedResponse(fname, ret))
+    },
+
     EtfQuotes: async (
       bearerToken: string,
       searchRequest: Partial<ISearchRequestView>
