@@ -28,6 +28,7 @@ export type ConfigTickerInfoTabSettings = {
 }
 
 export interface IContextTickers extends IContext {
+  scrollSpeed?: number
   tickers: string[]
 }
 
