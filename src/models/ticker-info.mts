@@ -41,13 +41,13 @@ export interface ISymbolSearch extends ISymbolName {
 
 export function ISymbolSearch2ITickerSearch(iss: ISymbolSearch) {
   const its: ITickerSearch = {
-    name: iss.name,
     description: iss.stockExchange,
-    exchange: iss.exchangeShortName,
+    exchange: iss.stockExchange,
     full_name: iss.name,
+    name: iss.name,
     symbol: iss.symbol,
     ticker: iss.symbol,
-    type: iss.currency,
+    type: iss.exchangeShortName,
   }
 
   return its
