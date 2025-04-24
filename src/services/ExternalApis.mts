@@ -31,6 +31,7 @@ import {
   ISymbolDetail,
   ISymbolPrices,
   ISymbolPriceVolumeChanges,
+  ISymbolSearch,
   ITicker,
   ITickerSearch,
   ITickerType,
@@ -330,7 +331,7 @@ export class ExternalApis {
     ) => {
       const fname = this.asset.CryptoQuotes.name
 
-      return fetchPost<IPagedResponse<ITickerSearch>, ISearchRequestView>({
+      return fetchPost<IPagedResponse<ISymbolSearch>, ISearchRequestView>({
         url: urlJoin(this.CONST_EndpointAsset, 'crypto-search'),
         fname,
         bearerToken,

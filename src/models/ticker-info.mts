@@ -39,6 +39,26 @@ export interface ISymbolSearch extends ISymbolName {
   exchangeShortName: string
 }
 
+export function ISymbolSearch2ITickerSearch(iss: ISymbolSearch) {
+  const its: ITickerSearch = {
+    name: iss.name,
+    description: iss.stockExchange,
+    exchange: iss.exchangeShortName,
+    full_name: iss.name,
+    symbol: iss.symbol,
+    ticker: iss.symbol,
+    type: iss.currency,
+  }
+
+  return its
+}
+
+export function ISymbolSearch2ITickerSearchArray(
+  iss: ISymbolSearch[]
+): ITickerSearch[] {
+  return safeArray(iss).map(ISymbolSearch2ITickerSearch)
+}
+
 export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   // symbol: string    // GME,
   // name: string      // GameStop Corp.,
