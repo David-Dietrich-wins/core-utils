@@ -29,6 +29,8 @@ export type ConfigTickerInfoTabSettings = {
 
 export interface IContextTickers extends IContext {
   scrollSpeed?: number
+  showPercentChange?: boolean
+  showPriceChange?: boolean
   tickers: string[]
 }
 
@@ -61,7 +63,6 @@ export enum TpConfigNamesEnum {
   ideaTabSelected = 'ideaTabSelected',
   ideaCryptoTabSelected = 'ideaCryptoTabSelected',
   openFirstPlot = 'openFirstPlot',
-  showPriceChangeInTickerBar = 'showPriceChangeInTickerBar',
   useMinusEight = 'useMinusEight',
   tickerInfo = 'tickerInfo',
 }
@@ -75,7 +76,6 @@ export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
   [TpConfigNamesEnum.openFirstPlot]: boolean
-  [TpConfigNamesEnum.showPriceChangeInTickerBar]: boolean
   [TpConfigNamesEnum.useMinusEight]: boolean
 }
 export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
@@ -145,7 +145,6 @@ export class ConfigManager {
     [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
     [TpConfigNamesEnum.ideaCryptoTabSelected]: { id: 0, name: 'crypto' },
     [TpConfigNamesEnum.openFirstPlot]: true,
-    [TpConfigNamesEnum.showPriceChangeInTickerBar]: false,
     [TpConfigNamesEnum.useMinusEight]: true,
     [TpConfigNamesEnum.tickerInfo]: {
       selectedTab: 'asset',
@@ -164,7 +163,6 @@ export class ConfigManager {
       ideaTabSelected: this.ideaTabSelected,
       ideaCryptoTabSelected: this.ideaCryptoTabSelected,
       openFirstPlot: this.openFirstPlot,
-      showPriceChangeInTickerBar: this.showPriceChangeInTickerBar,
       useMinusEight: this.useMinusEight,
     }
 
@@ -216,9 +214,6 @@ export class ConfigManager {
 
   get openFirstPlot() {
     return this.FindBoolean(TpConfigNamesEnum.openFirstPlot)
-  }
-  get showPriceChangeInTickerBar() {
-    return this.FindBoolean(TpConfigNamesEnum.showPriceChangeInTickerBar)
   }
 
   get useMinusEight() {
@@ -308,7 +303,6 @@ export class ConfigManager {
   //   ideaCryptoTabSelected: { id: 0, name: 'crypto' },
   //   ideaTabSelected: { id: 0, name: 'most-active' },
   //   openFirstPlot: true,
-  //   showPriceChangeInTickerBar: false,
   //   tickerInfo: {
   //     selectedTab: 'asset',
   //     selectedPeopleTab: '',

@@ -10,7 +10,6 @@ export interface IUserInfo {
   lastDashboardAccessed: string
   lastName: string
   quoteEndpoint: string
-  tickers: string[]
   tokenExpireTime: number
 }
 
@@ -23,7 +22,6 @@ export class UserInfo implements IUserInfo {
   lastDashboardAccessed = ''
   lastName = ''
   quoteEndpoint = ''
-  tickers = []
   tokenExpireTime = 0
 
   constructor(obj?: IUserInfo) {
