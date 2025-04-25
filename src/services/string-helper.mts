@@ -264,5 +264,5 @@ export function stringIf(
   strTrue: string | null | undefined,
   strFalse?: string | null
 ) {
-  return ifTrue ? strTrue : safestr(strFalse)
+  return ifTrue ? safestr(strTrue) : safestr(strFalse)
 }
