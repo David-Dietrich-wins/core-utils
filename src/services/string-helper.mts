@@ -174,7 +174,7 @@ export function plusMinus(num: number) {
  * @returns The prefix if the string is not empty.
  */
 
-export function prefixIfHasData(s: string, prefix = ', ') {
+export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
   return hasData(s) ? safestr(prefix) : ''
 }
 /**
@@ -257,4 +257,12 @@ export function stringWrapParen(str: string) {
 export function stringWrapSingleQuote(str: string) {
   // eslint-disable-next-line quotes
   return stringWrap("'", str, "'")
+}
+
+export function stringIf(
+  ifTrue: boolean | null | undefined,
+  strTrue: string | null | undefined,
+  strFalse?: string | null
+) {
+  return ifTrue ? strTrue : safestr(strFalse)
 }

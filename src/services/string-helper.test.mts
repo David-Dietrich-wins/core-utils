@@ -5,10 +5,16 @@ import {
   capitalizeWords,
   getCommaUpperList,
   isEmptyString,
+  pluralize,
+  pluralSuffix,
+  plusMinus,
+  prefixIfHasData,
   safestr,
+  safestrLowercase,
   safestrToJson,
   stringEquals,
   stringEqualsQuoted,
+  stringIf,
   stringWrapDoubleQuote,
   stringWrapParen,
   stringWrapSingleQuote,
@@ -152,4 +158,68 @@ test('safestrToJson', () => {
   expect(console.log).toHaveBeenCalledTimes(1)
   expect(safestrToJson('{a:1', 'functionName:')).toBeUndefined()
   expect(console.log).toHaveBeenCalledTimes(2)
+})
+
+test('stringIf', () => {
+  const stringIfTrue = 'string if true'
+  const stringIfFalse = 'string if false'
+
+  expect(stringIf(true, stringIfTrue)).toBe(stringIfTrue)
+  expect(stringIf(false, stringIfTrue)).toBe('')
+  expect(stringIf(false, stringIfFalse)).toBe('')
+  expect(stringIf(true, stringIfTrue, stringIfFalse)).toBe(stringIfTrue)
+  expect(stringIf(false, stringIfTrue, stringIfFalse)).toBe(stringIfFalse)
+})
+
+test('safestrLowercase', () => {
+  expect(safestrLowercase('AAAA')).toBe('aaaa')
+  expect(safestrLowercase('')).toBe('')
+  expect(safestrLowercase(null)).toBe('')
+  expect(safestrLowercase(undefined)).toBe('')
+  expect(safestrLowercase('123')).toBe('123')
+  expect(safestrLowercase('hello world')).toBe('hello world')
+  expect(safestrLowercase('Hello World')).toBe('hello world')
+  expect(safestrLowercase('hello World')).toBe('hello world')
+})
+
+test('pluralize', () => {
+  expect(pluralize(1)).toBe('')
+  expect(pluralize(2)).toBe('s')
+  expect(pluralize(0)).toBe('s')
+  expect(pluralize(-1)).toBe('s')
+  expect(pluralize(1, 'item', 'items')).toBe('item')
+  expect(pluralize(2, 'item', 'items')).toBe('items')
+  expect(pluralize(0, 'item', 'items')).toBe('items')
+  expect(pluralize(-1, 'item', 'items')).toBe('items')
+})
+
+test('pluralSuffix', () => {
+  expect(pluralSuffix(1)).toBe('')
+  expect(pluralSuffix(2)).toBe('s')
+  expect(pluralSuffix(0)).toBe('s')
+  expect(pluralSuffix(-1)).toBe('s')
+  expect(pluralSuffix(1, 'item')).toBe('')
+  expect(pluralSuffix(2, 'items')).toBe('items')
+  expect(pluralSuffix(0, 'items')).toBe('items')
+  expect(pluralSuffix(-1, 'items')).toBe('items')
+})
+
+test('plusMinus', () => {
+  expect(plusMinus(0)).toBe('')
+  expect(plusMinus(1)).toBe('+')
+  expect(plusMinus(-1)).toBe('-')
+})
+
+test('prefixIfHasData', () => {
+  const prefix = 'prefix'
+  const str = 'string'
+  const emptyStr = ''
+  const nullStr = null
+  const undefinedStr = undefined
+
+  expect(prefixIfHasData(str, prefix)).toBe(prefix)
+  expect(prefixIfHasData(' ', prefix)).toBe(prefix)
+  expect(prefixIfHasData(emptyStr, prefix)).toBe('')
+  expect(prefixIfHasData(nullStr, prefix)).toBe('')
+  expect(prefixIfHasData(undefinedStr, prefix)).toBe('')
 })
