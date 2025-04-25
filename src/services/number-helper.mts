@@ -1,10 +1,25 @@
+import { AppException } from '../models/AppException.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, isNullOrUndefined } from './general.mjs'
+import { isObject, runOnAllMembers } from './object-helper.mjs'
 import { isString } from './string-helper.mjs'
-import { isObject } from './object-helper.mjs'
-import { isArray } from './array-helper.mjs'
-import { runOnAllMembers } from './object-helper.mjs'
-import { safeArray } from './array-helper.mjs'
-import { capitalizeFirstLetter } from './string-helper.mjs'
+
+export type NumberFormattingBreakpoints = {
+  value: number | bigint | string
+  minDecimalPlaces?: number
+  maxDecimalPlaces?: number
+  showZeroValues?: boolean
+  prefix?: string
+  suffix?: string
+  formatFunction?: FormatFunction
+}
+export type NumberFormattingOptions = Omit<
+  NumberFormattingBreakpoints,
+  'value'
+> & {
+  breakPoints?: NumberFormattingBreakpoints[]
+  differentForNegative?: boolean
+}
 
 /**
  * Individually adds all same member names who are number together.
@@ -65,7 +80,7 @@ export function setMaxDecimalPlaces(
     throw new Error('Invalid number of decimal places.')
   }
 
-  const formatter = (num: number) => {
+  const formatter = (num: number): string => {
     return Math.round((num * 100) / 100).toFixed(maxDecimalPlaces)
   }
 
@@ -75,7 +90,12 @@ export function setMaxDecimalPlaces(
 
   if (isString(obj)) {
     if (isNumeric(obj)) {
-      return formatter(parseFloat(obj)).toString()
+      return formatter(parseFloat(obj))
+    } else {
+      throw new AppException(
+        'Invalid number format. Expected a number or numeric string.',
+        'NumberFormatterError'
+      )
     }
   }
 
@@ -109,7 +129,9 @@ export function toFixedPrefixed(
   toFixedLength = 2,
   prefix = '$'
 ) {
-  return prefix + getNumberString(val, showZeroValues, toFixedLength)
+  const s = getNumberString(val, showZeroValues, toFixedLength)
+
+  return !showZeroValues && !hasData(s) ? '' : prefix + s
 }
 
 export function toFixedSuffixed(
@@ -119,19 +141,12 @@ export function toFixedSuffixed(
   suffix = '%'
 ) {
   const s = getNumberString(val, showZeroValues, toFixedLength)
-  if (!showZeroValues && !hasData(s)) {
-    return s
-  }
 
-  return s + suffix
-}
-
-export function FirstCharCapitalFormatter(s: string) {
-  return capitalizeFirstLetter(s)
+  return !showZeroValues && !hasData(s) ? '' : s + suffix
 }
 
 export function formattedNumber(
-  val?: number | string,
+  val?: number | bigint | string,
   showZeroValues = true,
   toFixedLength = 2,
   prefix = '',
@@ -153,14 +168,14 @@ export function formattedNumber(
 }
 
 export function NumberFormatter(
-  val?: number | string,
+  val?: number | bigint | string,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
   return formattedNumber(val, showZeroValues, numDecimalPlaces)
 }
 export function NumberFormatterNoDecimal(
-  val?: number | string,
+  val?: number | bigint | string,
   showZeroValues = true
 ) {
   return formattedNumber(val, showZeroValues, 0)
@@ -221,7 +236,7 @@ export function PercentTimes100Formatter(
 }
 
 export function StockVolumeFormatter(
-  volume?: number | string,
+  volume?: number | string | null,
   showZeroValues = false,
   numDecimalPlaces = 0
 ) {
@@ -357,7 +372,7 @@ export function getStockPriceInDollars(price: number, maxDecimalPlaces = 4) {
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
 
-export function getAsNumber(stringOrNumber?: string | number | null) {
+export function getAsNumber(stringOrNumber?: string | number | bigint | null) {
   return getNumberFormatted(stringOrNumber)
 }
 /**
@@ -370,7 +385,7 @@ export function getAsNumber(stringOrNumber?: string | number | null) {
  */
 
 export function getAsNumberOrUndefined(
-  stringOrNumber?: string | number | null,
+  stringOrNumber?: string | number | bigint | null,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
 ) {
@@ -507,7 +522,7 @@ export function isNumber(
   return bret
 }
 
-export function isNumeric(value?: string | number): boolean {
+export function isNumeric(value?: string | number | bigint): boolean {
   return (
     !isNullOrUndefined(value) &&
     value !== '' &&

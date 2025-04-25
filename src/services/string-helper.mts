@@ -266,3 +266,6 @@ export function stringIf(
 ) {
   return ifTrue ? safestr(strTrue) : safestr(strFalse)
 }
+export function FirstCharCapitalFormatter(s: string) {
+  return capitalizeFirstLetter(s)
+}
