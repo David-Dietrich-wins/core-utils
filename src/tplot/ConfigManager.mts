@@ -61,7 +61,7 @@ export type ConfigTickerInfo<
 export enum TpConfigNamesEnum {
   charts = 'charts',
   dashboards = 'dashboards',
-  headerTickerBarUser = 'headerTickerBarUser',
+  headerTickerBars = 'headerTickerBars',
   hideTooltips = 'hideTooltips',
   ideaTabSelected = 'ideaTabSelected',
   ideaCryptoTabSelected = 'ideaCryptoTabSelected',
@@ -73,7 +73,7 @@ export enum TpConfigNamesEnum {
 export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.charts]: IChartsConfig
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
-  [TpConfigNamesEnum.headerTickerBarUser]: ITickerBarsConfig
+  [TpConfigNamesEnum.headerTickerBars]: ITickerBarsConfig
   [TpConfigNamesEnum.hideTooltips]: boolean
   [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
@@ -141,7 +141,7 @@ export class ConfigManager {
       ],
     },
 
-    [TpConfigNamesEnum.headerTickerBarUser]: {
+    [TpConfigNamesEnum.headerTickerBars]: {
       id: newGuid(),
       asset: { id: newGuid(), tickers: ['AAPL'] },
       crypto: { id: newGuid(), tickers: ['BTCUSD', 'ETHUSD'] },
@@ -162,7 +162,7 @@ export class ConfigManager {
     const config: TpUserInfoConfigs = {
       charts: this.charts,
       dashboards: this.dashboards,
-      headerTickerBarUser: this.headerTickerBarUser,
+      headerTickerBars: this.headerTickerBars,
       hideTooltips: this.hideTooltips,
       ideaTabSelected: this.ideaTabSelected,
       ideaCryptoTabSelected: this.ideaCryptoTabSelected,
@@ -192,9 +192,9 @@ export class ConfigManager {
     return clone
   }
 
-  get headerTickerBarUser() {
+  get headerTickerBars() {
     return this.FindConfig<ITickerBarsConfig>(
-      TpConfigNamesEnum.headerTickerBarUser
+      TpConfigNamesEnum.headerTickerBars
     )
   }
 
@@ -298,7 +298,7 @@ export class ConfigManager {
   //     ],
   //   },
   //   headerTickerBarIndex: { showAsset: true, showCrypto: true },
-  //   headerTickerBarUser: { tickers: ['AAPL'] },
+  //   headerTickerBars: { tickers: ['AAPL'] },
   //   hideTickerBar: false,
   //   hideTooltips: false,
   //   ideaCryptoTabSelected: { id: 0, name: 'crypto' },
