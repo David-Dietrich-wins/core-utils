@@ -32,6 +32,7 @@ export type ConfigTickerInfoTabSettings = {
 }
 
 export interface IContextTickers extends IContext {
+  backgroundColor?: IContextUI
   scrollSpeed?: number
   showPercentChange?: boolean
   showPriceChange?: boolean
