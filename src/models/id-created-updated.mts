@@ -2,10 +2,16 @@ import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from './interfaces.mjs'
 
-export interface IIdCreated<Tid = string> extends IId<Tid>, ICreatedBy {}
-export interface IIdCreatedUpdated<Tid = string>
-  extends IIdCreated<Tid>,
-    IUpdatedBy {}
+export interface IIdCreated<
+  Tid = string,
+  Tcreated extends Date | string | number = Date
+> extends IId<Tid>,
+    ICreatedBy<Tcreated> {}
+export interface IIdCreatedUpdated<
+  Tid = string,
+  Tcreated extends Date | string | number = Date
+> extends IIdCreated<Tid, Tcreated>,
+    IUpdatedBy<Tcreated> {}
 
 export class IdCreated<Tid = string> implements IIdCreated<Tid> {
   id?: Tid

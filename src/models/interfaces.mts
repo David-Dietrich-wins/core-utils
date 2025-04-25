@@ -3,22 +3,28 @@ import { ArrayOrSingle, SortOrder } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IId } from './IdManager.mjs'
 
-export interface ICreatedBy {
+export interface ICreatedBy<T extends Date | string | number = Date> {
   createdby: string
-  created: Date
+  created: T
 }
-export interface IUpdatedBy {
+export interface IUpdated<T extends Date | string | number = Date> {
+  updated: T
+}
+export interface IUpdatedBy<T extends Date | string | number = Date>
+  extends IUpdated<T> {
   updatedby: string
-  updated: Date
 }
 
-export interface ICreatedOnBy {
+export interface ICreatedOnBy<T extends Date | string | number = Date> {
   createdby: string
-  createdon: Date
+  createdon: T
 }
-export interface IUpdatedOnBy {
+export interface IUpdatedOn<T extends Date | string | number = Date> {
+  updatedon?: T
+}
+export interface IUpdatedOnBy<T extends Date | string | number = Date>
+  extends IUpdatedOn<T> {
   updatedby?: string
-  updatedon?: Date
 }
 
 export interface IDate<T = string> {

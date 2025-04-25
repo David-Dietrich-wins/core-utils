@@ -90,6 +90,7 @@ export class ConfigManager {
   static readonly defaults: Readonly<TpUserInfoAllConfigs> = {
     [TpConfigNamesEnum.charts]: {
       id: newGuid(),
+      updated: Date.now(),
       down: { color: '#FF0000' },
       up: { color: '#00FF00' },
     },
@@ -143,8 +144,13 @@ export class ConfigManager {
 
     [TpConfigNamesEnum.headerTickerBars]: {
       id: newGuid(),
-      asset: { id: newGuid(), tickers: ['AAPL'] },
-      crypto: { id: newGuid(), tickers: ['BTCUSD', 'ETHUSD'] },
+      updated: Date.now(),
+      asset: { id: newGuid(), updated: Date.now(), tickers: ['AAPL'] },
+      crypto: {
+        id: newGuid(),
+        updated: Date.now(),
+        tickers: ['BTCUSD', 'ETHUSD'],
+      },
     },
     [TpConfigNamesEnum.hideTooltips]: false,
     [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
