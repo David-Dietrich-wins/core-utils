@@ -9,7 +9,7 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { IdName } from '../models/id-name.mjs'
 import { newGuid } from '../services/general.mjs'
-import { IContext } from '../services/ContextManager.mjs'
+import { IContext, IContextUI } from '../services/ContextManager.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
 export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
@@ -34,10 +34,14 @@ export interface IContextTickers extends IContext {
   tickers: string[]
 }
 
-export interface ITickerBarsConfig {
-  context: IContext
+export interface ITickerBarsConfig extends IContext {
   asset: IContextTickers
   crypto: IContextTickers
+}
+
+export interface IChartsConfig extends IContext {
+  down: IContextUI
+  up: IContextUI
 }
 
 export function CreateConfigTickerInfoTabSettings(
@@ -55,8 +59,7 @@ export type ConfigTickerInfo<
 > = IKeyValueShort<ConfigTickerInfoTabSettings, U>
 
 export enum TpConfigNamesEnum {
-  chartColorDown = 'chartColorDown',
-  chartColorUp = 'chartColorUp',
+  charts = 'charts',
   dashboards = 'dashboards',
   headerTickerBarUser = 'headerTickerBarUser',
   hideTooltips = 'hideTooltips',
@@ -68,8 +71,7 @@ export enum TpConfigNamesEnum {
 }
 
 export type TpUserInfoConfigs = {
-  [TpConfigNamesEnum.chartColorDown]: string
-  [TpConfigNamesEnum.chartColorUp]: string
+  [TpConfigNamesEnum.charts]: IChartsConfig
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
   [TpConfigNamesEnum.headerTickerBarUser]: ITickerBarsConfig
   [TpConfigNamesEnum.hideTooltips]: boolean
@@ -86,8 +88,11 @@ export class ConfigManager {
   constructor(public configs: IConfigShort[]) {}
 
   static readonly defaults: Readonly<TpUserInfoAllConfigs> = {
-    [TpConfigNamesEnum.chartColorDown]: '#FF0000',
-    [TpConfigNamesEnum.chartColorUp]: '#00FF00',
+    [TpConfigNamesEnum.charts]: {
+      id: newGuid(),
+      down: { color: '#FF0000' },
+      up: { color: '#00FF00' },
+    },
     [TpConfigNamesEnum.dashboards]: {
       screens: [
         {
@@ -137,7 +142,7 @@ export class ConfigManager {
     },
 
     [TpConfigNamesEnum.headerTickerBarUser]: {
-      context: { id: newGuid() },
+      id: newGuid(),
       asset: { id: newGuid(), tickers: ['AAPL'] },
       crypto: { id: newGuid(), tickers: ['BTCUSD', 'ETHUSD'] },
     },
@@ -155,8 +160,7 @@ export class ConfigManager {
 
   get allTpUserInfoConfigs() {
     const config: TpUserInfoConfigs = {
-      chartColorUp: this.chartColorUp,
-      chartColorDown: this.chartColorDown,
+      charts: this.charts,
       dashboards: this.dashboards,
       headerTickerBarUser: this.headerTickerBarUser,
       hideTooltips: this.hideTooltips,
@@ -168,11 +172,8 @@ export class ConfigManager {
 
     return config
   }
-  get chartColorDown() {
-    return this.FindString(TpConfigNamesEnum.chartColorDown)
-  }
-  get chartColorUp() {
-    return this.FindString(TpConfigNamesEnum.chartColorUp)
+  get charts() {
+    return this.FindConfig<IChartsConfig>(TpConfigNamesEnum.charts)
   }
 
   get dashboards() {
