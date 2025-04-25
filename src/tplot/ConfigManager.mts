@@ -9,7 +9,11 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 import { IdName } from '../models/id-name.mjs'
 import { newGuid } from '../services/general.mjs'
-import { IContext, IContextUI } from '../services/ContextManager.mjs'
+import {
+  IContext,
+  IContextUI,
+  IContextValue,
+} from '../services/ContextManager.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
 export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
@@ -34,12 +38,12 @@ export interface IContextTickers extends IContext {
   tickers: string[]
 }
 
-export interface ITickerBarsConfig extends IContext {
+export interface IConfigTickerBars extends IContext {
   asset: IContextTickers
   crypto: IContextTickers
 }
 
-export interface IChartsConfig extends IContext {
+export interface IConfigCharts extends IContext {
   down: IContextUI
   up: IContextUI
 }
@@ -53,6 +57,15 @@ export function CreateConfigTickerInfoTabSettings(
   )
 }
 
+export interface IConfigOperations extends IContext {
+  useMinusEight: IContextValue<boolean>
+}
+
+export interface IConfigWebsite extends IContext {
+  openFirstPlot: IContextValue<boolean>
+  hideTooltips: IContextValue<boolean>
+}
+
 export type ConfigTickerInfo<
   Tticker extends string,
   U = `tickerInfo-${Tticker}`
@@ -62,23 +75,21 @@ export enum TpConfigNamesEnum {
   charts = 'charts',
   dashboards = 'dashboards',
   headerTickerBars = 'headerTickerBars',
-  hideTooltips = 'hideTooltips',
   ideaTabSelected = 'ideaTabSelected',
   ideaCryptoTabSelected = 'ideaCryptoTabSelected',
-  openFirstPlot = 'openFirstPlot',
-  useMinusEight = 'useMinusEight',
+  website = 'website',
+  operations = 'operations',
   tickerInfo = 'tickerInfo',
 }
 
 export type TpUserInfoConfigs = {
-  [TpConfigNamesEnum.charts]: IChartsConfig
+  [TpConfigNamesEnum.charts]: IConfigCharts
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
-  [TpConfigNamesEnum.headerTickerBars]: ITickerBarsConfig
-  [TpConfigNamesEnum.hideTooltips]: boolean
+  [TpConfigNamesEnum.headerTickerBars]: IConfigTickerBars
   [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
-  [TpConfigNamesEnum.openFirstPlot]: boolean
-  [TpConfigNamesEnum.useMinusEight]: boolean
+  [TpConfigNamesEnum.operations]: IConfigOperations
+  [TpConfigNamesEnum.website]: IConfigWebsite
 }
 export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
   [TpConfigNamesEnum.tickerInfo]: ConfigTickerInfoTabSettings
@@ -152,11 +163,19 @@ export class ConfigManager {
         tickers: ['BTCUSD', 'ETHUSD'],
       },
     },
-    [TpConfigNamesEnum.hideTooltips]: false,
     [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
     [TpConfigNamesEnum.ideaCryptoTabSelected]: { id: 0, name: 'crypto' },
-    [TpConfigNamesEnum.openFirstPlot]: true,
-    [TpConfigNamesEnum.useMinusEight]: true,
+    [TpConfigNamesEnum.operations]: {
+      id: newGuid(),
+      updated: Date.now(),
+      useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
+    },
+    [TpConfigNamesEnum.website]: {
+      id: newGuid(),
+      updated: Date.now(),
+      openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
+      hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
+    },
     [TpConfigNamesEnum.tickerInfo]: {
       selectedTab: 'asset',
       selectedPeopleTab: '',
@@ -169,17 +188,16 @@ export class ConfigManager {
       charts: this.charts,
       dashboards: this.dashboards,
       headerTickerBars: this.headerTickerBars,
-      hideTooltips: this.hideTooltips,
       ideaTabSelected: this.ideaTabSelected,
       ideaCryptoTabSelected: this.ideaCryptoTabSelected,
-      openFirstPlot: this.openFirstPlot,
-      useMinusEight: this.useMinusEight,
+      operations: this.operations,
+      website: this.website,
     }
 
     return config
   }
   get charts() {
-    return this.FindConfig<IChartsConfig>(TpConfigNamesEnum.charts)
+    return this.FindConfig<IConfigCharts>(TpConfigNamesEnum.charts)
   }
 
   get dashboards() {
@@ -199,13 +217,9 @@ export class ConfigManager {
   }
 
   get headerTickerBars() {
-    return this.FindConfig<ITickerBarsConfig>(
+    return this.FindConfig<IConfigTickerBars>(
       TpConfigNamesEnum.headerTickerBars
     )
-  }
-
-  get hideTooltips() {
-    return this.FindBoolean(TpConfigNamesEnum.hideTooltips)
   }
 
   get ideaTabSelected() {
@@ -219,12 +233,12 @@ export class ConfigManager {
     )
   }
 
-  get openFirstPlot() {
-    return this.FindBoolean(TpConfigNamesEnum.openFirstPlot)
+  get operations() {
+    return this.FindConfig<IConfigOperations>(TpConfigNamesEnum.operations)
   }
 
-  get useMinusEight() {
-    return this.FindBoolean(TpConfigNamesEnum.useMinusEight)
+  get website() {
+    return this.FindConfig<IConfigWebsite>(TpConfigNamesEnum.website)
   }
 
   /**
