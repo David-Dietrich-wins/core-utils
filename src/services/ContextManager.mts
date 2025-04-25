@@ -1,5 +1,5 @@
 import { IdManager, IIdRequired } from '../models/IdManager.mjs'
-import { IUpdated } from '../models/interfaces.mjs'
+import { IUpdated, IValue } from '../models/interfaces.mjs'
 import { newGuid } from './general.mjs'
 
 export type IconConfiguration = {
@@ -27,6 +27,8 @@ export interface IContext extends IIdRequired<string>, IUpdated<number> {
   ui?: IContextUI
   [key: string]: unknown
 }
+
+export interface IContextValue<T> extends IContext, IValue<T> {}
 
 export class ContextManager
   extends IdManager<IContext>
