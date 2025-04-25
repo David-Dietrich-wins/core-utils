@@ -95,12 +95,12 @@ export class TradePlot implements ITradePlot {
     this.ticker = obj.ticker
     this.description = obj.description
     if (!isNullOrUndefined(obj.goal)) {
-      this.goal = getNumberFormatted(obj.goal, 2, 2)
+      this.goal = getNumberFormatted(obj.goal, true, 2, 2)
     }
     this.isShort = obj.isShort
 
     if (!isNullOrUndefined(obj.purchase)) {
-      this.purchase = getNumberFormatted(obj.purchase, 2, 2)
+      this.purchase = getNumberFormatted(obj.purchase, true, 2, 2)
     }
 
     this.shares = obj.shares

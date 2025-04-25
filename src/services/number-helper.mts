@@ -105,18 +105,25 @@ export type FormatFunction = (val: unknown) => string
 
 export function toFixedPrefixed(
   val: number | string,
+  showZeroValues = true,
   toFixedLength = 2,
   prefix = '$'
 ) {
-  return prefix + getNumberString(val, toFixedLength)
+  return prefix + getNumberString(val, showZeroValues, toFixedLength)
 }
 
 export function toFixedSuffixed(
   val: number | string,
+  showZeroValues = true,
   toFixedLength = 2,
   suffix = '%'
 ) {
-  return getNumberString(val, toFixedLength) + suffix
+  const s = getNumberString(val, showZeroValues, toFixedLength)
+  if (!showZeroValues && !hasData(s)) {
+    return s
+  }
+
+  return s + suffix
 }
 
 export function FirstCharCapitalFormatter(s: string) {
@@ -125,6 +132,7 @@ export function FirstCharCapitalFormatter(s: string) {
 
 export function formattedNumber(
   val?: number | string,
+  showZeroValues = true,
   toFixedLength = 2,
   prefix = '',
   suffix = ''
@@ -136,7 +144,7 @@ export function formattedNumber(
   const num = isString(val) ? parseFloat(val) : val
 
   if (num) {
-    const str = getNumberString(num, toFixedLength)
+    const str = getNumberString(num, showZeroValues, toFixedLength)
 
     return `${prefix}${str}${suffix}`
   }
@@ -144,22 +152,34 @@ export function formattedNumber(
   return ''
 }
 
-export function NumberFormatter(val?: number | string, numDecimalPlaces = 2) {
-  return formattedNumber(val, numDecimalPlaces)
+export function NumberFormatter(
+  val?: number | string,
+  showZeroValues = true,
+  numDecimalPlaces = 2
+) {
+  return formattedNumber(val, showZeroValues, numDecimalPlaces)
 }
-export function NumberFormatterNoDecimal(val?: number | string) {
-  return formattedNumber(val, 0)
+export function NumberFormatterNoDecimal(
+  val?: number | string,
+  showZeroValues = true
+) {
+  return formattedNumber(val, showZeroValues, 0)
 }
 
-export function XFormatter(val: number | string, numDecimalPlaces = 2) {
-  return toFixedSuffixed(val, numDecimalPlaces, 'x')
+export function XFormatter(
+  val: number | string,
+  showZeroValues = true,
+  numDecimalPlaces = 2
+) {
+  return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, 'x')
 }
 
 export function DollarFormatter(
   val: number | string = 0,
+  showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return toFixedPrefixed(val, numDecimalPlaces)
+  return toFixedPrefixed(val, showZeroValues, numDecimalPlaces)
 }
 
 export function StockPriceFormatter(
@@ -170,6 +190,7 @@ export function StockPriceFormatter(
   if (price || showZeroValues) {
     return toFixedPrefixed(
       price ?? 0,
+      showZeroValues,
       isNullOrUndefined(numDecimalPlaces)
         ? Math.abs(getAsNumber(price)) < 1
           ? 4
@@ -179,15 +200,24 @@ export function StockPriceFormatter(
   }
 }
 
-export function PercentFormatter(val: number | string, numDecimalPlaces = 2) {
-  return toFixedSuffixed(val, numDecimalPlaces, '%')
+export function PercentFormatter(
+  val: number | string,
+  showZeroValues = false,
+  numDecimalPlaces = 2
+) {
+  return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, '%')
 }
 
 export function PercentTimes100Formatter(
   val: number | string,
+  showZeroValues = false,
   numDecimalPlaces = 2
 ) {
-  return PercentFormatter(getAsNumber(val) * 100, numDecimalPlaces)
+  return PercentFormatter(
+    getAsNumber(val) * 100,
+    showZeroValues,
+    numDecimalPlaces
+  )
 }
 
 export function StockVolumeFormatter(
@@ -198,6 +228,7 @@ export function StockVolumeFormatter(
   if (volume || showZeroValues) {
     const num = NumberFormatter(
       isNullOrUndefined(volume) ? 0 : volume,
+      showZeroValues,
       numDecimalPlaces ?? 0
     )
     if (num || showZeroValues) {
@@ -346,6 +377,7 @@ export function getAsNumberOrUndefined(
   if (hasData(stringOrNumber)) {
     return getNumberFormatted(
       stringOrNumber,
+      true,
       maxDecimalPlaces,
       minDecimalPlaces
     )
@@ -381,6 +413,7 @@ export function getMantissa(num: number) {
 export function getNumberFormatted(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   num?: any | null,
+  showZeroValues = true,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
 ) {
@@ -398,7 +431,12 @@ export function getNumberFormatted(
     (!isNullOrUndefined(maxDecimalPlaces) ||
       !isNullOrUndefined(minDecimalPlaces))
   ) {
-    const mystr = getNumberString(num, maxDecimalPlaces, minDecimalPlaces)
+    const mystr = getNumberString(
+      num,
+      showZeroValues,
+      maxDecimalPlaces,
+      minDecimalPlaces
+    )
     return parseFloat(mystr.replace(/,/g, ''))
   }
 
@@ -415,6 +453,7 @@ export function getNumberFormatted(
 export function getNumberString(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   num: any,
+  showZeroValues = true,
   maxDecimalPlaces?: number,
   minDecimalPlaces?: number
 ) {
@@ -424,6 +463,10 @@ export function getNumberString(
     if (isString(newnum, 1)) {
       num = +newnum
     }
+  }
+
+  if (!showZeroValues && num === 0) {
+    return ''
   }
 
   maxDecimalPlaces = maxDecimalPlaces || 0

@@ -169,22 +169,22 @@ test('getNumberString', () => {
   expect(getNumberString(0)).toBe('0')
   expect(getNumberString('1,249')).toBe('1,249')
 
-  expect(getNumberString('1,249', 2)).toBe('1,249.00')
-  expect(getNumberString('1,249.999', 2)).toBe('1,250.00')
-  expect(getNumberString('1,249.9', 2)).toBe('1,249.90')
+  expect(getNumberString('1,249', true, 2)).toBe('1,249.00')
+  expect(getNumberString('1,249.999', true, 2)).toBe('1,250.00')
+  expect(getNumberString('1,249.9', true, 2)).toBe('1,249.90')
 
-  expect(getNumberString('38,459,238,231,249.999', 2)).toBe(
+  expect(getNumberString('38,459,238,231,249.999', true, 2)).toBe(
     '38,459,238,231,250.00'
   )
 })
 test('getNumberFormatted', () => {
   expect(getNumberFormatted(0)).toBe(0)
 
-  expect(getNumberFormatted('1,249', 2)).toBe(1249)
-  expect(getNumberFormatted('1,249.999', 2)).toBe(1250)
-  expect(getNumberFormatted('1,249.9', 2)).toBe(1249.9)
-  expect(getNumberFormatted(1249.9, 2)).toBe(1249.9)
-  expect(getNumberFormatted(undefined, 2)).toBe(0)
+  expect(getNumberFormatted('1,249', true, 2)).toBe(1249)
+  expect(getNumberFormatted('1,249.999', true, 2)).toBe(1250)
+  expect(getNumberFormatted('1,249.9', true, 2)).toBe(1249.9)
+  expect(getNumberFormatted(1249.9, true, 2)).toBe(1249.9)
+  expect(getNumberFormatted(undefined, true, 2)).toBe(0)
 })
 test('getMantissa', () => {
   expect(getMantissa(0)).toBe(0)
