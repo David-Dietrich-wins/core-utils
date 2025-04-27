@@ -1,4 +1,6 @@
+import { isArray } from '../index.mjs'
 import { ICompany } from '../politagree/company.mjs'
+import { getBoolean } from '../services/general.mjs'
 import { ConfigManager, TpUserInfoConfigs } from './ConfigManager.mjs'
 
 export interface IUserInfo {
@@ -28,5 +30,21 @@ export class UserInfo implements IUserInfo {
     if (obj) {
       Object.assign(this, obj)
     }
+  }
+
+  get isHeaderTickerBarsDisabled() {
+    return getBoolean(this.config.headerTickerBars.disabled)
+  }
+  get isHeaderTickerBarsAssetsDisabled() {
+    return (
+      getBoolean(this.config.headerTickerBars.asset.disabled) ||
+      !isArray(this.config.headerTickerBars.asset.tickers, 1)
+    )
+  }
+  get isHeaderTickerBarsCryptosDisabled() {
+    return (
+      getBoolean(this.config.headerTickerBars.crypto.disabled) ||
+      !isArray(this.config.headerTickerBars.crypto.tickers, 1)
+    )
   }
 }
