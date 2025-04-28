@@ -35,6 +35,16 @@ export class UserInfo implements IUserInfo {
   get isHeaderTickerBarsDisabled() {
     return getBoolean(this.config.headerTickerBars.disabled)
   }
+
+  /** Checks if all of the conditions are met to disable the Ticker Bars */
+  get shouldHeaderTickerBarsBeDisabled() {
+    return (
+      this.isHeaderTickerBarsDisabled ||
+      (this.isHeaderTickerBarsCryptosDisabled &&
+        this.isHeaderTickerBarsAssetsDisabled)
+    )
+  }
+
   get isHeaderTickerBarsAssetsDisabled() {
     return (
       getBoolean(this.config.headerTickerBars.asset.disabled) ||

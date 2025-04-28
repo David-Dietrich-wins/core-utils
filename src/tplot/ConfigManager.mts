@@ -1,21 +1,21 @@
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
-import { UserConfig, IUserConfig } from '../models/UserConfig.mjs'
-import { IKeyValueShort } from '../models/key-val.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
-import { isArray } from '../services/array-helper.mjs'
-import { DefaultWithOverrides } from '../services/object-helper.mjs'
-import { IDashboardSetting } from './DashboardSetting.mjs'
-import { TileType } from './TileConfig.mjs'
-import { IdName } from '../models/id-name.mjs'
 import { newGuid } from '../services/general.mjs'
 import {
   IContext,
   IContextUI,
   IContextValue,
 } from '../services/ContextManager.mjs'
+import { IdName } from '../models/id-name.mjs'
+import { IKeyValueShort } from '../models/key-val.mjs'
+import {
+  deepCloneJson,
+  DefaultWithOverrides,
+} from '../services/object-helper.mjs'
+import { IDashboardSetting } from './DashboardSetting.mjs'
+import { TileType } from './TileConfig.mjs'
 
-export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac' | 'wsb'
+export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac'
 export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
 export type IdeasTabNames =
   | 'top-gainers'
@@ -46,6 +46,7 @@ export interface IConfigTickerBars extends IContext {
 
 export interface IConfigCharts extends IContext {
   down: IContextUI
+  neutral: IContextUI
   up: IContextUI
 }
 
@@ -87,8 +88,8 @@ export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.charts]: IConfigCharts
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
   [TpConfigNamesEnum.headerTickerBars]: IConfigTickerBars
-  [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
+  [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
   [TpConfigNamesEnum.operations]: IConfigOperations
   [TpConfigNamesEnum.website]: IConfigWebsite
 }
@@ -99,14 +100,15 @@ export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
 export class ConfigManager {
   constructor(public configs: IConfigShort[]) {}
 
-  static readonly defaults: Readonly<TpUserInfoAllConfigs> = {
-    [TpConfigNamesEnum.charts]: {
+  static get defaults(): Readonly<TpUserInfoAllConfigs> {
+    const cfgCharts: IConfigCharts = {
       id: newGuid(),
       updated: Date.now(),
       down: { color: '#FF0000' },
+      neutral: { color: '#000000' },
       up: { color: '#00FF00' },
-    },
-    [TpConfigNamesEnum.dashboards]: {
+    }
+    const cfgDashboards: IDashboardSetting = {
       screens: [
         {
           id: 'default',
@@ -152,9 +154,8 @@ export class ConfigManager {
         //   }
         // ],
       ],
-    },
-
-    [TpConfigNamesEnum.headerTickerBars]: {
+    }
+    const cfgHeaderTickerBars: IConfigTickerBars = {
       id: newGuid(),
       updated: Date.now(),
       asset: { id: newGuid(), updated: Date.now(), tickers: ['AAPL'] },
@@ -163,26 +164,46 @@ export class ConfigManager {
         updated: Date.now(),
         tickers: ['BTCUSD', 'ETHUSD'],
       },
-    },
-    [TpConfigNamesEnum.ideaTabSelected]: { id: 0, name: 'most-active' },
-    [TpConfigNamesEnum.ideaCryptoTabSelected]: { id: 0, name: 'crypto' },
-    [TpConfigNamesEnum.operations]: {
+    }
+    const cfgOperations: IConfigOperations = {
       id: newGuid(),
       updated: Date.now(),
       useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
-    },
-    [TpConfigNamesEnum.website]: {
+    }
+    const cfgWebsite: IConfigWebsite = {
       id: newGuid(),
       updated: Date.now(),
       openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
       hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
-    },
-    [TpConfigNamesEnum.tickerInfo]: {
+    }
+    const cfgIdeaTabSelected: IdName<number, IdeasTabNames> = {
+      id: 0,
+      name: 'most-active',
+    }
+    const cfgIdeaCryptoTabSelected: IdName<number, CryptoIdeasTabNames> = {
+      id: 0,
+      name: 'crypto',
+    }
+    const cfgTickerInfo: ConfigTickerInfoTabSettings = {
       selectedTab: 'asset',
       selectedPeopleTab: '',
       // selectedRatioTab: 'ratio',
-    },
-  } as const
+    }
+
+    const items: Readonly<TpUserInfoAllConfigs> = {
+      [TpConfigNamesEnum.charts]: cfgCharts,
+      [TpConfigNamesEnum.dashboards]: cfgDashboards,
+
+      [TpConfigNamesEnum.headerTickerBars]: cfgHeaderTickerBars,
+      [TpConfigNamesEnum.ideaTabSelected]: cfgIdeaTabSelected,
+      [TpConfigNamesEnum.ideaCryptoTabSelected]: cfgIdeaCryptoTabSelected,
+      [TpConfigNamesEnum.operations]: cfgOperations,
+      [TpConfigNamesEnum.website]: cfgWebsite,
+      [TpConfigNamesEnum.tickerInfo]: cfgTickerInfo,
+    }
+
+    return items
+  }
 
   get allTpUserInfoConfigs() {
     const config: TpUserInfoConfigs = {
@@ -254,7 +275,7 @@ export class ConfigManager {
       return found.v as T
     }
 
-    return ConfigManager.defaults[typeof name] as T
+    return ConfigManager.defaults[name] as T
   }
 
   FindBoolean(name: TpConfigNamesEnum) {
@@ -266,148 +287,5 @@ export class ConfigManager {
 
   findScreen(screenName: string) {
     return this.dashboards.screens.find((screen) => screen.name === screenName)
-  }
-
-  // static readonly defaultConfigs: TpUserInfoAllConfigs = {
-  //   chartColorDown: '#ff0000',
-  //   chartColorUp: '#00ff00',
-  //   dashboards: {
-  //     screens: [
-  //       {
-  //         id: 'default',
-  //         name: 'default',
-  //         tiles: [
-  //           {
-  //             id: 'initial-tile-left',
-  //             cols: 1,
-  //             name: 'Trade Plotter',
-  //             rows: 2,
-  //             color: 'white',
-  //             index: 0,
-  //             value: TileType.empty,
-  //             typeid: 6,
-  //           },
-  //           {
-  //             id: 'initial-tile-right',
-  //             cols: 1,
-  //             name: 'Trade Plotter',
-  //             rows: 2,
-  //             color: 'white',
-  //             index: 0,
-  //             value: TileType.empty,
-  //             typeid: 7,
-  //           },
-  //         ],
-  //       },
-  //       // Example for a chart and a plotlist.
-  //       // [
-  //       //   {
-  //       //     id: 'AAPL',
-  //       //     index: 0,
-  //       //     typeid: 3,
-  //       //     cols: 1,
-  //       //     rows: 2
-  //       //   },
-  //       //   {
-  //       //     id: 'Trade Plotter',
-  //       //     index: 2,
-  //       //     typeid: 1,
-  //       //     cols: 2,
-  //       //     rows: 2
-  //       //   }
-  //       // ],
-  //     ],
-  //   },
-  //   headerTickerBarIndex: { showAsset: true, showCrypto: true },
-  //   headerTickerBars: { tickers: ['AAPL'] },
-  //   hideTickerBar: false,
-  //   hideTooltips: false,
-  //   ideaCryptoTabSelected: { id: 0, name: 'crypto' },
-  //   ideaTabSelected: { id: 0, name: 'most-active' },
-  //   openFirstPlot: true,
-  //   tickerInfo: {
-  //     selectedTab: 'asset',
-  //     selectedPeopleTab: '',
-  //     // selectedRatioTab: 'ratio',
-  //   },
-  //   useMinusEight: true,
-  // }
-
-  static userInfoConfigNames = Object.keys(ConfigManager.defaults).filter(
-    (x) => 'TickerInfo' != x
-  ) as TpConfigNamesEnum[]
-
-  static getDefaultValue(name: TpConfigNamesEnum) {
-    return ConfigManager.defaults[typeof name]
-  }
-
-  static getDefaultConfig(
-    configName: TpConfigNamesEnum,
-    userid: string,
-    updatedby?: string,
-    updated?: Date,
-    createdby?: string,
-    created?: Date
-  ) {
-    return ConfigManager.getNewConfig(
-      userid,
-      configName,
-      updatedby,
-      updated,
-      createdby,
-      created
-    )
-  }
-
-  static getNewConfig(
-    userid: string,
-    name: TpConfigNamesEnum,
-    updatedby?: string,
-    updated?: Date,
-    createdby?: string,
-    created?: Date
-  ) {
-    const defval = ConfigManager.getDefaultValue(name)
-
-    return new UserConfig<typeof defval>(
-      userid,
-      name,
-      defval,
-      updatedby,
-      updated,
-      createdby,
-      created
-    )
-  }
-
-  static FindMissing(userid: string, dataPage: IUserConfig<unknown>[]) {
-    const arrMissingConfigs: IUserConfig[] = []
-    const arrUpdateConfigs: IUserConfig[] = []
-
-    // Setup for the first time the default config settings.
-    for (const configName of ConfigManager.userInfoConfigNames) {
-      const found = dataPage.find((dbConfig) => configName === dbConfig.k)
-      if (!found) {
-        const cfg = ConfigManager.getNewConfig(userid, configName)
-        arrUpdateConfigs.push(cfg)
-      } else if (
-        TpConfigNamesEnum.dashboards === found.k &&
-        !isArray((found as IUserConfig<IDashboardSetting>).v.screens, 1) &&
-        !isArray(
-          (found as IUserConfig<IDashboardSetting>).v.screens[0].tiles,
-          1
-        )
-      ) {
-        // Not a valid dashboard config saved.
-        // Overwrite what's in the db with the default.
-        const cfg = ConfigManager.getNewConfig(
-          userid,
-          TpConfigNamesEnum.dashboards
-        )
-        arrMissingConfigs.push(cfg)
-      }
-    }
-
-    return [arrMissingConfigs, arrUpdateConfigs] as const
   }
 }
