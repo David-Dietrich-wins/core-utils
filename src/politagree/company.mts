@@ -42,4 +42,28 @@ export class Company extends IdCreatedUpdated implements ICompany {
       Object.assign(this, obj)
     }
   }
+
+  static CreateICompany(overrides?: Partial<ICompany>): ICompany {
+    const company: ICompany = {
+      name: '',
+      status: 0,
+      imageuri: '',
+      imageurihref: '',
+      description: '',
+      phone: '',
+      email: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      created: new Date(),
+      createdby: '',
+      updated: new Date(),
+      updatedby: '',
+      ...overrides,
+    }
+
+    return company
+  }
 }
