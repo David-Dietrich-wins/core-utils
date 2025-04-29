@@ -4,10 +4,9 @@ import {
   getAsNumber,
   getAsNumberOrUndefined,
   getMantissa,
-  getNumberFormatted,
-  getNumberString,
   isNumber,
   isNumeric,
+  NumberHelper,
   setMaxDecimalPlaces,
 } from './number-helper.mjs'
 
@@ -106,7 +105,7 @@ describe('maxDecimalPlaces', () => {
 describe('Number formatting', () => {
   test('String from a number with commas added', () => {
     const num = 123456789
-    const str = getNumberString(num)
+    const str = NumberHelper.NumberToString(num)
 
     expect(str).toBe('123,456,789')
   })
@@ -166,25 +165,25 @@ test('isNumber', () => {
   expect(isNumber(1002, 1001, 999)).toBe(false)
 })
 test('getNumberString', () => {
-  expect(getNumberString(0)).toBe('0')
-  expect(getNumberString('1,249')).toBe('1,249')
+  expect(NumberHelper.NumberToString(0)).toBe('0')
+  expect(NumberHelper.NumberToString('1,249')).toBe('1,249')
 
-  expect(getNumberString('1,249', true, 2)).toBe('1,249.00')
-  expect(getNumberString('1,249.999', true, 2)).toBe('1,250.00')
-  expect(getNumberString('1,249.9', true, 2)).toBe('1,249.90')
+  expect(NumberHelper.NumberToString('1,249', true, 2)).toBe('1,249.00')
+  expect(NumberHelper.NumberToString('1,249.999', true, 2)).toBe('1,250.00')
+  expect(NumberHelper.NumberToString('1,249.9', true, 2)).toBe('1,249.90')
 
-  expect(getNumberString('38,459,238,231,249.999', true, 2)).toBe(
+  expect(NumberHelper.NumberToString('38,459,238,231,249.999', true, 2)).toBe(
     '38,459,238,231,250.00'
   )
 })
 test('getNumberFormatted', () => {
-  expect(getNumberFormatted(0)).toBe(0)
+  expect(NumberHelper.getNumberFormatted(0)).toBe(0)
 
-  expect(getNumberFormatted('1,249', true, 2)).toBe(1249)
-  expect(getNumberFormatted('1,249.999', true, 2)).toBe(1250)
-  expect(getNumberFormatted('1,249.9', true, 2)).toBe(1249.9)
-  expect(getNumberFormatted(1249.9, true, 2)).toBe(1249.9)
-  expect(getNumberFormatted(undefined, true, 2)).toBe(0)
+  expect(NumberHelper.getNumberFormatted('1,249', true, 2)).toBe(1249)
+  expect(NumberHelper.getNumberFormatted('1,249.999', true, 2)).toBe(1250)
+  expect(NumberHelper.getNumberFormatted('1,249.9', true, 2)).toBe(1249.9)
+  expect(NumberHelper.getNumberFormatted(1249.9, true, 2)).toBe(1249.9)
+  expect(NumberHelper.getNumberFormatted(undefined, true, 2)).toBe(0)
 })
 test('getMantissa', () => {
   expect(getMantissa(0)).toBe(0)

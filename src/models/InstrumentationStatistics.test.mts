@@ -1,5 +1,5 @@
 import { timeDifferenceStringFromMillis } from '../services/DateHelper.mjs'
-import { getNumberString } from '../services/number-helper.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 const CONST_DefaultSecondsMs = new RegExp('^(\\d+ seconds?|\\d+m?s)$')
@@ -556,7 +556,9 @@ describe('processedTimesArray', () => {
     expect(stats.processingTimeInSeconds).toBe(
       Math.round((+(stats.finishTime ?? 0) - +stats.startTime) / 1000)
     )
-    expect(totalRecordsProcessed).toBe('' + getNumberString(totalProcessed))
+    expect(totalRecordsProcessed).toBe(
+      '' + NumberHelper.NumberToString(totalProcessed)
+    )
     expect(totalAvgRecordsPerSecond).toBe(avgRecordsPerSecond.toFixed(1))
     expect(totalAvgProcessingTimeString).toBe(
       timeDifferenceStringFromMillis(secondsToAdvance * 1000, true, true)

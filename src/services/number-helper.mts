@@ -129,7 +129,7 @@ export function toFixedPrefixed(
   toFixedLength = 2,
   prefix = '$'
 ) {
-  const s = getNumberString(val, showZeroValues, toFixedLength)
+  const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
 
   return !showZeroValues && !hasData(s) ? '' : prefix + s
 }
@@ -140,7 +140,7 @@ export function toFixedSuffixed(
   toFixedLength = 2,
   suffix = '%'
 ) {
-  const s = getNumberString(val, showZeroValues, toFixedLength)
+  const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
 
   return !showZeroValues && !hasData(s) ? '' : s + suffix
 }
@@ -159,7 +159,7 @@ export function formattedNumber(
   const num = isString(val) ? parseFloat(val) : val
 
   if (num) {
-    const str = getNumberString(num, showZeroValues, toFixedLength)
+    const str = NumberHelper.NumberToString(num, showZeroValues, toFixedLength)
 
     return `${prefix}${str}${suffix}`
   }
@@ -285,7 +285,7 @@ export function elementTopLeftCoords(element: any): {
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
 export function getAsNumber(stringOrNumber?: string | number | bigint | null) {
-  return getNumberFormatted(stringOrNumber)
+  return NumberHelper.getNumberFormatted(stringOrNumber)
 }
 /**
  * Returns a number from a string. A number is allowed too in case you don't know if the value is a number already.
@@ -302,7 +302,7 @@ export function getAsNumberOrUndefined(
   minDecimalPlaces?: number
 ) {
   if (hasData(stringOrNumber)) {
-    return getNumberFormatted(
+    return NumberHelper.getNumberFormatted(
       stringOrNumber,
       true,
       maxDecimalPlaces,
@@ -329,81 +329,7 @@ export function getMantissa(num: number) {
 
   return 0
 }
-/**
- * Gets a formatted number based on a specified number of decimal places.
- * @param num A number or string representing a number.
- * @param maxDecimalPlaces The maximum number of decimal places to show.
- * @param minDecimalPlaces The minimum number of required decimal places to show.
- * @returns A number with the given decimal places. Or 0 if num was null or undefined.
- */
 
-export function getNumberFormatted(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  num?: any | null,
-  showZeroValues = true,
-  maxDecimalPlaces?: number,
-  minDecimalPlaces?: number
-) {
-  if (isString(num, 1)) {
-    const newnum = num.replace(/,/g, '')
-
-    if (isString(newnum, 1)) {
-      num = +newnum
-    }
-  }
-
-  if (
-    !isNullOrUndefined(num) &&
-    isNumber(num) &&
-    (!isNullOrUndefined(maxDecimalPlaces) ||
-      !isNullOrUndefined(minDecimalPlaces))
-  ) {
-    const mystr = getNumberString(
-      num,
-      showZeroValues,
-      maxDecimalPlaces,
-      minDecimalPlaces
-    )
-    return parseFloat(mystr.replace(/,/g, ''))
-  }
-
-  return isNumber(num) ? num : 0
-}
-/**
- * Gets a formatted number based on a specified number of decimal places.
- * @param num A number or string representing a number.
- * @param maxDecimalPlaces The maximum number of decimal places to show.
- * @param minDecimalPlaces The minimum number of required decimal places to show.
- * @returns A string of the passed in num with the given decimal places.
- */
-
-export function getNumberString(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  num: any,
-  showZeroValues = true,
-  maxDecimalPlaces?: number,
-  minDecimalPlaces?: number
-) {
-  if (isString(num, 1)) {
-    const newnum = num.replace(/,/g, '')
-
-    if (isString(newnum, 1)) {
-      num = +newnum
-    }
-  }
-
-  if (!showZeroValues && num === 0) {
-    return ''
-  }
-
-  maxDecimalPlaces = maxDecimalPlaces || 0
-  minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
-
-  return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: maxDecimalPlaces,
-    minimumFractionDigits: minDecimalPlaces,
-  }).format(num)
-}
 /**
  * Tests an object to determine if it is a number.
  * Additionally, will test if the number is greater than or equal to a minimum value and/or less than or equal to a maximum value.
@@ -446,6 +372,81 @@ export function isNumeric(value?: string | number | bigint): boolean {
 //   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
 export class NumberHelper {
+  /**
+   * Gets a formatted number based on a specified number of decimal places.
+   * @param num A number or string representing a number.
+   * @param maxDecimalPlaces The maximum number of decimal places to show.
+   * @param minDecimalPlaces The minimum number of required decimal places to show.
+   * @returns A number with the given decimal places. Or 0 if num was null or undefined.
+   */
+  static getNumberFormatted(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    num?: any | null,
+    showZeroValues = true,
+    maxDecimalPlaces?: number,
+    minDecimalPlaces?: number
+  ) {
+    if (isString(num, 1)) {
+      const newnum = num.replace(/,/g, '')
+
+      if (isString(newnum, 1)) {
+        num = +newnum
+      }
+    }
+
+    if (
+      !isNullOrUndefined(num) &&
+      isNumber(num) &&
+      (!isNullOrUndefined(maxDecimalPlaces) ||
+        !isNullOrUndefined(minDecimalPlaces))
+    ) {
+      const mystr = NumberHelper.NumberToString(
+        num,
+        showZeroValues,
+        maxDecimalPlaces,
+        minDecimalPlaces
+      )
+      return parseFloat(mystr.replace(/,/g, ''))
+    }
+
+    return isNumber(num) ? num : 0
+  }
+
+  /**
+   * Gets a formatted number based on a specified number of decimal places.
+   * @param num A number or string representing a number.
+   * @param maxDecimalPlaces The maximum number of decimal places to show.
+   * @param minDecimalPlaces The minimum number of required decimal places to show.
+   * @returns A string of the passed in num with the given decimal places.
+   */
+  static NumberToString(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    num: any,
+    showZeroValues = true,
+    maxDecimalPlaces?: number,
+    minDecimalPlaces?: number
+  ) {
+    if (isString(num, 1)) {
+      const newnum = num.replace(/,/g, '')
+
+      if (isString(newnum, 1)) {
+        num = +newnum
+      }
+    }
+
+    if (!showZeroValues && num === 0) {
+      return ''
+    }
+
+    maxDecimalPlaces = maxDecimalPlaces || 0
+    minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
+
+    return new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: maxDecimalPlaces,
+      minimumFractionDigits: minDecimalPlaces,
+    }).format(num)
+  }
+
   /**
    * Returns a number used for stock prices.
    * This includes a minimum of 2 decimal places (if there is a mantissa).

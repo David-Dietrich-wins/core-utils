@@ -14,7 +14,7 @@ import {
 import { isString } from '../services/string-helper.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { isArray } from '../services/array-helper.mjs'
-import { getNumberString } from '../services/number-helper.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
 import {
   ArrayOrSingle,
   StringOrStringArray,
@@ -210,7 +210,7 @@ export class InstrumentationStatistics {
     showSkipped = false,
     recordsName = ''
   ) {
-    let msg = `${getNumberString(this.totalProcessed)} ${safestr(
+    let msg = `${NumberHelper.NumberToString(this.totalProcessed)} ${safestr(
       recordsName
     )}${pluralize(
       this.totalProcessed,
@@ -224,19 +224,19 @@ export class InstrumentationStatistics {
       if (this.successes || showSuccessFailIf0) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Success: ${getNumberString(this.successes)}`
+        )}Success: ${NumberHelper.NumberToString(this.successes)}`
       }
 
       if (this.failures || showSuccessFailIf0) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Fail: ${getNumberString(this.failures)}`
+        )}Fail: ${NumberHelper.NumberToString(this.failures)}`
       }
 
       if (showSkipped && this.skipped) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Skipped: ${getNumberString(this.skipped)}`
+        )}Skipped: ${NumberHelper.NumberToString(this.skipped)}`
       }
 
       if (successFailMsg) {
@@ -297,45 +297,57 @@ export class InstrumentationStatistics {
   }
 
   messageString(isOneLine?: boolean) {
-    let s = `Processed ${getNumberString(
+    let s = `Processed ${NumberHelper.NumberToString(
       this.totalProcessed
     )} item${pluralSuffix(this.totalProcessed)} in ${this.processingTimeString(
       true
     )}${isOneLine ? '' : '.'}`
     if (this.add) {
-      s += `${this.lineSeparator(isOneLine)}Added: ${getNumberString(
-        this.add
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Added: ${NumberHelper.NumberToString(this.add)}${isOneLine ? '' : '.'}`
     }
     if (this.update) {
-      s += `${this.lineSeparator(isOneLine)}Updated: ${getNumberString(
-        this.update
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Updated: ${NumberHelper.NumberToString(this.update)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.upsert) {
-      s += `${this.lineSeparator(isOneLine)}Upserted: ${getNumberString(
-        this.upsert
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Upserted: ${NumberHelper.NumberToString(this.upsert)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.delete) {
-      s += `${this.lineSeparator(isOneLine)}Deleted: ${getNumberString(
-        this.delete
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Deleted: ${NumberHelper.NumberToString(this.delete)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.skipped) {
-      s += `${this.lineSeparator(isOneLine)}Skipped: ${getNumberString(
-        this.skipped
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Skipped: ${NumberHelper.NumberToString(this.skipped)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.successes) {
-      s += `${this.lineSeparator(isOneLine)}Successes: ${getNumberString(
-        this.successes
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Successes: ${NumberHelper.NumberToString(this.successes)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.failures) {
-      s += `${this.lineSeparator(isOneLine)}Failures: ${getNumberString(
-        this.failures
-      )}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(
+        isOneLine
+      )}Failures: ${NumberHelper.NumberToString(this.failures)}${
+        isOneLine ? '' : '.'
+      }`
     }
 
     if (isOneLine) {
@@ -361,7 +373,7 @@ export class InstrumentationStatistics {
       : 1
 
     return [
-      getNumberString(this.totalProcessed),
+      NumberHelper.NumberToString(this.totalProcessed),
       recordsPerSecond.toFixed(1),
       timeDifferenceStringFromMillis(this.processingTime, true),
     ]

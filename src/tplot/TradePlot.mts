@@ -14,7 +14,6 @@ import {
   newGuid,
 } from '../services/general.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import { getNumberFormatted } from '../services/number-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
@@ -95,12 +94,12 @@ export class TradePlot implements ITradePlot {
     this.ticker = obj.ticker
     this.description = obj.description
     if (!isNullOrUndefined(obj.goal)) {
-      this.goal = getNumberFormatted(obj.goal, true, 2, 2)
+      this.goal = NumberHelper.getNumberFormatted(obj.goal, true, 2, 2)
     }
     this.isShort = obj.isShort
 
     if (!isNullOrUndefined(obj.purchase)) {
-      this.purchase = getNumberFormatted(obj.purchase, true, 2, 2)
+      this.purchase = NumberHelper.getNumberFormatted(obj.purchase, true, 2, 2)
     }
 
     this.shares = obj.shares
