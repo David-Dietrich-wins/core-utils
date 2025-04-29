@@ -1,6 +1,4 @@
 import {
-  addNumbers,
-  divideByNumbers,
   getAsNumber,
   getAsNumberOrUndefined,
   getMantissa,
@@ -13,11 +11,18 @@ import {
 test('addNumbers', () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' }
 
-  const objRet = addNumbers(io, { a: 3, b: 4, c: '5', d: '6', e: 'c', f: 'd' })
+  const objRet = NumberHelper.AddNumbers(io, {
+    a: 3,
+    b: 4,
+    c: '5',
+    d: '6',
+    e: 'c',
+    f: 'd',
+  })
   expect(objRet).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: 'b' })
 
   const io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } }
-  const objret2 = addNumbers(io2, {
+  const objret2 = NumberHelper.AddNumbers(io2, {
     a: 3,
     b: 4,
     c: '5',
@@ -28,7 +33,7 @@ test('addNumbers', () => {
   expect(objret2).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
 
   const io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } }
-  const objret3 = addNumbers(io3, {
+  const objret3 = NumberHelper.AddNumbers(io3, {
     a: [3],
     b: 4,
     c: '5',
@@ -39,7 +44,7 @@ test('addNumbers', () => {
   expect(objret3).toEqual({ a: [2], b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
 
   const io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } }
-  const objret4 = addNumbers(io4, {
+  const objret4 = NumberHelper.AddNumbers(io4, {
     a: [3],
     b: 4,
     c: [9],
@@ -54,7 +59,7 @@ test('addNumbers', () => {
 test('divideByNumbers', () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' }
 
-  const objRet = divideByNumbers(io, 2)
+  const objRet = NumberHelper.DivideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })

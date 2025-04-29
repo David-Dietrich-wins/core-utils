@@ -21,55 +21,6 @@ export type NumberFormattingOptions = Omit<
   differentForNegative?: boolean
 }
 
-/**
- * Individually adds all same member names who are number together.
- * Returns a new object with every number member added together.
- * @param objLeft Adds all number members to the right.
- * @param objRight Adds all number members to the right.
- */
-export function addNumbers<T extends object>(objLeft: T, objRight: T) {
-  return runOnAllMembers(
-    objLeft,
-    (key, val) => {
-      const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const robjval: any = (objRight as any)[key]
-      const rval = isNumber(robjval)
-        ? robjval
-        : isString(robjval)
-        ? parseFloat(robjval)
-        : NaN
-
-      if (isNaN(lval)) {
-        return isNaN(rval) ? val : rval
-      }
-
-      return isNaN(rval) ? lval : lval + rval
-    },
-    false
-  )
-}
-
-/**
- * Takes an object and divides every member by divideBy.
- * @param obj Object to divide all members.
- * @param divideBy The number to divide all members by.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function divideByNumbers<T extends object = any>(
-  obj: T,
-  divideBy: number
-) {
-  return runOnAllMembers(obj, (_, val) => {
-    let newval = val
-    if (isString(val)) {
-      newval = parseFloat(val)
-    }
-
-    return isNumber(newval) && !isNaN(newval) ? newval / divideBy : val
-  })
-}
-
 export function setMaxDecimalPlaces(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any,
@@ -578,5 +529,51 @@ export class NumberHelper {
     }
 
     return isNullOrUndefined(up) ? 0 : up ? 1 : -1
+  }
+
+  /**
+   * Individually adds all same member names who are number together.
+   * Returns a new object with every number member added together.
+   * @param objLeft Adds all number members to the right.
+   * @param objRight Adds all number members to the right.
+   */
+  static AddNumbers<T extends object>(objLeft: T, objRight: T) {
+    return runOnAllMembers(
+      objLeft,
+      (key, val) => {
+        const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const robjval: any = (objRight as any)[key]
+        const rval = isNumber(robjval)
+          ? robjval
+          : isString(robjval)
+          ? parseFloat(robjval)
+          : NaN
+
+        if (isNaN(lval)) {
+          return isNaN(rval) ? val : rval
+        }
+
+        return isNaN(rval) ? lval : lval + rval
+      },
+      false
+    )
+  }
+
+  /**
+   * Takes an object and divides every member by divideBy.
+   * @param obj Object to divide all members.
+   * @param divideBy The number to divide all members by.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static DivideByNumbers<T extends object = any>(obj: T, divideBy: number) {
+    return runOnAllMembers(obj, (_, val) => {
+      let newval = val
+      if (isString(val)) {
+        newval = parseFloat(val)
+      }
+
+      return isNumber(newval) && !isNaN(newval) ? newval / divideBy : val
+    })
   }
 }
