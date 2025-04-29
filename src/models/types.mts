@@ -28,25 +28,7 @@ export type ApiProps = {
   logFilename?: string
 }
 
-export type CreateImmutable<Type> = {
-  +readonly [Property in keyof Type]: Type[Property]
-}
-
-export type CreateMutable<Type> = {
-  -readonly [Property in keyof Type]: Type[Property]
-}
-
 export type ArrayOrSingle<T> = T | T[]
-
-export type StringFunction = () => string
-
-export type StringOrStringArray = ArrayOrSingle<string>
-
-// Function App and/or Express request header types.
-export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
-
-//export type NotDate<T> = T extends Date ? never : T extends object ? T : never
-// export type TisIId<T extends object> = T extends IId ? T : never
 
 export type ConvertToType<
   T,
@@ -65,6 +47,27 @@ export type ConvertToType<
       : ConvertToType<T[Tprop], R, TChildAdd>
     : R
 }
+
+export type CreateImmutable<Type> = {
+  +readonly [Property in keyof Type]: Type[Property]
+}
+
+export type CreateMutable<Type> = {
+  -readonly [Property in keyof Type]: Type[Property]
+}
+
+export type DialogReturn<T = unknown> = {
+  ok: boolean
+  data: T
+}
+
+export type FromTo<T = number> = {
+  from?: T
+  to?: T
+}
+
+//export type NotDate<T> = T extends Date ? never : T extends object ? T : never
+// export type TisIId<T extends object> = T extends IId ? T : never
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics
@@ -97,11 +100,6 @@ export type NonFunctionKeyNames<T extends object> = Exclude<
   { [K in keyof T]: T[K] extends Function ? never : K }[keyof T],
   undefined
 >
-
-export type FromTo<T = number> = {
-  from?: T
-  to?: T
-}
 
 export type OmitUserId<T extends { userid?: unknown }> = Omit<T, 'userid'>
 
@@ -141,5 +139,12 @@ export function SortOrderAsNumeric(order?: SortOrder | null) {
 export function SortOrderAsString(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
+
+export type StringFunction = () => string
+
+export type StringOrStringArray = ArrayOrSingle<string>
+
+// Function App and/or Express request header types.
+export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
 
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
