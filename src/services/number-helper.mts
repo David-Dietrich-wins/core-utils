@@ -415,8 +415,8 @@ export function getNumberString(
 
 export function isNumber(
   obj: unknown,
-  minValue: number | null = null,
-  maxValue: number | null = null
+  minValue: number | null | undefined = null,
+  maxValue: number | null | undefined = null
 ): obj is number {
   if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
     return false
