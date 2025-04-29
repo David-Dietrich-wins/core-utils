@@ -65,6 +65,7 @@ export interface IConfigOperations extends IContext {
 
 export interface IConfigWebsite extends IContext {
   openFirstPlot: IContextValue<boolean>
+  hideHelp: IContextValue<boolean>
   hideTooltips: IContextValue<boolean>
 }
 
@@ -173,8 +174,9 @@ export class ConfigManager {
     const cfgWebsite: IConfigWebsite = {
       id: newGuid(),
       updated: Date.now(),
-      openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
+      hideHelp: { id: newGuid(), updated: Date.now(), value: false },
       hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
+      openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
     }
     const cfgIdeaTabSelected: IdName<number, IdeasTabNames> = {
       id: 0,
