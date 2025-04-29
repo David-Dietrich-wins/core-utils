@@ -279,104 +279,11 @@ export function elementTopLeftCoords(element: any): {
 }
 
 /**
- * Returns a number used for stock prices.
- * This includes a minimum of 2 decimal places (if there is a mantissa).
- * Will go 4 digits max on the mantissa.
- * @param price The price or number to get a formatted stock price for.
- * @return The formatted stock price.
- */
-export function getStockPrice(price: number, maxDecimalPlaces?: number) {
-  const defaultReturn = '0'
-
-  // const priceret = ''
-
-  if (!isNaN(price)) {
-    // if (price < 0) {
-    //   console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
-    // }
-
-    maxDecimalPlaces = maxDecimalPlaces ?? 4
-    const priceOriginal = +price
-
-    return new Intl.NumberFormat('en', {
-      maximumFractionDigits: maxDecimalPlaces,
-      minimumFractionDigits: maxDecimalPlaces > 1 ? 2 : maxDecimalPlaces,
-    }).format(priceOriginal)
-    // // Make sure we have something.
-    // const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
-    // // if (price < 0) {
-    // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
-    // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-    // // }
-    // if (priceOriginalStr && priceOriginalStr.length) {
-    //   // split to get the mantissa.
-    //   let pricearr = priceOriginalStr.split('.');
-    //   // if (price < 0) {
-    //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-    //   // }
-    //   if (isArray(pricearr, 1)) {
-    //     // if (price < 0) {
-    //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-    //     // }
-    //     let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
-    //     let mantissalen = mantissa.length;
-
-    //     // Lop off any unneeded 0s.
-    //     if (mantissalen) {
-    //       // if (price < 0 && price > -1) {
-    //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-    //       // }
-    //       let lastchar = mantissa.charAt(mantissa.length - 1);
-    //       while ('0' === lastchar && mantissalen > 2) {
-    //         mantissa = mantissa.slice(0, -1);
-    //         mantissalen = mantissa.length;
-    //       }
-
-    //       if (hasData(mantissa) && mantissalen) {
-    //         // if (price < 0 && price > -1) {
-    //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
-    //         // }
-    //         priceret = priceOriginal.toFixed(mantissalen);
-    //       }
-    //     }
-
-    //     if (!priceret && hasData(pricearr[0])) {
-    //       priceret = priceOriginalStr;
-    //     }
-    //   }
-    // }
-  }
-
-  // if (priceret) {
-  //   // priceret = numberWithCommas(priceret);
-  //   // Lop off the .00 for now.
-  //   if (priceret.length > 3 && '.00' === priceret.substr(-3)) {
-  //     return priceret.substr(0, priceret.length - 3)
-  //   }
-
-  //   return priceret
-  // }
-
-  return defaultReturn
-}
-
-export function getStockPriceInDollars(
-  price: number,
-  showDollarSign = true,
-  maxDecimalPlaces = 4
-) {
-  const dollar =
-    stringIf(showDollarSign, '$') + getStockPrice(price, maxDecimalPlaces)
-
-  return dollar.replace('$-', '-$')
-}
-/**
  * Returns a number from a string. A number is allowed too in case you don't know if the value is a number already.
  * If a null or undefined value is passed in, 0 is returned.
  * @param stringOrNumber The string or number to return as a number.
  * @returns The number representation of the stringOrNumber. If it is a number, just returns the number.
  */
-
 export function getAsNumber(stringOrNumber?: string | number | bigint | null) {
   return getNumberFormatted(stringOrNumber)
 }
@@ -539,6 +446,100 @@ export function isNumeric(value?: string | number | bigint): boolean {
 //   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
 export class NumberHelper {
+  /**
+   * Returns a number used for stock prices.
+   * This includes a minimum of 2 decimal places (if there is a mantissa).
+   * Will go 4 digits max on the mantissa.
+   * @param price The price or number to get a formatted stock price for.
+   * @return The formatted stock price.
+   */
+  static NumberWithDecimalPlaces(price: number, maxDecimalPlaces?: number) {
+    const defaultReturn = '0'
+
+    // const priceret = ''
+
+    if (!isNaN(price)) {
+      // if (price < 0) {
+      //   console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
+      // }
+
+      maxDecimalPlaces = maxDecimalPlaces ?? 4
+      const priceOriginal = +price
+
+      return new Intl.NumberFormat('en', {
+        maximumFractionDigits: maxDecimalPlaces,
+        minimumFractionDigits: maxDecimalPlaces > 1 ? 2 : maxDecimalPlaces,
+      }).format(priceOriginal)
+      // // Make sure we have something.
+      // const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
+      // // if (price < 0) {
+      // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
+      // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+      // // }
+      // if (priceOriginalStr && priceOriginalStr.length) {
+      //   // split to get the mantissa.
+      //   let pricearr = priceOriginalStr.split('.');
+      //   // if (price < 0) {
+      //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+      //   // }
+      //   if (isArray(pricearr, 1)) {
+      //     // if (price < 0) {
+      //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+      //     // }
+      //     let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
+      //     let mantissalen = mantissa.length;
+
+      //     // Lop off any unneeded 0s.
+      //     if (mantissalen) {
+      //       // if (price < 0 && price > -1) {
+      //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+      //       // }
+      //       let lastchar = mantissa.charAt(mantissa.length - 1);
+      //       while ('0' === lastchar && mantissalen > 2) {
+      //         mantissa = mantissa.slice(0, -1);
+      //         mantissalen = mantissa.length;
+      //       }
+
+      //       if (hasData(mantissa) && mantissalen) {
+      //         // if (price < 0 && price > -1) {
+      //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
+      //         // }
+      //         priceret = priceOriginal.toFixed(mantissalen);
+      //       }
+      //     }
+
+      //     if (!priceret && hasData(pricearr[0])) {
+      //       priceret = priceOriginalStr;
+      //     }
+      //   }
+      // }
+    }
+
+    // if (priceret) {
+    //   // priceret = numberWithCommas(priceret);
+    //   // Lop off the .00 for now.
+    //   if (priceret.length > 3 && '.00' === priceret.substr(-3)) {
+    //     return priceret.substr(0, priceret.length - 3)
+    //   }
+
+    //   return priceret
+    // }
+
+    return defaultReturn
+  }
+
+  static PriceInDollars(
+    price: number,
+    showDollarSign = true,
+    maxDecimalPlaces = 4
+  ) {
+    const dollar =
+      stringIf(showDollarSign, '$') +
+      NumberHelper.NumberWithDecimalPlaces(price, maxDecimalPlaces)
+
+    return dollar.replace('$-', '-$')
+  }
+
   static UpOrDown(
     currentValue: number,
     priceChange: number | undefined,

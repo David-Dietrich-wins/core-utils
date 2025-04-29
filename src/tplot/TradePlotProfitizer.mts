@@ -8,10 +8,7 @@ import {
 import { safestrLowercase } from '../services/string-helper.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
-import {
-  getStockPrice,
-  getStockPriceInDollars,
-} from '../services/number-helper.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
 import { ITradePlot, TradePlot } from './TradePlot.mjs'
 
@@ -121,9 +118,9 @@ export class TradePlotProfitizer
       } else if (!x.profit) {
         msg = 'Current break even.'
       } else if (x.profit > 0) {
-        msg = `Currently up ${getStockPriceInDollars(x.profit)}!`
+        msg = `Currently up ${NumberHelper.PriceInDollars(x.profit)}!`
       } else {
-        msg = `Currently down ${getStockPriceInDollars(x.profit)}.`
+        msg = `Currently down ${NumberHelper.PriceInDollars(x.profit)}.`
       }
 
       const pl: IPlotMsg = {
@@ -142,7 +139,7 @@ export class TradePlotProfitizer
   }
 
   get currentPriceDisplay() {
-    return getStockPriceInDollars(this.currentPrice ?? 0)
+    return NumberHelper.PriceInDollars(this.currentPrice ?? 0)
   }
 
   /**
@@ -226,7 +223,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountDisplay() {
-    const s = getStockPriceInDollars(this.investmentAmountCurrent)
+    const s = NumberHelper.PriceInDollars(this.investmentAmountCurrent)
     if (!hasData(s)) {
       return '-'
     }
@@ -242,7 +239,7 @@ export class TradePlotProfitizer
       return '$0'
     }
 
-    return getStockPriceInDollars(this.investmentAmountStart)
+    return NumberHelper.PriceInDollars(this.investmentAmountStart)
   }
 
   get profitLoss() {
@@ -250,7 +247,7 @@ export class TradePlotProfitizer
     return this.investmentAmountCurrent - this.investmentAmountStart
   }
   get profitLossText() {
-    return getStockPrice(this.profitLoss) //, this.maxDecimalPlaces)
+    return NumberHelper.NumberWithDecimalPlaces(this.profitLoss) //, this.maxDecimalPlaces)
   }
 
   get subplotCount() {

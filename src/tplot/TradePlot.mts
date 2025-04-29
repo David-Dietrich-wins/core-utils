@@ -16,7 +16,7 @@ import {
 import { isObject } from '../services/object-helper.mjs'
 import { getNumberFormatted } from '../services/number-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
-import { getStockPriceInDollars } from '../services/number-helper.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 
@@ -199,7 +199,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return getStockPriceInDollars(gain, true, maxDecimalPlaces)
+    return NumberHelper.PriceInDollars(gain, true, maxDecimalPlaces)
   }
 
   investmentAmountGainPercent(currentPrice: number) {
@@ -229,7 +229,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return getStockPriceInDollars(this.investmentAmountStart)
+    return NumberHelper.PriceInDollars(this.investmentAmountStart)
   }
 
   get startingInvestment() {
