@@ -533,3 +533,43 @@ export function isNumeric(value?: string | number | bigint): boolean {
 // export function numberWithCommas(x) {
 //   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
+export class NumberHelper {
+  static UpOrDown(
+    currentValue: number,
+    priceChange: number | undefined,
+    isShort = false
+  ) {
+    let up: boolean | undefined = undefined
+
+    if (isNullOrUndefined(priceChange)) {
+      if (isShort) {
+        if (currentValue < 0) {
+          up = true
+        } else if (currentValue > 0) {
+          up = false
+        }
+      } else {
+        if (currentValue < 0) {
+          up = false
+        } else if (currentValue > 0) {
+          up = true
+        }
+      }
+      // } else if (isShort) {
+      //   if (priceChange > 0) {
+      //     cn += 'tp-number-down '
+      //   } else if (priceChange < 0) {
+      //     cn += 'tp-number-up '
+      //   }
+    } else {
+      // priceChange already accounts for isShort
+      if (priceChange < 0) {
+        up = false
+      } else if (priceChange > 0) {
+        up = true
+      }
+    }
+
+    return isNullOrUndefined(up) ? 0 : up ? 1 : -1
+  }
+}
