@@ -540,9 +540,9 @@ export class NumberHelper {
     return dollar.replace('$-', '-$')
   }
 
-  static UpOrDown(
+  static DownUpOrEqual(
     currentValue: number,
-    priceChange: number | undefined,
+    priceChange: number | null | undefined,
     isShort = false
   ) {
     let up: boolean | undefined = undefined

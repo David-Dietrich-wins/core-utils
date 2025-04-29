@@ -15,7 +15,11 @@ export class ColorHelper {
     colorUp?: string,
     colorNeutral = '#000000'
   ) {
-    const upDown = NumberHelper.UpOrDown(currentValue, priceChange, isShort)
+    const upDown = NumberHelper.DownUpOrEqual(
+      currentValue,
+      priceChange,
+      isShort
+    )
 
     return upDown === 1 ? colorUp : upDown === -1 ? colorDown : colorNeutral
   }
