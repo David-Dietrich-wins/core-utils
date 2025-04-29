@@ -199,7 +199,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return getStockPriceInDollars(gain, maxDecimalPlaces)
+    return getStockPriceInDollars(gain, true, maxDecimalPlaces)
   }
 
   investmentAmountGainPercent(currentPrice: number) {

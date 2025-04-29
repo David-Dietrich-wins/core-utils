@@ -2,7 +2,7 @@ import { AppException } from '../models/AppException.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, isNullOrUndefined } from './general.mjs'
 import { isObject, runOnAllMembers } from './object-helper.mjs'
-import { isString } from './string-helper.mjs'
+import { isString, stringIf } from './string-helper.mjs'
 
 export type NumberFormattingBreakpoints = {
   value: number | bigint | string
@@ -360,8 +360,13 @@ export function getStockPrice(price: number, maxDecimalPlaces?: number) {
   return defaultReturn
 }
 
-export function getStockPriceInDollars(price: number, maxDecimalPlaces = 4) {
-  const dollar = '$' + getStockPrice(price, maxDecimalPlaces)
+export function getStockPriceInDollars(
+  price: number,
+  showDollarSign = true,
+  maxDecimalPlaces = 4
+) {
+  const dollar =
+    stringIf(showDollarSign, '$') + getStockPrice(price, maxDecimalPlaces)
 
   return dollar.replace('$-', '-$')
 }
