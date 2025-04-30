@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import {
   IdCreatedUpdated,
   IIdCreatedUpdated,
@@ -65,5 +66,48 @@ export class Company extends IdCreatedUpdated implements ICompany {
     }
 
     return company
+  }
+
+  static get VerificationSchema() {
+    // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
+    // Define Zod schema for form validation
+    const schema = z.object({
+      id: z.string().optional(),
+      name: z.string().min(1, 'Name is required'),
+      status: z.number(),
+      // .min(0, 'Status must be 0 or 1')
+      imageuri: z.string().url('Invalid URL').optional().or(z.literal('')),
+      imageurihref: z.string().url('Invalid URL').optional().or(z.literal('')),
+      description: z.string().optional(),
+      phone: z
+        .string()
+        .min(10, 'Phone number must be at least 10 digits')
+        .max(10)
+        .optional()
+        .or(z.literal('')),
+      email: z
+        .string()
+        .email('Invalid email')
+        .min(1, 'Email is required')
+        .optional()
+        .or(z.literal('')),
+      address1: z.string().optional(),
+      address2: z.string().optional(),
+      city: z.string().optional(),
+      state: z
+        .string()
+        .min(2, 'State is required')
+        .optional()
+        .or(z.literal('')),
+      zip: z
+        .string()
+        .min(5, 'Zip code must be at least 5 characters long')
+        .refine((value) => /^\d+$/.test(value), {
+          message: 'Zip code must contain only numeric characters',
+        })
+        .or(z.literal('')),
+    })
+
+    return schema
   }
 }
