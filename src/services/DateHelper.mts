@@ -343,7 +343,6 @@ export class DateHelper {
  * @returns true if the date is valid. false otherwise.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 export function isDateObject(date: any) {
   return date &&
     Object.prototype.toString.call(date) === '[object Date]' &&

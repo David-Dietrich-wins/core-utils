@@ -1,4 +1,5 @@
 import {
+  AnyObject,
   AnyRecord,
   ArrayOrSingle,
   SortOrder,
@@ -59,19 +60,19 @@ export class SearchRequestView implements ISearchRequestView {
       this.limit = limit
       this.offset = offset
       this.exactMatch = exactMatch
-
-      this.pageIndex = 0
-      this.pageSize = 0
     }
   }
 
   clear() {
+    this.addToQuery = undefined
+    this.searchColumns = undefined
+
     this.term = ''
     this.sortColumn = ''
-    this.searchColumns = undefined
     this.sortDirection = 'asc'
     this.limit = 0
     this.offset = 0
+    this.exactMatch = false
 
     this.pageIndex = 0
     this.pageSize = 0
@@ -97,7 +98,9 @@ export class SearchRequestView implements ISearchRequestView {
         ? safestrLowercase(this.term, false)
         : safestr(this.term)
       : this.term
+
     const searchColumns = safeArray(this.searchColumns)
+
     if (lterm && isArray(searchColumns, 1)) {
       ret = ret.filter((x) => {
         let found = false
@@ -124,8 +127,7 @@ export class SearchRequestView implements ISearchRequestView {
     if (hasData(sortColumn)) {
       const lsortDirection = SortOrderAsBoolean(this.sortDirection)
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ret = ret.sort((a: any, b: any) =>
+      ret = ret.sort((a: AnyObject, b: AnyObject) =>
         sortFunction(a[sortColumn], b[sortColumn], lsortDirection)
       )
     }

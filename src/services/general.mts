@@ -1,12 +1,12 @@
-import { isArray, safeArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import {
   ArrayOrSingle,
   SortOrder,
   SortOrderAsBoolean,
 } from '../models/types.mjs'
-import { isObject } from './object-helper.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { isNumber } from './number-helper.mjs'
+import { isObject } from './object-helper.mjs'
 import { isString, safestr, safestrLowercase } from './string-helper.mjs'
 
 /**
@@ -190,10 +190,8 @@ export function newGuid() {
  * @returns -1, 0 or 1 depending on the sort direction.
  */
 export function sortFunction(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  a: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  b: any,
+  a: unknown,
+  b: unknown,
   sortOrder: SortOrder = true,
   compareStringsLowercase = true
 ) {

@@ -18,9 +18,9 @@ export const enum DigicrewTypes {
 export type DigicrewType<T = string> = IIdNameValueType<T, DigicrewTypes>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyRecord<T = any> = Record<string, T>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyRecord<T = any> = Record<string, T>
 
 export type ApiProps = {
   baseUrl: string
