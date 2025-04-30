@@ -1,5 +1,5 @@
 import { DefaultWithOverrides } from '../services/object-helper.mjs'
-import { ISearchRequestView } from './interfaces.mjs'
+import { ISearchRequestView } from '../services/SearchRequestView.mjs'
 
 export function SearchRequestViewDefault(
   overrides?: Partial<ISearchRequestView> | null

@@ -4,9 +4,9 @@ import { IIdName } from '../models/id-name.mjs'
 import {
   IChartRunLogApiReturn,
   IEventLogin,
-  ISearchRequestView,
   ISlug,
 } from '../models/interfaces.mjs'
+import { ISearchRequestView } from './SearchRequestView.mjs'
 import { INameVal, NameVal } from '../models/NameValManager.mjs'
 import {
   IPagedResponse,

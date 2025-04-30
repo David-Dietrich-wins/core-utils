@@ -1,6 +1,6 @@
-import { isArray } from '../index.mjs'
-import { ICompany } from '../politagree/company.mjs'
+import { isArray } from '../services/array-helper.mjs'
 import { getBoolean } from '../services/general.mjs'
+import { ICompany } from '../politagree/company.mjs'
 import { ConfigManager, TpUserInfoConfigs } from './ConfigManager.mjs'
 
 export interface IUserInfo {

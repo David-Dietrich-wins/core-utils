@@ -1,5 +1,4 @@
 import { IWebState } from './WebState.mjs'
-import { ArrayOrSingle, SortOrder } from './types.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IId } from './IdManager.mjs'
 
@@ -73,18 +72,6 @@ export interface IEventLogin<T = string>
     ICreatedBy {
   ip: string
   logoutTime?: Date
-}
-
-export interface ISearchRequestView {
-  term: string
-  sortColumn: string
-  sortDirection: SortOrder
-  limit: number
-  offset: number
-  exactMatch: boolean
-  pageIndex: number
-  pageSize: number
-  searchColumns?: ArrayOrSingle<string>
 }
 
 export interface IServerState<T = unknown> {
