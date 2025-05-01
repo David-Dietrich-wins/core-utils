@@ -1,6 +1,7 @@
 import { StringOrStringArray } from '../models/types.mjs'
 import { hasData, isFunction } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
+import { isObject } from './object-helper.mjs'
 
 export function capitalizeFirstLetter(str?: string | null) {
   return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''
@@ -68,7 +69,6 @@ export function isString(obj: unknown, minlength = 0): obj is string {
  * @param ifEmpty If the string is empty(including ""), return this value. Defaults to "".
  * @returns A guaranteed string. Returns ifEmpty if the string does not have data, or "" if an ifEmpty value is not provided.
  */
-
 export function safestr(s?: string | null, ifEmpty = '') {
   if (hasData(s) && s) {
     return s
@@ -76,13 +76,13 @@ export function safestr(s?: string | null, ifEmpty = '') {
 
   return hasData(ifEmpty) ? ifEmpty : ''
 }
+
 /**
  * Returns a guaranteed valid string to be lowercase.
  * @param s A string to set to lowercase. If null or undefined, empty string is returned.
  * @param trim Optionally trim the string also.
  * @returns A guaranteed string to be nonnull and lowercase.
  */
-
 export function safestrLowercase(s?: string | null, trim = true) {
   if (trim) {
     s = safestrTrim(s)
@@ -90,13 +90,13 @@ export function safestrLowercase(s?: string | null, trim = true) {
 
   return safestr(s).toLowerCase()
 }
+
 /**
  * Wraps JSON.parse in a try/catch so that exceptions are not bubbled up.
  * @param strjson The string converted to be converted to a JSON object.
  * @param fname The optional function name that is the source of the operation. Used for exception logging.
  * @returns A the JSON.parsed object or undefined if there was an exception.
  */
-
 export function safestrToJson<T>(
   strjson?: string | null,
   fname?: string
@@ -268,4 +268,88 @@ export function stringIf(
 }
 export function FirstCharCapitalFormatter(s: string) {
   return capitalizeFirstLetter(s)
+}
+
+export class StringHelper {
+  static safestr(
+    s?: string | number | boolean | null,
+    ifEmpty?: {
+      ifEmpty?: string
+      prefix?: string
+      suffix?: string
+      trim?: boolean
+      trimStart?: boolean
+      trimEnd?: boolean
+    } | null
+  ) {
+    if (
+      !hasData(s) &&
+      (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
+    ) {
+      return ifEmpty ?? ''
+    }
+
+    if (!hasData(s)) {
+      s = ''
+    }
+
+    s = isString(s) ? s : String(s)
+
+    if (isObject(ifEmpty)) {
+      const {
+        ifEmpty: ifEmptyValue,
+        prefix,
+        suffix,
+        trim,
+        trimStart,
+        trimEnd,
+      } = ifEmpty
+
+      if (ifEmptyValue) {
+        return ifEmptyValue
+      }
+
+      s = s ?? ''
+      if (trim) {
+        s = s.trim()
+      }
+      if (trimStart) {
+        s = s.trimStart()
+      }
+      if (trimEnd) {
+        s = s.trimEnd()
+      }
+
+      s = trim ? (s ?? '').trim() : s ?? ''
+      return (prefix ?? '') + s + (suffix ?? '')
+    }
+
+    return s
+  }
+
+  /**
+   * Returns a string with a prepended prefix if the string has data.
+   * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
+   * @param prefix The prefix to prepend if the string has data.
+   * @returns Empty string if the string is empty, otherwise the prefix is prepended with the string.
+   */
+  static safePrefix(s?: string | number | boolean | null, prefix = ' ') {
+    return StringHelper.safestr(s, {
+      prefix,
+      trim: true,
+    })
+  }
+
+  /**
+   * Returns a string with a suffix if the string has data.
+   * @param s The string to check for data, and if there is data, trim and add the suffix.
+   * @param suffix The suffix to add if the string has data.
+   * @returns Empty string if the string is empty, otherwise the string with the suffix.
+   */
+  static safeSuffix(s?: string | number | boolean | null, suffix = ' ') {
+    return StringHelper.safestr(s, {
+      suffix,
+      trim: true,
+    })
+  }
 }
