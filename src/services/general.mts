@@ -5,6 +5,7 @@ import {
   SortOrderAsBoolean,
 } from '../models/types.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
+import { isDateObject } from './DateHelper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { isString, safestr, safestrLowercase } from './string-helper.mjs'
@@ -132,6 +133,10 @@ export function hasData(o?: any | null, minlength = 1) {
     // Primitives cannot have more than 1 by definition of not being an array or object.
     if (!isObject(o)) {
       return o >= minlength
+    }
+
+    if (isDateObject(o)) {
+      return (o as Date).getTime() >= minlength
     }
 
     return isArray(Object.keys(o), minlength)

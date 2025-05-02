@@ -2,6 +2,7 @@ import { ICreatedBy, IUpdatedBy, IUserId } from './interfaces.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
+import { AnyObject } from './types.mjs'
 
 export interface ICreatedTable<Tid = string> extends IId<Tid>, ICreatedBy {}
 export interface ICreatedUpdatedTable<Tid = string>
@@ -81,10 +82,10 @@ export class UserCreatedUpdatedTable<T = string>
   extends CreatedUpdatedTable
   implements IUserCreatedUpdatedTable<T>
 {
-  userid
+  userid: T | undefined
 
   constructor(
-    userid?: string | IUserCreatedUpdatedTable,
+    userid?: T | IUserCreatedUpdatedTable<T>,
     updatedby = 'IdUserCreatedUpdated',
     updated?: Date,
     createdby = 'IdUserCreatedUpdated',
@@ -93,15 +94,14 @@ export class UserCreatedUpdatedTable<T = string>
     super(updatedby, updated, createdby, created)
 
     if (isObject(userid)) {
-      this.copyFromDatabase(userid as IUserCreatedUpdatedTable)
+      this.copyFromDatabase(userid as IUserCreatedUpdatedTable<T>)
     } else {
       this.userid = userid
     }
   }
 
   static fixupForUpsert(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    obj: any,
+    obj: AnyObject,
     // userid: string,
     username: string,
     dateToSetTo?: Date
@@ -119,16 +119,16 @@ export class UserCreatedUpdatedTable<T = string>
     }
 
     if (!hasData(obj.createdby)) {
-      obj.createdBy = username
+      obj.createdby = username
     }
 
     obj.updated = dateToUse
-    obj.updatedBy = username
+    obj.updatedby = username
 
     return isUpdate
   }
 
-  copyFromDatabase(dbtp: IUserCreatedUpdatedTable) {
+  copyFromDatabase(dbtp: IUserCreatedUpdatedTable<T>) {
     super.copyFromDatabase(dbtp)
 
     if (dbtp.userid) {
