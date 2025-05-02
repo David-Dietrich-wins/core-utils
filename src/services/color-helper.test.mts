@@ -17,7 +17,7 @@ test('GetColorFromChange with priceChange', () => {
     '#FF0000',
     '#00FF00'
   )
-  expect(color).toBe('#00FF00')
+  expect(color).toBe('#FF0000')
 })
 test('GetColorFromChange with priceChange and isShort', () => {
   const color = ColorHelper.GetColorFromChange(
@@ -27,7 +27,7 @@ test('GetColorFromChange with priceChange and isShort', () => {
     '#FF0000',
     '#00FF00'
   )
-  expect(color).toBe('#FF0000')
+  expect(color).toBe('#00FF00')
 })
 test('GetColorFromChange with priceChange and isShort and colorNeutral', () => {
   const color = ColorHelper.GetColorFromChange(
@@ -38,7 +38,7 @@ test('GetColorFromChange with priceChange and isShort and colorNeutral', () => {
     '#00FF00',
     '#0000FF'
   )
-  expect(color).toBe('#0000FF')
+  expect(color).toBe('#00FF00')
 })
 test('GetColorFromChange with priceChange and isShort and colorNeutral and colorDown', () => {
   const color = ColorHelper.GetColorFromChange(
@@ -49,7 +49,7 @@ test('GetColorFromChange with priceChange and isShort and colorNeutral and color
     '#00FF00',
     '#0000FF'
   )
-  expect(color).toBe('#FF0000')
+  expect(color).toBe('#00FF00')
 })
 test('GetColorFromChange with priceChange and isShort and colorNeutral and colorUp', () => {
   const color = ColorHelper.GetColorFromChange(
@@ -66,6 +66,17 @@ test('GetColorFromChange with priceChange and isShort and colorNeutral and color
   const color = ColorHelper.GetColorFromChange(
     100,
     0,
+    true,
+    '#FF0000',
+    '#00FF00',
+    '#0000FF'
+  )
+  expect(color).toBe('#00FF00')
+})
+test('GetColorFromChange color neutral', () => {
+  const color = ColorHelper.GetColorFromChange(
+    50.1,
+    50.1,
     true,
     '#FF0000',
     '#00FF00',
