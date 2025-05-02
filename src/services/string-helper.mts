@@ -1,5 +1,10 @@
 import { StringOrStringArray } from '../models/types.mjs'
-import { hasData, isFunction } from './general.mjs'
+import {
+  hasData,
+  isBoolean,
+  isFunction,
+  isNullOrUndefined,
+} from './general.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 
@@ -282,18 +287,20 @@ export class StringHelper {
       trimEnd?: boolean
     } | null
   ) {
+    if (isNullOrUndefined(s)) {
+      s = ''
+    } else if (!isString(s)) {
+      s = String(s)
+    }
+
     if (
       !hasData(s) &&
       (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
     ) {
-      return ifEmpty ?? ''
+      if (!isObject(s) && !isNumber(s) && !isBoolean(s)) {
+        return ifEmpty ?? ''
+      }
     }
-
-    if (!hasData(s)) {
-      s = ''
-    }
-
-    s = isString(s) ? s : String(s)
 
     if (isObject(ifEmpty)) {
       const {
@@ -305,11 +312,10 @@ export class StringHelper {
         trimEnd,
       } = ifEmpty
 
-      if (ifEmptyValue) {
+      if (!hasData(s) && ifEmptyValue) {
         return ifEmptyValue
       }
 
-      s = s ?? ''
       if (trim) {
         s = s.trim()
       }
@@ -320,7 +326,10 @@ export class StringHelper {
         s = s.trimEnd()
       }
 
-      s = trim ? (s ?? '').trim() : s ?? ''
+      if (!hasData(s)) {
+        return ''
+      }
+
       return (prefix ?? '') + s + (suffix ?? '')
     }
 

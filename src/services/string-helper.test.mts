@@ -3,6 +3,7 @@ import { jest } from '@jest/globals'
 import {
   capitalizeFirstLetter,
   capitalizeWords,
+  FirstCharCapitalFormatter,
   getCommaUpperList,
   isEmptyString,
   pluralize,
@@ -14,6 +15,7 @@ import {
   safestrToJson,
   stringEquals,
   stringEqualsQuoted,
+  StringHelper,
   stringIf,
   stringWrapDoubleQuote,
   stringWrapParen,
@@ -222,4 +224,92 @@ test('prefixIfHasData', () => {
   expect(prefixIfHasData(emptyStr, prefix)).toBe('')
   expect(prefixIfHasData(nullStr, prefix)).toBe('')
   expect(prefixIfHasData(undefinedStr, prefix)).toBe('')
+})
+
+test('FirstCharCapitalFormatter', () => {
+  const str = 'hello world'
+  const str2 = 'Hello world'
+  const str3 = 'HELLO WORLD'
+  const str4 = 'hELLO WORLD'
+  const str5 = 'hELLO wORLD'
+
+  expect(FirstCharCapitalFormatter(str)).toBe('Hello world')
+  expect(FirstCharCapitalFormatter(str2)).toBe('Hello world')
+  expect(FirstCharCapitalFormatter(str3)).toBe('HELLO WORLD')
+  expect(FirstCharCapitalFormatter(str4)).toBe('HELLO WORLD')
+  expect(FirstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
+})
+
+describe('StringHelper', () => {
+  test('safestr', () => {
+    expect(StringHelper.safestr(null)).toBe('')
+    expect(StringHelper.safestr(undefined)).toBe('')
+    expect(StringHelper.safestr('')).toBe('')
+    expect(StringHelper.safestr('null')).toBe('null')
+
+    expect(StringHelper.safestr('', { ifEmpty: 'test' })).toBe('test')
+    expect(
+      StringHelper.safestr('', {
+        ifEmpty: 'test',
+        prefix: 'prefix-',
+        suffix: '-suffix',
+      })
+    ).toBe('test')
+    expect(
+      StringHelper.safestr('ab', {
+        ifEmpty: 'test',
+        prefix: 'prefix-',
+        suffix: '-suffix',
+      })
+    ).toBe('prefix-ab-suffix')
+
+    expect(StringHelper.safestr('', { prefix: 'test-' })).toBe('')
+    expect(StringHelper.safestr('ab', { prefix: 'test-' })).toBe('test-ab')
+
+    expect(StringHelper.safestr('', { suffix: '-test' })).toBe('')
+    expect(StringHelper.safestr('ab', { suffix: '-test' })).toBe('ab-test')
+
+    expect(
+      StringHelper.safestr(' ab ', { suffix: '-test', trimEnd: true })
+    ).toBe(' ab-test')
+    expect(
+      StringHelper.safestr(' ab ', { suffix: '-test', trimStart: true })
+    ).toBe('ab -test')
+  })
+})
+
+test('StringHelper.safePrefix', () => {
+  const str = 'test'
+  const prefix = 'prefix-'
+
+  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
+  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
+  expect(StringHelper.safePrefix('', prefix)).toBe('')
+  expect(StringHelper.safePrefix(null, prefix)).toBe('')
+  expect(StringHelper.safePrefix(undefined, prefix)).toBe('')
+  expect(StringHelper.safePrefix(0)).toBe(' 0')
+  expect(StringHelper.safePrefix(0, prefix)).toBe('prefix-0')
+  expect(StringHelper.safePrefix(-1, prefix)).toBe('prefix--1')
+  expect(StringHelper.safePrefix(5, prefix)).toBe('prefix-5')
+  expect(StringHelper.safePrefix(true, prefix)).toBe('prefix-true')
+  expect(StringHelper.safePrefix(false, prefix)).toBe('prefix-false')
+  expect(StringHelper.safePrefix(false)).toBe(' false')
+})
+
+test('StringHelper.safeSuffix', () => {
+  const str = 'test'
+  const suffix = '-suffix'
+
+  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(StringHelper.safeSuffix('', suffix)).toBe('')
+  expect(StringHelper.safeSuffix(null, suffix)).toBe('')
+  expect(StringHelper.safeSuffix(undefined, suffix)).toBe('')
+  expect(StringHelper.safeSuffix(0, suffix)).toBe('0-suffix')
+  expect(StringHelper.safeSuffix(0)).toBe('0 ')
+  expect(StringHelper.safeSuffix(-1, suffix)).toBe('-1-suffix')
+  expect(StringHelper.safeSuffix(5, suffix)).toBe('5-suffix')
+  expect(StringHelper.safeSuffix(true, suffix)).toBe('true-suffix')
+  expect(StringHelper.safeSuffix(false, suffix)).toBe('false-suffix')
+  expect(StringHelper.safeSuffix(false)).toBe('false ')
 })
