@@ -1,0 +1,75 @@
+import { ColorHelper } from './color-helper.mjs'
+
+test('constructor', () => {
+  const color = new ColorHelper()
+  expect(color).toBeInstanceOf(ColorHelper)
+})
+
+test('GetColorFromChange', () => {
+  const color = ColorHelper.GetColorFromChange(100, 10)
+  expect(color).toBeUndefined()
+})
+test('GetColorFromChange with priceChange', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    10,
+    false,
+    '#FF0000',
+    '#00FF00'
+  )
+  expect(color).toBe('#00FF00')
+})
+test('GetColorFromChange with priceChange and isShort', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    -10,
+    true,
+    '#FF0000',
+    '#00FF00'
+  )
+  expect(color).toBe('#FF0000')
+})
+test('GetColorFromChange with priceChange and isShort and colorNeutral', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    0,
+    true,
+    '#FF0000',
+    '#00FF00',
+    '#0000FF'
+  )
+  expect(color).toBe('#0000FF')
+})
+test('GetColorFromChange with priceChange and isShort and colorNeutral and colorDown', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    -10,
+    true,
+    '#FF0000',
+    '#00FF00',
+    '#0000FF'
+  )
+  expect(color).toBe('#FF0000')
+})
+test('GetColorFromChange with priceChange and isShort and colorNeutral and colorUp', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    10,
+    true,
+    '#FF0000',
+    '#00FF00',
+    '#0000FF'
+  )
+  expect(color).toBe('#00FF00')
+})
+test('GetColorFromChange with priceChange and isShort and colorNeutral and colorDown and colorUp', () => {
+  const color = ColorHelper.GetColorFromChange(
+    100,
+    0,
+    true,
+    '#FF0000',
+    '#00FF00',
+    '#0000FF'
+  )
+  expect(color).toBe('#0000FF')
+})
