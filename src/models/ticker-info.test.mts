@@ -17,6 +17,9 @@ import {
   IAssetQuotesWithIpoDate,
   IAssetQuotesWithScore,
   ISymbolDetail,
+  ISymbolSearch,
+  ISymbolSearch2ITickerSearch,
+  ISymbolSearch2ITickerSearchArray,
   PriceHistoricalResponse,
 } from './ticker-info.mjs'
 
@@ -889,5 +892,56 @@ describe('FmpIndicatorQueryParams', () => {
     }
 
     expect(() => FmpIndicatorParamsFromObject(params)).toThrow('No ticker')
+  })
+})
+
+describe('ISymbolSearch2ITickerSearch', () => {
+  test('ISymbolSearch2ITickerSearch', () => {
+    const params: ISymbolSearch = {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      exchangeShortName: 'NASDAQ',
+      stockExchange: 'NASDAQ',
+      currency: 'USD',
+    }
+    const result = ISymbolSearch2ITickerSearch(params)
+    expect(result).toMatchObject({
+      ticker: 'AAPL',
+      name: 'Apple Inc.',
+      type: 'NASDAQ',
+      exchange: 'NASDAQ',
+    })
+  })
+
+  test('ISymbolSearch2ITickerSearchArray', () => {
+    const aapl: ISymbolSearch = {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      exchangeShortName: 'NASDAQ',
+      stockExchange: 'NASDAQ',
+      currency: 'USD',
+    }
+    const msft: ISymbolSearch = {
+      symbol: 'MSFT',
+      name: 'Microsoft Corp.',
+      exchangeShortName: 'NYSE',
+      stockExchange: 'New York Stock Exchange',
+      currency: 'USD',
+    }
+    const result = ISymbolSearch2ITickerSearchArray([aapl, msft])
+    expect(result).toMatchObject([
+      {
+        ticker: 'AAPL',
+        name: 'Apple Inc.',
+        type: 'NASDAQ',
+        exchange: 'NASDAQ',
+      },
+      {
+        ticker: 'MSFT',
+        name: 'Microsoft Corp.',
+        type: 'NYSE',
+        exchange: 'New York Stock Exchange',
+      },
+    ])
   })
 })
