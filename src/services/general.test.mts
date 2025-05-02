@@ -53,6 +53,12 @@ describe('URL Join', () => {
       `${baseUrl}/?x=1&y=2#link`
     )
   })
+  test('number', () => {
+    expect(urlJoin(baseUrl, 5, true)).toBe(`${baseUrl}/5/`)
+  })
+  test('exception', () => {
+    expect(() => urlJoin(baseUrl, [undefined], true)).toThrow()
+  })
 })
 
 describe('URL Join', () => {
@@ -232,6 +238,8 @@ test('hasData', () => {
       throw new Error('test error')
     }, 1)
   ).toBe(false)
+
+  expect(hasData(new Date(), 0)).toBe(true)
 })
 
 test('getPercentChangeString', () => {
