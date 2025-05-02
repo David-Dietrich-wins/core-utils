@@ -59,9 +59,9 @@ export class Company extends IdCreatedUpdated implements ICompany {
       state: '',
       zip: '',
       created: new Date(),
-      createdby: '',
+      createdby: 'TradePlotter',
       updated: new Date(),
-      updatedby: '',
+      updatedby: 'TradePlotter',
       ...overrides,
     }
 
