@@ -32,7 +32,7 @@ export function setMaxDecimalPlaces(
   }
 
   const formatter = (num: number): string => {
-    return Math.round((num * 100) / 100).toFixed(maxDecimalPlaces)
+    return Math.round(num).toFixed(maxDecimalPlaces)
   }
 
   if (isNumber(obj)) {
@@ -197,11 +197,12 @@ export function StockVolumeFormatter(
 ) {
   if (volume || showZeroValues) {
     const num = NumberFormatter(
-      isNullOrUndefined(volume) ? 0 : volume,
+      volume ?? 0,
       showZeroValues,
       numDecimalPlaces ?? 0
     )
-    if (num || showZeroValues) {
+
+    if ('0' !== num || showZeroValues) {
       return num
     }
   }
@@ -499,42 +500,19 @@ export class NumberHelper {
   }
 
   static DownUpOrEqual(
-    currentValue: number,
-    priceChange: number | null | undefined,
+    startValue: number,
+    newValue: number | null | undefined,
     isShort = false
   ) {
-    let up: boolean | undefined = undefined
-
-    if (isNullOrUndefined(priceChange)) {
-      if (isShort) {
-        if (currentValue < 0) {
-          up = true
-        } else if (currentValue > 0) {
-          up = false
-        }
-      } else {
-        if (currentValue < 0) {
-          up = false
-        } else if (currentValue > 0) {
-          up = true
-        }
-      }
-      // } else if (isShort) {
-      //   if (priceChange > 0) {
-      //     cn += 'tp-number-down '
-      //   } else if (priceChange < 0) {
-      //     cn += 'tp-number-up '
-      //   }
-    } else {
-      // priceChange already accounts for isShort
-      if (priceChange < 0) {
-        up = false
-      } else if (priceChange > 0) {
-        up = true
-      }
+    if (isNullOrUndefined(newValue) || startValue === newValue) {
+      return 0
     }
 
-    return isNullOrUndefined(up) ? 0 : up ? 1 : -1
+    if (isShort) {
+      return newValue > startValue ? -1 : 1
+    }
+
+    return newValue > startValue ? 1 : -1
   }
 
   /**

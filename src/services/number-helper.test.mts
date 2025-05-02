@@ -1,5 +1,6 @@
 import {
   DollarFormatter,
+  elementTopLeftCoords,
   formattedNumber,
   getAsNumber,
   getAsNumberOrUndefined,
@@ -81,6 +82,9 @@ describe('maxDecimalPlaces', () => {
     expect(setMaxDecimalPlaces(34.9912, 2)).toEqual('35.00')
     expect(setMaxDecimalPlaces(234.499999912, 2)).toEqual('234.00')
     expect(setMaxDecimalPlaces(234.5000001, 2)).toEqual('235.00')
+
+    expect(setMaxDecimalPlaces('234.5000001', 3)).toEqual('235.000')
+    expect(() => setMaxDecimalPlaces('234.xx5000001', 3)).toThrow()
   })
 
   test('good obj', () => {
@@ -219,7 +223,11 @@ test('getMantissa', () => {
 })
 
 test('toFixedPrefixed', () => {
+  expect(toFixedPrefixed('')).toBe('$0.00')
+  expect(toFixedPrefixed(undefined)).toBe('')
+  expect(toFixedPrefixed(null)).toBe('')
   expect(toFixedPrefixed('', true, 2)).toBe('$0.00')
+  expect(toFixedPrefixed(2.4, true, 2, '€')).toBe('€2.40')
   expect(toFixedPrefixed('', false, 2)).toBe('')
   expect(toFixedPrefixed(0, true, 2)).toBe('$0.00')
   expect(toFixedPrefixed(1, true, 2)).toBe('$1.00')
@@ -231,6 +239,10 @@ test('toFixedPrefixed', () => {
 test('toFixedSuffixed', () => {
   expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
   expect(toFixedSuffixed('', false, 2)).toBe('')
+  expect(toFixedSuffixed(undefined)).toBe('')
+  expect(toFixedSuffixed(null)).toBe('')
+  expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed(2.4, true, 2, '€')).toBe('2.40€')
   expect(toFixedSuffixed(0, true, 2)).toBe('0.00%')
   expect(toFixedSuffixed(1, true, 2)).toBe('1.00%')
   expect(toFixedSuffixed(1.1, true, 2)).toBe('1.10%')
@@ -330,6 +342,8 @@ test('DollarFormatter', () => {
 test('StockPriceFormatter', () => {
   expect(StockPriceFormatter(null)).toBeUndefined()
   expect(StockPriceFormatter(undefined)).toBeUndefined()
+  expect(StockPriceFormatter(null, true)).toBe('$0.0000')
+  expect(StockPriceFormatter(undefined, true)).toBe('$0.0000')
   expect(StockPriceFormatter('')).toBeUndefined()
   expect(StockPriceFormatter('', false)).toBeUndefined()
   expect(StockPriceFormatter(0)).toBeUndefined()
@@ -387,10 +401,19 @@ test('PercentTimes100Formatter', () => {
 test('StockVolumeFormatter', () => {
   expect(StockVolumeFormatter(null)).toBeUndefined()
   expect(StockVolumeFormatter(undefined)).toBeUndefined()
+  expect(StockVolumeFormatter(null, true)).toBe('0')
+  expect(StockVolumeFormatter(undefined, true)).toBe('0')
+  expect(StockVolumeFormatter(undefined, true, null as unknown as number)).toBe(
+    '0'
+  )
+  expect(StockVolumeFormatter(undefined, true, 3)).toBe('0.000')
   expect(StockVolumeFormatter('')).toBeUndefined()
   expect(StockVolumeFormatter('', false)).toBeUndefined()
   expect(StockVolumeFormatter(0)).toBeUndefined()
+  expect(StockVolumeFormatter(undefined, true)).toBe('0')
+  expect(StockVolumeFormatter('', true)).toBe('0')
   expect(StockVolumeFormatter(0, true)).toBe('0')
+  expect(StockVolumeFormatter(5, true)).toBe('5')
   expect(StockVolumeFormatter(1)).toBe('1')
   expect(StockVolumeFormatter(1.1)).toBe('1')
   expect(StockVolumeFormatter(1.11)).toBe('1')
@@ -399,4 +422,87 @@ test('StockVolumeFormatter', () => {
   expect(StockVolumeFormatter('1000', false, 3)).toBe('1,000.000')
   expect(StockVolumeFormatter(1000.1)).toBe('1,000')
   expect(StockVolumeFormatter(1000000.1, false, 3)).toBe('1,000,000.100')
+})
+
+test('NumberWithDecimalPlaces', () => {
+  expect(NumberHelper.NumberWithDecimalPlaces(NaN)).toBe('0')
+  expect(NumberHelper.NumberWithDecimalPlaces(0)).toBe('0.00')
+  expect(NumberHelper.NumberWithDecimalPlaces(1)).toBe('1.00')
+  expect(NumberHelper.NumberWithDecimalPlaces(1.1)).toBe('1.10')
+  expect(NumberHelper.NumberWithDecimalPlaces(1.11)).toBe('1.11')
+  expect(NumberHelper.NumberWithDecimalPlaces(1.111)).toBe('1.111')
+  expect(NumberHelper.NumberWithDecimalPlaces(1000)).toBe('1,000.00')
+  expect(NumberHelper.NumberWithDecimalPlaces(1000, 3)).toBe('1,000.00')
+  expect(NumberHelper.NumberWithDecimalPlaces(1000.1)).toBe('1,000.10')
+  expect(NumberHelper.NumberWithDecimalPlaces(1000000.1, 3)).toBe(
+    '1,000,000.10'
+  )
+})
+
+test('PriceInDollars', () => {
+  expect(NumberHelper.PriceInDollars(0)).toBe('$0.00')
+  expect(NumberHelper.PriceInDollars(1)).toBe('$1.00')
+  expect(NumberHelper.PriceInDollars(9999999, false, 0)).toBe('9,999,999')
+  expect(NumberHelper.PriceInDollars(1.1)).toBe('$1.10')
+  expect(NumberHelper.PriceInDollars(1.11)).toBe('$1.11')
+  expect(NumberHelper.PriceInDollars(1.111)).toBe('$1.111')
+  expect(NumberHelper.PriceInDollars(1000)).toBe('$1,000.00')
+  expect(NumberHelper.PriceInDollars(1000.1)).toBe('$1,000.10')
+  expect(NumberHelper.PriceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
+})
+
+test('DownUpOrEqual', () => {
+  expect(NumberHelper.DownUpOrEqual(-10, undefined)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(0, undefined)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(10, undefined)).toBe(0)
+
+  expect(NumberHelper.DownUpOrEqual(0, 0)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(1, 0)).toBe(-1)
+  expect(NumberHelper.DownUpOrEqual(0, 1)).toBe(1)
+  expect(NumberHelper.DownUpOrEqual(1, 1)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(1.1, 1)).toBe(-1)
+  expect(NumberHelper.DownUpOrEqual(1.11, 1)).toBe(-1)
+
+  expect(NumberHelper.DownUpOrEqual(0, 0, true)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(1, 0, true)).toBe(1)
+  expect(NumberHelper.DownUpOrEqual(0, 1, true)).toBe(-1)
+  expect(NumberHelper.DownUpOrEqual(1, 1, true)).toBe(0)
+  expect(NumberHelper.DownUpOrEqual(1.1, 1, true)).toBe(1)
+  expect(NumberHelper.DownUpOrEqual(1.11, 1, true)).toBe(1)
+})
+
+test('elementTopLeftCoords', () => {
+  const coords = {
+    offsetTop: 10,
+    offsetLeft: 20,
+  }
+
+  expect(elementTopLeftCoords(coords)).toEqual({
+    top: 10,
+    left: 20,
+  })
+
+  const coordsWithParent = {
+    offsetTop: 10,
+    offsetLeft: 20,
+    offsetParent: {
+      offsetTop: 5,
+      offsetLeft: 5,
+    },
+  }
+  expect(elementTopLeftCoords(coordsWithParent)).toEqual({
+    top: 15,
+    left: 25,
+  })
+
+  const coordsWithoutValues = {
+    offsetParent: {
+      offsetTop: 5,
+      offsetLeft: 7,
+    },
+  }
+  expect(elementTopLeftCoords(coordsWithoutValues)).toEqual({
+    top: 5,
+    left: 7,
+  })
 })
