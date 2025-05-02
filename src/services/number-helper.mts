@@ -377,12 +377,10 @@ export class NumberHelper {
     maxDecimalPlaces?: number,
     minDecimalPlaces?: number
   ) {
-    if (isString(num, 1)) {
+    if (isString(num)) {
       const newnum = num.replace(/,/g, '')
 
-      if (isString(newnum, 1)) {
-        num = +newnum
-      }
+      num = num.length === 0 ? 0 : +newnum
     }
 
     if (!showZeroValues && num === 0) {

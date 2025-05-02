@@ -6,6 +6,8 @@ import {
   isNumeric,
   NumberHelper,
   setMaxDecimalPlaces,
+  toFixedPrefixed,
+  toFixedSuffixed,
 } from './number-helper.mjs'
 
 test('addNumbers', () => {
@@ -171,6 +173,13 @@ test('isNumber', () => {
 })
 test('getNumberString', () => {
   expect(NumberHelper.NumberToString(0)).toBe('0')
+  expect(NumberHelper.NumberToString(0, false)).toBe('')
+  expect(NumberHelper.NumberToString(0.0, false)).toBe('')
+  expect(NumberHelper.NumberToString('', false)).toBe('')
+  expect(NumberHelper.NumberToString('', true)).toBe('0')
+  expect(NumberHelper.NumberToString('', true, 2)).toBe('0.00')
+  expect(NumberHelper.NumberToString('0', false)).toBe('')
+  expect(NumberHelper.NumberToString('0.00', false)).toBe('')
   expect(NumberHelper.NumberToString('1,249')).toBe('1,249')
 
   expect(NumberHelper.NumberToString('1,249', true, 2)).toBe('1,249.00')
@@ -198,4 +207,24 @@ test('getMantissa', () => {
   expect(getMantissa(34.012)).toBe(12)
 
   expect(getMantissa(34)).toBe(0)
+})
+
+test('toFixedPrefixed', () => {
+  expect(toFixedPrefixed('', true, 2)).toBe('$0.00')
+  expect(toFixedPrefixed('', false, 2)).toBe('')
+  expect(toFixedPrefixed(0, true, 2)).toBe('$0.00')
+  expect(toFixedPrefixed(1, true, 2)).toBe('$1.00')
+  expect(toFixedPrefixed(1.1, true, 2)).toBe('$1.10')
+  expect(toFixedPrefixed(1.11, true, 2)).toBe('$1.11')
+  expect(toFixedPrefixed(1.111, true, 2)).toBe('$1.11')
+})
+
+test('toFixedSuffixed', () => {
+  expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed('', false, 2)).toBe('')
+  expect(toFixedSuffixed(0, true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed(1, true, 2)).toBe('1.00%')
+  expect(toFixedSuffixed(1.1, true, 2)).toBe('1.10%')
+  expect(toFixedSuffixed(1.11, true, 2)).toBe('1.11%')
+  expect(toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
 })
