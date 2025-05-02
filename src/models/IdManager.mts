@@ -1,6 +1,7 @@
-import { arrayAdd, arrayRemove } from '../services/array-helper.mjs'
+import { arrayAdd, arrayRemove, isArray } from '../services/array-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { FindObjectWithField } from '../services/object-helper.mjs'
+import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 export interface IId<T = string> {
@@ -10,10 +11,11 @@ export interface IId<T = string> {
 export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
 export class IdManager<T extends IId<Tid>, Tid = T['id']> {
-  constructor(
-    public list: T[] = [],
-    public stats?: InstrumentationStatistics
-  ) {}
+  constructor(public list: T[] = [], public stats?: InstrumentationStatistics) {
+    if (!isArray(list) || !list.every((item) => 'id' in item)) {
+      throw new AppException('list must be an array', 'IdManager.constructor')
+    }
+  }
 
   static CreateIdManager<T extends IId<Tid>, Tid = T['id']>(
     arr: T[] | null | undefined,

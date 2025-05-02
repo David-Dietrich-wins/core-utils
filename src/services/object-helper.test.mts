@@ -1,22 +1,25 @@
 /* eslint-disable quotes */
 import { jest } from '@jest/globals'
-// import { HttpResponse, http } from 'msw'
-// import { mockServer } from '../jest.setup.mjs'
 import {
   AxiosError,
   AxiosHeaders,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios'
+import { IId } from '../models/IdManager.mjs'
+import { IdValueManager } from '../models/IdValueManager.mjs'
+import { IConstructor } from '../models/types.mjs'
 import {
   addObjectToList,
   CloneObjectWithExtras,
   deepCloneJson,
   deepDiffMapper,
+  FindObjectWithField,
   getNullObject,
   getObjectValue,
   isObject,
   ObjectFindKeyAndReturnValue,
+  ObjectHelper,
   ObjectMustHaveKeyAndReturnValue,
   ObjectTypesToString,
   renameProperty,
@@ -26,7 +29,6 @@ import {
   searchObjectForArray,
   UpdateFieldValue,
 } from './object-helper.mjs'
-import { IId } from '../models/IdManager.mjs'
 import { pluralize, plusMinus } from './string-helper.mjs'
 
 type PostExceptionAxiosResponseData = {
@@ -781,7 +783,13 @@ test('getObjectValue', () => {
 
 test('deepCloneJson', () => {
   expect(deepCloneJson({ a: 'a' })).toStrictEqual({ a: 'a' })
+
+  expect(deepCloneJson({})).toStrictEqual({})
+  expect(deepCloneJson([])).toStrictEqual([])
+
+  expect(deepCloneJson(undefined as unknown as object)).toStrictEqual({})
 })
+
 test('addObjectToList', () => {
   expect(addObjectToList([], [{ a: 'a' }])).toStrictEqual([{ a: 'a' }])
   expect(addObjectToList([], [1, 2])).toStrictEqual([1, 2])
@@ -974,5 +982,200 @@ describe('deepDiffMapper', () => {
     b = { a: 'a' }
     const ddMap = deepDiffMapper().map(a, b)
     expect(ddMap).toStrictEqual({ a: { type: 'created', data: 'a' } })
+  })
+})
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createDeepObject(depth: number, value: any) {
+  return { item: depth > 0 ? createDeepObject(--depth, value) : value }
+}
+
+test('FindObjectWithField', () => {
+  const obj = {
+    a: 'a',
+    b: 'b',
+    c: 'c',
+    d: {
+      e: 'e',
+      f: [{ f1: 'f1' }, { f2: 'f2' }],
+      g: {
+        h: 'h',
+        i: 'i',
+        j: {
+          k: 'k',
+          l: 'l',
+        },
+      },
+    },
+  }
+
+  expect(FindObjectWithField(obj, 'a', 'a')).toBe(obj)
+  expect(FindObjectWithField(obj, 'b', 'c')).toBeUndefined()
+  expect(FindObjectWithField(obj, 'e', 'e')).toBe(obj.d)
+  expect(FindObjectWithField(obj, 'd', 'd')).toBeUndefined()
+  expect(FindObjectWithField(obj, 'j', 'k')).toBeUndefined()
+  expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
+  expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
+
+  const deepObj = createDeepObject(101, 'value')
+  expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
+})
+
+test('getFirstNewWithException', () => {
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(IdValueManager, [])
+  ).not.toThrow()
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(IdValueManager, [234, 20])
+  ).toThrow(new Error('list must be an array'))
+
+  let fnOrig = ObjectHelper.getInstance
+  ObjectHelper.getInstance = <T, Tid>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _theClass: IConstructor<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    ..._args: any[]
+  ) => {
+    return undefined as Tid as unknown as T
+  }
+
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(
+      IdValueManager,
+      undefined as unknown as string[]
+    )
+  ).toThrow(new Error('Error getting first new object'))
+  ObjectHelper.getInstance = fnOrig
+
+  fnOrig = ObjectHelper.getInstance
+  ObjectHelper.getInstance = <T, Tid>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _theClass: IConstructor<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    ..._args: any[]
+  ) => {
+    return undefined as Tid as unknown as T
+  }
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(
+      IdValueManager,
+      undefined as unknown as string[],
+      'generic exception text'
+    )
+  ).toThrow(new Error('generic exception text'))
+  ObjectHelper.getInstance = fnOrig
+
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(IdValueManager, [
+      [{ id: 234, value: '234' }],
+      [{ id: 20, value: '20' }],
+    ])
+  ).not.toThrow()
+  expect(() =>
+    ObjectHelper.getFirstNewWithException(IdValueManager, [
+      { id: 234, value: '234' },
+      { id: 20, value: '20' },
+    ])
+  ).toThrow()
+})
+
+test('getNewObject', () => {
+  expect(() => ObjectHelper.getNewObject(IdValueManager, [])).not.toThrow()
+  expect(() => ObjectHelper.getNewObject(IdValueManager, [234, 20])).toThrow()
+  expect(() =>
+    ObjectHelper.getNewObject(
+      IdValueManager,
+      [
+        { id: 234, value: '234' },
+        { id: 20, value: '20' },
+      ],
+      1
+    )
+  ).not.toThrow()
+  expect(() =>
+    ObjectHelper.getNewObject(IdValueManager, [
+      { id: 234, value: '234' },
+      { id: 20, value: '20' },
+    ])
+  ).not.toThrow()
+})
+
+test('getInstance', () => {
+  const idvm = ObjectHelper.getInstance(IdValueManager, [
+    { id: 'a', value: 'a' },
+  ])
+
+  expect(idvm).toBeInstanceOf(IdValueManager)
+  expect(idvm.list).toEqual([{ id: 'a', value: 'a' }])
+})
+
+describe('ObjectHelper', () => {
+  test('CloneObjectAlphabetizingKeys', () => {
+    const obj = {
+      b: 'b',
+      a: 'a',
+      c: 'c',
+    }
+
+    const clonedObj = ObjectHelper.CloneObjectAlphabetizingKeys(obj)
+
+    expect(clonedObj).toEqual({ a: 'a', b: 'b', c: 'c' })
+  })
+
+  test('DecodeBase64ToObject', () => {
+    const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' }))
+    const decodedObj = ObjectHelper.DecodeBase64ToObject(base64String)
+
+    expect(decodedObj).toEqual({ a: 'a', b: 'b' })
+  })
+
+  test('EncodeObjectToBase64', () => {
+    const obj = { a: 'a', b: 'b' }
+    const encodedString = ObjectHelper.EncodeObjectToBase64(obj)
+
+    expect(encodedString).toBe(btoa(JSON.stringify(obj)))
+  })
+
+  test('DeepCloneJsonWithUndefined', () => {
+    const obj = {
+      a: 'a',
+      b: undefined,
+      c: {
+        d: 'd',
+        e: undefined,
+      },
+    }
+
+    const clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
+
+    expect(clonedObj).toEqual({
+      a: 'a',
+      b: undefined,
+      c: {
+        d: 'd',
+        e: undefined,
+      },
+    })
+  })
+  test('DeepCloneJsonWithUndefined exception', () => {
+    const obj = {
+      a: 'a',
+      b: undefined,
+      c: {
+        d: 'd',
+        e: undefined,
+      },
+    }
+
+    const clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
+
+    expect(clonedObj).toEqual({
+      a: 'a',
+      b: undefined,
+      c: {
+        d: 'd',
+        e: undefined,
+      },
+    })
   })
 })

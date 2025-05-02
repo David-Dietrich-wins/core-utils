@@ -5,7 +5,12 @@ import { safestr, safestrLowercase, safestrToJson } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
 import { isArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { AnyRecord, ArrayOrSingle, IConstructor } from '../models/types.mjs'
+import {
+  AnyObject,
+  AnyRecord,
+  ArrayOrSingle,
+  IConstructor,
+} from '../models/types.mjs'
 import { arrayElement, arrayFirst, safeArray } from './array-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
@@ -168,38 +173,6 @@ export function ObjectTypesToString(
   return etoString
 }
 
-export function getFirstNewWithException<T>(
-  theClass: IConstructor<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obj: any[],
-  exceptionTextIfEmpty = ''
-) {
-  const first = getInstance(theClass, arrayFirst(obj))
-  if (!first) {
-    throw new Error(
-      safestr(exceptionTextIfEmpty, 'Error getting first new object')
-    )
-  }
-
-  return first
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
-  return new theClass(...args)
-}
-
-export function getNewObject<T>(
-  theClass: IConstructor<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructorArgs: any[],
-  index = 0
-): T {
-  return (
-    getInstance(theClass, constructorArgs), arrayElement(constructorArgs, index)
-  )
-}
-
 export function FindObjectWithField(
   obj: object,
   fieldName: string,
@@ -239,7 +212,7 @@ export function FindObjectWithField(
 }
 
 export class ObjectHelper {
-  static CloneAlphabetizedObject<T>(obj: Readonly<T>): T {
+  static CloneObjectAlphabetizingKeys<T>(obj: Readonly<T>): T {
     const sortedObj = Object.fromEntries(
       Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     )
@@ -253,10 +226,62 @@ export class ObjectHelper {
     return safestrToJson<T>(decodedString.toString())
   }
   static EncodeObjectToBase64(obj: object) {
-    const jsonString = JSON.stringify(ObjectHelper.CloneAlphabetizedObject(obj))
+    const jsonString = JSON.stringify(
+      ObjectHelper.CloneObjectAlphabetizingKeys(obj)
+    )
     const encodedString = Buffer.from(jsonString)
 
     return encodedString.toString('base64')
+  }
+
+  /**
+   * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
+   * Suppresses any exceptions, but still writes to the console.log.
+   * @param obj The object to copy.
+   * @param fname The function name of the caller. Not required.
+   * @returns A JSON stringify and parsed copy of the obj.
+   */
+  static DeepCloneJsonWithUndefined<T extends object | Array<T>>(
+    obj: T,
+    fname?: string
+  ) {
+    fname = fname || 'deepCloneJsonWithUndefined'
+
+    return safestrToJson<T>(safeJsonToString(obj, fname), fname)
+  }
+
+  static getFirstNewWithException<T>(
+    theClass: IConstructor<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    obj: any[],
+    exceptionTextIfEmpty = ''
+  ) {
+    const first = ObjectHelper.getInstance(theClass, arrayFirst(obj))
+    if (!first) {
+      throw new AppException(
+        safestr(exceptionTextIfEmpty, 'Error getting first new object'),
+        ObjectHelper.getFirstNewWithException.name
+      )
+    }
+
+    return first
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
+    return new theClass(...args)
+  }
+
+  static getNewObject<T>(
+    theClass: IConstructor<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructorArgs: any[],
+    index = 0
+  ): T {
+    return (
+      ObjectHelper.getInstance(theClass, constructorArgs),
+      arrayElement(constructorArgs, index)
+    )
   }
 }
 
@@ -524,8 +549,7 @@ export function deepDiffMapper() {
  * @param keyToFind The property to look for in the object.
  * @returns The value from the obj[keyToFind]. undefined if not found.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getObjectValue(obj: any, keyToFind: string) {
+export function getObjectValue(obj: AnyObject, keyToFind: string) {
   if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
     return obj[keyToFind]
   }
@@ -540,6 +564,7 @@ export function isEmptyObject(obj: unknown) {
       obj.constructor === Object)
   )
 }
+
 /**
  * Checks if the variable passed in is a JavaScript object that is not an array.
  * Optionally can test for a minimum number of member objects, or if a member of the object is a named by the minLengthOrContainsField parameter.
@@ -547,7 +572,6 @@ export function isEmptyObject(obj: unknown) {
  * @param minLengthOrContainsField The minimum number of items that must be in the object. Or if a string, the object must contain a member named the string provided.
  * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
  */
-
 export function isObject(
   obj: unknown,
   minLengthOrContainsField: number | string = 0
@@ -574,12 +598,12 @@ export function isObject(
 
   return true
 }
+
 /**
  * Tests an object to see if it is empty. If so returns null, otherwise just returns the object.
  * @param obj The object to test if it is empty.
  * @returns Null if the object is empty, otherwise the object is returned.
  */
-
 export function getNullObject<T>(obj: T) {
   return isEmptyObject(obj) ? null : obj
 }
@@ -648,22 +672,6 @@ export function addObjectToList<T>(
 
   return listObjects
 }
-/**
- * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
- * Suppresses any exceptions, but still writes to the console.log.
- * @param obj The object to copy.
- * @param fname The function name of the caller. Not required.
- * @returns A JSON stringify and parsed copy of the obj.
- */
-
-export function deepCloneJsonWithUndefined<T extends object | Array<T>>(
-  obj: T,
-  fname?: string
-) {
-  fname = fname || 'deepCloneJsonWithUndefined'
-
-  return safestrToJson<T>(safeJsonToString(obj, fname), fname)
-}
 
 export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
@@ -672,11 +680,7 @@ export function deepCloneJson<T extends object | Array<T>>(
   fname = fname || 'deepCloneJson'
   const ret = safestrToJson<T>(safeJsonToString(obj, fname), fname)
 
-  if (!ret) {
-    throw new AppException('Unable to parse JSON', fname)
-  }
-
-  return ret
+  return ret!
 }
 /**
  * Looks for a ret.body object to return.
