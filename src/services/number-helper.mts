@@ -2,7 +2,7 @@ import { AppException } from '../models/AppException.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, isNullOrUndefined } from './general.mjs'
 import { isObject, runOnAllMembers } from './object-helper.mjs'
-import { isString, stringIf } from './string-helper.mjs'
+import { isString, safestr, StringHelper, stringIf } from './string-helper.mjs'
 
 export type NumberFormattingBreakpoints = {
   value: number | bigint | string
@@ -75,29 +75,33 @@ export function setMaxDecimalPlaces(
 export type FormatFunction = (val: unknown) => string
 
 export function toFixedPrefixed(
-  val: number | string,
+  val: number | string | null | undefined,
   showZeroValues = true,
   toFixedLength = 2,
   prefix = '$'
 ) {
   const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
 
-  return !showZeroValues && !hasData(s) ? '' : prefix + s
+  return !showZeroValues && !hasData(s)
+    ? ''
+    : StringHelper.safePrefix(s, prefix)
 }
 
 export function toFixedSuffixed(
-  val: number | string,
+  val: number | string | null | undefined,
   showZeroValues = true,
   toFixedLength = 2,
   suffix = '%'
 ) {
   const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
 
-  return !showZeroValues && !hasData(s) ? '' : s + suffix
+  return !showZeroValues && !hasData(s)
+    ? ''
+    : StringHelper.safeSuffix(s, suffix)
 }
 
 export function formattedNumber(
-  val?: number | bigint | string,
+  val?: number | bigint | string | null,
   showZeroValues = true,
   toFixedLength = 2,
   prefix = '',
@@ -107,9 +111,9 @@ export function formattedNumber(
     return ''
   }
 
-  const num = isString(val) ? parseFloat(val) : val
+  const num = isString(val) ? parseFloat(safestr(val, '0')) : val
 
-  if (num) {
+  if (num || showZeroValues) {
     const str = NumberHelper.NumberToString(num, showZeroValues, toFixedLength)
 
     return `${prefix}${str}${suffix}`
@@ -119,21 +123,21 @@ export function formattedNumber(
 }
 
 export function NumberFormatter(
-  val?: number | bigint | string,
+  val?: number | bigint | string | null,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
   return formattedNumber(val, showZeroValues, numDecimalPlaces)
 }
 export function NumberFormatterNoDecimal(
-  val?: number | bigint | string,
+  val?: number | bigint | string | null,
   showZeroValues = true
 ) {
   return formattedNumber(val, showZeroValues, 0)
 }
 
 export function XFormatter(
-  val: number | string,
+  val: number | string | null | undefined,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
@@ -141,7 +145,7 @@ export function XFormatter(
 }
 
 export function DollarFormatter(
-  val: number | string = 0,
+  val: number | string | null | undefined = 0,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
@@ -167,7 +171,7 @@ export function StockPriceFormatter(
 }
 
 export function PercentFormatter(
-  val: number | string,
+  val: number | string | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 2
 ) {
@@ -175,7 +179,7 @@ export function PercentFormatter(
 }
 
 export function PercentTimes100Formatter(
-  val: number | string,
+  val: number | bigint | string | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 2
 ) {
@@ -377,6 +381,10 @@ export class NumberHelper {
     maxDecimalPlaces?: number,
     minDecimalPlaces?: number
   ) {
+    if (isNullOrUndefined(num)) {
+      return ''
+    }
+
     if (isString(num)) {
       const newnum = num.replace(/,/g, '')
 

@@ -1,13 +1,22 @@
 import {
+  DollarFormatter,
+  formattedNumber,
   getAsNumber,
   getAsNumberOrUndefined,
   getMantissa,
   isNumber,
   isNumeric,
+  NumberFormatter,
+  NumberFormatterNoDecimal,
   NumberHelper,
+  PercentFormatter,
+  PercentTimes100Formatter,
   setMaxDecimalPlaces,
+  StockPriceFormatter,
+  StockVolumeFormatter,
   toFixedPrefixed,
   toFixedSuffixed,
+  XFormatter,
 } from './number-helper.mjs'
 
 test('addNumbers', () => {
@@ -227,4 +236,167 @@ test('toFixedSuffixed', () => {
   expect(toFixedSuffixed(1.1, true, 2)).toBe('1.10%')
   expect(toFixedSuffixed(1.11, true, 2)).toBe('1.11%')
   expect(toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
+})
+
+test('formattedNumber', () => {
+  expect(formattedNumber(null)).toBe('')
+  expect(formattedNumber(undefined)).toBe('')
+  expect(formattedNumber('')).toBe('0.00')
+  expect(formattedNumber('', false)).toBe('')
+  expect(formattedNumber(0)).toBe('0.00')
+  expect(formattedNumber(1)).toBe('1.00')
+  expect(formattedNumber(1.1)).toBe('1.10')
+  expect(formattedNumber(1.11)).toBe('1.11')
+  expect(formattedNumber(1.111)).toBe('1.11')
+  expect(formattedNumber(1000)).toBe('1,000.00')
+  expect(formattedNumber('1000')).toBe('1,000.00')
+  expect(formattedNumber(1000.1)).toBe('1,000.10')
+  expect(formattedNumber(1000000.1, false, 3)).toBe('1,000,000.100')
+  expect(formattedNumber(1000000.1, false, 3, 'prefix-', '-suffix')).toBe(
+    'prefix-1,000,000.100-suffix'
+  )
+})
+
+test('NumberFormatter', () => {
+  expect(NumberFormatter(null)).toBe('')
+  expect(NumberFormatter(undefined)).toBe('')
+  expect(NumberFormatter('')).toBe('0.00')
+  expect(NumberFormatter('', false)).toBe('')
+  expect(NumberFormatter(0)).toBe('0.00')
+  expect(NumberFormatter(1)).toBe('1.00')
+  expect(NumberFormatter(1.1)).toBe('1.10')
+  expect(NumberFormatter(1.11)).toBe('1.11')
+  expect(NumberFormatter(1.111)).toBe('1.11')
+  expect(NumberFormatter(1000)).toBe('1,000.00')
+  expect(NumberFormatter('1000', false, 3)).toBe('1,000.000')
+  expect(NumberFormatter(1000.1)).toBe('1,000.10')
+  expect(NumberFormatter(1000000.1, false, 3)).toBe('1,000,000.100')
+})
+
+test('NumberFormatterNoDecimal', () => {
+  expect(NumberFormatterNoDecimal(null)).toBe('')
+  expect(NumberFormatterNoDecimal(undefined)).toBe('')
+  expect(NumberFormatterNoDecimal('')).toBe('0')
+  expect(NumberFormatterNoDecimal('', false)).toBe('')
+  expect(NumberFormatterNoDecimal(0)).toBe('0')
+  expect(NumberFormatterNoDecimal(1)).toBe('1')
+  expect(NumberFormatterNoDecimal(1.1)).toBe('1')
+  expect(NumberFormatterNoDecimal(1.11)).toBe('1')
+  expect(NumberFormatterNoDecimal(1.49999999)).toBe('1')
+  expect(NumberFormatterNoDecimal(1.5)).toBe('2')
+  expect(NumberFormatterNoDecimal(1.999)).toBe('2')
+  expect(NumberFormatterNoDecimal(1000)).toBe('1,000')
+  expect(NumberFormatterNoDecimal('1000', false)).toBe('1,000')
+  expect(NumberFormatterNoDecimal(1000.1)).toBe('1,000')
+  expect(NumberFormatterNoDecimal(1000000.5, false)).toBe('1,000,001')
+})
+
+test('XFormatter', () => {
+  expect(XFormatter(null)).toBe('')
+  expect(XFormatter(undefined)).toBe('')
+  expect(XFormatter('')).toBe('0.00x')
+  expect(XFormatter('', false)).toBe('')
+  expect(XFormatter(0)).toBe('0.00x')
+  expect(XFormatter(1)).toBe('1.00x')
+  expect(XFormatter(9999999, false, 0)).toBe('9,999,999x')
+  expect(XFormatter(1.1)).toBe('1.10x')
+  expect(XFormatter(1.11)).toBe('1.11x')
+  expect(XFormatter(1.111)).toBe('1.11x')
+  expect(XFormatter(1000)).toBe('1,000.00x')
+  expect(XFormatter('1000', false, 3)).toBe('1,000.000x')
+  expect(XFormatter(1000.1)).toBe('1,000.10x')
+  expect(XFormatter(1000000.1, false, 3)).toBe('1,000,000.100x')
+})
+
+test('DollarFormatter', () => {
+  expect(DollarFormatter(null)).toBe('')
+  expect(DollarFormatter(undefined)).toBe('$0.00')
+  expect(DollarFormatter('')).toBe('$0.00')
+  expect(DollarFormatter('', false)).toBe('')
+  expect(DollarFormatter(0)).toBe('$0.00')
+  expect(DollarFormatter(1)).toBe('$1.00')
+  expect(DollarFormatter(9999999, false, 0)).toBe('$9,999,999')
+  expect(DollarFormatter(1.1)).toBe('$1.10')
+  expect(DollarFormatter(1.11)).toBe('$1.11')
+  expect(DollarFormatter(1.111)).toBe('$1.11')
+  expect(DollarFormatter(1000)).toBe('$1,000.00')
+  expect(DollarFormatter('1000', false, 3)).toBe('$1,000.000')
+  expect(DollarFormatter('1000.000499999', false, 3)).toBe('$1,000.000')
+  expect(DollarFormatter('1000.0005', false, 3)).toBe('$1,000.001')
+  expect(DollarFormatter(1000.1)).toBe('$1,000.10')
+  expect(DollarFormatter(1000000.1, false, 3)).toBe('$1,000,000.100')
+})
+
+test('StockPriceFormatter', () => {
+  expect(StockPriceFormatter(null)).toBeUndefined()
+  expect(StockPriceFormatter(undefined)).toBeUndefined()
+  expect(StockPriceFormatter('')).toBeUndefined()
+  expect(StockPriceFormatter('', false)).toBeUndefined()
+  expect(StockPriceFormatter(0)).toBeUndefined()
+  expect(StockPriceFormatter(0, true)).toBe('$0.0000')
+  expect(StockPriceFormatter(1)).toBe('$1.00')
+  expect(StockPriceFormatter(9999999, false, 0)).toBe('$9,999,999')
+  expect(StockPriceFormatter(1.1)).toBe('$1.10')
+  expect(StockPriceFormatter(1.11)).toBe('$1.11')
+  expect(StockPriceFormatter(1.111)).toBe('$1.11')
+  expect(StockPriceFormatter(1000)).toBe('$1,000.00')
+  expect(StockPriceFormatter('1000', false, 3)).toBe('$1,000.000')
+  expect(StockPriceFormatter('1000.000499999', false, 3)).toBe('$1,000.000')
+  expect(StockPriceFormatter('1000.0005', false, 3)).toBe('$1,000.001')
+  expect(StockPriceFormatter(1000.1)).toBe('$1,000.10')
+  expect(StockPriceFormatter(1000000.1, false, 3)).toBe('$1,000,000.100')
+})
+
+test('PercentFormatter', () => {
+  expect(PercentFormatter(null)).toBe('')
+  expect(PercentFormatter(undefined)).toBe('')
+  expect(PercentFormatter('')).toBe('')
+  expect(PercentFormatter('', false)).toBe('')
+  expect(PercentFormatter(0)).toBe('')
+  expect(PercentFormatter(0, true)).toBe('0.00%')
+  expect(PercentFormatter(1)).toBe('1.00%')
+  expect(PercentFormatter(9999999, false, 0)).toBe('9,999,999%')
+  expect(PercentFormatter(1.1)).toBe('1.10%')
+  expect(PercentFormatter(1.11)).toBe('1.11%')
+  expect(PercentFormatter(1.111)).toBe('1.11%')
+  expect(PercentFormatter(1000)).toBe('1,000.00%')
+  expect(PercentFormatter('1000', false, 3)).toBe('1,000.000%')
+  expect(PercentFormatter(1000.1)).toBe('1,000.10%')
+  expect(PercentFormatter(1000000.1, false, 3)).toBe('1,000,000.100%')
+})
+
+test('PercentTimes100Formatter', () => {
+  expect(PercentTimes100Formatter(null)).toBe('')
+  expect(PercentTimes100Formatter(undefined)).toBe('')
+  expect(PercentTimes100Formatter('')).toBe('')
+  expect(PercentTimes100Formatter('', false)).toBe('')
+  expect(PercentTimes100Formatter(0)).toBe('')
+  expect(PercentTimes100Formatter(0, true)).toBe('0.00%')
+  expect(PercentTimes100Formatter(0.24)).toBe('24.00%')
+  expect(PercentTimes100Formatter(0.9999999, false, 0)).toBe('100%')
+  expect(PercentTimes100Formatter(0.11)).toBe('11.00%')
+  expect(PercentTimes100Formatter(0.1149)).toBe('11.49%')
+  expect(PercentTimes100Formatter(0.115)).toBe('11.50%')
+  expect(PercentTimes100Formatter(0.11111)).toBe('11.11%')
+  expect(PercentTimes100Formatter(1000)).toBe('100,000.00%')
+  expect(PercentTimes100Formatter('1000', false, 3)).toBe('100,000.000%')
+  expect(PercentTimes100Formatter(1000.1)).toBe('100,010.00%')
+  expect(PercentTimes100Formatter(1000000.1, false, 3)).toBe('100,000,010.000%')
+})
+
+test('StockVolumeFormatter', () => {
+  expect(StockVolumeFormatter(null)).toBeUndefined()
+  expect(StockVolumeFormatter(undefined)).toBeUndefined()
+  expect(StockVolumeFormatter('')).toBeUndefined()
+  expect(StockVolumeFormatter('', false)).toBeUndefined()
+  expect(StockVolumeFormatter(0)).toBeUndefined()
+  expect(StockVolumeFormatter(0, true)).toBe('0')
+  expect(StockVolumeFormatter(1)).toBe('1')
+  expect(StockVolumeFormatter(1.1)).toBe('1')
+  expect(StockVolumeFormatter(1.11)).toBe('1')
+  expect(StockVolumeFormatter(1.111)).toBe('1')
+  expect(StockVolumeFormatter(1000)).toBe('1,000')
+  expect(StockVolumeFormatter('1000', false, 3)).toBe('1,000.000')
+  expect(StockVolumeFormatter(1000.1)).toBe('1,000')
+  expect(StockVolumeFormatter(1000000.1, false, 3)).toBe('1,000,000.100')
 })
