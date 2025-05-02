@@ -441,3 +441,134 @@ test('isDateObject', () => {
   expect(isDateObject(new Date('20'))).toBe(false)
   expect(isDateObject(new Date(20))).toBe(true)
 })
+
+test('TimeframeToStartOf', () => {
+  expect(DateHelper.TimeframeToStartOf('d')).toBe('day')
+  expect(DateHelper.TimeframeToStartOf('h')).toBe('hour')
+  expect(DateHelper.TimeframeToStartOf('m')).toBe('minute')
+  expect(DateHelper.TimeframeToStartOf('s')).toBe('second')
+  expect(DateHelper.TimeframeToStartOf('w')).toBe('week')
+  expect(DateHelper.TimeframeToStartOf('M')).toBe('month')
+  expect(DateHelper.TimeframeToStartOf('y')).toBe('year')
+  expect(DateHelper.TimeframeToStartOf('v')).toBe('v')
+})
+
+test('LocalToUtc', () => {
+  const localDate = new Date('2024-01-01T00:00:00.000Z')
+  const utcDate = DateHelper.LocalToUtc(localDate)
+
+  expect(utcDate).toBeInstanceOf(Date)
+  expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
+
+  expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
+    new Date('2025-12-01T17:00:00.000Z')
+  )
+})
+
+// test('getFormattedTime', () => {
+//   const localDate = new Date('2024-01-01T00:00:00.000Z')
+//   const utcDate = DateHelper.getFormattedTime(+localDate)
+
+//   expect(utcDate).toBeInstanceOf(Date)
+//   expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
+
+//   expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
+//     new Date('2025-12-01T17:00:00.000Z')
+//   )
+// })
+
+test('FormattedUnixTime', () => {
+  const localDate = new Date('2024-01-01T00:00:00.000Z')
+  const utcDate = DateHelper.FormattedUnixTime(+localDate)
+
+  expect(utcDate).toBe('Saturday, September 27th 55969, 8:00:00 pm')
+})
+
+test('TimezoneOffsetInMinutes', () => {
+  const utcDate = DateHelper.TimezoneOffsetInMinutes()
+
+  expect(utcDate).toBe(-300)
+})
+
+test('UnixTimeFormat', () => {
+  const utcDate = DateHelper.UnixTimeFormat(+new Date())
+
+  expect(utcDate).toBe('Dec 1, 2025 7:00 AM')
+})
+
+test('UnixTimeFormatForTheDow', () => {
+  const utcDate = DateHelper.UnixTimeFormatForTheDow(+new Date())
+
+  expect(utcDate).toBe('Monday, December 1st 2025, 7:00:00 AM')
+})
+
+test('DateFormatForUiWithTime', () => {
+  expect(DateHelper.DateFormatForUiWithTime(+new Date())).toBe(
+    '12/1/25 7:00:00 am'
+  )
+  expect(DateHelper.DateFormatForUiWithTime(+new Date(), true)).toBe(
+    '12/1/2025 7:00:00 am'
+  )
+})
+
+test('DateFormatForApiCalls', () => {
+  const utcDate = DateHelper.DateFormatForApiCalls(+new Date())
+
+  expect(utcDate).toBe('2025-12-01')
+})
+
+test('Midnight', () => {
+  const utcDate = DateHelper.Midnight(new Date())
+
+  expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
+  expect(DateHelper.Midnight('2025-12-01T00:00:00.000Z')).toStrictEqual(
+    new Date('2025-12-01T00:00:00.000Z')
+  )
+})
+
+test('MidnightSafe', () => {
+  const utcDate = DateHelper.MidnightSafe(new Date())
+
+  expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
+
+  expect(() => DateHelper.MidnightSafe(undefined)).toThrow()
+})
+
+test('NextBoundaryUp', () => {
+  expect(DateHelper.NextBoundaryUp(new Date(), 'year')).toStrictEqual(
+    new Date('2026-01-01T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'year', 3)).toStrictEqual(
+    new Date('2028-01-01T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'month')).toStrictEqual(
+    new Date('2026-01-01T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'month', 3)).toStrictEqual(
+    new Date('2026-03-01T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'day')).toStrictEqual(
+    new Date('2025-12-02T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'day', 3)).toStrictEqual(
+    new Date('2025-12-04T00:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'hour')).toStrictEqual(
+    new Date('2025-12-01T13:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'hour', 3)).toStrictEqual(
+    new Date('2025-12-01T15:00:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'minute')).toStrictEqual(
+    new Date('2025-12-01T12:01:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'minute', 3)).toStrictEqual(
+    new Date('2025-12-01T12:03:00.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'second')).toStrictEqual(
+    new Date('2025-12-01T12:00:01.000Z')
+  )
+  expect(DateHelper.NextBoundaryUp(new Date(), 'second', 3)).toStrictEqual(
+    new Date('2025-12-01T12:00:03.000Z')
+  )
+})

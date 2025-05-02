@@ -1,10 +1,4 @@
-import moment, {
-  DurationInputArg1,
-  DurationInputArg2,
-  Moment,
-  unitOfTime,
-} from 'moment'
-import { isNullOrUndefined } from './general.mjs'
+import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { pluralSuffix, prefixIfHasData, safestr } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -252,18 +246,18 @@ export class DateHelper {
     return safestr(DateHelper.toIsoString(date))
   }
 
-  static getFormattedTime(
-    units: DurationInputArg1,
-    timeframe: DurationInputArg2,
-    isUtc = false
-  ) {
-    const mom = isUtc ? moment().utc() : moment()
-    if (units && timeframe) {
-      mom.add(units, timeframe)
-    }
+  // static getFormattedTime(
+  //   units: DurationInputArg1,
+  //   timeframe: DurationInputArg2,
+  //   isUtc = false
+  // ) {
+  //   const mom = isUtc ? moment().utc() : moment()
+  //   if (units && timeframe) {
+  //     mom.add(units, timeframe)
+  //   }
 
-    return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
-  }
+  //   return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
+  // }
 
   static FormattedUnixTime(unixtime: number) {
     const mom = moment.unix(unixtime)
@@ -276,11 +270,7 @@ export class DateHelper {
   }
 
   static UnixTimeFormat(val: number) {
-    if (!isNullOrUndefined(val)) {
-      return moment(val).format('MMM D, YYYY LT')
-    }
-
-    return ''
+    return moment(val).format('MMM D, YYYY LT')
   }
 
   static UnixTimeFormatForTheDow(val: number) {
