@@ -504,9 +504,15 @@ test('UnixTimeFormatForTheDow', () => {
 
 test('DateFormatForUiWithTime', () => {
   expect(DateHelper.DateFormatForUiWithTime(+new Date())).toBe(
-    '12/1/25 7:00:00 am'
+    '12/1/25 7:00 am'
   )
   expect(DateHelper.DateFormatForUiWithTime(+new Date(), true)).toBe(
+    '12/1/2025 7:00 am'
+  )
+  expect(DateHelper.DateFormatForUiWithTime(+new Date(), false, true)).toBe(
+    '12/1/25 7:00:00 am'
+  )
+  expect(DateHelper.DateFormatForUiWithTime(+new Date(), true, true)).toBe(
     '12/1/2025 7:00:00 am'
   )
 })
