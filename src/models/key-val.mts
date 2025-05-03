@@ -4,7 +4,9 @@ export interface IKeyVal<Tval = string, Tkey = string> extends IVal<Tval> {
   key: Tkey
 }
 
-export class KeyVal<Tval = string, Tkey = string> implements IKeyVal<Tval, Tkey> {
+export class KeyVal<Tval = string, Tkey = string>
+  implements IKeyVal<Tval, Tkey>
+{
   key: Tkey
   val: Tval
 
@@ -24,7 +26,9 @@ export interface IKeyValueShort<Tval = string, Tkey = string> {
   v: Tval
 }
 
-export class KeyValueShort<Tval = string, Tkey = string> implements IKeyValueShort<Tval, Tkey> {
+export class KeyValueShort<Tval = string, Tkey = string>
+  implements IKeyValueShort<Tval, Tkey>
+{
   k: Tkey
   v: Tval
 
@@ -32,9 +36,4 @@ export class KeyValueShort<Tval = string, Tkey = string> implements IKeyValueSho
     this.k = key
     this.v = value
   }
-}
-
-export type KeyValueShortType<Tval = string, Tkey = string> = {
-  k: Tkey
-  v: Tval
 }
