@@ -8,18 +8,14 @@ export class ColorHelper {
   static readonly TradePlotterGray = '#4D4D4D'
 
   static GetColorFromChange(
-    currentValue: number,
-    priceChange: number | undefined,
+    startValue: number,
+    endValue: number | undefined,
     isShort = false,
     colorDown?: string,
     colorUp?: string,
     colorNeutral = '#000000'
   ) {
-    const upDown = NumberHelper.DownUpOrEqual(
-      currentValue,
-      priceChange,
-      isShort
-    )
+    const upDown = NumberHelper.DownUpOrEqual(startValue, endValue, isShort)
 
     return upDown === 1 ? colorUp : upDown === -1 ? colorDown : colorNeutral
   }

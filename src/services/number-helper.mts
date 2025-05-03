@@ -501,18 +501,18 @@ export class NumberHelper {
 
   static DownUpOrEqual(
     startValue: number,
-    newValue: number | null | undefined,
+    endValue: number | null | undefined,
     isShort = false
   ) {
-    if (isNullOrUndefined(newValue) || startValue === newValue) {
+    if (isNullOrUndefined(endValue) || startValue === endValue) {
       return 0
     }
 
     if (isShort) {
-      return newValue > startValue ? -1 : 1
+      return endValue > startValue ? -1 : 1
     }
 
-    return newValue > startValue ? 1 : -1
+    return endValue > startValue ? 1 : -1
   }
 
   /**
