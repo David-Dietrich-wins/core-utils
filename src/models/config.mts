@@ -5,7 +5,6 @@ import {
 import { IIdVal } from '../models/id-val.mjs'
 import { INameVal } from './NameValManager.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import { IId } from './IdManager.mjs'
 import { IName } from './interfaces.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 
@@ -65,10 +64,7 @@ export class Config<Tid = string, Tval = boolean>
 
 export interface IConfigShort<Tid = string, Tval = unknown>
   extends IKeyValueShort<Tval, Tid>,
-    IId<Tid>,
     IIdCreatedUpdated<Tid> {
-  k: Tid
-  v: Tval
   userid: Tid
 }
 
@@ -91,6 +87,7 @@ export class ConfigShort<Tid = string, Tval = unknown>
     created = new Date()
   ) {
     super(id, createdby, created, updatedby, updated)
+
     if (isObject(id)) {
       this.copyFromDatabase(id as IConfigShort<Tid, Tval>)
     } else {

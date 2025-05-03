@@ -1,10 +1,5 @@
 import { StringOrStringArray } from '../models/types.mjs'
-import {
-  hasData,
-  isBoolean,
-  isFunction,
-  isNullOrUndefined,
-} from './general.mjs'
+import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 
@@ -278,15 +273,18 @@ export function FirstCharCapitalFormatter(s: string) {
 export class StringHelper {
   static safestr(
     s?: string | number | boolean | null,
-    ifEmpty?: {
-      ifEmpty?: string
-      prefix?: string
-      suffix?: string
-      trim?: boolean
-      trimStart?: boolean
-      trimEnd?: boolean
-    } | null
-  ) {
+    ifEmpty?:
+      | string
+      | {
+          ifEmpty?: string
+          prefix?: string
+          suffix?: string
+          trim?: boolean
+          trimStart?: boolean
+          trimEnd?: boolean
+        }
+      | null
+  ): string {
     if (isNullOrUndefined(s)) {
       s = ''
     } else if (!isString(s)) {
@@ -297,9 +295,7 @@ export class StringHelper {
       !hasData(s) &&
       (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
     ) {
-      if (!isObject(s) && !isNumber(s) && !isBoolean(s)) {
-        return ifEmpty ?? ''
-      }
+      return (ifEmpty as string) ?? ''
     }
 
     if (isObject(ifEmpty)) {
