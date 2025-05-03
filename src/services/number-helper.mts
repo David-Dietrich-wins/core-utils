@@ -75,7 +75,7 @@ export function setMaxDecimalPlaces(
 export type FormatFunction = (val: unknown) => string
 
 export function toFixedPrefixed(
-  val: number | string | null | undefined,
+  val: number | bigint | string | null | undefined,
   showZeroValues = true,
   toFixedLength = 2,
   prefix = '$'
@@ -88,7 +88,7 @@ export function toFixedPrefixed(
 }
 
 export function toFixedSuffixed(
-  val: number | string | null | undefined,
+  val: number | bigint | string | null | undefined,
   showZeroValues = true,
   toFixedLength = 2,
   suffix = '%'
@@ -137,7 +137,7 @@ export function NumberFormatterNoDecimal(
 }
 
 export function XFormatter(
-  val: number | string | null | undefined,
+  val: number | bigint | string | null | undefined,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
@@ -145,7 +145,7 @@ export function XFormatter(
 }
 
 export function DollarFormatter(
-  val: number | string | null | undefined = 0,
+  val: number | bigint | string | null | undefined = 0,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
@@ -153,7 +153,7 @@ export function DollarFormatter(
 }
 
 export function StockPriceFormatter(
-  price: number | string | null | undefined = 0,
+  price: number | bigint | string | null | undefined = 0,
   showZeroValues = false,
   numDecimalPlaces?: number
 ) {
@@ -171,7 +171,7 @@ export function StockPriceFormatter(
 }
 
 export function PercentFormatter(
-  val: number | string | null | undefined,
+  val: number | bigint | string | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 2
 ) {
@@ -191,7 +191,7 @@ export function PercentTimes100Formatter(
 }
 
 export function StockVolumeFormatter(
-  volume?: number | string | null,
+  volume: number | bigint | string | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 0
 ) {
