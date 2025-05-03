@@ -11,8 +11,10 @@ export class DateHelper {
   static readonly FormatForApiCalls = 'YYYY-MM-DD'
   static readonly FormatForUi = 'M/D/YYYY'
   static readonly FormatForUiWithYear = 'M/D/YYYY h:mm:ss a'
+  static readonly FormatForUiWithYearNoSeconds = 'M/D/YYYY h:mm a'
   static readonly FormatForUi2DigitYear = 'M/D/YY'
   static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
+  static readonly FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a'
 
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
@@ -225,12 +227,17 @@ export class DateHelper {
   static DateFormatForUiWithTime(
     date?: Moment | Date | number | string,
     showFullYear = false,
+    showSeconds = false,
     isUtc = false
   ) {
     return DateHelper.FormatDateTime(
       showFullYear
-        ? DateHelper.FormatForUiWithYear
-        : DateHelper.FormatForUi2DigitYearWithTime,
+        ? showSeconds
+          ? DateHelper.FormatForUiWithYear
+          : DateHelper.FormatForUiWithYearNoSeconds
+        : showSeconds
+        ? DateHelper.FormatForUi2DigitYearWithTime
+        : DateHelper.FormatForUi2DigitYearWithTimeNoSeconds,
       date,
       isUtc
     )
