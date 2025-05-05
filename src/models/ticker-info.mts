@@ -2,7 +2,7 @@ import moment from 'moment'
 import { z } from 'zod'
 import { IdName } from '../models/id-name.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
-import { arrayFirst, isArray, safeArray } from '../services/array-helper.mjs'
+import { isArray, safeArray } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import {
   getAsNumber,
@@ -13,32 +13,16 @@ import {
   isString,
   safestr,
   safestrUppercase,
-  StringHelper,
 } from '../services/string-helper.mjs'
+import {
+  zFromStringOrStringArray,
+  zStringMinMax,
+  zToStringArray,
+} from '../services/zod-helper.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
 import { AnyRecord, FromTo } from './types.mjs'
-
-function zStringMinMax(min = 0, max = 1000) {
-  return z.string().min(min).max(max)
-}
-
-function zFromStringOrStringArray(min = 0, max = 1000) {
-  return z
-    .union([zStringMinMax(min, max), z.array(zStringMinMax(min, max))])
-    .transform((arg): string | string[] => {
-      const items = StringHelper.SplitToArray(arg)
-
-      return isArray(items, 2) ? items : arrayFirst(items) ?? []
-    })
-}
-
-function zToStringArray(min = 0, max = 1000) {
-  return z
-    .union([zStringMinMax(min, max), z.array(zStringMinMax(min, max))])
-    .transform((arg): string[] => StringHelper.SplitToArray(arg))
-}
 
 export const SymbolSchema = z.object({
   symbol: zStringMinMax(1, 10),
