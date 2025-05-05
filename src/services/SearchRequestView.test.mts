@@ -1,3 +1,4 @@
+import { ZodSchema } from 'zod'
 import { IIdNameValue, StringHelper } from '../index.mjs'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 
@@ -295,5 +296,62 @@ describe('getItems', () => {
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
+  })
+})
+
+describe('VerificationSchema', () => {
+  test('VerificationSchema', () => {
+    const schema = SearchRequestView.VerificationSchema
+
+    expect(schema).toBeDefined()
+    expect(schema).toBeInstanceOf(ZodSchema)
+  })
+
+  test('valid parse', () => {
+    const schema = SearchRequestView.VerificationSchema
+
+    const srv: ISearchRequestView = {
+      term: 'name',
+      sortColumn: 'name',
+      sortDirection: 'asc',
+      limit: 10,
+      offset: 0,
+      exactMatch: true,
+      pageIndex: 0,
+      pageSize: 20,
+    }
+
+    expect(() => schema.parse(srv)).not.toThrow()
+  })
+
+  test('bad limit', () => {
+    const schema = SearchRequestView.VerificationSchema
+
+    const company: ISearchRequestView = {
+      term: 'name',
+      sortColumn: 'name',
+      sortDirection: 'asc',
+      limit: 1011111111111,
+      offset: 0,
+      exactMatch: true,
+      pageIndex: 0,
+      pageSize: 20,
+    }
+
+    expect(() => schema.parse(company)).toThrow(
+      new Error(`[
+  {
+    "code": "too_big",
+    "maximum": 1000000,
+    "type": "number",
+    "inclusive": true,
+    "exact": false,
+    "message": "Number must be less than or equal to 1000000",
+    "path": [
+      "limit"
+    ]
+  }
+]`)
+    )
   })
 })

@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import {
   AnyObject,
   AnyRecord,
@@ -175,5 +176,29 @@ export class SearchRequestView implements ISearchRequestView {
   }
   get isDescending() {
     return !this.isAscending
+  }
+
+  static get VerificationSchema() {
+    // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
+    // Define Zod schema for form validation
+    const schema = z.object({
+      term: z.string().max(100).optional(),
+      sortColumn: z.string().max(100).optional(),
+      sortDirection: z
+        .number()
+        .max(10)
+        .or(z.literal('asc'))
+        .or(z.literal('desc'))
+        .or(z.literal(1))
+        .or(z.literal(-1)),
+      offset: z.number().min(0).max(1000000),
+      limit: z.number().min(0).max(1000000),
+      exactMatch: z.boolean(),
+      pageIndex: z.number().min(0).max(1000000),
+      pageSize: z.number().min(0).max(1000000),
+      searchColumns: z.string().max(1000000).or(z.array(z.string())).optional(),
+    })
+
+    return schema
   }
 }
