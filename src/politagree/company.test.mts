@@ -1,6 +1,7 @@
 import { ZodSchema } from 'zod'
 import { getCurrentDate } from '../jest.setup.mjs'
 import { Company } from './company.mjs'
+import { StringHelper } from '../index.mjs'
 
 test('constructor', () => {
   const company = new Company()
@@ -120,5 +121,54 @@ describe('VerificationSchema', () => {
     const company = Company.CreateICompany()
 
     expect(() => schema.parse(company)).toThrow()
+  })
+})
+
+describe('CompanyNameVerificationSchema', () => {
+  test('CompanyNameVerificationSchema', () => {
+    const schema = Company.CompanyNameVerificationSchema
+
+    expect(schema).toBeDefined()
+    expect(schema).toBeInstanceOf(ZodSchema)
+  })
+
+  test('valid parse', () => {
+    const schema = Company.CompanyNameVerificationSchema
+
+    const company = Company.CreateICompany({
+      name: 'name',
+    })
+
+    expect(() => schema.parse(company)).not.toThrow()
+  })
+
+  test('no name', () => {
+    const schema = Company.CompanyNameVerificationSchema
+
+    const company = Company.CreateICompany()
+
+    expect(() => schema.parse(company)).toThrow()
+  })
+
+  test('invalid name', () => {
+    expect(() =>
+      Company.CompanyNameVerificationSchema.parse({
+        name: StringHelper.GenerateRandomString(126),
+      })
+    ).toThrow(
+      new Error(`[
+  {
+    "code": "too_big",
+    "maximum": 125,
+    "type": "string",
+    "inclusive": true,
+    "exact": false,
+    "message": "String must contain at most 125 character(s)",
+    "path": [
+      "name"
+    ]
+  }
+]`)
+    )
   })
 })
