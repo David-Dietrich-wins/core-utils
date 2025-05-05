@@ -1,6 +1,7 @@
 import { ZodSchema } from 'zod'
-import { IIdNameValue, StringHelper } from '../index.mjs'
+import { IIdNameValue } from '../models/id-name.mjs'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
+import { StringHelper } from './string-helper.mjs'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(

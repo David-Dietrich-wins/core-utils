@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod'
 import { getCurrentDate } from '../jest.setup.mjs'
+import { StringHelper } from '../services/string-helper.mjs'
 import { Company } from './company.mjs'
-import { StringHelper } from '../index.mjs'
 
 test('constructor', () => {
   const company = new Company()

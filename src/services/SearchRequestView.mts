@@ -2,7 +2,6 @@ import * as z from 'zod'
 import {
   AnyObject,
   AnyRecord,
-  ArrayOrSingle,
   SortOrder,
   SortOrderAsBoolean,
   StringOrStringArray,
@@ -27,7 +26,7 @@ export interface ISearchRequestView {
   exactMatch: boolean
   pageIndex: number
   pageSize: number
-  searchColumns?: ArrayOrSingle<string>
+  searchColumns?: StringOrStringArray
 }
 
 export class SearchRequestView implements ISearchRequestView {
@@ -56,7 +55,8 @@ export class SearchRequestView implements ISearchRequestView {
     pageSize = 0
   ) {
     if (isObject(term)) {
-      Object.assign(this, term)
+      // Do this to ensure no extra properties are passed in.
+      Object.assign(this, SearchRequestView.VerificationSchema.parse(term))
     } else {
       this.term = safestr(term)
       this.sortColumn = sortColumn
@@ -66,9 +66,9 @@ export class SearchRequestView implements ISearchRequestView {
       this.exactMatch = exactMatch
       this.pageIndex = pageIndex
       this.pageSize = pageSize
-    }
 
-    SearchRequestView.VerificationSchema.parse(this)
+      SearchRequestView.VerificationSchema.parse(this)
+    }
   }
 
   static Create(overrides?: Partial<ISearchRequestView> | null) {
@@ -200,11 +200,12 @@ export class SearchRequestView implements ISearchRequestView {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({
-      term: z
-        .string()
-        .max(100)
-        .or(z.array(z.string().max(100)))
-        .optional(),
+      exactMatch: z.boolean(),
+      limit: z.number().min(0).max(1000000),
+      offset: z.number().min(0).max(1000000),
+      pageIndex: z.number().min(0).max(1000000),
+      pageSize: z.number().min(0).max(1000000),
+      searchColumns: z.string().max(1000000).or(z.array(z.string())).optional(),
       sortColumn: z.string().max(100).optional(),
       sortDirection: z
         .number()
@@ -213,12 +214,11 @@ export class SearchRequestView implements ISearchRequestView {
         .or(z.literal('desc'))
         .or(z.literal(1))
         .or(z.literal(-1)),
-      offset: z.number().min(0).max(1000000),
-      limit: z.number().min(0).max(1000000),
-      exactMatch: z.boolean(),
-      pageIndex: z.number().min(0).max(1000000),
-      pageSize: z.number().min(0).max(1000000),
-      searchColumns: z.string().max(1000000).or(z.array(z.string())).optional(),
+      term: z
+        .string()
+        .max(100)
+        .or(z.array(z.string().max(100)))
+        .optional(),
     })
 
     return schema
