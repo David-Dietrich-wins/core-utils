@@ -2,7 +2,7 @@ import moment from 'moment'
 import { z } from 'zod'
 import { IdName } from '../models/id-name.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
-import { isArray, safeArray } from '../services/array-helper.mjs'
+import { arrayFirst, isArray, safeArray } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import {
   getAsNumber,
@@ -20,67 +20,33 @@ import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
 import { AnyRecord, FromTo } from './types.mjs'
 
+function zStringMinMax(min = 0, max = 1000) {
+  return z.string().min(min).max(max)
+}
+
 function zFromStringOrStringArray(min = 0, max = 1000) {
   return z
-    .union([z.string().min(min).max(max), z.string().min(min).max(max).array()])
+    .union([zStringMinMax(min, max), z.array(zStringMinMax(min, max))])
     .transform((arg): string | string[] => {
-      if (isString(arg)) {
-        const items = StringHelper.SplitToArray(arg)
+      const items = StringHelper.SplitToArray(arg)
 
-        if (isArray(items, 1)) {
-          return items.length > 1 ? items : items[0]
-        }
-      } else if (isArray(arg)) {
-        return arg.map((v) => v.trim())
-      }
-
-      return ''
+      return isArray(items, 2) ? items : arrayFirst(items) ?? []
     })
 }
 
-// export function arrayFromString<
-//   T extends z.ZodType<string[], z.ZodTypeDef, string | string[]>
-// >(schema: T) {
-//   return z.preprocess((obj: unknown) => {
-//     if (!obj) {
-//       return [] as string[]
-//     }
-//     if (Array.isArray(obj)) {
-//       return obj as string[]
-//     }
-//     if (typeof obj === 'string') {
-//       return obj.split(',') as string[]
-//     }
-
-//     return [] as string[]
-//   }, z.string().array())
-// }
-
-// export function ZodStringOrStringArray() {
-//   return zArrayFromString() //(z.string().min(min).max(max))
-
-//   // return z.preprocess((val) => {
-//   //   let strArray: string[] = []
-
-//   //   if (val !== null && val !== undefined) {
-//   //     if (isString(val)) {
-//   //       strArray = val.split(',').map((v) => v.trim())
-//   //     } else if (isArray(val)) {
-//   //       strArray = val as string[]
-//   //     }
-//   //   }
-
-//   //   return strArray
-//   // }, z.string().min(min).max(max).array())
-// }
+function zToStringArray(min = 0, max = 1000) {
+  return z
+    .union([zStringMinMax(min, max), z.array(zStringMinMax(min, max))])
+    .transform((arg): string[] => StringHelper.SplitToArray(arg))
+}
 
 export const SymbolSchema = z.object({
-  symbol: z.string().min(1).max(10),
+  symbol: zStringMinMax(1, 10),
 })
 export type ISymbol = z.infer<typeof SymbolSchema>
 
 export const TickerSchema = z.object({
-  ticker: z.string().min(1).max(10),
+  ticker: zStringMinMax(1, 10),
 })
 export type ITicker = z.infer<typeof TickerSchema>
 
@@ -88,6 +54,11 @@ export const TickerArraySchema = z.object({
   ticker: zFromStringOrStringArray(1, 10),
 })
 export type ITickerArray = z.infer<typeof TickerArraySchema>
+
+export const TickerToArraySchema = z.object({
+  ticker: zToStringArray(1, 10),
+})
+export type ITickerToArray = z.infer<typeof TickerToArraySchema>
 
 export const TickersArraySchema = z.object({
   tickers: zFromStringOrStringArray(1, 10),
