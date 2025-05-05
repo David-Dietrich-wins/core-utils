@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "inlineSources": true,
+    "isolatedModules": true,
     "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
