@@ -1,0 +1,299 @@
+import { IIdNameValue, StringHelper } from '../index.mjs'
+import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
+
+test('constructor string', () => {
+  const searchRequestView = new SearchRequestView(
+    'test',
+    'column',
+    'asc',
+    10,
+    0,
+    true
+  )
+  expect(searchRequestView.term).toBe('test')
+  expect(searchRequestView.sortColumn).toBe('column')
+  expect(searchRequestView.sortDirection).toBe('asc')
+  expect(searchRequestView.limit).toBe(10)
+  expect(searchRequestView.offset).toBe(0)
+  expect(searchRequestView.exactMatch).toBe(true)
+})
+
+test('constructor object', () => {
+  const isrv: ISearchRequestView = {
+    term: 'test',
+    sortColumn: 'column',
+    sortDirection: 'asc',
+    limit: 10,
+    offset: 0,
+    exactMatch: true,
+    pageIndex: 0,
+    pageSize: 20,
+  }
+
+  const srv = new SearchRequestView(isrv)
+  expect(srv.term).toBe('test')
+  expect(srv.sortColumn).toBe('column')
+  expect(srv.sortDirection).toBe('asc')
+  expect(srv.limit).toBe(10)
+  expect(srv.offset).toBe(0)
+  expect(srv.exactMatch).toBe(true)
+
+  srv.clear()
+  expect(srv.term).toBe('')
+  expect(srv.sortColumn).toBe('')
+  expect(srv.sortDirection).toBe('asc')
+  expect(srv.limit).toBe(0)
+  expect(srv.offset).toBe(0)
+  expect(srv.exactMatch).toBe(false)
+  expect(srv.pageIndex).toBe(0)
+  expect(srv.pageSize).toBe(0)
+  expect(srv.searchColumns).toBeUndefined()
+
+  expect(srv.isAscending).toBe(true)
+  expect(srv.isDescending).toBe(false)
+})
+
+test('pageIndex and pageSize', () => {
+  const isrv: ISearchRequestView = {
+    term: 'test',
+    sortColumn: 'column',
+    sortDirection: 'asc',
+    limit: 12,
+    offset: 0,
+    exactMatch: true,
+    pageIndex: 2,
+    pageSize: 20,
+  }
+
+  const srv = new SearchRequestView(isrv)
+  expect(srv.pageIndex).toBe(2)
+  expect(srv.pageSize).toBe(20)
+  expect(srv.CalculatedPageSize).toBe(20)
+  srv.pageSize = 0
+  expect(srv.CalculatedPageSize).toBe(12)
+  expect(srv.CalculatedOffset).toBe(24)
+
+  expect(srv.CapLimit(10)).toBe(10)
+  expect(srv.CapLimit(20)).toBe(10)
+  srv.limit = 0
+  expect(srv.CapLimit(10)).toBe(10)
+  expect(srv.CapLimit(20)).toBe(10)
+})
+
+describe('getItems', () => {
+  test('getItems with limit', () => {
+    const items: IIdNameValue<string, number>[] = []
+    for (let i = 0; i < 100; i++) {
+      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+
+      items.push({
+        id: i,
+        name: i < 50 ? `xxxxX-${randomString}` : randomString,
+        value: `Value ${i}`,
+      })
+    }
+
+    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true)
+    const [result, count] = srv.getItems(items, 10)
+    expect(result.length).toBe(10)
+    expect(count).toBe(100)
+
+    srv.limit = 20
+    const [result2, count2] = srv.getItems(items)
+    expect(result2.length).toBe(20)
+    expect(count2).toBe(100)
+
+    srv.limit = 0
+    srv.sortColumn = ''
+    const [result3, count3] = srv.getItems(items, 30, 'value', false)
+    expect(result3.length).toBe(30)
+    expect(count3).toBe(100)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.limit).toBe(30)
+    expect(srv.offset).toBe(0)
+    expect(srv.exactMatch).toBe(true)
+
+    srv.exactMatch = false
+    srv.term = 'xxxxX'
+    srv.searchColumns = ['name']
+    const [result4, count4] = srv.getItems(items, 30, 'name', true)
+    expect(result4.length).toBe(30)
+    expect(count4).toBe(50)
+
+    srv.limit = 0
+    const [result5, count5] = srv.getItems(items, 24, 'name', false)
+    expect(result5.length).toBe(24)
+    expect(count5).toBe(50)
+
+    srv.pageIndex = 1
+    srv.pageSize = 10
+    const [result6, count6] = srv.getItems(items, 24, 'name', false)
+    expect(result6.length).toBe(10)
+    expect(count6).toBe(50)
+    expect(srv.CalculatedOffset).toBe(10)
+    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.pageIndex).toBe(1)
+    expect(srv.pageSize).toBe(10)
+    expect(srv.limit).toBe(24)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['name'])
+    expect(srv.term).toBe('xxxxX')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+
+    srv.limit = 13
+    srv.offset = 2
+    srv.pageIndex = 0
+    srv.pageSize = 0
+    const [result7, count7] = srv.getItems(items, 24, 'name', false)
+    expect(result7.length).toBe(13)
+    expect(count7).toBe(50)
+    expect(srv.CalculatedOffset).toBe(2)
+    expect(srv.CalculatedPageSize).toBe(13)
+    expect(srv.pageIndex).toBe(0)
+    expect(srv.pageSize).toBe(0)
+    expect(srv.limit).toBe(13)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['name'])
+    expect(srv.term).toBe('xxxxX')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+
+    srv.limit = 0
+    srv.offset = 2
+    srv.pageIndex = 0
+    srv.pageSize = 0
+    const [result8, count8] = srv.getItems(items, 0, 'name', false)
+    expect(result8.length).toBe(48)
+    expect(count8).toBe(50)
+    expect(srv.CalculatedOffset).toBe(2)
+    expect(srv.CalculatedPageSize).toBe(0)
+    expect(srv.pageIndex).toBe(0)
+    expect(srv.pageSize).toBe(0)
+    expect(srv.limit).toBe(0)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['name'])
+    expect(srv.term).toBe('xxxxX')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+  })
+
+  test('numbers', () => {
+    const items: IIdNameValue<number, number>[] = []
+    for (let i = 0; i < 100; i++) {
+      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+
+      items.push({
+        id: i,
+        name: i < 50 ? `xxxxX-${randomString}` : randomString,
+        value: i < 50 ? 100 + i : i,
+      })
+    }
+
+    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true)
+    const [result, count] = srv.getItems(items, 10)
+    expect(result.length).toBe(10)
+    expect(count).toBe(100)
+
+    srv.limit = 20
+    const [result2, count2] = srv.getItems(items)
+    expect(result2.length).toBe(20)
+    expect(count2).toBe(100)
+
+    srv.limit = 0
+    srv.sortColumn = ''
+    const [result3, count3] = srv.getItems(items, 30, 'value', false)
+    expect(result3.length).toBe(30)
+    expect(count3).toBe(100)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.limit).toBe(30)
+    expect(srv.offset).toBe(0)
+    expect(srv.exactMatch).toBe(true)
+
+    srv.exactMatch = false
+    srv.term = '100'
+    srv.searchColumns = ['value']
+    const [result4, count4] = srv.getItems(items, 30, 'name', true)
+    expect(result4.length).toBe(0)
+    expect(count4).toBe(0)
+
+    srv.limit = 0
+    const [result5, count5] = srv.getItems(items, 24, 'name', false)
+    expect(result5.length).toBe(0)
+    expect(count5).toBe(0)
+
+    srv.pageIndex = 1
+    srv.pageSize = 10
+    const [result6, count6] = srv.getItems(items, 24, 'name', false)
+    expect(result6.length).toBe(0)
+    expect(count6).toBe(0)
+    expect(srv.CalculatedOffset).toBe(10)
+    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.pageIndex).toBe(1)
+    expect(srv.pageSize).toBe(10)
+    expect(srv.limit).toBe(24)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['value'])
+    expect(srv.term).toBe('100')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+
+    srv.limit = 13
+    srv.offset = 2
+    srv.pageIndex = 0
+    srv.pageSize = 0
+    const [result7, count7] = srv.getItems(items, 24, 'name', false)
+    expect(result7.length).toBe(0)
+    expect(count7).toBe(0)
+    expect(srv.CalculatedOffset).toBe(2)
+    expect(srv.CalculatedPageSize).toBe(13)
+    expect(srv.pageIndex).toBe(0)
+    expect(srv.pageSize).toBe(0)
+    expect(srv.limit).toBe(13)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['value'])
+    expect(srv.term).toBe('100')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    srv.term = 100 as any
+    srv.limit = 0
+    srv.offset = 2
+    srv.pageIndex = 0
+    srv.pageSize = 0
+    const [result8, count8] = srv.getItems(items, 0, 'name', false)
+    expect(result8.length).toBe(0)
+    expect(count8).toBe(1)
+    expect(srv.CalculatedOffset).toBe(2)
+    expect(srv.CalculatedPageSize).toBe(0)
+    expect(srv.pageIndex).toBe(0)
+    expect(srv.pageSize).toBe(0)
+    expect(srv.limit).toBe(0)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['value'])
+    expect(srv.term).toBe(100)
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
+  })
+})

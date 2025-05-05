@@ -49,7 +49,9 @@ export class SearchRequestView implements ISearchRequestView {
     sortDirection: SortOrder = 1, // ORDER BY direction
     limit = 0, // LIMIT the result set to # of rows
     offset = 0, // Start at OFFSET
-    exactMatch = false
+    exactMatch = false,
+    pageIndex = 0,
+    pageSize = 0
   ) {
     if (isObject(term)) {
       Object.assign(this, term)
@@ -60,6 +62,8 @@ export class SearchRequestView implements ISearchRequestView {
       this.limit = limit
       this.offset = offset
       this.exactMatch = exactMatch
+      this.pageIndex = pageIndex
+      this.pageSize = pageSize
     }
   }
 
@@ -150,7 +154,12 @@ export class SearchRequestView implements ISearchRequestView {
   }
 
   get CalculatedOffset() {
-    return this.CalculatedPageSize * getAsNumber(this.pageIndex)
+    const offset = this.CalculatedPageSize * getAsNumber(this.pageIndex)
+    if (offset > 0) {
+      return offset
+    }
+
+    return getAsNumber(this.offset)
   }
 
   CapLimit(maxlimit: number) {

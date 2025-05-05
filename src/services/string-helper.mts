@@ -332,6 +332,17 @@ export class StringHelper {
     return s
   }
 
+  static GenerateRandomString(length: number) {
+    let result = ''
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+  }
+
   /**
    * Returns a string with a prepended prefix if the string has data.
    * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
