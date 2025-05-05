@@ -5,6 +5,7 @@ import {
   ArrayOrSingle,
   SortOrder,
   SortOrderAsBoolean,
+  StringOrStringArray,
 } from '../models/types.mjs'
 import { safeArray, isArray } from './array-helper.mjs'
 import { hasData, sortFunction } from './general.mjs'
@@ -18,7 +19,7 @@ import {
 } from './string-helper.mjs'
 
 export interface ISearchRequestView {
-  term: string
+  term: StringOrStringArray
   sortColumn: string
   sortDirection: SortOrder
   limit: number
@@ -32,7 +33,7 @@ export interface ISearchRequestView {
 export class SearchRequestView implements ISearchRequestView {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addToQuery?: any // Additional query parameters for MongoDb.
-  searchColumns?: ArrayOrSingle<string> // The search column(s)
+  searchColumns?: StringOrStringArray
 
   term = ''
   sortColumn = ''
@@ -45,7 +46,7 @@ export class SearchRequestView implements ISearchRequestView {
   pageSize = 0
 
   constructor(
-    term?: string | object, // Search term
+    term?: StringOrStringArray | object, // Search term
     sortColumn = '', // ORDER BY column
     sortDirection: SortOrder = 1, // ORDER BY direction
     limit = 0, // LIMIT the result set to # of rows
@@ -199,7 +200,11 @@ export class SearchRequestView implements ISearchRequestView {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({
-      term: z.string().max(100).optional(),
+      term: z
+        .string()
+        .max(100)
+        .or(z.array(z.string().max(100)))
+        .optional(),
       sortColumn: z.string().max(100).optional(),
       sortDirection: z
         .number()

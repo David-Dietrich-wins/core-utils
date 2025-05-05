@@ -324,6 +324,23 @@ describe('VerificationSchema', () => {
     expect(() => schema.parse(srv)).not.toThrow()
   })
 
+  test('term array', () => {
+    const schema = SearchRequestView.VerificationSchema
+
+    const srv: ISearchRequestView = {
+      term: ['name', 'value'],
+      sortColumn: 'name',
+      sortDirection: 'asc',
+      limit: 10,
+      offset: 0,
+      exactMatch: true,
+      pageIndex: 0,
+      pageSize: 20,
+    }
+
+    expect(() => schema.parse(srv)).not.toThrow()
+  })
+
   test('bad limit', () => {
     const schema = SearchRequestView.VerificationSchema
 
