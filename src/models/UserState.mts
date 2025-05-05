@@ -1,6 +1,6 @@
 import { IIdName } from './id-name.mjs'
 
-export interface IUserState<T = unknown> extends IIdName<string, string> {
+export interface IUserState<T = unknown> extends IIdName<string> {
   message?: string
   obj?: T
   status: string

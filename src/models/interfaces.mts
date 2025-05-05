@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { IWebState } from './WebState.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IId } from './IdManager.mjs'
@@ -34,9 +35,10 @@ export interface IUserId<T = string> {
   userid?: T
 }
 
-export interface IName<T = string> {
-  name: T
-}
+export const NameSchema = z.object({
+  name: z.string().min(1).max(1000),
+})
+export type IName = z.infer<typeof NameSchema>
 
 export interface IType<T = string> {
   type: T
@@ -50,21 +52,25 @@ export interface IValue<T> {
   value: T
 }
 
-export interface IJwt {
-  jwt: string
-}
+export const JwtSchema = z.object({
+  jwt: z.string().min(1).max(5000),
+})
+export type IJwt = z.infer<typeof JwtSchema>
 
-export interface IPrice {
-  price: number
-}
+export const PriceSchema = z.object({
+  price: z.number().nonnegative().max(1000),
+})
+export type IPrice = z.infer<typeof PriceSchema>
 
-export interface ISlug {
-  slug: string
-}
+export const SlugSchema = z.object({
+  slug: z.string().min(1).max(1000),
+})
+export type ISlug = z.infer<typeof SlugSchema>
 
-export interface IErrorMessage {
-  errorMessage: string
-}
+export const ErrorMessageSchema = z.object({
+  errorMessage: z.string().min(1).max(5000),
+})
+export type IErrorMessage = z.infer<typeof ErrorMessageSchema>
 
 export interface IEventLogin<T = string>
   extends IId<string>,
@@ -102,6 +108,7 @@ export interface IChartRunLogApiReturn extends ITicker {
   created: Date
 }
 
-export interface IBearerToken {
-  bearerToken: string
-}
+export const BearerTokenSchema = z.object({
+  bearerToken: z.string().min(1).max(5000),
+})
+export type IBearerToken = z.infer<typeof BearerTokenSchema>

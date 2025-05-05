@@ -76,6 +76,6 @@ describe('ConfigShort', () => {
     expect(config.updated).toBe(ic.updated)
     expect(config.updatedby).toBe(ic.updatedby)
 
-    expect(config.api()).toEqual({ name: 1, val: 1 })
+    expect(config.api()).toEqual({ name: '1', val: 1 })
   })
 })

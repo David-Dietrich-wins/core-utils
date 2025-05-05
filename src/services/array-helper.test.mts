@@ -49,15 +49,12 @@ import {
 } from './array-helper.mjs'
 
 test('arrayGetIds', () => {
-  const arr: IdName<number, string>[] = [
-    new IdName(1, 'name1'),
-    new IdName(2, 'name2'),
-  ]
+  const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetIds(arr)).toStrictEqual([1, 2])
 
   expect(
-    arrayGetIds(arr, (item: IdName<number, string>) => {
+    arrayGetIds(arr, (item: IdName<number>) => {
       if (item.id === 1) {
         return 3
       }
@@ -68,10 +65,7 @@ test('arrayGetIds', () => {
 })
 
 test('arrayGetIdNames', () => {
-  const arr: IdName<number, string>[] = [
-    new IdName(1, 'name1'),
-    new IdName(2, 'name2'),
-  ]
+  const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetIdNames(arr)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -79,7 +73,7 @@ test('arrayGetIdNames', () => {
   ])
 
   expect(
-    arrayGetIdNames(arr, (item: IdName<number, string>) => {
+    arrayGetIdNames(arr, (item: IdName<number>) => {
       if (item.id === 1) {
         return new IdName(3, item.name)
       }
@@ -90,24 +84,18 @@ test('arrayGetIdNames', () => {
 })
 
 test('arrayGetNames', () => {
-  const arr: IdName<number, string>[] = [
-    new IdName(1, 'name1'),
-    new IdName(2, 'name2'),
-  ]
+  const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetNames(arr)).toStrictEqual(['name1', 'name2'])
 
   expect(
-    arrayGetNames<IdName<number, string>>(
-      arr,
-      (item: IdName<number, string>) => {
-        if (item.name === 'name1') {
-          return 'test-rename'
-        }
-
-        return item.name
+    arrayGetNames<IdName<number>>(arr, (item: IdName<number>) => {
+      if (item.name === 'name1') {
+        return 'test-rename'
       }
-    )
+
+      return item.name
+    })
   ).toStrictEqual(['test-rename', 'name2'])
 })
 
@@ -221,7 +209,7 @@ test('arrayFilter', () => {
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
   ]
-  const filterFunc = (item: IdName<number, string>) => item.id === 1
+  const filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFilter([], filterFunc)).toStrictEqual([])
   expect(arrayFilter(undefined, filterFunc)).toStrictEqual([])
@@ -234,7 +222,7 @@ test('arrayFind', () => {
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
   ]
-  const filterFunc = (item: IdName<number, string>) => item.id === 1
+  const filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFind([], filterFunc)).toBeUndefined()
   expect(arrayFind(undefined, filterFunc)).toBeUndefined()
@@ -247,7 +235,7 @@ test('arrayMustFindFunc', () => {
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
   ]
-  const filterFunc = (item: IdName<number, string>) => item.id === 1
+  const filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(() => arrayMustFindFunc([], filterFunc)).toThrow(
     'Unable to find arrayMustFindFunc.'

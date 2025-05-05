@@ -3,7 +3,7 @@ import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import { isArray } from '../services/array-helper.mjs'
 import { ITileConfig, TileConfig } from './TileConfig.mjs'
 
-export interface IDashboardScreenSetting extends IIdName<string, string> {
+export interface IDashboardScreenSetting extends IIdName<string> {
   tiles: ITileConfig[]
 }
 

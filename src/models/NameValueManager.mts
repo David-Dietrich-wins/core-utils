@@ -2,36 +2,30 @@ import { safeArray } from '../services/array-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IName, IType, IValue } from './interfaces.mjs'
 
-export interface INameType<TType = string, Tname = string>
-  extends IName<Tname>,
-    IType<TType> {}
-export interface INameTypeValue<TValue = string, TType = string, Tname = string>
-  extends IName<Tname>,
+export interface INameType<TType = string> extends IName, IType<TType> {}
+export interface INameTypeValue<TValue = string, TType = string>
+  extends IName,
     IType<TType>,
     IValue<TValue> {}
-export interface INameValue<Tvalue = string, Tname = string>
-  extends IName<Tname>,
-    IValue<Tvalue> {}
+export interface INameValue<Tvalue = string> extends IName, IValue<Tvalue> {}
 
-export class NameValue<Tvalue = string, Tname = string>
-  implements INameValue<Tvalue, Tname>
-{
-  name: Tname
+export class NameValue<Tvalue = string> implements INameValue<Tvalue> {
+  name: string
   value: Tvalue
 
-  constructor(name: Tname, value: Tvalue) {
+  constructor(name: string, value: Tvalue) {
     this.name = name
     this.value = value
   }
 }
 
-export class NameValueType<TValue = string, TType = string, TName = string>
-  extends NameValue<TValue, TName>
-  implements INameTypeValue<TValue, TType, TName>
+export class NameValueType<TValue = string, TType = string>
+  extends NameValue<TValue>
+  implements INameTypeValue<TValue, TType>
 {
   type: TType
 
-  constructor(name: TName, value: TValue, type: TType) {
+  constructor(name: string, value: TValue, type: TType) {
     super(name, value)
     this.type = type
   }
@@ -49,24 +43,24 @@ export type NameValueBoolean = NameValueType<boolean>
 export type NameValueNumber = NameValueType<number>
 export type NameValueString = NameValueType<string>
 
-export class NameValueManager<TValue = string, TName = string> {
+export class NameValueManager<TValue = string> {
   constructor(
-    public list: INameValue<TValue, TName>[] = [],
+    public list: INameValue<TValue>[] = [],
     public stats?: InstrumentationStatistics
   ) {}
 
-  static CreateNameValueManager<TValue = string, TName = string>(
-    arr: INameValue<TValue, TName>[] | null | undefined,
+  static CreateNameValueManager<TValue = string>(
+    arr: INameValue<TValue>[] | null | undefined,
     stats?: InstrumentationStatistics
-  ): NameValueManager<TValue, TName> {
+  ): NameValueManager<TValue> {
     return new NameValueManager(safeArray(arr), stats)
   }
 
-  static CreateINameValue<TValue = string, TName = string>(
-    name: TName,
+  static CreateINameValue<TValue = string>(
+    name: string,
     value: TValue
-  ): INameValue<TValue, TName> {
-    const item: INameValue<TValue, TName> = {
+  ): INameValue<TValue> {
+    const item: INameValue<TValue> = {
       name,
       value,
     }

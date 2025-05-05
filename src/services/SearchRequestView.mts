@@ -17,22 +17,14 @@ import {
   safestrTrim,
 } from './string-helper.mjs'
 
-export interface ISearchRequestView {
-  term: StringOrStringArray
-  sortColumn: string
-  sortDirection: SortOrder
-  limit: number
-  offset: number
-  exactMatch: boolean
-  pageIndex: number
-  pageSize: number
-  searchColumns?: StringOrStringArray
-}
+export type ISearchRequestView = z.infer<
+  typeof SearchRequestView.VerificationSchema
+>
 
 export class SearchRequestView implements ISearchRequestView {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addToQuery?: any // Additional query parameters for MongoDb.
-  searchColumns?: StringOrStringArray
+  searchColumns?: ISearchRequestView['searchColumns']
 
   term = ''
   sortColumn = ''
@@ -206,19 +198,20 @@ export class SearchRequestView implements ISearchRequestView {
       pageIndex: z.number().min(0).max(1000000),
       pageSize: z.number().min(0).max(1000000),
       searchColumns: z.string().max(1000000).or(z.array(z.string())).optional(),
-      sortColumn: z.string().max(100).optional(),
+      sortColumn: z.string().max(100),
       sortDirection: z
         .number()
         .max(10)
         .or(z.literal('asc'))
         .or(z.literal('desc'))
         .or(z.literal(1))
-        .or(z.literal(-1)),
+        .or(z.literal(-1))
+        .or(z.boolean()),
+
       term: z
         .string()
         .max(100)
-        .or(z.array(z.string().max(100)))
-        .optional(),
+        .or(z.array(z.string().max(100))),
     })
 
     return schema

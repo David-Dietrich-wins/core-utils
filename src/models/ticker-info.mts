@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { z } from 'zod'
 import { IdName } from '../models/id-name.mjs'
 import { safestr, safestrUppercase } from '../services/string-helper.mjs'
 import { isString } from '../services/string-helper.mjs'
@@ -16,15 +17,21 @@ import { AnyRecord, FromTo } from './types.mjs'
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 
-export interface ISymbol {
-  symbol: string
-}
-export interface ITicker {
-  ticker: string
-}
-export interface IVolume<T = number> {
-  volume: T
-}
+export const SymbolSchema = z.object({
+  symbol: z.string().min(1).max(10),
+})
+export type ISymbol = z.infer<typeof SymbolSchema>
+
+export const TickerSchema = z.object({
+  ticker: z.string().min(1).max(10),
+})
+export type ITicker = z.infer<typeof TickerSchema>
+
+export const VolumeSchema = z.object({
+  volume: z.coerce.number().min(1).max(1000000000000), //z.preprocess(Number, z.number()),
+})
+
+export type IVolume = z.infer<typeof VolumeSchema>
 
 export interface ISymbolName extends ISymbol, IName {}
 
@@ -256,9 +263,9 @@ export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
   changesPercentage: number
 }
 
-export interface ISymbolPriceVolumeChanges<TVolume = number>
+export interface ISymbolPriceVolumeChanges
   extends ISymbolPriceChanges,
-    IVolume<TVolume> {}
+    IVolume {}
 
 export interface IIpoCalendar extends ISymbol, IDate {
   company: string

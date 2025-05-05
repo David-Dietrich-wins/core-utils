@@ -89,8 +89,8 @@ export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.charts]: IConfigCharts
   [TpConfigNamesEnum.dashboards]: IDashboardSetting
   [TpConfigNamesEnum.headerTickerBars]: IConfigTickerBars
-  [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number, CryptoIdeasTabNames>
-  [TpConfigNamesEnum.ideaTabSelected]: IdName<number, IdeasTabNames>
+  [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number>
+  [TpConfigNamesEnum.ideaTabSelected]: IdName<number>
   [TpConfigNamesEnum.operations]: IConfigOperations
   [TpConfigNamesEnum.website]: IConfigWebsite
 }
@@ -178,11 +178,11 @@ export class ConfigManager {
       hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
       openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
     }
-    const cfgIdeaTabSelected: IdName<number, IdeasTabNames> = {
+    const cfgIdeaTabSelected: IdName<number> = {
       id: 0,
       name: 'most-active',
     }
-    const cfgIdeaCryptoTabSelected: IdName<number, CryptoIdeasTabNames> = {
+    const cfgIdeaCryptoTabSelected: IdName<number> = {
       id: 0,
       name: 'crypto',
     }
@@ -247,12 +247,10 @@ export class ConfigManager {
   }
 
   get ideaTabSelected() {
-    return this.FindConfig<IdName<number, IdeasTabNames>>(
-      TpConfigNamesEnum.ideaTabSelected
-    )
+    return this.FindConfig<IdName<number>>(TpConfigNamesEnum.ideaTabSelected)
   }
   get ideaCryptoTabSelected() {
-    return this.FindConfig<IdName<number, CryptoIdeasTabNames>>(
+    return this.FindConfig<IdName<number>>(
       TpConfigNamesEnum.ideaCryptoTabSelected
     )
   }

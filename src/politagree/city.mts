@@ -41,8 +41,6 @@ export class City implements ICity {
   }
 }
 
-export interface IdNameSlug<Tid = string, Tname = string>
-  extends IdName<Tid, Tname>,
-    ISlug {}
+export interface IdNameSlug<Tid = string> extends IdName<Tid>, ISlug {}
 
 export type IdNameSlugWithScales = IdNameSlug & IHasPolitiscales

@@ -10,7 +10,7 @@ import { IKeyValueShort } from './key-val.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,
-    IName<string>,
+    IName,
     IIdCreatedUpdated<Tid> {
   userid: Tid
 }
@@ -107,8 +107,8 @@ export class ConfigShort<Tid = string, Tval = unknown>
   }
 
   api() {
-    const ret: INameVal<Tval, Tid> = {
-      name: this.k,
+    const ret: INameVal<Tval> = {
+      name: String(this.k),
       val: this.v,
     }
 

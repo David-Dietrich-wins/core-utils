@@ -6,7 +6,7 @@ import { ICompany } from './company.mjs'
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 
-export type IPolitiscale = INameValue<number, PolitiscaleName>
+export type IPolitiscale = INameValue<number>
 
 export type IPolitiscales = {
   [key in PolitiscaleName]: number

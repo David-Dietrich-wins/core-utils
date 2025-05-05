@@ -32,22 +32,21 @@ export function arrayGetIds<T extends IIdRequired<Tid>, Tid = T['id']>(
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.id))
 }
-export function arrayGetIdNames<
-  T extends IIdName<Tid, Tname>,
-  Tid = T['id'],
-  Tname = T['name']
->(arr?: Readonly<T>[], callback?: (item: T) => IIdName<Tid, Tname>) {
+export function arrayGetIdNames<T extends IIdName<Tid>, Tid = T['id']>(
+  arr?: Readonly<T>[],
+  callback?: (item: T) => IIdName<Tid>
+) {
   return safeArray(arr).map((x) => {
     if (callback) {
       return callback(x)
     }
 
-    const idname: IIdName<Tid, Tname> = { id: x.id, name: x.name }
+    const idname: IIdName<Tid> = { id: x.id, name: x.name }
 
     return idname
   })
 }
-export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
+export function arrayGetNames<T extends IName, Tname = T['name']>(
   arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tname
 ) {
@@ -92,11 +91,10 @@ export function arrayFindIndexOf<T extends IId<Tid>, Tid = T['id']>(
  * @param id id to search for in the arrItems list.
  * @returns The name of the found item. If not found, undefined is returned.
  */
-export function arrayFindNameById<
-  T extends IIdName<Tid, Tname>,
-  Tid = T['id'],
-  Tname = T['name']
->(arrItems?: T[], id?: Tid) {
+export function arrayFindNameById<T extends IIdName<Tid>, Tid = T['id']>(
+  arrItems?: T[],
+  id?: Tid
+) {
   return arrayFindById(arrItems, id)?.name
 }
 
@@ -159,9 +157,9 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
  * @param name Name to search for in the IName
  * @returns The object with the given name. If not found, and exception is thrown.
  */
-export function arrayFindByName<T extends IName<Tname>, Tname = T['name']>(
+export function arrayFindByName<T extends IName>(
   arrItems?: ArrayOrSingle<T> | null,
-  name?: Tname
+  name?: string
 ) {
   return arrayFind(arrItems, (x) => x.name === name)
 }
@@ -201,9 +199,9 @@ export function arrayMustFindFunc<T>(
   return foundItem
 }
 
-export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
+export function arrayMustFindByName<T extends IName>(
   arrItems: ArrayOrSingle<T> | null | undefined,
-  name: Tname,
+  name: string,
   functionSourceName?: string
 ) {
   return arrayMustFindFunc(
@@ -224,10 +222,8 @@ export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(
   })
 }
 
-export function arrayOfNames<T extends IName<Tname>, Tname = T['name']>(
-  arr?: Readonly<T>[]
-) {
-  return safeArray(arr).reduce((acc: Tname[], cur) => {
+export function arrayOfNames<T extends IName>(arr?: Readonly<T>[]) {
+  return safeArray(arr).reduce((acc: string[], cur) => {
     acc.push(cur.name)
 
     return acc
@@ -630,7 +626,7 @@ export function splitToArrayOfIntegers(commaDelimitedString?: string) {
   return trimmed.map((item) => parseInt(item, 10))
 }
 
-export function ToIIdNameArray<T extends IIdName<string, string>>(
+export function ToIIdNameArray<T extends IIdName<string>>(
   arr: Readonly<T | string>[] | null | undefined
 ) {
   return safeArray(arr).map((x) => {

@@ -634,22 +634,16 @@ export class ExternalApis {
       ).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    GetOrSetTabSettings: async <T extends string>(
+    GetOrSetTabSettings: async (
       bearerToken: string,
       configKeyName: string,
-      settings: IIdName<number, T>
+      settings: IIdName<number>
     ) => {
       const fname = this.config.GetOrSetTickerInfoTabSettings.name
 
-      const data = new NameVal<IIdName<number, T>, string>(
-        configKeyName,
-        settings
-      )
+      const data = new NameVal<IIdName<number>>(configKeyName, settings)
 
-      return fetchPost<
-        INameVal<IIdName<number, T>>,
-        INameVal<IIdName<number, T>>
-      >({
+      return fetchPost<INameVal<IIdName<number>>, INameVal<IIdName<number>>>({
         url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
@@ -658,21 +652,18 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    UpsertTabSettings: async <T extends string>(
+    UpsertTabSettings: async (
       bearerToken: string,
       configKeyName: string,
-      settings: IIdName<number, T>
+      settings: IIdName<number>
     ) => {
       const fname = this.config.UpsertTickerInfoTabSettings.name
 
-      const data = new NameVal<IIdName<number, T>, string>(
-        configKeyName,
-        settings
-      )
+      const data = new NameVal<IIdName<number>>(configKeyName, settings)
 
       return fetchPut<
-        INameVal<IIdName<number, T>>,
-        IConfig<string, IIdName<number, T>>
+        INameVal<IIdName<number>>,
+        IConfig<string, IIdName<number>>
       >({
         url: this.CONST_EndpointConfig,
         fname,
@@ -1019,13 +1010,10 @@ export class ExternalApis {
   }
 
   user = {
-    ConfigSet: async (
-      bearerToken: string,
-      nameVal: INameVal<unknown, string>
-    ) => {
+    ConfigSet: async (bearerToken: string, nameVal: INameVal<unknown>) => {
       const fname = this.user.ConfigSet.name
 
-      return fetchPut<INameVal<unknown, string>, INameVal<unknown, string>>({
+      return fetchPut<INameVal<unknown>, INameVal<unknown>>({
         url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
