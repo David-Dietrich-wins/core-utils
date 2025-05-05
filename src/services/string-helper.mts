@@ -1,4 +1,5 @@
 import { StringOrStringArray } from '../models/types.mjs'
+import { isArray } from './array-helper.mjs'
 import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
@@ -367,5 +368,121 @@ export class StringHelper {
       suffix,
       trim: true,
     })
+  }
+
+  /**
+   * Takes a string or array of strings, iterates over each string and splits them according to the splitter provided.
+   * Each split string is then added to an array and the array of split strings is returned.
+   * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+   * @param splitter A string of what to split every string by.
+   * @param removeEmpties If true, remove all empty strings.
+   * @param trimStrings True if you want to remove any surrounding spaces on every string.
+   * @returns An array of every string split by splitter.
+   */
+  static SplitToArray(
+    strOrArray?: StringOrStringArray,
+    splitter = ',',
+    removeEmpties = true,
+    trimStrings = true
+  ) {
+    let splitted: string[] = []
+    if (isNullOrUndefined(strOrArray)) {
+      return splitted
+    }
+
+    if (isString(strOrArray)) {
+      let str = safestrTrim(strOrArray)
+
+      if (str.startsWith('[')) {
+        str = safestrTrim(str.substring(1))
+      }
+      if (str.endsWith(']')) {
+        str = safestrTrim(str.substring(0, str.length - 1))
+      }
+
+      splitted = str.split(splitter)
+    } else if (isArray(strOrArray)) {
+      strOrArray.map((x) => (splitted = splitted.concat(x.split(splitter))))
+    } else {
+      throw 'Invalid type passed to splitToArray'
+    }
+
+    if (removeEmpties) {
+      splitted = splitted.filter((e) => hasData(e))
+    }
+
+    if (trimStrings) {
+      splitted = splitted.map((x) => safestrTrim(x))
+    }
+
+    return splitted
+  }
+
+  /**
+   * Calls splitToArray and if only one string is the array is returned, just that string is returned.
+   * Otherwise the array returned from splitToArray is returned intact.
+   * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+   * @param splitter A string of what to split every string by.
+   * @param removeEmpties If true, remove all empty strings.
+   * @param trimStrings True if you want to remove any surrounding spaces on every string.
+   * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray, the string itself is returned.
+   */
+  static SplitToArrayOrStringIfOnlyOne(
+    strOrArray: StringOrStringArray,
+    splitter = ',',
+    removeEmpties = true,
+    trimStrings = true
+  ): StringOrStringArray {
+    const arr = StringHelper.SplitToArray(
+      strOrArray,
+      splitter,
+      removeEmpties,
+      trimStrings
+    )
+
+    if (isArray(arr, 2)) {
+      return arr
+    }
+
+    if (isArray(arr, 1)) {
+      return arr[0]
+    }
+
+    return ''
+  }
+
+  /**
+   * Calls splitToArray and if only one string is the array is returned, just that string is returned uppercase.
+   * Otherwise the array returned from splitToArray is returned with each string uppercased.
+   * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
+   * @param splitter A string of what to split every string by.
+   * @param removeEmpties If true, remove all empty strings.
+   * @param trimStrings True if you want to remove any surrounding spaces on every string.
+   * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray with every string uppercased, the string itself is returned uppercase.
+   */
+  static SplitToArrayOrStringIfOnlyOneToUpper(
+    strOrArray: StringOrStringArray,
+    splitter = ',',
+    removeEmpties = true,
+    trimStrings = true
+  ): StringOrStringArray {
+    const arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      strOrArray,
+      splitter,
+      removeEmpties,
+      trimStrings
+    )
+
+    if (isArray(arr)) {
+      return arr.map((x) => x.toUpperCase())
+    }
+
+    return safestrUppercase(arr)
+  }
+
+  static SplitToArrayOfIntegers(commaDelimitedString?: string) {
+    const trimmed = StringHelper.SplitToArray(commaDelimitedString)
+
+    return trimmed.map((item) => parseInt(item, 10))
   }
 }

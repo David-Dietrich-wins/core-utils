@@ -21,6 +21,7 @@ import {
   stringWrapParen,
   stringWrapSingleQuote,
 } from './string-helper.mjs'
+import { StringOrStringArray } from '../index.mjs'
 
 test('capitalizeFirstLetter', () => {
   expect(capitalizeFirstLetter('hello')).toBe('Hello')
@@ -312,4 +313,336 @@ test('StringHelper.safeSuffix', () => {
   expect(StringHelper.safeSuffix(true, suffix)).toBe('true-suffix')
   expect(StringHelper.safeSuffix(false, suffix)).toBe('false-suffix')
   expect(StringHelper.safeSuffix(false)).toBe('false ')
+})
+describe('StringHelper.SplitToArray', () => {
+  test('StringHelper.SplitToArray', () => {
+    let strOrArray: StringOrStringArray = 'a,b , c,'
+    const splitter = ','
+    const removeEmpties = true
+    const trimStrings = true
+    let arr = StringHelper.SplitToArray(strOrArray)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter, removeEmpties)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(
+      strOrArray,
+      splitter,
+      removeEmpties,
+      trimStrings
+    )
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    strOrArray = 'a'
+    arr = StringHelper.SplitToArray(strOrArray)
+    expect(arr).toEqual(['a'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter)
+    expect(arr).toEqual(['a'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter, removeEmpties)
+    expect(arr).toEqual(['a'])
+
+    arr = StringHelper.SplitToArray(
+      strOrArray,
+      splitter,
+      removeEmpties,
+      trimStrings
+    )
+    expect(arr).toEqual(['a'])
+
+    // strOrArray as Array
+    strOrArray = ['a', 'b ', ' c', '']
+    arr = StringHelper.SplitToArray(strOrArray)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(strOrArray, splitter, removeEmpties)
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(
+      strOrArray,
+      splitter,
+      removeEmpties,
+      trimStrings
+    )
+    expect(arr).toEqual(['a', 'b', 'c'])
+
+    arr = StringHelper.SplitToArray(undefined)
+    expect(arr).toEqual([])
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect(() => StringHelper.SplitToArray(2 as any)).toThrow()
+  })
+
+  describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
+    test('default', () => {
+      const strOrArray = 'a,b , c'
+      const splitter = ','
+      const removeEmpties = true
+      const trimStrings = true
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        'a',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('a')
+    })
+
+    test('no remove empties', () => {
+      const strOrArray = 'a,b   , c,'
+      const splitter = ','
+      const removeEmpties = false
+      const trimStrings = false
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['a', 'b', 'c', ''])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['a', 'b   ', ' c', ''])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        'a',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('a')
+    })
+
+    test('no trim strings', () => {
+      const strOrArray = 'a,b   , c'
+      const splitter = ','
+      const removeEmpties = true
+      const trimStrings = false
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['a', 'b', 'c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['a', 'b   ', ' c'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        'a',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('a')
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        '',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('')
+    })
+  })
+
+  describe('StringHelper.SplitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
+    test('default', () => {
+      const strOrArray = 'a,b , c'
+      const splitter = ','
+      const removeEmpties = true
+      const trimStrings = true
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        'A',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('A')
+    })
+
+    test('no remove empties', () => {
+      const strOrArray = 'a,b   , c,'
+      const splitter = ','
+      const removeEmpties = false
+      const trimStrings = false
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['A', 'B', 'C', ''])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['A', 'B   ', ' C', ''])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        'a',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('A')
+    })
+
+    test('no trim strings', () => {
+      const strOrArray = 'a,b   , c'
+      const splitter = ','
+      const removeEmpties = true
+      const trimStrings = false
+      let arr: StringOrStringArray =
+        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties
+      )
+      expect(arr).toEqual(['A', 'B', 'C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+        strOrArray,
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual(['A', 'B   ', ' C'])
+
+      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+        'a',
+        splitter,
+        removeEmpties,
+        trimStrings
+      )
+      expect(arr).toEqual('a')
+    })
+  })
+
+  test('StringHelper.SplitToArrayOfIntegers', () => {
+    let arr = StringHelper.SplitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    arr = StringHelper.SplitToArrayOfIntegers('[1,2,3,4,5,6,7,8,9,10]')
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    arr = StringHelper.SplitToArrayOfIntegers(
+      '     [   1,2 , 3, 4,    5, 6     ,7,8,9,10    ]  '
+    )
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    arr = StringHelper.SplitToArrayOfIntegers(
+      '[        1,2 , 3, 4,    5, 6     ,7,8,9,10      '
+    )
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    arr = StringHelper.SplitToArrayOfIntegers(
+      '        1,2 , 3, 4,    5, 6     ,7,8,9,10  ]    '
+    )
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  })
 })

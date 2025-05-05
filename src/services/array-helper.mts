@@ -2,11 +2,11 @@ import { AppException } from '../models/AppException.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IId, IIdRequired } from '../models/IdManager.mjs'
 import { IName } from '../models/interfaces.mjs'
-import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import { ArrayOrSingle } from '../models/types.mjs'
 import { isNullOrUndefined } from './general.mjs'
-import { safestr, safestrTrim, safestrUppercase } from './string-helper.mjs'
-import { isString } from './string-helper.mjs'
 import { isNumber } from './number-helper.mjs'
+import { isString, safestr } from './string-helper.mjs'
+
 /**
  * Tests if the passed in arr is in fact an array that is not undefined or null.
  * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty array is returned.
@@ -14,7 +14,6 @@ import { isNumber } from './number-helper.mjs'
  * @param ifEmpty If the array is null or undefined, return this value. Defaults to [].
  * @returns A guaranteed array to be nonNull. Returns ifEmpty when the array does not have data. Or [] if ifEmpty is not declared.
  */
-
 export function safeArray<T>(
   arr?: ArrayOrSingle<T> | null,
   ifEmpty?: ArrayOrSingle<T> | null
@@ -32,6 +31,7 @@ export function arrayGetIds<T extends IIdRequired<Tid>, Tid = T['id']>(
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.id))
 }
+
 export function arrayGetIdNames<T extends IIdName<Tid>, Tid = T['id']>(
   arr?: Readonly<T>[],
   callback?: (item: T) => IIdName<Tid>
@@ -46,6 +46,7 @@ export function arrayGetIdNames<T extends IIdName<Tid>, Tid = T['id']>(
     return idname
   })
 }
+
 export function arrayGetNames<T extends IName, Tname = T['name']>(
   arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tname
@@ -114,6 +115,7 @@ export function arrayFindByIds<T extends IIdRequired<Tid>, Tid = T['id']>(
 
   return safeArray(arrItems).filter((arrItem) => ids.includes(arrItem.id))
 }
+
 /**
  * Return the objects that do NOT match any of the given ids.
  * @param arrItems The array to search for the ids.
@@ -510,120 +512,6 @@ export function shuffleArray<T>(array: T[], maxItems?: number) {
   return isNullOrUndefined(maxItems)
     ? shuffledArray
     : shuffledArray.slice(0, maxItems)
-}
-
-/**
- * Takes a string or array of strings, iterates over each string and splits them according to the splitter provided.
- * Each split string is then added to an array and the array of split strings is returned.
- * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
- * @param splitter A string of what to split every string by.
- * @param removeEmpties If true, remove all empty strings.
- * @param trimStrings True if you want to remove any surrounding spaces on every string.
- * @returns An array of every string split by splitter.
- */
-export function splitToArray(
-  strOrArray?: StringOrStringArray,
-  splitter = ',',
-  removeEmpties = true,
-  trimStrings = true
-) {
-  let splitted: string[] = []
-  if (isNullOrUndefined(strOrArray)) {
-    return splitted
-  }
-
-  if (isString(strOrArray)) {
-    let str = safestrTrim(strOrArray)
-    if (str.startsWith('[')) {
-      str = safestrTrim(str.substring(1))
-    }
-    if (str.endsWith(']')) {
-      str = safestrTrim(str.substring(0, str.length - 1))
-    }
-
-    splitted = str.split(splitter)
-  } else if (isArray(strOrArray)) {
-    strOrArray.map((x) => (splitted = splitted.concat(x.split(splitter))))
-  } else {
-    throw 'Invalid type passed to splitToArray'
-  }
-
-  if (trimStrings) {
-    splitted = splitted.map((x) => safestrTrim(x))
-  }
-
-  if (removeEmpties) {
-    return splitted.filter(function (e) {
-      if (e) {
-        return e
-      }
-    })
-  }
-
-  return splitted
-}
-
-/**
- * Calls splitToArray and if only one string is the array is returned, just that string is returned.
- * Otherwise the array returned from splitToArray is returned intact.
- * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
- * @param splitter A string of what to split every string by.
- * @param removeEmpties If true, remove all empty strings.
- * @param trimStrings True if you want to remove any surrounding spaces on every string.
- * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray, the string itself is returned.
- */
-export function splitToArrayOrStringIfOnlyOne(
-  strOrArray: StringOrStringArray,
-  splitter = ',',
-  removeEmpties = true,
-  trimStrings = true
-): StringOrStringArray {
-  const arr = splitToArray(strOrArray, splitter, removeEmpties, trimStrings)
-
-  if (isArray(arr, 2)) {
-    return arr
-  }
-
-  if (isArray(arr, 1)) {
-    return arr[0]
-  }
-
-  return ''
-}
-
-/**
- * Calls splitToArray and if only one string is the array is returned, just that string is returned uppercase.
- * Otherwise the array returned from splitToArray is returned with each string uppercased.
- * @param strOrArray A {@link StringOrStringArray} to push all items split with the splitter provided.
- * @param splitter A string of what to split every string by.
- * @param removeEmpties If true, remove all empty strings.
- * @param trimStrings True if you want to remove any surrounding spaces on every string.
- * @returns An array of every string split by splitter, of if only 1 string is the result of splitToArray with every string uppercased, the string itself is returned uppercase.
- */
-export function splitToArrayOrStringIfOnlyOneToUpper(
-  strOrArray: StringOrStringArray,
-  splitter = ',',
-  removeEmpties = true,
-  trimStrings = true
-): StringOrStringArray {
-  const arr = splitToArrayOrStringIfOnlyOne(
-    strOrArray,
-    splitter,
-    removeEmpties,
-    trimStrings
-  )
-
-  if (isArray(arr)) {
-    return arr.map((x) => x.toUpperCase())
-  }
-
-  return safestrUppercase(arr)
-}
-
-export function splitToArrayOfIntegers(commaDelimitedString?: string) {
-  const trimmed = splitToArray(commaDelimitedString)
-
-  return trimmed.map((item) => parseInt(item, 10))
 }
 
 export function ToIIdNameArray<T extends IIdName<string>>(

@@ -1,21 +1,78 @@
 import moment from 'moment'
 import { z } from 'zod'
 import { IdName } from '../models/id-name.mjs'
-import { safestr, safestrUppercase } from '../services/string-helper.mjs'
-import { isString } from '../services/string-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { isArray } from '../services/array-helper.mjs'
+import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
+import { isArray, safeArray } from '../services/array-helper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import {
   getAsNumber,
   getAsNumberOrUndefined,
 } from '../services/number-helper.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import {
+  isString,
+  safestr,
+  safestrUppercase,
+  StringHelper,
+} from '../services/string-helper.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
+import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
 import { AnyRecord, FromTo } from './types.mjs'
-import { AppException } from './AppException.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
+
+function zFromStringOrStringArray(min = 0, max = 1000) {
+  return z
+    .union([z.string().min(min).max(max), z.string().min(min).max(max).array()])
+    .transform((arg): string | string[] => {
+      if (isString(arg)) {
+        const items = StringHelper.SplitToArray(arg)
+
+        if (isArray(items, 1)) {
+          return items.length > 1 ? items : items[0]
+        }
+      } else if (isArray(arg)) {
+        return arg.map((v) => v.trim())
+      }
+
+      return ''
+    })
+}
+
+// export function arrayFromString<
+//   T extends z.ZodType<string[], z.ZodTypeDef, string | string[]>
+// >(schema: T) {
+//   return z.preprocess((obj: unknown) => {
+//     if (!obj) {
+//       return [] as string[]
+//     }
+//     if (Array.isArray(obj)) {
+//       return obj as string[]
+//     }
+//     if (typeof obj === 'string') {
+//       return obj.split(',') as string[]
+//     }
+
+//     return [] as string[]
+//   }, z.string().array())
+// }
+
+// export function ZodStringOrStringArray() {
+//   return zArrayFromString() //(z.string().min(min).max(max))
+
+//   // return z.preprocess((val) => {
+//   //   let strArray: string[] = []
+
+//   //   if (val !== null && val !== undefined) {
+//   //     if (isString(val)) {
+//   //       strArray = val.split(',').map((v) => v.trim())
+//   //     } else if (isArray(val)) {
+//   //       strArray = val as string[]
+//   //     }
+//   //   }
+
+//   //   return strArray
+//   // }, z.string().min(min).max(max).array())
+// }
 
 export const SymbolSchema = z.object({
   symbol: z.string().min(1).max(10),
@@ -26,6 +83,16 @@ export const TickerSchema = z.object({
   ticker: z.string().min(1).max(10),
 })
 export type ITicker = z.infer<typeof TickerSchema>
+
+export const TickerArraySchema = z.object({
+  ticker: zFromStringOrStringArray(1, 10),
+})
+export type ITickerArray = z.infer<typeof TickerArraySchema>
+
+export const TickersArraySchema = z.object({
+  tickers: zFromStringOrStringArray(1, 10),
+})
+export type ITickersArray = z.infer<typeof TickersArraySchema>
 
 export const VolumeSchema = z.object({
   volume: z.coerce.number().min(1).max(1000000000000), //z.preprocess(Number, z.number()),
