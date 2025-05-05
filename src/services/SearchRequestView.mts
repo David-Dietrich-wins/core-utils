@@ -9,7 +9,7 @@ import {
 import { safeArray, isArray } from './array-helper.mjs'
 import { hasData, sortFunction } from './general.mjs'
 import { getAsNumber } from './number-helper.mjs'
-import { isObject } from './object-helper.mjs'
+import { DefaultWithOverrides, isObject } from './object-helper.mjs'
 import {
   isString,
   safestr,
@@ -66,6 +66,23 @@ export class SearchRequestView implements ISearchRequestView {
       this.pageIndex = pageIndex
       this.pageSize = pageSize
     }
+
+    SearchRequestView.VerificationSchema.parse(this)
+  }
+
+  static Create(overrides?: Partial<ISearchRequestView> | null) {
+    const DEFAULT_SearchRequestView: ISearchRequestView = {
+      term: '',
+      sortColumn: '',
+      sortDirection: 'asc',
+      limit: 0,
+      offset: 0,
+      exactMatch: false,
+      pageIndex: 0,
+      pageSize: 0,
+    }
+
+    return DefaultWithOverrides(DEFAULT_SearchRequestView, overrides)
   }
 
   clear() {

@@ -355,3 +355,38 @@ describe('VerificationSchema', () => {
     )
   })
 })
+
+test('Create', () => {
+  expect(SearchRequestView.Create()).toEqual({
+    term: '',
+    sortColumn: '',
+    sortDirection: 'asc',
+    limit: 0,
+    offset: 0,
+    exactMatch: false,
+    pageIndex: 0,
+    pageSize: 0,
+  })
+
+  expect(
+    SearchRequestView.Create({
+      term: 'term',
+      sortColumn: 'filter',
+      sortDirection: 'desc',
+      limit: 1,
+      offset: 2,
+      exactMatch: true,
+      pageIndex: 3,
+      pageSize: 4,
+    })
+  ).toStrictEqual({
+    term: 'term',
+    sortColumn: 'filter',
+    sortDirection: 'desc',
+    limit: 1,
+    offset: 2,
+    exactMatch: true,
+    pageIndex: 3,
+    pageSize: 4,
+  })
+})
