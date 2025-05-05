@@ -4,18 +4,6 @@ import { IId } from './IdManager.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IWebState } from './WebState.mjs'
 
-export interface ICreatedOnBy<T extends Date | string | number = Date> {
-  createdby: string
-  createdon: T
-}
-export interface IUpdatedOn<T extends Date | string | number = Date> {
-  updatedon?: T
-}
-export interface IUpdatedOnBy<T extends Date | string | number = Date>
-  extends IUpdatedOn<T> {
-  updatedby?: string
-}
-
 export interface IDate<T = string> {
   date: T
 }
