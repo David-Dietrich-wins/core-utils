@@ -1,7 +1,7 @@
 import { AppException } from '../models/AppException.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
-import { ICreatedBy, IUpdatedBy } from '../models/interfaces.mjs'
+import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import {
   IAssetQuoteResponse,
   IQuoteBarEma,

@@ -1,5 +1,6 @@
 import { IdManager, IIdRequired } from '../models/IdManager.mjs'
-import { IUpdated, IValue } from '../models/interfaces.mjs'
+import { IValue } from '../models/interfaces.mjs'
+import { IUpdated } from '../models/id-created-updated.mjs'
 import { newGuid } from './general.mjs'
 
 export type IconConfiguration = {

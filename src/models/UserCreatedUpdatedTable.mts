@@ -1,4 +1,5 @@
-import { ICreatedBy, IUpdatedBy, IUserId } from './interfaces.mjs'
+import { IUserId } from './interfaces.mjs'
+import { ICreatedBy, IUpdatedBy } from './id-created-updated.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
