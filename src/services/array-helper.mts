@@ -477,7 +477,13 @@ export function arrayUpdateOrAdd<T extends IId<Tid>, Tid = T['id']>(
   const foundIndex = arrItems.findIndex((x) => item.id === x.id)
 
   // If the index is out of bounds, just push the item to the end of the array.
-  if (!insertAtFront || arrItems.length === 0 || foundIndex === -1) {
+  if (insertAtFront) {
+    if (foundIndex >= 0) {
+      arrItems = arrayRemoveById(arrItems, item.id) // Remove the existing item from the array if it exists.
+    }
+
+    arrItems.splice(0, 0, item) // Remove the existing item from the array if it exists.
+  } else if (arrItems.length === 0 || foundIndex === -1) {
     arrItems.push(item)
   } else {
     arrItems.splice(foundIndex, 1, item) // Remove the existing item from the array if it exists.

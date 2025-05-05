@@ -1,6 +1,8 @@
-import { IdName, IIdName } from '../models/id-name.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { IdName, IIdName, IIdNameValue } from '../models/id-name.mjs'
 import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
 import {
+  arrayAdd,
   arrayElement,
   arrayElementNonEmpty,
   arrayFilter,
@@ -9,6 +11,7 @@ import {
   arrayFindByIds,
   arrayFindByName,
   arrayFindByNotIds,
+  arrayFindIndexOf,
   arrayFindNameById,
   arrayFirst,
   arrayFirstNonEmpty,
@@ -18,21 +21,29 @@ import {
   arrayGetNames,
   arrayLast,
   arrayLastNonEmpty,
+  arrayMoveDown,
+  arrayMoveUp,
   arrayMustFind,
   arrayMustFindByName,
   arrayMustFindFunc,
   arrayOfIds,
   arrayOfNames,
   arrayReduceArrayReturns,
+  arrayRemove,
+  arrayRemoveById,
   arraySwapItems,
   arraySwapItemsById,
+  arrayUnique,
+  arrayUpdateOrAdd,
   isArray,
+  MapINamesToNames,
   safeArray,
   shuffleArray,
   splitToArray,
   splitToArrayOfIntegers,
   splitToArrayOrStringIfOnlyOne,
   splitToArrayOrStringIfOnlyOneToUpper,
+  ToIIdNameArray,
   ToSafeArray,
   ToSafeArray2d,
 } from './array-helper.mjs'
@@ -797,4 +808,211 @@ test('isArray', () => {
   expect(isArray(['a', 'b'], 'a')).toBe(true)
   expect(isArray(['a', 'b'], 'a')).toBe(true)
   expect(isArray(['a', 'b'], 'b')).toBe(true)
+})
+
+test('arrayFindIndexOf', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  expect(arrayFindIndexOf(arr, 2)).toStrictEqual(1)
+  expect(arrayFindIndexOf(arr, 4)).toBeUndefined()
+})
+
+test('arrayMoveDown', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  expect(arrayMoveDown(arr, 1)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 3, name: 'name3' },
+    { id: 2, name: 'name2' },
+  ])
+  expect(() => arrayMoveDown(arr, 2)).toThrow(
+    new AppException(
+      'Invalid destination index of 3 when swapping array elements.'
+    )
+  )
+})
+
+test('arrayMoveUp', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  expect(arrayMoveUp(arr, 2)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 3, name: 'name3' },
+    { id: 2, name: 'name2' },
+  ])
+  expect(() => arrayMoveUp(arr, 0)).toThrow(
+    new AppException('Invalid source index of -1 when swapping array elements.')
+  )
+})
+
+test('arrayRemoveById', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  expect(arrayRemoveById(arr, 2)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 3, name: 'name3' },
+  ])
+  expect(arrayRemoveById(arr, 4)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ])
+})
+
+test('arrayUnique', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    { id: 1, name: 'name1' },
+  ]
+
+  expect(arrayUnique(arr)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    { id: 1, name: 'name1' },
+  ])
+
+  arr.push(arr[0])
+  expect(arrayUnique(arr)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    { id: 1, name: 'name1' },
+  ])
+})
+
+test('arrayAdd', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  const addItem = { id: 4, name: 'name4' }
+
+  expect(arrayAdd(arr, addItem)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    { id: 4, name: 'name4' },
+  ])
+  expect(arrayAdd(arr, addItem, 1)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    addItem,
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    addItem,
+  ])
+
+  expect(arrayAdd(arr, addItem)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    addItem,
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+    addItem,
+    addItem,
+  ])
+})
+
+test('arrayRemove', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  const removeItem = { id: 2, name: 'name2' }
+
+  expect(arrayRemove(arr, removeItem)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    { id: 3, name: 'name3' },
+  ])
+})
+
+test('arrayUpdateOrAdd', () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  const updateItem = { id: 2, name: 'name2-updated' }
+  const addItem = { id: 4, name: 'name4' }
+
+  expect(arrayUpdateOrAdd(arr, updateItem)).toStrictEqual([
+    { id: 1, name: 'name1' },
+    updateItem,
+    { id: 3, name: 'name3' },
+  ])
+
+  expect(arrayUpdateOrAdd(arr, addItem, true)).toStrictEqual([
+    addItem,
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2-updated' },
+    { id: 3, name: 'name3' },
+  ])
+
+  expect(arrayUpdateOrAdd(arr, arr[2], true)).toStrictEqual([
+    { id: 2, name: 'name2-updated' },
+    addItem,
+    { id: 1, name: 'name1' },
+    { id: 3, name: 'name3' },
+  ])
+
+  expect(arrayUpdateOrAdd([], arr[2], false)).toStrictEqual([arr[2]])
+  expect(arrayUpdateOrAdd(arr, arr[2], false)).toStrictEqual([
+    addItem,
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2-updated' },
+    { id: 3, name: 'name3' },
+  ])
+})
+
+test('ToIIdNameArray', () => {
+  const arr: IIdNameValue<string, string>[] = [
+    { id: '1', name: 'name1', value: 'value1' },
+    { id: '2', name: 'name2', value: 'value2' },
+    { id: '3', name: 'name3', value: 'value3' },
+  ]
+
+  expect(ToIIdNameArray(arr)).toStrictEqual(arr)
+
+  expect(ToIIdNameArray(undefined)).toStrictEqual([])
+
+  const arrString = ['2', '4', '6']
+  expect(ToIIdNameArray(arrString)).toStrictEqual([
+    { id: '2', name: '2' },
+    { id: '4', name: '4' },
+    { id: '6', name: '6' },
+  ])
+})
+
+test('MapINamesToNames', () => {
+  const arr: IIdNameValue<string, string>[] = [
+    { id: '1', name: 'name1', value: 'value1' },
+    { id: '2', name: 'name2', value: 'value2' },
+    { id: '3', name: 'name3', value: 'value3' },
+  ]
+
+  expect(MapINamesToNames(arr)).toStrictEqual(['name1', 'name2', 'name3'])
+
+  expect(MapINamesToNames(undefined)).toStrictEqual([])
 })
