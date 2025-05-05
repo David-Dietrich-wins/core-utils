@@ -1,7 +1,17 @@
 import { z } from 'zod'
-import { IWebState } from './WebState.mjs'
-import { ITicker } from './ticker-info.mjs'
 import { IId } from './IdManager.mjs'
+import { ITicker } from './ticker-info.mjs'
+import { IWebState } from './WebState.mjs'
+
+// const ZodDateField = z.union([
+//   z.string().refine((val) => !isNaN(Date.parse(val)), {
+//     message: 'Invalid date string',
+//   }),
+//   z.number().refine((val) => !isNaN(val), {
+//     message: 'Invalid date number',
+//   }),
+//   z.date(),
+// ])
 
 export interface ICreatedBy<T extends Date | string | number = Date> {
   createdby: string

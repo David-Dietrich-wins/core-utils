@@ -1,7 +1,11 @@
 import moment, { Moment } from 'moment'
+import { z } from 'zod'
 import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
-import { IPlotPricesWithMidpoint } from '../models/ticker-info.mjs'
+import {
+  IPlotPricesWithMidpoint,
+  TickerSchema,
+} from '../models/ticker-info.mjs'
 import { arrayFindByIds } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { hasData } from '../services/general.mjs'
@@ -91,17 +95,19 @@ export class ChartPlotReturn {
   positions: IShapePosition[] = []
 }
 
-export interface IChartSettings {
-  ticker: string
-  period: number
-  periodType: string
-  frequency: number
-  frequencyType: string
-  granularity?: string
-  extendedHoursTrading?: boolean
-  startDate?: number // as milliseconds since epoch
-  endDate?: number // as milliseconds since epoch
-}
+// export interface IChartSettings {
+//   ticker: string
+//   period: number
+//   periodType: string
+//   frequency: number
+//   frequencyType: string
+//   granularity?: string
+//   extendedHoursTrading?: boolean
+//   startDate?: number // as milliseconds since epoch
+//   endDate?: number // as milliseconds since epoch
+// }
+
+export type IChartSettings = z.infer<typeof ChartSettings.VerificationSchema>
 
 export class ChartSettings implements IChartSettings {
   ticker = ''
@@ -256,6 +262,19 @@ export class ChartSettings implements IChartSettings {
 
     ret.ticker = safestrUppercase(ret.ticker)
     return ret
+  }
+
+  static get VerificationSchema() {
+    return TickerSchema.extend({
+      period: z.number().min(1),
+      periodType: z.string().min(1),
+      frequency: z.number().min(1),
+      frequencyType: z.string().min(1),
+      granularity: z.string().optional(),
+      extendedHoursTrading: z.boolean().optional(),
+      startDate: z.number().optional(),
+      endDate: z.number().optional(),
+    })
   }
 
   static CreateForTradingView(
