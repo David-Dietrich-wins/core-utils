@@ -944,11 +944,11 @@ export class ExternalApis {
   }
 
   tv = {
-    TvChart: async (bearerToken: string, chartId: string | number) => {
+    TvChart: async (bearerToken: string, id: string | number) => {
       const fname = this.tv.TvChart.name
 
       return fetchGet<string>({
-        url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
+        url: urlJoin(this.CONST_EndpointTv, ['chart', id]),
         fname,
         bearerToken,
         headers: GetHttpHeaderApplicationName(this.appName),
@@ -985,11 +985,11 @@ export class ExternalApis {
       })
     },
 
-    RemoveChart: async (bearerToken: string, chartId: number | string) => {
+    RemoveChart: async (bearerToken: string, id: number | string) => {
       const fname = this.tv.RemoveChart.name
 
       return fetchDelete({
-        url: urlJoin(this.CONST_EndpointTv, ['chart', chartId]),
+        url: urlJoin(this.CONST_EndpointTv, ['chart', id]),
         fname,
         bearerToken,
         headers: GetHttpHeaderApplicationName(this.appName),

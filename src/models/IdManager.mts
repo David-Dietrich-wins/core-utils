@@ -1,6 +1,8 @@
+import { z } from 'zod'
 import { arrayAdd, arrayRemove, isArray } from '../services/array-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { FindObjectWithField } from '../services/object-helper.mjs'
+import { zStringMinMax } from '../services/zod-helper.mjs'
 import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
@@ -29,6 +31,10 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     id: string | number
   ) {
     return FindObjectWithField(obj, 'id', id)
+  }
+
+  static get VerificationSchemaStringId() {
+    return z.object({ id: zStringMinMax(1, 50) })
   }
 
   add(item: T, index?: number) {
