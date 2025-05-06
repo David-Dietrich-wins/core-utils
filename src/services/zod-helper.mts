@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { arrayFirst, isArray } from './array-helper.mjs'
-import { StringHelper } from './string-helper.mjs'
+import { isNumber } from './number-helper.mjs'
+import { isString, StringHelper } from './string-helper.mjs'
 
 type StringSettings = {
   arrayStringMax?: number
@@ -69,4 +70,12 @@ export function zToStringArray(min = 0, max = 1000, extras?: StringSettings) {
 
       return items
     })
+}
+
+export function zDateTime() {
+  return z.preprocess((arg) => {
+    if (isString(arg) || isNumber(arg) || arg instanceof Date) {
+      return new Date(arg)
+    }
+  }, z.date())
 }
