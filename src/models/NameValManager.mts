@@ -12,6 +12,12 @@ export class NameVal<Tval = string> implements INameVal<Tval> {
     this.name = name
     this.val = val
   }
+
+  static CreateINameVal<T = unknown>(name: string, val: T): INameVal<T> {
+    const inv: INameVal<T> = { name, val }
+
+    return inv
+  }
 }
 
 export class NameValType<TValue = string, TType = string>
