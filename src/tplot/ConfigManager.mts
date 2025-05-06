@@ -1,17 +1,18 @@
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
-import { newGuid } from '../services/general.mjs'
+import { IdName } from '../models/id-name.mjs'
+import { IKeyValueShort } from '../models/key-val.mjs'
 import {
   IContext,
   IContextUI,
   IContextValue,
 } from '../services/ContextManager.mjs'
-import { IdName } from '../models/id-name.mjs'
-import { IKeyValueShort } from '../models/key-val.mjs'
+import { hasData, newGuid } from '../services/general.mjs'
 import {
   deepCloneJson,
   DefaultWithOverrides,
 } from '../services/object-helper.mjs'
+import { safestrTrim } from '../services/string-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
 
@@ -101,6 +102,30 @@ export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
 export class ConfigManager {
   constructor(public configs: IConfigShort[]) {}
 
+  static ValidateConfigName(name: string | null | undefined): string {
+    if (!name || !hasData(name) || name.length > 50) {
+      throw new AppException('Config name is required.', 'ConfigManager')
+    }
+
+    const nameStr = safestrTrim(name)
+    if (
+      Object.values(TpConfigNamesEnum).includes(nameStr as TpConfigNamesEnum)
+    ) {
+      return nameStr
+    }
+
+    if (nameStr.startsWith('tickerInfo-')) {
+      const ticker = nameStr.substring('tickerInfo-'.length)
+      if (ticker.length > 0 && ticker.length < 10) {
+        return nameStr
+      }
+    }
+
+    throw new AppException(
+      'Invalid config name',
+      'ConfigManager.ValidateConfigName'
+    )
+  }
   static get defaults(): Readonly<TpUserInfoAllConfigs> {
     const cfgCharts: IConfigCharts = {
       id: newGuid(),
