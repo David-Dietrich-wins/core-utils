@@ -1,5 +1,6 @@
 /* eslint-disable quotes */
 import { jest } from '@jest/globals'
+import { StringOrStringArray } from '../models/types.mjs'
 import {
   capitalizeFirstLetter,
   capitalizeWords,
@@ -21,7 +22,6 @@ import {
   stringWrapParen,
   stringWrapSingleQuote,
 } from './string-helper.mjs'
-import { StringOrStringArray } from '../index.mjs'
 
 test('capitalizeFirstLetter', () => {
   expect(capitalizeFirstLetter('hello')).toBe('Hello')

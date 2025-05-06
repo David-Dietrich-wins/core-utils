@@ -1,9 +1,9 @@
 import { z } from 'zod'
+import { zStringMinMax } from '../services/zod-helper.mjs'
 import { ICreatedBy } from './id-created-updated.mjs'
 import { IId } from './IdManager.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IWebState } from './WebState.mjs'
-import { zStringMinMax } from '../index.mjs'
 
 export interface IDate<T = string> {
   date: T

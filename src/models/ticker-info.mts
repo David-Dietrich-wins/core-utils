@@ -24,28 +24,33 @@ import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
 import { AnyRecord, FromTo } from './types.mjs'
 
+const CONST_TickerMaxLength = 20
+
 export const SymbolSchema = z.object({
-  symbol: zStringMinMax(1, 10),
+  symbol: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
 })
 export type ISymbol = z.infer<typeof SymbolSchema>
 
 export const TickerSchema = z.object({
-  ticker: zStringMinMax(1, 10),
+  ticker: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
 })
 export type ITicker = z.infer<typeof TickerSchema>
 
 export const TickerArraySchema = z.object({
-  ticker: zFromStringOrStringArray(1, 10),
+  ticker: zFromStringOrStringArray(1, CONST_TickerMaxLength, {
+    arrayStringMax: 1000,
+    uppercase: true,
+  }),
 })
 export type ITickerArray = z.infer<typeof TickerArraySchema>
 
 export const TickerToArraySchema = z.object({
-  ticker: zToStringArray(1, 10),
+  ticker: zToStringArray(1, 10, { uppercase: true }),
 })
 export type ITickerToArray = z.infer<typeof TickerToArraySchema>
 
 export const TickersArraySchema = z.object({
-  tickers: zFromStringOrStringArray(1, 10),
+  tickers: zFromStringOrStringArray(1, 10, { uppercase: true }),
 })
 export type ITickersArray = z.infer<typeof TickersArraySchema>
 
