@@ -3,6 +3,7 @@ import { ICreatedBy } from './id-created-updated.mjs'
 import { IId } from './IdManager.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IWebState } from './WebState.mjs'
+import { zStringMinMax } from '../index.mjs'
 
 export interface IDate<T = string> {
   date: T
@@ -40,12 +41,12 @@ export const PriceSchema = z.object({
 export type IPrice = z.infer<typeof PriceSchema>
 
 export const SlugSchema = z.object({
-  slug: z.string().min(1).max(1000),
+  slug: zStringMinMax(1, 1000),
 })
 export type ISlug = z.infer<typeof SlugSchema>
 
 export const ErrorMessageSchema = z.object({
-  errorMessage: z.string().min(1).max(5000),
+  errorMessage: zStringMinMax(1, 5000),
 })
 export type IErrorMessage = z.infer<typeof ErrorMessageSchema>
 
@@ -86,6 +87,6 @@ export interface IChartRunLogApiReturn extends ITicker {
 }
 
 export const BearerTokenSchema = z.object({
-  bearerToken: z.string().min(1).max(5000),
+  bearerToken: zStringMinMax(1, 5000),
 })
 export type IBearerToken = z.infer<typeof BearerTokenSchema>

@@ -2,8 +2,10 @@ import { z } from 'zod'
 import { arrayFirst, isArray } from './array-helper.mjs'
 import { StringHelper } from './string-helper.mjs'
 
-export function zStringMinMax(min = 0, max = 1000) {
-  return z.string().min(min).max(max)
+export function zStringMinMax(min = 0, max = 1000, trim = true) {
+  const ret = z.string().min(min).max(max)
+
+  return trim ? ret.trim() : ret
 }
 
 export function zFromStringOrStringArray(min = 0, max = 1000) {
