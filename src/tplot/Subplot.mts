@@ -10,6 +10,8 @@ import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,
 } from './ChartSettings.mjs'
+import { z } from 'zod'
+import { zDateTime } from '../index.mjs'
 
 export interface ISubplot extends IIdRequired<string> {
   orderNumber: number
@@ -77,6 +79,26 @@ export class Subplot implements ISubplot {
       this.useMinusEight = useMinusEight
       this.scaleInverted = scaleInverted
     }
+  }
+
+  static get VerificationSchema() {
+    const schema = z.object({
+      id: z.string(),
+      orderNumber: z.number().min(0).max(100).default(0),
+      pattern: z.string().default(''),
+      timeframe: z.string().default(''),
+      total: z.number().nonnegative().optional(),
+      targetLow: z.number().min(0).max(10000000).optional(),
+      targetHigh: z.number().min(0).max(10000000).optional(),
+      expectedTriggerDate: zDateTime().optional(),
+      comment: z.string().max(1000).default(''),
+      lossFloorPercent: z.number().min(0).max(100).default(8),
+      gainCeilingPercent: z.number().min(0).max(100).default(10),
+      useMinusEight: z.boolean().default(true),
+      scaleInverted: z.boolean().default(false),
+    })
+
+    return schema
   }
 
   createFormStatus(parentId: FormStatusItem['id']) {

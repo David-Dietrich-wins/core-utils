@@ -65,6 +65,7 @@ import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
 import {
   ITradePlot,
   ITradePlotProfitizerWithContext,
+  TradePlot,
 } from '../tplot/TradePlot.mjs'
 import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
 import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
@@ -937,7 +938,7 @@ export class ExternalApis {
         url: urlJoin(this.CONST_EndpointTrade, plot.id),
         fname,
         bearerToken,
-        data: plot,
+        data: TradePlot.FixupForSave(plot),
         headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },

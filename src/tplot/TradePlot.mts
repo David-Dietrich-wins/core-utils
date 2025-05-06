@@ -6,6 +6,7 @@ import {
   IAssetQuoteResponse,
   IQuoteBarEma,
   ITicker,
+  TickerSchema,
 } from '../models/ticker-info.mjs'
 import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import {
@@ -18,6 +19,8 @@ import { safeArray } from '../services/array-helper.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
+import { z } from 'zod'
+import { zDateTime } from '../index.mjs'
 
 export interface ITradePlot
   extends IIdRequired<string>,
@@ -58,6 +61,26 @@ export class TradePlot implements ITradePlot {
     }
   }
 
+  static get VerificationSchema() {
+    const dnow = new Date()
+
+    const schema = TickerSchema.extend({
+      id: z.string().default(newGuid()),
+      created: zDateTime().default(dnow),
+      createdby: z.string().default('TradePlot'),
+      updated: zDateTime().default(dnow),
+      updatedby: z.string().default('TradePlot'),
+      description: z.string().default(''),
+      goal: z.number().optional(),
+      isShort: z.boolean().default(false),
+      purchase: z.number().min(0).max(1000000).optional(),
+      shares: z.number().min(0).max(1000000).default(0),
+      subplots: z.array(Subplot.VerificationSchema).default([]),
+    })
+
+    return schema
+  }
+
   static CreateFromTicker(ticker: string, email: string) {
     if (!ticker) {
       throw new AppException(
@@ -80,6 +103,16 @@ export class TradePlot implements ITradePlot {
     tp.createdby = email
 
     return tp
+  }
+
+  static FixupForSave(obj: ITradePlot) {
+    for (const subplot of obj.subplots) {
+      if (!subplot.expectedTriggerDate && 'expectedTriggerDate' in subplot) {
+        delete subplot.expectedTriggerDate
+      }
+    }
+
+    return obj
   }
 
   copyObject(obj: ITradePlot) {
