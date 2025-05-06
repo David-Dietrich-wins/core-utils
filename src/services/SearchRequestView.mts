@@ -22,6 +22,9 @@ export type ISearchRequestView = z.infer<
 >
 
 export class SearchRequestView implements ISearchRequestView {
+  static readonly TermMaxLength = 100
+  static readonly LimitAndOffsetMax = 10000
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addToQuery?: any // Additional query parameters for MongoDb.
   searchColumns?: ISearchRequestView['searchColumns']
@@ -192,26 +195,49 @@ export class SearchRequestView implements ISearchRequestView {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({
-      exactMatch: z.boolean(),
-      limit: z.number().min(0).max(1000000),
-      offset: z.number().min(0).max(1000000),
-      pageIndex: z.number().min(0).max(1000000),
-      pageSize: z.number().min(0).max(1000000),
-      searchColumns: z.string().max(1000000).or(z.array(z.string())).optional(),
-      sortColumn: z.string().max(100),
+      exactMatch: z.boolean().default(false),
+      limit: z
+        .number()
+        .min(0)
+        .max(SearchRequestView.LimitAndOffsetMax)
+        .default(0),
+      offset: z
+        .number()
+        .min(0)
+        .max(SearchRequestView.LimitAndOffsetMax)
+        .default(0),
+      pageIndex: z
+        .number()
+        .min(0)
+        .max(SearchRequestView.LimitAndOffsetMax)
+        .default(0),
+      pageSize: z
+        .number()
+        .min(0)
+        .max(SearchRequestView.LimitAndOffsetMax)
+        .default(0),
+      searchColumns: z
+        .string()
+        .max(10000)
+        .or(z.array(z.string().max(SearchRequestView.TermMaxLength)))
+        .optional(),
+      sortColumn: z.string().max(SearchRequestView.TermMaxLength).default(''),
       sortDirection: z
         .number()
-        .max(10)
+        .min(-1)
+        .max(1)
         .or(z.literal('asc'))
         .or(z.literal('desc'))
         .or(z.literal(1))
         .or(z.literal(-1))
-        .or(z.boolean()),
+        .or(z.boolean())
+        .default(1),
 
       term: z
         .string()
-        .max(100)
-        .or(z.array(z.string().max(100))),
+        .max(SearchRequestView.TermMaxLength)
+        .or(z.array(z.string().max(SearchRequestView.TermMaxLength)))
+        .optional(),
     })
 
     return schema
