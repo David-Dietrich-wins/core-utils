@@ -2,10 +2,7 @@ import moment, { Moment } from 'moment'
 import { z } from 'zod'
 import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
-import {
-  IPlotPricesWithMidpoint,
-  TickerSchema,
-} from '../models/ticker-info.mjs'
+import { IPlotPricesWithMidpoint, zTicker } from '../models/ticker-info.mjs'
 import { arrayFindByIds } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { hasData } from '../services/general.mjs'
@@ -107,7 +104,7 @@ export class ChartPlotReturn {
 //   endDate?: number // as milliseconds since epoch
 // }
 
-export type IChartSettings = z.infer<typeof ChartSettings.VerificationSchema>
+export type IChartSettings = z.infer<typeof ChartSettings.zChartSettings>
 
 export class ChartSettings implements IChartSettings {
   ticker = ''
@@ -264,8 +261,8 @@ export class ChartSettings implements IChartSettings {
     return ret
   }
 
-  static get VerificationSchema() {
-    return TickerSchema.extend({
+  static get zChartSettings() {
+    return zTicker.extend({
       period: z.number().min(1),
       periodType: z.string().min(1),
       frequency: z.number().min(1),

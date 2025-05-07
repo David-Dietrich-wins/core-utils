@@ -2,60 +2,19 @@ import { z } from 'zod'
 import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
 
-// const ZodDateField = z.union([
-//   z.string().refine((val) => !isNaN(Date.parse(val)), {
-//     message: 'Invalid date string',
-//   }),
-//   z.number().refine((val) => !isNaN(val), {
-//     message: 'Invalid date number',
-//   }),
-//   z.date(),
-// ])
-
-export const CreatedOnSchema = <T extends string | number | Date = Date>(
-  created: z.ZodType<T>
-) => {
-  return z.object({
-    created,
-  })
-}
 export type ICreated<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof CreatedOnSchema<T>>
+  ReturnType<typeof IdCreated.zCreatedOn<T>>
 >
-
-export const CreatedBySchema = <T extends string | number | Date = Date>(
-  created: z.ZodType<T>
-) =>
-  z
-    .object({
-      createdby: z.string().min(1).max(1000),
-    })
-    .merge(CreatedOnSchema<T>(created))
 export type ICreatedBy<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof CreatedBySchema<T>>
+  ReturnType<typeof IdCreated.zCreatedBy<T>>
 >
 
-export const UpdatedOnSchema = <T extends string | number | Date = Date>(
-  updated: z.ZodType<T>
-) => {
-  return z.object({
-    updated,
-  })
-}
 export type IUpdated<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof UpdatedOnSchema<T>>
+  ReturnType<typeof IdCreatedUpdated.zUpdatedOn<T>>
 >
 
-export const UpdatedBySchema = <T extends string | number | Date = Date>(
-  updated: z.ZodType<T>
-) =>
-  z
-    .object({
-      updatedby: z.string().min(1).max(1000),
-    })
-    .merge(UpdatedOnSchema<T>(updated))
 export type IUpdatedBy<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof UpdatedBySchema<T>>
+  ReturnType<typeof IdCreatedUpdated.zUpdatedBy<T>>
 >
 
 export interface ICreatedOnBy<T extends Date | string | number = Date> {
@@ -99,6 +58,24 @@ export class IdCreated<Tid = string> implements IIdCreated<Tid> {
     }
   }
 
+  static zCreatedOn<T extends string | number | Date = Date>(
+    created: z.ZodType<T>
+  ) {
+    return z.object({
+      created,
+    })
+  }
+
+  static zCreatedBy<T extends string | number | Date = Date>(
+    created: z.ZodType<T>
+  ) {
+    return z
+      .object({
+        createdby: z.string().min(1).max(1000),
+      })
+      .merge(IdCreated.zCreatedOn<T>(created))
+  }
+
   copyFromDatabase(dbtp: IIdCreated<Tid>) {
     this.id = dbtp.id
     this.createdby = dbtp.createdby
@@ -128,6 +105,24 @@ export class IdCreatedUpdated<Tid = string>
       this.updated = updated
       this.updatedby = updatedby
     }
+  }
+
+  static zUpdatedOn<T extends string | number | Date = Date>(
+    updated: z.ZodType<T>
+  ) {
+    return z.object({
+      updated,
+    })
+  }
+
+  static zUpdatedBy<T extends string | number | Date = Date>(
+    updated: z.ZodType<T>
+  ) {
+    return z
+      .object({
+        updatedby: z.string().min(1).max(1000),
+      })
+      .merge(IdCreatedUpdated.zUpdatedOn<T>(updated))
   }
 
   copyFromDatabase(dbtp: IIdCreatedUpdated<Tid>) {

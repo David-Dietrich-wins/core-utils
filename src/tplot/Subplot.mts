@@ -81,7 +81,7 @@ export class Subplot implements ISubplot {
     }
   }
 
-  static get VerificationSchema() {
+  static get zSchema() {
     const schema = z.object({
       id: z.string(),
       orderNumber: z.number().min(0).max(100).default(0),

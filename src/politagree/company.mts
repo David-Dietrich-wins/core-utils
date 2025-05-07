@@ -68,7 +68,7 @@ export class Company extends IdCreatedUpdated implements ICompany {
     return company
   }
 
-  static get CompanyNameVerificationSchema() {
+  static get CompanyNamezSchema() {
     const schema = z.object({
       name: z.string().min(1, 'Name is required').max(125),
     })
@@ -76,7 +76,7 @@ export class Company extends IdCreatedUpdated implements ICompany {
     return schema
   }
 
-  static get VerificationSchema() {
+  static get zCompany() {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({

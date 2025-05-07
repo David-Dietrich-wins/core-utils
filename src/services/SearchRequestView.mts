@@ -18,7 +18,7 @@ import {
 } from './string-helper.mjs'
 
 export type ISearchRequestView = z.infer<
-  typeof SearchRequestView.VerificationSchema
+  typeof SearchRequestView.zSearchRequestView
 >
 
 export class SearchRequestView implements ISearchRequestView {
@@ -51,7 +51,7 @@ export class SearchRequestView implements ISearchRequestView {
   ) {
     if (isObject(term)) {
       // Do this to ensure no extra properties are passed in.
-      Object.assign(this, SearchRequestView.VerificationSchema.parse(term))
+      Object.assign(this, SearchRequestView.zSearchRequestView.parse(term))
     } else {
       this.term = safestr(term)
       this.sortColumn = sortColumn
@@ -62,7 +62,7 @@ export class SearchRequestView implements ISearchRequestView {
       this.pageIndex = pageIndex
       this.pageSize = pageSize
 
-      SearchRequestView.VerificationSchema.parse(this)
+      SearchRequestView.zSearchRequestView.parse(this)
     }
   }
 
@@ -191,7 +191,7 @@ export class SearchRequestView implements ISearchRequestView {
     return !this.isAscending
   }
 
-  static get VerificationSchema() {
+  static get zSearchRequestView() {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({

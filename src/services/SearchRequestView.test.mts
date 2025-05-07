@@ -300,16 +300,16 @@ describe('getItems', () => {
   })
 })
 
-describe('VerificationSchema', () => {
-  test('VerificationSchema', () => {
-    const schema = SearchRequestView.VerificationSchema
+describe('zSchema', () => {
+  test('zSchema', () => {
+    const schema = SearchRequestView.zSearchRequestView
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(ZodSchema)
   })
 
   test('valid parse', () => {
-    const schema = SearchRequestView.VerificationSchema
+    const schema = SearchRequestView.zSearchRequestView
 
     const srv: ISearchRequestView = {
       term: 'name',
@@ -326,7 +326,7 @@ describe('VerificationSchema', () => {
   })
 
   test('term array', () => {
-    const schema = SearchRequestView.VerificationSchema
+    const schema = SearchRequestView.zSearchRequestView
 
     const srv: ISearchRequestView = {
       term: ['name', 'value'],
@@ -343,7 +343,7 @@ describe('VerificationSchema', () => {
   })
 
   test('bad limit', () => {
-    const schema = SearchRequestView.VerificationSchema
+    const schema = SearchRequestView.zSearchRequestView
 
     const company: ISearchRequestView = {
       term: 'name',
@@ -360,11 +360,11 @@ describe('VerificationSchema', () => {
       new Error(`[
   {
     "code": "too_big",
-    "maximum": 1000000,
+    "maximum": 10000,
     "type": "number",
     "inclusive": true,
     "exact": false,
-    "message": "Number must be less than or equal to 1000000",
+    "message": "Number must be less than or equal to 10000",
     "path": [
       "limit"
     ]

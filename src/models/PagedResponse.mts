@@ -1,14 +1,26 @@
+import { z } from 'zod'
 import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse } from './ApiResponse.mjs'
 
-export interface IPagedResponse<T> {
+/*export interface IPagedResponse<T> {
   dataPage: T[]
+  rowCount?: number
   totalCount: number
 }
+*/
+
+export type IPagedResponse<T> = z.infer<
+  ReturnType<typeof PagedResponse.zPagedResponse<z.ZodType<T>>>
+>
 
 export class PagedResponse<T> implements IPagedResponse<T> {
-  constructor(public dataPage: T[] = [], public totalCount = 0) {
+  dataPage: T[] = []
+  rowCount?: number
+  totalCount = 0
+
+  constructor(dataPage?: T[], totalCount = 0, rowCount?: number) {
     this.dataPage = safeArray(dataPage)
+    this.rowCount = rowCount ?? this.dataPage.length
 
     if (!totalCount) {
       this.totalCount = this.dataPage.length
@@ -17,6 +29,22 @@ export class PagedResponse<T> implements IPagedResponse<T> {
 
   createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
     return PagedResponse.CreateNewFromMap<T, Tout>(this, mapper)
+  }
+
+  /**
+   * API response for paged data
+   * @template T - Type of the data in the response
+   * @property {T[]} dataPage - The current page of data
+   * @property {number} rowCount - The number of rows in the current page
+   * @property {number} totalCount - The total number of rows available
+   */
+  static zPagedResponse<T extends z.ZodType>(recordSchema: T) {
+    return z.object({
+      // ctx: IContext<unknown>,
+      rowCount: z.number().int().nonnegative().optional(),
+      totalCount: z.number().int().nonnegative(),
+      dataPage: z.array(recordSchema),
+    })
   }
 
   static CreateFromIPagedResponse<T>(ret: IPagedResponse<T>) {

@@ -97,16 +97,16 @@ test('CreateICompany', () => {
   })
 })
 
-describe('VerificationSchema', () => {
-  test('VerificationSchema', () => {
-    const schema = Company.VerificationSchema
+describe('zSchema', () => {
+  test('zSchema', () => {
+    const schema = Company.zCompany
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(ZodSchema)
   })
 
   test('valid parse', () => {
-    const schema = Company.VerificationSchema
+    const schema = Company.zCompany
 
     const company = Company.CreateICompany({
       name: 'name',
@@ -116,7 +116,7 @@ describe('VerificationSchema', () => {
   })
 
   test('no name', () => {
-    const schema = Company.VerificationSchema
+    const schema = Company.zCompany
 
     const company = Company.CreateICompany()
 
@@ -124,16 +124,16 @@ describe('VerificationSchema', () => {
   })
 })
 
-describe('CompanyNameVerificationSchema', () => {
-  test('CompanyNameVerificationSchema', () => {
-    const schema = Company.CompanyNameVerificationSchema
+describe('CompanyNamezSchema', () => {
+  test('CompanyNamezSchema', () => {
+    const schema = Company.CompanyNamezSchema
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(ZodSchema)
   })
 
   test('valid parse', () => {
-    const schema = Company.CompanyNameVerificationSchema
+    const schema = Company.CompanyNamezSchema
 
     const company = Company.CreateICompany({
       name: 'name',
@@ -143,7 +143,7 @@ describe('CompanyNameVerificationSchema', () => {
   })
 
   test('no name', () => {
-    const schema = Company.CompanyNameVerificationSchema
+    const schema = Company.CompanyNamezSchema
 
     const company = Company.CreateICompany()
 
@@ -152,7 +152,7 @@ describe('CompanyNameVerificationSchema', () => {
 
   test('invalid name', () => {
     expect(() =>
-      Company.CompanyNameVerificationSchema.parse({
+      Company.CompanyNamezSchema.parse({
         name: StringHelper.GenerateRandomString(126),
       })
     ).toThrow(

@@ -26,39 +26,39 @@ import { AnyRecord, FromTo } from './types.mjs'
 
 const CONST_TickerMaxLength = 20
 
-export const SymbolSchema = z.object({
+export const zSymbol = z.object({
   symbol: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
 })
-export type ISymbol = z.infer<typeof SymbolSchema>
+export type ISymbol = z.infer<typeof zSymbol>
 
-export const TickerSchema = z.object({
+export const zTicker = z.object({
   ticker: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
 })
-export type ITicker = z.infer<typeof TickerSchema>
+export type ITicker = z.infer<typeof zTicker>
 
-export const TickerArraySchema = z.object({
+export const zTickerArray = z.object({
   ticker: zFromStringOrStringArray(1, CONST_TickerMaxLength, {
     arrayStringMax: 1000,
     uppercase: true,
   }),
 })
-export type ITickerArray = z.infer<typeof TickerArraySchema>
+export type ITickerArray = z.infer<typeof zTickerArray>
 
-export const TickerToArraySchema = z.object({
+export const zTickerToArray = z.object({
   ticker: zToStringArray(1, 10, { uppercase: true }),
 })
-export type ITickerToArray = z.infer<typeof TickerToArraySchema>
+export type ITickerToArray = z.infer<typeof zTickerToArray>
 
-export const TickersArraySchema = z.object({
+export const zTickersArray = z.object({
   tickers: zFromStringOrStringArray(1, 10, { uppercase: true }),
 })
-export type ITickersArray = z.infer<typeof TickersArraySchema>
+export type ITickersArray = z.infer<typeof zTickersArray>
 
-export const VolumeSchema = z.object({
+export const zVolume = z.object({
   volume: z.coerce.number().min(1).max(1000000000000), //z.preprocess(Number, z.number()),
 })
 
-export type IVolume = z.infer<typeof VolumeSchema>
+export type IVolume = z.infer<typeof zVolume>
 
 export interface ISymbolName extends ISymbol, IName {}
 

@@ -6,7 +6,7 @@ import {
   IAssetQuoteResponse,
   IQuoteBarEma,
   ITicker,
-  TickerSchema,
+  zTicker,
 } from '../models/ticker-info.mjs'
 import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import {
@@ -61,10 +61,10 @@ export class TradePlot implements ITradePlot {
     }
   }
 
-  static get VerificationSchema() {
+  static get zSchema() {
     const dnow = new Date()
 
-    const schema = TickerSchema.extend({
+    const schema = zTicker.extend({
       id: z.string().default(newGuid()),
       created: zDateTime().default(dnow),
       createdby: z.string().default('TradePlot'),
@@ -75,7 +75,7 @@ export class TradePlot implements ITradePlot {
       isShort: z.boolean().default(false),
       purchase: z.number().min(0).max(1000000).optional(),
       shares: z.number().min(0).max(1000000).default(0),
-      subplots: z.array(Subplot.VerificationSchema).default([]),
+      subplots: z.array(Subplot.zSchema).default([]),
     })
 
     return schema

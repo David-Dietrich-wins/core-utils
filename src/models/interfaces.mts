@@ -13,10 +13,10 @@ export interface IUserId<T = string> {
   userid?: T
 }
 
-export const NameSchema = z.object({
+export const zName = z.object({
   name: z.string().min(1).max(1000),
 })
-export type IName = z.infer<typeof NameSchema>
+export type IName = z.infer<typeof zName>
 
 export interface IType<T = string> {
   type: T
@@ -30,25 +30,25 @@ export interface IValue<T> {
   value: T
 }
 
-export const JwtSchema = z.object({
+export const zJwt = z.object({
   jwt: z.string().min(1).max(5000),
 })
-export type IJwt = z.infer<typeof JwtSchema>
+export type IJwt = z.infer<typeof zJwt>
 
-export const PriceSchema = z.object({
+export const zPrice = z.object({
   price: z.number().nonnegative().max(1000),
 })
-export type IPrice = z.infer<typeof PriceSchema>
+export type IPrice = z.infer<typeof zPrice>
 
-export const SlugSchema = z.object({
+export const zSlug = z.object({
   slug: zStringMinMax(1, 1000),
 })
-export type ISlug = z.infer<typeof SlugSchema>
+export type ISlug = z.infer<typeof zSlug>
 
-export const ErrorMessageSchema = z.object({
+export const zErrorMessage = z.object({
   errorMessage: zStringMinMax(1, 5000),
 })
-export type IErrorMessage = z.infer<typeof ErrorMessageSchema>
+export type IErrorMessage = z.infer<typeof zErrorMessage>
 
 export interface IEventLogin<T = string>
   extends IId<string>,
@@ -86,7 +86,7 @@ export interface IChartRunLogApiReturn extends ITicker {
   created: Date
 }
 
-export const BearerTokenSchema = z.object({
+export const zBearerToken = z.object({
   bearerToken: zStringMinMax(1, 5000),
 })
-export type IBearerToken = z.infer<typeof BearerTokenSchema>
+export type IBearerToken = z.infer<typeof zBearerToken>

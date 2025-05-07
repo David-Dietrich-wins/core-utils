@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, ZodString } from 'zod'
 import { arrayAdd, arrayRemove, isArray } from '../services/array-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { FindObjectWithField } from '../services/object-helper.mjs'
@@ -6,9 +6,12 @@ import { zStringMinMax } from '../services/zod-helper.mjs'
 import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
+// export type IId<T> = z.infer<ReturnType<typeof IIdSchema<z.ZodType<T>>>>
+
 export interface IId<T = string> {
   id?: T
 }
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
@@ -33,9 +36,13 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     return FindObjectWithField(obj, 'id', id)
   }
 
-  static get VerificationSchemaStringId() {
-    return z.object({ id: zStringMinMax(1, 50) })
+  static zIId<T extends z.ZodType = ZodString>(id: T) {
+    return z.object({
+      id: id.optional(),
+    })
   }
+
+  static readonly zIdString = z.object({ id: zStringMinMax(1, 50) })
 
   add(item: T, index?: number) {
     arrayAdd(this.list, item, index)
