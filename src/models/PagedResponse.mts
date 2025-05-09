@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse } from './ApiResponse.mjs'
+import { hasData } from '../services/general.mjs'
 
 /*export interface IPagedResponse<T> {
   dataPage: T[]
@@ -21,10 +22,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
   constructor(dataPage?: T[], totalCount = 0, rowCount?: number) {
     this.dataPage = safeArray(dataPage)
     this.rowCount = rowCount ?? this.dataPage.length
-
-    if (!totalCount) {
-      this.totalCount = this.dataPage.length
-    }
+    this.totalCount = hasData(totalCount) ? totalCount : this.dataPage.length
   }
 
   createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
