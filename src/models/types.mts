@@ -28,6 +28,9 @@ export type ApiProps = {
 }
 
 export type ArrayOrSingle<T> = T | T[]
+export type ArrayOrSingleBasicTypes = ArrayOrSingle<BasicTypes>
+
+export type BasicTypes = string | number | bigint | boolean | null | undefined
 
 export type ConvertToType<
   T,
@@ -95,6 +98,7 @@ export type IDataWithStats<T = unknown> = {
 export type JSONValue =
   | string
   | number
+  | bigint
   | boolean
   | { [x: string]: JSONValue }
   | JSONValue[]

@@ -1,5 +1,8 @@
-import { StringOrStringArray } from '../models/types.mjs'
-import { isArray } from './array-helper.mjs'
+import {
+  ArrayOrSingleBasicTypes,
+  StringOrStringArray,
+} from '../models/types.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
@@ -25,15 +28,16 @@ export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
   const myset = new Set(stringOrArray)
   return [...myset].join(',')
 }
+
 /**
  * Gets a comma separated list of unique items in uppercase.
  * @param stringOrArray The {@link StringOrStringArray} to uppercase and separate by commas.
  * @returns The flattened, comma-separated string in uppercase.
  */
-
 export function getCommaUpperList(stringOrArray: StringOrStringArray) {
   return safestrUppercase(getCommaSeparatedList(stringOrArray))
 }
+
 /**
  * Checks a variable to see if it is empty.
  * If it is a string, then checks for "".
@@ -49,6 +53,7 @@ export function isEmptyString(s: any, allowFunction = true) {
 
   return testString(s) || (allowFunction && isFunction(s) && testString(s()))
 }
+
 /**
  * Tests an object to determine if it is a string.
  * Additionally, will test if the string if it has a minimum length.
@@ -56,13 +61,13 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @param minlength The minimum length the string must be.
  * @returns True if the object is a string and meets an optional minimum length if provided.
  */
-
 export function isString(obj: unknown, minlength = 0): obj is string {
   return (
     ('string' === typeof obj || obj instanceof String) &&
     obj.length >= minlength
   )
 }
+
 /**
  * Tests if a string has data (is not undefined, null or empty string).
  * If the string is empty, then the ifEmpty value is returned.
@@ -108,22 +113,22 @@ export function safestrToJson<T>(
     console.log(fname ? fname : 'safestrToJson', ex)
   }
 }
+
 /**
  * Returns a guaranteed valid string to be trimmed.
  * @param s A string to set to lowercase. If null or undefined, empty string is returned.
  * @returns A guaranteed string to be nonnull and trimmed.
  */
-
 export function safestrTrim(s?: string | null, ifEmpty = '') {
   return safestr(s, ifEmpty).trim()
 }
+
 /**
  * Returns a guaranteed valid string to be uppercase.
  * @param s A string to set to uppercase. If null or undefined, empty string is returned.
  * @param trim Optionally trim the string also.
  * @returns A guaranteed string to be nonnull and uppercase.
  */
-
 export function safestrUppercase(s?: string | null, trim = true) {
   if (trim) {
     s = safestrTrim(s)
@@ -131,22 +136,22 @@ export function safestrUppercase(s?: string | null, trim = true) {
 
   return safestr(s).toUpperCase()
 }
+
 /**
  * Returns an s if the number passed in should be pluralized.
  * @param isPlural A number that is used to determine if the plural suffix is added.
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-
 export const pluralSuffix = (num: number, suffix = 's') =>
   pluralize(num, '', suffix)
+
 /**
  * Returns an s if the number passed in should be pluralized.
  * @param num A number that is used to determine if the plural suffix is added.
  * @param suffix The suffix to add if the number should be pluralized.
  * @returns The suffix string if the number is not 1.
  */
-
 export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
   if (isNumber(num) && 1 === num) {
     return safestr(textIfSingle)
@@ -154,12 +159,12 @@ export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
 
   return safestr(textIfPlural)
 }
+
 /**
  * Returns the prefix for a number if it positive + or negative -.
  * @param num The number to check for negative or positive.
  * @returns Empty string is num is 0, + if positive, or - if negative.
  */
-
 export function plusMinus(num: number) {
   if (!num) {
     return ''
@@ -167,6 +172,7 @@ export function plusMinus(num: number) {
 
   return num > 0 ? '+' : '-'
 }
+
 /**
  * Returns the prefix if the given string s has a value (not empty).
  * Generally used in loops so that the prefix is not prepended on the first pass.
@@ -174,10 +180,10 @@ export function plusMinus(num: number) {
  * @param prefix The prefix if the string is not empty.
  * @returns The prefix if the string is not empty.
  */
-
 export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
   return hasData(s) ? safestr(prefix) : ''
 }
+
 /**
  * Creates a string with a name=value. Optional wrapping of the value is provided.
  * @param name The name.
@@ -185,7 +191,6 @@ export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
  * @param valueWrapper An optional wrapper around the value. Usually a quote or double quote.
  * @returns The name=value string.
  */
-
 export function stringEquals(name: string, value: string, valueWrapper = '') {
   if (hasData(name)) {
     return (
@@ -199,6 +204,7 @@ export function stringEquals(name: string, value: string, valueWrapper = '') {
 
   return ''
 }
+
 /**
  * Creates a string with a name='value' or name="value" depending on useSingleQuote.
  * @param name The name.
@@ -223,6 +229,7 @@ export function stringEqualsQuoted(
 
   return ''
 }
+
 /**
  * Wraps a given string str with a prefix and suffix.
  * @param left The prefix to put in front of the str.
@@ -230,7 +237,6 @@ export function stringEqualsQuoted(
  * @param right The suffix to put after str.
  * @returns A string of left + str + right. Guaranteed to be a safe string.
  */
-
 export function stringWrap(left: string, str: string, right: string) {
   return safestr(left) + safestr(str) + safestr(right)
 }
@@ -242,6 +248,7 @@ export function stringWrap(left: string, str: string, right: string) {
 export function stringWrapDoubleQuote(str: string) {
   return stringWrap('"', str, '"')
 }
+
 /**
  * Creates a string as (str) wrapped in parentheses.
  * @param str The string to wrap in parentheses.
@@ -250,6 +257,7 @@ export function stringWrapDoubleQuote(str: string) {
 export function stringWrapParen(str: string) {
   return stringWrap('(', str, ')')
 }
+
 /**
  * Creates a string as 'str'.
  * @param str The string to wrap in single quotes.
@@ -344,6 +352,16 @@ export class StringHelper {
     return result
   }
 
+  static ReplaceNonPrintable(str: string) {
+    return str.replaceAll(/[^\x20-\x7E]/g, '')
+  }
+
+  static safeHtmlAttribute(items: ArrayOrSingleBasicTypes, separator = '-') {
+    return StringHelper.SplitToArray(items, ',', true, true, {
+      removeNonPrintable: true,
+    }).join(separator)
+  }
+
   /**
    * Returns a string with a prepended prefix if the string has data.
    * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
@@ -370,6 +388,29 @@ export class StringHelper {
     })
   }
 
+  static SplitIntoArray(
+    strToSplit: ArrayOrSingleBasicTypes,
+    splitter = ',',
+    replaceNonPrintable = true
+  ) {
+    let str = isString(strToSplit)
+      ? safestrTrim(strToSplit)
+      : String(strToSplit)
+
+    if (replaceNonPrintable) {
+      str = StringHelper.ReplaceNonPrintable(str)
+    }
+
+    if (str.startsWith('[')) {
+      str = safestrTrim(str.substring(1))
+    }
+    if (str.endsWith(']')) {
+      str = safestrTrim(str.substring(0, str.length - 1))
+    }
+
+    return str.split(splitter)
+  }
+
   /**
    * Takes a string or array of strings, iterates over each string and splits them according to the splitter provided.
    * Each split string is then added to an array and the array of split strings is returned.
@@ -380,35 +421,24 @@ export class StringHelper {
    * @returns An array of every string split by splitter.
    */
   static SplitToArray(
-    strOrArray?: StringOrStringArray,
+    strOrArray?: ArrayOrSingleBasicTypes,
     splitter = ',',
     removeEmpties = true,
-    trimStrings = true
+    trimStrings = true,
+    extras: {
+      removeNonPrintable?: boolean
+    } = { removeNonPrintable: true }
   ) {
-    let splitted: string[] = []
-    if (isNullOrUndefined(strOrArray)) {
-      return splitted
-    }
-
-    if (isString(strOrArray)) {
-      let str = safestrTrim(strOrArray)
-
-      if (str.startsWith('[')) {
-        str = safestrTrim(str.substring(1))
-      }
-      if (str.endsWith(']')) {
-        str = safestrTrim(str.substring(0, str.length - 1))
-      }
-
-      splitted = str.split(splitter)
-    } else if (isArray(strOrArray)) {
-      strOrArray.map((x) => (splitted = splitted.concat(x.split(splitter))))
-    } else {
-      throw 'Invalid type passed to splitToArray'
-    }
+    let splitted = safeArray(strOrArray).reduce(
+      (acc: string[], cur) =>
+        acc.concat(
+          StringHelper.SplitIntoArray(cur, splitter, extras.removeNonPrintable)
+        ),
+      []
+    )
 
     if (removeEmpties) {
-      splitted = splitted.filter((e) => hasData(e))
+      splitted = splitted.filter((e) => hasData(e.trim()))
     }
 
     if (trimStrings) {
