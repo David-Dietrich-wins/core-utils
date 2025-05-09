@@ -45,7 +45,7 @@ export const zTickerArray = z.object({
 export type ITickerArray = z.infer<typeof zTickerArray>
 
 export const zTickerToArray = z.object({
-  ticker: zToStringArray(1, 10, { uppercase: true }),
+  ticker: zToStringArray(1, 10, { arrayStringMax: 1000, uppercase: true }),
 })
 export type ITickerToArray = z.infer<typeof zTickerToArray>
 

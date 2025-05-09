@@ -1,10 +1,9 @@
+import { IconConfiguration } from '../services/ContextManager.mjs'
 import { isNullOrUndefined } from '../services/general.mjs'
-import { safestrLowercase } from '../services/string-helper.mjs'
-import { isString } from '../services/string-helper.mjs'
-import { isNumber } from '../services/number-helper.mjs'
-import { getAsNumber } from '../services/number-helper.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
-import { IIdNameValueType } from './id-name.mjs'
+import { getAsNumber, isNumber } from '../services/number-helper.mjs'
+import { isString, safestrLowercase } from '../services/string-helper.mjs'
+import { IdName, IIdNameValueType } from './id-name.mjs'
 import { IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
@@ -77,6 +76,13 @@ export type FunctionAppResponse<TBody = unknown> = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GenericCallback<T = unknown> = (...args: any[]) => T
+
+export type HeaderNavLinks = IdName & {
+  icon?: IconConfiguration
+  showInAppBar: boolean
+  title?: string
+  disabled?: boolean
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IConstructor<T> = new (...args: any[]) => T
