@@ -561,3 +561,17 @@ export function isArray<T = unknown>(
 
   return arr.includes(minLengthOrIncludes)
 }
+
+export function arrayMoveFromTo<T>(
+  arr: ArrayOrSingle<T>,
+  from: number,
+  to: number
+) {
+  const arrCopy = safeArray(arr)
+
+  const item = arrCopy[from]
+  arrCopy.splice(from, 1)
+  arrCopy.splice(to, 0, item)
+
+  return arrCopy
+}
