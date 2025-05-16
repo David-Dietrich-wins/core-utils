@@ -1,12 +1,18 @@
 import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
 import { IIdName } from '../models/id-name.mjs'
+import { ApiResponse } from '../models/ApiResponse.mjs'
 import {
   IChartRunLogApiReturn,
   IEventLogin,
   ISlug,
 } from '../models/interfaces.mjs'
-import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
+import { IConfig } from '../models/config.mjs'
 import { INameVal, NameVal } from '../models/NameValManager.mjs'
+import {
+  UserLoginRefreshTokenResponse,
+  UserLoginResponse,
+} from '../models/types.mjs'
+import { IUserInfo } from '../models/UserInfo.mjs'
 import {
   IPagedResponse,
   IPagedResponseWithTotalValue,
@@ -36,10 +42,27 @@ import {
   ITickerType,
   IUsersWithCount,
 } from '../models/ticker-info.mjs'
+import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
+import { ICompany } from '../politagree/company.mjs'
+import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
+import { ChartPlotReturn, IChartSettings } from '../tplot/ChartSettings.mjs'
 import {
   ConfigTickerInfoTabSettings,
   CreateConfigTickerInfoTabSettings,
 } from '../tplot/ConfigManager.mjs'
+import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
+import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
+import { FacetSaveParameters } from '../tplot/Facet.mjs'
+import { IPlotList } from '../tplot/PlotList.mjs'
+import { ScreenData } from '../tplot/ScreenData.mjs'
+import {
+  ITradePlot,
+  ITradePlotProfitizerWithContext,
+  TradePlot,
+} from '../tplot/TradePlot.mjs'
+import { ITradePlotProfitizer } from '../tplot/TradePlotProfitizer.mjs'
+import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { ChartData, SearchSymbolResultItem } from './charting_library.mjs'
 import {
   fetchPost,
@@ -51,28 +74,9 @@ import {
   fetchDeleteJson,
 } from './fetch-http.mjs'
 import { hasData, urlJoin } from './general.mjs'
+import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { safestr } from './string-helper.mjs'
-import { isArray } from './array-helper.mjs'
-import { safeArray } from './array-helper.mjs'
-import { IConfig } from '../models/config.mjs'
-import { ChartPlotReturn, IChartSettings } from '../tplot/ChartSettings.mjs'
-import { ScreenData } from '../tplot/ScreenData.mjs'
-import { ITvChartLayout } from '../tplot/TvChartLayout.mjs'
-import { ApiResponse } from '../models/ApiResponse.mjs'
-import { FacetSaveParameters } from '../tplot/Facet.mjs'
-import { IUserInfo } from '../tplot/UserInfo.mjs'
-import { IDashboardScreenSetting } from '../tplot/DashboardScreenSetting.mjs'
-import {
-  ITradePlot,
-  ITradePlotProfitizerWithContext,
-  TradePlot,
-} from '../tplot/TradePlot.mjs'
-import { ICity, IdNameSlugWithScales } from '../politagree/city.mjs'
-import { IPolitiscaleSearchParams } from '../politagree/politiscale.mjs'
-import { IDashboardSetting } from '../tplot/DashboardSetting.mjs'
-import { ICompany } from '../politagree/company.mjs'
-import { IPlotList } from '../tplot/PlotList.mjs'
-import { ITradePlotProfitizer } from '../tplot/TradePlotProfitizer.mjs'
+import { IUserLoginRequest } from './user-helper.mjs'
 
 /**
  * Interface for the result of a symbol search.
@@ -1021,6 +1025,38 @@ export class ExternalApis {
         data: nameVal,
         headers: GetHttpHeaderApplicationName(this.appName),
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    Login: async (iLogin: IUserLoginRequest) => {
+      const fname = this.user.Login.name
+      return fetchPost<UserLoginResponse, IUserLoginRequest>({
+        url: urlJoin(this.baseUrl, 'login'),
+        fname,
+        data: iLogin,
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    Logout: async (bearerToken: string) => {
+      const fname = this.user.Logout.name
+      return fetchPost<string, string>({
+        url: urlJoin(this.baseUrl, 'logout'),
+        fname,
+        bearerToken,
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    RefreshToken: async (refreshToken: string) => {
+      const fname = this.user.Logout.name
+      return fetchPost<UserLoginRefreshTokenResponse, { refreshToken: string }>(
+        {
+          url: urlJoin(this.baseUrl, 'refresh-token'),
+          fname,
+          headers: GetHttpHeaderApplicationName(this.appName),
+          data: { refreshToken },
+        }
+      ).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     ScreenData: async (

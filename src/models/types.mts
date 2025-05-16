@@ -6,6 +6,7 @@ import { isString, safestrLowercase } from '../services/string-helper.mjs'
 import { IdName, IIdNameValueType } from './id-name.mjs'
 import { IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { IUserInfo } from './UserInfo.mjs'
 
 export const enum DigicrewTypes {
   FormStatusItem = 'FormStatusItem',
@@ -147,7 +148,9 @@ export function SortOrderAsNumeric(order?: SortOrder | null) {
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
 export function SortOrderAsString(order?: SortOrder | null) {
-  return SortOrderAsBoolean(order) ? 'asc' : 'desc'
+  return SortOrderAsBoolean(isNullOrUndefined(order) ? true : order)
+    ? 'asc'
+    : 'desc'
 }
 
 export type StringFunction = () => string
@@ -156,5 +159,18 @@ export type StringOrStringArray = ArrayOrSingle<string>
 
 // Function App and/or Express request header types.
 export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
+
+export type UserLoginRefreshTokenResponse = {
+  access_token: string
+  expires_in: number
+  refresh_token?: string
+}
+
+export type UserLoginResponse = {
+  refreshToken: string
+  token: string
+  tokenExpirationInstant: number
+  user: IUserInfo
+}
 
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
