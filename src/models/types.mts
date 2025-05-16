@@ -166,10 +166,12 @@ export type UserLoginRefreshTokenResponse = {
   refresh_token?: string
 }
 
-export type UserLoginResponse = {
-  refreshToken: string
+export type BearerTokenResponse = {
   token: string
   tokenExpirationInstant: number
+  refreshToken: string
+}
+export type UserLoginResponse = BearerTokenResponse & {
   user: IUserInfo
 }
 

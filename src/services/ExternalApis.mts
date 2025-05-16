@@ -140,7 +140,7 @@ export class ExternalApis {
     if (location && err instanceof AppExceptionHttp) {
       if (err.httpStatusCode === 403) {
         setTimeout(() => {
-          location.href = `/api/auth/signin?callbackUrl=${encodeURIComponent(
+          location.href = `/login?callbackUrl=${encodeURIComponent(
             location.pathname + location.search
           )}`
         }, 100)
