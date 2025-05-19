@@ -126,7 +126,7 @@ export class ConfigManager {
       'ConfigManager.ValidateConfigName'
     )
   }
-  static get defaults(): Readonly<TpUserInfoAllConfigs> {
+  static get defaults(): TpUserInfoAllConfigs {
     const cfgCharts: IConfigCharts = {
       id: newGuid(),
       updated: Date.now(),
@@ -229,7 +229,7 @@ export class ConfigManager {
       [TpConfigNamesEnum.tickerInfo]: cfgTickerInfo,
     }
 
-    return items
+    return deepCloneJson(items)
   }
 
   get allTpUserInfoConfigs() {
