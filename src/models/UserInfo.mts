@@ -36,10 +36,14 @@ export class UserInfo implements IUserInfo {
     return new UserInfo(obj)
   }
 
+  static CreateIUserInfo(obj?: Partial<IUserInfo>) {
+    return new UserInfo(obj).IUserInfo
+  }
+
   get IUserInfo() {
     const iUserInfo: IUserInfo = {
       companies: this.companies,
-      config: this.config,
+      config: { ...this.config },
       displayName: this.displayName,
       email: this.email,
       firstName: this.firstName,
