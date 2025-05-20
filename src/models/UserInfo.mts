@@ -17,7 +17,7 @@ export interface IUserInfo {
 
 export class UserInfo implements IUserInfo {
   companies = []
-  config = { ...ConfigManager.defaults }
+  config = ConfigManager.defaults
   displayName = ''
   email = ''
   firstName = ''
