@@ -1015,10 +1015,13 @@ export class ExternalApis {
   }
 
   user = {
-    ConfigSet: async (bearerToken: string, nameVal: INameVal<unknown>) => {
+    ConfigSet: async <T extends object>(
+      bearerToken: string,
+      nameVal: INameVal<T>
+    ) => {
       const fname = this.user.ConfigSet.name
 
-      return fetchPut<INameVal<unknown>, INameVal<unknown>>({
+      return fetchPut<INameVal<T>, INameVal<T>>({
         url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
