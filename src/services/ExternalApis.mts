@@ -1040,13 +1040,15 @@ export class ExternalApis {
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
-    Logout: async (bearerToken: string) => {
+    Logout: async (bearerToken: string, refreshToken: string) => {
       const fname = this.user.Logout.name
-      return fetchPost<string, string>({
+
+      return fetchPost<string, { refreshToken: string }>({
         url: urlJoin(this.baseUrl, 'logout'),
         fname,
         bearerToken,
         headers: GetHttpHeaderApplicationName(this.appName),
+        data: { refreshToken },
       }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
