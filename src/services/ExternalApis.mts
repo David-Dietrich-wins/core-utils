@@ -1171,7 +1171,7 @@ export class ExternalApis {
     ) => {
       const fname = this.user.UserLogDashboardAccess.name
 
-      return fetchPost<string, IDashboardScreenSetting>({
+      return fetchPost<IDashboardScreenSetting, IDashboardScreenSetting>({
         url: urlJoin(this.CONST_EndpointUser, 'log-dashboard-access'),
         fname,
         bearerToken,
