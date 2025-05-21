@@ -6,7 +6,7 @@ import DailyRotateFile, {
 import { hasData } from './general.mjs'
 import { safestr, safestrTrim } from './string-helper.mjs'
 import { DateHelper } from './DateHelper.mjs'
-import { DefaultWithOverrides, ObjectTypesToString } from './object-helper.mjs'
+import { ObjectTypesToString } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 
 const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH'
@@ -150,7 +150,7 @@ export class LogManager {
   }
 
   static LogManagerDefaultOptions(overrides?: Partial<LogManagerOptions>) {
-    const defaultOptions: LogManagerOptions = {
+    const logManagerOptions: LogManagerOptions = {
       componentName: 'LogManager',
       includeHttpRequestDataInTheLog: false,
       includeHttpResponseDataInTheLog: false,
@@ -162,9 +162,10 @@ export class LogManager {
       rotateBaseFileName: '',
       showConsole: true,
       suffixDatePattern: DEFAULT_RotateDatePattern,
+      ...overrides,
     }
 
-    return DefaultWithOverrides(defaultOptions, overrides)
+    return logManagerOptions
   }
 
   static TransportFileLogger(

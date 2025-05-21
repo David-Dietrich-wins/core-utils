@@ -3,7 +3,6 @@ import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
 import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
 import { newGuid } from '../services/general.mjs'
 import { safestrLowercase } from '../services/string-helper.mjs'
-import { DefaultWithOverrides } from '../services/object-helper.mjs'
 import { IChartSettings } from './ChartSettings.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
@@ -319,7 +318,7 @@ export class TileConfig<Tvalue = any>
   }
 
   static CreateITileConfig(overrides?: Partial<ITileConfig> | null) {
-    const DEFAULT_TileConfig: ITileConfig = {
+    const iTileConfig: ITileConfig = {
       id: newGuid(),
       name: 'Trade Plotter',
       value: {},
@@ -327,11 +326,10 @@ export class TileConfig<Tvalue = any>
       index: 0,
       cols: 1,
       rows: 1,
+      ...overrides,
     }
 
-    const itile = DefaultWithOverrides(DEFAULT_TileConfig, overrides)
-
-    return itile
+    return iTileConfig
   }
 
   static CreateTileConfig<T = unknown>(

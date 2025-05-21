@@ -8,10 +8,7 @@ import {
   IContextValue,
 } from '../services/ContextManager.mjs'
 import { hasData, newGuid } from '../services/general.mjs'
-import {
-  deepCloneJson,
-  DefaultWithOverrides,
-} from '../services/object-helper.mjs'
+import { deepCloneJson } from '../services/object-helper.mjs'
 import { safestrTrim } from '../services/string-helper.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { TileType } from './TileConfig.mjs'
@@ -54,10 +51,12 @@ export interface IConfigCharts extends IContext {
 export function CreateConfigTickerInfoTabSettings(
   overrides?: Partial<ConfigTickerInfoTabSettings>
 ) {
-  return DefaultWithOverrides(
-    ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
-    overrides
-  )
+  const ret: ConfigTickerInfoTabSettings = {
+    ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
+    ...overrides,
+  }
+
+  return ret
 }
 
 export interface IConfigOperations extends IContext {

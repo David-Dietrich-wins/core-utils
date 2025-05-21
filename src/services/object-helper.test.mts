@@ -11,7 +11,6 @@ import { IdValueManager } from '../models/IdValueManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import {
   addObjectToList,
-  CloneObjectWithExtras,
   deepCloneJson,
   deepDiffMapper,
   FindObjectWithField,
@@ -589,14 +588,6 @@ describe('ObjectTypesToString', () => {
     const ret = ObjectTypesToString(e, true, true)
     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
   })
-})
-
-test('CloneObjectWithExtras', () => {
-  const obj: IId = {
-    id: 'abc1',
-  }
-
-  expect(CloneObjectWithExtras(obj)).toEqual(obj)
 })
 
 test('UpdateFieldValue', () => {

@@ -5,31 +5,22 @@ import { safestr, safestrLowercase, safestrToJson } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
 import { isArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import {
-  AnyObject,
-  AnyRecord,
-  ArrayOrSingle,
-  IConstructor,
-} from '../models/types.mjs'
+import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst, safeArray } from './array-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
-
-export function CloneObjectWithExtras<T extends IId>(
-  objectWithId: Readonly<T>,
-  overridesAndExtras?: AnyRecord
-) {
-  const newq: T = { ...objectWithId, ...overridesAndExtras }
-
-  return newq
-}
 
 export function UpdateFieldValue<T extends IId>(
   parentObject: Readonly<T>,
   fieldName: string,
   fieldValue: unknown
 ) {
-  return CloneObjectWithExtras(parentObject, { [fieldName]: fieldValue })
+  const ret: T = {
+    ...parentObject,
+    [fieldName]: fieldValue,
+  }
+
+  return ret
 }
 
 const CONST_JsonDepth = 5
@@ -48,15 +39,6 @@ type AxiosErrorWrapper = {
   statusText?: string
   type: string
   url?: string
-}
-
-export function DefaultWithOverrides<T extends AnyRecord>(
-  defaultObject: Readonly<T>,
-  overrides?: Partial<T> | null
-) {
-  const ret: T = { ...defaultObject, ...overrides }
-
-  return ret
 }
 
 /**

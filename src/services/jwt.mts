@@ -13,7 +13,6 @@ import { safeArray } from './array-helper.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { DefaultWithOverrides } from './object-helper.mjs'
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
@@ -193,18 +192,12 @@ export function JwtTokenWithUserId(
     header,
   }
 
-  const payload = DefaultWithOverrides<JwtPayload>(
-    {
-      ...{
-        sub: userId,
-      },
-    },
-    overrides
-  )
+  const payload: JwtPayload = {
+    sub: userId,
+    ...overrides,
+  }
 
-  const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
-
-  return jwtToken
+  return JwtSign(payload, secretOrPrivateKey, signOptions)
 }
 
 export function JwtTokenWithEmail(
@@ -221,18 +214,12 @@ export function JwtTokenWithEmail(
     header,
   }
 
-  const payload = DefaultWithOverrides<JwtPayload>(
-    {
-      ...{
-        email,
-      },
-    },
-    overrides
-  )
+  const payload: JwtPayload = {
+    email,
+    ...overrides,
+  }
 
-  const jwtToken = JwtSign(payload, secretOrPrivateKey, signOptions)
-
-  return jwtToken
+  return JwtSign(payload, secretOrPrivateKey, signOptions)
 }
 
 /**
@@ -320,9 +307,10 @@ export class JwtBase implements IJwtBase {
       roles: [],
       scope: '',
       tid: '',
+      ...overrides,
     }
 
-    return DefaultWithOverrides(jwt, overrides)
+    return jwt
   }
 
   get ApplicationRoles() {
@@ -404,9 +392,10 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
       ...{
         sub: '',
       },
+      ...overrides,
     }
 
-    return DefaultWithOverrides(jwt, overrides)
+    return jwt
   }
 
   get FusionAuthUserId() {
@@ -452,9 +441,10 @@ export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
         preferred_username: '',
         sid: '',
       },
+      ...overrides,
     }
 
-    return DefaultWithOverrides(jwt, overrides)
+    return jwt
   }
 
   get authenticationTime() {
@@ -490,9 +480,10 @@ export class JwtFusionAuthClientCredentials
       ...{
         permissions: [],
       },
+      ...overrides,
     }
 
-    return DefaultWithOverrides(jwt, overrides)
+    return jwt
   }
 }
 
@@ -578,8 +569,9 @@ export class JwtFusionAuthIdToken
         phone_number: '',
         picture: '',
       },
+      ...overrides,
     }
 
-    return DefaultWithOverrides(jwt, overrides)
+    return jwt
   }
 }
