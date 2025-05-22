@@ -55,9 +55,15 @@ export class TradePlot implements ITradePlot {
   createdby = 'TradePlot'
   created = new Date()
 
-  constructor(obj?: ITradePlot) {
+  constructor(obj?: Partial<ITradePlot>) {
     if (obj) {
-      this.copyObject(obj)
+      Object.assign(this, obj)
+
+      if (obj.subplots) {
+        this.subplots = safeArray(obj.subplots).map(
+          (subplot) => new Subplot(subplot)
+        )
+      }
     }
   }
 
@@ -71,10 +77,10 @@ export class TradePlot implements ITradePlot {
       updated: zDateTime().default(dnow),
       updatedby: z.string().default('TradePlot'),
       description: z.string().default(''),
-      goal: z.number().optional(),
+      goal: z.coerce.number().optional(),
       isShort: z.boolean().default(false),
-      purchase: z.number().min(0).max(1000000).optional(),
-      shares: z.number().min(0).max(1000000).default(0),
+      purchase: z.coerce.number().min(0).max(1000000).optional(),
+      shares: z.coerce.number().min(0).max(1000000).default(0),
       subplots: z.array(Subplot.zSchema).default([]),
     })
 
