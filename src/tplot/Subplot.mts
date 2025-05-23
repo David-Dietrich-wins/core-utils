@@ -3,7 +3,6 @@ import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
 import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
-import { FormStatus, FormStatusItem } from '../services/FormStatus.mjs'
 import { newGuid } from '../services/general.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { zDateTime } from '../services/zod-helper.mjs'
@@ -100,65 +99,6 @@ export class Subplot implements ISubplot {
     return schema
   }
 
-  createFormStatus(parentId: FormStatusItem['id']) {
-    const sperr = FormStatus.CreateChild<ISubplot>(this.id, parentId, {
-      orderNumber: FormStatus.CreateItem('', parentId, this.id),
-      pattern: FormStatus.CreateItem(
-        'input[name="pattern"]',
-        parentId,
-        this.id
-      ),
-      timeframe: FormStatus.CreateItem(
-        'input[name="timeframe"]',
-        parentId,
-        this.id
-      ),
-      total: FormStatus.CreateItem('input[name="total"]', parentId, this.id),
-      targetLow: FormStatus.CreateItem(
-        'input[name="targetLow"]',
-        parentId,
-        this.id
-      ),
-      targetHigh: FormStatus.CreateItem(
-        'input[name="targetHigh"]',
-        parentId,
-        this.id
-      ),
-      expectedTriggerDate: FormStatus.DateBeforeMidnightToday(
-        'input[name="expectedTriggerDate"]',
-        this.expectedTriggerDate,
-        parentId,
-        this.id
-      ),
-      comment: FormStatus.CreateItem(
-        'input[name="comment"]',
-        parentId,
-        this.id
-      ),
-      lossFloorPercent: FormStatus.CreateItem(
-        'input[name="lossFloorPercent"]',
-        parentId,
-        this.id
-      ),
-      gainCeilingPercent: FormStatus.CreateItem(
-        'input[name="gainCeilingPercent"]',
-        parentId,
-        this.id
-      ),
-      useMinusEight: FormStatus.CreateItem(
-        'input[name="useMinusEight"]',
-        parentId,
-        this.id
-      ),
-      scaleInverted: FormStatus.CreateItem(
-        'input[name="scaleInverted"]',
-        parentId,
-        this.id
-      ),
-    })
-
-    return sperr
-  }
   static GetFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
     const periodLength = arrayMustFind(
       ChartPatternOptions,

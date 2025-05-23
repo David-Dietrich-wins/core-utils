@@ -1,5 +1,4 @@
 import { IIdName } from '../models/id-name.mjs'
-import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import { isArray } from '../services/array-helper.mjs'
 import { ITileConfig, TileConfig } from './TileConfig.mjs'
 
@@ -15,29 +14,8 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   static Create(overrides?: Partial<IDashboardScreenSetting>) {
     return Object.assign(new DashboardScreenSetting(), overrides)
   }
-
-  createFormStatus() {
-    const topLevelStatus = FormStatus.CreateTopLevel()
-    const parentId = topLevelStatus.id
-    const ret: FormStatusManager<IDashboardScreenSetting> = {
-      topLevelStatus,
-      id: this.id,
-      name: FormStatus.CreateItem('input[name="name"]', parentId, this.id),
-      tiles: this.tiles.map((x) =>
-        new TileConfig(
-          x.id,
-          x.name,
-          x.value,
-          x.type,
-          x.index,
-          x.cols,
-          x.rows
-        ).createFormStatus(topLevelStatus.id)
-      ),
-    }
-
-    ret.topLevelStatus.errorStatus = FormStatus.FindAllErrorsFromChildren(ret)
-    return ret
+  static CreateISetting(overrides?: Partial<IDashboardScreenSetting>) {
+    return Object.assign({}, new DashboardScreenSetting(), overrides)
   }
 
   static CreateNew(name: string, tiles: ITileConfig[] = []) {
