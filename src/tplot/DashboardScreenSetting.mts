@@ -15,7 +15,13 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
     return Object.assign(new DashboardScreenSetting(), overrides)
   }
   static CreateISetting(overrides?: Partial<IDashboardScreenSetting>) {
-    return Object.assign({}, new DashboardScreenSetting(), overrides)
+    const idss: IDashboardScreenSetting = Object.assign(
+      {},
+      new DashboardScreenSetting(),
+      overrides
+    )
+
+    return idss
   }
 
   static CreateNew(name: string, tiles: ITileConfig[] = []) {
