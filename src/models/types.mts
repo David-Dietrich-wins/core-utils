@@ -3,19 +3,9 @@ import { isNullOrUndefined } from '../services/general.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
 import { getAsNumber, isNumber } from '../services/number-helper.mjs'
 import { isString, safestrLowercase } from '../services/string-helper.mjs'
-import { IdName, IIdNameValueType } from './id-name.mjs'
-import { IId } from './IdManager.mjs'
+import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IUserInfo } from './UserInfo.mjs'
-
-export const enum DigicrewTypes {
-  FormStatusItem = 'FormStatusItem',
-  FormStatusTopLevel = 'FormStatusTopLevel',
-  FormStatusChildLevel = 'FormStatusChildLevel',
-  FormStatusManager = 'FormStatusManager',
-}
-
-export type DigicrewType<T = string> = IIdNameValueType<T, DigicrewTypes>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }
@@ -32,24 +22,6 @@ export type ArrayOrSingle<T> = T | T[]
 export type ArrayOrSingleBasicTypes = ArrayOrSingle<BasicTypes>
 
 export type BasicTypes = string | number | bigint | boolean | null | undefined
-
-export type ConvertToType<
-  T,
-  R extends object,
-  TChildAdd extends AnyRecord = object
-> = {
-  [Tprop in keyof T]: T[Tprop] extends Array<T[Tprop]>
-    ? ConvertToType<T[Tprop], R, TChildAdd>[]
-    : T[Tprop] extends IId
-    ? ConvertToType<Omit<T[Tprop], 'id'>, R, TChildAdd> &
-        IId<T[Tprop]['id']> &
-        TChildAdd
-    : T[Tprop] extends object
-    ? T[Tprop] extends Date
-      ? R
-      : ConvertToType<T[Tprop], R, TChildAdd>
-    : R
-}
 
 export type CreateImmutable<Type> = {
   +readonly [Property in keyof Type]: Type[Property]

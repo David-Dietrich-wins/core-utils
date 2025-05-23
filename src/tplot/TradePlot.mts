@@ -9,7 +9,6 @@ import {
   ITicker,
   zTicker,
 } from '../models/ticker-info.mjs'
-import { FormStatus, FormStatusManager } from '../services/FormStatus.mjs'
 import {
   getPercentChangeString,
   isNullOrUndefined,
@@ -151,43 +150,6 @@ export class TradePlot implements ITradePlot {
     this.subplots = safeArray(obj.subplots).map(
       (subplot) => new Subplot(subplot)
     )
-  }
-
-  createFormStatus() {
-    const topLevelStatus = FormStatus.CreateTopLevel()
-    const parentId = topLevelStatus.id
-    const ret: FormStatusManager<ITradePlot> = {
-      topLevelStatus,
-      id: this.id,
-      subplots: safeArray(this.subplots).map((x) =>
-        x.createFormStatus(parentId)
-      ),
-      created: FormStatus.CreateItem('', parentId, this.id),
-      createdby: FormStatus.CreateItem('', parentId, this.id),
-      description: FormStatus.CreateItem(
-        'input[name="description"]',
-        parentId,
-        this.id
-      ),
-      goal: FormStatus.CreateItem('input[name="goal"]', parentId, this.id),
-      isShort: FormStatus.CreateItem(
-        'input[name="isShort"]',
-        parentId,
-        this.id
-      ),
-      purchase: FormStatus.CreateItem(
-        'input[name="purchase"]',
-        parentId,
-        this.id
-      ),
-      shares: FormStatus.CreateItem('input[name="shares"]', parentId, this.id),
-      ticker: FormStatus.CreateItem('input[name="ticker"]', parentId, this.id),
-      updated: FormStatus.CreateItem('', parentId, this.id),
-      updatedby: FormStatus.CreateItem('', parentId, this.id),
-    }
-
-    ret.topLevelStatus.errorStatus = FormStatus.FindAllErrorsFromChildren(ret)
-    return ret
   }
 
   toApi() {
