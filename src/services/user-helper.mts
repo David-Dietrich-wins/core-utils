@@ -1,11 +1,14 @@
 import { z } from 'zod'
 
-const UserLoginRequestTypes = ['login', 'google'] as const
+export enum UserLoginRequestTypes {
+  login = 'login',
+  google = 'google',
+}
 
 export const zUserLoginRequest = z.object({
-  type: z.enum(UserLoginRequestTypes),
-  username: z.string().max(250).email().optional(),
-  password: z.string().min(8).optional(),
+  type: z.nativeEnum(UserLoginRequestTypes),
+  username: z.string().max(250).email(),
+  password: z.string().min(8),
   remember: z.boolean().optional(),
   appName: z.string().optional(),
   redirectUrl: z.string().optional(),
