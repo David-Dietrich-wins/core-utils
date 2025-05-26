@@ -17,7 +17,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   static CreateISetting(overrides?: Partial<IDashboardScreenSetting>) {
     const idss: IDashboardScreenSetting = Object.assign(
       {},
-      new DashboardScreenSetting(),
+      DashboardScreenSetting.CreateNew('New Dashboard'),
       overrides
     )
 
@@ -26,7 +26,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
 
   static CreateNew(name: string, tiles: ITileConfig[] = []) {
     if (!isArray(tiles, 1)) {
-      tiles = [TileConfig.CreateTicker('AAPL')]
+      tiles = [TileConfig.CreateTicker('AAPL').ITileConfig]
     }
 
     return new DashboardScreenSetting(name, tiles)
