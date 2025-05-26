@@ -679,3 +679,20 @@ export function getBody(ret: unknown) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (ret as { body: any }).body
 }
+
+type CoalesceType<T> = T | (() => T) | undefined
+
+export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
+  let retItem: T | undefined = undefined
+
+  for (const item of all) {
+    if (isFunction(item)) {
+      retItem = item()
+      if (!isNullOrUndefined(retItem)) {
+        return retItem
+      }
+    } else if (!isNullOrUndefined(item)) {
+      return item
+    }
+  }
+}
