@@ -20,7 +20,7 @@ test('NameValType good', () => {
   expect(pr.type).toBe(type)
 })
 
-describe('NameValueManager', () => {
+describe('NameValManager', () => {
   test('constructor', () => {
     const name = 'name'
     const value = 'value'
@@ -38,7 +38,7 @@ describe('NameValueManager', () => {
     expect(manager.list.length).toBe(0)
   })
 
-  test('CreateNameValueManager', () => {
+  test('CreateNameValManager', () => {
     const name = 'name'
     const value = 'value'
     const type = 'type'
@@ -49,23 +49,46 @@ describe('NameValueManager', () => {
     expect(manager.list[0].name).toBe(name)
     expect(manager.list[0].val).toBe(value)
   })
-  test('CreateNameValueManager with null', () => {
+  test('CreateNameValManager with null', () => {
     const manager = NameValManager.CreateNameValManager(null)
 
     expect(manager.list.length).toBe(0)
   })
-  test('CreateNameValueManager with undefined', () => {
+  test('CreateNameValManager with undefined', () => {
     const manager = NameValManager.CreateNameValManager(undefined)
 
     expect(manager.list.length).toBe(0)
   })
 
-  test('CreateINameValue', () => {
+  test('NameVal.CreateINameVal', () => {
+    const name = 'name'
+    const value = 'value'
+    const item = NameVal.CreateINameVal(name, value)
+
+    expect(item.name).toBe(name)
+    expect(item.val).toBe(value)
+    expect(item).toEqual({ name, val: value })
+
+    const item2 = NameVal.CreateINameVal<{ id: number }>(name, {
+      id: 123,
+    })
+    expect(item2.name).toBe(name)
+    expect(item2.val).toEqual({ id: 123 })
+  })
+
+  test('NameValManager.CreateINameVal', () => {
     const name = 'name'
     const value = 'value'
     const item = NameValManager.CreateINameVal(name, value)
 
     expect(item.name).toBe(name)
     expect(item.val).toBe(value)
+    expect(item).toEqual({ name, val: value })
+
+    const item2 = NameValManager.CreateINameVal<{ id: number }>(name, {
+      id: 123,
+    })
+    expect(item2.name).toBe(name)
+    expect(item2.val).toEqual({ id: 123 })
   })
 })

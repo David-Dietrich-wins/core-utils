@@ -1,7 +1,7 @@
-import { ZodSchema } from 'zod'
 import { IIdNameValue } from '../models/id-name.mjs'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { StringHelper } from './string-helper.mjs'
+import { ZodType } from 'zod/v4'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(
@@ -305,7 +305,7 @@ describe('zSchema', () => {
     const schema = SearchRequestView.zSearchRequestView
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodSchema)
+    expect(schema).toBeInstanceOf(ZodType)
   })
 
   test('valid parse', () => {
@@ -359,15 +359,14 @@ describe('zSchema', () => {
     expect(() => schema.parse(company)).toThrow(
       new Error(`[
   {
+    "origin": "number",
     "code": "too_big",
     "maximum": 10000,
-    "type": "number",
     "inclusive": true,
-    "exact": false,
-    "message": "Number must be less than or equal to 10000",
     "path": [
       "limit"
-    ]
+    ],
+    "message": "Too big: expected number to be <=10000"
   }
 ]`)
     )

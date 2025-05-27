@@ -1,7 +1,7 @@
-import { ZodSchema } from 'zod'
 import { getCurrentDate } from '../jest.setup.mjs'
 import { StringHelper } from '../services/string-helper.mjs'
 import { Company } from './company.mjs'
+import { ZodError, ZodObject } from 'zod/v4'
 
 test('constructor', () => {
   const company = new Company()
@@ -102,7 +102,38 @@ describe('zSchema', () => {
     const schema = Company.zCompany
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodSchema)
+    expect(schema).toBeInstanceOf(ZodObject)
+
+    try {
+      schema.parse({
+        name: 'name',
+      })
+    } catch (err) {
+      expect(err).toBeInstanceOf(ZodError)
+      const zerr = err as ZodError
+      expect(zerr.issues).toBeDefined()
+      expect(zerr.issues.length).toBeGreaterThan(0)
+      expect(zerr.issues[0].code).toBe('invalid_type')
+      expect(zerr).toMatchObject(
+        expect.arrayContaining([
+          // expect.objectContaining({
+          //   expected: 'number',
+          //   code: 'invalid_type',
+          //   path: ['status'],
+          //   message: 'Invalid input: expected number, received undefined',
+          //   // issues: [
+          //   //   {
+          //   //     code: 'invalid_type',
+          //   //     expected: 'object',
+          //   //     received: 'undefined',
+          //   //   },
+          //   // ],
+          // }),
+        ])
+      )
+    }
+
+    expect.assertions(7)
   })
 
   test('valid parse', () => {
@@ -129,7 +160,7 @@ describe('CompanyNamezSchema', () => {
     const schema = Company.CompanyNamezSchema
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodSchema)
+    expect(schema).toBeInstanceOf(ZodObject)
   })
 
   test('valid parse', () => {
@@ -158,15 +189,13 @@ describe('CompanyNamezSchema', () => {
     ).toThrow(
       new Error(`[
   {
+    "origin": "string",
     "code": "too_big",
     "maximum": 125,
-    "type": "string",
-    "inclusive": true,
-    "exact": false,
-    "message": "String must contain at most 125 character(s)",
     "path": [
       "name"
-    ]
+    ],
+    "message": "Too big: expected string to have <125 characters"
   }
 ]`)
     )

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { FmpIndicatorQueryParams } from '../models/ticker-info.mjs'
 import { arrayMustFind, safeArray } from '../services/array-helper.mjs'

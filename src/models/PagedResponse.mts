@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse } from './ApiResponse.mjs'
 import { hasData } from '../services/general.mjs'

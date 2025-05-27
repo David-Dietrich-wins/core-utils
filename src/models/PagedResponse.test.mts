@@ -1,3 +1,4 @@
+import z from 'zod/v4'
 import { ApiResponse } from './ApiResponse.mjs'
 import { PagedResponse } from './PagedResponse.mjs'
 
@@ -42,4 +43,22 @@ test('API response', () => {
   const mydata = PagedResponse.GetDataFromApiResponse(apiResponse)
   expect(mydata.length).toBe(1)
   expect(mydata[0].data).toBe('hello')
+})
+
+test('zPagedResponse', () => {
+  const zPagedResponse = PagedResponse.zPagedResponse(
+    z.object({ data: z.string() })
+  )
+
+  const validData = {
+    rowCount: 2,
+    totalCount: 5,
+    dataPage: [{ data: 'hello' }, { data: 'world' }],
+  }
+
+  const result = zPagedResponse.safeParse(validData)
+  expect(result.success).toBe(true)
+  expect(result.data?.rowCount).toBe(2)
+  expect(result.data?.totalCount).toBe(5)
+  expect(result.data?.dataPage[0].data).toBe('hello')
 })

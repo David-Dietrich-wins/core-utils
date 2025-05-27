@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { AppException } from '../models/AppException.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'

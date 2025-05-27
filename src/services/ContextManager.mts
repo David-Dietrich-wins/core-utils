@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { newGuid } from './general.mjs'
 import { IUpdated } from '../models/id-created-updated.mjs'
 import { IdManager, IIdRequired } from '../models/IdManager.mjs'

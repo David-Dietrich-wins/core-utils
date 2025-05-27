@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 import { ICreatedBy } from './id-created-updated.mjs'
 import { IId } from './IdManager.mjs'

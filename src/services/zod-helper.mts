@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { arrayFirst, isArray } from './array-helper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isString, StringHelper } from './string-helper.mjs'

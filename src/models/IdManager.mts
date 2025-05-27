@@ -1,4 +1,4 @@
-import { z, ZodString } from 'zod'
+import { z, ZodString } from 'zod/v4'
 import { arrayAdd, arrayRemove, isArray } from '../services/array-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { FindObjectWithField } from '../services/object-helper.mjs'

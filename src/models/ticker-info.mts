@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { IdName } from '../models/id-name.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { isArray, safeArray } from '../services/array-helper.mjs'

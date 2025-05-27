@@ -1,5 +1,5 @@
 import moment, { Moment } from 'moment'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint, zTicker } from '../models/ticker-info.mjs'
