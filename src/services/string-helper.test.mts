@@ -378,7 +378,7 @@ describe('StringHelper.SplitToArray', () => {
     expect(arr).toEqual([])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => StringHelper.SplitToArray(2 as any)).toThrow()
+    expect(StringHelper.SplitToArray(2 as any)).toStrictEqual(['2'])
   })
 
   describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
