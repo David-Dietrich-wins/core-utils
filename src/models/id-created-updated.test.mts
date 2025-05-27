@@ -1,3 +1,4 @@
+import { z } from 'zod/v4'
 import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 
 const suffix = Date.now()
@@ -83,4 +84,57 @@ test('IdCreatedUpdated good with object', () => {
   expect(pr2.createdby).toBe(createdby)
   expect(pr2.updated).toBe(updated)
   expect(pr2.updatedby).toBe(updatedby)
+})
+
+test('zCreatedBy', () => {
+  const zSchema = IdCreated.zCreatedBy(z.date())
+  const data = { createdby: 'test', created: new Date() }
+
+  const result = zSchema.safeParse(data)
+  expect(result.success).toBe(true)
+  expect(result).toMatchObject({
+    data: expect.objectContaining({
+      createdby: expect.any(String),
+      created: expect.any(Date),
+    }),
+  })
+  expect(result.data).toEqual(data)
+  expect(result.data?.created).toBeInstanceOf(Date)
+  expect(result.data?.created.getTime()).toBe(data.created.getTime())
+})
+
+test('zCreatedOn', () => {
+  const zSchema = IdCreated.zCreatedOn(z.date())
+  const data = { created: new Date() }
+  const result = zSchema.safeParse(data)
+  expect(result.success).toBe(true)
+  expect(result.data).toEqual(data)
+  expect(result.data?.created).toBeInstanceOf(Date)
+  expect(result.data?.created.getTime()).toBe(data.created.getTime())
+})
+
+test('zUpdatedBy', () => {
+  const zSchema = IdCreatedUpdated.zUpdatedBy(z.date())
+  const data = { updatedby: 'test', updated: new Date() }
+  const result = zSchema.safeParse(data)
+  expect(result.success).toBe(true)
+  expect(result).toMatchObject({
+    data: expect.objectContaining({
+      updatedby: expect.any(String),
+      updated: expect.any(Date),
+    }),
+  })
+  expect(result.data).toEqual(data)
+  expect(result.data?.updated).toBeInstanceOf(Date)
+  expect(result.data?.updated.getTime()).toBe(data.updated.getTime())
+})
+
+test('zUpdatedOn', () => {
+  const zSchema = IdCreatedUpdated.zUpdatedOn(z.date())
+  const data = { updated: new Date() }
+  const result = zSchema.safeParse(data)
+  expect(result.success).toBe(true)
+  expect(result.data).toEqual(data)
+  expect(result.data?.updated).toBeInstanceOf(Date)
+  expect(result.data?.updated.getTime()).toBe(data.updated.getTime())
 })
