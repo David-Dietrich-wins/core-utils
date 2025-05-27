@@ -1,4 +1,4 @@
-import { ConfigManager, TpConfigNamesEnum } from '../index.mjs'
+import { ConfigManager, TpConfigNamesEnum } from '../tplot/ConfigManager.mjs'
 import { UserInfo } from './UserInfo.mjs'
 
 test('constructor with default', () => {

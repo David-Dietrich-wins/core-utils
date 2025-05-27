@@ -1,7 +1,7 @@
 import z from 'zod/v4'
 import { IdManager, IId } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { zStringMinMax } from '../index.mjs'
+import { zStringMinMax } from '../services/zod-helper.mjs'
 
 test('good', () => {
   const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }]
