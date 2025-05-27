@@ -10,7 +10,7 @@ import { IConfig } from '../models/config.mjs'
 import { INameVal, NameVal } from '../models/NameValManager.mjs'
 import {
   UserLoginRefreshTokenResponse,
-  UserLoginResponse,
+  UserInfoWithTokens,
 } from '../models/types.mjs'
 import { IUserInfo } from '../models/UserInfo.mjs'
 import {
@@ -1032,7 +1032,7 @@ export class ExternalApis {
 
     Login: async (iLogin: IUserLoginRequest) => {
       const fname = this.user.Login.name
-      return fetchPost<UserLoginResponse, IUserLoginRequest>({
+      return fetchPost<UserInfoWithTokens, IUserLoginRequest>({
         url: urlJoin(this.baseUrl, 'login'),
         fname,
         data: iLogin,

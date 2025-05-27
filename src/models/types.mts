@@ -143,7 +143,7 @@ export type BearerTokenResponse = {
   tokenExpirationInstant: number
   refreshToken: string
 }
-export type UserLoginResponse = BearerTokenResponse & {
+export type UserInfoWithTokens = BearerTokenResponse & {
   user: IUserInfo
 }
 
