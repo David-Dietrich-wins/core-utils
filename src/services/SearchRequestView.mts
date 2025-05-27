@@ -21,6 +21,24 @@ export type ISearchRequestView = z.infer<
   typeof SearchRequestView.zSearchRequestView
 >
 
+export type SearchWhereOperator = {
+  $in?: string[]
+  $nin?: string[]
+  $eq?: string | number
+  $ne?: string | number
+  $gt?: string | number
+  $gte?: string | number
+  $lt?: string | number
+  $lte?: string | number
+  $regex?: string
+  $exists?: boolean
+  $and?: SearchWhere[]
+  $or?: SearchWhere[]
+  $not?: SearchWhere
+}
+
+export type SearchWhere = Record<string, SearchWhereOperator>
+
 export class SearchRequestView implements ISearchRequestView {
   static readonly TermMaxLength = 100
   static readonly LimitAndOffsetMax = 10000
@@ -28,6 +46,7 @@ export class SearchRequestView implements ISearchRequestView {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addToQuery?: any // Additional query parameters for MongoDb.
   searchColumns?: ISearchRequestView['searchColumns']
+  where?: SearchWhere
 
   term = ''
   sortColumn = ''
@@ -85,6 +104,7 @@ export class SearchRequestView implements ISearchRequestView {
   clear() {
     this.addToQuery = undefined
     this.searchColumns = undefined
+    this.where = undefined
 
     this.term = ''
     this.sortColumn = ''

@@ -1,12 +1,16 @@
-import { JSONValue } from '../models/types.mjs'
+import {
+  ArrayOrSingle,
+  JSONValue,
+  StringOrStringArray,
+} from '../models/types.mjs'
+
+export type TpSearchJsonTuple = [string, JSONValue]
+export type TpSearchTerm = string | number
 
 export type TpSearchOptions =
-  | string
   | object
-  | string[]
-  | [string, JSONValue]
-  | [string, JSONValue][]
-export type TpSearchTerm = string | number
+  | StringOrStringArray
+  | ArrayOrSingle<TpSearchJsonTuple>
 
 export type ElementMatch = {
   $elemMatch: {
@@ -17,6 +21,9 @@ export type ElementMatch = {
   }
 }
 
+/**
+ * Represents a search match for scales (climate, religion, ...) in PolitAgree.
+ */
 export type ScaleMatch = {
   scales?: ElementMatch
   $and?: ScaleMatch[]
