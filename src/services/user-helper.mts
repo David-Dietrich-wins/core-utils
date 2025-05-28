@@ -6,8 +6,8 @@ export enum UserLoginRequestTypes {
 }
 
 export const zUserLoginRequest = z.object({
-  type: z.nativeEnum(UserLoginRequestTypes),
-  username: z.string().max(250).email(),
+  type: z.enum(UserLoginRequestTypes),
+  username: z.email().max(250),
   password: z.string().min(8),
   remember: z.boolean().optional(),
   appName: z.string().optional(),

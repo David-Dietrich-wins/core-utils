@@ -147,7 +147,7 @@ export class SqlServerHelper {
     intValue: number,
     mapper?: (row: TMapFrom) => T
   ) {
-    return await this.queryByIntField(sqlQuery, 'userId', intValue, mapper)
+    return this.queryByIntField(sqlQuery, 'userId', intValue, mapper)
   }
 
   async queryOneByUserId<T = unknown, TMapFrom = T>(
@@ -165,7 +165,7 @@ export class SqlServerHelper {
     stringValue: string,
     mapper?: (row: TMapFrom) => T
   ) {
-    return await this.queryByStringField<T, TMapFrom>(
+    return this.queryByStringField<T, TMapFrom>(
       sqlQuery,
       'userId',
       stringValue,

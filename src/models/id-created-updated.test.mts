@@ -104,7 +104,7 @@ test('zCreatedBy', () => {
 })
 
 test('zCreatedOn', () => {
-  const zSchema = IdCreated.zCreatedOn(z.date())
+  const zSchema = IdCreated.zCreated(z.date())
   const data = { created: new Date() }
   const result = zSchema.safeParse(data)
   expect(result.success).toBe(true)
@@ -130,7 +130,7 @@ test('zUpdatedBy', () => {
 })
 
 test('zUpdatedOn', () => {
-  const zSchema = IdCreatedUpdated.zUpdatedOn(z.date())
+  const zSchema = IdCreatedUpdated.zUpdated(z.date())
   const data = { updated: new Date() }
   const result = zSchema.safeParse(data)
   expect(result.success).toBe(true)

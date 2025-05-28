@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import ApiResponseHelper from './ApiResponseHelper.mjs'
 
@@ -67,14 +67,12 @@ test('respondWithSuccess', () => {
 })
 
 test('respondWithError', () => {
-  const mockRequest = { params: {} } as Request
-
   const mockResponse = {
     json: jest.fn(),
     status: jest.fn(() => mockResponse),
   } as unknown as Response
 
-  ApiResponseHelper.respondWithError('test', mockRequest, mockResponse)
+  ApiResponseHelper.respondWithError('test', mockResponse)
 
   expect(mockResponse.json).toHaveBeenCalledTimes(1)
 })

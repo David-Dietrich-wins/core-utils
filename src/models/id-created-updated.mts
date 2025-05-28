@@ -3,14 +3,14 @@ import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
 
 export type ICreated<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof IdCreated.zCreatedOn<T>>
+  ReturnType<typeof IdCreated.zCreated<T>>
 >
 export type ICreatedBy<T extends string | number | Date = Date> = z.infer<
   ReturnType<typeof IdCreated.zCreatedBy<T>>
 >
 
 export type IUpdated<T extends string | number | Date = Date> = z.infer<
-  ReturnType<typeof IdCreatedUpdated.zUpdatedOn<T>>
+  ReturnType<typeof IdCreatedUpdated.zUpdated<T>>
 >
 
 export type IUpdatedBy<T extends string | number | Date = Date> = z.infer<
@@ -58,7 +58,7 @@ export class IdCreated<Tid = string> implements IIdCreated<Tid> {
     }
   }
 
-  static zCreatedOn<T extends string | number | Date = Date>(
+  static zCreated<T extends string | number | Date = Date>(
     created: z.ZodType<T>
   ) {
     return z.object({
@@ -69,11 +69,10 @@ export class IdCreated<Tid = string> implements IIdCreated<Tid> {
   static zCreatedBy<T extends string | number | Date = Date>(
     created: z.ZodType<T>
   ) {
-    return z
-      .object({
-        createdby: z.string().min(1).max(1000),
-      })
-      .merge(IdCreated.zCreatedOn<T>(created))
+    return z.object({
+      ...z.object({ createdby: z.string().min(1).max(1000) }).shape,
+      ...IdCreated.zCreated<T>(created).shape,
+    })
   }
 
   copyFromDatabase(dbtp: IIdCreated<Tid>) {
@@ -107,7 +106,7 @@ export class IdCreatedUpdated<Tid = string>
     }
   }
 
-  static zUpdatedOn<T extends string | number | Date = Date>(
+  static zUpdated<T extends string | number | Date = Date>(
     updated: z.ZodType<T>
   ) {
     return z.object({
@@ -118,11 +117,12 @@ export class IdCreatedUpdated<Tid = string>
   static zUpdatedBy<T extends string | number | Date = Date>(
     updated: z.ZodType<T>
   ) {
-    return z
-      .object({
-        updatedby: z.string().min(1).max(1000),
-      })
-      .merge(IdCreatedUpdated.zUpdatedOn<T>(updated))
+    const updatedby = z.string().min(1).max(1000)
+
+    return z.object({
+      ...z.object({ updatedby }).shape,
+      ...IdCreatedUpdated.zUpdated<T>(updated).shape,
+    })
   }
 
   copyFromDatabase(dbtp: IIdCreatedUpdated<Tid>) {

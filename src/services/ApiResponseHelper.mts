@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { isString } from './string-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
@@ -38,12 +38,7 @@ export default abstract class ApiResponseHelper {
     return crret
   }
 
-  static respondWithError<T>(
-    fname: string,
-    req: Request,
-    res: Response,
-    obj?: T
-  ) {
+  static respondWithError<T>(fname: string, res: Response, obj?: T) {
     console.log(fname, 'Error returned:', obj)
     // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 

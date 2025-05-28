@@ -94,7 +94,6 @@ export class Company extends IdCreatedUpdated implements ICompany {
         .optional()
         .or(z.literal('')),
       email: z
-        .string()
         .email('Invalid email')
         .min(1, 'Email is required')
         .optional()
