@@ -1,5 +1,4 @@
 import { z } from 'zod/v4'
-import { AppException } from '../models/AppException.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
@@ -17,7 +16,7 @@ import {
 import { isObject } from '../services/object-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
-import { zDateTime } from '../services/zod-helper.mjs'
+import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 
@@ -87,25 +86,15 @@ export class TradePlot implements ITradePlot {
   }
 
   static CreateFromTicker(ticker: string, email: string) {
-    if (!ticker) {
-      throw new AppException(
-        'You must specify a ticker to create a TradePlot.',
-        'TradePlot.CreateFromTicker'
-      )
-    }
-    if (!email) {
-      throw new AppException(
-        'You must specify an email to create a TradePlot.',
-        'TradePlot.CreateFromTicker'
-      )
-    }
+    const cleanTicker = zStringMinMax(1, 100, { trim: true }).parse(ticker)
+    const cleanEmail = z.email().parse(email)
 
     const tp = new TradePlot()
-    tp.ticker = ticker
+    tp.ticker = cleanTicker
     tp.subplots = [Subplot.GetNewWithNextPattern()]
 
-    tp.updatedby = email
-    tp.createdby = email
+    tp.updatedby = cleanEmail
+    tp.createdby = cleanEmail
 
     return tp
   }

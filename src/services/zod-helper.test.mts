@@ -1,93 +1,11 @@
 import { ZodError } from 'zod/v4'
+import { ZodTestHelper } from '../jest.setup.mjs'
 import {
   zDateTime,
   zFromStringOrStringArray,
   zStringMinMax,
   zToStringArray,
 } from './zod-helper.mjs'
-
-class Helper {
-  static SuccessFalseSingle(error: object) {
-    return {
-      success: false,
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([expect.objectContaining(error)]),
-      }),
-    }
-  }
-
-  static SuccessFalse(errors: ZodError[][]) {
-    return {
-      success: false,
-      error: expect.objectContaining(Helper.InvalidUnion(errors)),
-    }
-  }
-  static InvalidUnion(errors: ZodError[][]) {
-    return {
-      issues: expect.arrayContaining([
-        expect.objectContaining({
-          code: 'invalid_union',
-          path: [],
-          message: 'Invalid input',
-          errors: expect.arrayContaining(errors),
-        }),
-      ]),
-    }
-  }
-
-  static InvalidType(expected = 'array', received = 'string') {
-    return {
-      expected,
-      code: 'invalid_type',
-      path: [],
-      message: `Invalid input: expected ${expected}, received ${received}`,
-    }
-  }
-  static InvalidTypeArrayString() {
-    return Helper.InvalidType('array', 'string')
-  }
-  static InvalidTypeStringArray() {
-    return Helper.InvalidType('string', 'array')
-  }
-
-  static StringTooBig(maximum: number, path: (string | number)[] = []) {
-    return {
-      origin: 'string',
-      code: 'too_big',
-      maximum,
-      path,
-      message: `Too big: expected string to have <${maximum} characters`,
-    }
-  }
-  static StringTooSmall(minimum: number, path: (string | number)[] = []) {
-    return {
-      origin: 'string',
-      code: 'too_small',
-      minimum,
-      path,
-      message: `Too small: expected string to have >${minimum} characters`,
-    }
-  }
-
-  static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
-    return {
-      code: 'too_big',
-      message: `Too big: expected array to have <${maximum} items`,
-      maximum,
-      origin: 'array',
-      path,
-    }
-  }
-  static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
-    return {
-      code: 'too_small',
-      message: `Too small: expected array to have >${minimum} items`,
-      minimum,
-      origin: 'array',
-      path,
-    }
-  }
-}
 
 describe('zStringMinMax', () => {
   test('default max', () => {
@@ -100,7 +18,7 @@ describe('zStringMinMax', () => {
       data: str1000,
     })
     expect(schema.safeParse(str1001)).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooBig(1000))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(1000))
     )
 
     expect(schema.safeParse('  hello  ')).toEqual({
@@ -108,7 +26,7 @@ describe('zStringMinMax', () => {
       data: '  hello  ',
     })
     expect(schema.safeParse('hi')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooSmall(3))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
     )
     expect(schema.safeParse('this is a long string')).toEqual({
       success: true,
@@ -135,13 +53,13 @@ describe('zStringMinMax', () => {
       data: 'hello',
     })
     expect(schema.safeParse('Hi')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooSmall(3))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
     )
     expect(schema.safeParse('this IS a long string')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooBig(10))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
     )
     expect(schema.safeParse('heLLO world')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooBig(10))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
     )
     expect(schema.safeParse('heLLO Wd')).toEqual({
       success: true,
@@ -156,14 +74,14 @@ describe('zStringMinMax', () => {
       data: 'HELLO',
     })
     expect(schema.safeParse('hi')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooSmall(3))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
     )
 
     expect(schema.safeParse('this is a long string')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooBig(10))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
     )
     expect(schema.safeParse('hello world')).toEqual(
-      Helper.SuccessFalseSingle(Helper.StringTooBig(10))
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
     )
   })
 })
@@ -199,9 +117,9 @@ describe('zFromStringOrStringArray', () => {
       data: str1000,
     })
     expect(schema.safeParse(str1001)).toEqual(
-      Helper.SuccessFalse([
-        [expect.objectContaining(Helper.StringTooBig(1000))],
-        [expect.objectContaining(Helper.InvalidTypeArrayString())],
+      ZodTestHelper.SuccessFalse([
+        [expect.objectContaining(ZodTestHelper.StringTooBig(1000))],
+        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
       ])
     )
 
@@ -210,9 +128,9 @@ describe('zFromStringOrStringArray', () => {
       data: 'hello',
     })
     expect(schema.safeParse('hi')).toEqual(
-      Helper.SuccessFalse([
-        [expect.objectContaining(Helper.StringTooSmall(3))],
-        [expect.objectContaining(Helper.InvalidTypeArrayString())],
+      ZodTestHelper.SuccessFalse([
+        [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
+        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
       ])
     )
     expect(schema.safeParse('this is a long string')).toEqual({
@@ -251,9 +169,9 @@ describe('zFromStringOrStringArray', () => {
       data: 'hello',
     })
     expect(schema.safeParse('hi')).toEqual(
-      Helper.SuccessFalse([
-        [expect.objectContaining(Helper.StringTooSmall(3))],
-        [expect.objectContaining(Helper.InvalidTypeArrayString())],
+      ZodTestHelper.SuccessFalse([
+        [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
+        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
       ])
     )
     expect(schema.safeParse('this is a long string')).toEqual({
@@ -265,17 +183,17 @@ describe('zFromStringOrStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(10))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
       }),
     })
     expect(schema.safeParse('hello world')).toEqual(
-      Helper.SuccessFalse([
-        [expect.objectContaining(Helper.StringTooBig(10))],
-        [expect.objectContaining(Helper.InvalidTypeArrayString())],
+      ZodTestHelper.SuccessFalse([
+        [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
       ])
     )
     expect(schema.safeParse(['hELlo', 'World'])).toEqual({
@@ -283,25 +201,25 @@ describe('zFromStringOrStringArray', () => {
       data: ['hello', 'world'],
     })
     expect(schema.safeParse(['hi', 'there'])).toEqual(
-      Helper.SuccessFalse([
+      ZodTestHelper.SuccessFalse([
         [
-          expect.objectContaining(Helper.InvalidTypeStringArray()),
-          expect.objectContaining(Helper.ArrayTooSmall(3)),
+          expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+          expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
         ],
-        [expect.objectContaining(Helper.StringTooSmall(3, [0]))],
+        [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
       ])
     )
     expect(
       schema.safeParse(['this is a long string', 'another long string'])
     ).toEqual(
-      Helper.SuccessFalse([
+      ZodTestHelper.SuccessFalse([
         [
-          expect.objectContaining(Helper.InvalidTypeStringArray()),
-          expect.objectContaining(Helper.ArrayTooSmall(3)),
+          expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+          expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
         ],
         [
-          expect.objectContaining(Helper.StringTooBig(10, [0])),
-          expect.objectContaining(Helper.StringTooBig(10, [1])),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
         ],
       ])
     )
@@ -325,8 +243,8 @@ describe('zFromStringOrStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooSmall(3))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -341,8 +259,8 @@ describe('zFromStringOrStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(10))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -357,8 +275,8 @@ describe('zFromStringOrStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(10))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -378,10 +296,10 @@ describe('zFromStringOrStringArray', () => {
             message: 'Invalid input',
             errors: expect.arrayContaining([
               [
-                expect.objectContaining(Helper.InvalidTypeStringArray()),
-                expect.objectContaining(Helper.ArrayTooSmall(3)),
+                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
               ],
-              [expect.objectContaining(Helper.StringTooSmall(3, [0]))],
+              [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
             ]),
           }),
         ]),
@@ -399,12 +317,12 @@ describe('zFromStringOrStringArray', () => {
             message: 'Invalid input',
             errors: expect.arrayContaining([
               [
-                expect.objectContaining(Helper.InvalidTypeStringArray()),
-                expect.objectContaining(Helper.ArrayTooSmall(3)),
+                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
               ],
               [
-                expect.objectContaining(Helper.StringTooBig(10, [0])),
-                expect.objectContaining(Helper.StringTooBig(10, [1])),
+                expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
+                expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
               ],
             ]),
           }),
@@ -453,8 +371,8 @@ describe('zToStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(1000))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(1000))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -474,8 +392,8 @@ describe('zToStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooSmall(3))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -550,8 +468,8 @@ describe('zToStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(10))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -566,8 +484,8 @@ describe('zToStringArray', () => {
             path: [],
             message: 'Invalid input',
             errors: expect.arrayContaining([
-              [expect.objectContaining(Helper.StringTooBig(10))],
-              [expect.objectContaining(Helper.InvalidTypeArrayString())],
+              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
+              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
             ]),
           }),
         ]),
@@ -592,10 +510,10 @@ describe('zToStringArray', () => {
             message: 'Invalid input',
             errors: expect.arrayContaining([
               [
-                expect.objectContaining(Helper.InvalidTypeStringArray()),
-                expect.objectContaining(Helper.ArrayTooSmall(3)),
+                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
               ],
-              [expect.objectContaining(Helper.StringTooSmall(3, [0]))],
+              [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
             ]),
           }),
         ]),
@@ -613,12 +531,12 @@ describe('zToStringArray', () => {
             message: 'Invalid input',
             errors: expect.arrayContaining([
               [
-                expect.objectContaining(Helper.InvalidTypeStringArray()),
-                expect.objectContaining(Helper.ArrayTooSmall(3)),
+                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
+                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
               ],
               [
-                expect.objectContaining(Helper.StringTooBig(10, [0])),
-                expect.objectContaining(Helper.StringTooBig(10, [1])),
+                expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
+                expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
               ],
             ]),
           }),

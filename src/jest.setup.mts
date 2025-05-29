@@ -5,6 +5,8 @@ import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { JwtPayload } from 'jsonwebtoken'
 import { LogManagerOptions } from './services/LogManager.mjs'
 import { safestr } from './services/string-helper.mjs'
+import { ZodError } from 'zod/v4'
+
 // import { HttpHandler } from 'msw'
 // import { setupServer } from 'msw/node'
 
@@ -22,6 +24,108 @@ export const mockLoggerInfo = jest.fn()
 export const mockLoggerLog = jest.fn()
 export const mockLoggerSilly = jest.fn()
 export const mockLoggerWarn = jest.fn()
+
+export class ZodTestHelper {
+  static Issue(error: object) {
+    return {
+      issues: expect.arrayContaining([expect.objectContaining(error)]),
+    }
+  }
+
+  static SuccessFalseSingle(error: object) {
+    return {
+      success: false,
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([expect.objectContaining(error)]),
+      }),
+    }
+  }
+
+  static SuccessFalse(errors: ZodError[][]) {
+    return {
+      success: false,
+      error: expect.objectContaining(ZodTestHelper.InvalidUnion(errors)),
+    }
+  }
+  static InvalidUnion(errors: ZodError[][]) {
+    return {
+      issues: expect.arrayContaining([
+        expect.objectContaining({
+          code: 'invalid_union',
+          path: [],
+          message: 'Invalid input',
+          errors: expect.arrayContaining(errors),
+        }),
+      ]),
+    }
+  }
+
+  static InvalidEmail() {
+    return {
+      origin: 'string',
+      code: 'invalid_format',
+      format: 'email',
+      pattern:
+        // eslint-disable-next-line quotes
+        "/^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$/",
+      path: [],
+      message: 'Invalid email address',
+    }
+  }
+
+  static InvalidType(expected = 'array', received = 'string') {
+    return {
+      expected,
+      code: 'invalid_type',
+      path: [],
+      message: `Invalid input: expected ${expected}, received ${received}`,
+    }
+  }
+  static InvalidTypeArrayString() {
+    return ZodTestHelper.InvalidType('array', 'string')
+  }
+  static InvalidTypeStringArray() {
+    return ZodTestHelper.InvalidType('string', 'array')
+  }
+
+  static StringTooBig(maximum: number, path: (string | number)[] = []) {
+    return {
+      origin: 'string',
+      code: 'too_big',
+      maximum,
+      path,
+      message: `Too big: expected string to have <${maximum} characters`,
+    }
+  }
+  static StringTooSmall(minimum: number, path: (string | number)[] = []) {
+    return {
+      origin: 'string',
+      code: 'too_small',
+      minimum,
+      path,
+      message: `Too small: expected string to have >${minimum} characters`,
+    }
+  }
+
+  static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
+    return {
+      code: 'too_big',
+      message: `Too big: expected array to have <${maximum} items`,
+      maximum,
+      origin: 'array',
+      path,
+    }
+  }
+  static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
+    return {
+      code: 'too_small',
+      message: `Too small: expected array to have >${minimum} items`,
+      minimum,
+      origin: 'array',
+      path,
+    }
+  }
+}
 
 const globalLogger = jest.fn().mockImplementation(() => {
   return {
