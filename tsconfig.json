@@ -7,7 +7,7 @@
     "sourceMap": true,
     "inlineSources": true,
     "isolatedModules": true,
-    "lib": ["ESNext"],
+    "lib": ["ES2024"],
     "listEmittedFiles": false,
     "listFiles": false,
     "target": "ES2024",
