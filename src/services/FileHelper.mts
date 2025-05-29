@@ -1,14 +1,78 @@
 import fs from 'node:fs'
+import { FileHandle, open } from 'node:fs/promises'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 import { safestr } from './string-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { isArray } from './array-helper.mjs'
 import { safeArray } from './array-helper.mjs'
+import { AppException } from '../index.mjs'
 
-export class FileHelper {
-  fsid = 0
+export class FileHelper implements AsyncDisposable {
+  filename: string = ''
+  fileHandle: FileHandle | undefined
 
-  constructor(private filename: string) {}
+  constructor(filename: string) {
+    this.filename = filename
+  }
+
+  async [Symbol.asyncDispose]() {
+    await this.close()
+  }
+
+  static async Run<T>(filename: string, fn: (fh: FileHelper) => Promise<T>) {
+    await using fileHelper = new FileHelper(filename)
+
+    return await fn(fileHelper)
+  }
+
+  static async writeArrayToJsonFile<T extends object = object>(
+    filename: string,
+    arrT: T[],
+    mapFn?: (item: T) => object
+  ) {
+    const stats = new InstrumentationStatistics()
+
+    FileHelper.DeleteFileIfExists(filename)
+
+    await using fw = new FileHelper(filename)
+    await fw.openForWrite()
+    stats.add += await fw.write('[')
+
+    let i = 0
+    for await(const item of safeArray(arrT)) {
+      const mappedItem = mapFn ? mapFn(item) : item
+
+      stats.add += await fw.addCommaIfNotFirst(i)
+      stats.add += await fw.write(mappedItem)
+
+      ++i
+    }
+
+    stats.add += await fw.write(']')
+
+    ++stats.successes
+
+    return stats
+  }
+
+  // static async FileHandleAutoClose(path: string, fileFlags = 'r') {
+  //   const fh = await open(path, fileFlags)
+
+  //   return {
+  //     fileHandle: fh,
+  //     [Symbol.asyncDispose]: async () => {
+  //       await fh.close()
+  //     },
+  //   }
+  // }
+
+  async addCommaIfNotFirst(iterationNumber = 0) {
+    if (iterationNumber > 0) {
+      return await this.write(',')
+    }
+
+    return 0
+  }
 
   static DeleteFileIfExists(filename: string) {
     if (fs.existsSync(filename)) {
@@ -20,67 +84,63 @@ export class FileHelper {
     return false
   }
 
-  close() {
-    fs.closeSync(this.fsid)
+  static ReadEntireFile(filename: string) {
+    return fs.readFileSync(filename, 'utf8')
   }
 
-  openForWrite() {
-    this.fsid = fs.openSync(this.filename, 'w')
+  async close() {
+    await this.fileHandle?.close()
 
-    return this.fsid
+    this.fileHandle = undefined
   }
 
-  read() {
-    return fs.readFileSync(this.filename, 'utf8')
+  async open(openMode) {
+    await this.close()
+
+    this.fileHandle = await open(this.filename, openMode)
+
+    return this.fileHandle
   }
 
-  write(str: unknown, prefix = '', suffix = '') {
+  async openForRead() {
+    return this.open('r')
+  }
+
+  async openForWrite() {
+    return this.open('w')
+  }
+
+  async readLines() {
+    if (!this.fileHandle) {
+      throw new AppException(
+        `FileHelper: Cannot read from file, file handle is not open for ${this.filename}.`
+      )
+    }
+
+    const lines: string[] = []
+    for await (const line of this.fileHandle.readLines()) {
+      lines.push(line)
+    }
+
+    return lines
+  }
+
+  async write(str: unknown, prefix = '', suffix = '') {
     const strToWrite =
       isObject(str) || isArray(str)
         ? JSON.stringify(str)
         : (str ?? '').toString()
 
-    return fs.writeSync(
-      this.fsid,
-      safestr(prefix) + strToWrite + safestr(suffix)
-    )
-  }
-
-  addCommaIfNotFirst(iterationNumber = 0) {
-    if (iterationNumber > 0) {
-      return this.write(',')
+    if (!this.fileHandle) {
+      throw new AppException(
+        `FileHelper: Cannot write to file, file handle is not open for ${this.filename}.`
+      )
     }
 
-    return 0
-  }
+    const ret = await this.fileHandle.write(
+      safestr(prefix) + strToWrite + safestr(suffix)
+    )
 
-  static writeArrayToJsonFile<T extends object = object>(
-    filename: string,
-    arrT: T[],
-    mapFn?: (item: T) => object
-  ) {
-    const stats = new InstrumentationStatistics()
-
-    FileHelper.DeleteFileIfExists(filename)
-
-    const fw = new FileHelper(filename)
-    fw.openForWrite()
-    fw.write('[')
-
-    safeArray(arrT).forEach((item, i) => {
-      const mappedItem = mapFn ? mapFn(item) : item
-
-      fw.addCommaIfNotFirst(i)
-      fw.write(mappedItem)
-
-      stats.added()
-    })
-
-    fw.write(']')
-    fw.close()
-
-    ++stats.successes
-
-    return stats
+    return ret.bytesWritten
   }
 }
