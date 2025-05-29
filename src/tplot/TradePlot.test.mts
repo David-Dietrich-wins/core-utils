@@ -141,7 +141,7 @@ describe('CreateFromTicker', () => {
     expect.assertions(4)
   })
 
-  test('should handle empty ticker', () => {
+  test('bad empty ticker', () => {
     try {
       TradePlot.CreateFromTicker('', 'test@test.com')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -157,4 +157,13 @@ describe('CreateFromTicker', () => {
 
     expect.assertions(4)
   })
+})
+
+test('FixupForSave', () => {
+  const tradePlot = TradePlot.CreateFromTicker('AAPL', 'test@test.com')
+  tradePlot.subplots[0].expectedTriggerDate = new Date('2023-10-01')
+  expect(tradePlot.subplots[0].expectedTriggerDate).toEqual(expect.any(Date))
+
+  const fixedTradePlot = TradePlot.FixupForSave(tradePlot.toApi())
+  expect(fixedTradePlot.subplots[0].expectedTriggerDate).toBeUndefined()
 })
