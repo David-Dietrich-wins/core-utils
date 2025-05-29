@@ -1,8 +1,7 @@
-import { success, ZodError } from 'zod/v4'
+import { ZodError } from 'zod/v4'
 import { ZodTestHelper } from '../jest.setup.mjs'
 import { Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
-import { safeJsonToString } from '../index.mjs'
 
 test('TradePlot', () => {
   const subplot = new Subplot({
@@ -133,25 +132,29 @@ describe('CreateFromTicker', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e).toBeInstanceOf(ZodError)
-      // expect(safeJsonToString(e)).toBe('')
-      expect(e.issues.length).toBeGreaterThan(0)
+      expect(e.issues.length).toBe(1)
       expect(e.stack).toBeDefined()
 
       expect(e).toMatchObject(ZodTestHelper.Issue(ZodTestHelper.InvalidEmail()))
     }
+
+    expect.assertions(4)
   })
 
-  // test('should handle empty ticker', () => {
-  //   const tradePlot = TradePlot.CreateFromTicker('', 'Test Trade Plot')
+  test('should handle empty ticker', () => {
+    try {
+      TradePlot.CreateFromTicker('', 'test@test.com')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(ZodError)
+      expect(e.issues.length).toBe(1)
+      expect(e.stack).toBeDefined()
 
-  //   expect(tradePlot.ticker).toBe('')
-  //   expect(tradePlot.description).toBe('Test Trade Plot')
-  //   expect(tradePlot.goal).toBe(150)
-  //   expect(tradePlot.isShort).toBe(false)
-  //   expect(tradePlot.purchase).toBe(145)
-  //   expect(tradePlot.shares).toBe(10)
-  //   expect(tradePlot.updatedby).toBe('TradePlot')
-  //   expect(tradePlot.createdby).toBe('TradePlot')
-  //   expect(tradePlot.subplots.length).toBe(0)
-  // })
+      expect(e).toMatchObject(
+        ZodTestHelper.Issue(ZodTestHelper.StringTooSmall(1))
+      )
+    }
+
+    expect.assertions(4)
+  })
 })
