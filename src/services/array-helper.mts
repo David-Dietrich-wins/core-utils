@@ -568,10 +568,21 @@ export function arrayMoveFromTo<T>(
   to: number
 ) {
   const arrCopy = safeArray(arr)
+  const len = arrCopy.length
 
-  const item = arrCopy[from]
-  arrCopy.splice(from, 1)
-  arrCopy.splice(to, 0, item)
+  if (from < 0 || from >= len || to < 0 || to >= len) {
+    throw new AppException(
+      `Invalid source index of ${from} or destination index of ${to} when moving array elements.`,
+      arrayMoveFromTo.name,
+      arrCopy
+    )
+  }
+
+  if (from !== to) {
+    const temp = arrCopy[to]
+    arrCopy[to] = arrCopy[from]
+    arrCopy[from] = temp
+  }
 
   return arrCopy
 }

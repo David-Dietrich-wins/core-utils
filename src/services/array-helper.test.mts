@@ -22,6 +22,7 @@ import {
   arrayLast,
   arrayLastNonEmpty,
   arrayMoveDown,
+  arrayMoveFromTo,
   arrayMoveUp,
   arrayMustFind,
   arrayMustFindByName,
@@ -706,4 +707,50 @@ test('MapINamesToNames', () => {
   expect(MapINamesToNames(arr)).toStrictEqual(['name1', 'name2', 'name3'])
 
   expect(MapINamesToNames(undefined)).toStrictEqual([])
+})
+
+// test('arrayMoveFromTo', () => {
+//   const arr: IIdNameValue<string, string>[] = [
+//     { id: '1', name: 'name1', value: 'value1' },
+//     { id: '2', name: 'name2', value: 'value2' },
+//     { id: '3', name: 'name3', value: 'value3' },
+//     { id: '4', name: 'name4', value: 'value4' },
+//     { id: '5', name: 'name5', value: 'value5' },
+//     { id: '6', name: 'name6', value: 'value6' },
+//   ]
+
+//   expect(arrayMoveFromTo(arr, 0, 1)).toStrictEqual([
+//     { id: '2', name: 'name2', value: 'value2' },
+//     { id: '1', name: 'name1', value: 'value1' },
+//     { id: '3', name: 'name3', value: 'value3' },
+//     { id: '4', name: 'name4', value: 'value4' },
+//     { id: '5', name: 'name5', value: 'value5' },
+//     { id: '6', name: 'name6', value: 'value6' },
+//   ])
+
+//   expect(arrayMoveFromTo(arr, 5, 2)).toStrictEqual([
+//     { id: '1', name: 'name1', value: 'value1' },
+//     { id: '6', name: 'name6', value: 'value6' },
+//     { id: '3', name: 'name3', value: 'value3' },
+//     { id: '4', name: 'name4', value: 'value4' },
+//     { id: '5', name: 'name5', value: 'value5' },
+//     { id: '2', name: 'name2', value: 'value2' },
+//   ])
+// })
+
+test('arrayMoveFromTo', () => {
+  const arr = [0, 1, 2, 3, 4, 5, 6]
+
+  expect(arrayMoveFromTo([...arr], 1, 1)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
+  expect(arrayMoveFromTo([...arr], 6, 6)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
+  expect(arrayMoveFromTo([...arr], 0, 1)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
+  expect(arrayMoveFromTo([...arr], 1, 0)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
+  expect(arrayMoveFromTo([...arr], 2, 0)).toStrictEqual([2, 1, 0, 3, 4, 5, 6])
+
+  expect(arrayMoveFromTo([...arr], 5, 2)).toStrictEqual([0, 1, 5, 3, 4, 2, 6])
+  expect(arrayMoveFromTo([...arr], 0, 6)).toStrictEqual([6, 1, 2, 3, 4, 5, 0])
+  expect(arrayMoveFromTo([...arr], 6, 0)).toStrictEqual([6, 1, 2, 3, 4, 5, 0])
+
+  expect(() => arrayMoveFromTo([...arr], 7, 0)).toThrow(AppException)
+  expect(() => arrayMoveFromTo([...arr], -1, 0)).toThrow(AppException)
 })
