@@ -130,3 +130,21 @@ describe('Generate random string', () => {
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
 })
+
+test('rsaDecryptStaticObject with JSON', () => {
+  const lengthForRandomString = 4
+  const randomString = CryptoHelper.GenerateRandomString(lengthForRandomString)
+  const jsonObject = { data: randomString }
+  const cipherText = CryptoHelper.rsaEncryptStaticObject(
+    jsonObject,
+    TEST_Parameters_DEV.rsaPublicKey
+  )
+  expect(cipherText).not.toBeNull()
+  const decrypted = CryptoHelper.rsaDecryptStaticObject(
+    cipherText,
+    TEST_Parameters_DEV.rsaPrivateKey,
+    '' //TEST_Parameters_DEV.rsaPassPhrase
+  )
+  expect(decrypted).not.toBeNull()
+  expect(decrypted).toEqual(jsonObject)
+})
