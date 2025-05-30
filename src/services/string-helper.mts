@@ -391,10 +391,13 @@ export class StringHelper {
   static SplitIntoArray(
     strToSplit: ArrayOrSingleBasicTypes,
     splitter = ',',
-    replaceNonPrintable = true
+    replaceNonPrintable = true,
+    preTrimString = false
   ) {
     let str = isString(strToSplit)
-      ? safestrTrim(strToSplit)
+      ? preTrimString
+        ? safestrTrim(strToSplit)
+        : safestr(strToSplit)
       : String(strToSplit)
 
     if (replaceNonPrintable) {
@@ -426,13 +429,19 @@ export class StringHelper {
     removeEmpties = true,
     trimStrings = true,
     extras: {
+      preTrimString?: boolean
       removeNonPrintable?: boolean
-    } = { removeNonPrintable: true }
+    } = { preTrimString: false, removeNonPrintable: true }
   ) {
     let splitted = safeArray(strOrArray).reduce(
       (acc: string[], cur) =>
         acc.concat(
-          StringHelper.SplitIntoArray(cur, splitter, extras.removeNonPrintable)
+          StringHelper.SplitIntoArray(
+            cur,
+            splitter,
+            extras.removeNonPrintable,
+            extras.preTrimString
+          )
         ),
       []
     )
@@ -511,7 +520,13 @@ export class StringHelper {
   }
 
   static SplitToArrayOfIntegers(commaDelimitedString?: string) {
-    const trimmed = StringHelper.SplitToArray(commaDelimitedString)
+    const trimmed = StringHelper.SplitToArray(
+      commaDelimitedString,
+      ',',
+      true,
+      true,
+      { preTrimString: true, removeNonPrintable: true }
+    )
 
     return trimmed.map((item) => parseInt(item, 10))
   }
