@@ -62,3 +62,40 @@ test('zPagedResponse', () => {
   expect(result.data?.totalCount).toBe(5)
   expect(result.data?.dataPage[0].data).toBe('hello')
 })
+
+test('CreateFromPromise', async () => {
+  const mockPromise = Promise.resolve([{ data: 'hello' }, { data: 'world' }])
+  const mockCountPromise = Promise.resolve(2)
+  let pagedResponse = await PagedResponse.CreateFromPromise(
+    mockPromise,
+    mockCountPromise
+  )
+  expect(pagedResponse.dataPage.length).toBe(2)
+  expect(pagedResponse.dataPage[0].data).toBe('hello')
+  expect(pagedResponse.dataPage[1].data).toBe('world')
+  expect(pagedResponse.totalCount).toBe(2)
+  expect(pagedResponse.rowCount).toBe(2)
+  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
+    'hello',
+    'world',
+  ])
+  expect(pagedResponse.createNewFromMap((item) => item.data).totalCount).toBe(2)
+  expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
+
+  pagedResponse = await PagedResponse.CreateFromPromise(mockPromise)
+  expect(pagedResponse.dataPage.length).toBe(2)
+  expect(pagedResponse.dataPage[0].data).toBe('hello')
+  expect(pagedResponse.dataPage[1].data).toBe('world')
+  expect(pagedResponse.totalCount).toBe(2)
+  expect(pagedResponse.rowCount).toBe(2)
+  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
+    'hello',
+    'world',
+  ])
+  expect(pagedResponse.createNewFromMap((item) => item.data).totalCount).toBe(2)
+  expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
+  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
+    'hello',
+    'world',
+  ])
+})
