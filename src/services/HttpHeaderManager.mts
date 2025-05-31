@@ -49,6 +49,12 @@ export class HttpHeaderManagerBase {
     return ''
   }
 
+  get applicationName() {
+    return this.getHeaderStringSafe(
+      HttpHeaderNamesAllowed.ApplicationName
+    ).trim()
+  }
+
   getBoolean(name: string) {
     return getBoolean(this.getHeader(name))
   }
