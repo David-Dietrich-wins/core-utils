@@ -25,24 +25,14 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     this.totalCount = hasData(totalCount) ? totalCount : this.dataPage.length
   }
 
-  createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
-    return PagedResponse.CreateNewFromMap<T, Tout>(this, mapper)
-  }
+  static async CreateFromPromise<T>(
+    prom: Promise<T[] | undefined>,
+    promCounts?: Promise<number>
+  ) {
+    const ret = await Promise.all([prom, promCounts ?? Promise.resolve(0)])
 
-  /**
-   * API response for paged data
-   * @template T - Type of the data in the response
-   * @property {T[]} dataPage - The current page of data
-   * @property {number} rowCount - The number of rows in the current page
-   * @property {number} totalCount - The total number of rows available
-   */
-  static zPagedResponse<T extends z.ZodType>(recordSchema: T) {
-    return z.object({
-      // ctx: IContext<unknown>,
-      rowCount: z.number().int().nonnegative().optional(),
-      totalCount: z.number().int().nonnegative(),
-      dataPage: z.array(recordSchema),
-    })
+    const arr = safeArray(ret[0])
+    return new PagedResponse<T>(arr, ret[1] || arr.length)
   }
 
   static CreateFromIPagedResponse<T>(ret: IPagedResponse<T>) {
@@ -65,6 +55,26 @@ export class PagedResponse<T> implements IPagedResponse<T> {
 
   static GetDataFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
     return safeArray(ret.data.dataPage)
+  }
+
+  createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
+    return PagedResponse.CreateNewFromMap<T, Tout>(this, mapper)
+  }
+
+  /**
+   * API response for paged data
+   * @template T - Type of the data in the response
+   * @property {T[]} dataPage - The current page of data
+   * @property {number} rowCount - The number of rows in the current page
+   * @property {number} totalCount - The total number of rows available
+   */
+  static zPagedResponse<T extends z.ZodType>(recordSchema: T) {
+    return z.object({
+      // ctx: IContext<unknown>,
+      rowCount: z.number().int().nonnegative().optional(),
+      totalCount: z.number().int().nonnegative(),
+      dataPage: z.array(recordSchema),
+    })
   }
 }
 
