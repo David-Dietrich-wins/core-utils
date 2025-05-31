@@ -14,6 +14,12 @@ import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../models/AppException.mjs'
 
+export enum WebRoles {
+  USER = 'user',
+  MANAGER = 'manager',
+  ADMIN = 'admin',
+}
+
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
 interface IJwtConstructor<TInterface extends IJwtBase, T extends JwtBase> {
@@ -38,8 +44,6 @@ function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
 // function activator<T extends JwtBase>(type: IConstructor<T>): T {
 //   return new type()
 // }
-
-export type WebRoles = 'user' | 'admin'
 
 export const CONST_IssuerTradePlotter = 'tradeplotter.com'
 export const CONST_IssuerPolitagree = 'politagree.com'
@@ -317,12 +321,16 @@ export class JwtBase implements IJwtBase {
     const arrRoles: WebRoles[] = []
 
     const safeRoles = safeArray<string>(this.roles)
-    if (safeRoles.includes('admin')) {
-      arrRoles.push('admin')
+    if (safeRoles.includes(WebRoles.ADMIN)) {
+      arrRoles.push(WebRoles.ADMIN)
     }
 
-    if (safeRoles.includes('user')) {
-      arrRoles.push('user')
+    if (safeRoles.includes(WebRoles.MANAGER)) {
+      arrRoles.push(WebRoles.MANAGER)
+    }
+
+    if (safeRoles.includes(WebRoles.USER)) {
+      arrRoles.push(WebRoles.USER)
     }
 
     return arrRoles
@@ -337,11 +345,15 @@ export class JwtBase implements IJwtBase {
   }
 
   get isAdmin() {
-    return this.ApplicationRoles.includes('admin')
+    return this.ApplicationRoles.includes(WebRoles.ADMIN)
+  }
+
+  get isManager() {
+    return this.ApplicationRoles.includes(WebRoles.MANAGER) || this.isAdmin
   }
 
   get isUser() {
-    return this.ApplicationRoles.includes('user') || this.isAdmin
+    return this.ApplicationRoles.includes(WebRoles.USER) || this.isManager
   }
 
   get issuer() {
@@ -354,6 +366,9 @@ export class JwtBase implements IJwtBase {
   get isPolitagreeAdmin() {
     return this.isAdmin && this.isPolitagree
   }
+  get isPolitagreeManager() {
+    return this.isManager && this.isPolitagree
+  }
   get isPolitagreeUser() {
     return this.isUser && this.isPolitagree
   }
@@ -363,6 +378,9 @@ export class JwtBase implements IJwtBase {
   }
   get isTradePlotterAdmin() {
     return this.isAdmin && this.isTradePlotter
+  }
+  get isTradePlotterManager() {
+    return this.isManager && this.isTradePlotter
   }
   get isTradePlotterUser() {
     return this.isUser && this.isTradePlotter
@@ -414,6 +432,7 @@ export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
 
   constructor(token: IJwtAccessToken) {
     super(token)
+
     this.applicationId = token.applicationId
     this.auth_time = token.auth_time
     this.authenticationType = token.authenticationType
