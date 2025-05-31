@@ -1,3 +1,4 @@
+import { deepCloneJson } from './object-helper.mjs'
 import { safestr } from './string-helper.mjs'
 
 export type ReduxAsyncStatus<T = unknown> = {
@@ -25,24 +26,46 @@ export class ReduxHelper {
     return defaultValue
   }
 
-  static Fulfilled<T = unknown>(state: ReduxAsyncStatus<T>, message?: string) {
+  static InitialState<T extends object = object>(data: T): ReduxAsyncStatus<T> {
+    const state: ReduxAsyncStatus<T> = {
+      status: 'idle',
+      error: undefined,
+      data: deepCloneJson(data),
+      isLoading: false,
+      lastUpdate: Date.now(),
+      message: undefined,
+    }
+
+    return state
+  }
+
+  static Fulfilled<T extends object = object>(update: T, message?: string) {
+    const state: ReduxAsyncStatus<T> = {
+      data: deepCloneJson(update),
+      error: undefined,
+      isLoading: false,
+      lastUpdate: Date.now(),
+      message,
+      status: 'fulfilled',
+    }
+
+    return state
+  }
+
+  static FulfilledOnly(state: ReduxAsyncStatus, message?: string) {
     state.error = undefined
     state.isLoading = false
     state.lastUpdate = Date.now()
     state.message = message
     state.status = 'fulfilled'
-
-    return state
   }
 
-  static Pending<T = unknown>(state: ReduxAsyncStatus<T>, message?: string) {
+  static Pending(state: ReduxAsyncStatus, message?: string) {
     state.error = undefined
     state.isLoading = true
     state.lastUpdate = Date.now()
     state.message = message
     state.status = 'pending'
-
-    return state
   }
 
   static RejectAndResetState<T = unknown>(
@@ -51,7 +74,7 @@ export class ReduxHelper {
     message?: string
   ) {
     const rrs: ReduxAsyncStatus<T> = {
-      ...state,
+      ...deepCloneJson(state),
       error: safestr(error, 'Unknown error'),
       isLoading: false,
       message,
@@ -61,17 +84,11 @@ export class ReduxHelper {
 
     return rrs
   }
-  static RejectOnly<T = unknown>(
-    state: ReduxAsyncStatus<T>,
-    error?: string,
-    message?: string
-  ) {
+  static RejectOnly(state: ReduxAsyncStatus, error?: string, message?: string) {
     state.error = safestr(error, 'Unknown error')
     state.isLoading = false
     state.lastUpdate = Date.now()
     state.message = message
     state.status = 'rejected'
-
-    return state
   }
 }
