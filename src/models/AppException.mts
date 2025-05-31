@@ -25,7 +25,10 @@ export class AppException<Tobj = string> extends Error {
       this.functionNameSource = AppException.name
     }
 
-    // Object.setPrototypeOf(this, new.target.prototype)
+    // new.target is the constructor that was called (even if it's a subclass)
+    // Object.setPrototypeOf(this, new.target.prototype) is used to set the prototype of the instance to the prototype of the class
+    // This is necessary to ensure that instanceof checks work correctly
+    Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
@@ -47,47 +50,35 @@ export class AppExceptionHttp<Tobj = Response> extends AppException<Tobj> {
       hasData(functionNameSource) ? functionNameSource : 'AppExceptionHttp',
       response
     )
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
 export class AppExceptionHttpUnauthorized<T> extends AppExceptionHttp<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_Unauthorized, response)
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
 export class AppExceptionHttpForbidden<T> extends AppExceptionHttp<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_Forbidden, response)
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
 export class AppExceptionHttpNotAcceptable<T> extends AppExceptionHttp<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_NotAcceptable, response)
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
 export class AppExceptionHttpNotAllowed<T> extends AppExceptionHttp<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_MethodNotAllowed, response)
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
 export class AppExceptionHttpNotFound<T> extends AppExceptionHttp<T> {
   constructor(message: string, functionNameSource: string, response?: T) {
     super(message, functionNameSource, HTTP_NotFound, response)
-
-    // Object.setPrototypeOf(this, new.target.prototype)
   }
 }
