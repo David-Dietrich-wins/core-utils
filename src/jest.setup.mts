@@ -73,11 +73,15 @@ export class ZodTestHelper {
     }
   }
 
-  static InvalidType(expected = 'array', received = 'string') {
+  static InvalidType(
+    expected = 'array',
+    received = 'string',
+    path: (string | number)[] = []
+  ) {
     return {
       expected,
       code: 'invalid_type',
-      path: [],
+      path,
       message: `Invalid input: expected ${expected}, received ${received}`,
     }
   }
