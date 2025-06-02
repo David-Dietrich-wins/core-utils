@@ -1,55 +1,42 @@
-import { Response } from 'express'
 import { isString } from './string-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
-import { HTTP_Forbidden } from '../models/AppException.mjs'
 
 /**
  * Used to wrap all API return calls in a standard wrapper.
  */
-export default abstract class ApiResponseHelper {
-  static apiResponseError<T = unknown>(obj: T) {
+export class ApiResponseHelper {
+  static Error<T = unknown>(obj: T) {
     // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 
-    const crret =
-      isObject(obj) && obj instanceof ApiResponse
-        ? obj
-        : new ApiResponse<T>(obj)
-
-    crret.setError(obj)
-
-    return crret
-  }
-
-  static ApiResponseSuccess<T = unknown>(obj: T) {
-    const crret =
-      isObject(obj) && obj instanceof ApiResponse
-        ? obj
-        : new ApiResponse<T>(obj)
-
-    if (isString(obj)) {
-      crret.message = obj
-
-      crret.setSuccess()
+    let crret: ApiResponse<T>
+    if (isObject(obj) && obj instanceof ApiResponse) {
+      crret = obj
     } else {
-      crret.setSuccess(obj)
+      crret = new ApiResponse(obj, 'Error', 'Error', -1)
+
+      crret.setError(obj)
     }
 
     return crret
   }
 
-  static respondWithError<T>(fname: string, res: Response, obj?: T) {
-    console.log(fname, 'Error returned:', obj)
-    // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
+  static Success<T = unknown>(obj: T) {
+    let crret: ApiResponse<T>
+    if (isObject(obj) && obj instanceof ApiResponse) {
+      crret = obj
+    } else {
+      crret = new ApiResponse(obj)
 
-    const crret = ApiResponseHelper.apiResponseError(obj)
+      if (obj && isString(obj)) {
+        crret.message = obj as string
 
-    res.status(HTTP_Forbidden).json(crret)
-  }
+        crret.setSuccess()
+      } else {
+        crret.setSuccess(obj)
+      }
+    }
 
-  static respondWithSuccess<T>(res: Response, obj?: T) {
-    const crret = ApiResponseHelper.ApiResponseSuccess(obj)
-
-    res.json(crret)
+    return crret
   }
 }
