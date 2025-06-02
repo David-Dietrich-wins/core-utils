@@ -1,17 +1,17 @@
 import { IncomingHttpHeaders } from 'node:http'
+import { AppException } from '../models/AppException.mjs'
+import { IdType } from '../models/id-name.mjs'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import { getBoolean } from './general.mjs'
 import { safestr, safestrLowercase } from './string-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { arrayFirst } from './array-helper.mjs'
 import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
-import { AppException } from '../models/AppException.mjs'
-import { IdType } from '../models/id-name.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
 
-export const CONST_AppNamePolitagree = 'Politagree'
-export const CONST_AppNameTradePlotter = 'TradePlotter'
+export const CONST_AppNamePolitagree = 'politagree'
+export const CONST_AppNameTradePlotter = 'tradeplotter'
 
 export enum HttpHeaderNamesAllowed {
   Authorization = 'authorization',
@@ -50,9 +50,7 @@ export class HttpHeaderManagerBase {
   }
 
   get applicationName() {
-    return this.getHeaderStringSafe(
-      HttpHeaderNamesAllowed.ApplicationName
-    ).trim()
+    return this.getHeaderStringSafe(HttpHeaderNamesAllowed.ApplicationName)
   }
 
   getBoolean(name: string) {
