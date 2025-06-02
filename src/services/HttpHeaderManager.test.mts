@@ -161,3 +161,13 @@ test('referrer', () => {
   expect(ab).toBeInstanceOf(HttpHeaderManager)
   expect(ab.referrer).toBe('anything.com')
 })
+
+test('applicationName', () => {
+  const req = {
+    body: { 'my-test': 'my-test' },
+    headers: { [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp' },
+  }
+  const ab = new HttpHeaderManager(req.headers)
+  expect(ab).toBeInstanceOf(HttpHeaderManager)
+  expect(ab.applicationName).toBe('TestApp')
+})
