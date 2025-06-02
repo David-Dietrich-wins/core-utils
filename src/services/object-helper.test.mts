@@ -11,6 +11,7 @@ import { IdValueManager } from '../models/IdValueManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import {
   addObjectToList,
+  coalesce,
   deepCloneJson,
   deepDiffMapper,
   FindObjectWithField,
@@ -1169,4 +1170,40 @@ describe('ObjectHelper', () => {
       },
     })
   })
+})
+
+test('coalesce', () => {
+  expect(coalesce(undefined, null, 'value')).toBe('value')
+  expect(coalesce(undefined, null, () => 'value')).toBe('value')
+  expect(
+    coalesce(
+      undefined,
+      () => undefined,
+      () => 'value'
+    )
+  ).toBe('value')
+  expect(coalesce(undefined, null, '')).toBe('')
+  expect(coalesce(undefined, null, 0)).toBe(0)
+  expect(coalesce(undefined, null, false)).toBe(false)
+  expect(coalesce(undefined, null, true)).toBe(true)
+  expect(coalesce(undefined, null, { a: 'a' })).toEqual({ a: 'a' })
+  expect(coalesce(undefined, null, ['a', 'b'])).toEqual(['a', 'b'])
+  expect(coalesce(undefined, null, new Date())).toBeInstanceOf(Date)
+  expect(coalesce(undefined, null, new Map([['key', 'value']]))).toEqual(
+    new Map([['key', 'value']])
+  )
+
+  expect(coalesce(undefined, null, new Set(['a', 'b']))).toEqual(
+    new Set(['a', 'b'])
+  )
+
+  expect(coalesce(undefined, null, new Error('error'))).toBeInstanceOf(Error)
+  expect(coalesce(undefined, null, new RegExp('test'))).toBeInstanceOf(RegExp)
+  expect(coalesce(undefined, null, BigInt(123))).toBe(123n)
+  expect(coalesce(undefined, null, new Uint8Array([1, 2, 3]))).toEqual(
+    new Uint8Array([1, 2, 3])
+  )
+  expect(coalesce(undefined, null, new ArrayBuffer(8))).toBeInstanceOf(
+    ArrayBuffer
+  )
 })
