@@ -205,6 +205,7 @@ describe('JwtAccessClient', () => {
     let jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
+    expect(jhelper.isManager).toBeTruthy()
     expect(jhelper.isUser).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
@@ -213,11 +214,22 @@ describe('JwtAccessClient', () => {
     jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin'])
     expect(jhelper.isAdmin).toBeTruthy()
+    expect(jhelper.isManager).toBeTruthy()
     expect(jhelper.isUser).toBeTruthy()
 
     jhelper = JwtAccessToken.Create({ ...jhelper, roles: ['user'] })
     expect(jhelper.ApplicationRoles).toEqual(['user'])
     expect(jhelper.isAdmin).toBeFalsy()
+    expect(jhelper.isManager).toBeFalsy()
+    expect(jhelper.isUser).toBeTruthy()
+
+    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
+      roles: ['manager'],
+    })
+    jhelper = JwtAccessToken.Create(jwt)
+    expect(jhelper.ApplicationRoles).toEqual(['manager'])
+    expect(jhelper.isAdmin).toBeFalsy()
+    expect(jhelper.isManager).toBeTruthy()
     expect(jhelper.isUser).toBeTruthy()
 
     jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
@@ -226,6 +238,7 @@ describe('JwtAccessClient', () => {
     jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['user'])
     expect(jhelper.isAdmin).toBeFalsy()
+    expect(jhelper.isManager).toBeFalsy()
     expect(jhelper.isUser).toBeTruthy()
   })
 
@@ -284,8 +297,10 @@ test('JwtBase create', () => {
   expect(jhelper.isAdmin).toBeFalsy()
   expect(jhelper.isUser).toBeTruthy()
   expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterManager).toBeFalsy()
   expect(jhelper.isTradePlotterUser).toBeTruthy()
   expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeManager).toBeFalsy()
   expect(jhelper.isPolitagreeUser).toBeFalsy()
 
   jwtPayload.roles = ['admin']
@@ -295,8 +310,10 @@ test('JwtBase create', () => {
   expect(jhelper.isAdmin).toBeTruthy()
   expect(jhelper.isUser).toBeTruthy()
   expect(jhelper.isTradePlotterAdmin).toBeTruthy()
+  expect(jhelper.isTradePlotterManager).toBeTruthy()
   expect(jhelper.isTradePlotterUser).toBeTruthy()
   expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeManager).toBeFalsy()
   expect(jhelper.isPolitagreeUser).toBeFalsy()
 
   jwtPayload.iss = 'politagree.com'
@@ -307,8 +324,10 @@ test('JwtBase create', () => {
   expect(jhelper.isAdmin).toBeFalsy()
   expect(jhelper.isUser).toBeTruthy()
   expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterManager).toBeFalsy()
   expect(jhelper.isTradePlotterUser).toBeFalsy()
   expect(jhelper.isPolitagreeAdmin).toBeFalsy()
+  expect(jhelper.isPolitagreeManager).toBeFalsy()
   expect(jhelper.isPolitagreeUser).toBeTruthy()
 
   jwtPayload.roles = ['admin']
@@ -318,8 +337,10 @@ test('JwtBase create', () => {
   expect(jhelper.isAdmin).toBeTruthy()
   expect(jhelper.isUser).toBeTruthy()
   expect(jhelper.isTradePlotterAdmin).toBeFalsy()
+  expect(jhelper.isTradePlotterManager).toBeFalsy()
   expect(jhelper.isTradePlotterUser).toBeFalsy()
   expect(jhelper.isPolitagreeAdmin).toBeTruthy()
+  expect(jhelper.isPolitagreeManager).toBeTruthy()
   expect(jhelper.isPolitagreeUser).toBeTruthy()
 })
 
