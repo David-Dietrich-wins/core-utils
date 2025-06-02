@@ -23,7 +23,7 @@ export class AppException<Tobj = string> extends Error {
   ) {
     super(message)
 
-    this.functionNameSource = functionNameSource
+    this.functionNameSource = functionNameSource || new.target.name
     this.obj = obj
     this.responseCode = responseCode
 
