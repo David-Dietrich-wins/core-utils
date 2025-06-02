@@ -13,6 +13,7 @@ import { safeArray } from './array-helper.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { IConstructor } from '../models/types.mjs'
 
 export enum WebRoles {
   USER = 'user',
@@ -22,15 +23,8 @@ export enum WebRoles {
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
-interface IJwtConstructor<TInterface extends IJwtBase, T extends JwtBase> {
-  new (arg: TInterface): T
-
-  // Or enforce default constructor
-  // new (): T;
-}
-
 function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
-  type: IJwtConstructor<TInterface, T>,
+  type: IConstructor<T>,
   token: string | TInterface,
   options?: DecodeOptions
 ): T {
@@ -40,10 +34,6 @@ function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
 
   return new type(decoded)
 }
-
-// function activator<T extends JwtBase>(type: IConstructor<T>): T {
-//   return new type()
-// }
 
 export const CONST_IssuerTradePlotter = 'tradeplotter.com'
 export const CONST_IssuerPolitagree = 'politagree.com'
@@ -506,8 +496,8 @@ export class JwtFusionAuthClientCredentials
   }
 }
 
-export function FromHeaders<TInterface extends IJwtBase, TNew extends JwtBase>(
-  type: IJwtConstructor<TInterface, TNew>,
+export function FromHeaders<TNew extends JwtBase>(
+  type: IConstructor<TNew>,
   headers?: Headers | IncomingHttpHeaders | null
 ) {
   let bearerToken = ''
@@ -525,10 +515,10 @@ export function FromHeaders<TInterface extends IJwtBase, TNew extends JwtBase>(
   return FromBearerToken(type, bearerToken)
 }
 
-export function FromBearerToken<
-  TInterface extends IJwtBase,
-  TNew extends JwtBase
->(type: IJwtConstructor<TInterface, TNew>, token: string) {
+export function FromBearerToken<TNew extends JwtBase>(
+  type: IConstructor<TNew>,
+  token: string
+) {
   return JwtCreate(type, token)
 }
 

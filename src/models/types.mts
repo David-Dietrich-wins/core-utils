@@ -63,6 +63,11 @@ export type HeaderNavLinks = IdName & {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IConstructor<T> = new (...args: any[]) => T
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function CreateClass<T>(type: IConstructor<T>, ...args: any[]) {
+  return new type(...args)
+}
+
 export type IDataWithStats<T = unknown> = {
   data: T
   stats: InstrumentationStatistics
