@@ -1,4 +1,3 @@
-import { Request } from 'express'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 import {
   HttpHeaderManager,
@@ -98,9 +97,8 @@ describe('HttpHeaderManager', () => {
   test('Constructor', () => {
     const req = {
       body: { 'my-test': 'my-test' },
-    } as Request
-
-    req.headers = { 'my-test': 'my-test', 'my2': undefined }
+      headers: { 'my-test': 'my-test', 'my2': undefined },
+    }
 
     const ab = new HttpHeaderManager(req.headers)
 
@@ -111,7 +109,8 @@ describe('HttpHeaderManager', () => {
   test('Constructor with raw Headers', () => {
     const req = {
       body: { 'my-test': 'my-test' },
-    } as Request
+      headers: { 'my-test': 'my-test', 'my2': undefined },
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(req as any).rawHeaders = [
@@ -154,9 +153,8 @@ test('BearerTokenParse', () => {
 test('referrer', () => {
   const req = {
     body: { 'my-test': 'my-test' },
-  } as Request
-
-  req.headers = { referer: 'anything.com' }
+    headers: { referer: 'anything.com' },
+  }
 
   const ab = new HttpHeaderManager(req.headers)
 
