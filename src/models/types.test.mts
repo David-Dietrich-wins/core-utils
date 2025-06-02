@@ -1,4 +1,5 @@
 import {
+  CreateClass,
   SortOrder,
   SortOrderAsBoolean,
   SortOrderAsNumeric,
@@ -45,4 +46,13 @@ test('SortOrderAsString', () => {
   expect(SortOrderAsString(false)).toBe('desc')
   expect(SortOrderAsString(1)).toBe('asc')
   expect(SortOrderAsString(-1)).toBe('desc')
+})
+
+test('CreateClass', () => {
+  class TestClass {
+    constructor(public name: string) {}
+  }
+  const instance = CreateClass(TestClass, 'TestName')
+  expect(instance).toBeInstanceOf(TestClass)
+  expect(instance.name).toBe('TestName')
 })
