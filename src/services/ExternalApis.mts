@@ -9,8 +9,8 @@ import {
 import { IConfig } from '../models/config.mjs'
 import { INameVal, NameVal } from '../models/NameValManager.mjs'
 import {
-  UserLoginRefreshTokenResponse,
   UserInfoWithTokens,
+  UserLoginRefreshTokenResponse,
 } from '../models/types.mjs'
 import { IUserInfo } from '../models/UserInfo.mjs'
 import {
@@ -1053,7 +1053,7 @@ export class ExternalApis {
     },
 
     RefreshToken: async (refreshToken: string) => {
-      const fname = this.user.Logout.name
+      const fname = this.user.RefreshToken.name
       return fetchPost<UserLoginRefreshTokenResponse, { refreshToken: string }>(
         {
           url: urlJoin(this.baseUrl, 'refresh-token'),
@@ -1062,6 +1062,16 @@ export class ExternalApis {
           data: { refreshToken },
         }
       ).then((ret) => ExternalApis.verifySuccess(fname, ret))
+    },
+
+    RevokeToken: async (refreshToken: string) => {
+      const fname = this.user.RevokeToken.name
+      return fetchPost<{ message: string }, { revokeToken: string }>({
+        url: urlJoin(this.baseUrl, 'revoke-token'),
+        fname,
+        headers: GetHttpHeaderApplicationName(this.appName),
+        data: { revokeToken: refreshToken },
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     ScreenData: async (
