@@ -17,6 +17,7 @@ import {
 } from './jwt.mjs'
 import { safestr } from './string-helper.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { CONST_AppNameTradePlotter } from './HttpHeaderManager.mjs'
 
 describe('JwtDecode', () => {
   let jwt = ''
@@ -398,7 +399,7 @@ test('JwtFusionAuthClientCredentials', () => {
   expect(jwt.exp).toBe(123)
   expect(jwt.iat).toBe(456)
   expect(jwt.iss).toBe('tradeplotter.com')
-  expect(jwt.issuer).toBe('tradeplotter')
+  expect(jwt.issuer).toBe(CONST_AppNameTradePlotter)
   expect(jwt.jti).toBe('jti')
   expect(jwt.isAdmin).toBeFalsy()
   expect(jwt.isUser).toBeTruthy()
@@ -475,7 +476,7 @@ test('JwtFusionAuthIdToken with roles', () => {
   expect(jwt.exp).toBe(123)
   expect(jwt.iat).toBe(456)
   expect(jwt.iss).toBe('tradeplotter.com')
-  expect(jwt.issuer).toBe('tradeplotter')
+  expect(jwt.issuer).toBe(CONST_AppNameTradePlotter)
   expect(jwt.jti).toBe('jti')
   expect(jwt.isAdmin).toBeFalsy()
   expect(jwt.isUser).toBeTruthy()
