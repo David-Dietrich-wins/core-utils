@@ -9,7 +9,8 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:clean": "npm run clean && npm run build",
-    "clean": "rm -rf lib dist node_modules yarn.lock package-lock.json && npm install",
+    "clean": "npm run clean:files && npm install",
+    "clean:files": "rimraf .next build dist lib node_modules out package-lock.json yarn.lock",
     "lint": "eslint ./src/ --fix",
     "test:watch": "jest --watch",
     "test2": "jest --coverage",
