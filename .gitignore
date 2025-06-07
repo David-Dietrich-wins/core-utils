@@ -117,3 +117,7 @@ dist
 
 # Compiled code
 lib/
+
+# local env files
+.env*.local
+bookmarks.json
