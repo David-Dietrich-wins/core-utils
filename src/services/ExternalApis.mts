@@ -1054,14 +1054,11 @@ export class ExternalApis {
 
     RefreshToken: async (refreshToken: string) => {
       const fname = this.user.RefreshToken.name
-      return fetchPost<UserLoginRefreshTokenResponse, { refreshToken: string }>(
-        {
-          url: urlJoin(this.baseUrl, 'refresh-token'),
-          fname,
-          headers: GetHttpHeaderApplicationName(this.appName),
-          data: { refreshToken },
-        }
-      ).then((ret) => ExternalApis.verifySuccess(fname, ret))
+      return fetchGet<UserLoginRefreshTokenResponse>({
+        url: urlJoin(this.baseUrl, ['refresh-token', refreshToken]),
+        fname,
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     RevokeToken: async (refreshToken: string) => {
