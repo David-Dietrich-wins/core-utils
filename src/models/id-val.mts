@@ -7,4 +7,10 @@ export interface IIdVal<Tid = string, Tval = string>
 
 export class IdVal<Tid = string, Tval = string> implements IIdVal<Tid, Tval> {
   constructor(public id: Tid, public val: Tval) {}
+
+  static CreateIdVal<Tid = string, Tval = string>(id: Tid, val: Tval) {
+    const idval: IIdVal<Tid, Tval> = { id, val }
+
+    return idval
+  }
 }
