@@ -6,7 +6,6 @@ import {
   IEventLogin,
   ISlug,
 } from '../models/interfaces.mjs'
-import { IConfig } from '../models/config.mjs'
 import { INameVal, NameVal } from '../models/NameValManager.mjs'
 import {
   UserInfoWithTokens,
@@ -77,6 +76,7 @@ import { hasData, urlJoin } from './general.mjs'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { safestr } from './string-helper.mjs'
 import { IUserLoginRequest } from './user-helper.mjs'
+import { IIdVal } from '../index.mjs'
 
 /**
  * Interface for the result of a symbol search.
@@ -625,18 +625,16 @@ export class ExternalApis {
     ) => {
       const fname = this.config.DashboardPeopleTabSave.name
 
-      return fetchPatch<{ name: number | string }, ConfigTickerInfoTabSettings>(
-        {
-          url: urlJoin(
-            this.CONST_EndpointUser,
-            `dashboard-people-tab/${ticker}`
-          ),
-          fname,
-          bearerToken,
-          data: { name },
-          headers: GetHttpHeaderApplicationName(this.appName),
-        }
-      ).then((ret) => ExternalApis.verifySuccess(fname, ret))
+      return fetchPatch<
+        { name: number | string },
+        IIdVal<string, ConfigTickerInfoTabSettings>
+      >({
+        url: urlJoin(this.CONST_EndpointUser, `dashboard-people-tab/${ticker}`),
+        fname,
+        bearerToken,
+        data: { name },
+        headers: GetHttpHeaderApplicationName(this.appName),
+      }).then((ret) => ExternalApis.verifySuccess(fname, ret))
     },
 
     GetOrSetTabSettings: async (
@@ -646,9 +644,15 @@ export class ExternalApis {
     ) => {
       const fname = this.config.GetOrSetTickerInfoTabSettings.name
 
-      const data = new NameVal<IIdName<number>>(configKeyName, settings)
+      const data = NameVal.CreateINameVal<IIdName<number>>(
+        configKeyName,
+        settings
+      )
 
-      return fetchPost<INameVal<IIdName<number>>, INameVal<IIdName<number>>>({
+      return fetchPost<
+        INameVal<IIdName<number>>,
+        IIdVal<string, IIdName<number>>
+      >({
         url: this.CONST_EndpointConfig,
         fname,
         bearerToken,
@@ -664,11 +668,14 @@ export class ExternalApis {
     ) => {
       const fname = this.config.UpsertTickerInfoTabSettings.name
 
-      const data = new NameVal<IIdName<number>>(configKeyName, settings)
+      const data = NameVal.CreateINameVal<IIdName<number>>(
+        configKeyName,
+        settings
+      )
 
       return fetchPut<
         INameVal<IIdName<number>>,
-        IConfig<string, IIdName<number>>
+        IIdVal<string, IIdName<number>>
       >({
         url: this.CONST_EndpointConfig,
         fname,
@@ -685,13 +692,13 @@ export class ExternalApis {
     ) => {
       const fname = this.config.GetOrSetTickerInfoTabSettings.name
 
-      const data = new NameVal<ConfigTickerInfoTabSettings>(
+      const data = NameVal.CreateINameVal<ConfigTickerInfoTabSettings>(
         `tickerInfo-${ticker}`,
         CreateConfigTickerInfoTabSettings(settings)
       )
 
       return fetchPost<
-        IConfig<string, ConfigTickerInfoTabSettings>,
+        IIdVal<string, ConfigTickerInfoTabSettings>,
         INameVal<ConfigTickerInfoTabSettings>
       >({
         url: this.CONST_EndpointConfig,
@@ -709,14 +716,14 @@ export class ExternalApis {
     ) => {
       const fname = this.config.UpsertTickerInfoTabSettings.name
 
-      const data = new NameVal<ConfigTickerInfoTabSettings>(
+      const data = NameVal.CreateINameVal<ConfigTickerInfoTabSettings>(
         `tickerInfo-${ticker}`,
         CreateConfigTickerInfoTabSettings(settings)
       )
 
       return fetchPut<
         INameVal<ConfigTickerInfoTabSettings>,
-        IConfig<string, ConfigTickerInfoTabSettings>
+        IIdVal<string, ConfigTickerInfoTabSettings>
       >({
         url: this.CONST_EndpointConfig,
         fname,
@@ -1158,6 +1165,7 @@ export class ExternalApis {
         fname,
         bearerToken,
         data: SearchRequestView.Create(searchRequest),
+        headers: GetHttpHeaderApplicationName(this.appName),
       })
     },
 

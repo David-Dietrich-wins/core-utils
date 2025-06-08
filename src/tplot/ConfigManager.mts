@@ -1,6 +1,7 @@
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
 import { IdName } from '../models/id-name.mjs'
+import { IIdValRequired } from '../models/id-val.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import {
   IContext,
@@ -28,6 +29,24 @@ export type ConfigTickerInfoTabSettings = {
   selectedPeopleTab: string
   // selectedRatioTab: string
 }
+
+export type FuncTabSettingsGet = (
+  params: IIdValRequired<string, ConfigTickerInfoTabSettings>
+) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
+export type FuncTabSettingsTickerInfoGetOrSet = (params: {
+  id: string
+  settings?: ConfigTickerInfoTabSettings
+}) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
+export type FuncTabSettingsTickerInfoUpsert = (
+  params: IIdValRequired<string, Partial<ConfigTickerInfoTabSettings>>
+) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
+
+export type FuncDashboardPeopleTabGet = (
+  params: IIdValRequired<string, string>
+) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
+export type FuncDashboardPeopleTabSave = (
+  params: IIdValRequired<string, string>
+) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
 export interface IContextTickers extends IContext {
   backgroundColor?: IContextUI
