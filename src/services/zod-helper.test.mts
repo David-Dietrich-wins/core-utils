@@ -582,7 +582,7 @@ describe('zToStringArray', () => {
                   code: 'too_big',
                   maximum: 10,
                   path: [],
-                  message: 'Too big: expected string to have <10 characters',
+                  message: 'Too big: expected string to have <=10 characters',
                 }),
               ],
               [
@@ -611,7 +611,7 @@ describe('zToStringArray', () => {
                   code: 'too_big',
                   maximum: 10,
                   path: [],
-                  message: 'Too big: expected string to have <10 characters',
+                  message: 'Too big: expected string to have <=10 characters',
                 }),
               ],
               [
@@ -690,7 +690,8 @@ describe('zToStringArray', () => {
             },
             {
               code: 'too_small',
-              message: 'Too small: expected array to have >3 items',
+              inclusive: true,
+              message: 'Too small: expected array to have >=3 items',
               minimum: 3,
               origin: 'array',
               path: [],
@@ -699,15 +700,17 @@ describe('zToStringArray', () => {
           [
             {
               code: 'too_big',
+              inclusive: true,
               maximum: 10,
-              message: 'Too big: expected string to have <10 characters',
+              message: 'Too big: expected string to have <=10 characters',
               origin: 'string',
               path: [0],
             },
             {
               code: 'too_big',
+              inclusive: true,
               maximum: 10,
-              message: 'Too big: expected string to have <10 characters',
+              message: 'Too big: expected string to have <=10 characters',
               origin: 'string',
               path: [1],
             },

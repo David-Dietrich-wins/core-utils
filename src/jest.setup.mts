@@ -98,7 +98,7 @@ export class ZodTestHelper {
       code: 'too_big',
       maximum,
       path,
-      message: `Too big: expected string to have <${maximum} characters`,
+      message: `Too big: expected string to have <=${maximum} characters`,
     }
   }
   static StringTooSmall(minimum: number, path: (string | number)[] = []) {
@@ -107,14 +107,14 @@ export class ZodTestHelper {
       code: 'too_small',
       minimum,
       path,
-      message: `Too small: expected string to have >${minimum} characters`,
+      message: `Too small: expected string to have >=${minimum} characters`,
     }
   }
 
   static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
     return {
       code: 'too_big',
-      message: `Too big: expected array to have <${maximum} items`,
+      message: `Too big: expected array to have <=${maximum} items`,
       maximum,
       origin: 'array',
       path,
@@ -123,7 +123,7 @@ export class ZodTestHelper {
   static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected array to have >${minimum} items`,
+      message: `Too small: expected array to have >=${minimum} items`,
       minimum,
       origin: 'array',
       path,

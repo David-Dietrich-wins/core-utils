@@ -192,10 +192,11 @@ describe('CompanyNamezSchema', () => {
     "origin": "string",
     "code": "too_big",
     "maximum": 125,
+    "inclusive": true,
     "path": [
       "name"
     ],
-    "message": "Too big: expected string to have <125 characters"
+    "message": "Too big: expected string to have <=125 characters"
   }
 ]`)
     )

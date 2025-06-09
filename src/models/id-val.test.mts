@@ -18,3 +18,12 @@ test('IIdVal interface', () => {
   expect(pr.id).toBe('id')
   expect(pr.val).toBe('val')
 })
+
+test('CreateIdVal', () => {
+  const id = 'id'
+  const val = 'val'
+  const pr = IdVal.CreateIdVal(id, val)
+
+  expect(pr.id).toBe(id)
+  expect(pr.val).toBe(val)
+})
