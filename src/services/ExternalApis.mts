@@ -906,7 +906,7 @@ export class ExternalApis {
       plotListName: string | undefined,
       ticker: string
     ) => {
-      const fname = this.trade.TradePlotDelete.name
+      const fname = this.trade.TradePlotCreate.name
 
       return fetchPost<
         ITradePlotProfitizerWithContext,
