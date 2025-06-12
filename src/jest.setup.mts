@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import { CryptoHelper } from './services/CryptoHelper.mjs'
 import { ApiProps } from './models/types.mjs'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { JwtPayload } from 'jsonwebtoken'
@@ -260,14 +259,6 @@ afterEach(() => {
 // afterAll(() => {
 //   mockServer.close()
 // })
-
-export function GenerateRandomPinEncrypted() {
-  return CryptoHelper.rsaEncryptStatic(
-    CryptoHelper.GenerateRandomString(4),
-    TEST_Parameters_DEV.rsaPublicKey,
-    TEST_Parameters_DEV.rsaPassPhrase
-  )
-}
 
 export function getAceApiParams() {
   const apiParams: ApiProps = {
