@@ -40,7 +40,7 @@ jest.unstable_mockModule('node:fs/promises', () => ({
   open: mockOpen,
 }))
 
-const { closeSync, openSync, unlinkSync, writeSync } = await import('node:fs')
+// const { closeSync, openSync, unlinkSync, writeSync } = await import('node:fs')
 // const { open } = await import('node:fs/promises')
 const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
@@ -77,12 +77,12 @@ test('constructor', async () => {
 
   const stats = await processor.processFile()
 
-  expect(closeSync).toHaveBeenCalledTimes(0)
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
   // expect(existsSync).toHaveBeenCalledTimes(1)
   // expect(existsSync).toHaveReturnedWith(true)
-  expect(openSync).toHaveBeenCalledTimes(0)
-  expect(unlinkSync).toHaveBeenCalledTimes(0)
-  expect(writeSync).toHaveBeenCalledTimes(0)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   // expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(5)
@@ -230,12 +230,12 @@ test('constructor file not found', async () => {
 
   const stats = await processor.processFile()
 
-  expect(closeSync).toHaveBeenCalledTimes(0)
+  expect(mockCloseSync).toHaveBeenCalledTimes(0)
   // expect(existsSync).toHaveBeenCalledTimes(1)
   // expect(existsSync).toHaveReturnedWith(true)
-  expect(openSync).toHaveBeenCalledTimes(0)
-  expect(unlinkSync).toHaveBeenCalledTimes(0)
-  expect(writeSync).toHaveBeenCalledTimes(0)
+  expect(mockOpenSync).toHaveBeenCalledTimes(0)
+  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
+  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   // expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(0)

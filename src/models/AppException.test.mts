@@ -7,6 +7,7 @@ import {
   AppExceptionHttpUnauthorized,
   AppException,
   AppExceptionSecurity,
+  isErrorWithMessage,
 } from './AppException.mjs'
 
 test('AppException good', () => {
@@ -149,4 +150,13 @@ test('AppExceptionHttpNotFound default', () => {
   expect(new AppExceptionHttpNotFound().functionNameSource).toBe(
     'AppExceptionHttpNotFound'
   )
+})
+
+test('isErrorWithMessage', () => {
+  expect(isErrorWithMessage('Test')).toBe(false)
+  expect(isErrorWithMessage(new Error('Test'))).toBe(true)
+  expect(isErrorWithMessage(new AppException('Test'))).toBe(true)
+  expect(isErrorWithMessage({})).toBe(false)
+  expect(isErrorWithMessage(null)).toBe(false)
+  expect(isErrorWithMessage(undefined)).toBe(false)
 })
