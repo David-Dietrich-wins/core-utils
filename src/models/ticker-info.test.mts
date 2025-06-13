@@ -847,10 +847,38 @@ describe('FmpIndicatorQueryParams', () => {
       timeframe: '1y',
       from: +new Date('2021-01-01'),
     }
-    const dateBoundary = FmpIndicatorParamsSetDateBoundary(params)
+
+    let dateBoundary = FmpIndicatorParamsSetDateBoundary(params)
     expect(dateBoundary).toMatchObject({
       from: +new Date('2022-01-01'),
       to: +new Date('2026-01-01T00:00:00Z'),
+    })
+
+    dateBoundary = FmpIndicatorParamsSetDateBoundary({
+      ...params,
+      timeframe: '5y',
+    })
+    expect(dateBoundary).toMatchObject({
+      from: +new Date('2026-01-01T00:00:00Z'),
+      to: +new Date('2030-01-01'),
+    })
+
+    dateBoundary = FmpIndicatorParamsSetDateBoundary({
+      ...params,
+      timeframe: '',
+    })
+    expect(dateBoundary).toMatchObject({
+      from: +new Date('2021-01-01T00:00:00Z'),
+    })
+
+    dateBoundary = FmpIndicatorParamsSetDateBoundary({
+      ...params,
+      from: undefined,
+      to: +new Date('2025-01-01'),
+    })
+    expect(dateBoundary).toMatchObject({
+      from: undefined,
+      to: +new Date('2026-01-01'),
     })
   })
 
@@ -862,9 +890,20 @@ describe('FmpIndicatorQueryParams', () => {
       from: +new Date('2021-01-01'),
       to: +new Date('2021-12-31'),
     }
-    const path = FmpIndicatorParamsToPath(params)
+
+    let path = FmpIndicatorParamsToPath(params)
     expect(path).toBe(
       '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
+    )
+
+    path = FmpIndicatorParamsToPath({ ...params, from: undefined })
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000'
+    )
+
+    path = FmpIndicatorParamsToPath({ ...params, to: undefined })
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000'
     )
   })
 
@@ -944,4 +983,114 @@ describe('ISymbolSearch2ITickerSearch', () => {
       },
     ])
   })
+})
+
+test('IAssetQuotesWithIpoDate', () => {
+  const iaqr: IAssetQuoteResponse = {
+    symbol: 'AAPL',
+    price: 150,
+    volume: 1000000,
+    exchange: 'NASDAQ',
+    name: 'Apple Inc.',
+    dayLow: 201.35,
+    dayHigh: 214.0353,
+    yearHigh: 483,
+    yearLow: 3.77,
+    marketCap: 14376655872,
+    priceAvg50: 211.59486,
+    priceAvg200: 136.80391,
+    // volume: number    // 2006952,
+    avgVolume: 9315590,
+    open: 214,
+    previousClose: 212.31,
+    eps: -1.78,
+    pe: 12,
+    earningsAnnouncement: '2021-06-09T16:09:00.000+0000',
+    sharesOutstanding: 70800004,
+    timestamp: 1624635044,
+    change: 0.01,
+    changesPercentage: 0.01,
+  }
+
+  const assets = [{ ipoDate: '2024-01-01', symbol: 'AAPL' }]
+
+  let ret = IAssetQuotesWithIpoDate('test', [iaqr], assets)
+  expect(ret).toStrictEqual([
+    {
+      ...iaqr,
+      ticker: 'AAPL',
+      changes: 0.01,
+      companyName: 'Apple Inc.',
+    },
+  ])
+
+  ret = IAssetQuotesWithIpoDate(
+    'test',
+    [iaqr],
+    [{ ...assets[0], symbol: 'MSFT' }]
+  )
+  expect(ret).toStrictEqual([
+    {
+      ...iaqr,
+      ticker: 'AAPL',
+      changes: 0.01,
+      companyName: 'Apple Inc.',
+    },
+  ])
+})
+
+test('IAssetQuotesWithScore', () => {
+  const iaqr: IAssetQuoteResponse = {
+    symbol: 'AAPL',
+    price: 150,
+    volume: 1000000,
+    exchange: 'NASDAQ',
+    name: 'Apple Inc.',
+    dayLow: 201.35,
+    dayHigh: 214.0353,
+    yearHigh: 483,
+    yearLow: 3.77,
+    marketCap: 14376655872,
+    priceAvg50: 211.59486,
+    priceAvg200: 136.80391,
+    // volume: number    // 2006952,
+    avgVolume: 9315590,
+    open: 214,
+    previousClose: 212.31,
+    eps: -1.78,
+    pe: 12,
+    earningsAnnouncement: '2021-06-09T16:09:00.000+0000',
+    sharesOutstanding: 70800004,
+    timestamp: 1624635044,
+    change: 0.01,
+    changesPercentage: 0.01,
+  }
+
+  const assets = { AAPL: { matches: 5, score: 25 } }
+
+  let ret = IAssetQuotesWithScore([iaqr], assets)
+  expect(ret).toStrictEqual([
+    {
+      ...iaqr,
+      ticker: 'AAPL',
+      changesPercentage: 0.01,
+      changes: 0.01,
+      companyName: 'Apple Inc.',
+      matches: 5,
+      scorePercentage: 1, //  25 / 100, // Convert to percentage
+    },
+  ])
+
+  ret = IAssetQuotesWithScore([iaqr], { MSFT: { matches: 3, score: 15 } })
+  expect(ret).toStrictEqual([
+    {
+      ...iaqr,
+      ticker: 'AAPL',
+      changesPercentage: 0.01,
+      changes: 0.01,
+      companyName: 'Apple Inc.',
+      matches: 0, // No match for AAPL
+      scorePercentage: 0, // No score for AAPL
+    },
+  ])
 })
