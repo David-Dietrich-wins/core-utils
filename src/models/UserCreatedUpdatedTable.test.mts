@@ -8,7 +8,6 @@ import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
-import { create } from 'domain'
 
 describe('CreatedTable', () => {
   test('constructor string', () => {
