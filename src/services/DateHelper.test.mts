@@ -532,6 +532,12 @@ test('Midnight', () => {
   )
 })
 
+test('Midnight bad date', () => {
+  const utcDate = DateHelper.Midnight('invalid date')
+
+  expect(utcDate).toBeUndefined()
+})
+
 test('MidnightSafe', () => {
   const utcDate = DateHelper.MidnightSafe(new Date())
 
