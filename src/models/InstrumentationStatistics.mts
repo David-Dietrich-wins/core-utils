@@ -222,9 +222,9 @@ export class InstrumentationStatistics {
       let successFailMsg = ''
 
       if (this.successes || showSuccessFailIf0) {
-        successFailMsg += `${prefixIfHasData(
-          successFailMsg
-        )}Success: ${NumberHelper.NumberToString(this.successes)}`
+        successFailMsg += `Success: ${NumberHelper.NumberToString(
+          this.successes
+        )}`
       }
 
       if (this.failures || showSuccessFailIf0) {
@@ -239,9 +239,7 @@ export class InstrumentationStatistics {
         )}Skipped: ${NumberHelper.NumberToString(this.skipped)}`
       }
 
-      if (successFailMsg) {
-        msg += ` (${successFailMsg})`
-      }
+      msg += ` (${successFailMsg})`
     }
 
     return msg

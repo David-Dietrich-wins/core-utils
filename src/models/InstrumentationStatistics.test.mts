@@ -253,25 +253,63 @@ describe('messageString', () => {
   })
 })
 
-test('messageTotalProcessedWithSuccessFail with skipped good', () => {
-  const arrMessages = ['string', 'array']
+describe('messageTotalProcessedWithSuccessFail', () => {
+  test('with skipped good', () => {
+    const arrMessages = ['string', 'array']
 
-  const istats = new InstrumentationStatistics()
-  istats.addSkipped(arrMessages)
-  const msg = istats.messageTotalProcessedWithSuccessFail(true, true)
+    const istats = new InstrumentationStatistics()
+    istats.addSkipped(arrMessages)
+    const msg = istats.messageTotalProcessedWithSuccessFail(true, true)
 
-  expect(msg.indexOf('1 ')).toBe(0)
-  expect(msg).toContain('Skipped: 1')
-})
+    expect(msg.indexOf('1 ')).toBe(0)
+    expect(msg).toContain('Skipped: 1')
+  })
 
-test('messageTotalProcessedWithSuccessFail with false SuccessFailIf0', () => {
-  const arrMessages = ['string', 'array']
+  test('with false SuccessFailIf0', () => {
+    const arrMessages = ['string', 'array']
 
-  const istats = new InstrumentationStatistics()
-  istats.addSkipped(arrMessages)
-  const msg = istats.messageTotalProcessedWithSuccessFail(false, false)
+    const istats = new InstrumentationStatistics()
+    istats.addSkipped(arrMessages)
+    const msg = istats.messageTotalProcessedWithSuccessFail(false, false)
 
-  expect(msg).toBe('1 ')
+    expect(msg).toBe('1 ')
+  })
+
+  test('with true SuccessFailIf0', () => {
+    const arrMessages = ['string', 'array']
+
+    const istats = new InstrumentationStatistics()
+    let msg = istats.messageTotalProcessedWithSuccessFail(false)
+    expect(msg).toBe('0 s')
+    msg = istats.messageTotalProcessedWithSuccessFail(false, false)
+    expect(msg).toBe('0 s')
+    msg = istats.messageTotalProcessedWithSuccessFail(true)
+    expect(msg).toBe('0 s (Success: 0, Fail: 0)')
+    msg = istats.messageTotalProcessedWithSuccessFail(true, true)
+    expect(msg).toBe('0 s (Success: 0, Fail: 0)')
+
+    istats.addSkipped(arrMessages)
+    msg = istats.messageTotalProcessedWithSuccessFail(true, true)
+    expect(msg).toBe('1  (Success: 0, Fail: 0, Skipped: 1)')
+
+    istats.addFailure()
+    msg = istats.messageTotalProcessedWithSuccessFail(false, false)
+    expect(msg).toBe('2 s (Fail: 1)')
+    istats.failures = 0
+
+    istats.addSuccess(arrMessages)
+    msg = istats.messageTotalProcessedWithSuccessFail(false, false)
+    expect(msg).toBe('3 s (Success: 1)')
+    msg = istats.messageTotalProcessedWithSuccessFail(false, true)
+    expect(msg).toBe('3 s (Success: 1, Skipped: 1)')
+
+    istats.addFailure(arrMessages)
+    msg = istats.messageTotalProcessedWithSuccessFail(true, true)
+    expect(msg).toBe('4 s (Success: 1, Fail: 1, Skipped: 1)')
+    istats.addFailure(arrMessages)
+    msg = istats.messageTotalProcessedWithSuccessFail(true, true)
+    expect(msg).toBe('5 s (Success: 1, Fail: 2, Skipped: 1)')
+  })
 })
 
 describe('lineSeparator', () => {
