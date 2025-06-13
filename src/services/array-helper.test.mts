@@ -511,6 +511,7 @@ test('arrayFindIndexOf', () => {
 
   expect(arrayFindIndexOf(arr, 2)).toStrictEqual(1)
   expect(arrayFindIndexOf(arr, 4)).toBeUndefined()
+  expect(arrayFindIndexOf(arr)).toBeUndefined()
 })
 
 test('arrayMoveDown', () => {
