@@ -6,6 +6,7 @@ import {
 } from './HttpHeaderManager.mjs'
 import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
 import { JwtTokenWithUserId } from './jwt.mjs'
+import { IncomingHttpHeaders } from 'node:http'
 
 test('getHeaderString', () => {
   const init: StringOrStringArrayObject = {
@@ -170,4 +171,33 @@ test('applicationName', () => {
   const ab = new HttpHeaderManager(req.headers)
   expect(ab).toBeInstanceOf(HttpHeaderManager)
   expect(ab.applicationName).toBe('TestApp')
+})
+
+test('HeadersToStringOrStringObject', () => {
+  const req = {
+    body: { 'my-test': 'my-test' },
+    headers: {
+      [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp',
+      [HttpHeaderNamesAllowed.Authorization]: TEST_Parameters_DEV.jwt,
+      [HttpHeaderNamesAllowed.ShowDebug]: 'true',
+    },
+  }
+
+  const ab = new HttpHeaderManager(req.headers)
+  expect(ab).toBeInstanceOf(HttpHeaderManager)
+  expect(ab.headers).toEqual({
+    [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp',
+    [HttpHeaderNamesAllowed.Authorization]: TEST_Parameters_DEV.jwt,
+    [HttpHeaderNamesAllowed.ShowDebug]: 'true',
+  })
+  expect(HttpHeaderManager.HeadersToStringOrStringObject(ab.headers)).toEqual({
+    [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp',
+    [HttpHeaderNamesAllowed.Authorization]: TEST_Parameters_DEV.jwt,
+    [HttpHeaderNamesAllowed.ShowDebug]: 'true',
+  })
+  expect(
+    HttpHeaderManager.HeadersToStringOrStringObject(
+      true as unknown as IncomingHttpHeaders
+    )
+  ).toEqual({})
 })
