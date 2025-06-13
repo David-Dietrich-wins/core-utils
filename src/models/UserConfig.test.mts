@@ -14,7 +14,7 @@ test('create an instance', () => {
 })
 
 test('copyFromDatabase', () => {
-  const userConfig = new UserConfig('userId', 'key', 'value')
+  let userConfig = new UserConfig('userId', 'key', 'value')
   const dbtp = {
     k: 'newKey',
     v: 'newValue',
@@ -29,6 +29,26 @@ test('copyFromDatabase', () => {
 
   expect(userConfig.k).toBe('newKey')
   expect(userConfig.v).toBe('newValue')
+  expect(userConfig.userid).toBe('newUserId')
+  expect(userConfig.updatedby).toBe('newUpdatedBy')
+  expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.createdby).toBe('newCreatedBy')
+  expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+
+  userConfig = new UserConfig('userId', '', '')
+  userConfig.copyFromDatabase({ ...dbtp, k: '' })
+  expect(userConfig.k).toBe('')
+  expect(userConfig.v).toBe('newValue')
+  expect(userConfig.userid).toBe('newUserId')
+  expect(userConfig.updatedby).toBe('newUpdatedBy')
+  expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.createdby).toBe('newCreatedBy')
+  expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+
+  userConfig = new UserConfig('userId', '', '')
+  userConfig.copyFromDatabase({ ...dbtp, v: '' })
+  expect(userConfig.k).toBe('newKey')
+  expect(userConfig.v).toBe('')
   expect(userConfig.userid).toBe('newUserId')
   expect(userConfig.updatedby).toBe('newUpdatedBy')
   expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
