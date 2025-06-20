@@ -85,7 +85,7 @@ export class SearchRequestView implements ISearchRequestView {
     }
   }
 
-  static Create(overrides?: Partial<ISearchRequestView> | null) {
+  static Create(overrides?: Partial<ISearchRequestView>): ISearchRequestView {
     const iSearchRequestView: ISearchRequestView = {
       term: '',
       sortColumn: '',
