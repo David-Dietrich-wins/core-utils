@@ -14,6 +14,7 @@ import {
   safestr,
   safestrLowercase,
   safestrToJson,
+  safestrUppercase,
   stringEquals,
   stringEqualsQuoted,
   StringHelper,
@@ -183,6 +184,19 @@ test('safestrLowercase', () => {
   expect(safestrLowercase('hello world')).toBe('hello world')
   expect(safestrLowercase('Hello World')).toBe('hello world')
   expect(safestrLowercase('hello World')).toBe('hello world')
+})
+
+test('safestrUppercase', () => {
+  expect(safestrUppercase('aaaa')).toBe('AAAA')
+  expect(safestrUppercase('')).toBe('')
+  expect(safestrUppercase(null)).toBe('')
+  expect(safestrUppercase(undefined)).toBe('')
+  expect(safestrUppercase('123')).toBe('123')
+  expect(safestrUppercase('HEllo world')).toBe('HELLO WORLD')
+  expect(safestrUppercase('Hello World')).toBe('HELLO WORLD')
+  expect(safestrUppercase('hello World')).toBe('HELLO WORLD')
+  expect(safestrUppercase(' hello World ')).toBe('HELLO WORLD')
+  expect(safestrUppercase(' hello World ', false)).toBe(' HELLO WORLD ')
 })
 
 test('pluralize', () => {
