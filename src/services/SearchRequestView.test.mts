@@ -188,6 +188,26 @@ describe('getItems', () => {
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
+
+    // trying to to test line 148
+    items.push(items[0])
+    srv.term = 'xxxxX'
+    const [result9, count9] = srv.getItems(items, 0, 'name', true)
+    expect(result9.length).toBe(10)
+    expect(count9).toBe(51)
+    expect(srv.CalculatedOffset).toBe(2)
+    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.pageIndex).toBe(0)
+    expect(srv.pageSize).toBe(0)
+    expect(srv.limit).toBe(10)
+    expect(srv.sortColumn).toBe('value')
+    expect(srv.sortDirection).toBe('asc')
+    expect(srv.exactMatch).toBe(false)
+    expect(srv.searchColumns).toEqual(['name'])
+    expect(srv.term).toBe('xxxxX')
+    expect(srv.isAscending).toBe(true)
+    expect(srv.isDescending).toBe(false)
+    expect(srv.CapLimit(10)).toBe(10)
   })
 
   test('numbers', () => {
