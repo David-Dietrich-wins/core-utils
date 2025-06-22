@@ -7,7 +7,7 @@ import { isArray } from './array-helper.mjs'
 import { safeArray } from './array-helper.mjs'
 import { AppException } from '../index.mjs'
 
-export class FileHelper implements AsyncDisposable {
+export class FileHelper {
   filename: string = ''
   fileHandle: FileHandle | undefined
 
@@ -15,14 +15,18 @@ export class FileHelper implements AsyncDisposable {
     this.filename = filename
   }
 
-  async [Symbol.asyncDispose]() {
-    await this.close()
-  }
-
   static async Run<T>(filename: string, fn: (fh: FileHelper) => Promise<T>) {
-    await using fileHelper = new FileHelper(filename)
+    const fileHelper = new FileHelper(filename)
 
-    return await fn(fileHelper)
+    try {
+      return await fn(fileHelper)
+    } catch (error) {
+      throw new AppException(
+        `FileHelper: Error processing file ${filename}: ${error}`
+      )
+    } finally {
+      await fileHelper.close()
+    }
   }
 
   static async writeArrayToJsonFile<T extends object = object>(
@@ -34,25 +38,34 @@ export class FileHelper implements AsyncDisposable {
 
     FileHelper.DeleteFileIfExists(filename)
 
-    await using fw = new FileHelper(filename)
-    await fw.openForWrite()
-    stats.add += await fw.write('[')
+    const fw = new FileHelper(filename)
+    try {
+      await fw.openForWrite()
+      stats.add += await fw.write('[')
 
-    let i = 0
-    for await(const item of safeArray(arrT)) {
-      const mappedItem = mapFn ? mapFn(item) : item
+      let i = 0
+      for await (const item of safeArray(arrT)) {
+        const mappedItem = mapFn ? mapFn(item) : item
 
-      stats.add += await fw.addCommaIfNotFirst(i)
-      stats.add += await fw.write(mappedItem)
+        stats.add += await fw.addCommaIfNotFirst(i)
+        stats.add += await fw.write(mappedItem)
 
-      ++i
+        ++i
+      }
+
+      stats.add += await fw.write(']')
+
+      ++stats.successes
+
+      return stats
+    } catch (error) {
+      stats.addFailure(`Error writing to file ${filename}: ${error}`)
+      throw new AppException(
+        `FileHelper: Error writing to file ${filename}: ${error}`
+      )
+    } finally {
+      await fw.close()
     }
-
-    stats.add += await fw.write(']')
-
-    ++stats.successes
-
-    return stats
   }
 
   // static async FileHandleAutoClose(path: string, fileFlags = 'r') {

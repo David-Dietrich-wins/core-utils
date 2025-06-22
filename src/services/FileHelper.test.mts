@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import fs from 'node:fs'
 import tmp from 'tmp'
 import { FileHelper } from './FileHelper.mjs'
@@ -252,6 +253,57 @@ describe('writeArrayToJsonFile', () => {
     expect(fileContents).toBe(safeJsonToString(testdata))
   })
 
+  test('write exception', async () => {
+    const tmpFile = tmp.fileSync().name
+
+    const dateNow = Date.now()
+
+    const testdata = [
+      {
+        a: 1,
+        b: '2',
+        c: 3.14,
+        d: { a: 'b' },
+        e: dateNow,
+      },
+      {
+        a: 1,
+        b: '2',
+        c: 3.14,
+        d: { a: 'b' },
+        e: dateNow,
+      },
+    ]
+
+    const spy = jest
+      .spyOn(FileHelper.prototype, 'write')
+      .mockRejectedValue(new Error('Mocked error'))
+
+    try {
+      const ret = await FileHelper.writeArrayToJsonFile(
+        tmpFile,
+        testdata,
+        (item) => {
+          if (item.a === 1) {
+            item.a = 2
+          }
+
+          return item
+        }
+      )
+    } catch (error: any) {
+      expect(error).toBeInstanceOf(Error)
+      expect(error.message).toMatch(/^FileHelper: Error writing to file/i)
+    } finally {
+      FileHelper.DeleteFileIfExists(tmpFile)
+    }
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    spy.mockRestore()
+
+    expect.assertions(3)
+  })
+
   test('no mapper', async () => {
     const tmpFile = tmp.fileSync().name
 
@@ -330,4 +382,29 @@ describe('openForRead', () => {
 
     expect(ret).toBe('hello world')
   })
+})
+
+test('write', async () => {
+  const tmpFile = tmp.fileSync().name
+
+  const fh = new FileHelper(tmpFile)
+  const spy = jest
+    .spyOn(fh, 'write')
+    .mockRejectedValue(new Error('Mocked error'))
+  await fh.openForWrite()
+  try {
+    const retRun = await fh.write('hello world')
+
+    expect(retRun).toBe(11)
+  } catch (error) {
+    expect(error).toEqual(new Error('Mocked error'))
+    expect(spy).toHaveBeenCalledWith('hello world')
+  } finally {
+    await fh.close()
+
+    FileHelper.DeleteFileIfExists(tmpFile)
+  }
+
+  expect(spy).toHaveBeenCalledTimes(1)
+  spy.mockRestore()
 })
