@@ -19,8 +19,8 @@ export interface ITradePlotProfitizer extends ITradePlot {
   targetLow?: number
   targetHigh?: number
   currentPrice?: number
-  previousClose?: number
-  openPrice?: number
+  previousClose?: number | null
+  openPrice?: number | null
   quoteTimeInLong?: number
   amountToTargetLow?: number
   amountToTargetHigh?: number
@@ -45,8 +45,8 @@ export class TradePlotProfitizer
   targetLow?: number
   targetHigh?: number
   currentPrice?: number
-  previousClose?: number
-  openPrice?: number
+  previousClose?: number | null
+  openPrice?: number | null
   quoteTimeInLong?: number
   amountToTargetLow?: number
   amountToTargetHigh?: number

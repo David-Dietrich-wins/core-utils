@@ -105,13 +105,13 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   priceAvg50: number // 211.59486,
   priceAvg200: number // 136.80391,
   // volume: number    // 2006952,
-  avgVolume: number // 9315590,
+  avgVolume?: number | null // 9315590,
   exchange: string // NYSE,
-  open: number // 214,
-  previousClose: number // 212.31,
-  eps: number // -1.78,
-  pe: number // null,
-  earningsAnnouncement: string // 2021-06-09T16:09:00.000+0000,
+  open?: number | null // 214,
+  previousClose?: number | null // 212.31,
+  eps?: number | null // -1.78,
+  pe?: number | null // null,
+  earningsAnnouncement?: string | null // 2021-06-09T16:09:00.000+0000,
   sharesOutstanding: number // 70800004,
   timestamp: number // 1624635044
 }
@@ -286,8 +286,8 @@ export interface ICompanyProfile extends ISymbolPrice {
 }
 
 export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
-  change: number
-  changesPercentage: number
+  change?: number | null
+  changesPercentage?: number | null
 }
 
 export interface ISymbolPriceVolumeChanges
@@ -815,7 +815,7 @@ export interface ITickerSearch
 
 export interface ITickerType extends IdName, ITicker, IType {}
 export type AssetQuoteWithChanges = IAssetQuoteResponse &
-  ITicker & { changes: number; companyName: string }
+  ITicker & { changes?: number | null; companyName: string }
 export type AssetQuoteWithIpoDate = AssetQuoteWithChanges & {
   ipoDate?: number
 }
