@@ -76,7 +76,7 @@ test('divideByNumbers', () => {
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })
 
-describe('maxDecimalPlaces', () => {
+describe('setMaxDecimalPlaces', () => {
   test('good', () => {
     expect(setMaxDecimalPlaces(2.12, 2)).toEqual('2.00')
     expect(setMaxDecimalPlaces(34.9912, 2)).toEqual('35.00')
@@ -121,7 +121,26 @@ describe('maxDecimalPlaces', () => {
 
     expect.assertions(2)
   })
+
+  test('ignoreKeys', () => {
+    const io = {
+      a: 2.123456,
+      b: 3.123456,
+      c: '4.123456',
+      d: 5.123456,
+    }
+
+    expect(setMaxDecimalPlaces(io, 2, ['d'])).toEqual({
+      a: '2.00',
+      b: '3.00',
+      c: '4.00',
+      d: 5.123456,
+    })
+
+    expect(setMaxDecimalPlaces(2n, 2, ['d'])).toEqual(2n)
+  })
 })
+
 describe('Number formatting', () => {
   test('String from a number with commas added', () => {
     const num = 123456789
@@ -206,6 +225,7 @@ test('getNumberString', () => {
 test('getNumberFormatted', () => {
   expect(NumberHelper.getNumberFormatted(0)).toBe(0)
 
+  expect(NumberHelper.getNumberFormatted(',', true, 2)).toBe(0)
   expect(NumberHelper.getNumberFormatted('1,249', true, 2)).toBe(1249)
   expect(NumberHelper.getNumberFormatted('1,249.999', true, 2)).toBe(1250)
   expect(NumberHelper.getNumberFormatted('1,249.9', true, 2)).toBe(1249.9)
@@ -275,6 +295,7 @@ test('NumberFormatter', () => {
   expect(NumberFormatter('')).toBe('0.00')
   expect(NumberFormatter('', false)).toBe('')
   expect(NumberFormatter(0)).toBe('0.00')
+  expect(NumberFormatter(0, true, 0)).toBe('0')
   expect(NumberFormatter(1)).toBe('1.00')
   expect(NumberFormatter(1.1)).toBe('1.10')
   expect(NumberFormatter(1.11)).toBe('1.11')
@@ -402,6 +423,7 @@ test('StockVolumeFormatter', () => {
   expect(StockVolumeFormatter(null)).toBeUndefined()
   expect(StockVolumeFormatter(undefined)).toBeUndefined()
   expect(StockVolumeFormatter(null, true)).toBe('0')
+  expect(StockVolumeFormatter(undefined, false, 2)).toBeUndefined()
   expect(StockVolumeFormatter(undefined, true)).toBe('0')
   expect(StockVolumeFormatter(undefined, true, null as unknown as number)).toBe(
     '0'
@@ -422,6 +444,14 @@ test('StockVolumeFormatter', () => {
   expect(StockVolumeFormatter('1000', false, 3)).toBe('1,000.000')
   expect(StockVolumeFormatter(1000.1)).toBe('1,000')
   expect(StockVolumeFormatter(1000000.1, false, 3)).toBe('1,000,000.100')
+
+  expect(StockVolumeFormatter(0, true)).toBe('0')
+  expect(StockVolumeFormatter(0, false)).toBeUndefined()
+  expect(StockVolumeFormatter(',,')).toBe('')
+  expect(StockVolumeFormatter('0.00', false, 0)).toBe('')
+  expect(StockVolumeFormatter('0', false, 2)).toBe('')
+  expect(StockVolumeFormatter('1', true)).toBe('1')
+  expect(StockVolumeFormatter('1', false)).toBe('1')
 })
 
 test('NumberWithDecimalPlaces', () => {
