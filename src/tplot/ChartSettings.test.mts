@@ -156,3 +156,155 @@ test('frequencyTypeFriendlyString', () => {
 
   expect(cs.frequencyTypeFriendlyString).toBe('Daily')
 })
+
+test('zChartSettings', () => {
+  const ics: IChartSettings = {
+    endDate: undefined,
+    extendedHoursTrading: false,
+    frequency: 4,
+    frequencyType: '1d',
+    granularity: '1d',
+    period: 3,
+    periodType: 'd',
+    startDate: undefined,
+    ticker: 'AAPL',
+  }
+
+  expect(ChartSettings.zChartSettings.parse(ics)).toEqual({
+    ticker: 'AAPL',
+    period: 3,
+    periodType: 'd',
+    frequency: 4,
+    frequencyType: '1d',
+    granularity: '1d',
+    startDate: undefined,
+    endDate: undefined,
+    extendedHoursTrading: false,
+  })
+})
+
+test('debugMessage', () => {
+  const cs = new ChartSettings('AAPL', 1, 'd', 1, 'd', '1')
+
+  expect(cs.debugMessage).toBe('Daily')
+})
+
+test('oneMinute', () => {
+  const cs = ChartSettings.oneMinute('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(2)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(1)
+  expect(cs.frequencyType).toBe('minute')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('fiveMinute', () => {
+  const cs = ChartSettings.fiveMinute('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(5)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(5)
+  expect(cs.frequencyType).toBe('minute')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('tenMinute', () => {
+  const cs = ChartSettings.tenMinute('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(10)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(10)
+  expect(cs.frequencyType).toBe('minute')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('fifteenMinute', () => {
+  const cs = ChartSettings.fifteenMinute('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(15)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(15)
+  expect(cs.frequencyType).toBe('minute')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('thirtyMinute', () => {
+  const cs = ChartSettings.thirtyMinute('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(30)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(30)
+  expect(cs.frequencyType).toBe('minute')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('oneDay', () => {
+  const cs = ChartSettings.oneDay('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(90)
+  expect(cs.periodType).toBe('day')
+  expect(cs.frequency).toBe(1)
+  expect(cs.frequencyType).toBe('daily')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(true)
+})
+
+test('oneWeek', () => {
+  const cs = ChartSettings.oneWeek('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(2)
+  expect(cs.periodType).toBe('year')
+  expect(cs.frequency).toBe(1)
+  expect(cs.frequencyType).toBe('weekly')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(false)
+})
+
+test('oneMonth', () => {
+  const cs = ChartSettings.oneMonth('AAPL')
+
+  expect(cs).toBeInstanceOf(ChartSettings)
+  expect(cs.ticker).toBe('AAPL')
+  expect(cs.period).toBe(10)
+  expect(cs.periodType).toBe('year')
+  expect(cs.frequency).toBe(1)
+  expect(cs.frequencyType).toBe('monthly')
+  expect(cs.granularity).toBe('1')
+  expect(cs.startDate).toBeUndefined()
+  expect(cs.endDate).toBeUndefined()
+  expect(cs.extendedHoursTrading).toBe(false)
+})
