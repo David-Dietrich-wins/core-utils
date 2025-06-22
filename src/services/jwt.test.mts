@@ -182,6 +182,12 @@ describe('JwtAccessClient', () => {
     )
   })
 
+  test('FromHeaders no data', () => {
+    expect(() => FromHeaders(JwtAccessToken)).toThrow(
+      'Invalid security token when attempting to decode the JWT.'
+    )
+  })
+
   test('FromString', () => {
     expect(
       FromBearerToken(JwtAccessToken, `Bearer ${TEST_Parameters_DEV.jwt}`).email
