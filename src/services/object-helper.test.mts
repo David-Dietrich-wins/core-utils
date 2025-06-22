@@ -75,6 +75,24 @@ describe('ObjectFindKeyAndReturnValue', () => {
     expect(result).toBe('value1')
   })
 
+  test('no keyToFind', () => {
+    const obj = {
+      key1: 'value1',
+      key2: 'value2',
+      key3: 'value3',
+    }
+
+    const keyToFind = ''
+    const matchLowercaseAndTrimKey = false
+    const result = ObjectFindKeyAndReturnValue(
+      obj,
+      keyToFind,
+      matchLowercaseAndTrimKey
+    )
+
+    expect(result).toBeUndefined()
+  })
+
   test('match key case fail', () => {
     const obj = {
       key1: 'value1',
@@ -602,6 +620,7 @@ test('UpdateFieldValue', () => {
     field: 'newvalue',
   })
 })
+
 test('searchObjectForArray', () => {
   const obj: Record<string, unknown> = {
     a: 'a',
@@ -621,6 +640,8 @@ test('searchObjectForArray', () => {
   expect(searchObjectForArray(obj)).toEqual(['c', 'b', 'a'])
 
   expect(searchObjectForArray(['c', 'b', 'a'])).toEqual(['c', 'b', 'a'])
+
+  expect(searchObjectForArray('c' as unknown as object)).toEqual([])
 })
 test('runOnAllMembers', () => {
   expect(() =>
@@ -791,7 +812,12 @@ test('addObjectToList', () => {
   expect(addObjectToList(undefined as any, [1, 2])).toStrictEqual([1, 2])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect(addObjectToList([], undefined as any)).toStrictEqual([])
+
+  expect(addObjectToList([], [0])).toStrictEqual([0])
+  expect(addObjectToList([], [undefined])).toStrictEqual([])
+  expect(addObjectToList([], [null])).toStrictEqual([])
 })
+
 describe('deepDiffMapper', () => {
   test('compareValues', () => {
     const anum = 1
@@ -1000,6 +1026,8 @@ test('FindObjectWithField', () => {
       },
     },
   }
+
+  expect(FindObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
 
   expect(FindObjectWithField(obj, 'a', 'a')).toBe(obj)
   expect(FindObjectWithField(obj, 'b', 'c')).toBeUndefined()

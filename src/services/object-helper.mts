@@ -644,9 +644,10 @@ export function addObjectToList<T>(
   listObjects = safeArray(listObjects)
 
   if (!isNullOrUndefined(obj)) {
-    for (let i = 0; arrayElement(obj, i); ++i) {
+    const len = safeArray(obj).length
+    for (let i = 0; i < len; ++i) {
       const objCurrent = arrayElement(obj, i)
-      if (objCurrent) {
+      if (!isNullOrUndefined(objCurrent)) {
         listObjects.push(objCurrent)
       }
     }
