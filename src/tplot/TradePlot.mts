@@ -15,7 +15,7 @@ import {
 } from '../services/general.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { safeArray } from '../services/array-helper.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
+import { getAsNumber, NumberHelper } from '../services/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
@@ -101,7 +101,7 @@ export class TradePlot implements ITradePlot {
 
   static FixupForSave(obj: ITradePlot) {
     for (const subplot of obj.subplots) {
-      if (subplot.expectedTriggerDate && 'expectedTriggerDate' in subplot) {
+      if ('expectedTriggerDate' in subplot) {
         delete subplot.expectedTriggerDate
       }
     }
@@ -110,10 +110,6 @@ export class TradePlot implements ITradePlot {
   }
 
   copyObject(obj: ITradePlot) {
-    if (!isObject(obj)) {
-      return
-    }
-
     if (obj.id) {
       this.id = obj.id
     }
@@ -132,9 +128,9 @@ export class TradePlot implements ITradePlot {
     this.shares = obj.shares
 
     this.updatedby = obj.updatedby || 'TradePlot'
-    this.updated = obj.updated || new Date()
+    this.updated = obj.updated
     this.createdby = obj.createdby || 'TradePlot'
-    this.created = obj.created || new Date()
+    this.created = obj.created
 
     this.subplots = safeArray(obj.subplots).map(
       (subplot) => new Subplot(subplot)
@@ -178,8 +174,8 @@ export class TradePlot implements ITradePlot {
   investmentAmountGain(currentPrice: number) {
     return !isNullOrUndefined(this.investmentAmountStart) &&
       !isNullOrUndefined(this.investmentAmountGainPercent(currentPrice))
-      ? (this.investmentAmountStart ?? 0) *
-          (this.investmentAmountGainPercent(currentPrice) ?? 0)
+      ? getAsNumber(this.investmentAmountStart) *
+          getAsNumber(this.investmentAmountGainPercent(currentPrice))
       : undefined
   }
   investmentAmountGainDisplay(currentPrice: number, maxDecimalPlaces: number) {
@@ -204,8 +200,8 @@ export class TradePlot implements ITradePlot {
     }
 
     return this.isShort
-      ? getPercentChangeString(currentPrice, this.purchase ?? 0)
-      : getPercentChangeString(this.purchase ?? 0, currentPrice)
+      ? getPercentChangeString(currentPrice, getAsNumber(this.purchase))
+      : getPercentChangeString(getAsNumber(this.purchase), currentPrice)
   }
 
   get investmentAmountStart() {
@@ -271,7 +267,13 @@ export class TradePlot implements ITradePlot {
         ? +cur.expectedTriggerDate
         : 0
 
-      return acc > triggerDateNum ? triggerDateNum : acc
+      // If acc is 0, then we are looking for the first trigger date that is >= dateNow
+      // If acc is not 0, then we are looking for the earliest trigger date that is >= dateNow
+      return !acc && triggerDateNum >= dateNow
+        ? triggerDateNum
+        : acc > triggerDateNum
+        ? triggerDateNum
+        : acc
     }, 0)
 
     if (dateNum >= dateNow) {
