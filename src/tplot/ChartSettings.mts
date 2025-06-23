@@ -193,9 +193,6 @@ export class ChartSettings implements IChartSettings {
     if (startDate) {
       this.startDate = startDate
       this.#_startMoment = moment.unix(startDate)
-      if (!this.#_startMoment.isValid()) {
-        throw new Error(`Invalid date format for start date: ${startDate}.`)
-      }
 
       // this.#_startMoment = this.#_startMoment.startOf('day');
 
@@ -204,9 +201,6 @@ export class ChartSettings implements IChartSettings {
     if (endDate) {
       this.endDate = endDate
       this.#_endMoment = moment.unix(endDate)
-      if (!this.#_endMoment.isValid()) {
-        throw new Error(`Invalid date format for start date: ${endDate}.`)
-      }
 
       // this.#_endMoment = this.#_endMoment.endOf('day');
 
@@ -331,7 +325,7 @@ export class ChartSettings implements IChartSettings {
 
     return mtoday.isSame(mdate, 'day')
   }
-  static isYesterday(date: Date) {
+  static isYesterday(date?: Date | null) {
     if (!date) {
       return false
     }
