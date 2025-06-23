@@ -10,7 +10,7 @@ export type ReduxAsyncStatus<T = unknown> = {
   message?: string
 }
 
-export class ReduxHelper {
+export abstract class ReduxHelper {
   static getStatus<T = unknown>(
     state: ReduxAsyncStatus<T>,
     defaultValue: T
@@ -84,6 +84,13 @@ export class ReduxHelper {
 
     return rrs
   }
+
+  /**
+   * Rejects the state and sets the error message.
+   * @param state The ReduxAsyncStatus state to update.
+   * @param error The error message to set.
+   * @param message An optional message to set.
+   */
   static RejectOnly(state: ReduxAsyncStatus, error?: string, message?: string) {
     state.error = safestr(error, 'Unknown error')
     state.isLoading = false
