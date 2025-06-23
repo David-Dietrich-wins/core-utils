@@ -219,7 +219,7 @@ test('GetProfitForRowItems', () => {
 
   const tpp = deepCloneJson(arrITradePlotProfitizer[0])
   tpp.profit = undefined
-  expect(TradePlotProfitizer.GetProfitForRowItems(tpp)).toBe(0)
+  expect(TradePlotProfitizer.GetProfitForRowItems([tpp])).toBe(0)
 })
 
 test('MapToPlotMsg', () => {
