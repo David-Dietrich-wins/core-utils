@@ -73,9 +73,7 @@ export class TradePlotProfitizer
 
   static Create(obj: ITradePlot, tprice?: IAssetQuoteResponse) {
     const tplot = new TradePlotProfitizer()
-    if (isObject(obj)) {
-      tplot.copyObject(obj)
-    }
+    tplot.copyObject(obj)
 
     const price = tprice?.price
     tplot.profit = tplot.getProfit(price)
@@ -106,17 +104,17 @@ export class TradePlotProfitizer
     return tplot
   }
 
-  static GetProfitForRowItems(rows: TradePlotProfitizer[]) {
+  static GetProfitForRowItems(rows: ITradePlotProfitizer[]) {
     return safeArray(rows).reduce((acc, tprow) => acc + (tprow?.profit || 0), 0)
   }
 
-  static MapToPlotMsg(x: TradePlotProfitizer) {
+  static MapToPlotMsg(x: ITradePlotProfitizer) {
     {
       let msg = ''
       if (isNullOrUndefined(x.profit)) {
         msg = 'Please setup targets in your trade plot.'
       } else if (!x.profit) {
-        msg = 'Current break even.'
+        msg = 'Currently break even.'
       } else if (x.profit > 0) {
         msg = `Currently up ${NumberHelper.PriceInDollars(x.profit)}!`
       } else {
@@ -134,7 +132,8 @@ export class TradePlotProfitizer
       return pl
     }
   }
-  static MapToPlotMsgs(x: TradePlotProfitizer[]) {
+
+  static MapToPlotMsgs(x: ITradePlotProfitizer[]) {
     return safeArray(x).map(TradePlotProfitizer.MapToPlotMsg)
   }
 
@@ -199,6 +198,7 @@ export class TradePlotProfitizer
       true
       // this.maxDecimalPlaces
     )
+
     if (percent2goal < 0) {
       s = s.substring(1)
 
@@ -223,12 +223,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountDisplay() {
-    const s = NumberHelper.PriceInDollars(this.investmentAmountCurrent)
-    if (!hasData(s)) {
-      return '-'
-    }
-
-    return s
+    return NumberHelper.PriceInDollars(this.investmentAmountCurrent)
   }
 
   get investmentAmountStart() {
