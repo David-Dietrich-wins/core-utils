@@ -48,6 +48,11 @@ export class TvChartLayout
       this.copyFromDatabase(userid as ITvChartLayout)
     }
   }
+
+  /**
+   * Copies the properties from a database object to this instance.
+   * @param dbtp The database object to copy from.
+   */
   copyFromDatabase(dbtp: ITvChartLayout) {
     super.copyFromDatabase(dbtp)
 
