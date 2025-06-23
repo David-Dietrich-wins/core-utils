@@ -11,11 +11,11 @@ export interface ICompany extends IIdCreatedUpdated, IHasPolitiscales {
   status: number
   imageuri: string
   imageurihref: string
-  description: string
+  description?: string | null
   phone: string
   email: string
   address1: string
-  address2: string
+  address2?: string | null
   city: string
   state: string
   zip: string
@@ -84,9 +84,9 @@ export class Company extends IdCreatedUpdated implements ICompany {
       name: z.string().min(1, 'Name is required'),
       status: z.number(),
       // .min(0, 'Status must be 0 or 1')
-      imageuri: z.string().url('Invalid URL').optional().or(z.literal('')),
-      imageurihref: z.string().url('Invalid URL').optional().or(z.literal('')),
-      description: z.string().optional(),
+      imageuri: z.url('Invalid URL').optional().or(z.literal('')),
+      imageurihref: z.url('Invalid URL').optional().or(z.literal('')),
+      description: z.string().nullable().optional(),
       phone: z
         .string()
         .min(10, 'Phone number must be at least 10 digits')
@@ -99,7 +99,7 @@ export class Company extends IdCreatedUpdated implements ICompany {
         .optional()
         .or(z.literal('')),
       address1: z.string().optional(),
-      address2: z.string().optional(),
+      address2: z.string().nullish().optional(),
       city: z.string().optional(),
       state: z
         .string()
