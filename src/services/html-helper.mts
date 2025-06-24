@@ -25,10 +25,10 @@ export function InterpolateColorRange(colorRange: ColorRange, percent: number) {
 
   const n0 = startMatch
     ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent))
-    : []
+    : [0, 0, 0]
   const n1 = endMatch
     ? safeArray(endMatch).map((oct) => parseInt(oct, 16) * percent)
-    : []
+    : [0, 0, 0]
 
   const ci = [0, 1, 2].map((i) => Math.min(Math.round(n0[i] + n1[i]), 255))
 
