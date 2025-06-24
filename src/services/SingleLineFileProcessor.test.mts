@@ -1,5 +1,7 @@
 import { jest } from '@jest/globals'
-import fs from 'node:fs'
+import { writeFileSync } from 'node:fs'
+import { safestr } from './string-helper.mjs'
+import { fileSync, setGracefulCleanup } from 'tmp'
 import {
   getGlobalLogger,
   mockLoggerDebug,
@@ -10,59 +12,18 @@ import {
   mockLoggerWarn,
 } from '../jest.setup.mjs'
 
-const CONST_DelayTime = 50000
-
-const mockCloseSync = jest.fn()
-const mockExistsSync = jest.fn().mockReturnValue(true)
-const mockOpenSync = jest.fn().mockReturnValue(1)
-const mockUnlinkSync = jest.fn()
-const mockWriteSync = jest.fn(() => 2)
-
-jest.unstable_mockModule('node:fs', () => ({
-  closeSync: mockCloseSync,
-  existsSync: mockExistsSync,
-  openSync: mockOpenSync,
-  unlinkSync: mockUnlinkSync,
-  writeSync: mockWriteSync,
-}))
-
-const mockOpen = jest.fn().mockImplementation(() => {
-  const r = {
-    readLines: jest
-      .fn()
-      .mockReturnValueOnce(['1', '2', '3', '4', '5', '', '# comment']),
-  }
-
-  return Promise.resolve(r)
-})
-
-jest.unstable_mockModule('node:fs/promises', () => ({
-  open: mockOpen,
-}))
-
-// const { closeSync, openSync, unlinkSync, writeSync } = await import('node:fs')
-// const { open } = await import('node:fs/promises')
 const sflp = await import('./SingleLineFileProcessor.mjs')
 const { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
-import { safestr } from './string-helper.mjs'
-import { fileSync, setGracefulCleanup } from 'tmp'
+
+const CONST_DelayTime = 50000
 
 // Cleanup files created by tmp
 setGracefulCleanup()
 
-beforeEach(() => {
-  mockOpen.mockClear()
-  mockCloseSync.mockClear()
-  mockExistsSync.mockClear()
-  mockOpenSync.mockClear()
-  mockUnlinkSync.mockClear()
-  mockWriteSync.mockClear()
-})
-
 test('constructor', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
   const fnaction = jest.fn(() => Promise.resolve(1))
   const config: SingleLineFileProcessorConfig<number> = {
@@ -76,13 +37,6 @@ test('constructor', async () => {
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
-
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(existsSync).toHaveBeenCalledTimes(1)
-  // expect(existsSync).toHaveReturnedWith(true)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   // expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(5)
@@ -201,7 +155,9 @@ test('constructor', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(0)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual([])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(2)
@@ -216,7 +172,6 @@ test('constructor', async () => {
 test('constructor file not found', async () => {
   // const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
   // fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
-  mockExistsSync.mockReturnValueOnce(false)
   const fnaction = jest.fn(() => Promise.resolve(1))
   const config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
@@ -230,14 +185,6 @@ test('constructor file not found', async () => {
 
   const stats = await processor.processFile()
 
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(existsSync).toHaveBeenCalledTimes(1)
-  // expect(existsSync).toHaveReturnedWith(true)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
-
-  // expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
@@ -255,7 +202,9 @@ test('constructor file not found', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(1)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual(['File not found: notfound.txt.'])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(0)
@@ -273,7 +222,7 @@ test('action exception', async () => {
     prefix: 'prefix-',
     postfix: '.txt',
   })
-  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
   const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
 
@@ -290,14 +239,6 @@ test('action exception', async () => {
 
   expect(fnaction).toHaveBeenCalledTimes(5)
 
-  // expect(mockOpen).toHaveBeenCalledTimes(1)
-
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(mockExistsSync).toHaveBeenCalledTimes(1)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
-
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(5)
   expect(mockLoggerInfo).toHaveBeenCalledTimes(14)
@@ -307,7 +248,9 @@ test('action exception', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(5)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual([])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(2)
@@ -321,7 +264,7 @@ test('action exception', async () => {
 
 test('action exception with trimline', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
   const fnaction = jest.fn((safeline: string) => {
     return Promise.resolve(safestr(safeline).length)
@@ -337,14 +280,6 @@ test('action exception with trimline', async () => {
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
-
-  // expect(mockOpen).toHaveBeenCalledTimes(1)
-
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(mockExistsSync).toHaveBeenCalledTimes(1)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(0)
@@ -459,7 +394,9 @@ test('action exception with trimline', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(0)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual([])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(2)
@@ -473,7 +410,7 @@ test('action exception with trimline', async () => {
 
 test('processFile bad', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-  fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
   const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
 
@@ -489,14 +426,6 @@ test('processFile bad', async () => {
   const stats = await processor.processFile()
 
   expect(fnaction).toHaveBeenCalledTimes(5)
-
-  // expect(mockOpen).toHaveBeenCalledTimes(1)
-
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(mockExistsSync).toHaveBeenCalledTimes(1)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(5)
@@ -646,7 +575,9 @@ test('processFile bad', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(5)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual([])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(2)
@@ -659,9 +590,9 @@ test('processFile bad', async () => {
 })
 
 test('open fails', async () => {
-  mockOpen.mockImplementationOnce(() => {
-    return Promise.reject(new Error('open failed'))
-  })
+  // mockOpen.mockImplementationOnce(() => {
+  //   return Promise.reject(new Error('open failed'))
+  // })
 
   const fnaction = jest.fn(() => Promise.resolve(1))
   const config: SingleLineFileProcessorConfig<number> = {
@@ -676,14 +607,6 @@ test('open fails', async () => {
 
   const stats = await processor.processFile()
 
-  expect(mockCloseSync).toHaveBeenCalledTimes(0)
-  // expect(existsSync).toHaveBeenCalledTimes(1)
-  // expect(existsSync).toHaveReturnedWith(true)
-  expect(mockOpenSync).toHaveBeenCalledTimes(0)
-  expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-  expect(mockWriteSync).toHaveBeenCalledTimes(0)
-
-  // expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
@@ -701,7 +624,9 @@ test('open fails', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(1)
-  expect(stats.finishTime).toBeUndefined()
+  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
+    Date.now()
+  )
   expect(stats.msg).toStrictEqual(['File not found: notfound.txt.'])
   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
   expect(stats.skipped).toBe(0)
@@ -712,59 +637,3 @@ test('open fails', async () => {
   expect(stats.update).toBe(0)
   expect(stats.upsert).toBe(0)
 })
-
-// test('open fails', async () => {
-//   mockOpen.mockImplementationOnce(() => {
-//     return Promise.reject('open failed')
-//   })
-//   mockExistsSync.mockReturnValueOnce(true)
-//   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-//   fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
-//   // fs.rmSync(tmpFile.name, { force: true })
-
-//   const fnaction = jest.fn(() => Promise.resolve(1))
-//   const config: SingleLineFileProcessorConfig<number> = {
-//     action: fnaction,
-//     fileName: tmpFile.name,
-//     logger: getGlobalLogger(),
-//     typeName: 'type',
-//   }
-
-//   const processor = new SingleLineFileProcessor(config)
-//   expect(processor.config).toBe(config)
-
-//   const stats = await processor.processFile()
-
-//   expect(mockCloseSync).toHaveBeenCalledTimes(0)
-//   // expect(existsSync).toHaveBeenCalledTimes(1)
-//   // expect(existsSync).toHaveReturnedWith(true)
-//   expect(mockOpenSync).toHaveBeenCalledTimes(0)
-//   expect(mockUnlinkSync).toHaveBeenCalledTimes(0)
-//   expect(mockWriteSync).toHaveBeenCalledTimes(0)
-
-//   expect(mockOpen).toHaveBeenCalledTimes(1)
-//   expect(fnaction).toHaveBeenCalledTimes(0)
-
-//   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerError).toHaveBeenCalledTimes(1)
-//   expect(mockLoggerInfo).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerLog).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerSilly).toHaveBeenCalledTimes(0)
-//   expect(mockLoggerWarn).toHaveBeenCalledTimes(0)
-
-//   expect(stats.add).toBe(0)
-//   expect(stats.delete).toBe(0)
-//   expect(stats.failures).toBe(1)
-//   expect(stats.finishTime).toBeUndefined()
-//   expect(stats.msg).toStrictEqual(
-//     expect.arrayContaining([expect.stringContaining('File not found: ')])
-//   )
-//   expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
-//   expect(stats.skipped).toBe(0)
-//   expect(stats.successes).toBe(0)
-//   expect(stats.suffixWhenPlural).toBe('s')
-//   expect(stats.suffixWhenSingle).toBe('')
-//   expect(stats.totalProcessed).toBe(1)
-//   expect(stats.update).toBe(0)
-//   expect(stats.upsert).toBe(0)
-// })

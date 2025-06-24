@@ -16,23 +16,33 @@ export type SingleLineFileProcessorConfig<T = unknown> = {
 export class SingleLineFileProcessor<T = unknown> {
   constructor(public config: SingleLineFileProcessorConfig<T>) {}
 
-  async processFile() {
-    const stats = new InstrumentationStatistics()
-
-    const { action, fileName, logger, trimLine = true, typeName } = this.config
+  async openExistingFile(stats: InstrumentationStatistics) {
+    const { fileName, logger, typeName } = this.config
 
     if (!existsSync(fileName)) {
       logger.error('File not found:', fileName)
 
       stats.addFailure(`File not found: ${fileName}.`)
-      return stats
+      return
     }
 
     logger.info('Processing', typeName, 'file:', fileName)
 
+    return open(fileName, 'r')
+  }
+
+  /**
+   * Processes a file line by line, executing the provided action for each non-empty, non-comment line.
+   * @returns An instance of InstrumentationStatistics containing the results of the processing.
+   */
+  async processFile() {
+    const stats = new InstrumentationStatistics()
+
+    const { action, fileName, logger, trimLine = true, typeName } = this.config
+
     let lineNumber = 1
 
-    const file = await open(fileName, 'r')
+    const file = await this.openExistingFile(stats)
     if (file) {
       for await (const line of file.readLines()) {
         const safeLine = safestrTrim(line)
@@ -80,18 +90,19 @@ export class SingleLineFileProcessor<T = unknown> {
 
         lineNumber++
       }
+
+      logger.info(
+        'Finished processing',
+        typeName,
+        'file:',
+        fileName,
+        'with',
+        lineNumber,
+        'lines'
+      )
     }
 
-    logger.info(
-      'Finished processing',
-      typeName,
-      'file:',
-      fileName,
-      'with',
-      lineNumber,
-      'lines'
-    )
-
+    stats.finished()
     return stats
   }
 }
