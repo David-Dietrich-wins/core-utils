@@ -112,7 +112,7 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   eps?: number | null // -1.78,
   pe?: number | null // null,
   earningsAnnouncement?: string | null // 2021-06-09T16:09:00.000+0000,
-  sharesOutstanding: number // 70800004,
+  sharesOutstanding?: number | null // 70800004,
   timestamp: number // 1624635044
 }
 
@@ -143,18 +143,20 @@ export interface ILoginWithCount {
   logoutTime: Date
 }
 
-export interface IExchangeInfo extends ISymbolPriceName {
+export interface IExchangeInfo
+  extends ISymbolPriceName,
+    Partial<IType<string>> {
   exchange: string
   exchangeShortName: string
 }
 
-export interface ICompanyExecutive extends ISymbolName {
-  yearBorn: number
-  pay: number
+export interface ICompanyExecutive extends Partial<ISymbol>, IName {
+  yearBorn?: number | null
+  pay?: number | null
   currencyPay: string
   title: string
   gender: string
-  titleSince: string
+  titleSince?: string | null
 }
 
 export interface ICompanyFinancialRatios {
@@ -257,11 +259,12 @@ export interface ICompanyProfile extends ISymbolPrice {
   beta: number
   volAvg: number
   mktCap: number
-  lastDiv: string
+  lastDiv: number
   range: string
   changes: number
   companyName: string
   currency: string
+  cik?: string | null
   isin: string
   isEtf: boolean
   cusip: string
@@ -273,14 +276,14 @@ export interface ICompanyProfile extends ISymbolPrice {
   ceo: string
   sector: string
   country: string
-  fullTimeEmployees: number
+  fullTimeEmployees: number | string
   phone: string
   address: string
   city: string
   state: string
   zip: string
-  dcfDiff: string
-  dcf: string
+  dcfDiff: number
+  dcf: number
   image: string
   ipoDate: string
 }
@@ -482,11 +485,12 @@ export class CompanyProfile implements ICompanyProfile {
   beta = 0
   volAvg = 0
   mktCap = 0
-  lastDiv = ''
+  lastDiv = 0
   range = ''
   changes = 0
   companyName = ''
   currency = ''
+  cik = ''
   isin = ''
   isEtf = false
   cusip = ''
@@ -498,14 +502,14 @@ export class CompanyProfile implements ICompanyProfile {
   ceo = ''
   sector = ''
   country = ''
-  fullTimeEmployees = 0
+  fullTimeEmployees: string | number = 0
   phone = ''
   address = ''
   city = ''
   state = ''
   zip = ''
-  dcfDiff = ''
-  dcf = ''
+  dcfDiff = 0
+  dcf = 0
   image = ''
   ipoDate = ''
 }
@@ -646,6 +650,7 @@ export interface IRatioProfitability {
 
 export interface IRatio extends ISymbol, IDate {
   period: string
+  calendarYear?: string | null
   currentRatio: number
   quickRatio: number
   cashRatio: number
