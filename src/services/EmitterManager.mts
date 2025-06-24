@@ -31,7 +31,7 @@ export function CreateEmitterManager<T>(name: string) {
 
   return {
     on: (fn: EventReceiver<T>) => {
-      emitterManager.on(`${name}`, fn)
+      emitterManager.on(name, fn)
     },
     off(fn: EventReceiver<T>) {
       emitterManager.off(name, fn)
