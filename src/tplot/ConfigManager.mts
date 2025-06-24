@@ -113,6 +113,7 @@ export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.operations]: IConfigOperations
   [TpConfigNamesEnum.website]: IConfigWebsite
 }
+
 export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
   [TpConfigNamesEnum.tickerInfo]: ConfigTickerInfoTabSettings
 }
@@ -144,6 +145,7 @@ export class ConfigManager {
       'ConfigManager.ValidateConfigName'
     )
   }
+
   static get defaults(): TpUserInfoAllConfigs {
     const cfgCharts: IConfigCharts = {
       id: newGuid(),
@@ -152,6 +154,7 @@ export class ConfigManager {
       neutral: { color: '#000000' },
       up: { color: '#00FF00' },
     }
+
     const cfgDashboards: IDashboardSetting = {
       screens: [
         {
@@ -199,6 +202,7 @@ export class ConfigManager {
         // ],
       ],
     }
+
     const cfgHeaderTickerBars: IConfigTickerBars = {
       id: newGuid(),
       updated: Date.now(),
@@ -209,11 +213,13 @@ export class ConfigManager {
         tickers: ['BTCUSD', 'ETHUSD'],
       },
     }
+
     const cfgOperations: IConfigOperations = {
       id: newGuid(),
       updated: Date.now(),
       useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
     }
+
     const cfgWebsite: IConfigWebsite = {
       id: newGuid(),
       updated: Date.now(),
@@ -221,14 +227,17 @@ export class ConfigManager {
       hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
       openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
     }
+
     const cfgIdeaTabSelected: IdName<number> = {
       id: 0,
       name: 'most-active',
     }
+
     const cfgIdeaCryptoTabSelected: IdName<number> = {
       id: 0,
       name: 'crypto',
     }
+
     const cfgTickerInfo: ConfigTickerInfoTabSettings = {
       selectedTab: 'asset',
       selectedPeopleTab: '',
@@ -263,6 +272,7 @@ export class ConfigManager {
 
     return config
   }
+
   get charts() {
     return this.FindConfig<IConfigCharts>(TpConfigNamesEnum.charts)
   }
@@ -272,15 +282,7 @@ export class ConfigManager {
       TpConfigNamesEnum.dashboards
     )
 
-    const clone = deepCloneJson(dashboard)
-    if (!clone) {
-      throw new AppException(
-        'Unable to clone the dashboard config.',
-        'ConfigManager.dashboards'
-      )
-    }
-
-    return clone
+    return deepCloneJson(dashboard)
   }
 
   get headerTickerBars() {
