@@ -83,7 +83,7 @@ test('pageIndex and pageSize', () => {
 })
 
 describe('getItems', () => {
-  test('getItems with limit', () => {
+  test('limit', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 100; i++) {
       const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
@@ -208,6 +208,84 @@ describe('getItems', () => {
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
+  })
+
+  test('found true', () => {
+    const items: IIdNameValue<string, number>[] = []
+    for (let i = 0; i < 10; i++) {
+      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+
+      items.push({
+        id: i,
+        name: randomString,
+        value: randomString,
+      })
+      if (i === 5) {
+        items.push({
+          id: i,
+          name: 'test',
+          value: 'test',
+        })
+      }
+    }
+
+    const srv = new SearchRequestView('test', 'name', 'asc', 20, 0, true)
+    srv.searchColumns = ['name', 'value']
+    const [result, count] = srv.getItems(items, 11)
+    expect(result.length).toBe(1)
+    expect(count).toBe(1)
+  })
+
+  test('offset of 0 when no page size', () => {
+    const items: IIdNameValue<string, number>[] = []
+    for (let i = 0; i < 10; i++) {
+      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+
+      items.push({
+        id: i,
+        name: randomString,
+        value: randomString,
+      })
+      if (i === 5) {
+        items.push({
+          id: i,
+          name: 'test',
+          value: 'test',
+        })
+      }
+    }
+
+    const srv = new SearchRequestView('test', 'name', 'asc', 0, 0, true)
+    srv.offset = 0
+    srv.searchColumns = ['name', 'value']
+    const [result, count] = srv.getItems(items)
+    expect(result.length).toBe(1)
+    expect(count).toBe(1)
+  })
+
+  test('empty search column', () => {
+    const items: IIdNameValue<string, number>[] = []
+    for (let i = 0; i < 10; i++) {
+      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+
+      items.push({
+        id: i,
+        name: randomString,
+        value: randomString,
+      })
+      if (i === 5) {
+        items.push({
+          id: i,
+          name: 'test',
+          value: 'test',
+        })
+      }
+    }
+
+    const srv = new SearchRequestView('test', '', 'asc', 5, 2, true)
+    const [result, count] = srv.getItems(items, 11)
+    expect(result.length).toBe(5)
+    expect(count).toBe(11)
   })
 
   test('numbers', () => {
