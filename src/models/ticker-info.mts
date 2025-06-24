@@ -224,8 +224,15 @@ export interface ICompanyInfo
     IHasPolitiscales,
     IVal<IExchangeInfo>,
     IType {
+  ceo?: string | null
+  date?: number | null
+  description?: string | null
   exchange: string
+  exchangeShortName?: string | null
+  fullTimeEmployees?: number | null
+  imageUrl?: string | null
   industry: string
+  ipoDate?: string | null
   minmov: number
   minmov2: number
   pricescale: number
@@ -233,6 +240,9 @@ export interface ICompanyInfo
   sector: string
   createdby: string
   updatedby: string
+  website?: string | null
+  slug?: string | null
+  tags?: string[] | null
 }
 
 export interface ICompanyScales
@@ -267,6 +277,9 @@ export interface ICompanyProfile extends ISymbolPrice {
   cik?: string | null
   isin: string
   isEtf: boolean
+  isActivelyTrading?: boolean | null
+  isAdr?: boolean | null
+  isFund?: boolean | null
   cusip: string
   exchange: string
   exchangeShortName: string
@@ -276,7 +289,7 @@ export interface ICompanyProfile extends ISymbolPrice {
   ceo: string
   sector: string
   country: string
-  fullTimeEmployees: number | string
+  fullTimeEmployees: string
   phone: string
   address: string
   city: string
@@ -286,6 +299,7 @@ export interface ICompanyProfile extends ISymbolPrice {
   dcf: number
   image: string
   ipoDate: string
+  defaultImage?: boolean | null
 }
 
 export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
@@ -435,7 +449,7 @@ export interface ISpac extends ISymbolName {
 }
 
 export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {
-  profile: CompanyProfile
+  profile: ICompanyProfile
 }
 
 export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
@@ -502,7 +516,7 @@ export class CompanyProfile implements ICompanyProfile {
   ceo = ''
   sector = ''
   country = ''
-  fullTimeEmployees: string | number = 0
+  fullTimeEmployees = ''
   phone = ''
   address = ''
   city = ''
@@ -512,6 +526,7 @@ export class CompanyProfile implements ICompanyProfile {
   dcf = 0
   image = ''
   ipoDate = ''
+  defaultImage = false
 }
 
 export class ExchangeInfo implements IExchangeInfo {
