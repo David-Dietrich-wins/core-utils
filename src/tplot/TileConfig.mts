@@ -25,19 +25,6 @@ export type TileConfigTicker = {
   useProfileColors?: boolean
 }
 
-export function TileConfigChartDefault(overrides?: Partial<TileConfigChart>) {
-  const ret: TileConfigChart = {
-    frequency: 1,
-    frequencyType: 'daily',
-    period: 1,
-    periodType: 'year',
-    ticker: CONST_DefaultTicker,
-    ...overrides,
-  }
-
-  return ret
-}
-
 export type TileConfigContent<T = string> = {
   header?: string
   body?: string
@@ -223,12 +210,25 @@ export class TileConfig<Tvalue = any>
     return tile
   }
 
+  static ChartDefault(overrides?: Partial<TileConfigChart>) {
+    const ret: TileConfigChart = {
+      frequency: 1,
+      frequencyType: 'daily',
+      period: 1,
+      periodType: 'year',
+      ticker: CONST_DefaultTicker,
+      ...overrides,
+    }
+
+    return ret
+  }
+
   static CreateChart(
     ticker: string,
     overrides?: Partial<ITileConfig<TileConfigChart>> | null
   ) {
     return TileConfig.CreateTileConfig({
-      value: TileConfigChartDefault({ ticker }),
+      value: TileConfig.ChartDefault({ ticker }),
       ...overrides,
       type: TileType.chart,
     })
