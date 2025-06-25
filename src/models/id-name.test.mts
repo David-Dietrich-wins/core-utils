@@ -64,3 +64,25 @@ test('IdNameValueType good', () => {
   expect(pr.value).toBe(value)
   expect(pr.type).toBe('string')
 })
+
+test('ToIIdName', () => {
+  const id = 'id'
+  const name = 'name'
+  const pr = IdName.ToIIdName(id, name)
+
+  expect(pr.id).toBe(id)
+  expect(pr.name).toBe(name)
+})
+
+test('ToIIdNameValueType', () => {
+  const id = 'id'
+  const name = 'name'
+  const value = { id: 'id', name: 'name' }
+  const type = 'type'
+  const pr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
+
+  expect(pr.id).toBe(id)
+  expect(pr.name).toBe(name)
+  expect(pr.value).toBe(value)
+  expect(pr.type).toBe(type)
+})
