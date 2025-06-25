@@ -297,6 +297,35 @@ describe('StringHelper', () => {
   })
 })
 
+test('ReplaceTwoOrMoreSpacesWithSingleSpace', () => {
+  const expected = 'This is a test string'
+
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is   a    test   string'
+    )
+  ).toBe(expected)
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is \t\r \n  a    test   string'
+    )
+  ).toBe(expected)
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is \n  a  \t  test \r  string'
+    )
+  ).toBe(expected)
+
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(
+    ' '
+  )
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
+})
+
 test('StringHelper.safePrefix', () => {
   const str = 'test'
   const prefix = 'prefix-'
@@ -332,6 +361,7 @@ test('StringHelper.safeSuffix', () => {
   expect(StringHelper.safeSuffix(false, suffix)).toBe('false-suffix')
   expect(StringHelper.safeSuffix(false)).toBe('false ')
 })
+
 describe('StringHelper.SplitToArray', () => {
   test('StringHelper.SplitToArray', () => {
     let strOrArray: StringOrStringArray = 'a,b , c,'

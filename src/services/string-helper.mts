@@ -352,8 +352,12 @@ export class StringHelper {
     return result
   }
 
-  static ReplaceNonPrintable(str: string) {
-    return str.replaceAll(/[^\x20-\x7E]/g, '')
+  static ReplaceNonPrintable(str: string | null | undefined) {
+    return safestr(str).replaceAll(/[^\x20-\x7E]/g, '')
+  }
+
+  static ReplaceTwoOrMoreSpacesWithSingleSpace(str: string | null | undefined) {
+    return safestr(str).replaceAll(/[ \t\r\n]{2,}/g, ' ')
   }
 
   static safeHtmlAttribute(items: ArrayOrSingleBasicTypes, separator = '-') {
