@@ -1,7 +1,6 @@
 import {
   DollarFormatter,
   elementTopLeftCoords,
-  formattedNumber,
   getAsNumber,
   getAsNumberOrUndefined,
   getMantissa,
@@ -270,23 +269,32 @@ test('toFixedSuffixed', () => {
   expect(toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
 })
 
-test('formattedNumber', () => {
-  expect(formattedNumber(null)).toBe('')
-  expect(formattedNumber(undefined)).toBe('')
-  expect(formattedNumber('')).toBe('0.00')
-  expect(formattedNumber('', false)).toBe('')
-  expect(formattedNumber(0)).toBe('0.00')
-  expect(formattedNumber(1)).toBe('1.00')
-  expect(formattedNumber(1.1)).toBe('1.10')
-  expect(formattedNumber(1.11)).toBe('1.11')
-  expect(formattedNumber(1.111)).toBe('1.11')
-  expect(formattedNumber(1000)).toBe('1,000.00')
-  expect(formattedNumber('1000')).toBe('1,000.00')
-  expect(formattedNumber(1000.1)).toBe('1,000.10')
-  expect(formattedNumber(1000000.1, false, 3)).toBe('1,000,000.100')
-  expect(formattedNumber(1000000.1, false, 3, 'prefix-', '-suffix')).toBe(
-    'prefix-1,000,000.100-suffix'
+test('FormatPrefixSuffixZero', () => {
+  expect(NumberHelper.FormatPrefixSuffixZero(null)).toBe('')
+  expect(NumberHelper.FormatPrefixSuffixZero(undefined)).toBe('')
+  expect(NumberHelper.FormatPrefixSuffixZero('')).toBe('0.00')
+  expect(NumberHelper.FormatPrefixSuffixZero('', false)).toBe('')
+  expect(NumberHelper.FormatPrefixSuffixZero(0)).toBe('0.00')
+  expect(NumberHelper.FormatPrefixSuffixZero(0, true, 0)).toBe('0')
+  expect(NumberHelper.FormatPrefixSuffixZero(1)).toBe('1.00')
+  expect(NumberHelper.FormatPrefixSuffixZero(1.1)).toBe('1.10')
+  expect(NumberHelper.FormatPrefixSuffixZero(1.11)).toBe('1.11')
+  expect(NumberHelper.FormatPrefixSuffixZero(1.111)).toBe('1.11')
+  expect(NumberHelper.FormatPrefixSuffixZero(1000)).toBe('1,000.00')
+  expect(NumberHelper.FormatPrefixSuffixZero('1000')).toBe('1,000.00')
+  expect(NumberHelper.FormatPrefixSuffixZero(1000.1)).toBe('1,000.10')
+  expect(NumberHelper.FormatPrefixSuffixZero(1000000.1, false, 3)).toBe(
+    '1,000,000.100'
   )
+  expect(
+    NumberHelper.FormatPrefixSuffixZero(
+      1000000.1,
+      false,
+      3,
+      'prefix-',
+      '-suffix'
+    )
+  ).toBe('prefix-1,000,000.100-suffix')
 })
 
 test('NumberFormatter', () => {
@@ -296,6 +304,15 @@ test('NumberFormatter', () => {
   expect(NumberFormatter('', false)).toBe('')
   expect(NumberFormatter(0)).toBe('0.00')
   expect(NumberFormatter(0, true, 0)).toBe('0')
+  expect(NumberFormatter(0, false, 0)).toBe('')
+  expect(NumberFormatter(',', false, 0)).toBe('')
+  expect(NumberFormatter(',', true, 0)).toBe('')
+  expect(NumberFormatter(',##,44', true, 0)).toBe('')
+  expect(NumberFormatter(',##,44', false, 0)).toBe('')
+  expect(NumberFormatter('88,##,44', true, 0)).toBe('88')
+  expect(NumberFormatter('88,##,44', false, 0)).toBe('88')
+  expect(NumberFormatter('00,##,44', false, 0)).toBe('')
+  expect(NumberFormatter('0,##,44', false, 0)).toBe('')
   expect(NumberFormatter(1)).toBe('1.00')
   expect(NumberFormatter(1.1)).toBe('1.10')
   expect(NumberFormatter(1.11)).toBe('1.11')
@@ -447,11 +464,23 @@ test('StockVolumeFormatter', () => {
 
   expect(StockVolumeFormatter(0, true)).toBe('0')
   expect(StockVolumeFormatter(0, false)).toBeUndefined()
-  expect(StockVolumeFormatter(',,')).toBe('')
-  expect(StockVolumeFormatter('0.00', false, 0)).toBe('')
-  expect(StockVolumeFormatter('0', false, 2)).toBe('')
+  expect(StockVolumeFormatter(',,')).toBeUndefined()
+  expect(StockVolumeFormatter(',,', true, 0)).toBe('')
+  expect(StockVolumeFormatter('0.00', false, 0)).toBeUndefined()
+  expect(StockVolumeFormatter('0.0', false, 0)).toBeUndefined()
+  expect(StockVolumeFormatter('0.', false, 0)).toBeUndefined()
+  expect(StockVolumeFormatter('.00', false, 0)).toBeUndefined()
+  expect(StockVolumeFormatter('0', false, 2)).toBeUndefined()
   expect(StockVolumeFormatter('1', true)).toBe('1')
   expect(StockVolumeFormatter('1', false)).toBe('1')
+
+  expect(StockVolumeFormatter(0, false, 0)).toBeUndefined()
+  expect(StockVolumeFormatter(0, true, 0)).toBe('0')
+})
+
+test('StockVolumeFormatter tester', () => {
+  expect(StockVolumeFormatter(',,')).toBeUndefined()
+  expect(StockVolumeFormatter(',,', true, 0)).toBe('')
 })
 
 test('NumberWithDecimalPlaces', () => {

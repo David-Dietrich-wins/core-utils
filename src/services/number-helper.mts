@@ -100,40 +100,22 @@ export function toFixedSuffixed(
     : StringHelper.safeSuffix(s, suffix)
 }
 
-export function formattedNumber(
-  val?: number | bigint | string | null,
-  showZeroValues = true,
-  toFixedLength = 2,
-  prefix = '',
-  suffix = ''
-) {
-  if (isNullOrUndefined(val)) {
-    return ''
-  }
-
-  const num = isString(val) ? parseFloat(safestr(val, '0')) : val
-
-  if (num || showZeroValues) {
-    const str = NumberHelper.NumberToString(num, showZeroValues, toFixedLength)
-
-    return `${prefix}${str}${suffix}`
-  }
-
-  return ''
-}
-
 export function NumberFormatter(
   val?: number | bigint | string | null,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return formattedNumber(val, showZeroValues, numDecimalPlaces)
+  return NumberHelper.FormatPrefixSuffixZero(
+    val,
+    showZeroValues,
+    numDecimalPlaces
+  )
 }
 export function NumberFormatterNoDecimal(
   val?: number | bigint | string | null,
   showZeroValues = true
 ) {
-  return formattedNumber(val, showZeroValues, 0)
+  return NumberHelper.FormatPrefixSuffixZero(val, showZeroValues, 0)
 }
 
 export function XFormatter(
@@ -202,7 +184,7 @@ export function StockVolumeFormatter(
       numDecimalPlaces ?? 0
     )
 
-    if ('0' !== num || showZeroValues) {
+    if (showZeroValues || !/^0*\.?0*$/.test(num)) {
       return num
     }
   }
@@ -327,7 +309,33 @@ export function isNumeric(value?: string | number | bigint): boolean {
 // export function numberWithCommas(x) {
 //   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
-export class NumberHelper {
+export abstract class NumberHelper {
+  static FormatPrefixSuffixZero(
+    val?: number | bigint | string | null,
+    showZeroValues = true,
+    toFixedLength = 2,
+    prefix = '',
+    suffix = ''
+  ) {
+    if (isNullOrUndefined(val)) {
+      return ''
+    }
+
+    const num = isString(val) ? parseFloat(safestr(val, '0')) : val
+
+    if (num || showZeroValues) {
+      const str = NumberHelper.NumberToString(
+        num,
+        showZeroValues,
+        toFixedLength
+      )
+
+      return `${prefix}${str}${suffix}`
+    }
+
+    return ''
+  }
+
   /**
    * Gets a formatted number based on a specified number of decimal places.
    * @param num A number or string representing a number.
@@ -392,7 +400,7 @@ export class NumberHelper {
       num = num.length === 0 ? 0 : +newnum
     }
 
-    if (!showZeroValues && num === 0) {
+    if ((!showZeroValues && num === 0) || isNaN(num)) {
       return ''
     }
 
