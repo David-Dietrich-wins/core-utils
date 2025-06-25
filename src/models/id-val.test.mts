@@ -22,7 +22,7 @@ test('IIdVal interface', () => {
 test('CreateIdVal', () => {
   const id = 'id'
   const val = 'val'
-  const pr = IdVal.CreateIdVal(id, val)
+  const pr = IdVal.ToIIdVal(id, val)
 
   expect(pr.id).toBe(id)
   expect(pr.val).toBe(val)

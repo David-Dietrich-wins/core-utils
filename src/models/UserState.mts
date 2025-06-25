@@ -1,4 +1,4 @@
-import { IIdName } from './id-name.mjs'
+import { IdName, IIdName } from './id-name.mjs'
 
 export interface IUserState<T = unknown> extends IIdName<string> {
   message?: string
@@ -8,15 +8,19 @@ export interface IUserState<T = unknown> extends IIdName<string> {
 }
 
 // Custom API error to throw
-export default class UserState<T = unknown> implements IUserState<T> {
-  id = ''
+export default class UserState<T = unknown>
+  extends IdName<string>
+  implements IUserState<T>
+{
+  status: string
+  statusCode: number
+  obj?: T
 
-  constructor(
-    public name = 'User',
-    public status = '',
-    public statusCode = -1,
-    public obj?: T
-  ) {
-    this.id = name
+  constructor(name = 'User', status = '', statusCode = -1, obj?: T) {
+    super(name, name)
+
+    this.status = status
+    this.statusCode = statusCode
+    this.obj = obj
   }
 }

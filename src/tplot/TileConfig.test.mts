@@ -1,4 +1,4 @@
-import { AppException } from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { ITileConfig, TileConfig, TileType } from './TileConfig.mjs'
 
 test('create TileConfig', () => {

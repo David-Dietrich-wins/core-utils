@@ -2,7 +2,7 @@ import { ZodError } from 'zod/v4'
 import { ZodTestHelper } from '../jest.setup.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
-import { deepCloneJson } from '../index.mjs'
+import { deepCloneJson } from '../services/object-helper.mjs'
 
 const iSubplot: ISubplot = {
   id: '123',

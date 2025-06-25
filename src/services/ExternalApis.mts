@@ -76,7 +76,7 @@ import { hasData, urlJoin } from './general.mjs'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { safestr } from './string-helper.mjs'
 import { IUserLoginRequest } from './user-helper.mjs'
-import { IIdVal } from '../index.mjs'
+import { IIdVal } from '../models/id-val.mjs'
 
 /**
  * Interface for the result of a symbol search.

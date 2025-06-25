@@ -1,6 +1,6 @@
-import { jest } from '@jest/globals'
+import { IdValueManager } from '../models/IdValueManager.mjs'
+import { ArrayOrSingle } from '../models/types.mjs'
 import { CacheManager } from './CacheManager.mjs'
-import { ArrayOrSingle, IdValueManager, IId, IIdValue } from '../index.mjs'
 
 test('constructor', async () => {
   const cacheManager = new CacheManager<string, string>('testCache', 60)

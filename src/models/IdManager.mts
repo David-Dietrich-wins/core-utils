@@ -16,10 +16,16 @@ export interface IId<T = string> {
 export interface IIdRequired<T = string> extends Required<IId<T>> {}
 
 export class IdManager<T extends IId<Tid>, Tid = T['id']> {
-  constructor(public list: T[] = [], public stats?: InstrumentationStatistics) {
+  list: T[]
+  stats?: InstrumentationStatistics
+
+  constructor(list: T[] = [], stats?: InstrumentationStatistics) {
     if (!isArray(list) || !list.every((item) => 'id' in item)) {
       throw new AppException('list must be an array', 'IdManager.constructor')
     }
+
+    this.list = list
+    this.stats = stats
   }
 
   static CreateIdManager<T extends IId<Tid>, Tid = T['id']>(

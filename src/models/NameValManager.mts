@@ -38,10 +38,16 @@ export type NameValAsType<Tvalue = string> = {
 }
 
 export class NameValManager<TValue = string> {
+  list: INameVal<TValue>[]
+  stats?: InstrumentationStatistics
+
   constructor(
-    public list: INameVal<TValue>[] = [],
-    public stats?: InstrumentationStatistics
-  ) {}
+    list: INameVal<TValue>[] = [],
+    stats?: InstrumentationStatistics
+  ) {
+    this.list = list
+    this.stats = stats
+  }
 
   static CreateNameValManager<TValue = string>(
     arr: INameVal<TValue>[] | null | undefined,
@@ -50,7 +56,7 @@ export class NameValManager<TValue = string> {
     return new NameValManager(safeArray(arr), stats)
   }
 
-  static CreateINameVal<TValue = string>(
+  static ToINameVal<TValue = string>(
     name: string,
     val: TValue
   ): INameVal<TValue> {

@@ -4,7 +4,17 @@ import { IIdRequired } from './IdManager.mjs'
 export interface IIdName<Tid = string> extends IIdRequired<Tid>, IName {}
 
 export class IdName<Tid = string> implements IIdName<Tid> {
-  constructor(public id: Tid, public name: string) {}
+  id: Tid
+  name: string
+
+  constructor(id: Tid, name: string) {
+    this.id = id
+    this.name = name
+  }
+
+  static ToIIdName<Tid = string>(id: Tid, name: string): IIdName<Tid> {
+    return { id, name }
+  }
 }
 
 export interface IIdNameValue<Tvalue = string, Tid = string>
@@ -15,8 +25,12 @@ export class IdNameValue<Tvalue = string, Tid = string>
   extends IdName<Tid>
   implements IIdNameValue<Tvalue, Tid>
 {
-  constructor(id: Tid, name: string, public value: Tvalue) {
+  value: Tvalue
+
+  constructor(id: Tid, name: string, value: Tvalue) {
     super(id, name)
+
+    this.value = value
   }
 }
 
@@ -31,8 +45,20 @@ export class IdNameValueType<Tvalue = string, Type = string, Tid = string>
   extends IdNameValue<Tvalue, Tid>
   implements IIdNameValueType<Tvalue, Type, Tid>
 {
-  constructor(id: Tid, name: string, public value: Tvalue, public type: Type) {
+  type: Type
+
+  constructor(id: Tid, name: string, value: Tvalue, type: Type) {
     super(id, name, value)
+    this.type = type
+  }
+
+  static ToIIdNameValueType<Tvalue = string, Type = string, Tid = string>(
+    id: Tid,
+    name: string,
+    value: Tvalue,
+    type: Type
+  ): IIdNameValueType<Tvalue, Type, Tid> {
+    return { id, name, value, type }
   }
 }
 
@@ -55,14 +81,12 @@ export function createValueChange<T = string>(
   value: T,
   type?: string,
   date?: number
-) {
-  const vc: IValueChange<T> = {
+): IValueChange<T> {
+  return {
     id,
     name,
     value,
     type: type ?? '',
     date: date ?? Date.now(),
   }
-
-  return vc
 }

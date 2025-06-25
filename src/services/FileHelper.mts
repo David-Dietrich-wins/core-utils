@@ -5,7 +5,7 @@ import { safestr } from './string-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { isArray } from './array-helper.mjs'
 import { safeArray } from './array-helper.mjs'
-import { AppException } from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 export class FileHelper {
   filename: string = ''

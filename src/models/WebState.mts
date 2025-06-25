@@ -35,26 +35,41 @@ export interface IWebState {
  * Used to report on the running state of the web server.
  */
 export default class WebState implements IWebState {
+  totalFailures: number
+  totalRequests: number
+  message: string
+  server?: IServerState
+  user?: IUserState
+  version: string
+  messages: string[]
+  errorMessages: string[]
+
   constructor(
-    public totalFailures = 0,
-    public totalRequests = 0,
-    public message = 'success',
-    public server?: IServerState,
-    public user?: IUserState,
-    public version = 'UNKNOWN',
-    public messages: string[] = [],
-    public errorMessages: string[] = []
-  ) {}
+    totalFailures = 0,
+    totalRequests = 0,
+    message = 'success',
+    server?: IServerState,
+    user?: IUserState,
+    version = 'UNKNOWN',
+    messages: string[] = [],
+    errorMessages: string[] = []
+  ) {
+    this.totalFailures = totalFailures
+    this.totalRequests = totalRequests
+    this.message = message
+    this.server = server
+    this.user = user
+    this.version = version
+    this.messages = messages
+    this.errorMessages = errorMessages
+  }
 }
 
 export const mockWebStateGoodResponse: IWebStateResponse = {
   errorMessages: [],
   message: 'Server is up.',
   messages: [],
-  pinKey: 'Jak this is for you',
-  pinKeyVault: 'Jak this is for you',
-  rsaPublicKey:
-    '-----BEGIN RSA PUBLIC KEY-----\nMIICCgKCAgEA4MysBA8jNsSNj82sVCB+CfYrcl81/jIxU7hQba4rxkL+ry0G4NmltxVCtNzCGjJVhppIM63PXccbg7UNim/1sVUV2YQEg8DHdQnsUK0eE58hqNn/34r5QWjEaXf8oRzhLadxt1yD7oc8efWPGlCn1ulJlPSEYOoR31Mx5zuAfZ5/3BPOyHv36HZN1cqHpz/f6CLovBb6/Y47rimfbV7MgTBQKT+R/SFIY0FjyjBtubqBMJ2eVXxr9npoXJfQYjtTlp26NHNGnpqWFmiIiIeVeZZLramEHrGE1qHCUZfAClTtVYJwvd6E44Z6JvTMl4pNU/EzcjUGNe6tLvGvu2gC+BujRz6cMZhJF1rrHDH6qGCunXdNV7tNsnQWeIgR1mlkQ0Ni8Sjd7Iwqsv6wtD7CybtAe07JIClQsBSlELRj6cBELpkGjWCrYyJjNwgcT1/rTpeJAzAmha6Ksc75bjOpkzuBm+09DgzXNd/1GSlZrkjgs5yO4xBWUBC03EAJSlUgSXPe6NLDJQuzjUJuULBFox/9BycgJvHNDpUEiIUINJW8HQ5mv0+FNK/g+RKDh1S0/EI7FwbfKYi9pZfJNREOQihsAO0PFhYJLqJkM6YCRbCNvSPmS8KcaYQj4Jbb1qZc0A6HZ3HENGSHEcDU0e2RdbvOU89sVHsmWuJElR2cg7sCAwEAAQ==\n-----END RSA PUBLIC KEY-----',
+  rsaPublicKey: safestr(process.env.RSA_PUBLIC_KEY),
   server: {
     currentTime: new Date(),
     message: 'Operational',

@@ -1,5 +1,6 @@
 import { IId, IIdRequired } from './IdManager.mjs'
 import { IVal } from './interfaces.mjs'
+import { INameVal } from './NameValManager.mjs'
 
 export interface IIdVal<Tid = string, Tval = string>
   extends IId<Tid>,
@@ -12,11 +13,28 @@ export interface IIdValRequired<Tid = string, Tval = string>
 export class IdVal<Tid = string, Tval = string>
   implements IIdValRequired<Tid, Tval>
 {
-  constructor(public id: Tid, public val: Tval) {}
+  id: Tid
+  val: Tval
 
-  static CreateIdVal<Tid = string, Tval = string>(id: Tid, val: Tval) {
-    const idval: IIdValRequired<Tid, Tval> = { id, val }
+  constructor(id: Tid, val: Tval) {
+    this.id = id
+    this.val = val
+  }
 
-    return idval
+  static ToIIdVal<Tid = string, Tval = string>(
+    id: Tid,
+    val: Tval
+  ): IIdValRequired<Tid, Tval> {
+    return { id, val }
+  }
+
+  static FromNameAndVal<Tid = string, Tval = string>(id: Tid, val: Tval) {
+    return IdVal.ToIIdVal<Tid, Tval>(id, val)
+  }
+
+  static FromNameVal<Tval = string>(
+    nameVal: INameVal<Tval>
+  ): IIdValRequired<string, Tval> {
+    return IdVal.ToIIdVal<string, Tval>(nameVal.name, nameVal.val)
   }
 }

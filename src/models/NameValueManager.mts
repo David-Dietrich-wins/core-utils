@@ -44,10 +44,16 @@ export type NameValueNumber = NameValueType<number>
 export type NameValueString = NameValueType<string>
 
 export class NameValueManager<TValue = string> {
+  list: INameValue<TValue>[]
+  stats?: InstrumentationStatistics
+
   constructor(
-    public list: INameValue<TValue>[] = [],
-    public stats?: InstrumentationStatistics
-  ) {}
+    list: INameValue<TValue>[] = [],
+    stats?: InstrumentationStatistics
+  ) {
+    this.list = list
+    this.stats = stats
+  }
 
   static CreateNameValueManager<TValue = string>(
     arr: INameValue<TValue>[] | null | undefined,

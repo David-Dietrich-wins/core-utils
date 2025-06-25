@@ -79,13 +79,13 @@ describe('NameValManager', () => {
   test('NameValManager.CreateINameVal', () => {
     const name = 'name'
     const value = 'value'
-    const item = NameValManager.CreateINameVal(name, value)
+    const item = NameValManager.ToINameVal(name, value)
 
     expect(item.name).toBe(name)
     expect(item.val).toBe(value)
     expect(item).toEqual({ name, val: value })
 
-    const item2 = NameValManager.CreateINameVal<{ id: number }>(name, {
+    const item2 = NameValManager.ToINameVal<{ id: number }>(name, {
       id: 123,
     })
     expect(item2.name).toBe(name)

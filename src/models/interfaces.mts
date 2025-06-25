@@ -70,8 +70,6 @@ export interface IServerState<T = unknown> {
 }
 
 export interface IWebStateResponse extends IWebState {
-  pinKey: string
-  pinKeyVault?: string
   rsaPublicKey?: string
   userId?: string
 }
