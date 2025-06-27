@@ -315,9 +315,9 @@ export interface IIpoCalendar extends ISymbol, IDate {
   company: string
   exchange: string
   actions: string
-  shares: number
-  priceRange: string
-  marketCap: number
+  shares?: number | null
+  priceRange?: string | null
+  marketCap?: number | null
 }
 
 export interface IPlotPricesWithMidpoint extends ISymbol {
