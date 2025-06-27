@@ -49,6 +49,11 @@ export function getBoolean(b: unknown) {
 
   return false
 }
+export function getBooleanUndefined(b: unknown) {
+  const bret = getBoolean(b)
+
+  return bret ? true : undefined
+}
 
 /**
  * Gets the percentage change from two numbers.

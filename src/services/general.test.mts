@@ -1,6 +1,7 @@
 /* eslint-disable quotes */
 import {
   getBoolean,
+  getBooleanUndefined,
   getPercentChange,
   getPercentChangeString,
   hasData,
@@ -277,6 +278,26 @@ test('getBoolean', () => {
   expect(getBoolean('1')).toBe(true)
   expect(getBoolean('true')).toBe(true)
   expect(getBoolean('hello')).toBe(true)
+})
+
+test('getBooleanUndefined', () => {
+  expect(getBooleanUndefined(undefined)).toBe(undefined)
+  expect(getBooleanUndefined(null)).toBe(undefined)
+  expect(getBooleanUndefined(false)).toBe(undefined)
+  expect(getBooleanUndefined(0)).toBe(undefined)
+  expect(getBooleanUndefined('')).toBe(undefined)
+  expect(getBooleanUndefined([])).toBe(undefined)
+
+  expect(getBooleanUndefined('FALSE')).toBe(undefined)
+  expect(getBooleanUndefined('f')).toBe(undefined)
+  expect(getBooleanUndefined('no')).toBe(undefined)
+  expect(getBooleanUndefined('0')).toBe(undefined)
+
+  expect(getBooleanUndefined(true)).toBe(true)
+  expect(getBooleanUndefined(1)).toBe(true)
+  expect(getBooleanUndefined('1')).toBe(true)
+  expect(getBooleanUndefined('true')).toBe(true)
+  expect(getBooleanUndefined('hello')).toBe(true)
 })
 
 test('getBody', () => {
