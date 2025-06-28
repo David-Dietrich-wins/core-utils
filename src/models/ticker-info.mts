@@ -382,7 +382,7 @@ export function FmpIndicatorParamsSetDateBoundary(
   const { from, timeframe } = fmp
   const fmpNew = { ...fmp }
 
-  const regex = /(\d+)|([A-za-z]+)/g
+  const regex = /(\d+)|([A-Z]+)/gi
   const matches = safestr(timeframe).match(regex)
   if (isArray(matches, 2) && matches[0] !== timeframe) {
     const [units, unit] = matches
