@@ -99,3 +99,97 @@ test('CreateFromPromise', async () => {
     'world',
   ])
 })
+
+test('toIPagedResponse', () => {
+  const pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
+  const ipr = pr.toIPagedResponse()
+
+  expect(ipr.dataPage[0].data).toBe('hello')
+  expect(ipr.totalCount).toBe(1)
+  expect(ipr.rowCount).toBe(1)
+})
+
+test('ToIPagedResponse', () => {
+  const pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
+
+  expect(PagedResponse.ToIPagedResponse(pr).dataPage[0].data).toBe('hello')
+  expect(PagedResponse.ToIPagedResponse(pr).totalCount).toBe(1)
+  expect(PagedResponse.ToIPagedResponse(pr).rowCount).toBe(1)
+  expect(PagedResponse.ToIPagedResponse(pr, 10, 5).dataPage[0].data).toBe(
+    'hello'
+  )
+  expect(PagedResponse.ToIPagedResponse(pr, 10, 5).totalCount).toBe(1)
+  expect(PagedResponse.ToIPagedResponse(pr, 10, 5).rowCount).toBe(1)
+  expect(
+    PagedResponse.ToIPagedResponse(pr, undefined, 5).dataPage[0].data
+  ).toBe('hello')
+  expect(PagedResponse.ToIPagedResponse(pr, undefined, 5).totalCount).toBe(1)
+  expect(PagedResponse.ToIPagedResponse(pr, undefined, 5).rowCount).toBe(1)
+  expect(
+    PagedResponse.ToIPagedResponse(pr, 10, undefined).dataPage[0].data
+  ).toBe('hello')
+  expect(PagedResponse.ToIPagedResponse(pr, 10, undefined).totalCount).toBe(1)
+  expect(PagedResponse.ToIPagedResponse(pr, 10, undefined).rowCount).toBe(1)
+  expect(
+    PagedResponse.ToIPagedResponse(pr, undefined, undefined).dataPage[0].data
+  ).toBe('hello')
+  expect(
+    PagedResponse.ToIPagedResponse(pr, undefined, undefined).totalCount
+  ).toBe(1)
+
+  expect(PagedResponse.ToIPagedResponse(null)).toEqual({
+    dataPage: [],
+    rowCount: 0,
+    totalCount: 0,
+  })
+  expect(PagedResponse.ToIPagedResponse(undefined)).toEqual({
+    dataPage: [],
+    rowCount: 0,
+    totalCount: 0,
+  })
+  expect(PagedResponse.ToIPagedResponse([])).toEqual({
+    dataPage: [],
+    rowCount: 0,
+    totalCount: 0,
+  })
+  expect(PagedResponse.ToIPagedResponse(null, 10, 5)).toEqual({
+    dataPage: [],
+    rowCount: 0,
+    totalCount: 0,
+  })
+  expect(PagedResponse.ToIPagedResponse(undefined, 10, 5)).toEqual({
+    dataPage: [],
+    rowCount: 0,
+    totalCount: 0,
+  })
+  expect(PagedResponse.ToIPagedResponse([], 10, 5)).toEqual({
+    dataPage: [],
+    rowCount: 5,
+    totalCount: 10,
+  })
+  expect(
+    PagedResponse.ToIPagedResponse(['a', 'b', 'c', 'd', 'e', 'f'], undefined, 5)
+  ).toEqual({
+    dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
+    rowCount: 5,
+    totalCount: 6,
+  })
+  expect(
+    PagedResponse.ToIPagedResponse(
+      ['a', 'b', 'c', 'd', 'e', 'f'],
+      10,
+      undefined
+    )
+  ).toEqual({
+    dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
+    rowCount: 6,
+    totalCount: 10,
+  })
+  expect(
+    PagedResponse.ToIPagedResponse(['a', 'b', 'c', 'd', 'e', 'f'], 10, 5)
+  ).toEqual({
+    dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
+    rowCount: 5,
+    totalCount: 10,
+  })
+})

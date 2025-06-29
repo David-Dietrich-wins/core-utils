@@ -1,7 +1,7 @@
 import { z } from 'zod/v4'
 import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse } from './ApiResponse.mjs'
-import { hasData } from '../services/general.mjs'
+import { hasData, isNullOrUndefined } from '../services/general.mjs'
 
 /*export interface IPagedResponse<T> {
   dataPage: T[]
@@ -55,6 +55,34 @@ export class PagedResponse<T> implements IPagedResponse<T> {
 
   static GetDataFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
     return safeArray(ret.data.dataPage)
+  }
+
+  static ToIPagedResponse<T>(
+    pagedResponse: T[] | null | undefined | IPagedResponse<T>,
+    totalCount?: number,
+    rowCount?: number
+  ): IPagedResponse<T> {
+    if (isNullOrUndefined(pagedResponse)) {
+      return { dataPage: [], rowCount: 0, totalCount: 0 }
+    }
+
+    if (Array.isArray(pagedResponse)) {
+      return {
+        dataPage: pagedResponse,
+        rowCount: rowCount ?? pagedResponse.length,
+        totalCount: totalCount ?? pagedResponse.length,
+      }
+    }
+
+    return (pagedResponse as PagedResponse<T>).toIPagedResponse()
+  }
+
+  toIPagedResponse(): IPagedResponse<T> {
+    return {
+      dataPage: this.dataPage,
+      rowCount: this.rowCount,
+      totalCount: this.totalCount,
+    }
   }
 
   createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
