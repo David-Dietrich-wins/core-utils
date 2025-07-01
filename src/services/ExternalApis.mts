@@ -1,4 +1,4 @@
-import { AppException, AppExceptionHttp } from '../models/AppException.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import {
@@ -136,43 +136,14 @@ export class ExternalApis {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     location?: any /* should be an HTML window.location object. */
   ) {
-    console.error(fname, err)
-    if (location && err instanceof AppExceptionHttp) {
-      if (err.httpStatusCode === 403) {
-        setTimeout(() => {
-          location.href = `/login?callbackUrl=${encodeURIComponent(
-            location.pathname + location.search
-          )}`
-        }, 100)
-
-        // redirect(
-        //   '/api/auth/signin?callbackUrl=' +
-        //     encodeURIComponent(window.location.href)
-        // )
-
-        return true
-      }
-    }
-
-    return false
+    return ApiResponse.ErrorHandler(fname, err, location)
   }
   static verifySuccess<T = unknown>(
     fname: string,
     ret: ApiResponse<T>,
     allowNoDataReturned = false
   ) {
-    if (!ApiResponse.isSuccess(ret)) {
-      throw new AppException(
-        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
-        fname
-      )
-    }
-
-    if (!allowNoDataReturned && !ret.data) {
-      throw new AppException('No data returned', fname)
-    }
-
-    return ret.data
+    return ApiResponse.VerifySuccess(fname, ret, allowNoDataReturned)
   }
 
   static verifySuccessPagedResponse<T = unknown>(
@@ -180,18 +151,7 @@ export class ExternalApis {
     ret: ApiResponse<IPagedResponse<T>>,
     allowNoDataReturned = false
   ) {
-    if (!ApiResponse.isSuccess(ret)) {
-      throw new AppException(
-        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
-        fname
-      )
-    }
-
-    if (!allowNoDataReturned && !ret.data) {
-      throw new AppException('No data returned', fname)
-    }
-
-    return PagedResponse.CreateFromApiResponse(ret)
+    return ApiResponse.VerifySuccess(fname, ret, allowNoDataReturned)
   }
 
   admin = {

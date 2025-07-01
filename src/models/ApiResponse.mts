@@ -1,9 +1,10 @@
-import { AppExceptionHttp } from './AppException.mjs'
+import { AppException, AppExceptionHttp } from './AppException.mjs'
 import { safestrLowercase } from '../services/string-helper.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { IDataWithStats } from './types.mjs'
 import { FetchDataTypesAllowed } from '../services/fetch-http.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { PagedResponse, type IPagedResponse } from './PagedResponse.mjs'
 
 export interface IApiResponse<T = unknown> extends IDataWithStats<T> {
   id: number
@@ -47,6 +48,83 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     // Object.assign(crret, iApiResponse)
 
     return crret
+  }
+
+  /**
+   * Checks if an error is a 403 Forbidden error and redirects to the sign-in page if so.
+   * This function is intended to be used as a global error handler for API calls.
+   * @param fname - The name of the function that is calling this error handler.
+   * This is used for logging purposes to identify where the error occurred.
+   * @param err The error object that was thrown. This can be any type of error, including
+   * custom errors like AppException or AppExceptionHttp.
+   * @param location The window.location object, which contains information about the current URL.
+   * @returns true if the error was handled (e.g., a 403 error that redirects to a sign-in page),
+   * false otherwise.
+   */
+  static ErrorHandler(
+    fname: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    err: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    location?: any /* should be an HTML window.location object. */
+  ) {
+    console.error(fname, err)
+    if (location && err instanceof AppExceptionHttp) {
+      if (err.httpStatusCode === 403) {
+        setTimeout(() => {
+          location.href = `/login?callbackUrl=${encodeURIComponent(
+            location.pathname + location.search
+          )}`
+        }, 100)
+
+        // redirect(
+        //   '/api/auth/signin?callbackUrl=' +
+        //     encodeURIComponent(window.location.href)
+        // )
+
+        return true
+      }
+    }
+
+    return false
+  }
+
+  static VerifySuccess<T = unknown>(
+    fname: string,
+    ret: ApiResponse<T>,
+    allowNoDataReturned = false
+  ) {
+    if (!ApiResponse.isSuccess(ret)) {
+      throw new AppException(
+        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
+        fname
+      )
+    }
+
+    if (!allowNoDataReturned && !ret.data) {
+      throw new AppException('No data returned', fname)
+    }
+
+    return ret.data
+  }
+
+  static VerifySuccessPagedResponse<T = unknown>(
+    fname: string,
+    ret: ApiResponse<IPagedResponse<T>>,
+    allowNoDataReturned = false
+  ) {
+    if (!ApiResponse.isSuccess(ret)) {
+      throw new AppException(
+        ret.message ? ret.message : `Bad result from API call: ${ret.result}.`,
+        fname
+      )
+    }
+
+    if (!allowNoDataReturned && !ret.data) {
+      throw new AppException('No data returned', fname)
+    }
+
+    return PagedResponse.CreateFromApiResponse(ret)
   }
 
   get isGood() {
