@@ -15,7 +15,6 @@ import { IUserInfo } from '../models/UserInfo.mjs'
 import {
   IPagedResponse,
   IPagedResponseWithTotalValue,
-  PagedResponse,
 } from '../models/PagedResponse.mjs'
 import {
   AssetQuoteWithChanges,
@@ -489,7 +488,7 @@ export class ExternalApis {
       const fname = this.asset.TickerSearch.name
 
       return fetchGet<
-        PagedResponse<ITickerSearch>,
+        IPagedResponse<ITickerSearch>,
         IPolitiscaleSearchParams & { exchange: string }
       >({
         url: urlJoin(this.CONST_EndpointAsset, 'ticker-search'),
@@ -930,7 +929,7 @@ export class ExternalApis {
     GetAllCharts: async (bearerToken: string) => {
       const fname = this.tv.GetAllCharts.name
 
-      return fetchGet<PagedResponse<ITvChartLayout>>({
+      return fetchGet<IPagedResponse<ITvChartLayout>>({
         url: urlJoin(this.CONST_EndpointTv, 'charts'),
         fname,
         bearerToken,
