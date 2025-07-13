@@ -23,6 +23,7 @@ import {
   stringWrapParen,
   stringWrapSingleQuote,
 } from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 test('capitalizeFirstLetter', () => {
   expect(capitalizeFirstLetter('hello')).toBe('Hello')
@@ -295,6 +296,29 @@ describe('StringHelper', () => {
     expect(StringHelper.safestr('', undefined)).toBe('')
     expect(StringHelper.safestr('', null)).toBe('')
   })
+
+  expect(
+    StringHelper.safestr(' ab ', {
+      suffix: '-test',
+      trimStart: true,
+      uppercase: true,
+    })
+  ).toBe('AB -test')
+  expect(
+    StringHelper.safestr(' Ab ', {
+      suffix: '-test',
+      trimStart: true,
+      lowercase: true,
+    })
+  ).toBe('ab -test')
+  expect(() =>
+    StringHelper.safestr(' Ab ', {
+      suffix: '-test',
+      trimStart: true,
+      lowercase: true,
+      uppercase: true,
+    })
+  ).toThrow(AppException)
 })
 
 test('ReplaceTwoOrMoreSpacesWithSingleSpace', () => {
@@ -1015,4 +1039,17 @@ describe('StringHelper.SplitIntoArray', () => {
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
+})
+
+test('GenerateRandomString', () => {
+  const length = 10
+  const randomString = StringHelper.GenerateRandomString(length)
+
+  expect(randomString).toHaveLength(length)
+  expect(randomString).toMatch(/^[a-zA-Z0-9]{1,10}$/) // Check if it contains only alphanumeric characters
+
+  const anotherRandomString = StringHelper.GenerateRandomString(length, 'abcde')
+
+  expect(anotherRandomString).toHaveLength(length)
+  expect(anotherRandomString).toMatch(/^[abcde]{1,10}$/) // Check if it contains only 'a', 'b', 'c', 'd', or 'e'
 })

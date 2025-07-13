@@ -5,7 +5,7 @@ import {
   SortOrderAsBoolean,
 } from '../models/types.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
-import { isDateObject } from './DateHelper.mjs'
+import { DateHelper } from './DateHelper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import { isString, safestr, safestrLowercase } from './string-helper.mjs'
@@ -140,7 +140,7 @@ export function hasData(o?: any | null, minlength = 1) {
       return o >= minlength
     }
 
-    if (isDateObject(o)) {
+    if (DateHelper.isDateObject(o)) {
       return (o as Date).getTime() >= minlength
     }
 

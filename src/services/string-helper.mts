@@ -1,3 +1,4 @@
+import { AppException } from '../models/AppException.mjs'
 import {
   ArrayOrSingleBasicTypes,
   StringOrStringArray,
@@ -291,6 +292,8 @@ export class StringHelper {
           trim?: boolean
           trimStart?: boolean
           trimEnd?: boolean
+          lowercase?: boolean
+          uppercase?: boolean
         }
       | null
   ): string {
@@ -315,6 +318,8 @@ export class StringHelper {
         trim,
         trimStart,
         trimEnd,
+        lowercase,
+        uppercase,
       } = ifEmpty
 
       if (!hasData(s) && ifEmptyValue) {
@@ -331,6 +336,18 @@ export class StringHelper {
         s = s.trimEnd()
       }
 
+      if (lowercase && uppercase) {
+        throw new AppException(
+          'Cannot set both lowercase and uppercase to true.'
+        )
+      }
+      if (lowercase) {
+        s = s.toLowerCase()
+      }
+      if (uppercase) {
+        s = s.toUpperCase()
+      }
+
       if (!hasData(s)) {
         return ''
       }
@@ -341,14 +358,17 @@ export class StringHelper {
     return s
   }
 
-  static GenerateRandomString(length: number) {
+  static GenerateRandomString(length: number, characters?: string) {
     let result = ''
-    const characters =
+    characters =
+      characters ||
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
     const charactersLength = characters.length
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
+
     return result
   }
 

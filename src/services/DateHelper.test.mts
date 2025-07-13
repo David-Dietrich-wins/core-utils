@@ -1,11 +1,5 @@
 import { getCurrentDate } from '../jest.setup.mjs'
-import {
-  DateHelper,
-  isDateObject,
-  timeDifference,
-  timeDifferenceString,
-  timeDifferenceStringFromMillis,
-} from './DateHelper.mjs'
+import { DateHelper } from './DateHelper.mjs'
 import { safestr } from './string-helper.mjs'
 
 const dateToTest = new Date()
@@ -289,28 +283,28 @@ describe('DateFormatForUi', () => {
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
   })
 })
-describe('timeDifference', () => {
+describe('DateHelper.timeDifference', () => {
   test('startTime', () => {
     const startDate = new Date(Date.now() - 2000)
 
-    const millis = timeDifference(startDate)
+    const millis = DateHelper.timeDifference(startDate)
     expect(millis).toBeGreaterThanOrEqual(2000)
   })
 
   test('startTime null', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => timeDifference(null as any)).toThrow(
-      'timeDifference: You must have a start time.'
+    expect(() => DateHelper.timeDifference(null as any)).toThrow(
+      'DateHelper.timeDifference: You must have a start time.'
     )
   })
 })
-describe('timeDifferenceString', () => {
+describe('DateHelper.timeDifferenceString', () => {
   test('2s', () => {
     const startDate = new Date()
     const endDate = new Date(+startDate)
 
     endDate.setSeconds(endDate.getSeconds() - 2)
-    const str = timeDifferenceString(startDate, endDate)
+    const str = DateHelper.timeDifferenceString(startDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2s')
@@ -321,7 +315,7 @@ describe('timeDifferenceString', () => {
     const endDate = new Date(+startDate)
 
     endDate.setHours(endDate.getHours() + 4)
-    const str = timeDifferenceString(startDate, endDate)
+    const str = DateHelper.timeDifferenceString(startDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('4h')
@@ -332,7 +326,7 @@ describe('timeDifferenceString', () => {
     const endDate = new Date(startDate)
 
     endDate.setDate(endDate.getDate() + 21)
-    const str = timeDifferenceString(startDate, endDate)
+    const str = DateHelper.timeDifferenceString(startDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toMatch(new RegExp('21d( 1h)?'))
@@ -342,7 +336,7 @@ describe('timeDifferenceString', () => {
     const startDate = new Date()
     const endDate = new Date(+startDate + 2000)
 
-    const str = timeDifferenceString(startDate, endDate, true)
+    const str = DateHelper.timeDifferenceString(startDate, endDate, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds')
@@ -352,94 +346,102 @@ describe('timeDifferenceString', () => {
     const startDate = new Date()
     const endDate = new Date(+startDate + 2123)
 
-    const str = timeDifferenceString(startDate, endDate, true, true)
+    const str = DateHelper.timeDifferenceString(startDate, endDate, true, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds, 123ms')
   })
 })
-describe('timeDifferenceStringFromMillis', () => {
+describe('DateHelper.timeDifferenceStringFromMillis', () => {
   test('2s', () => {
-    const str = timeDifferenceStringFromMillis(2000)
+    const str = DateHelper.timeDifferenceStringFromMillis(2000)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2s')
   })
 
   test('2s long format', () => {
-    const str = timeDifferenceStringFromMillis(2000, true)
+    const str = DateHelper.timeDifferenceStringFromMillis(2000, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds')
   })
 
   test('189ms', () => {
-    const str = timeDifferenceStringFromMillis(189)
+    const str = DateHelper.timeDifferenceStringFromMillis(189)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('189ms')
   })
 
   test('189ms long format', () => {
-    const str = timeDifferenceStringFromMillis(189, true)
+    const str = DateHelper.timeDifferenceStringFromMillis(189, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('189ms')
   })
 
   test('58m', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 58)
+    const str = DateHelper.timeDifferenceStringFromMillis(1000 * 60 * 58)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('58m')
   })
 
   test('58m long format', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 58, true)
+    const str = DateHelper.timeDifferenceStringFromMillis(1000 * 60 * 58, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('58 minutes')
   })
 
   test('4h', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 60 * 4)
+    const str = DateHelper.timeDifferenceStringFromMillis(1000 * 60 * 60 * 4)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('4h')
   })
 
   test('4h long format', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 60 * 4, true)
+    const str = DateHelper.timeDifferenceStringFromMillis(
+      1000 * 60 * 60 * 4,
+      true
+    )
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('4 hours')
   })
 
   test('21d', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 60 * 24 * 21)
+    const str = DateHelper.timeDifferenceStringFromMillis(
+      1000 * 60 * 60 * 24 * 21
+    )
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('21d')
   })
 
   test('21d long format', () => {
-    const str = timeDifferenceStringFromMillis(1000 * 60 * 60 * 24 * 21, true)
+    const str = DateHelper.timeDifferenceStringFromMillis(
+      1000 * 60 * 60 * 24 * 21,
+      true
+    )
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('21 days')
   })
 })
 
-test('isDateObject', () => {
-  expect(isDateObject(new Date())).toBe(true)
-  expect(isDateObject(1)).toBe(false)
-  expect(isDateObject(0)).toBe(false)
-  expect(isDateObject('')).toBe(false)
-  expect(isDateObject(new Date('2022'))).toBe(true)
-  expect(isDateObject('2022-10-24')).toBe(false)
-  expect(isDateObject('2022-10-24')).toBe(false)
-  expect(isDateObject(new Date('20'))).toBe(false)
-  expect(isDateObject(new Date(20))).toBe(true)
+test('DateHelper.isDateObject', () => {
+  expect(DateHelper.isDateObject(new Date())).toBe(true)
+  expect(DateHelper.isDateObject(1)).toBe(false)
+  expect(DateHelper.isDateObject(0)).toBe(false)
+  expect(DateHelper.isDateObject('')).toBe(false)
+  expect(DateHelper.isDateObject(new Date('2022'))).toBe(true)
+  expect(DateHelper.isDateObject('2022-10-24')).toBe(false)
+  expect(DateHelper.isDateObject('2022-10-24')).toBe(false)
+  expect(DateHelper.isDateObject(new Date('20'))).toBe(false)
+  expect(DateHelper.isDateObject(new Date(20))).toBe(true)
 })
 
 test('TimeframeToStartOf', () => {

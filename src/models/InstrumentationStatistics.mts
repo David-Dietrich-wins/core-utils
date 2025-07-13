@@ -1,10 +1,5 @@
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
-import {
-  timeDifference,
-  timeDifferenceInSeconds,
-  timeDifferenceString,
-  timeDifferenceStringFromMillis,
-} from '../services/DateHelper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import {
   pluralize,
   pluralSuffix,
@@ -173,17 +168,20 @@ export class InstrumentationStatistics {
   }
 
   get processingTime() {
-    return timeDifference(this.startTime, this.finishTime || new Date())
+    return DateHelper.timeDifference(
+      this.startTime,
+      this.finishTime || new Date()
+    )
   }
   /** Gets the total processing time in seconds. */
   get processingTimeInSeconds() {
-    return timeDifferenceInSeconds(
+    return DateHelper.timeDifferenceInSeconds(
       this.startTime,
       this.finishTime ?? new Date()
     )
   }
   processingTimeString(longFormat: boolean) {
-    return timeDifferenceString(
+    return DateHelper.timeDifferenceString(
       this.startTime,
       this.finishTime ?? new Date(),
       longFormat
@@ -286,7 +284,7 @@ export class InstrumentationStatistics {
       return prev
     }, '')
 
-    msg += ` in ${timeDifferenceStringFromMillis(
+    msg += ` in ${DateHelper.timeDifferenceStringFromMillis(
       this.processingTime,
       true
     )}${suffix}`
@@ -373,7 +371,7 @@ export class InstrumentationStatistics {
     return [
       NumberHelper.NumberToString(this.totalProcessed),
       recordsPerSecond.toFixed(1),
-      timeDifferenceStringFromMillis(this.processingTime, true),
+      DateHelper.timeDifferenceStringFromMillis(this.processingTime, true),
     ]
   }
 

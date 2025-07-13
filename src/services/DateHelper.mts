@@ -15,6 +15,19 @@ export class DateHelper {
   static readonly FormatForUi2DigitYear = 'M/D/YY'
   static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
   static readonly FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a'
+  /**
+   * Checks the date value passed in to see if the variable is a valid Date object.
+   * @param date Any value to test if it is a valid date.
+   * @returns true if the date is valid. false otherwise.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static isDateObject(date: any) {
+    return date &&
+      Object.prototype.toString.call(date) === '[object Date]' &&
+      !isNaN(date)
+      ? true
+      : false
+  }
 
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
@@ -332,125 +345,112 @@ export class DateHelper {
       .add(units, timeframe as unitOfTime.DurationConstructor)
     return newmom.utc().toDate()
   }
-}
 
-/**
- * Checks the date value passed in to see if the variable is a valid Date object.
- * @param date Any value to test if it is a valid date.
- * @returns true if the date is valid. false otherwise.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isDateObject(date: any) {
-  return date &&
-    Object.prototype.toString.call(date) === '[object Date]' &&
-    !isNaN(date)
-    ? true
-    : false
-}
-/**
- * Returns the number of milliseconds between two times.
- * @param startTime The time to begin the diff with.
- * @param endTime The ending time for the diff. If none provided, the current time is used.
- * @returns The absolute value of milliseconds difference between the two times.
- */
+  /**
+   * Returns the number of milliseconds between two times.
+   * @param startTime The time to begin the diff with.
+   * @param endTime The ending time for the diff. If none provided, the current time is used.
+   * @returns The absolute value of milliseconds difference between the two times.
+   */
 
-export function timeDifference(startTime: Date, endTime?: Date) {
-  const fname = 'timeDifference: '
-  if (!startTime) {
-    throw new Error(fname + 'You must have a start time.')
-  }
-
-  if (!endTime) {
-    endTime = new Date()
-  }
-
-  return Math.abs(endTime.getTime() - startTime.getTime())
-}
-/**
- * Returns the number of seconds between two times.
- * @param startTime The time to begin the diff with.
- * @param endTime The ending time for the diff. If none provided, the current time is used.
- * @returns The absolute value of seconds difference between the two times rounded down (even if milliseconds is > 500)
- */
-export function timeDifferenceInSeconds(startTime: Date, endTime?: Date) {
-  return Math.floor(timeDifference(startTime, endTime) / 1000)
-}
-/**
- * Returns the number of seconds or optionally milliseconds, between two times as a string representation.
- * i.e., 5 days 21 hours 59 minutes 35 seconds 889ms, or 5d 21h 59m 35s 889ms. Used mostly for log messages.
- * @param startTime The time to begin the diff with. Usually from a new Date()
- * @param endTime The ending time for the diff. If none provided, the current time is used.
- * @param longFormat True if you want day, hour, minute, and second to be spelled out. False if you want the dhms abbreviations only.
- * @param showMilliseconds True if you want the milliseconds included in the time difference.
- * @returns The absolute value of seconds or milliseconds difference between the two times as a string.
- */
-export function timeDifferenceString(
-  startTime: Date,
-  endTime?: Date,
-  longFormat = false,
-  showMilliseconds = false
-) {
-  return timeDifferenceStringFromMillis(
-    timeDifference(startTime, endTime),
-    longFormat,
-    showMilliseconds
-  )
-}
-/**
- * Returns the number of seconds or optionally milliseconds, between two times as a string representation.
- * i.e., 5 days 21 hours 59 minutes 35 seconds 889ms, or 5d 21h 59m 35s 889ms. Used mostly for log messages.
- * @param millis The time in milliseconds. Usually from new Date().getTime()
- * @param longFormat True if you want day, hour, minute, and second to be spelled out. False if you want the dhms abbreviations only.
- * @param showMilliseconds True if you want the milliseconds included in the time difference.
- * @returns The absolute value of seconds or milliseconds difference between the two times as a string.
- */
-export function timeDifferenceStringFromMillis(
-  millis: number,
-  longFormat = false,
-  showMilliseconds = false,
-  showMillisecondsIfUnderASecond = true
-) {
-  const totalSeconds = Math.floor(millis / 1000)
-  const seconds = totalSeconds % 60
-
-  const totalMinutes = Math.floor(millis / 60000)
-  const minutes = totalMinutes % 60
-  const totalHours = Math.floor(totalSeconds / 3600)
-  const hours = totalHours % 24
-  const days = Math.floor(totalHours / 24)
-
-  let s = ''
-  if (days > 0) {
-    s += longFormat ? `${days} day${pluralSuffix(days)}` : `${days}d`
-  }
-
-  if (hours > 0) {
-    s += longFormat
-      ? `${prefixIfHasData(s)}${hours} hour${pluralSuffix(hours)}`
-      : `${prefixIfHasData(s, ' ')}${hours}h`
-  }
-
-  if (minutes > 0) {
-    s += longFormat
-      ? `${prefixIfHasData(s)}${minutes} minute${pluralSuffix(minutes)}`
-      : `${prefixIfHasData(s, ' ')}${minutes}m`
-  }
-
-  const secondsModulo = seconds % 60
-  if (secondsModulo > 0) {
-    s += longFormat
-      ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(
-          secondsModulo
-        )}`
-      : `${prefixIfHasData(s, ' ')}${secondsModulo}s`
-  }
-
-  if (showMilliseconds || (showMillisecondsIfUnderASecond && millis < 1000)) {
-    const micros = millis % 1000
-    if (micros > 0) {
-      s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${micros % 1000}ms`
+  static timeDifference(startTime: Date, endTime?: Date) {
+    const fname = 'DateHelper.timeDifference: '
+    if (!startTime) {
+      throw new Error(fname + 'You must have a start time.')
     }
-  }
 
-  return safestr(s, longFormat ? '0 seconds' : '0s')
+    if (!endTime) {
+      endTime = new Date()
+    }
+
+    return Math.abs(endTime.getTime() - startTime.getTime())
+  }
+  /**
+   * Returns the number of seconds between two times.
+   * @param startTime The time to begin the diff with.
+   * @param endTime The ending time for the diff. If none provided, the current time is used.
+   * @returns The absolute value of seconds difference between the two times rounded down (even if milliseconds is > 500)
+   */
+  static timeDifferenceInSeconds(startTime: Date, endTime?: Date) {
+    return Math.floor(DateHelper.timeDifference(startTime, endTime) / 1000)
+  }
+  /**
+   * Returns the number of seconds or optionally milliseconds, between two times as a string representation.
+   * i.e., 5 days 21 hours 59 minutes 35 seconds 889ms, or 5d 21h 59m 35s 889ms. Used mostly for log messages.
+   * @param startTime The time to begin the diff with. Usually from a new Date()
+   * @param endTime The ending time for the diff. If none provided, the current time is used.
+   * @param longFormat True if you want day, hour, minute, and second to be spelled out. False if you want the dhms abbreviations only.
+   * @param showMilliseconds True if you want the milliseconds included in the time difference.
+   * @returns The absolute value of seconds or milliseconds difference between the two times as a string.
+   */
+  static timeDifferenceString(
+    startTime: Date,
+    endTime?: Date,
+    longFormat = false,
+    showMilliseconds = false
+  ) {
+    return DateHelper.timeDifferenceStringFromMillis(
+      DateHelper.timeDifference(startTime, endTime),
+      longFormat,
+      showMilliseconds
+    )
+  }
+  /**
+   * Returns the number of seconds or optionally milliseconds, between two times as a string representation.
+   * i.e., 5 days 21 hours 59 minutes 35 seconds 889ms, or 5d 21h 59m 35s 889ms. Used mostly for log messages.
+   * @param millis The time in milliseconds. Usually from new Date().getTime()
+   * @param longFormat True if you want day, hour, minute, and second to be spelled out. False if you want the dhms abbreviations only.
+   * @param showMilliseconds True if you want the milliseconds included in the time difference.
+   * @returns The absolute value of seconds or milliseconds difference between the two times as a string.
+   */
+  static timeDifferenceStringFromMillis(
+    millis: number,
+    longFormat = false,
+    showMilliseconds = false,
+    showMillisecondsIfUnderASecond = true
+  ) {
+    const totalSeconds = Math.floor(millis / 1000)
+    const seconds = totalSeconds % 60
+
+    const totalMinutes = Math.floor(millis / 60000)
+    const minutes = totalMinutes % 60
+    const totalHours = Math.floor(totalSeconds / 3600)
+    const hours = totalHours % 24
+    const days = Math.floor(totalHours / 24)
+
+    let s = ''
+    if (days > 0) {
+      s += longFormat ? `${days} day${pluralSuffix(days)}` : `${days}d`
+    }
+
+    if (hours > 0) {
+      s += longFormat
+        ? `${prefixIfHasData(s)}${hours} hour${pluralSuffix(hours)}`
+        : `${prefixIfHasData(s, ' ')}${hours}h`
+    }
+
+    if (minutes > 0) {
+      s += longFormat
+        ? `${prefixIfHasData(s)}${minutes} minute${pluralSuffix(minutes)}`
+        : `${prefixIfHasData(s, ' ')}${minutes}m`
+    }
+
+    const secondsModulo = seconds % 60
+    if (secondsModulo > 0) {
+      s += longFormat
+        ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(
+            secondsModulo
+          )}`
+        : `${prefixIfHasData(s, ' ')}${secondsModulo}s`
+    }
+
+    if (showMilliseconds || (showMillisecondsIfUnderASecond && millis < 1000)) {
+      const micros = millis % 1000
+      if (micros > 0) {
+        s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${micros % 1000}ms`
+      }
+    }
+
+    return safestr(s, longFormat ? '0 seconds' : '0s')
+  }
 }

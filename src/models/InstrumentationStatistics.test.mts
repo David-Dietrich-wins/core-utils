@@ -1,4 +1,4 @@
-import { timeDifferenceStringFromMillis } from '../services/DateHelper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
@@ -599,7 +599,11 @@ describe('processedTimesArray', () => {
     )
     expect(totalAvgRecordsPerSecond).toBe(avgRecordsPerSecond.toFixed(1))
     expect(totalAvgProcessingTimeString).toBe(
-      timeDifferenceStringFromMillis(secondsToAdvance * 1000, true, true)
+      DateHelper.timeDifferenceStringFromMillis(
+        secondsToAdvance * 1000,
+        true,
+        true
+      )
     )
     // expect(totalAvgProcessingTimeString).toMatch(CONST_DefaultSecondsMs)
   })

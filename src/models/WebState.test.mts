@@ -1,4 +1,4 @@
-import { timeDifferenceString } from '../services/DateHelper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import { IServerState } from './ApplicationState.mjs'
 import { HTTP_Ok } from './AppException.mjs'
 import UserState from './UserState.mjs'
@@ -17,7 +17,7 @@ const TestConfig = {
       state: 1,
       startTime,
       statusCode: HTTP_Ok,
-      uptime: timeDifferenceString(startTime),
+      uptime: DateHelper.timeDifferenceString(startTime),
     }
 
     return server
