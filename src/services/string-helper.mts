@@ -76,12 +76,8 @@ export function isString(obj: unknown, minlength = 0): obj is string {
  * @param ifEmpty If the string is empty(including ""), return this value. Defaults to "".
  * @returns A guaranteed string. Returns ifEmpty if the string does not have data, or "" if an ifEmpty value is not provided.
  */
-export function safestr(s?: string | null, ifEmpty = '') {
-  if (hasData(s) && s) {
-    return s
-  }
-
-  return hasData(ifEmpty) ? ifEmpty : ''
+export function safestr(...s: (string | null | undefined)[]) {
+  return s.find(hasData) || ''
 }
 
 /**

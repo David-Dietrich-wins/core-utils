@@ -52,12 +52,14 @@ test('capitalizeWords', () => {
     'Hello World! How Are You?'
   )
 })
+
 test('safestr', () => {
   expect(safestr(undefined)).toBe('')
   expect(safestr(null)).toBe('')
   expect(safestr('')).toBe('')
   expect(safestr('', 'test')).toBe('test')
   expect(safestr('test')).toBe('test')
+  expect(safestr('', null, undefined, '', 'test', undefined)).toBe('test')
 })
 
 describe('strings', () => {
