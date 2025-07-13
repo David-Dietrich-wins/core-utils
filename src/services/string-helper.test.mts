@@ -60,6 +60,35 @@ test('safestr', () => {
   expect(safestr('', 'test')).toBe('test')
   expect(safestr('test')).toBe('test')
   expect(safestr('', null, undefined, '', 'test', undefined)).toBe('test')
+
+  expect(safestr({})).toBe('')
+  expect(safestr([])).toBe('')
+  expect(safestr([1])).toBe('[1]')
+
+  expect(safestr({ a: 'a', b: 'b' })).toBe('{"a":"a","b":"b"}')
+  expect(safestr(['a', 'b'])).toBe('["a","b"]')
+  expect(safestr(24)).toBe('24')
+  expect(safestr(24000000000000000n)).toBe('24000000000000000')
+  expect(safestr(true)).toBe('true')
+  expect(safestr([{ a: 'a', b: 'b' }])).toBe('[{"a":"a","b":"b"}]')
+  expect(safestr([{ a: 'a', b: 'b' }, { c: 'c' }])).toBe(
+    '[{"a":"a","b":"b"},{"c":"c"}]'
+  )
+
+  const symbol1 = Symbol('description')
+  expect(safestr(symbol1)).toBe('Symbol(description)')
+  expect(safestr({ [symbol1]: 'abc' })).toBe('') // Symbols do not contain values for JSON serialization
+  expect(safestr(JSON.stringify({ [symbol1]: 'abc' }))).toBe('{}') // Symbols do not contain values for JSON serialization
+  expect(safestr(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe('') // Symbols do not contain values for JSON serialization
+  expect(safestr({ symbol1: 'abc' })).toBe('{"symbol1":"abc"}')
+  expect(safestr([symbol1])).toBe('[null]')
+
+  const symbolUnique: unique symbol = Symbol()
+  expect(safestr(symbolUnique)).toBe('Symbol()')
+  expect(safestr({ [symbolUnique]: 'abc' })).toBe('') // Unique symbols cannot be serialized
+  expect(safestr({ symbolUnique: 'abc' })).toBe('{"symbolUnique":"abc"}')
+  expect(safestr([symbolUnique])).toBe('[null]')
+  expect(safestr([Symbol('test')])).toBe('[null]')
 })
 
 describe('strings', () => {

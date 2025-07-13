@@ -70,13 +70,27 @@ export function isString(obj: unknown, minlength = 0): obj is string {
 }
 
 /**
- * Tests if a string has data (is not undefined, null or empty string).
- * The first string that is not empty is returned. If all strings are empty, then an empty string is returned.
- * @param s Any variable number of strings to check for truthy data. The first string that is not null, undefined or "" is returned.
- * @returns A guaranteed string. Returns the first truthy from the variable list of arguments. If there are no truthy values, an empty string is returned.
+ * Tests if any of a variable argument list has data and returns the first truthy item (is not undefined, null or empty string, not 0, empty array, object, ...).
+ * The first item that is truthy is returned as a string. If all arguments are empty, then an empty string is returned.
+ * @param s Any variable number of data types to check for truthy data. The first data type that is not null, undefined or falsy is returned.
+ * @returns A guaranteed string. Returns the first truthy value from the variable list of arguments as a string. If there are no truthy values, an empty string is returned.
  */
-export function safestr(...s: (string | null | undefined)[]) {
-  return s.find(hasData) || ''
+export function safestr(...s: unknown[]): string {
+  const ret = s.find((x) => hasData(x))
+
+  if (!ret) {
+    return ''
+  }
+
+  if (isString(ret)) {
+    return ret
+  }
+
+  if (isObject(ret) || isArray(ret)) {
+    return JSON.stringify(ret)
+  }
+
+  return String(ret)
 }
 
 /**
@@ -111,12 +125,12 @@ export function safestrToJson<T>(
 }
 
 /**
- * Returns a guaranteed valid string to be trimmed.
- * @param s A string to set to lowercase. If null or undefined, empty string is returned.
+ * Returns a guaranteed valid string that is trimmed. If all strings are empty, null or undefined, then an empty string is returned.
+ * @param s A string to set to trim. If null or undefined, empty string is returned.
  * @returns A guaranteed string to be nonnull and trimmed.
  */
-export function safestrTrim(s?: string | null, ifEmpty = '') {
-  return safestr(s, ifEmpty).trim()
+export function safestrTrim(...s: (string | null | undefined)[]) {
+  return safestr(...safeArray(s).map((x) => safestr(x).trim()))
 }
 
 /**

@@ -5,6 +5,7 @@ import {
   getPercentChange,
   getPercentChangeString,
   hasData,
+  isSymbol,
   newGuid,
   sortFunction,
   toHex,
@@ -222,10 +223,26 @@ test('hasData', () => {
   expect(hasData(undefined)).toBe(false)
   expect(hasData(null)).toBe(false)
   expect(hasData('')).toBe(false)
+  expect(hasData('a')).toBe(true)
+  expect(hasData('a', 0)).toBe(false)
   expect(hasData([])).toBe(false)
+  expect(hasData([], 0)).toBe(false)
+  expect(hasData([], -1)).toBe(false)
+  expect(hasData([1], -1)).toBe(false) // Must be greater than 0
   expect(hasData({})).toBe(false)
+  expect(hasData({}, undefined)).toBe(false)
+  expect(hasData({}, null as unknown as number)).toBe(false)
+  expect(hasData({ a: -1 }, -1)).toBe(false)
+  expect(hasData({ a: -1 }, 0)).toBe(false)
+  expect(hasData({ a: -1 }, 1)).toBe(true)
+  expect(hasData({ a: -1 }, 2)).toBe(false)
+  expect(hasData(0)).toBe(false)
+  expect(hasData(-1)).toBe(false)
+  expect(hasData(-10, -20)).toBe(true)
+  expect(hasData(1)).toBe(true)
 
-  expect(hasData(['a'], 0)).toBe(true)
+  expect(hasData(['a'], -1)).toBe(false)
+  expect(hasData(['a'], 0)).toBe(false)
   expect(hasData(['a'], 1)).toBe(true)
   expect(hasData(['a'], 2)).toBe(false)
 
@@ -241,6 +258,56 @@ test('hasData', () => {
   ).toBe(false)
 
   expect(hasData(new Date(), 0)).toBe(true)
+  expect(hasData(new Date(), 1)).toBe(true)
+  expect(hasData(new Date(), -1)).toBe(true)
+
+  const sym = Symbol('test')
+  expect(hasData(sym, 0)).toBe(false)
+  expect(hasData(sym, 1)).toBe(true)
+  expect(hasData(sym, 2)).toBe(false)
+  const symbol1 = Symbol('description')
+  expect(hasData(symbol1)).toBe(true)
+  expect(hasData({ [symbol1]: 'abc' })).toBe(false) // Symbols do not contain values for JSON serialization
+  expect(hasData({ symbol1: 'abc' })).toBe(true)
+  expect(hasData([symbol1])).toBe(true)
+  expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true) // Symbols do not contain values for JSON serialization
+  expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(false) // Symbols do not contain values for JSON serialization
+
+  const symbolUnique: unique symbol = Symbol()
+  expect(hasData(symbolUnique)).toBe(true)
+  expect(hasData([symbolUnique])).toBe(true)
+  expect(hasData(Symbol('test'))).toBe(true)
+  expect(hasData([Symbol('test')])).toBe(true)
+  expect(hasData({ [symbolUnique]: 'abc' })).toBe(false) // Unique symbols cannot be serialized
+  expect(hasData({ symbolUnique: 'abc' })).toBe(true)
+})
+
+test('isSymbol', () => {
+  expect(isSymbol(Symbol('test'))).toBe(true)
+  expect(isSymbol('test')).toBe(false)
+  expect(isSymbol(123)).toBe(false)
+  expect(isSymbol({})).toBe(false)
+  expect(isSymbol([])).toBe(false)
+  expect(isSymbol(undefined)).toBe(false)
+  expect(isSymbol(null)).toBe(false)
+  expect(isSymbol(new Date())).toBe(false)
+  expect(isSymbol(() => {})).toBe(false)
+  expect(isSymbol(Symbol.for('test'))).toBe(true)
+  expect(isSymbol(Symbol.iterator)).toBe(true)
+  expect(isSymbol(Symbol.asyncIterator)).toBe(true)
+  expect(isSymbol(Symbol.hasInstance)).toBe(true)
+  expect(isSymbol(Symbol.isConcatSpreadable)).toBe(true)
+  expect(isSymbol(Symbol.match)).toBe(true)
+  expect(isSymbol(Symbol.replace)).toBe(true)
+  expect(isSymbol(Symbol.search)).toBe(true)
+  expect(isSymbol(Symbol.species)).toBe(true)
+  expect(isSymbol(Symbol.split)).toBe(true)
+  expect(isSymbol(Symbol.toPrimitive)).toBe(true)
+  expect(isSymbol(Symbol.toStringTag)).toBe(true)
+  expect(isSymbol(Symbol.unscopables)).toBe(true)
+  expect(isSymbol(Symbol.asyncDispose)).toBe(true)
+  expect(isSymbol(Symbol.dispose)).toBe(true)
+  expect(isSymbol(Symbol.metadata)).toBe(false)
 })
 
 test('getPercentChangeString', () => {

@@ -111,16 +111,15 @@ export function getPercentChangeString(
  * @param minlength The required minimum length to consider to have data. If not supplied, defaults to 1.
  * @returns True if the object meets the minimum length requirements.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function hasData(o?: any | null, minlength = 1) {
+export function hasData(o: unknown, minlength = 1): boolean {
   // console.log('minlength: ' + minlength + ', o: ' + o)
   try {
     if (!o) {
       return false
     }
 
-    if (!minlength) {
-      minlength = 1
+    if (isNullOrUndefined(minlength)) {
+      throw new Error('Minimum length cannot be null or undefined.')
     }
 
     if (isFunction(o)) {
@@ -128,20 +127,52 @@ export function hasData(o?: any | null, minlength = 1) {
     }
 
     if (isString(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for string comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
       return o.length >= minlength
     }
 
     if (isArray(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for array comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
       return o.length >= minlength
     }
 
     // Primitives cannot have more than 1 by definition of not being an array or object.
     if (!isObject(o)) {
-      return o >= minlength
+      if (isSymbol(o)) {
+        return minlength === 1
+      }
+
+      if (isNumber(o)) {
+        return o >= minlength
+      }
+
+      return !!o
     }
 
     if (DateHelper.isDateObject(o)) {
       return (o as Date).getTime() >= minlength
+    }
+
+    if (minlength < 1) {
+      throw new AppException(
+        'Minimum length for object comparisons must be greater than 0.',
+        'hasData',
+        o
+      )
     }
 
     return isArray(Object.keys(o), minlength)
@@ -177,6 +208,10 @@ export function isFunction(obj: unknown) {
  */
 export function isNullOrUndefined(obj: unknown): obj is undefined | null {
   return 'undefined' === typeof obj || null == obj
+}
+
+export function isSymbol(value: unknown): value is symbol {
+  return typeof value === 'symbol'
 }
 
 /**
