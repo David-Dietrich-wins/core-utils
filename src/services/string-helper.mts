@@ -71,10 +71,9 @@ export function isString(obj: unknown, minlength = 0): obj is string {
 
 /**
  * Tests if a string has data (is not undefined, null or empty string).
- * If the string is empty, then the ifEmpty value is returned.
- * @param s A string to check for data.
- * @param ifEmpty If the string is empty(including ""), return this value. Defaults to "".
- * @returns A guaranteed string. Returns ifEmpty if the string does not have data, or "" if an ifEmpty value is not provided.
+ * The first string that is not empty is returned. If all strings are empty, then an empty string is returned.
+ * @param s Any variable number of strings to check for truthy data. The first string that is not null, undefined or "" is returned.
+ * @returns A guaranteed string. Returns the first truthy from the variable list of arguments. If there are no truthy values, an empty string is returned.
  */
 export function safestr(...s: (string | null | undefined)[]) {
   return s.find(hasData) || ''
