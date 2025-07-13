@@ -1,6 +1,12 @@
+import { jest } from '@jest/globals'
 import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
-import { AppExceptionHttp, AppExceptionHttpNotFound } from './AppException.mjs'
+import {
+  AppException,
+  AppExceptionHttp,
+  AppExceptionHttpNotFound,
+} from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { IPagedResponse, PagedResponse } from './PagedResponse.mjs'
 
 const CONST_DefaultError = 'Error'
 const CONST_DefaultErrorResponseCode = -1
@@ -515,4 +521,131 @@ test('CreateFromIApiResponse', () => {
   expect(ret.stats.failures).toBe(0)
   expect(ret.stats.successes).toBe(0)
   expect(ret.stats.totalProcessed).toBe(0)
+})
+
+test('ErrorHandler', async () => {
+  const fname = 'test-ErrorHandler'
+
+  const location = {
+    href: 'http://localhost',
+    pathname: '/test',
+    search: '?query=1',
+  }
+
+  let ret = ApiResponse.ErrorHandler(
+    fname,
+    new Error('error message'),
+    location
+  )
+  expect(ret).toBe(false)
+
+  ret = ApiResponse.ErrorHandler(
+    fname,
+    new AppExceptionHttp('error message', 'test', 402),
+    location
+  )
+  expect(ret).toBe(false)
+
+  ret = ApiResponse.ErrorHandler(
+    fname,
+    new AppExceptionHttp('error message', 'test', 403),
+    location
+  )
+  expect(ret).toBe(true)
+
+  ret = ApiResponse.ErrorHandler(
+    fname,
+    new AppExceptionHttp('error message', 'test', 403),
+    location
+  )
+  jest.advanceTimersByTime(200)
+  expect(ret).toBe(true)
+  expect(location).toMatchObject({
+    href: '/login?callbackUrl=%2Ftest%3Fquery%3D1',
+    pathname: '/test',
+    search: '?query=1',
+  })
+})
+
+test('VerifySuccess', () => {
+  const fname = 'test-VerifySuccess'
+  const ret = new ApiResponse('data', CONST_success, 'message', 200)
+
+  const data = ApiResponse.VerifySuccess(fname, ret)
+  expect(data).toBe('data')
+
+  expect(() => {
+    ApiResponse.VerifySuccess(fname, new ApiResponse('', 'error', '', 500))
+  }).toThrow(new Error('Bad result from API call: error.'))
+
+  expect(() => {
+    ApiResponse.VerifySuccess(
+      fname,
+      new ApiResponse('', CONST_success, '', 200),
+      true
+    )
+  }).not.toThrow()
+
+  expect(() => {
+    ApiResponse.VerifySuccess(
+      fname,
+      new ApiResponse('', 'success', '', 200),
+      false
+    )
+  }).toThrow(new AppException('No data returned', fname))
+})
+
+test('VerifySuccessPagedResponse', () => {
+  const fname = 'test-VerifySuccessPagedResponse'
+  const ret = new ApiResponse<IPagedResponse<string>>(
+    { dataPage: [], totalCount: 0 },
+    CONST_success,
+    'message',
+    200
+  )
+
+  const data = ApiResponse.VerifySuccessPagedResponse(fname, ret)
+  expect(data).toBeInstanceOf(PagedResponse)
+  expect(data.dataPage).toEqual([])
+  expect(data.totalCount).toBe(0)
+
+  expect(() => {
+    ApiResponse.VerifySuccessPagedResponse(
+      fname,
+      new ApiResponse<IPagedResponse<string>>(
+        {
+          dataPage: [],
+          totalCount: 0,
+        },
+        'error',
+        '',
+        500
+      )
+    )
+  }).toThrow(new Error('Bad result from API call: error.'))
+
+  expect(() => {
+    ApiResponse.VerifySuccessPagedResponse(
+      fname,
+      new ApiResponse<IPagedResponse<string>>(
+        undefined as unknown as IPagedResponse<string>,
+        'error',
+        '',
+        500
+      )
+    )
+  }).toThrow(new Error('Bad result from API call: error.'))
+
+  expect(() => {
+    ApiResponse.VerifySuccessPagedResponse(
+      fname,
+      new ApiResponse<IPagedResponse<string>>(
+        undefined as unknown as IPagedResponse<string>,
+        'success',
+        '',
+        200
+      ),
+      false
+    )
+  }).toThrow(new AppException('No data returned', fname))
 })
