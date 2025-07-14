@@ -4,7 +4,6 @@ import {
   AnyRecord,
   SortOrder,
   SortOrderAsBoolean,
-  StringOrStringArray,
 } from '../models/types.mjs'
 import { safeArray, isArray } from './array-helper.mjs'
 import { hasData, sortFunction } from './general.mjs'
@@ -15,6 +14,7 @@ import {
   safestr,
   safestrLowercase,
   safestrTrim,
+  StringHelper,
 } from './string-helper.mjs'
 
 export type ISearchRequestView = z.infer<
@@ -48,18 +48,18 @@ export class SearchRequestView implements ISearchRequestView {
   searchColumns?: ISearchRequestView['searchColumns']
   where?: SearchWhere
 
-  term = ''
-  sortColumn = ''
-  sortDirection: SortOrder = 1
-  limit = 0
-  offset = 0
-  exactMatch = false
+  term: ISearchRequestView['term'] = ''
+  sortColumn: ISearchRequestView['sortColumn'] = ''
+  sortDirection: ISearchRequestView['sortDirection'] = 1
+  limit: ISearchRequestView['limit'] = 0
+  offset: ISearchRequestView['offset'] = 0
+  exactMatch: ISearchRequestView['exactMatch'] = false
 
-  pageIndex = 0
-  pageSize = 0
+  pageIndex: ISearchRequestView['pageIndex'] = 0
+  pageSize: ISearchRequestView['pageSize'] = 0
 
   constructor(
-    term?: StringOrStringArray | object, // Search term
+    term?: ISearchRequestView['term'] | object, // Search term
     sortColumn = '', // ORDER BY column
     sortDirection: SortOrder = 1, // ORDER BY direction
     limit = 0, // LIMIT the result set to # of rows
@@ -72,7 +72,7 @@ export class SearchRequestView implements ISearchRequestView {
       // Do this to ensure no extra properties are passed in.
       Object.assign(this, SearchRequestView.zSearchRequestView.parse(term))
     } else {
-      this.term = safestr(term)
+      this.term = isArray(term) ? safeArray(term) : safestr(term)
       this.sortColumn = sortColumn
       this.sortDirection = sortDirection
       this.limit = limit
@@ -144,15 +144,17 @@ export class SearchRequestView implements ISearchRequestView {
       ret = ret.filter((x) => {
         let found = false
 
-        searchColumns.forEach((sc) => {
-          if (!found && x[sc]) {
+        searchColumns.forEach((scol) => {
+          if (!found && x[scol]) {
             const s =
-              isString(x[sc]) && lowerCaseSearch
-                ? safestrLowercase(x[sc])
-                : x[sc]
+              isString(x[scol]) && lowerCaseSearch
+                ? safestrLowercase(x[scol])
+                : x[scol]
 
             found =
-              this.exactMatch || !isString(s) ? lterm === s : s.includes(lterm)
+              this.exactMatch || !isString(s)
+                ? lterm === s
+                : StringHelper.IncludesAnyFromArray(s, safeArray(lterm))
           }
         })
 
@@ -255,10 +257,11 @@ export class SearchRequestView implements ISearchRequestView {
         .default(1),
 
       term: z
-        .string()
-        .max(SearchRequestView.TermMaxLength)
-        .or(z.array(z.string().max(SearchRequestView.TermMaxLength)))
-        .optional(),
+        .union([
+          z.string().max(SearchRequestView.TermMaxLength),
+          z.array(z.string().max(SearchRequestView.TermMaxLength)),
+        ])
+        .default(''),
     })
 
     return schema

@@ -75,22 +75,22 @@ export function isString(obj: unknown, minlength = 0): obj is string {
  * @param s Any variable number of data types to check for truthy data. The first data type that is not null, undefined or falsy is returned.
  * @returns A guaranteed string. Returns the first truthy value from the variable list of arguments as a string. If there are no truthy values, an empty string is returned.
  */
-export function safestr(...s: unknown[]): string {
-  const ret = s.find((x) => hasData(x))
+export function safestr(...args: unknown[]): string {
+  for (const arg of args) {
+    if (hasData(arg)) {
+      if (isString(arg)) {
+        return arg
+      }
 
-  if (!ret) {
-    return ''
+      if (isObject(arg) || isArray(arg)) {
+        return JSON.stringify(arg)
+      }
+
+      return String(arg)
+    }
   }
 
-  if (isString(ret)) {
-    return ret
-  }
-
-  if (isObject(ret) || isArray(ret)) {
-    return JSON.stringify(ret)
-  }
-
-  return String(ret)
+  return ''
 }
 
 /**
@@ -562,5 +562,12 @@ export class StringHelper {
     )
 
     return trimmed.map((item) => parseInt(item, 10))
+  }
+
+  static IncludesAnyFromArray(
+    mainString: string,
+    substrings: string[]
+  ): boolean {
+    return substrings.some((substring) => mainString.includes(substring))
   }
 }
