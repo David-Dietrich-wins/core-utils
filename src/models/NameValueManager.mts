@@ -148,13 +148,12 @@ export class NameValueLineFormatManager<T extends object> {
       const nvlf = this.nvlist.find((x) => x.key === item.name)
 
       if (nvlf) {
-        if (!isNullOrUndefined(nvlf.order)) {
-          ordered.push(Object.assign(item, { order: nvlf.order }))
-        } else {
+        if (isNullOrUndefined(nvlf.order)) {
           const im = itemMapper(item)
-          if (im) {
-            unordered.push(im)
-          }
+
+          unordered.push(im)
+        } else {
+          ordered.push(Object.assign(item, { order: nvlf.order }))
         }
       }
     })
