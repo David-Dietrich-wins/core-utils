@@ -20,6 +20,23 @@ test('constructor string', () => {
   expect(searchRequestView.exactMatch).toBe(true)
 })
 
+test('constructor term array', () => {
+  const searchRequestView = new SearchRequestView(
+    ['test', 'abc'],
+    'column',
+    'asc',
+    10,
+    0,
+    true
+  )
+  expect(searchRequestView.term).toEqual(['test', 'abc'])
+  expect(searchRequestView.sortColumn).toBe('column')
+  expect(searchRequestView.sortDirection).toBe('asc')
+  expect(searchRequestView.limit).toBe(10)
+  expect(searchRequestView.offset).toBe(0)
+  expect(searchRequestView.exactMatch).toBe(true)
+})
+
 test('constructor object', () => {
   const isrv: ISearchRequestView = {
     term: 'test',
