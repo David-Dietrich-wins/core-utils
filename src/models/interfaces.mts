@@ -30,6 +30,13 @@ export interface IValue<T> {
   value: T
 }
 
+export interface INameType<TType = string> extends IName, IType<TType> {}
+export interface INameTypeValue<TValue = string, TType = string>
+  extends IName,
+    IType<TType>,
+    IValue<TValue> {}
+export interface INameValue<Tvalue = string> extends IName, IValue<Tvalue> {}
+
 export const zJwt = z.object({
   jwt: z.string().min(1).max(5000),
 })

@@ -1,13 +1,8 @@
 import { safeArray } from '../services/array-helper.mjs'
+import { isNullOrUndefined, sortFunction } from '../services/general.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { IName, IType, IValue } from './interfaces.mjs'
-
-export interface INameType<TType = string> extends IName, IType<TType> {}
-export interface INameTypeValue<TValue = string, TType = string>
-  extends IName,
-    IType<TType>,
-    IValue<TValue> {}
-export interface INameValue<Tvalue = string> extends IName, IValue<Tvalue> {}
+import { INameTypeValue, INameValue } from './interfaces.mjs'
 
 export class NameValue<Tvalue = string> implements INameValue<Tvalue> {
   name: string
@@ -72,5 +67,117 @@ export class NameValueManager<TValue = string> {
     }
 
     return item
+  }
+}
+
+export class NameValueWithStyle {
+  constructor(
+    public name: string,
+    public value?: string | number,
+    public style?: object,
+    public tooltip?: string,
+    public order?: number
+  ) {}
+}
+
+type StyleFormatter = (
+  val: number | bigint | string | null | undefined,
+  showZeroValues: boolean,
+  numDecimalPlaces: number
+) => string
+
+export class NameValueLineFormatter<T extends object> {
+  constructor(
+    public key: keyof T,
+    public keyDisplayValue: string,
+    public order?: number,
+    public formatter?: StyleFormatter,
+    public tooltip?: string,
+    public style?: object,
+    public formatNumberOrString?: (
+      val: number | string | null | undefined
+    ) => string
+  ) {}
+
+  FromStyle(
+    name: string,
+    value: number | string | undefined,
+    showZeroValues = true,
+    numDecimalPlaces = 2
+  ) {
+    return new NameValueWithStyle(
+      this.keyDisplayValue,
+      this.formatter
+        ? this.formatter(value, showZeroValues, numDecimalPlaces)
+        : value,
+      this.style,
+      this.tooltip
+    )
+  }
+
+  NumberOrString(name: string, value: number | string | undefined) {
+    return new NameValueWithStyle(
+      this.keyDisplayValue,
+      this.formatNumberOrString ? this.formatNumberOrString(value) : value,
+      this.style,
+      this.tooltip
+    )
+  }
+}
+
+export class NameValueLineFormatManager<T extends object> {
+  constructor(public nvlist: NameValueLineFormatter<T>[] = []) {}
+
+  FormatWithStyle(data: NameValue[], sortField?: string, sortDirection = true) {
+    const itemMapper = (item: NameValueWithStyle) => {
+      const nvlf = this.nvlist.find((x) => x.key === item.name)
+
+      return nvlf?.FromStyle
+        ? nvlf.FromStyle(item.name, item.value)
+        : new NameValueWithStyle(
+            item.name,
+            item.value,
+            nvlf?.style,
+            nvlf?.tooltip
+          )
+    }
+
+    const ordered: NameValueWithStyle[] = []
+    const unordered: NameValueWithStyle[] = []
+    safeArray(data).forEach((item) => {
+      const nvlf = this.nvlist.find((x) => x.key === item.name)
+
+      if (nvlf) {
+        if (!isNullOrUndefined(nvlf.order)) {
+          ordered.push(Object.assign(item, { order: nvlf.order }))
+        } else {
+          const im = itemMapper(item)
+          if (im) {
+            unordered.push(im)
+          }
+        }
+      }
+    })
+
+    if ('name' === safestrLowercase(sortField)) {
+      unordered.sort((a, b) => sortFunction(a.name, b.name, sortDirection))
+    } else if ('value' === safestrLowercase(sortField)) {
+      unordered.sort((a, b) => sortFunction(a.value, b.value, sortDirection))
+    }
+
+    return ordered
+      .sort((a, b) => sortFunction(a.order, b.order, sortDirection))
+      .map(itemMapper)
+      .concat(unordered)
+  }
+
+  FromObject(obj?: object, sortField?: string, sortDirection = true) {
+    return this.FormatWithStyle(
+      Object.entries(obj || {}).map(
+        ([key, value]) => new NameValue(key, value)
+      ),
+      sortField,
+      sortDirection
+    )
   }
 }

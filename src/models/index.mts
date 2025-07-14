@@ -11,7 +11,25 @@ export * from './InstrumentationStatistics.mjs'
 export * from './interfaces.mjs'
 export * from './key-val.mjs'
 export * from './NameValManager.mjs'
-export * from './NameValueManager.mjs'
+
+export {
+  NameValue,
+  NameValueLineFormatter,
+  NameValueLineFormatManager,
+  NameValueManager,
+  NameValueType,
+  NameValueWithStyle,
+} from './NameValueManager.mjs'
+
+export type {
+  INameValueBoolean,
+  INameValueNumber,
+  NameValueAsType,
+  NameValueBoolean,
+  NameValueNumber,
+  NameValueString,
+} from './NameValueManager.mjs'
+
 export * from './PagedResponse.mjs'
 export * from './ticker-info.mjs'
 export * from './types.mjs'

@@ -12,10 +12,10 @@
     "clean": "npm run clean:files && npm install",
     "clean:files": "rimraf .next _next build dist lib node_modules out package-lock.json pnpm-lock.yaml yarn.lock",
     "lint": "eslint ./src/ --fix",
-    "test:watch": "jest --watch",
-    "test2": "jest --coverage",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test2": "jest --coverage",
     "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
+    "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

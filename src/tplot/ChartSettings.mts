@@ -159,16 +159,11 @@ export class ChartSettings implements IChartSettings {
    * If startDate and endDate are provided, period should not be provided.
    */
   startDate?: number
-  #_startMoment?: Moment
-  #_startMillis?: number
-
   /**
    * End date as milliseconds since epoch. If startDate and endDate are provided,
    * period should not be provided. Default is previous trading day.
    */
   endDate?: number
-  #_endMoment?: Moment
-  #_endMillis?: number
 
   constructor(
     ticker: string,
@@ -192,24 +187,39 @@ export class ChartSettings implements IChartSettings {
 
     if (startDate) {
       this.startDate = startDate
-      this.#_startMoment = moment.unix(startDate)
-
-      // this.#_startMoment = this.#_startMoment.startOf('day');
-
-      this.#_startMillis = this.#_startMoment.valueOf()
     }
+
     if (endDate) {
       this.endDate = endDate
-      this.#_endMoment = moment.unix(endDate)
-
-      // this.#_endMoment = this.#_endMoment.endOf('day');
-
-      this.#_endMillis = this.#_endMoment.valueOf()
     }
 
     if (extendedHoursTrading) {
       this.extendedHoursTrading = extendedHoursTrading
     }
+  }
+
+  /** The start date as a Moment object */
+  get startMoment() {
+    if (this.startDate) {
+      return moment.unix(this.startDate / 1000)
+    }
+  }
+
+  /** The start date as milliseconds since epoch */
+  get startMillis() {
+    return this.startMoment?.valueOf()
+  }
+
+  /** The end date as a Moment object */
+  get endMoment() {
+    if (this.endDate) {
+      return moment.unix(this.endDate / 1000)
+    }
+  }
+
+  /** The end date as milliseconds since epoch */
+  get endMillis() {
+    return this.endMoment?.valueOf()
   }
 
   static Create(overrides?: Partial<IChartSettings>) {
@@ -458,20 +468,6 @@ export class ChartSettings implements IChartSettings {
   }
   get endDateAsDate() {
     return this.endMoment?.toDate()
-  }
-
-  get startMillis() {
-    return this.#_startMillis
-  }
-  get endMillis() {
-    return this.#_endMillis
-  }
-
-  get startMoment() {
-    return this.#_startMoment
-  }
-  get endMoment() {
-    return this.#_endMoment
   }
 
   static periodWithTypeString(period: number, periodType: string) {

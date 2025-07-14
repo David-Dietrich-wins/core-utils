@@ -16,7 +16,7 @@ test('ChartPlotReturn', () => {
 })
 
 test('constructor', () => {
-  let cs = new ChartSettings('AAPL')
+  const cs = new ChartSettings('AAPL')
 
   expect(cs).toMatchObject({
     endDate: undefined,
@@ -266,10 +266,10 @@ test('debugMessage', () => {
 
   expect(cs.debugMessage).toBe('Daily')
 
-  cs.startDate = +new Date('2025-01-01')
-  cs.endDate = +new Date('2026-01-01')
+  cs.startDate = +DateHelper.LocalToUtc('2025-01-01')
+  cs.endDate = +DateHelper.LocalToUtc('2026-01-01')
 
-  expect(cs.debugMessage).toBe('Daily from 2025-12-01 to 2025-12-01')
+  expect(cs.debugMessage).toBe('Daily from 2025-01-01 to 2026-01-01')
 })
 
 test('oneMinute', () => {
