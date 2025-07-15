@@ -2,6 +2,7 @@ import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { pluralSuffix, prefixIfHasData, safestr } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { isNullOrUndefined } from './general.mjs'
 
 export class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
@@ -27,6 +28,14 @@ export class DateHelper {
       !isNaN(date)
       ? true
       : false
+  }
+
+  static VerifyDateOrNowIfInvalid(
+    date: Date | string | number | null | undefined
+  ) {
+    const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
+
+    return dateClean
   }
 
   /**
@@ -110,6 +119,23 @@ export class DateHelper {
     )
   }
 
+  static FormatLocaleDateString = (
+    date?: Date | string | number | null,
+    locale = 'en-US'
+  ) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }
+
+    const now = DateHelper.VerifyDateOrNowIfInvalid(date).toLocaleDateString(
+      locale,
+      options
+    )
+
+    return now
+  }
   static Midnight(date: Date | string | null | undefined) {
     if (date) {
       if (isString(date)) {
