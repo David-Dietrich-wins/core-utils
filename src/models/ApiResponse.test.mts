@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
+import { ApiResponse, IApiResponse, type IStatus } from './ApiResponse.mjs'
 import {
   AppException,
   AppExceptionHttp,
@@ -648,4 +648,312 @@ test('VerifySuccessPagedResponse', () => {
       false
     )
   }).toThrow(new AppException('No data returned', fname))
+})
+
+test('IsStatus', () => {
+  const obj: IStatus = {}
+
+  expect(ApiResponse.IsStatus(obj)).toBe(false)
+
+  obj.status = 500
+  expect(ApiResponse.IsStatus(obj)).toBe(true)
+
+  obj.statusText = 'Internal Server Error'
+  expect(ApiResponse.IsStatus(obj)).toBe(true)
+
+  obj.status = 0
+  expect(ApiResponse.IsStatus(obj)).toBe(true)
+
+  obj.status = undefined
+  expect(ApiResponse.IsStatus(obj)).toBe(true)
+
+  obj.statusText = undefined
+  expect(ApiResponse.IsStatus(obj)).toBe(true)
+})
+
+test('IsApiResponse', () => {
+  expect(ApiResponse.IsApiResponse({})).toBe(false)
+  expect(ApiResponse.IsApiResponse(null)).toBe(false)
+  expect(ApiResponse.IsApiResponse(undefined)).toBe(false)
+  expect(ApiResponse.IsApiResponse('')).toBe(false)
+  expect(ApiResponse.IsApiResponse(123)).toBe(false)
+  expect(ApiResponse.IsApiResponse([])).toBe(false)
+  expect(ApiResponse.IsApiResponse({ id: 123 })).toBe(false)
+  expect(ApiResponse.IsApiResponse({ id: 123, ts: Date.now() })).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({ id: 123, ts: Date.now(), result: '' })
+  ).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+    })
+  ).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+      responseCode: 0,
+    })
+  ).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+      responseCode: 0,
+      data: '',
+    })
+  ).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+      responseCode: 0,
+      data: '',
+      stats: new InstrumentationStatistics(),
+    })
+  ).toBe(true)
+
+  const obj: IApiResponse = {
+    id: 123,
+    ts: Date.now(),
+    result: '',
+    message: '',
+    responseCode: 0,
+    data: '',
+    stats: new InstrumentationStatistics(),
+  }
+
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.result = 'success'
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.message = 'message'
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.result = CONST_DefaultError
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.ts = Date.now()
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.responseCode = 200
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.data = { some: 'data' }
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+
+  obj.result = CONST_success
+  expect(ApiResponse.IsApiResponse(obj)).toBe(true)
+})
+
+test('IsApiResponseError', () => {
+  expect(ApiResponse.IsApiResponseError({})).toBe(true)
+  expect(ApiResponse.IsApiResponseError(null)).toBe(false)
+  expect(ApiResponse.IsApiResponseError(undefined)).toBe(false)
+  expect(ApiResponse.IsApiResponseError('')).toBe(false)
+  expect(ApiResponse.IsApiResponseError(123)).toBe(false)
+  expect(ApiResponse.IsApiResponseError([])).toBe(false)
+  expect(ApiResponse.IsApiResponseError({ id: 123 })).toBe(true)
+  expect(ApiResponse.IsApiResponseError({ id: 123, ts: Date.now() })).toBe(true)
+  expect(
+    ApiResponse.IsApiResponseError({ id: 123, ts: Date.now(), result: '' })
+  ).toBe(true)
+  expect(
+    ApiResponse.IsApiResponseError({
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+    })
+  ).toBe(true)
+
+  const obj: IApiResponse = {
+    id: 123,
+    ts: Date.now(),
+    result: '',
+    message: '',
+    responseCode: 0,
+    data: '',
+    stats: new InstrumentationStatistics(),
+  }
+
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
+
+  obj.result = 'success'
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(false)
+
+  obj.message = 'message'
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(false)
+
+  obj.result = CONST_DefaultError
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
+
+  obj.ts = Date.now()
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
+
+  obj.responseCode = 200
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
+
+  obj.data = { some: 'data' }
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
+
+  obj.result = CONST_success
+  expect(ApiResponse.IsApiResponseError(obj)).toBe(false)
+})
+
+test('HasObj', () => {
+  const obj: { obj: unknown } = { obj: {} }
+  expect(ApiResponse.HasObj(obj)).toBe(true)
+
+  obj.obj = null
+  expect(ApiResponse.HasObj(obj)).toBe(true)
+
+  obj.obj = undefined
+  expect(ApiResponse.HasObj(obj)).toBe(true)
+
+  delete obj.obj
+  expect(ApiResponse.HasObj(obj)).toBe(false)
+})
+
+test('IsCaptureResponse', () => {
+  const obj: { captureResponse: IApiResponse } = {
+    captureResponse: {
+      id: 123,
+      ts: Date.now(),
+      result: '',
+      message: '',
+      responseCode: 0,
+      data: '',
+      stats: new InstrumentationStatistics(),
+    },
+  }
+
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.result = 'success'
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.message = 'message'
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.result = CONST_DefaultError
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.ts = Date.now()
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.responseCode = 200
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.data = { some: 'data' }
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  obj.captureResponse.result = CONST_success
+  expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
+
+  const newobj = { captureResponse: {} }
+  expect(ApiResponse.IsCaptureResponse(newobj)).toBe(true)
+
+  const noobj = {}
+  expect(ApiResponse.IsCaptureResponse(noobj)).toBe(false)
+})
+
+test('IsWrappedCaptureResponse', () => {
+  const obj: { obj: { captureResponse: IApiResponse } } = {
+    obj: {
+      captureResponse: {
+        id: 123,
+        ts: Date.now(),
+        result: '',
+        message: '',
+        responseCode: 0,
+        data: '',
+        stats: new InstrumentationStatistics(),
+      },
+    },
+  }
+
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = 'success'
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.message = 'message'
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = CONST_DefaultError
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.ts = Date.now()
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.responseCode = 200
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.data = { some: 'data' }
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = CONST_success
+  expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
+
+  const newobj = { obj: { captureResponse: {} } }
+  expect(ApiResponse.IsWrappedCaptureResponse(newobj)).toBe(true)
+
+  const noobj = {}
+  expect(ApiResponse.IsWrappedCaptureResponse(noobj)).toBe(false)
+})
+
+test('IsWrappedCaptureResponseWithMsg', () => {
+  const obj: { obj: { captureResponse: IApiResponse } } = {
+    obj: {
+      captureResponse: {
+        id: 123,
+        ts: Date.now(),
+        result: '',
+        message: '',
+        responseCode: 0,
+        data: '',
+        stats: new InstrumentationStatistics(),
+      },
+    },
+  }
+
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = 'success'
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.message = 'message'
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = CONST_DefaultError
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.ts = Date.now()
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.responseCode = 200
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.data = { some: 'data' }
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  obj.obj.captureResponse.result = CONST_success
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
+
+  const newobj = { obj: { captureResponse: {} } }
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(newobj)).toBe(false)
+
+  const noobj = {}
+  expect(ApiResponse.IsWrappedCaptureResponseWithMessage(noobj)).toBe(false)
 })

@@ -35,8 +35,8 @@ export interface IApiResponse<T = unknown> extends IDataWithStats<T> {
   id: number
   ts: number
   code?: number
-  message: string
-  responseCode: number
+  message?: string
+  responseCode?: number
   result: string
 }
 
@@ -56,16 +56,37 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return isObject(obj, 'status') || isObject(obj, 'statusText')
   }
 
-  static IsApiResponseError(obj: unknown): obj is IApiResponseError {
+  static IsApiResponse(obj: unknown): obj is IApiResponse {
     return (
-      ApiResponse.IsStatus(obj) &&
+      // ApiResponse.IsStatus(obj) &&
       isObject(obj, 'id') &&
       isObject(obj, 'ts') &&
-      isObject(obj, 'result') &&
-      isObject(obj, 'message') &&
-      isObject(obj, 'responseCode') &&
-      isObject(obj, 'stats')
+      isObject(obj, 'data') &&
+      isObject(obj, 'stats') &&
+      isObject(obj, 'result')
     )
+  }
+
+  static IsApiResponseError(obj: unknown) {
+    if (!isObject(obj)) {
+      return false
+    }
+
+    if (ApiResponse.IsApiResponse(obj)) {
+      try {
+        ApiResponse.VerifySuccess(
+          ApiResponse.IsApiResponseError.name,
+          obj,
+          true
+        )
+
+        return false
+      } catch (error) {
+        console.error('Error verifying API response:', error)
+      }
+    }
+
+    return true
   }
 
   static HasObj(obj: unknown): obj is { obj: unknown } {
@@ -84,13 +105,13 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return ApiResponse.HasObj(obj) && ApiResponse.IsCaptureResponse(obj.obj)
   }
 
-  static IsWrappedCaptureResponseWithMsg(
+  static IsWrappedCaptureResponseWithMessage(
     obj: unknown
-  ): obj is { obj: { captureResponse: { msg: string } } } {
+  ): obj is { obj: { captureResponse: { message: string } } } {
     return (
       ApiResponse.HasObj(obj) &&
       ApiResponse.IsCaptureResponse(obj.obj) &&
-      isObject(obj.obj.captureResponse, 'msg')
+      isObject(obj.obj.captureResponse, 'message')
     )
   }
 
@@ -158,7 +179,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
   static VerifySuccess<T = unknown>(
     fname: string,
-    ret: ApiResponse<T>,
+    ret: IApiResponse<T>,
     allowNoDataReturned = false
   ) {
     if (!ApiResponse.isSuccess(ret)) {
@@ -177,7 +198,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
   static VerifySuccessPagedResponse<T = unknown>(
     fname: string,
-    ret: ApiResponse<IPagedResponse<T>>,
+    ret: IApiResponse<IPagedResponse<T>>,
     allowNoDataReturned = false
   ) {
     if (!ApiResponse.isSuccess(ret)) {

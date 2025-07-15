@@ -1,6 +1,6 @@
 import { z } from 'zod/v4'
 import { safeArray } from '../services/array-helper.mjs'
-import { ApiResponse } from './ApiResponse.mjs'
+import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
 
 /*export interface IPagedResponse<T> {
@@ -39,7 +39,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     return new PagedResponse<T>(ret.dataPage, ret.totalCount)
   }
 
-  static CreateFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
+  static CreateFromApiResponse<T>(ret: IApiResponse<IPagedResponse<T>>) {
     return new PagedResponse<T>(ret.data.dataPage, ret.data.totalCount)
   }
 

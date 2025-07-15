@@ -9,6 +9,7 @@ import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst, safeArray } from './array-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
+import type { IStatus } from '../models/ApiResponse.mjs'
 
 export function UpdateFieldValue<T extends IId>(
   parentObject: Readonly<T>,
@@ -25,7 +26,7 @@ export function UpdateFieldValue<T extends IId>(
 
 const CONST_JsonDepth = 5
 
-type AxiosErrorWrapper = {
+type AxiosErrorWrapper = IStatus & {
   code?: string
   lastRequestTime?: number
   message: string
@@ -35,8 +36,6 @@ type AxiosErrorWrapper = {
   responseData?: string
   retryCount?: number
   stack?: string
-  status?: number
-  statusText?: string
   type: string
   url?: string
 }
