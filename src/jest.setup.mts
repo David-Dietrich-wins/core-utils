@@ -169,7 +169,9 @@ export function getGlobalLogger() {
 
 export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
-  currentDate: new Date('2025-12-01T12:00:00Z'),
+  currentDateString: '2025-12-01T12:00:00.000Z',
+  currentDate: new Date('2025-12-01T12:00:00.000Z'),
+  currentDateInMilliseconds: 0,
   userIdGood: 123456789,
   userIdGoodEmail: 'test@test.com',
   userIdBad: 987654321,
@@ -187,6 +189,12 @@ export function GenerateSignedJwtToken(
 }
 
 beforeAll(() => {
+  TEST_Parameters_DEV.currentDate = new Date(
+    TEST_Parameters_DEV.currentDateString
+  )
+  TEST_Parameters_DEV.currentDateInMilliseconds =
+    TEST_Parameters_DEV.currentDate.getTime()
+
   // process.env.NODE_ENV = 'test'
   const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail)
 

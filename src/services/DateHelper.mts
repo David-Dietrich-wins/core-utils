@@ -30,10 +30,16 @@ export class DateHelper {
       : false
   }
 
-  static VerifyDateOrNowIfInvalid(
+  static VerifyDateOrNowIfEmpty(
     date: Date | string | number | null | undefined
   ) {
     const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
+    if (!DateHelper.isDateObject(dateClean)) {
+      throw new AppException(
+        'Invalid date',
+        'DateHelper.VerifyDateOrNowIfInvalid'
+      )
+    }
 
     return dateClean
   }
@@ -119,17 +125,17 @@ export class DateHelper {
     )
   }
 
-  static FormatLocaleDateString = (
+  static FormatLocaleDateString(
     date?: Date | string | number | null,
     locale = 'en-US'
-  ) => {
+  ) {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     }
 
-    const now = DateHelper.VerifyDateOrNowIfInvalid(date).toLocaleDateString(
+    const now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
       locale,
       options
     )
