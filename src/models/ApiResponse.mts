@@ -6,6 +6,31 @@ import { FetchDataTypesAllowed } from '../services/fetch-http.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { PagedResponse, type IPagedResponse } from './PagedResponse.mjs'
 
+/**
+ * Represents the status of an HTTP response usually used in API responses.
+ * @interface IStatus
+ * @property {number} [status] - The HTTP status code of the response.
+ * @property {string} [statusText] - The status text associated with the HTTP response.
+ */
+export interface IStatus {
+  status?: number
+  statusText?: string
+}
+
+/**
+ * Represents the status of an HTTP response.
+ * This interface is used to provide detailed information about the response, including status code, message, and any additional data.
+ * @interface ResponseStatus
+ * @property {string} [code] - A code representing the status of the response.
+ * @property {string} [message] - A message providing more details about the response status.
+ */
+export interface ResponseStatus extends IStatus {
+  code?: string
+  message?: string
+}
+export interface IApiResponseError extends IStatus {
+  error: string
+}
 export interface IApiResponse<T = unknown> extends IDataWithStats<T> {
   id: number
   ts: number
@@ -26,6 +51,48 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     public responseCode = 0,
     public stats = new InstrumentationStatistics()
   ) {}
+
+  static IsStatus(obj: unknown): obj is IStatus {
+    return isObject(obj, 'status') || isObject(obj, 'statusText')
+  }
+
+  static IsApiResponseError(obj: unknown): obj is IApiResponseError {
+    return (
+      ApiResponse.IsStatus(obj) &&
+      isObject(obj, 'id') &&
+      isObject(obj, 'ts') &&
+      isObject(obj, 'result') &&
+      isObject(obj, 'message') &&
+      isObject(obj, 'responseCode') &&
+      isObject(obj, 'stats')
+    )
+  }
+
+  static HasObj(obj: unknown): obj is { obj: unknown } {
+    return isObject(obj, 'obj')
+  }
+
+  static IsCaptureResponse(
+    obj: unknown
+  ): obj is { captureResponse: IApiResponseError } {
+    return isObject(obj, 'captureResponse')
+  }
+
+  static IsWrappedCaptureResponse(
+    obj: unknown
+  ): obj is { captureResponse: IApiResponseError } {
+    return ApiResponse.HasObj(obj) && ApiResponse.IsCaptureResponse(obj.obj)
+  }
+
+  static IsWrappedCaptureResponseWithMsg(
+    obj: unknown
+  ): obj is { obj: { captureResponse: { msg: string } } } {
+    return (
+      ApiResponse.HasObj(obj) &&
+      ApiResponse.IsCaptureResponse(obj.obj) &&
+      isObject(obj.obj.captureResponse, 'msg')
+    )
+  }
 
   static CreateFromErrorMessage(
     message: string,
