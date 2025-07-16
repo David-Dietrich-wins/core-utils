@@ -21,7 +21,6 @@ import {
   AssetQuoteWithIpoDate,
   AssetQuoteWithScore,
   CompanyAssetInfo,
-  FmpIndicatorQueryParams,
   IAssetQuoteResponse,
   ICompanyProfile,
   ICompanyUsersWithCount,
@@ -76,6 +75,7 @@ import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { safestr } from './string-helper.mjs'
 import { IUserLoginRequest } from './user-helper.mjs'
 import { IIdVal } from '../models/id-val.mjs'
+import type { FmpIndicatorQueryParams } from './TradingHelper.mjs'
 
 /**
  * Interface for the result of a symbol search.

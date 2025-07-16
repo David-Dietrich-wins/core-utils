@@ -2,18 +2,9 @@ import moment from 'moment'
 import { z } from 'zod/v4'
 import { IdName } from '../models/id-name.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
-import { isArray, safeArray } from '../services/array-helper.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import {
-  getAsNumber,
-  getAsNumberOrUndefined,
-} from '../services/number-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import {
-  isString,
-  safestr,
-  safestrUppercase,
-} from '../services/string-helper.mjs'
+import { isString, safestrUppercase } from '../services/string-helper.mjs'
 import {
   zFromStringOrStringArray,
   zStringMinMax,
@@ -22,7 +13,6 @@ import {
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
-import { AnyRecord, FromTo } from './types.mjs'
 
 const CONST_TickerMaxLength = 20
 
@@ -368,70 +358,6 @@ export interface IPriceHistoricalFull extends IQuoteBar {
 
 export interface IQuoteBarWithDateTime extends IQuoteBar {
   datetime: number // 1624507200000
-}
-
-export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
-  FromTo<TFromTo> & {
-    periodLength: number
-    timeframe: string
-  }
-
-export function FmpIndicatorParamsSetDateBoundary(
-  fmp: FmpIndicatorQueryParams<number>
-) {
-  const { from, timeframe } = fmp
-  const fmpNew = { ...fmp }
-
-  const regex = /(\d+)|([A-Z]+)/gi
-  const matches = safestr(timeframe).match(regex)
-  if (isArray(matches, 2) && matches[0] !== timeframe) {
-    const [units, unit] = matches
-    if (from) {
-      fmpNew.from = +DateHelper.NextBoundaryUp(from, unit, +units)
-    }
-
-    fmpNew.to = +DateHelper.NextBoundaryUp(
-      fmpNew.to ? fmpNew.to : Date.now(),
-      unit,
-      +units
-    )
-  }
-
-  return fmpNew
-}
-
-export function FmpIndicatorParamsToPath(
-  params: FmpIndicatorQueryParams<number>,
-  existingQueryParams = ''
-) {
-  let qp = `${existingQueryParams}&symbol=${params.symbol}&periodLength=${params.periodLength}&timeframe=${params.timeframe}`
-  if (params.from) {
-    qp += `&from=${params.from}`
-  }
-  if (params.to) {
-    qp += `&to=${params.to}`
-  }
-
-  return qp
-}
-
-export function FmpIndicatorParamsFromObject(body: AnyRecord) {
-  const from = getAsNumberOrUndefined(body.from)
-  const to = getAsNumberOrUndefined(body.to)
-
-  const fmp: FmpIndicatorQueryParams<number> = {
-    symbol: safestr(body.symbol, body.ticker),
-    periodLength: getAsNumber(body.periodLength),
-    timeframe: safestr(body.timeframe),
-    from,
-    to,
-  }
-
-  if (!fmp.symbol) {
-    throw new AppException('No ticker.', 'asset.js FinancialRatios:', fmp)
-  }
-
-  return fmp
 }
 
 export interface ISpac extends ISymbolName {
