@@ -283,8 +283,14 @@ export class ChartSettings implements IChartSettings {
     startDate?: number,
     endDate?: number,
     resolution?: string,
-    extendedHoursTrading = true
+    extendedHoursTrading = true,
+    firstDataRequest = false
   ) {
+    if (firstDataRequest) {
+      endDate = moment().valueOf()
+      startDate = moment().subtract(1, 'year').valueOf()
+    }
+
     return ChartSettings.Create({
       ticker,
       period: 1,
