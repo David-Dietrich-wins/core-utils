@@ -183,6 +183,27 @@ test('CreateForTradingView', () => {
     endDate: undefined,
     extendedHoursTrading: true,
   })
+
+  expect(
+    ChartSettings.CreateForTradingView(
+      'AAPL',
+      undefined,
+      undefined,
+      '1d',
+      false,
+      true
+    )
+  ).toMatchObject({
+    ticker: 'AAPL',
+    period: 1,
+    periodType: 'day',
+    frequency: 1,
+    frequencyType: 'minute',
+    granularity: '1d',
+    startDate: 1733054400000,
+    endDate: 1764590400000,
+    extendedHoursTrading: false,
+  })
 })
 
 test('chartTimeForFmp', () => {
