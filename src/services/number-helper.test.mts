@@ -11,7 +11,6 @@ import {
   NumberHelper,
   PercentFormatter,
   PercentTimes100Formatter,
-  setMaxDecimalPlaces,
   StockPriceFormatter,
   StockVolumeFormatter,
   toFixedPrefixed,
@@ -73,71 +72,6 @@ test('divideByNumbers', () => {
   const objRet = NumberHelper.DivideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
-})
-
-describe('setMaxDecimalPlaces', () => {
-  test('good', () => {
-    expect(setMaxDecimalPlaces(2.12, 2)).toEqual('2.00')
-    expect(setMaxDecimalPlaces(34.9912, 2)).toEqual('35.00')
-    expect(setMaxDecimalPlaces(234.499999912, 2)).toEqual('234.00')
-    expect(setMaxDecimalPlaces(234.5000001, 2)).toEqual('235.00')
-
-    expect(setMaxDecimalPlaces('234.5000001', 3)).toEqual('235.000')
-    expect(() => setMaxDecimalPlaces('234.xx5000001', 3)).toThrow()
-  })
-
-  test('good obj', () => {
-    const io = {
-      a: 2.123456,
-      b: 3.123456,
-      c: '4.123456',
-    }
-
-    expect(setMaxDecimalPlaces(io, 2)).toEqual({
-      a: '2.00',
-      b: '3.00',
-      c: '4.00',
-    })
-  })
-
-  test('array', () => {
-    expect(setMaxDecimalPlaces([2.12], 2)).toEqual(['2.00'])
-  })
-
-  test('string', () => {
-    expect(setMaxDecimalPlaces('2.12', 2)).toEqual('2.00')
-  })
-
-  test('exception', () => {
-    try {
-      expect(setMaxDecimalPlaces(2.12, undefined)).toBe('2.00')
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setMaxDecimalPlaces(2.12, null as any)
-    } catch (e) {
-      expect(e).toEqual(new Error('Invalid number of decimal places.'))
-    }
-
-    expect.assertions(2)
-  })
-
-  test('ignoreKeys', () => {
-    const io = {
-      a: 2.123456,
-      b: 3.123456,
-      c: '4.123456',
-      d: 5.123456,
-    }
-
-    expect(setMaxDecimalPlaces(io, 2, ['d'])).toEqual({
-      a: '2.00',
-      b: '3.00',
-      c: '4.00',
-      d: 5.123456,
-    })
-
-    expect(setMaxDecimalPlaces(2n, 2, ['d'])).toEqual(2n)
-  })
 })
 
 describe('Number formatting', () => {

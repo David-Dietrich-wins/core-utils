@@ -1,7 +1,6 @@
-import { AppException } from '../models/AppException.mjs'
-import { isArray, safeArray } from './array-helper.mjs'
+import { isArray } from './array-helper.mjs'
 import { hasData, isNullOrUndefined } from './general.mjs'
-import { isObject, runOnAllMembers } from './object-helper.mjs'
+import { runOnAllMembers } from './object-helper.mjs'
 import { isString, safestr, StringHelper, stringIf } from './string-helper.mjs'
 
 export type NumberFormattingBreakpoints = {
@@ -19,57 +18,6 @@ export type NumberFormattingOptions = Omit<
 > & {
   breakPoints?: NumberFormattingBreakpoints[]
   differentForNegative?: boolean
-}
-
-export function setMaxDecimalPlaces(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obj: any,
-  maxDecimalPlaces = 2,
-  ignoreKeys: string[] = []
-) {
-  if (isNullOrUndefined(maxDecimalPlaces)) {
-    throw new Error('Invalid number of decimal places.')
-  }
-
-  const formatter = (num: number): string => {
-    return Math.round(num).toFixed(maxDecimalPlaces)
-  }
-
-  if (isNumber(obj)) {
-    return formatter(obj)
-  }
-
-  if (isString(obj)) {
-    if (isNumeric(obj)) {
-      return formatter(parseFloat(obj))
-    } else {
-      throw new AppException(
-        'Invalid number format. Expected a number or numeric string.',
-        'NumberFormatterError'
-      )
-    }
-  }
-
-  // Go through the whole array.
-  if (isArray(obj)) {
-    return safeArray(obj).reduce((acc, cur) => {
-      acc.push(setMaxDecimalPlaces(cur))
-
-      return acc
-    }, [])
-  }
-
-  ignoreKeys = safeArray(ignoreKeys)
-  if (isObject(obj)) {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (!ignoreKeys.includes(key) && isNumeric(val)) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(obj as any)[key] = formatter(val as number)
-      }
-    })
-  }
-
-  return obj
 }
 
 export type FormatFunction = (val: unknown) => string
