@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { AppException } from '../index.mjs'
 import { getCurrentDate, TEST_Parameters_DEV } from '../jest.setup.mjs'
 import { DateHelper } from './DateHelper.mjs'
@@ -11,6 +12,16 @@ test('VerifyDateOrNowIfEmpty', () => {
 
   date = DateHelper.VerifyDateOrNowIfEmpty('2025-12-01T00:00:00.000Z')
   expect(date.getTime()).toEqual(new Date('2025-12-01T00:00:00.000Z').getTime())
+
+  date = DateHelper.VerifyDateOrNowIfEmpty(345427200000) // AAPL IPO date
+  expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
+
+  date = DateHelper.VerifyDateOrNowIfEmpty('1980-12-12') // AAPL IPO date
+  expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
+
+  expect(DateHelper.VerifyDateOrNowIfEmpty(1740481297461)).toEqual(
+    new Date('2025-02-25T11:01:37.461Z')
+  )
 
   expect(DateHelper.VerifyDateOrNowIfEmpty(undefined)).toEqual(
     TEST_Parameters_DEV.currentDate
@@ -476,16 +487,38 @@ describe('DateHelper.timeDifferenceStringFromMillis', () => {
   })
 })
 
-test('DateHelper.isDateObject', () => {
+test('isDateObject', () => {
   expect(DateHelper.isDateObject(new Date())).toBe(true)
   expect(DateHelper.isDateObject(1)).toBe(false)
   expect(DateHelper.isDateObject(0)).toBe(false)
   expect(DateHelper.isDateObject('')).toBe(false)
   expect(DateHelper.isDateObject(new Date('2022'))).toBe(true)
   expect(DateHelper.isDateObject('2022-10-24')).toBe(false)
-  expect(DateHelper.isDateObject('2022-10-24')).toBe(false)
+  expect(DateHelper.isDateObject(new Date('2022-10-24'))).toBe(true)
   expect(DateHelper.isDateObject(new Date('20'))).toBe(false)
   expect(DateHelper.isDateObject(new Date(20))).toBe(true)
+  expect(DateHelper.isDateObject(moment('2022-10-24T00:00:00.000Z'))).toBe(
+    false
+  )
+  expect(
+    DateHelper.isDateObject(moment('2022-10-24T00:00:00.000Z').toDate())
+  ).toBe(true)
+})
+
+test('IsValidDate', () => {
+  expect(DateHelper.IsValidDate(new Date())).toBe(true)
+  expect(DateHelper.IsValidDate(1)).toBe(true)
+  expect(DateHelper.IsValidDate(0)).toBe(false)
+  expect(DateHelper.IsValidDate('')).toBe(false)
+  expect(DateHelper.IsValidDate(new Date('2022'))).toBe(true)
+  expect(DateHelper.IsValidDate('2022-10-24')).toBe(true)
+  expect(DateHelper.IsValidDate('2022-10-24')).toBe(true)
+  expect(DateHelper.IsValidDate(new Date('20'))).toBe(false)
+  expect(DateHelper.IsValidDate(new Date(20))).toBe(true)
+  expect(DateHelper.IsValidDate(moment('2022-10-24T00:00:00.000Z'))).toBe(true)
+  expect(
+    DateHelper.IsValidDate(moment('2022-10-24T00:00:00.000Z').toDate())
+  ).toBe(true)
 })
 
 test('TimeframeToStartOf', () => {
@@ -655,4 +688,12 @@ test('FormatLocaleDateString', () => {
   expect(
     DateHelper.FormatLocaleDateString(TEST_Parameters_DEV.currentDate, 'es-ES')
   ).toBe('1 de diciembre de 2025')
+
+  expect(DateHelper.VerifyDateOrNowIfEmpty('1980-12-12')).toEqual(
+    new Date('1980-12-12T00:00:00.000Z')
+  )
+
+  expect(DateHelper.VerifyDateOrNowIfEmpty(1740481297461)).toEqual(
+    new Date('2025-02-25T11:01:37.461Z')
+  )
 })

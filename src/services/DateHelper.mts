@@ -3,6 +3,15 @@ import { pluralSuffix, prefixIfHasData, safestr } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { isNullOrUndefined } from './general.mjs'
+import { isNumber } from './number-helper.mjs'
+
+export type DateTypeAcceptable =
+  | Date
+  | string
+  | Moment
+  | number
+  | null
+  | undefined
 
 export class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
@@ -16,18 +25,40 @@ export class DateHelper {
   static readonly FormatForUi2DigitYear = 'M/D/YY'
   static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
   static readonly FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a'
+
+  static isDateObject(obj: unknown): obj is Date {
+    if (obj && Object.prototype.toString.call(obj) === '[object Date]') {
+      return !isNaN((obj as Date).getTime())
+    }
+
+    return false
+  }
+
   /**
    * Checks the date value passed in to see if the variable is a valid Date object.
    * @param date Any value to test if it is a valid date.
    * @returns true if the date is valid. false otherwise.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isDateObject(date: any) {
-    return date &&
-      Object.prototype.toString.call(date) === '[object Date]' &&
-      !isNaN(date)
-      ? true
-      : false
+  static IsValidDate(date: DateTypeAcceptable) {
+    let dateCheck: Date | undefined = undefined
+
+    if (date) {
+      if (DateHelper.isDateObject(date)) {
+        dateCheck = date
+      } else if (moment.isMoment(date)) {
+        dateCheck = date.toDate()
+      } else if (isString(date) || isNumber(date)) {
+        // If it's a string or number, we can try to convert it to a Date object
+        dateCheck = new Date(date)
+      }
+    }
+
+    if (dateCheck instanceof Date && !isNaN(dateCheck.getTime())) {
+      // it is a date object
+      return true
+    }
+
+    return false
   }
 
   static VerifyDateOrNowIfEmpty(
@@ -36,7 +67,7 @@ export class DateHelper {
     const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
     if (!DateHelper.isDateObject(dateClean)) {
       throw new AppException(
-        'Invalid date',
+        'Invalid date: ' + safestr(date),
         'DateHelper.VerifyDateOrNowIfInvalid'
       )
     }
