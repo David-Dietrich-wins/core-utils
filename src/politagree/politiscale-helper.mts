@@ -3,11 +3,7 @@ import type { ValueChangeHandler } from '../models/id-name.mjs'
 import type { IValue } from '../models/interfaces.mjs'
 import { isArray, safeArray } from '../services/array-helper.mjs'
 import { isNullOrUndefined } from '../services/general.mjs'
-import {
-  InterpolateColorRange,
-  InterpolateWeightedColorRange,
-  type ColorRange,
-} from '../services/html-helper.mjs'
+import { ColorHelper, type ColorRange } from '../services/color-helper.mjs'
 import {
   type PolitiscaleName,
   type IPolitiscale,
@@ -99,7 +95,11 @@ export abstract class PolitiscaleHelper {
           weight: 0.1,
         },
       },
-      colorRange: InterpolateWeightedColorRange(ColorRangeLeft, 90, 100),
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeLeft,
+        90,
+        100
+      ),
     },
     {
       name: CONST_ScaleNameFreeSpeech,
@@ -118,7 +118,11 @@ export abstract class PolitiscaleHelper {
           weight: 0.5,
         },
       },
-      colorRange: InterpolateWeightedColorRange(ColorRangeRight, 40, 60),
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeRight,
+        40,
+        60
+      ),
     },
     {
       name: CONST_ScaleNameReligion,
@@ -137,7 +141,11 @@ export abstract class PolitiscaleHelper {
           weight: 1,
         },
       },
-      colorRange: InterpolateWeightedColorRange(ColorRangeRight, 90, 100),
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeRight,
+        90,
+        100
+      ),
     },
   ]
 
@@ -357,7 +365,7 @@ export abstract class PolitiscaleHelper {
   }
 
   static PolitiscaleColor(name: PolitiscaleName | string, rating: number) {
-    return InterpolateColorRange(
+    return ColorHelper.InterpolateColorRange(
       PolitiscaleHelper.PolitiscaleColorRange(name),
       rating
     )
@@ -370,7 +378,10 @@ export abstract class PolitiscaleHelper {
     const status = PolitiscaleHelper.UserRatingOverall(scales, userScales)
 
     if (status.left.active && status.left.value) {
-      return InterpolateColorRange(ColorRangeLeft, status.left.value)
+      return ColorHelper.InterpolateColorRange(
+        ColorRangeLeft,
+        status.left.value
+      )
     }
 
     return colorIfEmpty

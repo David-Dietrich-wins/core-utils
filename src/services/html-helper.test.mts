@@ -1,42 +1,23 @@
-import {
-  ColorRange,
-  InterpolateColorRange,
-  InterpolateWeightedColorRange,
-} from './html-helper.mjs'
+import { HtmlHelper } from './html-helper.mjs'
 
-test('InterpolateColorRange', () => {
-  const colorRange: ColorRange = ['#000000', '#FFFFFF']
-  const percent = 50
-  const result = InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#808080') // Expecting the middle gray color
-})
+test('ParamsEncoder', () => {
+  expect(HtmlHelper.ParamsEncoder()).toBe('')
 
-test('InterpolateColorRange with different colors', () => {
-  const colorRange: ColorRange = ['FF0000', '00FF00'] // Red to Green
-  const percent = 50
-  const result = InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#808000') // Expecting the middle yellow color
-})
-
-test('InterpolateColorRange with no colors', () => {
-  const colorRange: ColorRange = ['', ''] // Empty colors
-  const percent = 50
-  const result = InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#000000') // Expecting black
-})
-
-test('InterpolateWeightedColorRange', () => {
-  const colorRange: ColorRange = ['#0000FF', '#FF00FF'] // Blue to Magenta
-  const startWeight = 25
-  const endWeight = 75
-  const result = InterpolateWeightedColorRange(
-    colorRange,
-    startWeight,
-    endWeight
+  expect(HtmlHelper.ParamsEncoder({ foo: 'bar', baz: 'qux' })).toBe(
+    'foo=bar&baz=qux'
   )
+  expect(
+    HtmlHelper.ParamsEncoder({ foo: 'bar', baz: 'qux', quux: 'corge' })
+  ).toBe('foo=bar&baz=qux&quux=corge')
 
-  expect(result).toStrictEqual([
-    InterpolateColorRange(colorRange, startWeight),
-    InterpolateColorRange(colorRange, endWeight),
-  ])
+  expect(
+    HtmlHelper.ParamsEncoder({
+      url: 'https://we.com/?a=bc&d=ef#bar',
+      baz: 'qux',
+      quux: 'corge',
+      grault: 'garply',
+    })
+  ).toBe(
+    'url=https%3A%2F%2Fwe.com%2F%3Fa%3Dbc%26d%3Def%23bar&baz=qux&quux=corge&grault=garply'
+  )
 })
