@@ -1,8 +1,8 @@
 import moment from 'moment'
-import { AppException } from '../index.mjs'
 import { getCurrentDate, TEST_Parameters_DEV } from '../jest.setup.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { safestr } from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 test('VerifyDateOrNowIfEmpty', () => {
   let date = DateHelper.VerifyDateOrNowIfEmpty(
