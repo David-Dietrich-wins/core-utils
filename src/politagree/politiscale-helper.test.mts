@@ -804,6 +804,24 @@ test('IsRightLeaning', () => {
   expect(PolitiscaleHelper.IsRightLeaning(100)).toBe(true)
 })
 
+test('CoreRatingValueTuple', () => {
+  expect(PolitiscaleHelper.CoreRatingValueTuple('climate')).toStrictEqual([
+    0, 0,
+  ])
+  expect(PolitiscaleHelper.CoreRatingValueTuple('climate', 20)).toStrictEqual([
+    20, 2,
+  ])
+  expect(PolitiscaleHelper.CoreRatingValueTuple('climate', 50)).toStrictEqual([
+    50, 5,
+  ])
+  expect(PolitiscaleHelper.CoreRatingValueTuple('climate', 50)).toStrictEqual([
+    50, 5,
+  ])
+  expect(PolitiscaleHelper.CoreRatingValueTuple('climate', 50)).toStrictEqual([
+    50, 5,
+  ])
+})
+
 test('CoreRating', () => {
   expect(PolitiscaleHelper.CoreRating('climate')).toStrictEqual({
     left: { active: true, isPrimary: true, value: 0, weight: 1 },

@@ -62,33 +62,6 @@ export type PolitiscalesSliderProps = {
   title?: string
 }
 
-// type PolitiformHelper = {
-//   politiscaleValue: (
-//     scaleName: PolitiscaleName,
-//     formDataOrScaleArray?: IHasPolitiscales | IPolitiscale[],
-//     valueIfEmpty?: number
-//   ) => number
-
-//   getRating: (scales: IHasPolitiscales | IPolitiscale[]) => number
-//   ratingClimate: (
-//     scaleval?: number | IHasPolitiscales | IPolitiscale[],
-//     isLeft?: boolean
-//   ) => number
-
-//   ratingFreeSpeech: (
-//     scaleval?: number | IHasPolitiscales | IPolitiscale[],
-//     isLeft?: boolean
-//   ) => number
-//   ratingOverall: (
-//     scales?: IHasPolitiscales | IPolitiscale[],
-//     userScales?: IHasPolitiscales | IPolitiscale[]
-//   ) => PolitiRatingLeftRight
-//   ratingReligion: (
-//     scaleval?: number | IHasPolitiscales | IPolitiscale[],
-//     isLeft?: boolean
-//   ) => number
-// }
-
 export interface PolirangeProps {
   scale: IPolitiscale
   title: string
@@ -210,13 +183,13 @@ export abstract class PolitiscaleHelper {
     const setting = PolitiscaleHelper.FindSetting(name).rating
 
     if (rating) {
-      if (setting.left.active) {
-        left = Math.round(rating * setting.left.weight)
-      }
+      // if (setting.left.active) {
+      left = Math.round(rating * setting.left.weight)
+      // }
 
-      if (setting.right.active) {
-        right = Math.round(rating * setting.right.weight)
-      }
+      // if (setting.right.active) {
+      right = Math.round(rating * setting.right.weight)
+      // }
     }
 
     const leaning: Readonly<PolitiRatingLeftRight> = {
@@ -236,6 +209,17 @@ export abstract class PolitiscaleHelper {
 
     return leaning
   }
+  static CoreRatingValueTuple(
+    name: string | PolitiscaleName,
+    rating?: number
+  ): [number, number] {
+    const pr = PolitiscaleHelper.CoreRating(name, rating)
+
+    return [
+      pr.left.active && pr.left.value ? pr.left.value : 0,
+      pr.right.active && pr.right.value ? pr.right.value : 0,
+    ]
+  }
 
   static PrimaryRating(
     name: string | PolitiscaleName,
@@ -246,7 +230,7 @@ export abstract class PolitiscaleHelper {
     return pr.left.isPrimary ? pr.left.value : pr.right.value
   }
 
-  static ratingOverall(
+  static RatingOverall(
     scales: { name: string | PolitiscaleName; value?: number }[] = []
   ): PolitiRatingLeftRight {
     const ratingsLeft: number[] = []
@@ -289,12 +273,12 @@ export abstract class PolitiscaleHelper {
     scales: IHasPolitiscales | IPolitiscale[] = [],
     userScales: IHasPolitiscales | IPolitiscale[] = []
   ) {
-    const rating = PolitiscaleHelper.ratingOverall(
+    const rating = PolitiscaleHelper.RatingOverall(
       PolitiscaleHelper.getScales(scales)
     )
 
     if (isArray(userScales as unknown)) {
-      const userRating = PolitiscaleHelper.ratingOverall(
+      const userRating = PolitiscaleHelper.RatingOverall(
         PolitiscaleHelper.getScales(userScales)
       )
 
@@ -398,7 +382,7 @@ export abstract class PolitiscaleHelper {
   static PolitiscaleRating(
     scales?: { name: string | PolitiscaleName; value?: number }[]
   ) {
-    return PolitiscaleHelper.ratingOverall(scales)
+    return PolitiscaleHelper.RatingOverall(scales)
   }
 
   static PolitiscaleValue(
@@ -510,7 +494,7 @@ export abstract class PolitiscaleHelper {
     scales: IHasPolitiscales | IPolitiscale[],
     isLeft?: boolean
   ) {
-    const overall = PolitiscaleHelper.ratingOverall(
+    const overall = PolitiscaleHelper.RatingOverall(
       PolitiscaleHelper.getScales(scales)
     )
 
