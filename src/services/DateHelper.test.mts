@@ -689,11 +689,16 @@ test('FormatLocaleDateString', () => {
     DateHelper.FormatLocaleDateString(TEST_Parameters_DEV.currentDate, 'es-ES')
   ).toBe('1 de diciembre de 2025')
 
-  expect(DateHelper.VerifyDateOrNowIfEmpty('1980-12-12')).toEqual(
-    new Date('1980-12-12T00:00:00.000Z')
+  expect(DateHelper.FormatLocaleDateString('1980-12-12')).toEqual(
+    'December 11, 1980'
   )
 
-  expect(DateHelper.VerifyDateOrNowIfEmpty(1740481297461)).toEqual(
-    new Date('2025-02-25T11:01:37.461Z')
+  expect(DateHelper.FormatLocaleDateString(1740481297461)).toEqual(
+    'February 25, 2025'
+  )
+
+  // AAPL IPO date
+  expect(DateHelper.FormatLocaleDateString(345427200000)).toEqual(
+    'December 11, 1980'
   )
 })
