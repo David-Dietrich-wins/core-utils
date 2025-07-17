@@ -693,6 +693,10 @@ test('FormatLocaleDateString', () => {
     'December 11, 1980'
   )
 
+  expect(DateHelper.FormatLocaleDateString(new Date('1980-12-12'))).toEqual(
+    'December 11, 1980'
+  )
+
   expect(DateHelper.FormatLocaleDateString(1740481297461)).toEqual(
     'February 25, 2025'
   )
