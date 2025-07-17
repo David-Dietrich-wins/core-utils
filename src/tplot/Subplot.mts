@@ -1,6 +1,6 @@
 import { z } from 'zod/v4'
 import { IIdRequired } from '../models/IdManager.mjs'
-import { FmpIndicatorQueryParams } from '../services/TradingHelper.mjs'
+import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
 import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { newGuid } from '../services/general.mjs'

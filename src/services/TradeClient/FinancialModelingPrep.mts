@@ -1,10 +1,11 @@
-import { AppException } from '../models/AppException.mjs'
-import type { ISymbol } from '../models/ticker-info.mjs'
-import type { AnyRecord, FromTo } from '../models/types.mjs'
-import { isArray } from './array-helper.mjs'
-import { DateHelper } from './DateHelper.mjs'
-import { getAsNumber, getAsNumberOrUndefined } from './number-helper.mjs'
-import { safestr } from './string-helper.mjs'
+import { AppException } from '../../models/AppException.mjs'
+import type { ISymbol } from '../../models/ticker-info.mjs'
+import type { AnyRecord, FromTo } from '../../models/types.mjs'
+import { isArray } from '../array-helper.mjs'
+import { DateHelper } from '../DateHelper.mjs'
+import { getAsNumber, getAsNumberOrUndefined } from '../number-helper.mjs'
+import { safestr } from '../string-helper.mjs'
+import { TradingClientBase } from './TradingClientBase.mjs'
 
 export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
   FromTo<TFromTo> & {
@@ -12,30 +13,7 @@ export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
     timeframe: string
   }
 
-export abstract class TradingHelper {
-  static CalculatePositionSize(
-    accountBalance: number,
-    riskPercentage: number,
-    entryPrice: number,
-    stopLossPrice: number
-  ): number {
-    const riskAmount = accountBalance * riskPercentage
-    const tradeRisk = entryPrice - stopLossPrice
-    const positionSize = riskAmount / tradeRisk
-    return positionSize
-  }
-
-  static CalculateRiskReward(
-    entryPrice: number,
-    takeProfitPrice: number,
-    stopLossPrice: number
-  ): number {
-    const potentialProfit = takeProfitPrice - entryPrice
-    const potentialLoss = entryPrice - stopLossPrice
-    const riskRewardRatio = potentialProfit / potentialLoss
-    return riskRewardRatio
-  }
-
+export class FinancialModelingPrep extends TradingClientBase {
   static FmpIndicatorParamsSetDateBoundary(
     fmp: FmpIndicatorQueryParams<number>
   ) {
