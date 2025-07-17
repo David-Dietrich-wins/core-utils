@@ -1,4 +1,4 @@
-import { DollarFormatter } from '../index.mjs'
+import { DollarFormatter } from '../services/number-helper.mjs'
 import {
   NameValue,
   NameValueLineFormatManager,
