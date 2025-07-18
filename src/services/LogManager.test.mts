@@ -9,29 +9,36 @@ const { LogManager } = await import('./LogManager.mjs')
 
 let logManagerOptions: LogManagerOptions
 
-const lmOptionsNoFiles: LogManagerOptions = {
-  componentName: 'TestComponent',
-  includeHttpRequestDataInTheLog: true,
-  includeHttpResponseDataInTheLog: true,
-  logCallback: jest.fn(),
-  logBaseFileName: '',
-  logFileName: '',
-  logLevel: 'info',
-  maxFiles: 5,
-  maxSize: 100,
-  rotateBaseFileName: '',
-  showConsole: true,
-  suffixDatePattern: 'YYYY-MM-DD',
-}
-
 // const mockLoggerCreateInstance = (LogManager.CreateInstance = jest.fn(
 //   (options: LogManagerOptions) => {
 //     return new LogManager(options)
 //   }
 // ))
 
+function GetTestLogManagerOptions(
+  overrides?: Partial<LogManagerOptions>
+): LogManagerOptions {
+  const logManagerOptions: LogManagerOptions = {
+    componentName: 'TestComponent',
+    includeHttpRequestDataInTheLog: true,
+    includeHttpResponseDataInTheLog: true,
+    logCallback: jest.fn(),
+    logBaseFileName: '',
+    logFileName: '',
+    logLevel: 'info',
+    maxFiles: 5,
+    maxSize: 100,
+    rotateBaseFileName: '',
+    showConsole: true,
+    suffixDatePattern: 'YYYY-MM-DD',
+    ...overrides,
+  }
+
+  return logManagerOptions
+}
+
 beforeEach(() => {
-  logManagerOptions = { ...lmOptionsNoFiles }
+  logManagerOptions = GetTestLogManagerOptions()
 })
 
 const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
@@ -45,25 +52,24 @@ const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
 })
 
 describe('constructor', () => {
-  const lmOptionsGood = {
-    ...logManagerOptions,
+  const lmOptionsGood = GetTestLogManagerOptions({
     logBaseFileName: 'test_base.log',
     logFileName: 'test.log',
     rotateBaseFileName: 'test_rotate.log',
-  }
+  })
 
   test('good', () => {
     const logManager = new LogManager(lmOptionsGood)
     expect(logManager).toBeInstanceOf(LogManager)
 
-    // expect(logManager.componentName).toBe('TestComponent')
-    // expect(logManager.logLevel).toBe('info')
-    // expect(logManager.includeHttpRequestDataInTheLog).toBe(false)
-    // expect(logManager.includeHttpResponseDataInTheLog).toBe(false)
+    expect(logManager.componentName).toBe('TestComponent')
+    expect(logManager.logLevel).toBe('info')
+    expect(logManager.includeHttpRequestDataInTheLog).toBe(true)
+    expect(logManager.includeHttpResponseDataInTheLog).toBe(true)
   })
 
   test('bad: no logBaseFileName, logFileName, or rotateBaseFileName', () => {
-    expect(() => new LogManager(lmOptionsNoFiles)).toThrow(
+    expect(() => new LogManager(logManagerOptions)).toThrow(
       'You must provide a logBaseFileName, an explicit logFileName or a rotateBaseFileName.'
     )
   })
@@ -75,20 +81,13 @@ describe('constructor', () => {
 })
 
 describe('log levels', () => {
-  const logManagerOptions: LogManagerOptions = {
-    componentName: 'TestComponent',
-    includeHttpRequestDataInTheLog: true,
-    includeHttpResponseDataInTheLog: true,
-    logCallback: jest.fn(),
+  const logManagerOptions = GetTestLogManagerOptions({
     logBaseFileName: 'test_base.log',
     logFileName: 'test.log',
-    logLevel: 'debug',
-    maxFiles: 5,
-    maxSize: 100,
     rotateBaseFileName: 'test_rotate.log',
-    showConsole: true,
     suffixDatePattern: 'YYYY-MM-DD',
-  }
+  })
+
   const lm = new LogManager(logManagerOptions)
 
   test('debug', () => {
@@ -96,6 +95,7 @@ describe('log levels', () => {
     const wlogger = lm.debug('1', '2', '3', '4', '5')
 
     expect(wlogger).toBeDefined()
+    expect(logManagerOptions.logCallback).toHaveBeenCalledTimes(0)
   })
 
   test('error', () => {
