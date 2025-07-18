@@ -413,7 +413,7 @@ test('addMessage bad', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     istats.addMessage(arrMessages as any)
 
-    throw new Error('Should never get here')
+    throw new AppException('Should never get here')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     expect(err.message).toBe('Message is not a string or set of strings.')

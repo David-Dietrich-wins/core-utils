@@ -155,9 +155,9 @@ export class ObjectHelper {
   }
   static EncodeObjectToBase64(obj: object) {
     const jsonString = JSON.stringify(
-      ObjectHelper.CloneObjectAlphabetizingKeys(obj)
-    ),
-     encodedString = Buffer.from(jsonString)
+        ObjectHelper.CloneObjectAlphabetizingKeys(obj)
+      ),
+      encodedString = Buffer.from(jsonString)
 
     return encodedString.toString('base64')
   }
@@ -248,10 +248,12 @@ export function runOnAllMembers<T extends object = object>(
   mustHaveValue = true
 ) {
   if (!isObject(obj)) {
-    throw new Error('runOnAllMembers() received an empty object.')
+    throw new AppException('runOnAllMembers() received an empty object.')
   }
   if (!isFunction(func)) {
-    throw new Error('runOnAllMembers() received an empty function operator.')
+    throw new AppException(
+      'runOnAllMembers() received an empty function operator.'
+    )
   }
 
   const objAsRecord = obj as Record<string, unknown>
@@ -279,12 +281,14 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
     !isString(newKey, 1) ||
     oldKey === newKey
   ) {
-    throw new Error('Cannot renameProperty. Invalid settings.')
+    throw new AppException('Cannot renameProperty. Invalid settings.')
   }
 
   const propdesc = Object.getOwnPropertyDescriptor(obj, oldKey)
   if (!propdesc) {
-    throw new Error(`Cannot renameProperty. Property: ${oldKey} not found.`)
+    throw new AppException(
+      `Cannot renameProperty. Property: ${oldKey} not found.`
+    )
   }
 
   Object.defineProperty(obj, newKey, propdesc)
@@ -328,7 +332,7 @@ export function deepDiffMapper() {
      */
     getChanges(obj1: unknown, obj2: unknown) {
       const objChanges = this.map(obj1, obj2),
-       changeEntries = Object.entries(objChanges)
+        changeEntries = Object.entries(objChanges)
 
       // Console.log('hasType:', this.isObject(objChanges, 'type'),
       //             ', objChanges:', objChanges,
@@ -389,7 +393,9 @@ export function deepDiffMapper() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map(obj1: any, obj2: any): object {
       if (this.isFunction(obj1) || this.isFunction(obj2)) {
-        throw new Error('Invalid argument. Function given, object expected.')
+        throw new AppException(
+          'Invalid argument. Function given, object expected.'
+        )
       }
       // Console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
       if (this.isValue(obj1) || this.isValue(obj2)) {
@@ -519,7 +525,7 @@ export function isObject(
 
   if (isString(minLengthOrContainsField)) {
     const keys = Object.keys(obj),
-     incs = safeArray(keys).includes(minLengthOrContainsField)
+      incs = safeArray(keys).includes(minLengthOrContainsField)
 
     return incs
   }
@@ -620,7 +626,7 @@ export function deepCloneJson<T extends object | Array<T>>(
 
 export function getBody(ret: unknown) {
   if (!isObject(ret, 'body')) {
-    throw new Error('Object body not found')
+    throw new AppException('Object body not found')
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

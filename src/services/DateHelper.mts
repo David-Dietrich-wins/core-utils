@@ -1,6 +1,10 @@
+import {
+  isString,
+  pluralSuffix,
+  prefixIfHasData,
+  safestr,
+} from './string-helper.mjs'
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
-import { pluralSuffix, prefixIfHasData, safestr } from './string-helper.mjs'
-import { isString } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { isNullOrUndefined } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
@@ -40,6 +44,7 @@ export class DateHelper {
    * @returns true if the date is valid. false otherwise.
    */
   static IsValidDate(date: DateTypeAcceptable) {
+    // eslint-disable-next-line init-declarations
     let dateCheck: Date | undefined
 
     if (date) {
@@ -67,7 +72,7 @@ export class DateHelper {
     const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
     if (!DateHelper.isDateObject(dateClean)) {
       throw new AppException(
-        `Invalid date: ${  safestr(date)}`,
+        `Invalid date: ${safestr(date)}`,
         'DateHelper.VerifyDateOrNowIfInvalid'
       )
     }
@@ -160,19 +165,19 @@ export class DateHelper {
     date?: Date | string | number | null,
     locale = 'en-US'
   ) {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    },
-
-     now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
-      locale,
-      options
-    )
+    const intlOptions: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      },
+      now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
+        locale,
+        intlOptions
+      )
 
     return now
   }
+
   static Midnight(date: Date | string | null | undefined) {
     if (date) {
       if (isString(date)) {
@@ -227,7 +232,7 @@ export class DateHelper {
   static SqlUtcToUtcString(sqlDateString: string, stripMilliseconds = true) {
     let strToConvert = safestr(sqlDateString)
     if (stripMilliseconds) {
-      strToConvert = strToConvert.replace(/\.\d{3}/, '')
+      strToConvert = strToConvert.replace(/\.\d{3}/u, '')
     }
 
     strToConvert = strToConvert.replace(' ', 'T')
@@ -361,6 +366,7 @@ export class DateHelper {
   }
 
   static TimeframeToStartOf(timeframe: string) {
+    // eslint-disable-next-line default-case
     switch (timeframe) {
       case 'd':
         return 'day'
@@ -386,9 +392,10 @@ export class DateHelper {
   }
 
   static LocalToUtc(date: Date | string | number | null | undefined) {
-    date = date ? new Date(date) : new Date()
-
-    const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
+    const dateNonEmpty = date ? new Date(date) : new Date(),
+      utc = new Date(
+        dateNonEmpty.getTime() + dateNonEmpty.getTimezoneOffset() * 60000
+      )
 
     return utc
   }
@@ -399,13 +406,14 @@ export class DateHelper {
     units: number = 1
   ) {
     const mom = moment.utc(date),
+      momTimeframe = DateHelper.TimeframeToStartOf(unit as string),
+      momUtcStart = mom
+        .utc()
+        .startOf(momTimeframe as moment.unitOfTime.StartOf),
+      newmom = momUtcStart
+        .utc()
+        .add(units, momTimeframe as unitOfTime.DurationConstructor)
 
-     timeframe = DateHelper.TimeframeToStartOf(unit as string),
-     smom = mom.utc().startOf(timeframe as moment.unitOfTime.StartOf),
-
-     newmom = smom
-      .utc()
-      .add(units, timeframe as unitOfTime.DurationConstructor)
     return newmom.utc().toDate()
   }
 
@@ -417,16 +425,15 @@ export class DateHelper {
    */
 
   static timeDifference(startTime: Date, endTime?: Date) {
-    const fname = 'DateHelper.timeDifference: '
     if (!startTime) {
-      throw new Error(`${fname  }You must have a start time.`)
+      throw new AppException(
+        `${DateHelper.name}.${DateHelper.timeDifference.name}: You must have a start time.`
+      )
     }
 
-    if (!endTime) {
-      endTime = new Date()
-    }
+    const endTimeNotEmpty = endTime ?? new Date()
 
-    return Math.abs(endTime.getTime() - startTime.getTime())
+    return Math.abs(endTimeNotEmpty.getTime() - startTime.getTime())
   }
   /**
    * Returns the number of seconds between two times.
@@ -472,33 +479,32 @@ export class DateHelper {
     showMilliseconds = false,
     showMillisecondsIfUnderASecond = true
   ) {
-    const totalSeconds = Math.floor(millis / 1000),
-     seconds = totalSeconds % 60,
-
-     totalMinutes = Math.floor(millis / 60000),
-     minutes = totalMinutes % 60,
-     totalHours = Math.floor(totalSeconds / 3600),
-     hours = totalHours % 24,
-     days = Math.floor(totalHours / 24)
+    const aMinutes = Math.floor(millis / 60000),
+      aSeconds = Math.floor(millis / 1000),
+      asHours = Math.floor(aSeconds / 3600),
+      numDays = Math.floor(asHours / 24),
+      numHours = asHours % 24,
+      numMinutes = aMinutes % 60,
+      numSeconds = aSeconds % 60,
+      secondsModulo = numSeconds % 60
 
     let s = ''
-    if (days > 0) {
-      s += longFormat ? `${days} day${pluralSuffix(days)}` : `${days}d`
+    if (numDays > 0) {
+      s += longFormat ? `${numDays} day${pluralSuffix(numDays)}` : `${numDays}d`
     }
 
-    if (hours > 0) {
+    if (numHours > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${hours} hour${pluralSuffix(hours)}`
-        : `${prefixIfHasData(s, ' ')}${hours}h`
+        ? `${prefixIfHasData(s)}${numHours} hour${pluralSuffix(numHours)}`
+        : `${prefixIfHasData(s, ' ')}${numHours}h`
     }
 
-    if (minutes > 0) {
+    if (numMinutes > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${minutes} minute${pluralSuffix(minutes)}`
-        : `${prefixIfHasData(s, ' ')}${minutes}m`
+        ? `${prefixIfHasData(s)}${numMinutes} minute${pluralSuffix(numMinutes)}`
+        : `${prefixIfHasData(s, ' ')}${numMinutes}m`
     }
 
-    const secondsModulo = seconds % 60
     if (secondsModulo > 0) {
       s += longFormat
         ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(

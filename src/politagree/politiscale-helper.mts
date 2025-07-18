@@ -11,11 +11,10 @@ import {
 } from './politiscale.mjs'
 
 const CONST_ScaleNameClimate = 'climate',
- CONST_ScaleNameFreeSpeech = 'freeSpeech',
- CONST_ScaleNameReligion = 'religion',
-
- ColorRangeLeft: ColorRange = ['#FF0000', '#0000FF'],
- ColorRangeRight: ColorRange = ['#0000FF', '#FF0000']
+  CONST_ScaleNameFreeSpeech = 'freeSpeech',
+  CONST_ScaleNameReligion = 'religion',
+  ColorRangeLeft: ColorRange = ['#FF0000', '#0000FF'],
+  ColorRangeRight: ColorRange = ['#0000FF', '#FF0000']
 
 export type PolitiscaleHeading = {
   name: PolitiscaleName
@@ -186,7 +185,7 @@ export abstract class PolitiscaleHelper {
     rating?: number
   ): PolitiRatingLeftRight {
     let left = rating ?? 0,
-     right = rating ?? 0
+      right = rating ?? 0
 
     const setting = PolitiscaleHelper.FindSetting(name).rating
 
@@ -242,7 +241,7 @@ export abstract class PolitiscaleHelper {
     scales: { name: string | PolitiscaleName; value?: number }[] = []
   ): PolitiRatingLeftRight {
     const ratingsLeft: number[] = [],
-     ratingsRight: number[] = []
+      ratingsRight: number[] = []
 
     safeArray(scales).forEach((scale) => {
       const pr = PolitiscaleHelper.CoreRating(scale.name, scale.value)
@@ -257,22 +256,21 @@ export abstract class PolitiscaleHelper {
     })
 
     const left = reduceRatings(ratingsLeft),
-     right = reduceRatings(ratingsRight),
-
-     leaning: PolitiRatingLeftRight = {
-      left: {
-        isPrimary: PolitiscaleHelper.IsLeftLeaning(left),
-        active: true,
-        value: left,
-        weight: 0,
-      },
-      right: {
-        isPrimary: PolitiscaleHelper.IsRightLeaning(right),
-        active: true,
-        value: right,
-        weight: 0,
-      },
-    }
+      right = reduceRatings(ratingsRight),
+      leaning: PolitiRatingLeftRight = {
+        left: {
+          isPrimary: PolitiscaleHelper.IsLeftLeaning(left),
+          active: true,
+          value: left,
+          weight: 0,
+        },
+        right: {
+          isPrimary: PolitiscaleHelper.IsRightLeaning(right),
+          active: true,
+          value: right,
+          weight: 0,
+        },
+      }
 
     return leaning
   }
@@ -320,9 +318,9 @@ export abstract class PolitiscaleHelper {
     // }
 
     let isLeft = primary.left.isPrimary,
-     isRight = primary.right.isPrimary,
-     ratingLeft = primary.left.active ? primary.left.value : 0,
-     ratingRight = primary.right.active ? primary.right.value : 0
+      isRight = primary.right.isPrimary,
+      ratingLeft = primary.left.active ? primary.left.value : 0,
+      ratingRight = primary.right.active ? primary.right.value : 0
 
     if (ratingLeft && applied.left.active && applied.left.value) {
       ratingLeft += applied.left.value
@@ -442,7 +440,7 @@ export abstract class PolitiscaleHelper {
 
   static getNewPolitiscales(scales: IPolitiscale[], scale: IPolitiscale) {
     const newarr = Array.from(safeArray(scales)),
-     findScale = newarr.find((x) => x.name === scale.name)
+      findScale = newarr.find((x) => x.name === scale.name)
     if (findScale) {
       findScale.value = scale.value
     } else {
@@ -457,10 +455,9 @@ export abstract class PolitiscaleHelper {
     formDataOrScaleArray?: IHasPolitiscales | IPolitiscale[]
   ) {
     const arrScales = this.getScales(formDataOrScaleArray),
-
-     scale = arrScales.find((x) => name === x.name)
+      scale = arrScales.find((x) => name === x.name)
     // If (!scale) {
-    //   Throw new Error(`Attempt to get PolitiScale for invalid name ${name}.`)
+    //   throw new AppException(`Attempt to get PolitiScale for invalid name ${name}.`)
     // }
 
     return scale

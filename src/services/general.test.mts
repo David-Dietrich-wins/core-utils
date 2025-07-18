@@ -1,4 +1,3 @@
- 
 import {
   getBoolean,
   getBooleanUndefined,
@@ -11,6 +10,7 @@ import {
   toHex,
   urlJoin,
 } from './general.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { getBody } from './object-helper.mjs'
 
 describe('URL Join', () => {
@@ -18,7 +18,7 @@ describe('URL Join', () => {
 
   test('Slash relative path', () => {
     const path = '/',
-     url = urlJoin(baseUrl, path)
+      url = urlJoin(baseUrl, path)
 
     expect(url).not.toBe(`${baseUrl}//`)
     expect(url).not.toBe(`${baseUrl}`)
@@ -26,25 +26,25 @@ describe('URL Join', () => {
   })
   test('Extra slashes relative path', () => {
     const path = '/',
-     url = urlJoin(`${baseUrl  }/`, path)
+      url = urlJoin(`${baseUrl}/`, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Many slashes relative path', () => {
     const path = '/',
-     url = urlJoin(`${baseUrl  }///`, path)
+      url = urlJoin(`${baseUrl}///`, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Undefined relative path', () => {
     const path = undefined,
-     url = urlJoin(baseUrl, path)
+      url = urlJoin(baseUrl, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('No relative path', () => {
     const path = undefined,
-     url = urlJoin(baseUrl, path, false)
+      url = urlJoin(baseUrl, path, false)
 
     expect(url).toBe(`${baseUrl}`)
   })
@@ -65,38 +65,38 @@ describe('URL Join', () => {
 
 describe('URL Join', () => {
   test('add trailing slash', () => {
-    const baseUrl = 'https://localhost:3000',
-     relativePath = '/test',
-     addTrailingSlash = true,
+    const addTrailingSlash = true,
+      baseUrl = 'https://localhost:3000',
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
 
-     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe(`https://localhost:3000/test/`)
   })
 
   test('no trailing slash', () => {
-    const baseUrl = 'https://localhost:3000',
-     relativePath = '/test',
-     addTrailingSlash = false,
+    const addTrailingSlash = false,
+      baseUrl = 'https://localhost:3000',
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
 
-     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 
   test('URL end in /', () => {
-    const baseUrl = 'https://localhost:3000/',
-     relativePath = '/test',
-     addTrailingSlash = false,
+    const addTrailingSlash = false,
+      baseUrl = 'https://localhost:3000/',
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
 
-     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 
   test('relative path and url end in /', () => {
-    const baseUrl = 'https://localhost:3000/',
-     relativePath = '/test/',
-     addTrailingSlash = false,
+    const addTrailingSlash = false,
+      baseUrl = 'https://localhost:3000/',
+      relativePath = '/test/',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
 
-     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 })
@@ -115,7 +115,7 @@ describe('toHex', () => {
   })
 
   test('10 should a', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     const ret = toHex(10, null as any)
 
     expect(ret).toBe('0A')
@@ -131,7 +131,7 @@ describe('toHex', () => {
 describe('sortFunction', () => {
   test('number', () => {
     const a = 0,
-     b = 1
+      b = 1
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -144,7 +144,7 @@ describe('sortFunction', () => {
 
   test('string', () => {
     const a = 'a',
-     b = 'b'
+      b = 'b'
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -165,7 +165,8 @@ describe('sortFunction', () => {
 
   test('empty', () => {
     let a: string | undefined = 'a',
-     b: string | undefined
+      // eslint-disable-next-line init-declarations, prefer-const
+      b: string | undefined
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -188,7 +189,7 @@ describe('sortFunction', () => {
 
   test('date', () => {
     const a = new Date(),
-     b = new Date(+a + 1000)
+      b = new Date(a.getTime() + 1000)
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -201,7 +202,7 @@ describe('sortFunction', () => {
 
   test('array', () => {
     const a = ['a', 'b'],
-     b = ['a', 'c']
+      b = ['a', 'c']
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -228,7 +229,8 @@ test('hasData', () => {
   expect(hasData([])).toBe(false)
   expect(hasData([], 0)).toBe(false)
   expect(hasData([], -1)).toBe(false)
-  expect(hasData([1], -1)).toBe(false) // Must be greater than 0
+  // Must be greater than 0
+  expect(hasData([1], -1)).toBe(false)
   expect(hasData({})).toBe(false)
   expect(hasData({}, undefined)).toBe(false)
   expect(hasData({}, null as unknown as number)).toBe(false)
@@ -246,14 +248,19 @@ test('hasData', () => {
   expect(hasData(['a'], 1)).toBe(true)
   expect(hasData(['a'], 2)).toBe(false)
 
-  const myfunc = () => ['a']
+  const myfunc = () => ['a'],
+    sym = Symbol('test'),
+    symbol1 = Symbol('description'),
+    // eslint-disable-next-line symbol-description
+    symbolUnique: unique symbol = Symbol()
+
   expect(hasData(myfunc, 1)).toBe(true)
   expect(hasData(myfunc, 2)).toBe(false)
 
   expect(hasData(23456, 23457)).toBe(false)
   expect(
     hasData(() => {
-      throw new Error('test error')
+      throw new AppException('test error')
     }, 1)
   ).toBe(false)
 
@@ -261,24 +268,24 @@ test('hasData', () => {
   expect(hasData(new Date(), 1)).toBe(true)
   expect(hasData(new Date(), -1)).toBe(true)
 
-  const sym = Symbol('test')
   expect(hasData(sym, 0)).toBe(false)
   expect(hasData(sym, 1)).toBe(true)
   expect(hasData(sym, 2)).toBe(false)
-  const symbol1 = Symbol('description')
   expect(hasData(symbol1)).toBe(true)
-  expect(hasData({ [symbol1]: 'abc' })).toBe(false) // Symbols do not contain values for JSON serialization
+  // Symbols do not contain values for JSON serialization
+  expect(hasData({ [symbol1]: 'abc' })).toBe(false)
   expect(hasData({ symbol1: 'abc' })).toBe(true)
   expect(hasData([symbol1])).toBe(true)
-  expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true) // Symbols do not contain values for JSON serialization
-  expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(false) // Symbols do not contain values for JSON serialization
+  // Symbols do not contain values for JSON serialization
+  expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true)
+  // Symbols do not contain values for JSON serialization
+  expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(false)
 
-  const symbolUnique: unique symbol = Symbol()
   expect(hasData(symbolUnique)).toBe(true)
   expect(hasData([symbolUnique])).toBe(true)
   expect(hasData(Symbol('test'))).toBe(true)
   expect(hasData([Symbol('test')])).toBe(true)
-  expect(hasData({ [symbolUnique]: 'abc' })).toBe(false) // Unique symbols cannot be serialized
+  expect(hasData({ [symbolUnique]: 'abc' })).toBe(false)
   expect(hasData({ symbolUnique: 'abc' })).toBe(true)
 })
 
@@ -368,6 +375,7 @@ test('getBooleanUndefined', () => {
 })
 
 test('getBody', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   expect(() => getBody('')).toThrow('Object body not found')
   expect(
     getBody({

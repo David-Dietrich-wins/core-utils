@@ -119,7 +119,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
     }
 
     if (isNullOrUndefined(minlength)) {
-      throw new Error('Minimum length cannot be null or undefined.')
+      throw new AppException('Minimum length cannot be null or undefined.')
     }
 
     if (isFunction(o)) {
@@ -164,7 +164,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
     }
 
     if (DateHelper.isDateObject(o)) {
-      return (o).getTime() >= minlength
+      return o.getTime() >= minlength
     }
 
     if (minlength < 1) {
@@ -241,9 +241,8 @@ export function sortFunction(
   compareStringsLowercase = true
 ) {
   const isAsc = SortOrderAsBoolean(sortOrder),
-
-   aEmpty = isNullOrUndefined(a),
-   bEmpty = isNullOrUndefined(b)
+    aEmpty = isNullOrUndefined(a),
+    bEmpty = isNullOrUndefined(b)
   if (aEmpty && bEmpty) {
     return 0
   }
@@ -265,9 +264,8 @@ export function sortFunction(
     return a < b ? -1 : 1
   }
   // If descending, highest sorts first
-  
-    return a < b ? 1 : -1
-  
+
+  return a < b ? 1 : -1
 
   // Return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
 }
@@ -283,10 +281,7 @@ export function toHex(decimal?: number, chars = 2) {
     chars = 2
   }
 
-  return ((decimal || 0) + 16**chars)
-    .toString(16)
-    .slice(-chars)
-    .toUpperCase()
+  return ((decimal || 0) + 16 ** chars).toString(16).slice(-chars).toUpperCase()
 }
 
 /**
@@ -303,19 +298,19 @@ export function urlJoin(
   addTrailingSlash = true
 ) {
   let url = safestr(baseUrl),
-   pathname = safeArray(relativePath)
-    .map((x) => {
-      if (isNullOrUndefined(x)) {
-        throw new AppException(
-          'urlJoin() relativePath cannot contain null or undefined values.',
-          'urlJoin',
-          safeArray(relativePath)
-        )
-      }
+    pathname = safeArray(relativePath)
+      .map((x) => {
+        if (isNullOrUndefined(x)) {
+          throw new AppException(
+            'urlJoin() relativePath cannot contain null or undefined values.',
+            'urlJoin',
+            safeArray(relativePath)
+          )
+        }
 
-      return isNumber(x) ? x.toString() : x
-    })
-    .join('/')
+        return isNumber(x) ? x.toString() : x
+      })
+      .join('/')
 
   // Remove any trailing slashes before adding a trailing slash.
   while (url.endsWith('/')) {
@@ -331,7 +326,7 @@ export function urlJoin(
   }
 
   if (pathname.length) {
-    url += `/${  pathname}`
+    url += `/${pathname}`
   }
 
   if (

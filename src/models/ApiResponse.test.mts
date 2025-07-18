@@ -1,17 +1,17 @@
-import { jest } from '@jest/globals'
 import { ApiResponse, IApiResponse, type IStatus } from './ApiResponse.mjs'
 import {
   AppException,
   AppExceptionHttp,
   AppExceptionHttpNotFound,
 } from './AppException.mjs'
-import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IPagedResponse, PagedResponse } from './PagedResponse.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { jest } from '@jest/globals'
 
 const CONST_DefaultError = 'Error',
- CONST_DefaultErrorResponseCode = -1,
- CONST_ErrorNotFound = 'Not Found',
- CONST_success = 'success'
+  CONST_DefaultErrorResponseCode = -1,
+  CONST_ErrorNotFound = 'Not Found',
+  CONST_success = 'success'
 
 test('Constructor empty', () => {
   const apiResponse = new ApiResponse('')
@@ -26,12 +26,12 @@ test('Constructor empty', () => {
 })
 
 test('Constructor one param', () => {
-  const result = CONST_success,
-   apiResponse = new ApiResponse('')
-  apiResponse.result = `${result  }extra`
+  const aaresult = CONST_success,
+    apiResponse = new ApiResponse('')
+  apiResponse.result = `${aaresult}extra`
 
   expect(apiResponse.message).toBe('')
-  expect(apiResponse.result).toBe(`${result  }extra`)
+  expect(apiResponse.result).toBe(`${aaresult}extra`)
   expect(apiResponse.id).toBeGreaterThan(0)
   expect(apiResponse.ts).toBeGreaterThan(0)
   expect(apiResponse.responseCode).toBe(0)
@@ -40,361 +40,363 @@ test('Constructor one param', () => {
 })
 
 test('message good', () => {
-  const result = CONST_success,
-   responseCode = 200,
-   message = CONST_success,
-   obj = { message: 'Found' },
-   apiResponse = new ApiResponse(obj, result, message, responseCode)
+  const message = CONST_success,
+    obj = { message: 'Found' },
+    responseCode = 200,
+    result = CONST_success,
+    zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-  expect(apiResponse.message.indexOf(message)).toBe(0)
-  expect(apiResponse.result.indexOf(result)).toBe(0)
-  expect(apiResponse.id).toBeGreaterThan(0)
-  expect(apiResponse.ts).toBeGreaterThan(0)
-  expect(apiResponse.responseCode).toBe(responseCode)
+  expect(zapiResponse.message.indexOf(message)).toBe(0)
+  expect(zapiResponse.result.indexOf(result)).toBe(0)
+  expect(zapiResponse.id).toBeGreaterThan(0)
+  expect(zapiResponse.ts).toBeGreaterThan(0)
+  expect(zapiResponse.responseCode).toBe(responseCode)
 
-  expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-  expect(apiResponse.data).toBe(obj)
+  expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+  expect(zapiResponse.data).toBe(obj)
 })
 
 describe('setError', () => {
   test('no params', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
 
-    apiResponse.setError()
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    zapiResponse.setError()
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data?.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
   })
 
   test('error object', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data?.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
 
-    apiResponse.setError(obj)
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    zapiResponse.setError(obj)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
 
-    apiResponse.setError(new AppExceptionHttpNotFound('', 'test', obj))
-    expect(apiResponse.message.indexOf(CONST_ErrorNotFound)).toBe(-1)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
-    expect(apiResponse.data.message.indexOf(CONST_ErrorNotFound)).toBe(-1)
-    expect(apiResponse.data).toStrictEqual({
+    zapiResponse.setError(new AppExceptionHttpNotFound('', 'test', obj))
+    expect(zapiResponse.message.indexOf(CONST_ErrorNotFound)).toBe(-1)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    expect(zapiResponse.data.message.indexOf(CONST_ErrorNotFound)).toBe(-1)
+    expect(zapiResponse.data).toStrictEqual({
       message: 'Found',
     })
   })
 
   test('exception', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode),
-     ge = new AppExceptionHttp('setError exception', 'not found')
+    const ge = new AppExceptionHttp('setError exception', 'not found'),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    apiResponse.setError(ge)
-    expect(apiResponse.message.indexOf('setError exception')).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    zapiResponse.setError(ge)
+    expect(zapiResponse.message.indexOf('setError exception')).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data).toStrictEqual(obj)
+    expect(zapiResponse.data).toStrictEqual(obj)
   })
 
   test('error number', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = 123,
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = 123,
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data).toBe(obj)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data).toBe(obj)
+    expect(zapiResponse.data).toBe(obj)
 
-    apiResponse.setError(obj)
-    expect(apiResponse.data).toBe(123)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(123)
+    zapiResponse.setError(obj)
+    expect(zapiResponse.data).toBe(123)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(123)
 
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data).toBe(obj)
   })
 
   test('error string', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = 'error string',
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = 'error string',
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data?.indexOf('error string')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data?.indexOf('error string')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
 
-    apiResponse.setError(obj)
-    expect(apiResponse.message.indexOf(obj)).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    zapiResponse.setError(obj)
+    expect(zapiResponse.message.indexOf(obj)).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data?.indexOf('error string')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data?.indexOf('error string')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
   })
 
   test('error object with response code', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
-
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
-
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
-
     const errorObj = new AppExceptionHttp(
-      'Not Found',
-      'test',
-      CONST_DefaultErrorResponseCode,
-      {
-        message: 'test Not Found',
-        responseCode: 404,
-      }
-    )
-    errorObj.responseCode = -21
-    apiResponse.setError(errorObj)
-    expect(apiResponse.message.indexOf('Not Found')).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(-21)
+        'Not Found',
+        'test',
+        CONST_DefaultErrorResponseCode,
+        {
+          message: 'test Not Found',
+          responseCode: 404,
+        }
+      ),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.data?.message.indexOf('test Not Found')).toBe(0)
-    expect(apiResponse.data).toStrictEqual({
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
+
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
+
+    errorObj.responseCode = -21
+    zapiResponse.setError(errorObj)
+    expect(zapiResponse.message.indexOf('Not Found')).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(-21)
+
+    expect(zapiResponse.data?.message.indexOf('test Not Found')).toBe(0)
+    expect(zapiResponse.data).toStrictEqual({
       message: 'test Not Found',
       responseCode: 404,
     })
   })
 
   test('error object with AppException', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
-
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
-
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
-
     const errorObj = new AppExceptionHttpNotFound(
-      'setError error object with AppExceptionHttpNotFound',
-      'test'
-    )
-    apiResponse.setError(errorObj)
+        'setError error object with AppExceptionHttpNotFound',
+        'test'
+      ),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
+
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
+
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
+
+    zapiResponse.setError(errorObj)
     expect(
-      apiResponse.message.indexOf(
+      zapiResponse.message.indexOf(
         'setError error object with AppExceptionHttpNotFound'
       )
     ).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data).toStrictEqual(obj)
+    expect(zapiResponse.data).toStrictEqual(obj)
   })
 
   test('error object with AppException no object', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
-
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
-
-    expect(apiResponse.data?.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
-
     const errorObj = new AppExceptionHttp(
-      CONST_ErrorNotFound,
-      'setError error object with AppException'
-    )
-    apiResponse.setError(errorObj)
-    expect(apiResponse.message.indexOf(CONST_ErrorNotFound)).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+        CONST_ErrorNotFound,
+        'setError error object with AppException'
+      ),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
+
+    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
+
+    zapiResponse.setError(errorObj)
+    expect(zapiResponse.message.indexOf(CONST_ErrorNotFound)).toBe(0)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+
+    expect(zapiResponse.data).toBe(obj)
   })
 
   test('error AppException with response code', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const eexceptionObject = {
+        message: 'Not Found',
+        responseCode: 500,
+      },
+      errorObj = new AppExceptionHttpNotFound(
+        'setError error object with AppExceptionHttpNotFound',
+        'test',
+        eexceptionObject
+      ),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
 
-    const exceptionObject = { responseCode: 500, message: 'Not Found' },
-     errorObj = new AppExceptionHttpNotFound(
-      'setError error object with AppExceptionHttpNotFound',
-      'test',
-      exceptionObject
-    )
-    apiResponse.setError(errorObj)
+    zapiResponse.setError(errorObj)
     expect(
-      apiResponse.message.indexOf(
+      zapiResponse.message.indexOf(
         'setError error object with AppExceptionHttpNotFound'
       )
     ).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(-1)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(-1)
 
-    expect(apiResponse.data).toBe(exceptionObject)
+    expect(zapiResponse.data).toBe(eexceptionObject)
   })
 
   test('error AppException without response code', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found' },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const eexceptionObject = { message: 'No responseCode' },
+      errorObj = new AppExceptionHttpNotFound(
+        'setError error object with AppExceptionHttpNotFound',
+        'test',
+        eexceptionObject
+      ),
+      message = CONST_success,
+      obj = { message: 'Found' },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.message.indexOf(message)).toBe(0)
-    expect(apiResponse.result.indexOf(result)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(responseCode)
+    expect(zapiResponse.message.indexOf(message)).toBe(0)
+    expect(zapiResponse.result.indexOf(result)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-    expect(apiResponse.data).toBe(obj)
-
-    const exceptionObject = { message: 'No responseCode' },
-     errorObj = new AppExceptionHttpNotFound(
-      'setError error object with AppExceptionHttpNotFound',
-      'test',
-      exceptionObject
-    )
-    apiResponse.setError(errorObj)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data).toBe(obj)
+    zapiResponse.setError(errorObj)
     expect(
-      apiResponse.message.indexOf(
+      zapiResponse.message.indexOf(
         'setError error object with AppExceptionHttpNotFound'
       )
     ).toBe(0)
-    expect(apiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
-    expect(apiResponse.id).toBeGreaterThan(0)
-    expect(apiResponse.ts).toBeGreaterThan(0)
-    expect(apiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
+    expect(zapiResponse.result.indexOf(CONST_DefaultError)).toBe(0)
+    expect(zapiResponse.id).toBeGreaterThan(0)
+    expect(zapiResponse.ts).toBeGreaterThan(0)
+    expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(apiResponse.data).toBe(exceptionObject)
+    expect(zapiResponse.data).toBe(eexceptionObject)
   })
 })
 
 test('setSuccess with object', () => {
-  const result = CONST_success,
-   responseCode = 200,
-   message = CONST_success,
-   obj = { message: 'Found', responseCode: 1 },
-   apiResponse = new ApiResponse(obj, result, message, responseCode)
+  const message = CONST_success,
+    obj = { message: 'Found', responseCode: 1 },
+    responseCode = 200,
+    result = CONST_success,
+    zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-  expect(apiResponse.message.indexOf(message)).toBe(0)
-  expect(apiResponse.result.indexOf(result)).toBe(0)
-  expect(apiResponse.id).toBeGreaterThan(0)
-  expect(apiResponse.ts).toBeGreaterThan(0)
-  expect(apiResponse.responseCode).toBe(responseCode)
+  expect(zapiResponse.message.indexOf(message)).toBe(0)
+  expect(zapiResponse.result.indexOf(result)).toBe(0)
+  expect(zapiResponse.id).toBeGreaterThan(0)
+  expect(zapiResponse.ts).toBeGreaterThan(0)
+  expect(zapiResponse.responseCode).toBe(responseCode)
 
-  expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-  expect(apiResponse.data).toBe(obj)
+  expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+  expect(zapiResponse.data).toBe(obj)
 
-  apiResponse.setSuccess(obj)
-  expect(apiResponse.message.indexOf(message)).toBe(0)
-  expect(apiResponse.result.indexOf(CONST_success)).toBe(0)
-  expect(apiResponse.id).toBeGreaterThan(0)
-  expect(apiResponse.ts).toBeGreaterThan(0)
-  expect(apiResponse.responseCode).toBe(responseCode)
+  zapiResponse.setSuccess(obj)
+  expect(zapiResponse.message.indexOf(message)).toBe(0)
+  expect(zapiResponse.result.indexOf(CONST_success)).toBe(0)
+  expect(zapiResponse.id).toBeGreaterThan(0)
+  expect(zapiResponse.ts).toBeGreaterThan(0)
+  expect(zapiResponse.responseCode).toBe(responseCode)
 
-  expect(apiResponse.data.message.indexOf('Found')).toBe(0)
-  expect(apiResponse.data).toBe(obj)
+  expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
+  expect(zapiResponse.data).toBe(obj)
 })
 
 describe('responseCodeIsGood', () => {
@@ -451,29 +453,29 @@ describe('isSuccess', () => {
   })
 
   test('isGood', () => {
-    const result = CONST_success,
-     responseCode = 200,
-     message = CONST_success,
-     obj = { message: 'Found', responseCode: 1 },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = { message: 'Found', responseCode: 1 },
+      responseCode = 200,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.isGood).toBe(true)
-    expect(apiResponse.isSuccess).toBe(true)
-    expect(apiResponse.isError).toBe(false)
-    expect(apiResponse.isErrorSignedOut).toBe(false)
+    expect(zapiResponse.isGood).toBe(true)
+    expect(zapiResponse.isSuccess).toBe(true)
+    expect(zapiResponse.isError).toBe(false)
+    expect(zapiResponse.isErrorSignedOut).toBe(false)
   })
 
   test('isError', () => {
-    const result = CONST_success,
-     responseCode = 401,
-     message = CONST_success,
-     obj = { message: 'Found', responseCode: 1 },
-     apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const message = CONST_success,
+      obj = { message: 'Found', responseCode: 1 },
+      responseCode = 401,
+      result = CONST_success,
+      zapiResponse = new ApiResponse(obj, result, message, responseCode)
 
-    expect(apiResponse.isGood).toBe(false)
-    expect(apiResponse.isSuccess).toBe(false)
-    expect(apiResponse.isError).toBe(true)
-    expect(apiResponse.isErrorSignedOut).toBe(true)
+    expect(zapiResponse.isGood).toBe(false)
+    expect(zapiResponse.isSuccess).toBe(false)
+    expect(zapiResponse.isError).toBe(true)
+    expect(zapiResponse.isErrorSignedOut).toBe(true)
   })
 })
 
@@ -499,16 +501,15 @@ test('CreateFromErrorMessage', () => {
 
 test('CreateFromIApiResponse', () => {
   const iapi: IApiResponse<{ some: string }> = {
-    message: 'error message',
-    result: CONST_DefaultError,
-    id: 123,
-    ts: 123456789,
-    responseCode: 200,
-    data: { some: 'data' },
-    stats: new InstrumentationStatistics(),
-  },
-
-   ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
+      data: { some: 'data' },
+      id: 123,
+      message: 'error message',
+      responseCode: 200,
+      result: CONST_DefaultError,
+      stats: new InstrumentationStatistics(),
+      ts: 123456789,
+    },
+    ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
 
   expect(ret).toBeInstanceOf(ApiResponse)
   expect(ret.message).toBe('error message')
@@ -523,14 +524,13 @@ test('CreateFromIApiResponse', () => {
   expect(ret.stats.totalProcessed).toBe(0)
 })
 
-test('ErrorHandler', async () => {
+test('ErrorHandler', () => {
   const fname = 'test-ErrorHandler',
-
-   location = {
-    href: 'http://localhost',
-    pathname: '/test',
-    search: '?query=1',
-  }
+    location = {
+      href: 'http://localhost',
+      pathname: '/test',
+      search: '?query=1',
+    }
 
   let ret = ApiResponse.ErrorHandler(
     fname,
@@ -569,10 +569,9 @@ test('ErrorHandler', async () => {
 
 test('VerifySuccess', () => {
   const fname = 'test-VerifySuccess',
-   ret = new ApiResponse('data', CONST_success, 'message', 200),
-
-   data = ApiResponse.VerifySuccess(fname, ret)
-  expect(data).toBe('data')
+    ret = new ApiResponse('data', CONST_success, 'message', 200),
+    zdata = ApiResponse.VerifySuccess(fname, ret)
+  expect(zdata).toBe('data')
 
   expect(() => {
     ApiResponse.VerifySuccess(fname, new ApiResponse('', 'error', '', 500))
@@ -597,17 +596,17 @@ test('VerifySuccess', () => {
 
 test('VerifySuccessPagedResponse', () => {
   const fname = 'test-VerifySuccessPagedResponse',
-   ret = new ApiResponse<IPagedResponse<string>>(
-    { dataPage: [], totalCount: 0 },
-    CONST_success,
-    'message',
-    200
-  ),
+    ret = new ApiResponse<IPagedResponse<string>>(
+      { dataPage: [], totalCount: 0 },
+      CONST_success,
+      'message',
+      200
+    ),
+    zdata = ApiResponse.VerifySuccessPagedResponse(fname, ret)
 
-   data = ApiResponse.VerifySuccessPagedResponse(fname, ret)
-  expect(data).toBeInstanceOf(PagedResponse)
-  expect(data.dataPage).toEqual([])
-  expect(data.totalCount).toBe(0)
+  expect(zdata).toBeInstanceOf(PagedResponse)
+  expect(zdata.dataPage).toEqual([])
+  expect(zdata.totalCount).toBe(0)
 
   expect(() => {
     ApiResponse.VerifySuccessPagedResponse(
@@ -681,55 +680,59 @@ test('IsApiResponse', () => {
   expect(ApiResponse.IsApiResponse({ id: 123 })).toBe(false)
   expect(ApiResponse.IsApiResponse({ id: 123, ts: Date.now() })).toBe(false)
   expect(
-    ApiResponse.IsApiResponse({ id: 123, ts: Date.now(), result: '' })
-  ).toBe(false)
-  expect(
     ApiResponse.IsApiResponse({
       id: 123,
-      ts: Date.now(),
       result: '',
-      message: '',
+      ts: Date.now(),
     })
   ).toBe(false)
   expect(
     ApiResponse.IsApiResponse({
       id: 123,
-      ts: Date.now(),
-      result: '',
       message: '',
-      responseCode: 0,
+      result: '',
+      ts: Date.now(),
     })
   ).toBe(false)
   expect(
     ApiResponse.IsApiResponse({
       id: 123,
-      ts: Date.now(),
-      result: '',
       message: '',
       responseCode: 0,
+      result: '',
+      ts: Date.now(),
+    })
+  ).toBe(false)
+  expect(
+    ApiResponse.IsApiResponse({
       data: '',
+      id: 123,
+      message: '',
+      responseCode: 0,
+      result: '',
+      ts: Date.now(),
     })
   ).toBe(false)
   expect(
     ApiResponse.IsApiResponse({
+      data: '',
       id: 123,
-      ts: Date.now(),
-      result: '',
       message: '',
       responseCode: 0,
-      data: '',
+      result: '',
       stats: new InstrumentationStatistics(),
+      ts: Date.now(),
     })
   ).toBe(true)
 
   const obj: IApiResponse = {
+    data: '',
     id: 123,
-    ts: Date.now(),
-    result: '',
     message: '',
     responseCode: 0,
-    data: '',
+    result: '',
     stats: new InstrumentationStatistics(),
+    ts: Date.now(),
   }
 
   expect(ApiResponse.IsApiResponse(obj)).toBe(true)
@@ -766,25 +769,29 @@ test('IsApiResponseError', () => {
   expect(ApiResponse.IsApiResponseError({ id: 123 })).toBe(true)
   expect(ApiResponse.IsApiResponseError({ id: 123, ts: Date.now() })).toBe(true)
   expect(
-    ApiResponse.IsApiResponseError({ id: 123, ts: Date.now(), result: '' })
+    ApiResponse.IsApiResponseError({
+      id: 123,
+      result: '',
+      ts: Date.now(),
+    })
   ).toBe(true)
   expect(
     ApiResponse.IsApiResponseError({
       id: 123,
-      ts: Date.now(),
-      result: '',
       message: '',
+      result: '',
+      ts: Date.now(),
     })
   ).toBe(true)
 
   const obj: IApiResponse = {
+    data: '',
     id: 123,
-    ts: Date.now(),
-    result: '',
     message: '',
     responseCode: 0,
-    data: '',
+    result: '',
     stats: new InstrumentationStatistics(),
+    ts: Date.now(),
   }
 
   expect(ApiResponse.IsApiResponseError(obj)).toBe(true)
@@ -826,17 +833,19 @@ test('HasObj', () => {
 })
 
 test('IsCaptureResponse', () => {
-  const obj: { captureResponse: IApiResponse } = {
-    captureResponse: {
-      id: 123,
-      ts: Date.now(),
-      result: '',
-      message: '',
-      responseCode: 0,
-      data: '',
-      stats: new InstrumentationStatistics(),
-    },
-  }
+  const newobj = { captureResponse: {} },
+    noobj = {},
+    obj: { captureResponse: IApiResponse } = {
+      captureResponse: {
+        data: '',
+        id: 123,
+        message: '',
+        responseCode: 0,
+        result: '',
+        stats: new InstrumentationStatistics(),
+        ts: Date.now(),
+      },
+    }
 
   expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
 
@@ -861,27 +870,27 @@ test('IsCaptureResponse', () => {
   obj.captureResponse.result = CONST_success
   expect(ApiResponse.IsCaptureResponse(obj)).toBe(true)
 
-  const newobj = { captureResponse: {} }
   expect(ApiResponse.IsCaptureResponse(newobj)).toBe(true)
 
-  const noobj = {}
   expect(ApiResponse.IsCaptureResponse(noobj)).toBe(false)
 })
 
 test('IsWrappedCaptureResponse', () => {
-  const obj: { obj: { captureResponse: IApiResponse } } = {
-    obj: {
-      captureResponse: {
-        id: 123,
-        ts: Date.now(),
-        result: '',
-        message: '',
-        responseCode: 0,
-        data: '',
-        stats: new InstrumentationStatistics(),
+  const newobj = { obj: { captureResponse: {} } },
+    noobj = {},
+    obj: { obj: { captureResponse: IApiResponse } } = {
+      obj: {
+        captureResponse: {
+          data: '',
+          id: 123,
+          message: '',
+          responseCode: 0,
+          result: '',
+          stats: new InstrumentationStatistics(),
+          ts: Date.now(),
+        },
       },
-    },
-  }
+    }
 
   expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
 
@@ -906,27 +915,27 @@ test('IsWrappedCaptureResponse', () => {
   obj.obj.captureResponse.result = CONST_success
   expect(ApiResponse.IsWrappedCaptureResponse(obj)).toBe(true)
 
-  const newobj = { obj: { captureResponse: {} } }
   expect(ApiResponse.IsWrappedCaptureResponse(newobj)).toBe(true)
 
-  const noobj = {}
   expect(ApiResponse.IsWrappedCaptureResponse(noobj)).toBe(false)
 })
 
 test('IsWrappedCaptureResponseWithMsg', () => {
-  const obj: { obj: { captureResponse: IApiResponse } } = {
-    obj: {
-      captureResponse: {
-        id: 123,
-        ts: Date.now(),
-        result: '',
-        message: '',
-        responseCode: 0,
-        data: '',
-        stats: new InstrumentationStatistics(),
+  const newobj = { obj: { captureResponse: {} } },
+    noobj = {},
+    obj: { obj: { captureResponse: IApiResponse } } = {
+      obj: {
+        captureResponse: {
+          data: '',
+          id: 123,
+          message: '',
+          responseCode: 0,
+          result: '',
+          stats: new InstrumentationStatistics(),
+          ts: Date.now(),
+        },
       },
-    },
-  }
+    }
 
   expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
 
@@ -951,9 +960,7 @@ test('IsWrappedCaptureResponseWithMsg', () => {
   obj.obj.captureResponse.result = CONST_success
   expect(ApiResponse.IsWrappedCaptureResponseWithMessage(obj)).toBe(true)
 
-  const newobj = { obj: { captureResponse: {} } }
   expect(ApiResponse.IsWrappedCaptureResponseWithMessage(newobj)).toBe(false)
 
-  const noobj = {}
   expect(ApiResponse.IsWrappedCaptureResponseWithMessage(noobj)).toBe(false)
 })

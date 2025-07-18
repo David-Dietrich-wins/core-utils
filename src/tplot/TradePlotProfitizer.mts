@@ -166,7 +166,7 @@ export class TradePlotProfitizer
         return 'When the 8- and 21-day moving averages cross each other. Follow the 8.'
 
       default:
-        // Throw new Error('Invalid pattern');
+        // throw new AppException('Invalid pattern');
         return ''
     }
   }

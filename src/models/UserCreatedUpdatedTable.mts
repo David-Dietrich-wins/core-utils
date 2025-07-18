@@ -1,9 +1,10 @@
-import { IUserId } from './interfaces.mjs'
 import { ICreatedBy, IUpdatedBy } from './id-created-updated.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { IId } from './IdManager.mjs'
 import { AnyObject } from './types.mjs'
+import { AppException } from './AppException.mjs'
+import { IId } from './IdManager.mjs'
+import { IUserId } from './interfaces.mjs'
+import { isObject } from '../services/object-helper.mjs'
 
 export interface ICreatedTable<Tid = string> extends IId<Tid>, ICreatedBy {}
 export interface ICreatedUpdatedTable<Tid = string>
@@ -107,13 +108,14 @@ export class UserCreatedUpdatedTable<T = string>
     username: string,
     dateToSetTo?: Date
   ) {
-    const isUpdate = false
-
     if (isNullOrUndefined(obj)) {
-      throw new Error('You must pass a non-empty object to fixupForInsert.')
+      throw new AppException(
+        'You must pass a non-empty object to fixupForInsert.'
+      )
     }
 
-    const dateToUse = isNullOrUndefined(dateToSetTo) ? new Date() : dateToSetTo
+    const dateToUse = isNullOrUndefined(dateToSetTo) ? new Date() : dateToSetTo,
+      wasUpdated = false
 
     if (!hasData(obj.created)) {
       obj.created = dateToUse
@@ -126,7 +128,7 @@ export class UserCreatedUpdatedTable<T = string>
     obj.updated = dateToUse
     obj.updatedby = username
 
-    return isUpdate
+    return wasUpdated
   }
 
   copyFromDatabase(dbtp: IUserCreatedUpdatedTable<T>) {

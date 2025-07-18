@@ -1,5 +1,6 @@
-import { IIdNameValue } from '../models/id-name.mjs'
+/* eslint-disable one-var */
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
+import { IIdNameValue } from '../models/id-name.mjs'
 import { StringHelper } from './string-helper.mjs'
 import { ZodType } from 'zod/v4'
 
@@ -39,17 +40,16 @@ test('constructor term array', () => {
 
 test('constructor object', () => {
   const isrv: ISearchRequestView = {
-    term: 'test',
-    sortColumn: 'column',
-    sortDirection: 'asc',
-    limit: 10,
-    offset: 0,
-    exactMatch: true,
-    pageIndex: 0,
-    pageSize: 20,
-  },
-
-   srv = new SearchRequestView(isrv)
+      exactMatch: true,
+      limit: 10,
+      offset: 0,
+      pageIndex: 0,
+      pageSize: 20,
+      sortColumn: 'column',
+      sortDirection: 'asc',
+      term: 'test',
+    },
+    srv = new SearchRequestView(isrv)
   expect(srv.term).toBe('test')
   expect(srv.sortColumn).toBe('column')
   expect(srv.sortDirection).toBe('asc')
@@ -74,17 +74,16 @@ test('constructor object', () => {
 
 test('pageIndex and pageSize', () => {
   const isrv: ISearchRequestView = {
-    term: 'test',
-    sortColumn: 'column',
-    sortDirection: 'asc',
-    limit: 12,
-    offset: 0,
-    exactMatch: true,
-    pageIndex: 2,
-    pageSize: 20,
-  },
-
-   srv = new SearchRequestView(isrv)
+      exactMatch: true,
+      limit: 12,
+      offset: 0,
+      pageIndex: 2,
+      pageSize: 20,
+      sortColumn: 'column',
+      sortDirection: 'asc',
+      term: 'test',
+    },
+    srv = new SearchRequestView(isrv)
   expect(srv.pageIndex).toBe(2)
   expect(srv.pageSize).toBe(20)
   expect(srv.CalculatedPageSize).toBe(20)
@@ -113,7 +112,7 @@ describe('getItems', () => {
     }
 
     const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true),
-     [result, count] = srv.getItems(items, 10)
+      [result, count] = srv.getItems(items, 10)
     expect(result.length).toBe(10)
     expect(count).toBe(100)
 
@@ -300,7 +299,7 @@ describe('getItems', () => {
     }
 
     const srv = new SearchRequestView('test', '', 'asc', 5, 2, true),
-     [result, count] = srv.getItems(items, 11)
+      [result, count] = srv.getItems(items, 11)
     expect(result.length).toBe(5)
     expect(count).toBe(11)
   })
@@ -318,7 +317,7 @@ describe('getItems', () => {
     }
 
     const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true),
-     [result, count] = srv.getItems(items, 10)
+      [result, count] = srv.getItems(items, 10)
     expect(result.length).toBe(10)
     expect(count).toBe(100)
 
@@ -390,7 +389,7 @@ describe('getItems', () => {
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
     srv.term = 100 as any
     srv.limit = 0
     srv.offset = 2
@@ -425,51 +424,48 @@ describe('zSchema', () => {
 
   test('valid parse', () => {
     const schema = SearchRequestView.zSearchRequestView,
-
-     srv: ISearchRequestView = {
-      term: 'name',
-      sortColumn: 'name',
-      sortDirection: 'asc',
-      limit: 10,
-      offset: 0,
-      exactMatch: true,
-      pageIndex: 0,
-      pageSize: 20,
-    }
+      srv: ISearchRequestView = {
+        exactMatch: true,
+        limit: 10,
+        offset: 0,
+        pageIndex: 0,
+        pageSize: 20,
+        sortColumn: 'name',
+        sortDirection: 'asc',
+        term: 'name',
+      }
 
     expect(() => schema.parse(srv)).not.toThrow()
   })
 
   test('term array', () => {
     const schema = SearchRequestView.zSearchRequestView,
-
-     srv: ISearchRequestView = {
-      term: ['name', 'value'],
-      sortColumn: 'name',
-      sortDirection: 'asc',
-      limit: 10,
-      offset: 0,
-      exactMatch: true,
-      pageIndex: 0,
-      pageSize: 20,
-    }
+      srv: ISearchRequestView = {
+        exactMatch: true,
+        limit: 10,
+        offset: 0,
+        pageIndex: 0,
+        pageSize: 20,
+        sortColumn: 'name',
+        sortDirection: 'asc',
+        term: ['name', 'value'],
+      }
 
     expect(() => schema.parse(srv)).not.toThrow()
   })
 
   test('bad limit', () => {
-    const schema = SearchRequestView.zSearchRequestView,
-
-     company: ISearchRequestView = {
-      term: 'name',
-      sortColumn: 'name',
-      sortDirection: 'asc',
-      limit: 1011111111111,
-      offset: 0,
-      exactMatch: true,
-      pageIndex: 0,
-      pageSize: 20,
-    }
+    const company: ISearchRequestView = {
+        exactMatch: true,
+        limit: 1011111111111,
+        offset: 0,
+        pageIndex: 0,
+        pageSize: 20,
+        sortColumn: 'name',
+        sortDirection: 'asc',
+        term: 'name',
+      },
+      schema = SearchRequestView.zSearchRequestView
 
     expect(() => schema.parse(company)).toThrow(
       new Error(`[
@@ -490,35 +486,35 @@ describe('zSchema', () => {
 
 test('Create', () => {
   expect(SearchRequestView.Create()).toEqual({
-    term: '',
-    sortColumn: '',
-    sortDirection: 'asc',
+    exactMatch: false,
     limit: 0,
     offset: 0,
-    exactMatch: false,
     pageIndex: 0,
     pageSize: 0,
+    sortColumn: '',
+    sortDirection: 'asc',
+    term: '',
   })
 
   expect(
     SearchRequestView.Create({
-      term: 'term',
-      sortColumn: 'filter',
-      sortDirection: 'desc',
+      exactMatch: true,
       limit: 1,
       offset: 2,
-      exactMatch: true,
       pageIndex: 3,
       pageSize: 4,
+      sortColumn: 'filter',
+      sortDirection: 'desc',
+      term: 'term',
     })
   ).toStrictEqual({
-    term: 'term',
-    sortColumn: 'filter',
-    sortDirection: 'desc',
+    exactMatch: true,
     limit: 1,
     offset: 2,
-    exactMatch: true,
     pageIndex: 3,
     pageSize: 4,
+    sortColumn: 'filter',
+    sortDirection: 'desc',
+    term: 'term',
   })
 })

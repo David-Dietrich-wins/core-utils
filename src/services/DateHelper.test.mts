@@ -1,8 +1,13 @@
-import moment from 'moment'
 import { TEST_Parameters_DEV, getCurrentDate } from '../jest.setup.mjs'
-import { DateHelper } from './DateHelper.mjs'
-import { safestr } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { DateHelper } from './DateHelper.mjs'
+import moment from 'moment'
+import { safestr } from './string-helper.mjs'
+
+const AAPL_IPO = '1980-12-12',
+  AAPL_IPO_AND_TIMEZONE = `${AAPL_IPO}T00:00:00.000Z`,
+  AAPL_IPO_DATE = new Date(AAPL_IPO),
+  AAPL_IPO_DATE_MILLISECONDS = AAPL_IPO_DATE.getTime()
 
 test('VerifyDateOrNowIfEmpty', () => {
   let date = DateHelper.VerifyDateOrNowIfEmpty(
@@ -13,11 +18,12 @@ test('VerifyDateOrNowIfEmpty', () => {
   date = DateHelper.VerifyDateOrNowIfEmpty('2025-12-01T00:00:00.000Z')
   expect(date.getTime()).toEqual(new Date('2025-12-01T00:00:00.000Z').getTime())
 
-  date = DateHelper.VerifyDateOrNowIfEmpty(345427200000) // AAPL IPO date
+  // AAPL IPO date
+  date = DateHelper.VerifyDateOrNowIfEmpty(AAPL_IPO_DATE_MILLISECONDS)
   expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
 
-  date = DateHelper.VerifyDateOrNowIfEmpty('1980-12-12') // AAPL IPO date
-  expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
+  date = DateHelper.VerifyDateOrNowIfEmpty(AAPL_IPO)
+  expect(date.getTime()).toEqual(new Date(AAPL_IPO_AND_TIMEZONE).getTime())
 
   expect(DateHelper.VerifyDateOrNowIfEmpty(1740481297461)).toEqual(
     new Date('2025-02-25T11:01:37.461Z')
@@ -38,63 +44,63 @@ test('VerifyDateOrNowIfEmpty', () => {
 })
 
 test('Add Milliseconds', () => {
-  const numToAdd = 2456,
-   newDate = DateHelper.addMillisToDate(
-    numToAdd,
-    TEST_Parameters_DEV.currentDate
-  )
+  const anumToAdd = 2456,
+    newDate = DateHelper.addMillisToDate(
+      anumToAdd,
+      TEST_Parameters_DEV.currentDate
+    )
 
   expect(
     newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(numToAdd)
+  ).toEqual(anumToAdd)
 })
 
 test('Add Seconds', () => {
-  const numToAdd = 2456,
-   newDate = DateHelper.addSecondsToDate(
-    numToAdd,
-    TEST_Parameters_DEV.currentDate
-  )
+  const anumToAdd = 2456,
+    newDate = DateHelper.addSecondsToDate(
+      anumToAdd,
+      TEST_Parameters_DEV.currentDate
+    )
 
   expect(
     newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(numToAdd * 1000)
+  ).toEqual(anumToAdd * 1000)
 })
 
 test('Add Minutes', () => {
-  const numToAdd = 2456,
-   newDate = DateHelper.addMinutesToDate(
-    numToAdd,
-    TEST_Parameters_DEV.currentDate
-  )
+  const anumToAdd = 2456,
+    newDate = DateHelper.addMinutesToDate(
+      anumToAdd,
+      TEST_Parameters_DEV.currentDate
+    )
 
   expect(
     newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(numToAdd * 1000 * 60)
+  ).toEqual(anumToAdd * 1000 * 60)
 })
 
 test('Add Hours', () => {
-  const numToAdd = 2456,
-   newDate = DateHelper.addHoursToDate(
-    numToAdd,
-    TEST_Parameters_DEV.currentDate
-  )
+  const anumToAdd = 2456,
+    newDate = DateHelper.addHoursToDate(
+      anumToAdd,
+      TEST_Parameters_DEV.currentDate
+    )
 
   expect(
     newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(numToAdd * 1000 * 60 * 60)
+  ).toEqual(anumToAdd * 1000 * 60 * 60)
 })
 
 test('Add Days', () => {
-  const numToAdd = 26,
-   newDate = DateHelper.addDaysToDate(
-    numToAdd,
-    TEST_Parameters_DEV.currentDate
-  )
+  const anumToAdd = 26,
+    newDate = DateHelper.addDaysToDate(
+      anumToAdd,
+      TEST_Parameters_DEV.currentDate
+    )
 
   expect(
     newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(numToAdd * 1000 * 60 * 60 * 24)
+  ).toEqual(anumToAdd * 1000 * 60 * 60 * 24)
 })
 
 describe('toIsoString', () => {
@@ -123,8 +129,8 @@ describe('toIsoString', () => {
   })
 
   test('SQL date', () => {
-    const strSqlDate = '2022-10-30 22:09:00.000',
-     ret = DateHelper.toIsoString(strSqlDate)
+    const astrSqlDate = '2022-10-30 22:09:00.000',
+      ret = DateHelper.toIsoString(astrSqlDate)
 
     expect(ret).toBe('2022-10-31T02:09:00.000Z')
   })
@@ -150,17 +156,15 @@ describe('SqlUtcToUtcString', () => {
   })
 
   test('milliseconds', () => {
-    const strSqlDate = '2022-11-31 22:09:00.000',
-
-     ret = DateHelper.SqlUtcToUtcString(strSqlDate, false)
+    const astrSqlDate = '2022-11-31 22:09:00.000',
+      ret = DateHelper.SqlUtcToUtcString(astrSqlDate, false)
 
     expect(ret).toBe('2022-11-31T22:09:00.000Z')
   })
 
   test('no milliseconds', () => {
-    const strSqlDate = '2022-11-31 22:09:00.000',
-
-     ret = DateHelper.SqlUtcToUtcString(strSqlDate)
+    const astrSqlDate = '2022-11-31 22:09:00.000',
+      ret = DateHelper.SqlUtcToUtcString(astrSqlDate)
 
     expect(ret).toBe('2022-11-31T22:09:00Z')
   })
@@ -194,58 +198,50 @@ describe('toIsoStringSafe', () => {
 
 describe('addMillisToDate', () => {
   test('empty', () => {
-    const startDate = new Date(),
-     startTimeMillis = +startDate,
-
-     retDate = DateHelper.addMillisToDate(5000),
-     retTimeMillis = +retDate,
-
-     millisElapsed = retTimeMillis - startTimeMillis
+    const retDate = DateHelper.addMillisToDate(5000),
+      retTimeMillis = Number(retDate),
+      startDate = new Date(),
+      startTimeMillis = startDate.getTime(),
+      startTimeMillisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
-    expect(millisElapsed).toBeGreaterThanOrEqual(5000)
+    expect(startTimeMillisElapsed).toBeGreaterThanOrEqual(5000)
     expect(new Date(retTimeMillis).toISOString()).toContain('T')
   })
 
   test('good Date', () => {
-    const startDate = new Date(),
-     startTimeMillis = +startDate,
-
-     retDate = DateHelper.addMillisToDate(5000, startDate),
-     retTimeMillis = +retDate,
-
-     millisElapsed = retTimeMillis - startTimeMillis
+    const astartDate = new Date(),
+      retDate = DateHelper.addMillisToDate(5000, astartDate),
+      retTimeMillis = retDate.getTime(),
+      startTimeMillis = astartDate.getTime(),
+      startTimeMillisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
-    expect(millisElapsed).toBeGreaterThanOrEqual(5000)
+    expect(startTimeMillisElapsed).toBeGreaterThanOrEqual(5000)
     expect(new Date(retTimeMillis).toISOString()).toContain('T')
   })
 
   test('good number', () => {
-    const startDate = new Date(),
-     startTimeMillis = +startDate,
-
-     retDate = DateHelper.addMillisToDate(5000, +startDate),
-     retTimeMillis = +retDate,
-
-     millisElapsed = retTimeMillis - startTimeMillis
+    const astartDate = new Date(),
+      retDate = DateHelper.addMillisToDate(5000, astartDate),
+      retTimeMillis = retDate.getTime(),
+      startTimeMillis = astartDate.getTime(),
+      startTimeMillisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
-    expect(millisElapsed).toBeGreaterThanOrEqual(5000)
+    expect(startTimeMillisElapsed).toBeGreaterThanOrEqual(5000)
     expect(new Date(retTimeMillis).toISOString()).toContain('T')
   })
 
   test('good string', () => {
-    const startDate = new Date(),
-     startTimeMillis = +startDate,
-
-     retDate = DateHelper.addMillisToDate(5000, startDate.toISOString()),
-     retTimeMillis = +retDate,
-
-     millisElapsed = retTimeMillis - startTimeMillis
+    const astartDate = new Date(),
+      retDate = DateHelper.addMillisToDate(5000, astartDate.toISOString()),
+      retTimeMillis = retDate.getTime(),
+      startTimeMillis = astartDate.getTime(),
+      startTimeMillisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
-    expect(millisElapsed).toBeGreaterThanOrEqual(5000)
+    expect(startTimeMillisElapsed).toBeGreaterThanOrEqual(5000)
     expect(new Date(retTimeMillis).toISOString()).toContain('T')
   })
 })
@@ -260,34 +256,30 @@ describe('FormatDateTime', () => {
   })
 
   test('good Date', () => {
-    const startDate = new Date(),
+    const astartDate = new Date(),
+      retDate = DateHelper.FormatDateTime(DateHelper.FormatSeconds, astartDate)
 
-     retDate = DateHelper.FormatDateTime(
-      DateHelper.FormatSeconds,
-      startDate
-    )
     expect(retDate).toContain('/')
     expect(retDate).toContain(':')
   })
 
   test('good number', () => {
-    const startDate = new Date(),
+    const astartDate = new Date(),
+      retDate = DateHelper.FormatDateTime(
+        DateHelper.FormatSeconds,
+        astartDate.getTime()
+      )
 
-     retDate = DateHelper.FormatDateTime(
-      DateHelper.FormatSeconds,
-      +startDate
-    )
     expect(retDate).toContain('/')
     expect(retDate).toContain(':')
   })
 
   test('good string', () => {
-    const startDate = new Date(),
-
-     retDate = DateHelper.FormatDateTime(
-      DateHelper.FormatSeconds,
-      startDate.toISOString()
-    )
+    const astartDate = new Date(),
+      retDate = DateHelper.FormatDateTime(
+        DateHelper.FormatSeconds,
+        astartDate.toISOString()
+      )
     expect(retDate).toContain('/')
     expect(retDate).toContain(':')
   })
@@ -296,7 +288,7 @@ describe('FormatDateTime', () => {
 test.each([undefined, null, new Date(), Date.now()])('fileDateTime %s', () => {
   const retDate = DateHelper.fileDateTime()
 
-  expect(retDate).toMatch(/\d{6}_\d{6}/i)
+  expect(retDate).toMatch(/\d{6}_\d{6}/iu)
 })
 
 test.each([
@@ -312,96 +304,96 @@ test.each([
 ])('FormatDateTimeWithMillis %s', (dateToTest) => {
   const ret = DateHelper.FormatDateTimeWithMillis(dateToTest)
 
-  expect(ret).toMatch(/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/)
+  expect(ret).toMatch(/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/u)
 })
 
 test('toLocalStringWithoutTimezone', () => {
   const ret = DateHelper.toLocalStringWithoutTimezone()
 
-  expect(ret).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}/)
+  expect(ret).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}/u)
 })
 
 describe('DateFormatForUi', () => {
   test('default', () => {
     const ret = DateHelper.DateFormatForUi()
 
-    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{2}/)
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{2}/u)
   })
   test('show full year', () => {
     const ret = DateHelper.DateFormatForUi(undefined, true)
 
-    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
   test('utc', () => {
     const ret = DateHelper.DateFormatForUi(Date.now(), true, true)
 
-    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
+    expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
 })
 describe('DateHelper.timeDifference', () => {
   test('startTime', () => {
-    const startDate = new Date(Date.now() - 2000),
+    const astartDate = new Date(Date.now() - 2000),
+      millis = DateHelper.timeDifference(astartDate)
 
-     millis = DateHelper.timeDifference(startDate)
     expect(millis).toBeGreaterThanOrEqual(2000)
   })
 
   test('startTime null', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => DateHelper.timeDifference(null as any)).toThrow(
+    expect(() => DateHelper.timeDifference(null as unknown as Date)).toThrow(
       'DateHelper.timeDifference: You must have a start time.'
     )
   })
 })
 describe('DateHelper.timeDifferenceString', () => {
   test('2s', () => {
-    const startDate = new Date(),
-     endDate = new Date(+startDate)
+    const astartDate = new Date(),
+      endDate = new Date(Number(astartDate))
 
     endDate.setSeconds(endDate.getSeconds() - 2)
-    const str = DateHelper.timeDifferenceString(startDate, endDate)
+    // eslint-disable-next-line one-var
+    const str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2s')
   })
 
   test('4h', () => {
-    const startDate = new Date(),
-     endDate = new Date(+startDate)
+    const astartDate = new Date(),
+      endDate = new Date(astartDate.getTime())
 
     endDate.setHours(endDate.getHours() + 4)
-    const str = DateHelper.timeDifferenceString(startDate, endDate)
+    // eslint-disable-next-line one-var
+    const str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('4h')
   })
 
   test('21d', () => {
-    const startDate = getCurrentDate(),
-     endDate = new Date(startDate)
+    const astartDate = getCurrentDate(),
+      endDate = new Date(astartDate)
 
     endDate.setDate(endDate.getDate() + 21)
-    const str = DateHelper.timeDifferenceString(startDate, endDate)
+    // eslint-disable-next-line one-var
+    const str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
-    expect(str).toMatch(new RegExp('21d( 1h)?'))
+    expect(str).toMatch(/21d(?<temp1> 1h)?/u)
   })
 
   test('long format', () => {
-    const startDate = new Date(),
-     endDate = new Date(+startDate + 2000),
-
-     str = DateHelper.timeDifferenceString(startDate, endDate, true)
+    const astartDate = new Date(),
+      endDate = new Date(Number(astartDate) + 2000),
+      str = DateHelper.timeDifferenceString(astartDate, endDate, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds')
   })
 
   test('long format with millis', () => {
-    const startDate = new Date(),
-     endDate = new Date(+startDate + 2123),
-
-     str = DateHelper.timeDifferenceString(startDate, endDate, true, true)
+    const astartDate = new Date(),
+      endDate = new Date(Number(astartDate) + 2123),
+      str = DateHelper.timeDifferenceString(astartDate, endDate, true, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds, 123ms')
@@ -534,7 +526,7 @@ test('TimeframeToStartOf', () => {
 
 test('LocalToUtc', () => {
   const localDate = new Date('2024-01-01T00:00:00.000Z'),
-   utcDate = DateHelper.LocalToUtc(localDate)
+    utcDate = DateHelper.LocalToUtc(localDate)
 
   expect(utcDate).toBeInstanceOf(Date)
   expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
@@ -558,7 +550,7 @@ test('LocalToUtc', () => {
 
 test('FormattedUnixTime', () => {
   const localDate = new Date('2024-01-01T00:00:00.000Z'),
-   utcDate = DateHelper.FormattedUnixTime(+localDate)
+    utcDate = DateHelper.FormattedUnixTime(localDate.getTime())
 
   expect(utcDate).toBe('Saturday, September 27th 55969, 8:00:00 pm')
 })
@@ -570,34 +562,34 @@ test('TimezoneOffsetInMinutes', () => {
 })
 
 test('UnixTimeFormat', () => {
-  const utcDate = DateHelper.UnixTimeFormat(+new Date())
+  const utcDate = DateHelper.UnixTimeFormat(new Date().getTime())
 
   expect(utcDate).toBe('Dec 1, 2025 7:00 AM')
 })
 
 test('UnixTimeFormatForTheDow', () => {
-  const utcDate = DateHelper.UnixTimeFormatForTheDow(+new Date())
+  const utcDate = DateHelper.UnixTimeFormatForTheDow(new Date().getTime())
 
   expect(utcDate).toBe('Monday, December 1st 2025, 7:00:00 AM')
 })
 
 test('DateFormatForUiWithTime', () => {
-  expect(DateHelper.DateFormatForUiWithTime(+new Date())).toBe(
+  expect(DateHelper.DateFormatForUiWithTime(new Date().getTime())).toBe(
     '12/1/25 7:00 am'
   )
-  expect(DateHelper.DateFormatForUiWithTime(+new Date(), true)).toBe(
+  expect(DateHelper.DateFormatForUiWithTime(new Date().getTime(), true)).toBe(
     '12/1/2025 7:00 am'
   )
-  expect(DateHelper.DateFormatForUiWithTime(+new Date(), false, true)).toBe(
-    '12/1/25 7:00:00 am'
-  )
-  expect(DateHelper.DateFormatForUiWithTime(+new Date(), true, true)).toBe(
-    '12/1/2025 7:00:00 am'
-  )
+  expect(
+    DateHelper.DateFormatForUiWithTime(new Date().getTime(), false, true)
+  ).toBe('12/1/25 7:00:00 am')
+  expect(
+    DateHelper.DateFormatForUiWithTime(new Date().getTime(), true, true)
+  ).toBe('12/1/2025 7:00:00 am')
 })
 
 test('DateFormatForApiCalls', () => {
-  const utcDate = DateHelper.DateFormatForApiCalls(+new Date())
+  const utcDate = DateHelper.DateFormatForApiCalls(new Date().getTime())
 
   expect(utcDate).toBe('2025-12-01')
 })
