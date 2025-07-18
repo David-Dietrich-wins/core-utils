@@ -123,7 +123,7 @@ export class LogManager {
    * @param options Object containing the options for the logger
    * @returns A new LogManager instance
    */
-  static createInstance(options?: Partial<LogManagerOptions>) {
+  static CreateInstance(options?: Partial<LogManagerOptions>) {
     return new LogManager(LogManager.LogManagerDefaultOptions(options))
   }
 
