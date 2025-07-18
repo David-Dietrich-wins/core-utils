@@ -17,11 +17,11 @@ export class FinancialModelingPrep extends TradingClientBase {
   static FmpIndicatorParamsSetDateBoundary(
     fmp: FmpIndicatorQueryParams<number>
   ) {
-    const { from, timeframe } = fmp
-    const fmpNew = { ...fmp }
+    const { from, timeframe } = fmp,
+     fmpNew = { ...fmp },
 
-    const regex = /(\d+)|([A-Z]+)/gi
-    const matches = safestr(timeframe).match(regex)
+     regex = /(\d+)|([A-Z]+)/gi,
+     matches = safestr(timeframe).match(regex)
     if (isArray(matches, 2) && matches[0] !== timeframe) {
       const [units, unit] = matches
       if (from) {
@@ -54,10 +54,10 @@ export class FinancialModelingPrep extends TradingClientBase {
   }
 
   static FmpIndicatorParamsFromObject(body: AnyRecord) {
-    const from = getAsNumberOrUndefined(body.from)
-    const to = getAsNumberOrUndefined(body.to)
+    const from = getAsNumberOrUndefined(body.from),
+     to = getAsNumberOrUndefined(body.to),
 
-    const fmp: FmpIndicatorQueryParams<number> = {
+     fmp: FmpIndicatorQueryParams<number> = {
       symbol: safestr(body.symbol, body.ticker),
       periodLength: getAsNumber(body.periodLength),
       timeframe: safestr(body.timeframe),

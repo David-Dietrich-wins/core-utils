@@ -140,10 +140,10 @@ export class NameValueLineFormatManager<T extends object> {
             nvlf?.style,
             nvlf?.tooltip
           )
-    }
+    },
 
-    const ordered: NameValueWithStyle[] = []
-    const unordered: NameValueWithStyle[] = []
+     ordered: NameValueWithStyle[] = [],
+     unordered: NameValueWithStyle[] = []
     safeArray(data).forEach((item) => {
       const nvlf = this.nvlist.find((x) => x.key === item.name)
 
@@ -158,9 +158,9 @@ export class NameValueLineFormatManager<T extends object> {
       }
     })
 
-    if ('name' === safestrLowercase(sortField)) {
+    if (safestrLowercase(sortField) === 'name') {
       unordered.sort((a, b) => sortFunction(a.name, b.name, sortDirection))
-    } else if ('value' === safestrLowercase(sortField)) {
+    } else if (safestrLowercase(sortField) === 'value') {
       unordered.sort((a, b) => sortFunction(a.value, b.value, sortDirection))
     }
 

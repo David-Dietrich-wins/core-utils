@@ -7,9 +7,9 @@ import { safeJsonToString } from './object-helper.mjs'
 
 describe('DeleteFileIfExists', () => {
   test('good', async () => {
-    const tmpFile = tmp.fileSync().name
+    const tmpFile = tmp.fileSync().name,
 
-    const stats = await FileHelper.writeArrayToJsonFile(tmpFile, [])
+     stats = await FileHelper.writeArrayToJsonFile(tmpFile, [])
     fs.writeFileSync(tmpFile, '1\n2\n3\n4\n5\n\n# comment\n')
 
     const ret = FileHelper.DeleteFileIfExists(tmpFile)
@@ -20,9 +20,9 @@ describe('DeleteFileIfExists', () => {
   })
 
   test('does not exist', () => {
-    const filename = 'adsfasdfafpioupiupiuadfsiuapiudf.txt'
+    const filename = 'adsfasdfafpioupiupiuadfsiuapiudf.txt',
 
-    const ret = FileHelper.DeleteFileIfExists(filename)
+     ret = FileHelper.DeleteFileIfExists(filename)
 
     expect(ret).toBe(false)
   })
@@ -30,11 +30,11 @@ describe('DeleteFileIfExists', () => {
 
 describe('addCommaIfNotFirst', () => {
   test('first', async () => {
-    const fileContents = ''
+    const fileContents = '',
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       let bytesWritten = 0
       await fh.openForWrite()
 
@@ -55,11 +55,11 @@ describe('addCommaIfNotFirst', () => {
   })
 
   test('not first', async () => {
-    const fileContents = ''
+    const fileContents = '',
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       let bytesWritten = 0
       await fh.openForWrite()
 
@@ -82,11 +82,11 @@ describe('addCommaIfNotFirst', () => {
 
 describe('write', () => {
   test('array of numbers', async () => {
-    const fileContents = [1, 2, 3, 4, 5]
+    const fileContents = [1, 2, 3, 4, 5],
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       await fh.openForWrite()
 
       return await fh.write(fileContents)
@@ -102,11 +102,11 @@ describe('write', () => {
   })
 
   test('array of strings', async () => {
-    const fileContents = ['a', 'bc', 'def', 'ghij', 'klmno']
+    const fileContents = ['a', 'bc', 'def', 'ghij', 'klmno'],
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       await fh.openForWrite()
 
       return await fh.write(fileContents)
@@ -122,12 +122,12 @@ describe('write', () => {
   })
 
   test('object', async () => {
-    const dateNow = Date.now()
-    const fileContents = { a: 1, b: '2', c: 3.14, d: { a: 'b' }, e: dateNow }
+    const dateNow = Date.now(),
+     fileContents = { a: 1, b: '2', c: 3.14, d: { a: 'b' }, e: dateNow },
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       await fh.openForWrite()
 
       return await fh.write(fileContents)
@@ -143,11 +143,11 @@ describe('write', () => {
   })
 
   test('string', async () => {
-    const fileContents = 'hello'
+    const fileContents = 'hello',
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       await fh.openForWrite()
 
       return await fh.write(fileContents)
@@ -163,11 +163,11 @@ describe('write', () => {
   })
 
   test('undefined', async () => {
-    const fileContents = undefined
+    const fileContents = undefined,
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name,
 
-    const retRun = await FileHelper.Run(tmpFile, async (fh) => {
+     retRun = await FileHelper.Run(tmpFile, async (fh) => {
       await fh.openForWrite()
 
       return await fh.write(fileContents)
@@ -183,15 +183,13 @@ describe('write', () => {
   })
 
   test('file not opened first', async () => {
-    const fileContents = 'hello'
+    const fileContents = 'hello',
 
-    const tmpFile = tmp.fileSync().name
+     tmpFile = tmp.fileSync().name
 
     expect(
       async () =>
-        await FileHelper.Run(tmpFile, async (fh) => {
-          return await fh.write(fileContents)
-        })
+        await FileHelper.Run(tmpFile, async (fh) => await fh.write(fileContents))
     ).rejects.toThrow(
       `FileHelper: Cannot write to file, file handle is not open for ${tmpFile}.`
     )
@@ -206,11 +204,11 @@ describe('write', () => {
 
 describe('writeArrayToJsonFile', () => {
   test('good', async () => {
-    const tmpFile = tmp.fileSync().name
+    const tmpFile = tmp.fileSync().name,
 
-    const dateNow = Date.now()
+     dateNow = Date.now(),
 
-    const testdata = [
+     testdata = [
       {
         a: 1,
         b: '2',
@@ -225,9 +223,9 @@ describe('writeArrayToJsonFile', () => {
         d: { a: 'b' },
         e: dateNow,
       },
-    ]
+    ],
 
-    const ret = await FileHelper.writeArrayToJsonFile(
+     ret = await FileHelper.writeArrayToJsonFile(
       tmpFile,
       testdata,
       (item) => {
@@ -254,11 +252,11 @@ describe('writeArrayToJsonFile', () => {
   })
 
   test('write exception', async () => {
-    const tmpFile = tmp.fileSync().name
+    const tmpFile = tmp.fileSync().name,
 
-    const dateNow = Date.now()
+     dateNow = Date.now(),
 
-    const testdata = [
+     testdata = [
       {
         a: 1,
         b: '2',
@@ -273,9 +271,9 @@ describe('writeArrayToJsonFile', () => {
         d: { a: 'b' },
         e: dateNow,
       },
-    ]
+    ],
 
-    const spy = jest
+     spy = jest
       .spyOn(FileHelper.prototype, 'write')
       .mockRejectedValue(new Error('Mocked error'))
 
@@ -305,11 +303,11 @@ describe('writeArrayToJsonFile', () => {
   })
 
   test('no mapper', async () => {
-    const tmpFile = tmp.fileSync().name
+    const tmpFile = tmp.fileSync().name,
 
-    const dateNow = Date.now()
+     dateNow = Date.now(),
 
-    const testdata = [
+     testdata = [
       {
         a: 1,
         b: '2',
@@ -324,9 +322,9 @@ describe('writeArrayToJsonFile', () => {
         d: { a: 'b' },
         e: dateNow,
       },
-    ]
+    ],
 
-    const ret = await FileHelper.writeArrayToJsonFile(tmpFile, testdata)
+     ret = await FileHelper.writeArrayToJsonFile(tmpFile, testdata)
 
     expect(ret).toBeInstanceOf(InstrumentationStatistics)
     expect(ret.add).toBe(115)
@@ -369,9 +367,7 @@ describe('openForRead', () => {
 
     expect(
       async () =>
-        await FileHelper.Run(tmpFile, async (fh) => {
-          return await fh.readLines()
-        })
+        await FileHelper.Run(tmpFile, async (fh) => await fh.readLines())
     ).rejects.toThrow(
       `FileHelper: Cannot read from file, file handle is not open for ${tmpFile}.`
     )
@@ -385,10 +381,10 @@ describe('openForRead', () => {
 })
 
 test('write', async () => {
-  const tmpFile = tmp.fileSync().name
+  const tmpFile = tmp.fileSync().name,
 
-  const fh = new FileHelper(tmpFile)
-  const spy = jest
+   fh = new FileHelper(tmpFile),
+   spy = jest
     .spyOn(fh, 'write')
     .mockRejectedValue(new Error('Mocked error'))
   await fh.openForWrite()

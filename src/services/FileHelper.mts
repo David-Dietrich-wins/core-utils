@@ -68,13 +68,13 @@ export class FileHelper {
     }
   }
 
-  // static async FileHandleAutoClose(path: string, fileFlags = 'r') {
-  //   const fh = await open(path, fileFlags)
+  // Static async FileHandleAutoClose(path: string, fileFlags = 'r') {
+  //   Const fh = await open(path, fileFlags)
 
-  //   return {
-  //     fileHandle: fh,
+  //   Return {
+  //     FileHandle: fh,
   //     [Symbol.asyncDispose]: async () => {
-  //       await fh.close()
+  //       Await fh.close()
   //     },
   //   }
   // }

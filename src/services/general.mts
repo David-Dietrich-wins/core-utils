@@ -34,17 +34,17 @@ export function getBoolean(b: unknown) {
       case '0':
       case '':
         return false
-      // case 'true':
-      // case 't':
-      // case 'y':
-      // case 'yes':
+      // Case 'true':
+      // Case 't':
+      // Case 'y':
+      // Case 'yes':
       default:
         return true
     }
   }
 
   if (isNumber(b)) {
-    return 0 !== b
+    return b !== 0
   }
 
   return false
@@ -94,7 +94,7 @@ export function getPercentChangeString(
 ) {
   const percent = getPercentChange(prev, cur)
 
-  // return Math.floor(percent)
+  // Return Math.floor(percent)
   let ret = percent.toFixed(decimalPlaces < 0 ? 0 : decimalPlaces)
   if (showPercent) {
     ret += '%'
@@ -112,7 +112,7 @@ export function getPercentChangeString(
  * @returns True if the object meets the minimum length requirements.
  */
 export function hasData(o: unknown, minlength = 1): boolean {
-  // console.log('minlength: ' + minlength + ', o: ' + o)
+  // Console.log('minlength: ' + minlength + ', o: ' + o)
   try {
     if (!o) {
       return false
@@ -160,11 +160,11 @@ export function hasData(o: unknown, minlength = 1): boolean {
         return o >= minlength
       }
 
-      return !!o
+      return Boolean(o)
     }
 
     if (DateHelper.isDateObject(o)) {
-      return (o as Date).getTime() >= minlength
+      return (o).getTime() >= minlength
     }
 
     if (minlength < 1) {
@@ -189,7 +189,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
  * @returns True if the object is a boolean.
  */
 export function isBoolean(obj: unknown): obj is boolean {
-  return 'boolean' === typeof obj
+  return typeof obj === 'boolean'
 }
 
 /**
@@ -198,7 +198,7 @@ export function isBoolean(obj: unknown): obj is boolean {
  * @returns True if the object is a function.
  */
 export function isFunction(obj: unknown) {
-  return 'function' === typeof obj
+  return typeof obj === 'function'
 }
 
 /**
@@ -207,7 +207,7 @@ export function isFunction(obj: unknown) {
  * @returns True if the object passed in is null or undefined.
  */
 export function isNullOrUndefined(obj: unknown): obj is undefined | null {
-  return 'undefined' === typeof obj || null == obj
+  return typeof obj === 'undefined' || obj == null
 }
 
 export function isSymbol(value: unknown): value is symbol {
@@ -219,7 +219,7 @@ export function isSymbol(value: unknown): value is symbol {
  * @returns A global unique identifier as a 16 character string.
  */
 export function newGuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
@@ -240,36 +240,36 @@ export function sortFunction(
   sortOrder: SortOrder = true,
   compareStringsLowercase = true
 ) {
-  const isAsc = SortOrderAsBoolean(sortOrder)
+  const isAsc = SortOrderAsBoolean(sortOrder),
 
-  const aEmpty = isNullOrUndefined(a)
-  const bEmpty = isNullOrUndefined(b)
+   aEmpty = isNullOrUndefined(a),
+   bEmpty = isNullOrUndefined(b)
   if (aEmpty && bEmpty) {
     return 0
   }
-  // null and undefined sort after anything else
+  // Null and undefined sort after anything else
   else if (aEmpty) {
     return 1
   } else if (bEmpty) {
     return -1
   }
-  // equal items sort equally
+  // Equal items sort equally
   else if (a === b) {
     return 0
   } else if (compareStringsLowercase && isString(a) && isString(b)) {
     // A little recursive, but we will not come back here a second time.
     return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
   }
-  // otherwise, if we're ascending, lowest sorts first
+  // Otherwise, if we're ascending, lowest sorts first
   else if (isAsc) {
     return a < b ? -1 : 1
   }
-  // if descending, highest sorts first
-  else {
+  // If descending, highest sorts first
+  
     return a < b ? 1 : -1
-  }
+  
 
-  // return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
+  // Return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
 }
 
 /**
@@ -283,7 +283,7 @@ export function toHex(decimal?: number, chars = 2) {
     chars = 2
   }
 
-  return ((decimal || 0) + Math.pow(16, chars))
+  return ((decimal || 0) + 16**chars)
     .toString(16)
     .slice(-chars)
     .toUpperCase()
@@ -302,8 +302,8 @@ export function urlJoin(
   relativePath?: ArrayOrSingle<string | number | null | undefined> | null,
   addTrailingSlash = true
 ) {
-  let url = safestr(baseUrl)
-  let pathname = safeArray(relativePath)
+  let url = safestr(baseUrl),
+   pathname = safeArray(relativePath)
     .map((x) => {
       if (isNullOrUndefined(x)) {
         throw new AppException(
@@ -331,7 +331,7 @@ export function urlJoin(
   }
 
   if (pathname.length) {
-    url += '/' + pathname
+    url += `/${  pathname}`
   }
 
   if (

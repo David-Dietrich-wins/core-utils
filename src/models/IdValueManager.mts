@@ -1,7 +1,7 @@
-import { safeArray } from '../services/array-helper.mjs'
-import { IdManager, IIdRequired } from './IdManager.mjs'
-import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { IIdRequired, IdManager } from './IdManager.mjs'
 import { IValue } from './interfaces.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 
 export interface IIdValue<Tid = string, Tvalue = string>
   extends IIdRequired<Tid>,

@@ -21,8 +21,8 @@ test('constructor with IConfig', () => {
     createdby: 'test',
     updated: new Date(),
     updatedby: 'test',
-  }
-  const config = new Config(ic, 0, '', false)
+  },
+   config = new Config(ic, 0, '', false)
 
   expect(config.id).toBe(1)
   expect(config.userid).toBe(1)
@@ -61,8 +61,8 @@ describe('ConfigShort', () => {
       createdby: 'test',
       updated: new Date(),
       updatedby: 'test',
-    }
-    const config = new ConfigShort(ic, 0, 1, false)
+    },
+     config = new ConfigShort(ic, 0, 1, false)
 
     expect(config.id).toBe(1)
     expect(config.userid).toBe(1)

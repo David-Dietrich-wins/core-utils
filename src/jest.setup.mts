@@ -1,19 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable one-var */
 import { jest } from '@jest/globals'
+// eslint-disable-next-line sort-imports
 import { ApiProps } from './models/types.mjs'
-import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { JwtPayload } from 'jsonwebtoken'
+import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
-import { safestr } from './services/string-helper.mjs'
 import { ZodError } from 'zod/v4'
+import { safestr } from './services/string-helper.mjs'
 
-// import { HttpHandler } from 'msw'
-// import { setupServer } from 'msw/node'
+// Import { HttpHandler } from 'msw'
+// Import { setupServer } from 'msw/node'
 
 // Set to 60 seconds. We are going over Global VPN.
 jest.setTimeout(600000)
 
-export const CONST_RegexUptimeMatcher = new RegExp('^\\d+m*s$')
-export const CONST_RegexForElapsedTime = /^(\d+ seconds|1 second|\d+m?s)/
+export const CONST_RegexUptimeMatcher = /^\d+m*s$/u
+export const CONST_RegexForElapsedTime = /^(?:\d+ seconds|1 second|\d+m?s)/u
 export const CONST_RegexStringSecondsOrMilliseconds =
   '(\\d+ seconds|1 second|\\d+ms)'
 
@@ -33,17 +36,17 @@ export class ZodTestHelper {
 
   static SuccessFalseSingle(error: object) {
     return {
-      success: false,
       error: expect.objectContaining({
         issues: expect.arrayContaining([expect.objectContaining(error)]),
       }),
+      success: false,
     }
   }
 
   static SuccessFalse(errors: ZodError[][]) {
     return {
-      success: false,
       error: expect.objectContaining(ZodTestHelper.InvalidUnion(errors)),
+      success: false,
     }
   }
   static InvalidUnion(errors: ZodError[][]) {
@@ -51,9 +54,9 @@ export class ZodTestHelper {
       issues: expect.arrayContaining([
         expect.objectContaining({
           code: 'invalid_union',
-          path: [],
-          message: 'Invalid input',
           errors: expect.arrayContaining(errors),
+          message: 'Invalid input',
+          path: [],
         }),
       ]),
     }
@@ -61,14 +64,13 @@ export class ZodTestHelper {
 
   static InvalidEmail() {
     return {
-      origin: 'string',
       code: 'invalid_format',
       format: 'email',
-      pattern:
-        // eslint-disable-next-line quotes
-        "/^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$/",
-      path: [],
       message: 'Invalid email address',
+      origin: 'string',
+      path: [],
+      pattern:
+        "/^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$/",
     }
   }
 
@@ -78,10 +80,10 @@ export class ZodTestHelper {
     path: (string | number)[] = []
   ) {
     return {
-      expected,
       code: 'invalid_type',
-      path,
+      expected,
       message: `Invalid input: expected ${expected}, received ${received}`,
+      path,
     }
   }
   static InvalidTypeArrayString() {
@@ -93,28 +95,28 @@ export class ZodTestHelper {
 
   static StringTooBig(maximum: number, path: (string | number)[] = []) {
     return {
-      origin: 'string',
       code: 'too_big',
       maximum,
-      path,
       message: `Too big: expected string to have <=${maximum} characters`,
+      origin: 'string',
+      path,
     }
   }
   static StringTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
-      origin: 'string',
       code: 'too_small',
-      minimum,
-      path,
       message: `Too small: expected string to have >=${minimum} characters`,
+      minimum,
+      origin: 'string',
+      path,
     }
   }
 
   static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
     return {
       code: 'too_big',
-      message: `Too big: expected array to have <=${maximum} items`,
       maximum,
+      message: `Too big: expected array to have <=${maximum} items`,
       origin: 'array',
       path,
     }
@@ -130,16 +132,14 @@ export class ZodTestHelper {
   }
 }
 
-const globalLogger = jest.fn().mockImplementation(() => {
-  return {
-    debug: mockLoggerDebug,
-    error: mockLoggerError,
-    info: mockLoggerInfo,
-    log: mockLoggerLog,
-    silly: mockLoggerSilly,
-    warn: mockLoggerWarn,
-  }
-})
+const globalLogger = jest.fn().mockImplementation(() => ({
+  debug: mockLoggerDebug,
+  error: mockLoggerError,
+  info: mockLoggerInfo,
+  log: mockLoggerLog,
+  silly: mockLoggerSilly,
+  warn: mockLoggerWarn,
+}))
 jest.unstable_mockModule('./services/LogManager.mjs', () => ({
   LogManager: globalLogger,
 }))
@@ -163,22 +163,22 @@ export function getGlobalLogger() {
   return new LogManager(loggerOptions)
 }
 
-// const httpHandlers: HttpHandler[] = []
+// Const httpHandlers: HttpHandler[] = []
 
-// export const mockServer = setupServer(...httpHandlers)
+// Export const mockServer = setupServer(...httpHandlers)
 
 export const TEST_Parameters_DEV = {
   apiBaseUrl: 'http://localhost:3000',
-  currentDateString: '2025-12-01T12:00:00.000Z',
   currentDate: new Date('2025-12-01T12:00:00.000Z'),
   currentDateInMilliseconds: 0,
-  userIdGood: 123456789,
-  userIdGoodEmail: 'test@test.com',
-  userIdBad: 987654321,
+  currentDateString: '2025-12-01T12:00:00.000Z',
   jwt: '',
   rsaPassPhrase: safestr(process.env.rsaPassPhrase),
   rsaPrivateKey: safestr(process.env.rsaPrivateKey),
   rsaPublicKey: safestr(process.env.rsaPublicKey),
+  userIdBad: 987654321,
+  userIdGood: 123456789,
+  userIdGoodEmail: 'test@test.com',
 }
 
 export function GenerateSignedJwtToken(
@@ -195,16 +195,16 @@ beforeAll(() => {
   TEST_Parameters_DEV.currentDateInMilliseconds =
     TEST_Parameters_DEV.currentDate.getTime()
 
-  // process.env.NODE_ENV = 'test'
+  // Process.env.NODE_ENV = 'test'
   const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail)
 
   TEST_Parameters_DEV.jwt = jwtToken
 
-  // mockServer.listen({
+  // MockServer.listen({
   //   // This tells MSW to throw an error whenever it
   //   // encounters a request that doesn't have a
   //   // matching request handler.
-  //   onUnhandledRequest: 'error',
+  //   OnUnhandledRequest: 'error',
   // })
 
   // https://stackoverflow.com/questions/29719631/how-do-i-set-a-mock-date-in-jest
@@ -242,7 +242,7 @@ export const mockConsoleWarn = jest
 const originalEnv = { ...process.env }
 
 beforeEach(() => {
-  // jest.resetModules()
+  // Jest.resetModules()
 
   mockConsoleDebug.mockClear()
   mockConsoleError.mockClear()
@@ -259,13 +259,13 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  // mockServer.resetHandlers()
+  // MockServer.resetHandlers()
 
   process.env = originalEnv
 })
 
-// afterAll(() => {
-//   mockServer.close()
+// AfterAll(() => {
+//   MockServer.close()
 // })
 
 export function getAceApiParams() {

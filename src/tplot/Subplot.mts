@@ -1,15 +1,15 @@
-import { z } from 'zod/v4'
-import { IIdRequired } from '../models/IdManager.mjs'
-import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
-import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import { newGuid } from '../services/general.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { zDateTime } from '../services/zod-helper.mjs'
 import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,
 } from './ChartSettings.mjs'
+import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
+import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
+import { IIdRequired } from '../models/IdManager.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { newGuid } from '../services/general.mjs'
+import { z } from 'zod/v4'
+import { zDateTime } from '../services/zod-helper.mjs'
 
 export interface ISubplot extends IIdRequired<string> {
   orderNumber: number
@@ -62,7 +62,7 @@ export class Subplot implements ISubplot {
     if (isObject(id)) {
       this.copyObject(id)
     } else {
-      // constructor items
+      // Constructor items
       this.id = id
       this.orderNumber = orderNumber
       this.pattern = pattern
@@ -81,43 +81,44 @@ export class Subplot implements ISubplot {
 
   static get zSchema() {
     const schema = z.object({
+      comment: z.string().max(1000).default(''),
+      expectedTriggerDate: zDateTime().optional(),
+      gainCeilingPercent: z.number().min(0).max(100).default(10),
       id: z.string(),
+      lossFloorPercent: z.number().min(0).max(100).default(8),
       orderNumber: z.number().min(0).max(100).default(0),
       pattern: z.string().default(''),
+      scaleInverted: z.boolean().default(false),
+      targetHigh: z.number().min(0).max(10000000).optional(),
+      targetLow: z.number().min(0).max(10000000).optional(),
       timeframe: z.string().default(''),
       total: z.number().nonnegative().optional(),
-      targetLow: z.number().min(0).max(10000000).optional(),
-      targetHigh: z.number().min(0).max(10000000).optional(),
-      expectedTriggerDate: zDateTime().optional(),
-      comment: z.string().max(1000).default(''),
-      lossFloorPercent: z.number().min(0).max(100).default(8),
-      gainCeilingPercent: z.number().min(0).max(100).default(10),
       useMinusEight: z.boolean().default(true),
-      scaleInverted: z.boolean().default(false),
     })
 
     return schema
   }
 
   static GetFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
-    const periodLength = arrayMustFind(
-      ChartPatternOptions,
-      subplot.pattern
-    ).periodLength
-
-    const fmp: FmpIndicatorQueryParams = {
-      periodLength,
-      symbol,
-      timeframe: arrayMustFind(TradeSubplotTimeFrameOptions, subplot.timeframe)
-        .fmpTimeFrame,
-      from: DateHelper.addDaysToDate(-5).getTime(),
-    }
+    const { periodLength } = arrayMustFind(
+        ChartPatternOptions,
+        subplot.pattern
+      ),
+      fmp: FmpIndicatorQueryParams = {
+        from: DateHelper.addDaysToDate(-5).getTime(),
+        periodLength,
+        symbol,
+        timeframe: arrayMustFind(
+          TradeSubplotTimeFrameOptions,
+          subplot.timeframe
+        ).fmpTimeFrame,
+      }
 
     return fmp
   }
 
   static GetNewWithNextPattern(subplots: ISubplot[] = []) {
-    let pattern = 'b28' // default pattern
+    let pattern = 'b28'
 
     const subplotPatterns = safeArray(subplots).map((sp) => sp.pattern)
     for (let i = 0; i < ChartPatternOptions.length; i++) {
@@ -157,19 +158,19 @@ export class Subplot implements ISubplot {
 
   toApi() {
     const ret: ISubplot = {
+      comment: this.comment,
+      expectedTriggerDate: this.expectedTriggerDate,
+      gainCeilingPercent: this.gainCeilingPercent,
       id: this.id,
+      lossFloorPercent: this.lossFloorPercent,
       orderNumber: this.orderNumber,
       pattern: this.pattern,
+      scaleInverted: this.scaleInverted,
+      targetHigh: this.targetHigh,
+      targetLow: this.targetLow,
       timeframe: this.timeframe,
       total: this.total,
-      targetLow: this.targetLow,
-      targetHigh: this.targetHigh,
-      expectedTriggerDate: this.expectedTriggerDate,
-      comment: this.comment,
-      lossFloorPercent: this.lossFloorPercent,
-      gainCeilingPercent: this.gainCeilingPercent,
       useMinusEight: this.useMinusEight,
-      scaleInverted: this.scaleInverted,
     }
 
     return ret

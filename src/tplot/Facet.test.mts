@@ -10,23 +10,17 @@ test('constructor', () => {
 
 test('copyFromDatabase', () => {
   const dbFacet: IFacet<number> = {
-    id: '1',
-    createdby: 'user1',
-    updatedby: 'user1',
-    created: new Date(),
-    updated: new Date(),
-    name: 'TestFacet',
-    symbol: 'symbol',
-    resolution: 'resolution',
-    val: 42,
-  }
-
-  const facet = new Facet(
-    dbFacet,
-    dbFacet.symbol,
-    dbFacet.resolution,
-    dbFacet.val
-  )
+      created: new Date(),
+      createdby: 'user1',
+      id: '1',
+      name: 'TestFacet',
+      resolution: 'resolution',
+      symbol: 'symbol',
+      updated: new Date(),
+      updatedby: 'user1',
+      val: 42,
+    },
+    facet = new Facet(dbFacet, dbFacet.symbol, dbFacet.resolution, dbFacet.val)
 
   expect(facet.id).toBe('1')
   expect(facet.createdby).toBe('user1')

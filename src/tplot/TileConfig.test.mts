@@ -1,68 +1,68 @@
-import { AppException } from '../models/AppException.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ITileConfig, TileConfig, TileType } from './TileConfig.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 test('create TileConfig', () => {
   const tileConfig = TileConfig.CreateTileConfig({
+    cols: 6,
     id: 'test-id',
+    rows: 4,
     type: TileType.content,
     value: {
-      title: 'Test Tile',
       content: 'This is a test tile content.',
+      title: 'Test Tile',
     },
-    cols: 6,
-    rows: 4,
     x: 0,
     y: 0,
   })
 
   expect(tileConfig).toEqual({
+    cols: 6,
     id: 'test-id',
     index: 0,
     name: 'Trade Plotter',
+    rows: 4,
     type: TileType.content,
     value: {
-      title: 'Test Tile',
       content: 'This is a test tile content.',
+      title: 'Test Tile',
     },
-    cols: 6,
-    rows: 4,
   })
 })
 
 test('ChartDefault', () => {
-  const ticker = 'AAPL'
-  const chartConfig = TileConfig.ChartDefault({ ticker })
+  const chartConfig = TileConfig.ChartDefault({ ticker: 'AAPL' })
 
   expect(chartConfig).toEqual({
-    ticker,
     frequency: 1,
     frequencyType: 'daily',
     period: 1,
     periodType: 'year',
+    ticker: 'AAPL',
   })
 })
 
 test('CreateChart', () => {
-  const ticker = 'AAPL'
-  const chartTile = TileConfig.CreateChart(ticker, {
-    cols: 4,
-    rows: 3,
-  })
+  const aticker = 'AAPL',
+    chartTile = TileConfig.CreateChart(aticker, {
+      cols: 4,
+      rows: 3,
+    })
 
   expect(chartTile).toEqual({
+    cols: 4,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 3,
     type: TileType.chart,
     value: {
-      ticker,
       frequency: 1,
       frequencyType: 'daily',
       period: 1,
       periodType: 'year',
+      ticker: aticker,
     },
-    cols: 4,
-    rows: 3,
   })
 })
 
@@ -73,65 +73,65 @@ test('Creates', () => {
       rows: 2,
     })
   ).toEqual({
+    cols: 3,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
-    type: TileType.content,
-    cols: 3,
     rows: 2,
+    type: TileType.content,
     value: {},
   })
 
   expect(TileConfig.CreateEmpty()).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.empty,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 
   expect(TileConfig.CreateNews()).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.news,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 
   expect(TileConfig.CreateTicker('AAPL')).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.ticker,
     value: {
       ticker: 'AAPL',
     },
-    cols: 1,
-    rows: 1,
   })
 
   expect(TileConfig.CreatePlotlist()).toEqual({
+    cols: 12,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.plotlist,
     value: {},
-    cols: 12,
-    rows: 1,
   })
 
   expect(TileConfig.CreateTable()).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.table,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 })
 
@@ -142,35 +142,36 @@ test('CreateFromTileType', () => {
       rows: 2,
     })
   ).toEqual({
+    cols: 3,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
-    type: TileType.content,
-    cols: 3,
     rows: 2,
+    type: TileType.content,
     value: {},
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const chartTile = TileConfig.CreateFromTileType(TileType.chart, {
-    ticker: 'AAPL',
     cols: 4,
     rows: 3,
+    ticker: 'AAPL',
   } as TileConfig['value'])
 
   expect(chartTile).toEqual({
+    cols: 4,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 3,
     type: TileType.chart,
     value: {
-      ticker: 'AAPL',
       frequency: 1,
       frequencyType: 'daily',
       period: 1,
       periodType: 'year',
+      ticker: 'AAPL',
     },
-    cols: 4,
-    rows: 3,
   })
   expect(
     TileConfig.CreateFromTileType(TileType.content, {
@@ -178,69 +179,70 @@ test('CreateFromTileType', () => {
       rows: 2,
     })
   ).toEqual({
+    cols: 3,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
-    type: TileType.content,
-    cols: 3,
     rows: 2,
+    type: TileType.content,
     value: {},
   })
 
   expect(TileConfig.CreateFromTileType(TileType.empty)).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.empty,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 
   expect(TileConfig.CreateFromTileType(TileType.news)).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.news,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 
   expect(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     TileConfig.CreateFromTileType(TileType.ticker, {
       ticker: 'AAPL',
     } as TileConfig['value'])
   ).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.ticker,
     value: {
       ticker: 'AAPL',
     },
-    cols: 1,
-    rows: 1,
   })
 
   expect(TileConfig.CreateFromTileType(TileType.plotlist)).toEqual({
+    cols: 12,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.plotlist,
     value: {},
-    cols: 12,
-    rows: 1,
   })
 
   expect(TileConfig.CreateFromTileType(TileType.table)).toEqual({
+    cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
+    rows: 1,
     type: TileType.table,
     value: {},
-    cols: 1,
-    rows: 1,
   })
 
   expect(() => TileConfig.CreateFromTileType('1' as TileType)).toThrow(
@@ -262,13 +264,13 @@ test('TileTypeFromString', () => {
 
 test('TileText', () => {
   const tileConfig: ITileConfig = {
-    id: 'test-id',
-    name: 'Test Tile',
-    value: { content: 'This is a test tile content.' },
-    type: 'unknown' as TileType,
-    index: 0,
     cols: 2,
+    id: 'test-id',
+    index: 0,
+    name: 'Test Tile',
     rows: 2,
+    type: 'unknown' as TileType,
+    value: { content: 'This is a test tile content.' },
   }
 
   expect(TileConfig.TileText(tileConfig)).toBe(
@@ -303,25 +305,24 @@ test('TileText', () => {
 })
 
 test('getITileConfig', () => {
-  const tileConfig = new TileConfig(
-    'test-id',
-    'Test Tile',
-    {},
-    TileType.empty,
-    0,
-    1,
-    1
-  )
-
-  const iTileConfig = tileConfig.ITileConfig
+  const atileConfig = new TileConfig(
+      'test-id',
+      'Test Tile',
+      {},
+      TileType.empty,
+      0,
+      1,
+      1
+    ),
+    iTileConfig = atileConfig.ITileConfig
 
   expect(iTileConfig).toEqual({
-    id: 'test-id',
-    name: 'Test Tile',
-    value: {},
-    type: TileType.empty,
-    index: 0,
     cols: 1,
+    id: 'test-id',
+    index: 0,
+    name: 'Test Tile',
     rows: 1,
+    type: TileType.empty,
+    value: {},
   })
 })

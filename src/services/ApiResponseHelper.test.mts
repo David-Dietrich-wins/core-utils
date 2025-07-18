@@ -11,8 +11,8 @@ test('ApiResponseSuccess', () => {
   expect(resapi?.result).toBe('success')
   expect(resapi?.data).toBe('test')
 
-  const obj = { a: 'test' }
-  const resobj = ApiResponseHelper.Success(obj)
+  const obj = { a: 'test' },
+   resobj = ApiResponseHelper.Success(obj)
 
   expect(resobj?.id).toBeGreaterThan(0)
   expect(resobj?.ts).toBeGreaterThan(0)
@@ -21,8 +21,8 @@ test('ApiResponseSuccess', () => {
   expect(resobj?.result).toBe('success')
   expect(resobj?.data).toBe(obj)
 
-  const newApiResponse = new ApiResponse('', 'success', '', 0)
-  const resApiResponse = ApiResponseHelper.Success(newApiResponse)
+  const newApiResponse = new ApiResponse('', 'success', '', 0),
+   resApiResponse = ApiResponseHelper.Success(newApiResponse)
 
   expect(resApiResponse?.id).toBeGreaterThan(0)
   expect(resApiResponse?.ts).toBeGreaterThan(0)
@@ -42,8 +42,8 @@ test('ApiResponseResponseError', () => {
   expect(resapi?.result).toBe('Error')
   expect(resapi?.data).toBe('test')
 
-  const newApiResponse = new ApiResponse<string>('Error', 'Error', 'Error', -1)
-  const resApiResponse = ApiResponseHelper.Error(newApiResponse)
+  const newApiResponse = new ApiResponse<string>('Error', 'Error', 'Error', -1),
+   resApiResponse = ApiResponseHelper.Error(newApiResponse)
 
   expect(resApiResponse?.id).toBeGreaterThan(0)
   expect(resApiResponse?.ts).toBeGreaterThan(0)
@@ -53,24 +53,24 @@ test('ApiResponseResponseError', () => {
   expect(resApiResponse?.data).toBe('Error')
 })
 
-// test('respondWithSuccess', () => {
-//   const mockResponse = {
-//     json: jest.fn(),
-//     status: jest.fn(() => mockResponse),
+// Test('respondWithSuccess', () => {
+//   Const mockResponse = {
+//     Json: jest.fn(),
+//     Status: jest.fn(() => mockResponse),
 //   } as unknown as Response
 
 //   ApiResponseHelper.respondWithSuccess(mockResponse, 'test')
 
-//   expect(mockResponse.json).toHaveBeenCalledTimes(1)
+//   Expect(mockResponse.json).toHaveBeenCalledTimes(1)
 // })
 
-// test('respondWithError', () => {
-//   const mockResponse = {
-//     json: jest.fn(),
-//     status: jest.fn(() => mockResponse),
+// Test('respondWithError', () => {
+//   Const mockResponse = {
+//     Json: jest.fn(),
+//     Status: jest.fn(() => mockResponse),
 //   } as unknown as Response
 
 //   ApiResponseHelper.respondWithError('test', mockResponse)
 
-//   expect(mockResponse.json).toHaveBeenCalledTimes(1)
+//   Expect(mockResponse.json).toHaveBeenCalledTimes(1)
 // })

@@ -1,38 +1,75 @@
-import moment, { Moment } from 'moment'
-import { z } from 'zod/v4'
-import { IIdName } from '../models/id-name.mjs'
-import { IPrice } from '../models/interfaces.mjs'
 import { IPlotPricesWithMidpoint, zTicker } from '../models/ticker-info.mjs'
-import { arrayFindByIds } from '../services/array-helper.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import { hasData } from '../services/general.mjs'
+import moment, { Moment } from 'moment'
 import {
   safestr,
   safestrLowercase,
   safestrUppercase,
 } from '../services/string-helper.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 import { IFacet } from './Facet.mjs'
+import { IIdName } from '../models/id-name.mjs'
+import { IPrice } from '../models/interfaces.mjs'
+import { arrayFindByIds } from '../services/array-helper.mjs'
+import { hasData } from '../services/general.mjs'
+import { z } from 'zod/v4'
 
 export const ChartTimeFrameOptions: (IIdName<string> & {
   fmpTimeFrame: string
 })[] = [
-  { id: '1m', name: '1 minute', fmpTimeFrame: '1min' },
-  { id: '2m', name: '2 minute', fmpTimeFrame: '2min' },
-  { id: '3m', name: '3 minute', fmpTimeFrame: '3min' },
-  { id: '5m', name: '5 minute', fmpTimeFrame: '5min' },
-  { id: '10m', name: '10 minute', fmpTimeFrame: '10min' },
-  { id: '15m', name: '15 minute', fmpTimeFrame: '15min' },
-  { id: '30m', name: '30 minute', fmpTimeFrame: '30min' },
-  { id: '1h', name: '1 hour', fmpTimeFrame: '1hour' },
-  { id: '4h', name: '4 hour', fmpTimeFrame: '4hour' },
-  { id: '1d', name: '1 day', fmpTimeFrame: '1day' },
-  { id: '1w', name: '1 week', fmpTimeFrame: '1week' },
-  { id: '1M', name: '1 month', fmpTimeFrame: '1month' },
-  { id: '1y', name: '1 year', fmpTimeFrame: '1year' },
+  {
+    fmpTimeFrame: '1min',
+    id: '1m',
+    name: '1 minute',
+  },
+  {
+    fmpTimeFrame: '2min',
+    id: '2m',
+    name: '2 minute',
+  },
+  {
+    fmpTimeFrame: '3min',
+    id: '3m',
+    name: '3 minute',
+  },
+  {
+    fmpTimeFrame: '5min',
+    id: '5m',
+    name: '5 minute',
+  },
+  {
+    fmpTimeFrame: '10min',
+    id: '10m',
+    name: '10 minute',
+  },
+  {
+    fmpTimeFrame: '15min',
+    id: '15m',
+    name: '15 minute',
+  },
+  {
+    fmpTimeFrame: '30min',
+    id: '30m',
+    name: '30 minute',
+  },
+  {
+    fmpTimeFrame: '1hour',
+    id: '1h',
+    name: '1 hour',
+  },
+  {
+    fmpTimeFrame: '4hour',
+    id: '4h',
+    name: '4 hour',
+  },
+  { fmpTimeFrame: '1day', id: '1d', name: '1 day' },
+  { fmpTimeFrame: '1week', id: '1w', name: '1 week' },
+  { fmpTimeFrame: '1month', id: '1M', name: '1 month' },
+  { fmpTimeFrame: '1year', id: '1y', name: '1 year' },
 ] as const
 
 export type ChartTimeFrameOption = (typeof ChartTimeFrameOptions)[number]['id']
 
+// eslint-disable-next-line one-var
 export const TradeSubplotTimeFrames: ChartTimeFrameOption[] = [
   '15m',
   '30m',
@@ -41,11 +78,13 @@ export const TradeSubplotTimeFrames: ChartTimeFrameOption[] = [
   '1d',
 ] as const
 
+// eslint-disable-next-line one-var
 export const TradeSubplotTimeFrameOptions = arrayFindByIds(
   ChartTimeFrameOptions,
   TradeSubplotTimeFrames
 )
 
+// eslint-disable-next-line one-var
 export const ChartPatternOptions: (IIdName<string> & {
   periodLength: number
 })[] = [
@@ -92,16 +131,16 @@ export class ChartPlotReturn {
   positions: IShapePosition[] = []
 }
 
-// export interface IChartSettings {
-//   ticker: string
-//   period: number
-//   periodType: string
-//   frequency: number
-//   frequencyType: string
-//   granularity?: string
-//   extendedHoursTrading?: boolean
-//   startDate?: number // as milliseconds since epoch
-//   endDate?: number // as milliseconds since epoch
+// Export interface IChartSettings {
+//   Ticker: string
+//   Period: number
+//   PeriodType: string
+//   Frequency: number
+//   FrequencyType: string
+//   Granularity?: string
+//   ExtendedHoursTrading?: boolean
+//   StartDate?: number // as milliseconds since epoch
+//   EndDate?: number // as milliseconds since epoch
 // }
 
 export type IChartSettings = z.infer<typeof ChartSettings.zChartSettings>
@@ -124,7 +163,7 @@ export class ChartSettings implements IChartSettings {
   period = 1
 
   /**
-   * day, month, year, ytd
+   * Day, month, year, ytd
    */
   periodType = 'day'
 
@@ -151,7 +190,7 @@ export class ChartSettings implements IChartSettings {
   /** Specify a granularity string. FMP uses this as its ResolutionString */
   granularity = ''
 
-  /** true to return extended hours data, false for regular market hours only. Defaults to true. */
+  /** True to return extended hours data, false for regular market hours only. Defaults to true. */
   extendedHoursTrading = false
 
   /**
@@ -225,13 +264,13 @@ export class ChartSettings implements IChartSettings {
   static Create(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
     const csettings = ChartSettings.CreateISettings({
-      ticker: 'AAPL', // Default ticker
-      period: 1, // Default period
-      periodType: 'day', // Default period type
-      frequency: 1, // Default frequency
-      frequencyType: '1d', // Default frequency type
-      // granularity: '1min', // Default granularity
-      // needExtendedHoursTrading: true, // Default to true for extended hours trading
+      frequency: 1,
+      frequencyType: '1d',
+      period: 1,
+      periodType: 'day',
+      ticker: 'AAPL',
+      // Granularity: '1min', // Default granularity
+      // NeedExtendedHoursTrading: true, // Default to true for extended hours trading
       ...overrides,
     })
 
@@ -251,13 +290,13 @@ export class ChartSettings implements IChartSettings {
   static CreateISettings(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
     const ret: IChartSettings = {
-      ticker: 'AAPL', // Default ticker
-      period: 1, // Default period
-      periodType: 'day', // Default period type
-      frequency: 1, // Default frequency
-      frequencyType: '1d', // Default frequency type
-      // granularity: '1min', // Default granularity
-      // needExtendedHoursTrading: true, // Default to true for extended hours trading
+      frequency: 1,
+      frequencyType: '1d',
+      period: 1,
+      periodType: 'day',
+      ticker: 'AAPL',
+      // Granularity: '1min', // Default granularity
+      // NeedExtendedHoursTrading: true, // Default to true for extended hours trading
       ...overrides,
     }
 
@@ -267,14 +306,14 @@ export class ChartSettings implements IChartSettings {
 
   static get zChartSettings() {
     return zTicker.extend({
-      period: z.number().min(1),
-      periodType: z.string().min(1),
+      endDate: z.number().optional(),
+      extendedHoursTrading: z.boolean().optional(),
       frequency: z.number().min(1),
       frequencyType: z.string().min(1),
       granularity: z.string().optional(),
-      extendedHoursTrading: z.boolean().optional(),
+      period: z.number().min(1),
+      periodType: z.string().min(1),
       startDate: z.number().optional(),
-      endDate: z.number().optional(),
     })
   }
 
@@ -287,42 +326,44 @@ export class ChartSettings implements IChartSettings {
     firstDataRequest = false
   ) {
     if (firstDataRequest) {
+      // eslint-disable-next-line no-param-reassign
       endDate = moment().valueOf()
+      // eslint-disable-next-line no-param-reassign
       startDate = moment().subtract(1, 'year').valueOf()
     }
 
     return ChartSettings.Create({
-      ticker,
-      period: 1,
-      periodType: 'day',
+      endDate,
+      extendedHoursTrading,
       frequency: 1,
       frequencyType: 'minute',
       granularity: resolution,
+      period: 1,
+      periodType: 'day',
       startDate,
-      endDate,
-      extendedHoursTrading,
+      ticker,
     }).toISettings()
   }
 
   toISettings(): IChartSettings {
     const ret: IChartSettings = {
-      ticker: safestrUppercase(this.ticker),
-      period: this.period,
-      periodType: this.periodType,
+      endDate: this.endDate,
+      extendedHoursTrading: this.extendedHoursTrading,
       frequency: this.frequency,
       frequencyType: this.frequencyType,
       granularity: this.granularity,
-      extendedHoursTrading: this.extendedHoursTrading,
+      period: this.period,
+      periodType: this.periodType,
       startDate: this.startDate,
-      endDate: this.endDate,
+      ticker: safestrUppercase(this.ticker),
     }
 
     return ret
   }
 
   static fromToForFmpStatic(startMoment?: Moment, endMoment?: Moment) {
-    let s = '&from=' + DateHelper.DateFormatForApiCalls(startMoment)
-    s += '&to=' + DateHelper.DateFormatForApiCalls(endMoment)
+    let s = `&from=${DateHelper.DateFormatForApiCalls(startMoment)}`
+    s += `&to=${DateHelper.DateFormatForApiCalls(endMoment)}`
 
     return s
   }
@@ -330,14 +371,13 @@ export class ChartSettings implements IChartSettings {
     return ChartSettings.fromToForFmpStatic(moment().add(-1, 'year'), moment())
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static isToday(date?: any) {
+  static isToday(date?: unknown) {
     if (!date) {
       return false
     }
 
-    const mdate = moment(date)
-    const mtoday = moment()
+    const mdate = moment(date),
+      mtoday = moment()
 
     return mtoday.isSame(mdate, 'day')
   }
@@ -346,8 +386,8 @@ export class ChartSettings implements IChartSettings {
       return false
     }
 
-    const mdate = moment(date)
-    const yesterday = moment().subtract(1, 'day')
+    const mdate = moment(date),
+      yesterday = moment().subtract(1, 'day')
 
     return yesterday.isSame(mdate, 'day')
   }
@@ -373,8 +413,8 @@ export class ChartSettings implements IChartSettings {
       case '240':
         chartTime = '4hour'
         break
-      // case '1D':
-      //   break;
+      // Case '1D':
+      //   Break;
       default:
         break
     }
@@ -439,11 +479,11 @@ export class ChartSettings implements IChartSettings {
     let s = this.frequencyTypeFriendlyString
 
     const fromDateStr = this.startDate
-      ? DateHelper.DateFormatForApiCalls(this.startMoment)
-      : ''
-    const toDateStr = this.endDate
-      ? DateHelper.DateFormatForApiCalls(this.endMoment)
-      : ''
+        ? DateHelper.DateFormatForApiCalls(this.startMoment)
+        : '',
+      toDateStr = this.endDate
+        ? DateHelper.DateFormatForApiCalls(this.endMoment)
+        : ''
 
     if (fromDateStr && toDateStr) {
       s += ` from ${fromDateStr} to ${toDateStr}`
@@ -466,7 +506,7 @@ export class ChartSettings implements IChartSettings {
   }
 
   get isDailyChart() {
-    return 'Daily' === this.frequencyTypeFriendlyString
+    return this.frequencyTypeFriendlyString === 'Daily'
   }
 
   get startDateAsDate() {
@@ -477,9 +517,9 @@ export class ChartSettings implements IChartSettings {
   }
 
   static periodWithTypeString(period: number, periodType: string) {
-    let str = period > 0 ? '' + period : '1'
+    let str = period > 0 ? `${period}` : '1'
 
-    str += ' ' + (hasData(periodType) ? periodType : 'year')
+    str += ` ${hasData(periodType) ? periodType : 'year'}`
 
     return str
   }
@@ -499,11 +539,11 @@ export class ChartSettings implements IChartSettings {
   static thirtyMinute(ticker: string) {
     return new ChartSettings(ticker, 30, 'day', 30, 'minute', '1', 0, 0, true)
   }
-  // static oneHour() {
-  //   return new ChartSettings('day', 60, 'hour', 1);
+  // Static oneHour() {
+  //   Return new ChartSettings('day', 60, 'hour', 1);
   // }
-  // static fourHour() {
-  //   return new ChartSettings('day', 60, 'hour', 4);
+  // Static fourHour() {
+  //   Return new ChartSettings('day', 60, 'hour', 4);
   // }
   static oneDay(ticker: string) {
     return new ChartSettings(ticker, 90, 'day', 1, 'daily', '1', 0, 0, true)

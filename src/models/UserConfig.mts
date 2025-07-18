@@ -56,10 +56,10 @@ export class UserConfig<TValue = any>
   ) {
     const fname = 'fromNameVal'
 
-    curDate = curDate ?? new Date()
-    const userEmail = safestr(email, fname)
+    curDate ??= new Date()
+    const userEmail = safestr(email, fname),
 
-    const config: IUserConfig<TFromNameVal> = {
+     config: IUserConfig<TFromNameVal> = {
       k: nv.name,
       v: nv.val,
       userid,

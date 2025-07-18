@@ -1,8 +1,8 @@
-import { NameVal } from '../models/NameValManager.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
+import { NameVal } from '../models/NameValManager.mjs'
 import { isObject } from '../services/object-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,9 +41,9 @@ export class Facet<T = any>
     super(undefined, updatedby, updated, createdby, created)
 
     if (isObject(name)) {
-      Object.assign(this, name as IFacet)
+      Object.assign(this, name)
     } else {
-      this.name = name as string
+      this.name = name
       this.symbol = symbol
       this.resolution = resolution
       this.val = val

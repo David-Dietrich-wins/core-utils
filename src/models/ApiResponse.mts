@@ -1,10 +1,10 @@
 import { AppException, AppExceptionHttp } from './AppException.mjs'
+import { type IPagedResponse, PagedResponse } from './PagedResponse.mjs'
 import { safestr, safestrLowercase } from '../services/string-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { IDataWithStats } from './types.mjs'
 import { FetchDataTypesAllowed } from '../services/html-helper.mjs'
+import { IDataWithStats } from './types.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { PagedResponse, type IPagedResponse } from './PagedResponse.mjs'
+import { isObject } from '../services/object-helper.mjs'
 
 /**
  * Represents the status of an HTTP response usually used in API responses.
@@ -154,7 +154,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    location?: any /* should be an HTML window.location object. */
+    location?: any /* Should be an HTML window.location object. */
   ) {
     console.error(fname, err)
     if (location && err instanceof AppExceptionHttp) {
@@ -165,9 +165,9 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
           )}`
         }, 100)
 
-        // redirect(
+        // Redirect(
         //   '/api/auth/signin?callbackUrl=' +
-        //     encodeURIComponent(window.location.href)
+        //     EncodeURIComponent(window.location.href)
         // )
 
         return true
@@ -282,11 +282,11 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
   static isSuccess<TResponse extends { result: string }>(ret?: TResponse) {
     if (ret && isObject(ret, 'result')) {
-      return 'success' === safestrLowercase(ret.result)
+      return safestrLowercase(ret.result) === 'success'
     }
 
     return false
   }
 }
 
-// export type ApiResponseType<T> = InstanceType<typeof ApiResponse>
+// Export type ApiResponseType<T> = InstanceType<typeof ApiResponse>

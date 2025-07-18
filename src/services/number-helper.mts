@@ -1,7 +1,7 @@
 import { isArray } from './array-helper.mjs'
 import { hasData, isNullOrUndefined } from './general.mjs'
 import { runOnAllMembers } from './object-helper.mjs'
-import { isString, safestr, StringHelper, stringIf } from './string-helper.mjs'
+import { StringHelper, isString, safestr, stringIf } from './string-helper.mjs'
 
 export type NumberFormattingBreakpoints = {
   value: number | bigint | string
@@ -150,8 +150,8 @@ export function elementTopLeftCoords(element: any): {
   top: number
   left: number
 } {
-  let top = 0
-  let left = 0
+  let left = 0,
+   top = 0
   do {
     top += element.offsetTop || 0
     left += element.offsetLeft || 0
@@ -207,8 +207,8 @@ export function getMantissa(num: number) {
     return 0
   }
 
-  const str = '' + num
-  const arr = str.split('.')
+  const str = `${  num}`,
+   arr = str.split('.')
   if (isArray(arr, 2) && hasData(arr[1])) {
     return +arr[1]
   }
@@ -230,7 +230,7 @@ export function isNumber(
   minValue: number | null | undefined = null,
   maxValue: number | null | undefined = null
 ): obj is number {
-  if (isNullOrUndefined(obj) || 'number' !== typeof obj) {
+  if (isNullOrUndefined(obj) || typeof obj !== 'number') {
     return false
   }
 
@@ -254,8 +254,8 @@ export function isNumeric(value?: string | number | bigint): boolean {
   )
 }
 
-// export function numberWithCommas(x) {
-//   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+// Export function numberWithCommas(x) {
+//   Return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
 export abstract class NumberHelper {
   static FormatPrefixSuffixZero(
@@ -352,8 +352,8 @@ export abstract class NumberHelper {
       return ''
     }
 
-    maxDecimalPlaces = maxDecimalPlaces || 0
-    minDecimalPlaces = minDecimalPlaces || maxDecimalPlaces
+    maxDecimalPlaces ||= 0
+    minDecimalPlaces ||= maxDecimalPlaces
 
     return new Intl.NumberFormat('en-US', {
       maximumFractionDigits: maxDecimalPlaces,
@@ -371,14 +371,14 @@ export abstract class NumberHelper {
   static NumberWithDecimalPlaces(price: number, maxDecimalPlaces?: number) {
     const defaultReturn = '0'
 
-    // const priceret = ''
+    // Const priceret = ''
 
     if (!isNaN(price)) {
-      // if (price < 0) {
-      //   console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
+      // If (price < 0) {
+      //   Console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
       // }
 
-      maxDecimalPlaces = maxDecimalPlaces ?? 4
+      maxDecimalPlaces ??= 4
       const priceOriginal = +price
 
       return new Intl.NumberFormat('en', {
@@ -386,58 +386,58 @@ export abstract class NumberHelper {
         minimumFractionDigits: maxDecimalPlaces > 1 ? 2 : maxDecimalPlaces,
       }).format(priceOriginal)
       // // Make sure we have something.
-      // const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
+      // Const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
       // // if (price < 0) {
       // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
       // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
       // // }
-      // if (priceOriginalStr && priceOriginalStr.length) {
+      // If (priceOriginalStr && priceOriginalStr.length) {
       //   // split to get the mantissa.
-      //   let pricearr = priceOriginalStr.split('.');
+      //   Let pricearr = priceOriginalStr.split('.');
       //   // if (price < 0) {
       //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
       //   // }
-      //   if (isArray(pricearr, 1)) {
+      //   If (isArray(pricearr, 1)) {
       //     // if (price < 0) {
       //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
       //     // }
-      //     let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
-      //     let mantissalen = mantissa.length;
+      //     Let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
+      //     Let mantissalen = mantissa.length;
 
       //     // Lop off any unneeded 0s.
-      //     if (mantissalen) {
+      //     If (mantissalen) {
       //       // if (price < 0 && price > -1) {
       //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
       //       // }
-      //       let lastchar = mantissa.charAt(mantissa.length - 1);
-      //       while ('0' === lastchar && mantissalen > 2) {
-      //         mantissa = mantissa.slice(0, -1);
-      //         mantissalen = mantissa.length;
+      //       Let lastchar = mantissa.charAt(mantissa.length - 1);
+      //       While ('0' === lastchar && mantissalen > 2) {
+      //         Mantissa = mantissa.slice(0, -1);
+      //         Mantissalen = mantissa.length;
       //       }
 
-      //       if (hasData(mantissa) && mantissalen) {
+      //       If (hasData(mantissa) && mantissalen) {
       //         // if (price < 0 && price > -1) {
       //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
       //         // }
-      //         priceret = priceOriginal.toFixed(mantissalen);
+      //         Priceret = priceOriginal.toFixed(mantissalen);
       //       }
       //     }
 
-      //     if (!priceret && hasData(pricearr[0])) {
-      //       priceret = priceOriginalStr;
+      //     If (!priceret && hasData(pricearr[0])) {
+      //       Priceret = priceOriginalStr;
       //     }
       //   }
       // }
     }
 
-    // if (priceret) {
+    // If (priceret) {
     //   // priceret = numberWithCommas(priceret);
     //   // Lop off the .00 for now.
-    //   if (priceret.length > 3 && '.00' === priceret.substr(-3)) {
-    //     return priceret.substr(0, priceret.length - 3)
+    //   If (priceret.length > 3 && '.00' === priceret.substr(-3)) {
+    //     Return priceret.substr(0, priceret.length - 3)
     //   }
 
-    //   return priceret
+    //   Return priceret
     // }
 
     return defaultReturn
@@ -481,10 +481,10 @@ export abstract class NumberHelper {
     return runOnAllMembers(
       objLeft,
       (key, val) => {
-        const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN
+        const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const robjval: any = (objRight as any)[key]
-        const rval = isNumber(robjval)
+         robjval: any = (objRight as any)[key],
+         rval = isNumber(robjval)
           ? robjval
           : isString(robjval)
           ? parseFloat(robjval)

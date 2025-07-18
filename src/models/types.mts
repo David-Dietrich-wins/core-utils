@@ -41,8 +41,8 @@ export type FromTo<T = number> = {
   to?: T
 }
 
-//export type NotDate<T> = T extends Date ? never : T extends object ? T : never
-// export type TisIId<T extends object> = T extends IId ? T : never
+//Export type NotDate<T> = T extends Date ? never : T extends object ? T : never
+// Export type TisIId<T extends object> = T extends IId ? T : never
 
 export type FunctionAppResponse<TBody = unknown> = {
   stats: InstrumentationStatistics

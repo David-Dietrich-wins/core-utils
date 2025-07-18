@@ -9,9 +9,9 @@ const { LogManager } = await import('./LogManager.mjs')
 
 let logManagerOptions: LogManagerOptions
 
-// const mockLoggerCreateInstance = (LogManager.CreateInstance = jest.fn(
+// Const mockLoggerCreateInstance = (LogManager.CreateInstance = jest.fn(
 //   (options: LogManagerOptions) => {
-//     return new LogManager(options)
+//     Return new LogManager(options)
 //   }
 // ))
 
@@ -84,9 +84,9 @@ describe('log levels', () => {
     logFileName: 'logLevels2-FileName.log',
     rotateBaseFileName: 'logLevels3-RotateBaseFileName.log',
     suffixDatePattern: 'YYYY-MM-DD',
-  })
+  }),
 
-  const lm = new LogManager(logManagerOptions)
+   lm = new LogManager(logManagerOptions)
 
   test('debug', () => {
     expect(lm).toBeDefined()
@@ -166,9 +166,9 @@ describe('transports', () => {
 
   test('no daily rotate file', () => {
     const mockDailyRotateFileLogger = (LogManager.DailyRotateFileLogger =
-      jest.fn(() => null as unknown as DailyRotateFile))
+      jest.fn(() => null as unknown as DailyRotateFile)),
 
-    const ret = LogManager.WinstonLogTransports(
+     ret = LogManager.WinstonLogTransports(
       'info',
       'TEST4.WinstonLogTransports-logFileName.log',
       'TEST5.WinstonLogTransports-logBaseFileName.log',

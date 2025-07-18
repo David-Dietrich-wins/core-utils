@@ -1,4 +1,4 @@
-import { IdName, IIdName } from './id-name.mjs'
+import { IIdName, IdName } from './id-name.mjs'
 
 export interface IUserState<T = unknown> extends IIdName<string> {
   message?: string

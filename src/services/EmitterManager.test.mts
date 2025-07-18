@@ -1,4 +1,4 @@
-import { jest, test, expect } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import { CreateEmitterManager } from './EmitterManager.mjs'
 
 test('CreateEmitterManager', () => {

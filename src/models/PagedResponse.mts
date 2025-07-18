@@ -3,7 +3,7 @@ import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
 
-/*export interface IPagedResponse<T> {
+/*Export interface IPagedResponse<T> {
   dataPage: T[]
   rowCount?: number
   totalCount: number
@@ -29,9 +29,9 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     prom: Promise<T[] | undefined>,
     promCounts?: Promise<number>
   ) {
-    const ret = await Promise.all([prom, promCounts ?? Promise.resolve(0)])
+    const ret = await Promise.all([prom, promCounts ?? Promise.resolve(0)]),
 
-    const arr = safeArray(ret[0])
+     arr = safeArray(ret[0])
     return new PagedResponse<T>(arr, ret[1] || arr.length)
   }
 
@@ -98,7 +98,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
    */
   static zPagedResponse<T extends z.ZodType>(recordSchema: T) {
     return z.object({
-      // ctx: IContext<unknown>,
+      // Ctx: IContext<unknown>,
       rowCount: z.number().int().nonnegative().optional(),
       totalCount: z.number().int().nonnegative(),
       dataPage: z.array(recordSchema),

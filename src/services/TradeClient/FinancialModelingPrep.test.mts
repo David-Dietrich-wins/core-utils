@@ -10,8 +10,8 @@ test('FmpIndicatorParamsSetDateBoundary', () => {
     timeframe: '1y',
     from: +new Date('2021-01-01'),
     to: +new Date('2021-12-31'),
-  }
-  const dateBoundary =
+  },
+   dateBoundary =
     FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(params)
   expect(dateBoundary).toMatchObject({
     from: +new Date('2022-01-01'),
@@ -96,8 +96,8 @@ test('FmpIndicatorParamsFromObject', () => {
     symbol: 'AAPL',
     periodLength: 1,
     timeframe: '1y',
-  }
-  const path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+  },
+   path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
   expect(path).toMatchObject({
     from: undefined,
     periodLength: 1,
@@ -126,8 +126,8 @@ test('FmpIndicatorParamsSetDateBoundary', () => {
     timeframe: '1y',
     from: +new Date('2021-01-01'),
     to: +new Date('2021-12-31'),
-  }
-  const dateBoundary =
+  },
+   dateBoundary =
     FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(params)
   expect(dateBoundary).toMatchObject({
     from: +new Date('2022-01-01'),
@@ -212,8 +212,8 @@ test('FmpIndicatorParamsFromObject', () => {
     symbol: 'AAPL',
     periodLength: 1,
     timeframe: '1y',
-  }
-  const path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+  },
+   path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
   expect(path).toMatchObject({
     from: undefined,
     periodLength: 1,

@@ -31,9 +31,9 @@ export function CreatePolitiscaleSearchParams(
     pageSize: 0,
     sortColumn: '',
     sortDirection: 'asc',
-  }
+  },
 
-  const ret: IPolitiscaleSearchParams = {
+   ret: IPolitiscaleSearchParams = {
     ...DEFAULT_params,
     ...overrides,
   }

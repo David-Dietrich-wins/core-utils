@@ -1,11 +1,11 @@
 import {
-  PolitiscaleHelper,
   type PolitiRatingLeftRight,
+  PolitiscaleHelper,
 } from './politiscale-helper.mjs'
 import {
   CreatePolitiscaleSearchParams,
-  Politiscale,
   type IHasPolitiscales,
+  Politiscale,
 } from './politiscale.mjs'
 
 test('UserColorFromScales', () => {
@@ -13,9 +13,9 @@ test('UserColorFromScales', () => {
     { name: 'climate', value: 0 },
     { name: 'freeSpeech', value: 0 },
     { name: 'religion', value: 0 },
-  ]
+  ],
 
-  const userScales = [
+   userScales = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 20 },
     { name: 'religion', value: 20 },
@@ -431,8 +431,8 @@ test('getNewPolitiscales', () => {
     { name: 'climate', value: 0 },
     { name: 'freeSpeech', value: 0 },
     { name: 'religion', value: 0 },
-  ]
-  let scale = new Politiscale('climate', 10)
+  ],
+   scale = new Politiscale('climate', 10)
   expect(PolitiscaleHelper.getNewPolitiscales(scales, scale)).toStrictEqual([
     { name: 'climate', value: 10 },
     { name: 'freeSpeech', value: 0 },
@@ -487,8 +487,8 @@ test('CombineRatings', () => {
   const primary: PolitiRatingLeftRight = {
     left: { active: false, isPrimary: true, value: 0, weight: 0 },
     right: { active: false, isPrimary: false, value: 0, weight: 0 },
-  }
-  const applied: PolitiRatingLeftRight = {
+  },
+   applied: PolitiRatingLeftRight = {
     left: { active: false, isPrimary: true, value: 0, weight: 0 },
     right: { active: false, isPrimary: false, value: 0, weight: 0 },
   }
@@ -623,8 +623,8 @@ test('UserRatingOverall', () => {
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
-  ]
-  const userRating = PolitiscaleHelper.UserRatingOverall(
+  ],
+   userRating = PolitiscaleHelper.UserRatingOverall(
     scales,
     'anything' as unknown as IHasPolitiscales
   )

@@ -40,7 +40,7 @@ export class DateHelper {
    * @returns true if the date is valid. false otherwise.
    */
   static IsValidDate(date: DateTypeAcceptable) {
-    let dateCheck: Date | undefined = undefined
+    let dateCheck: Date | undefined
 
     if (date) {
       if (DateHelper.isDateObject(date)) {
@@ -54,7 +54,7 @@ export class DateHelper {
     }
 
     if (dateCheck instanceof Date && !isNaN(dateCheck.getTime())) {
-      // it is a date object
+      // It is a date object
       return true
     }
 
@@ -67,7 +67,7 @@ export class DateHelper {
     const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
     if (!DateHelper.isDateObject(dateClean)) {
       throw new AppException(
-        'Invalid date: ' + safestr(date),
+        `Invalid date: ${  safestr(date)}`,
         'DateHelper.VerifyDateOrNowIfInvalid'
       )
     }
@@ -164,9 +164,9 @@ export class DateHelper {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-    }
+    },
 
-    const now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
+     now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
       locale,
       options
     )
@@ -329,17 +329,17 @@ export class DateHelper {
     return safestr(DateHelper.toIsoString(date))
   }
 
-  // static getFormattedTime(
-  //   units: DurationInputArg1,
-  //   timeframe: DurationInputArg2,
-  //   isUtc = false
+  // Static getFormattedTime(
+  //   Units: DurationInputArg1,
+  //   Timeframe: DurationInputArg2,
+  //   IsUtc = false
   // ) {
-  //   const mom = isUtc ? moment().utc() : moment()
-  //   if (units && timeframe) {
-  //     mom.add(units, timeframe)
+  //   Const mom = isUtc ? moment().utc() : moment()
+  //   If (units && timeframe) {
+  //     Mom.add(units, timeframe)
   //   }
 
-  //   return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
+  //   Return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
   // }
 
   static FormattedUnixTime(unixtime: number) {
@@ -379,7 +379,7 @@ export class DateHelper {
     }
 
     return timeframe
-    // throw new AppException(
+    // Throw new AppException(
     //   `Invalid timeframe: ${timeframe}`,
     //   'DateHelper.NextBoundaryUp'
     // )
@@ -398,12 +398,12 @@ export class DateHelper {
     unit: DurationInputArg1,
     units: number = 1
   ) {
-    const mom = moment.utc(date)
+    const mom = moment.utc(date),
 
-    const timeframe = DateHelper.TimeframeToStartOf(unit as string)
-    const smom = mom.utc().startOf(timeframe as moment.unitOfTime.StartOf)
+     timeframe = DateHelper.TimeframeToStartOf(unit as string),
+     smom = mom.utc().startOf(timeframe as moment.unitOfTime.StartOf),
 
-    const newmom = smom
+     newmom = smom
       .utc()
       .add(units, timeframe as unitOfTime.DurationConstructor)
     return newmom.utc().toDate()
@@ -419,7 +419,7 @@ export class DateHelper {
   static timeDifference(startTime: Date, endTime?: Date) {
     const fname = 'DateHelper.timeDifference: '
     if (!startTime) {
-      throw new Error(fname + 'You must have a start time.')
+      throw new Error(`${fname  }You must have a start time.`)
     }
 
     if (!endTime) {
@@ -472,14 +472,14 @@ export class DateHelper {
     showMilliseconds = false,
     showMillisecondsIfUnderASecond = true
   ) {
-    const totalSeconds = Math.floor(millis / 1000)
-    const seconds = totalSeconds % 60
+    const totalSeconds = Math.floor(millis / 1000),
+     seconds = totalSeconds % 60,
 
-    const totalMinutes = Math.floor(millis / 60000)
-    const minutes = totalMinutes % 60
-    const totalHours = Math.floor(totalSeconds / 3600)
-    const hours = totalHours % 24
-    const days = Math.floor(totalHours / 24)
+     totalMinutes = Math.floor(millis / 60000),
+     minutes = totalMinutes % 60,
+     totalHours = Math.floor(totalSeconds / 3600),
+     hours = totalHours % 24,
+     days = Math.floor(totalHours / 24)
 
     let s = ''
     if (days > 0) {

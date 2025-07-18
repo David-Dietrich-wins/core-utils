@@ -22,9 +22,9 @@ test('constructor with ICity', () => {
     city_img: 'city_img',
     slug: 'slug',
     scales: [],
-  }
+  },
 
-  const city = new City(ic)
+   city = new City(ic)
   expect(city).toEqual({
     name: 'name',
     city: 'city',
@@ -45,9 +45,9 @@ test('CreateICity', () => {
     city_img: 'city_img',
     slug: 'slug',
     scales: [],
-  }
+  },
 
-  const city = City.CreateICity(ic)
+   city = City.CreateICity(ic)
   expect(city).toEqual({
     name: 'name',
     city: 'city',

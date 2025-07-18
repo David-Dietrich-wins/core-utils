@@ -7,6 +7,6 @@ describe('MyLib', () => {
 
   it('should not have undefined exports', () => {
     for (const k of Object.keys(MyLib))
-      expect(MyLib).not.toHaveProperty(k, undefined)
+      {expect(MyLib).not.toHaveProperty(k, undefined)}
   })
 })

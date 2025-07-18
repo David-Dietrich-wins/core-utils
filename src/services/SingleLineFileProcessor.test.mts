@@ -12,8 +12,8 @@ import {
   mockLoggerWarn,
 } from '../jest.setup.mjs'
 
-const sflp = await import('./SingleLineFileProcessor.mjs')
-const { SingleLineFileProcessor } = sflp
+const sflp = await import('./SingleLineFileProcessor.mjs'),
+ { SingleLineFileProcessor } = sflp
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
 
 const CONST_DelayTime = 50000
@@ -25,20 +25,20 @@ test('constructor', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.resolve(1))
-  const config: SingleLineFileProcessorConfig<number> = {
+  const fnaction = jest.fn(() => Promise.resolve(1)),
+   config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
     fileName: tmpFile.name,
     logger: getGlobalLogger(),
     typeName: 'type',
-  }
+  },
 
-  const processor = new SingleLineFileProcessor(config)
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
-  // expect(open).toHaveBeenCalledTimes(1)
+  // Expect(open).toHaveBeenCalledTimes(1)
   expect(fnaction).toHaveBeenCalledTimes(5)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
@@ -170,17 +170,17 @@ test('constructor', async () => {
 })
 
 test('constructor file not found', async () => {
-  // const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
-  // fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
-  const fnaction = jest.fn(() => Promise.resolve(1))
-  const config: SingleLineFileProcessorConfig<number> = {
+  // Const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  // Fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
+  const fnaction = jest.fn(() => Promise.resolve(1)),
+   config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
     fileName: 'notfound.txt',
     logger: getGlobalLogger(),
     typeName: 'type',
-  }
+  },
 
-  const processor = new SingleLineFileProcessor(config)
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
@@ -224,15 +224,15 @@ test('action exception', async () => {
   })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
+  const fnaction = jest.fn(() => Promise.reject(new Error('action exception'))),
 
-  const config: SingleLineFileProcessorConfig<number> = {
+   config: SingleLineFileProcessorConfig<number> = {
     fileName: tmpFile.name,
     logger: getGlobalLogger(),
     typeName: 'type',
     action: fnaction,
-  }
-  const processor = new SingleLineFileProcessor(config)
+  },
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
@@ -266,17 +266,15 @@ test('action exception with trimline', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn((safeline: string) => {
-    return Promise.resolve(safestr(safeline).length)
-  })
-  const config: SingleLineFileProcessorConfig<number> = {
+  const fnaction = jest.fn((safeline: string) => Promise.resolve(safestr(safeline).length)),
+   config: SingleLineFileProcessorConfig<number> = {
     fileName: tmpFile.name,
     logger: getGlobalLogger(),
     typeName: 'type',
     action: fnaction,
     trimLine: false,
-  }
-  const processor = new SingleLineFileProcessor(config)
+  },
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
@@ -412,15 +410,15 @@ test('processFile bad', async () => {
   const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.reject(new Error('action exception')))
+  const fnaction = jest.fn(() => Promise.reject(new Error('action exception'))),
 
-  const config: SingleLineFileProcessorConfig<number> = {
+   config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
     fileName: tmpFile.name,
     logger: getGlobalLogger(),
     typeName: 'type',
-  }
-  const processor = new SingleLineFileProcessor(config)
+  },
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
@@ -590,19 +588,19 @@ test('processFile bad', async () => {
 })
 
 test('open fails', async () => {
-  // mockOpen.mockImplementationOnce(() => {
-  //   return Promise.reject(new Error('open failed'))
+  // MockOpen.mockImplementationOnce(() => {
+  //   Return Promise.reject(new Error('open failed'))
   // })
 
-  const fnaction = jest.fn(() => Promise.resolve(1))
-  const config: SingleLineFileProcessorConfig<number> = {
+  const fnaction = jest.fn(() => Promise.resolve(1)),
+   config: SingleLineFileProcessorConfig<number> = {
     action: fnaction,
     fileName: 'notfound.txt',
     logger: getGlobalLogger(),
     typeName: 'type',
-  }
+  },
 
-  const processor = new SingleLineFileProcessor(config)
+   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()

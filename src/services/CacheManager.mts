@@ -41,9 +41,9 @@ export class CacheManager<T = object, Tkey = string> {
       }
 
       return items
-    }
+    },
 
-    const allItems = await this.getAll([key], fnall)
+     allItems = await this.getAll([key], fnall)
 
     return arrayFirst(allItems)
   }
@@ -52,10 +52,10 @@ export class CacheManager<T = object, Tkey = string> {
     keys: ArrayOrSingle<Tkey>,
     fnData: (arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
-    const arrKeys = safeArray(keys)
-    const now = Date.now()
+    const arrKeys = safeArray(keys),
+     now = Date.now(),
 
-    const expiredKeys = arrKeys.filter((key) => {
+     expiredKeys = arrKeys.filter((key) => {
       const cacheObj = this.cache.get(key)
 
       return !cacheObj || cacheObj.expire < now
@@ -70,13 +70,13 @@ export class CacheManager<T = object, Tkey = string> {
       this.keys.length,
       'total.'
       // 'Keys:',
-      // safeJsonToString(this.keys.join)
+      // SafeJsonToString(this.keys.join)
     )
-    const expire = now + this.cacheTimeInSeconds * 1000
+    const expire = now + this.cacheTimeInSeconds * 1000,
 
-    const ret = await fnData(expiredKeys)
+     ret = await fnData(expiredKeys)
     safeArray(ret).forEach((item) => {
-      // console.log('CacheManager:', this.name, 'set', item.id)
+      // Console.log('CacheManager:', this.name, 'set', item.id)
       this.set(item.id, expire, item.value)
     })
 

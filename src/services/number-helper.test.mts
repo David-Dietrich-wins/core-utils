@@ -1,11 +1,5 @@
 import {
   DollarFormatter,
-  elementTopLeftCoords,
-  getAsNumber,
-  getAsNumberOrUndefined,
-  getMantissa,
-  isNumber,
-  isNumeric,
   NumberFormatter,
   NumberFormatterNoDecimal,
   NumberHelper,
@@ -13,15 +7,21 @@ import {
   PercentTimes100Formatter,
   StockPriceFormatter,
   StockVolumeFormatter,
+  XFormatter,
+  elementTopLeftCoords,
+  getAsNumber,
+  getAsNumberOrUndefined,
+  getMantissa,
+  isNumber,
+  isNumeric,
   toFixedPrefixed,
   toFixedSuffixed,
-  XFormatter,
 } from './number-helper.mjs'
 
 test('addNumbers', () => {
-  const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' }
+  const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
 
-  const objRet = NumberHelper.AddNumbers(io, {
+   objRet = NumberHelper.AddNumbers(io, {
     a: 3,
     b: 4,
     c: '5',
@@ -31,8 +31,8 @@ test('addNumbers', () => {
   })
   expect(objRet).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: 'b' })
 
-  const io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } }
-  const objret2 = NumberHelper.AddNumbers(io2, {
+  const io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
+   objret2 = NumberHelper.AddNumbers(io2, {
     a: 3,
     b: 4,
     c: '5',
@@ -42,8 +42,8 @@ test('addNumbers', () => {
   })
   expect(objret2).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
 
-  const io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } }
-  const objret3 = NumberHelper.AddNumbers(io3, {
+  const io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
+   objret3 = NumberHelper.AddNumbers(io3, {
     a: [3],
     b: 4,
     c: '5',
@@ -53,8 +53,8 @@ test('addNumbers', () => {
   })
   expect(objret3).toEqual({ a: [2], b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
 
-  const io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } }
-  const objret4 = NumberHelper.AddNumbers(io4, {
+  const io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } },
+   objret4 = NumberHelper.AddNumbers(io4, {
     a: [3],
     b: 4,
     c: [9],
@@ -67,31 +67,31 @@ test('addNumbers', () => {
 })
 
 test('divideByNumbers', () => {
-  const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' }
+  const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
 
-  const objRet = NumberHelper.DivideByNumbers(io, 2)
+   objRet = NumberHelper.DivideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })
 
 describe('Number formatting', () => {
   test('String from a number with commas added', () => {
-    const num = 123456789
-    const str = NumberHelper.NumberToString(num)
+    const num = 123456789,
+     str = NumberHelper.NumberToString(num)
 
     expect(str).toBe('123,456,789')
   })
 
   test('Number from string with commas', () => {
-    const num = '123,456,789'
-    const str = getAsNumberOrUndefined(num)
+    const num = '123,456,789',
+     str = getAsNumberOrUndefined(num)
 
     expect(str).toBe(123456789)
   })
 
   test('getAsNumber', () => {
-    const num = '123,456,789'
-    const str = getAsNumber(num)
+    const num = '123,456,789',
+     str = getAsNumber(num)
 
     expect(str).toBe(123456789)
   })

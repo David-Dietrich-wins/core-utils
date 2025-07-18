@@ -7,7 +7,7 @@ import { ApiResponse } from '../models/ApiResponse.mjs'
  */
 export class ApiResponseHelper {
   static Error<T = unknown>(obj: T) {
-    // uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
+    // Uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 
     let crret: ApiResponse<T>
     if (isObject(obj) && obj instanceof ApiResponse) {

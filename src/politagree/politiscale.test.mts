@@ -14,8 +14,8 @@ test('constructor', () => {
 })
 
 test('constructor with object', () => {
-  const ip: IPolitiscale = { name: 'religion', value: 5 }
-  const politiscale = new Politiscale(ip, 0)
+  const ip: IPolitiscale = { name: 'religion', value: 5 },
+   politiscale = new Politiscale(ip, 0)
   expect(politiscale).toEqual({
     name: 'religion',
     value: 5,

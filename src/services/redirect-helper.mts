@@ -31,20 +31,20 @@ export abstract class RedirectHelper {
     searchParamRequestUrl?: string | null,
     redirectAfterLoginIfIllegalRedirectLocation = '/'
   ): string {
-    const winParamRedirectUrl = decodeURI(safestrTrim(searchParamRequestUrl))
-    const winPathName = safestrTrim(windowPathname)
+    const winParamRedirectUrl = decodeURI(safestrTrim(searchParamRequestUrl)),
+     winPathName = safestrTrim(windowPathname),
 
-    const desiredRedirectUrl = safestr(winParamRedirectUrl, winPathName)
-    const redirectAfterLogin = RedirectHelper.getRedirectAfterLogin(
+     desiredRedirectUrl = safestr(winParamRedirectUrl, winPathName),
+     redirectAfterLogin = RedirectHelper.getRedirectAfterLogin(
       desiredRedirectUrl,
       redirectAfterLoginIfIllegalRedirectLocation
-    )
+    ),
 
-    const isNotLogin =
+     isNotLogin =
       hasData(desiredRedirectUrl) &&
-      RedirectHelper.IllegalRedirectPaths.includes(winPathName)
+      RedirectHelper.IllegalRedirectPaths.includes(winPathName),
 
-    const encodedRedirectUrl = stringIf(isNotLogin, '', '/login?redirectUrl=')
+     encodedRedirectUrl = stringIf(isNotLogin, '', '/login?redirectUrl=')
 
     return (
       encodedRedirectUrl +

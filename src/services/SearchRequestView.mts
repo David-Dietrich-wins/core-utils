@@ -5,16 +5,16 @@ import {
   SortOrder,
   SortOrderAsBoolean,
 } from '../models/types.mjs'
-import { safeArray, isArray } from './array-helper.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, sortFunction } from './general.mjs'
 import { getAsNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 import {
+  StringHelper,
   isString,
   safestr,
   safestrLowercase,
   safestrTrim,
-  StringHelper,
 } from './string-helper.mjs'
 
 export type ISearchRequestView = z.infer<
@@ -136,9 +136,9 @@ export class SearchRequestView implements ISearchRequestView {
       ? lowerCaseSearch
         ? safestrLowercase(this.term, false)
         : safestr(this.term)
-      : this.term
+      : this.term,
 
-    const searchColumns = safeArray(this.searchColumns)
+     searchColumns = safeArray(this.searchColumns)
 
     if (lterm && isArray(searchColumns, 1)) {
       ret = ret.filter((x) => {
@@ -162,9 +162,9 @@ export class SearchRequestView implements ISearchRequestView {
       })
     }
 
-    const numFound = ret.length
+    const numFound = ret.length,
 
-    const sortColumn = safestrTrim(this.sortColumn)
+     sortColumn = safestrTrim(this.sortColumn)
     if (hasData(sortColumn)) {
       const lsortDirection = SortOrderAsBoolean(this.sortDirection)
 
@@ -173,8 +173,8 @@ export class SearchRequestView implements ISearchRequestView {
       )
     }
 
-    const offset = this.CalculatedOffset
-    const pageSize = this.CalculatedPageSize
+    const offset = this.CalculatedOffset,
+     pageSize = this.CalculatedPageSize
     if (pageSize > 0) {
       ret = ret.slice(offset, offset + pageSize)
     } else if (offset > 0) {

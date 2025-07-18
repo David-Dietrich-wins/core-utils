@@ -1,73 +1,72 @@
-import { ZodError } from 'zod/v4'
-import { ZodTestHelper } from '../jest.setup.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
+import { ZodError } from 'zod/v4'
+import { ZodTestHelper } from '../jest.setup.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
 
 const iSubplot: ISubplot = {
-  id: '123',
-  orderNumber: 1,
-  pattern: 'TestPattern',
-  timeframe: '1D',
-  total: 0,
-  targetLow: 150,
-  targetHigh: 200,
-  expectedTriggerDate: new Date('2025-12-03'),
-  comment: 'Test Subplot',
-  lossFloorPercent: 0.05,
-  gainCeilingPercent: 0.1,
-  useMinusEight: false,
-  scaleInverted: false,
-}
-
-const testSubplots = [
-  new Subplot(iSubplot),
-  new Subplot({
-    id: '456',
-    orderNumber: 2,
-    pattern: 'AnotherPattern',
-    timeframe: '1W',
+    comment: 'Test Subplot',
+    expectedTriggerDate: new Date('2025-12-03'),
+    gainCeilingPercent: 0.1,
+    id: '123',
+    lossFloorPercent: 0.05,
+    orderNumber: 1,
+    pattern: 'TestPattern',
+    scaleInverted: false,
+    targetHigh: 200,
+    targetLow: 150,
+    timeframe: '1D',
     total: 0,
-    targetLow: 100,
-    targetHigh: 250,
-    expectedTriggerDate: new Date('2025-12-10'),
-    comment: 'Another Subplot',
-    lossFloorPercent: 0.03,
-    gainCeilingPercent: 0.15,
-    useMinusEight: true,
-    scaleInverted: true,
-  }),
-]
+    useMinusEight: false,
+  },
+  testSubplots = [
+    new Subplot(iSubplot),
+    new Subplot({
+      comment: 'Another Subplot',
+      expectedTriggerDate: new Date('2025-12-10'),
+      gainCeilingPercent: 0.15,
+      id: '456',
+      lossFloorPercent: 0.03,
+      orderNumber: 2,
+      pattern: 'AnotherPattern',
+      scaleInverted: true,
+      targetHigh: 250,
+      targetLow: 100,
+      timeframe: '1W',
+      total: 0,
+      useMinusEight: true,
+    }),
+  ]
 
 test('constructor', () => {
   const subplot = new Subplot({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: [subplot],
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 1,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: [subplot],
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.ticker).toBe('AAPL')
   expect(tradePlot.description).toBe('Test Trade Plot')
@@ -85,19 +84,20 @@ test('constructor', () => {
   expect(tradePlot.getTargetHigh()).toBe(155)
   expect(tradePlot.getTargetLow()).toBe(145)
   expect(tradePlot.toApi()).toMatchObject({
-    id: expect.any(String),
-    ticker: 'AAPL',
+    created: expect.any(Date),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
+    id: expect.any(String),
     isShort: false,
     purchase: 145,
     shares: 10,
     subplots: [
       {
-        id: '1',
         comment: 'Test comment',
         expectedTriggerDate: new Date('2023-10-01'),
         gainCeilingPercent: 10,
+        id: '1',
         lossFloorPercent: 5,
         orderNumber: 1,
         pattern: 'b28',
@@ -108,71 +108,70 @@ test('constructor', () => {
         useMinusEight: true,
       },
     ],
-    updatedby: 'TradePlot',
+    ticker: 'AAPL',
     updated: expect.any(Date),
-    createdby: 'TradePlot',
-    created: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 
   expect(new TradePlot()).toMatchObject({
-    ticker: '',
+    created: expect.any(Date),
+    createdby: 'TradePlot',
     description: '',
     goal: undefined,
+    id: expect.any(String),
     isShort: false,
     purchase: undefined,
     shares: 0,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: expect.any(Date),
-    created: expect.any(Date),
     subplots: [],
-    id: expect.any(String),
+    ticker: '',
+    updated: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 
   expect(new TradePlot({ id: 'my string' })).toMatchObject({
-    ticker: '',
+    created: expect.any(Date),
+    createdby: 'TradePlot',
     description: '',
     goal: undefined,
+    id: expect.any(String),
     isShort: false,
     purchase: undefined,
     shares: 0,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: expect.any(Date),
-    created: expect.any(Date),
     subplots: [],
-    id: expect.any(String),
+    ticker: '',
+    updated: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 
   expect(new TradePlot({ subplots: [iSubplot] })).toMatchObject({
-    ticker: '',
+    created: expect.any(Date),
+    createdby: 'TradePlot',
     description: '',
     goal: undefined,
+    id: expect.any(String),
     isShort: false,
     purchase: undefined,
     shares: 0,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: expect.any(Date),
-    created: expect.any(Date),
     subplots: [
       {
+        comment: 'Test Subplot',
+        expectedTriggerDate: new Date('2025-12-03'),
+        gainCeilingPercent: 0.1,
         id: '123',
+        lossFloorPercent: 0.05,
         orderNumber: 1,
         pattern: 'TestPattern',
+        scaleInverted: false,
+        targetHigh: 200,
+        targetLow: 150,
         timeframe: '1D',
         total: 0,
-        targetLow: 150,
-        targetHigh: 200,
-        expectedTriggerDate: new Date('2025-12-03'),
-        comment: 'Test Subplot',
-        lossFloorPercent: 0.05,
-        gainCeilingPercent: 0.1,
         useMinusEight: false,
-        scaleInverted: false,
       },
     ],
-    id: expect.any(String),
+    ticker: '',
+    updated: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 })
 
@@ -193,19 +192,20 @@ describe('CreateFromTicker', () => {
     expect(tradePlot.updated).toBeInstanceOf(Date)
     expect(tradePlot.created).toBeInstanceOf(Date)
     expect(tradePlot.toApi()).toMatchObject({
-      id: expect.any(String),
-      ticker: 'AAPL',
+      created: expect.any(Date),
+      createdby: 'test@test.com',
       description: '',
       goal: undefined,
+      id: expect.any(String),
       isShort: false,
       purchase: undefined,
       shares: 0,
       subplots: [
         {
-          id: expect.any(String),
           comment: '',
           expectedTriggerDate: undefined,
           gainCeilingPercent: 10,
+          id: expect.any(String),
           lossFloorPercent: 8,
           orderNumber: 0,
           pattern: 'b28',
@@ -216,21 +216,19 @@ describe('CreateFromTicker', () => {
           useMinusEight: true,
         },
       ],
-      updatedby: 'test@test.com',
-      createdby: 'test@test.com',
+      ticker: 'AAPL',
       updated: expect.any(Date),
-      created: expect.any(Date),
+      updatedby: 'test@test.com',
     })
   })
 
   test('bad email', () => {
     try {
       TradePlot.CreateFromTicker('AAPL', 'Test Trade Plot')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
+    } catch (e) {
       expect(e).toBeInstanceOf(ZodError)
-      expect(e.issues.length).toBe(1)
-      expect(e.stack).toBeDefined()
+      expect((e as ZodError).issues.length).toBe(1)
+      expect((e as ZodError).stack).toBeDefined()
 
       expect(e).toMatchObject(ZodTestHelper.Issue(ZodTestHelper.InvalidEmail()))
     }
@@ -244,8 +242,8 @@ describe('CreateFromTicker', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e).toBeInstanceOf(ZodError)
-      expect(e.issues.length).toBe(1)
-      expect(e.stack).toBeDefined()
+      expect((e as ZodError).issues.length).toBe(1)
+      expect((e as ZodError).stack).toBeDefined()
 
       expect(e).toMatchObject(
         ZodTestHelper.Issue(ZodTestHelper.StringTooSmall(1))
@@ -261,17 +259,19 @@ test('FixupForSave', () => {
   tradePlot.subplots[0].expectedTriggerDate = new Date('2023-10-01')
   expect(tradePlot.subplots[0].expectedTriggerDate).toEqual(expect.any(Date))
 
+  // eslint-disable-next-line one-var
   const fixedTradePlot = TradePlot.FixupForSave(tradePlot)
   expect(fixedTradePlot.subplots[0].expectedTriggerDate).toBeUndefined()
 
   delete tradePlot.subplots[0].expectedTriggerDate
+  // eslint-disable-next-line one-var
   const fixedTradePlot2 = TradePlot.FixupForSave(tradePlot)
   expect(fixedTradePlot2.subplots[0].expectedTriggerDate).toBeUndefined()
 })
 
 test('copyObject', () => {
-  const original = TradePlot.CreateFromTicker('AAPL', 'test@test.com')
-  const updated = TradePlot.CreateFromTicker('TSLA', 'test-tesla@test.com')
+  const original = TradePlot.CreateFromTicker('AAPL', 'test@test.com'),
+    updated = TradePlot.CreateFromTicker('TSLA', 'test-tesla@test.com')
 
   original.copyObject(updated)
 
@@ -297,50 +297,48 @@ test('copyObject', () => {
 })
 
 test('misc', () => {
-  const currentPrice = 100
-
-  const subplot = new Subplot({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-  const subplot2 = new Subplot({
-    id: '2',
-    comment: 'Another comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 200,
-    targetLow: 180,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: [subplot, subplot2],
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const currentPrice = 100,
+    subplot = new Subplot({
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 1,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    subplot2 = new Subplot({
+      comment: 'Another comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '2',
+      lossFloorPercent: 5,
+      orderNumber: 1,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 200,
+      targetLow: 180,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: [subplot, subplot2],
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.getPatternCount()).toBe(2)
   expect(tradePlot.getTargetHigh()).toBe(155)
@@ -376,23 +374,23 @@ test('misc', () => {
 })
 
 test('getNextOrderNumber', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.getNextOrderNumber(Date.now())).toBe(2)
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].expectedTriggerDate = undefined
   splots[1].expectedTriggerDate = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))
@@ -404,25 +402,25 @@ test('getNextOrderNumber', () => {
 })
 
 test('getMinExpectedTriggerDate', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.getMinExpectedTriggerDate(Date.now())).toEqual(
     new Date('2025-12-03')
   )
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].expectedTriggerDate = undefined
   splots[1].expectedTriggerDate = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))
@@ -433,25 +431,25 @@ test('getMinExpectedTriggerDate', () => {
 })
 
 test('getMaxExpectedTriggerDate', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.getMaxExpectedTriggerDate(Date.now())).toEqual(
     new Date('2025-12-10')
   )
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].expectedTriggerDate = undefined
   splots[1].expectedTriggerDate = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))
@@ -465,17 +463,17 @@ test('getMaxExpectedTriggerDate', () => {
 
 test('investmentAmountStartDisplay', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: undefined,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.investmentAmountStartDisplay).toBe('$0')
@@ -483,17 +481,17 @@ test('investmentAmountStartDisplay', () => {
 
 test('investmentAmountGain', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: undefined,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.investmentAmountGain(100)).toBeUndefined()
@@ -510,17 +508,17 @@ test('investmentAmountGain', () => {
 
 test('investmentAmountGainDisplay', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: undefined,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.investmentAmountGainDisplay(100, 2)).toBe('$0')
@@ -528,17 +526,17 @@ test('investmentAmountGainDisplay', () => {
 
 test('investmentAmountGainPercentDisplay', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: undefined,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.investmentAmountGainPercentDisplay(100)).toBe('0%')
@@ -555,22 +553,23 @@ test('investmentAmountGainPercentDisplay', () => {
 
 test('zSchema', () => {
   const tradePlot = TradePlot.zSchema.parse({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: undefined,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot).toBeDefined()
   expect(tradePlot).toMatchObject({
-    ticker: 'AAPL',
+    created: expect.any(Date),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
@@ -578,56 +577,55 @@ test('zSchema', () => {
     shares: 10,
     subplots: expect.arrayContaining([
       expect.objectContaining({
+        comment: 'Test Subplot',
+        expectedTriggerDate: new Date('2025-12-03'),
+        gainCeilingPercent: 0.1,
         id: expect.any(String),
+        lossFloorPercent: 0.05,
         orderNumber: 1,
         pattern: 'TestPattern',
+        scaleInverted: false,
+        targetHigh: 200,
+        targetLow: 150,
         timeframe: '1D',
         total: 0,
-        targetLow: 150,
-        targetHigh: 200,
-        expectedTriggerDate: new Date('2025-12-03'),
-        comment: 'Test Subplot',
-        lossFloorPercent: 0.05,
-        gainCeilingPercent: 0.1,
         useMinusEight: false,
-        scaleInverted: false,
       }),
       expect.objectContaining({
+        comment: 'Another Subplot',
+        expectedTriggerDate: new Date('2025-12-10'),
+        gainCeilingPercent: 0.15,
         id: expect.any(String),
+        lossFloorPercent: 0.03,
         orderNumber: 2,
         pattern: 'AnotherPattern',
+        scaleInverted: true,
+        targetHigh: 250,
+        targetLow: 100,
         timeframe: '1W',
         total: 0,
-        targetLow: 100,
-        targetHigh: 250,
-        expectedTriggerDate: new Date('2025-12-10'),
-        comment: 'Another Subplot',
-        lossFloorPercent: 0.03,
-        gainCeilingPercent: 0.15,
         useMinusEight: true,
-        scaleInverted: true,
       }),
     ]),
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: expect.any(Date),
-    created: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 })
 
 test('getAmountToTargetHigh', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: 145,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.getAmountToTargetHigh(100)).toBe(100)
@@ -636,17 +634,17 @@ test('getAmountToTargetHigh', () => {
 
 test('getAmountToTargetLow', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: 145,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.getAmountToTargetLow(100)).toBe(0)
@@ -654,23 +652,23 @@ test('getAmountToTargetLow', () => {
 })
 
 test('getPreviousExpectedTriggerDate', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
   expect(tradePlot.getPrevExpectedTriggerDate(Date.now())).toBeUndefined()
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].expectedTriggerDate = undefined
   splots[1].expectedTriggerDate = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))
@@ -679,17 +677,17 @@ test('getPreviousExpectedTriggerDate', () => {
 
 test('getProfit', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: true,
     purchase: 145,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.getProfit(100)).toBe(450)
@@ -698,17 +696,17 @@ test('getProfit', () => {
 
 test('startingInvestment', () => {
   const tradePlot = new TradePlot({
-    ticker: 'AAPL',
+    created: new Date(),
+    createdby: 'TradePlot',
     description: 'Test Trade Plot',
     goal: 150,
     isShort: false,
     purchase: 145,
     shares: 10,
     subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
+    ticker: 'AAPL',
     updated: new Date(),
-    created: new Date(),
+    updatedby: 'TradePlot',
   })
 
   expect(tradePlot.startingInvestment).toBe(1450)
@@ -718,21 +716,21 @@ test('startingInvestment', () => {
 })
 
 test('getTargetHigh', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].targetHigh = 100
   splots[1].targetHigh = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))
@@ -740,21 +738,21 @@ test('getTargetHigh', () => {
 })
 
 test('getTargetLow', () => {
-  const tradePlot = new TradePlot({
-    ticker: 'AAPL',
-    description: 'Test Trade Plot',
-    goal: 150,
-    isShort: false,
-    purchase: 145,
-    shares: 10,
-    subplots: testSubplots,
-    updatedby: 'TradePlot',
-    createdby: 'TradePlot',
-    updated: new Date(),
-    created: new Date(),
-  })
+  const splots: ISubplot[] = deepCloneJson(testSubplots),
+    tradePlot = new TradePlot({
+      created: new Date(),
+      createdby: 'TradePlot',
+      description: 'Test Trade Plot',
+      goal: 150,
+      isShort: false,
+      purchase: 145,
+      shares: 10,
+      subplots: testSubplots,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    })
 
-  const splots: ISubplot[] = deepCloneJson(testSubplots)
   splots[0].targetLow = 100
   splots[1].targetLow = undefined
   tradePlot.subplots = splots.map((subplot) => new Subplot(subplot))

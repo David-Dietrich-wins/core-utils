@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { getCurrentDate, TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { TEST_Parameters_DEV, getCurrentDate } from '../jest.setup.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { safestr } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -38,8 +38,8 @@ test('VerifyDateOrNowIfEmpty', () => {
 })
 
 test('Add Milliseconds', () => {
-  const numToAdd = 2456
-  const newDate = DateHelper.addMillisToDate(
+  const numToAdd = 2456,
+   newDate = DateHelper.addMillisToDate(
     numToAdd,
     TEST_Parameters_DEV.currentDate
   )
@@ -50,8 +50,8 @@ test('Add Milliseconds', () => {
 })
 
 test('Add Seconds', () => {
-  const numToAdd = 2456
-  const newDate = DateHelper.addSecondsToDate(
+  const numToAdd = 2456,
+   newDate = DateHelper.addSecondsToDate(
     numToAdd,
     TEST_Parameters_DEV.currentDate
   )
@@ -62,8 +62,8 @@ test('Add Seconds', () => {
 })
 
 test('Add Minutes', () => {
-  const numToAdd = 2456
-  const newDate = DateHelper.addMinutesToDate(
+  const numToAdd = 2456,
+   newDate = DateHelper.addMinutesToDate(
     numToAdd,
     TEST_Parameters_DEV.currentDate
   )
@@ -74,8 +74,8 @@ test('Add Minutes', () => {
 })
 
 test('Add Hours', () => {
-  const numToAdd = 2456
-  const newDate = DateHelper.addHoursToDate(
+  const numToAdd = 2456,
+   newDate = DateHelper.addHoursToDate(
     numToAdd,
     TEST_Parameters_DEV.currentDate
   )
@@ -86,8 +86,8 @@ test('Add Hours', () => {
 })
 
 test('Add Days', () => {
-  const numToAdd = 26
-  const newDate = DateHelper.addDaysToDate(
+  const numToAdd = 26,
+   newDate = DateHelper.addDaysToDate(
     numToAdd,
     TEST_Parameters_DEV.currentDate
   )
@@ -123,8 +123,8 @@ describe('toIsoString', () => {
   })
 
   test('SQL date', () => {
-    const strSqlDate = '2022-10-30 22:09:00.000'
-    const ret = DateHelper.toIsoString(strSqlDate)
+    const strSqlDate = '2022-10-30 22:09:00.000',
+     ret = DateHelper.toIsoString(strSqlDate)
 
     expect(ret).toBe('2022-10-31T02:09:00.000Z')
   })
@@ -150,17 +150,17 @@ describe('SqlUtcToUtcString', () => {
   })
 
   test('milliseconds', () => {
-    const strSqlDate = '2022-11-31 22:09:00.000'
+    const strSqlDate = '2022-11-31 22:09:00.000',
 
-    const ret = DateHelper.SqlUtcToUtcString(strSqlDate, false)
+     ret = DateHelper.SqlUtcToUtcString(strSqlDate, false)
 
     expect(ret).toBe('2022-11-31T22:09:00.000Z')
   })
 
   test('no milliseconds', () => {
-    const strSqlDate = '2022-11-31 22:09:00.000'
+    const strSqlDate = '2022-11-31 22:09:00.000',
 
-    const ret = DateHelper.SqlUtcToUtcString(strSqlDate)
+     ret = DateHelper.SqlUtcToUtcString(strSqlDate)
 
     expect(ret).toBe('2022-11-31T22:09:00Z')
   })
@@ -194,13 +194,13 @@ describe('toIsoStringSafe', () => {
 
 describe('addMillisToDate', () => {
   test('empty', () => {
-    const startDate = new Date()
-    const startTimeMillis = +startDate
+    const startDate = new Date(),
+     startTimeMillis = +startDate,
 
-    const retDate = DateHelper.addMillisToDate(5000)
-    const retTimeMillis = +retDate
+     retDate = DateHelper.addMillisToDate(5000),
+     retTimeMillis = +retDate,
 
-    const millisElapsed = retTimeMillis - startTimeMillis
+     millisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
     expect(millisElapsed).toBeGreaterThanOrEqual(5000)
@@ -208,13 +208,13 @@ describe('addMillisToDate', () => {
   })
 
   test('good Date', () => {
-    const startDate = new Date()
-    const startTimeMillis = +startDate
+    const startDate = new Date(),
+     startTimeMillis = +startDate,
 
-    const retDate = DateHelper.addMillisToDate(5000, startDate)
-    const retTimeMillis = +retDate
+     retDate = DateHelper.addMillisToDate(5000, startDate),
+     retTimeMillis = +retDate,
 
-    const millisElapsed = retTimeMillis - startTimeMillis
+     millisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
     expect(millisElapsed).toBeGreaterThanOrEqual(5000)
@@ -222,13 +222,13 @@ describe('addMillisToDate', () => {
   })
 
   test('good number', () => {
-    const startDate = new Date()
-    const startTimeMillis = +startDate
+    const startDate = new Date(),
+     startTimeMillis = +startDate,
 
-    const retDate = DateHelper.addMillisToDate(5000, +startDate)
-    const retTimeMillis = +retDate
+     retDate = DateHelper.addMillisToDate(5000, +startDate),
+     retTimeMillis = +retDate,
 
-    const millisElapsed = retTimeMillis - startTimeMillis
+     millisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
     expect(millisElapsed).toBeGreaterThanOrEqual(5000)
@@ -236,13 +236,13 @@ describe('addMillisToDate', () => {
   })
 
   test('good string', () => {
-    const startDate = new Date()
-    const startTimeMillis = +startDate
+    const startDate = new Date(),
+     startTimeMillis = +startDate,
 
-    const retDate = DateHelper.addMillisToDate(5000, startDate.toISOString())
-    const retTimeMillis = +retDate
+     retDate = DateHelper.addMillisToDate(5000, startDate.toISOString()),
+     retTimeMillis = +retDate,
 
-    const millisElapsed = retTimeMillis - startTimeMillis
+     millisElapsed = retTimeMillis - startTimeMillis
 
     expect(retTimeMillis).toBeGreaterThan(0)
     expect(millisElapsed).toBeGreaterThanOrEqual(5000)
@@ -252,7 +252,7 @@ describe('addMillisToDate', () => {
 
 describe('FormatDateTime', () => {
   test('empty', () => {
-    // const startDate = new Date()
+    // Const startDate = new Date()
 
     const retDate = DateHelper.FormatDateTime(DateHelper.FormatSeconds)
     expect(retDate).toContain('/')
@@ -260,9 +260,9 @@ describe('FormatDateTime', () => {
   })
 
   test('good Date', () => {
-    const startDate = new Date()
+    const startDate = new Date(),
 
-    const retDate = DateHelper.FormatDateTime(
+     retDate = DateHelper.FormatDateTime(
       DateHelper.FormatSeconds,
       startDate
     )
@@ -271,9 +271,9 @@ describe('FormatDateTime', () => {
   })
 
   test('good number', () => {
-    const startDate = new Date()
+    const startDate = new Date(),
 
-    const retDate = DateHelper.FormatDateTime(
+     retDate = DateHelper.FormatDateTime(
       DateHelper.FormatSeconds,
       +startDate
     )
@@ -282,9 +282,9 @@ describe('FormatDateTime', () => {
   })
 
   test('good string', () => {
-    const startDate = new Date()
+    const startDate = new Date(),
 
-    const retDate = DateHelper.FormatDateTime(
+     retDate = DateHelper.FormatDateTime(
       DateHelper.FormatSeconds,
       startDate.toISOString()
     )
@@ -340,9 +340,9 @@ describe('DateFormatForUi', () => {
 })
 describe('DateHelper.timeDifference', () => {
   test('startTime', () => {
-    const startDate = new Date(Date.now() - 2000)
+    const startDate = new Date(Date.now() - 2000),
 
-    const millis = DateHelper.timeDifference(startDate)
+     millis = DateHelper.timeDifference(startDate)
     expect(millis).toBeGreaterThanOrEqual(2000)
   })
 
@@ -355,8 +355,8 @@ describe('DateHelper.timeDifference', () => {
 })
 describe('DateHelper.timeDifferenceString', () => {
   test('2s', () => {
-    const startDate = new Date()
-    const endDate = new Date(+startDate)
+    const startDate = new Date(),
+     endDate = new Date(+startDate)
 
     endDate.setSeconds(endDate.getSeconds() - 2)
     const str = DateHelper.timeDifferenceString(startDate, endDate)
@@ -366,8 +366,8 @@ describe('DateHelper.timeDifferenceString', () => {
   })
 
   test('4h', () => {
-    const startDate = new Date()
-    const endDate = new Date(+startDate)
+    const startDate = new Date(),
+     endDate = new Date(+startDate)
 
     endDate.setHours(endDate.getHours() + 4)
     const str = DateHelper.timeDifferenceString(startDate, endDate)
@@ -377,8 +377,8 @@ describe('DateHelper.timeDifferenceString', () => {
   })
 
   test('21d', () => {
-    const startDate = getCurrentDate()
-    const endDate = new Date(startDate)
+    const startDate = getCurrentDate(),
+     endDate = new Date(startDate)
 
     endDate.setDate(endDate.getDate() + 21)
     const str = DateHelper.timeDifferenceString(startDate, endDate)
@@ -388,20 +388,20 @@ describe('DateHelper.timeDifferenceString', () => {
   })
 
   test('long format', () => {
-    const startDate = new Date()
-    const endDate = new Date(+startDate + 2000)
+    const startDate = new Date(),
+     endDate = new Date(+startDate + 2000),
 
-    const str = DateHelper.timeDifferenceString(startDate, endDate, true)
+     str = DateHelper.timeDifferenceString(startDate, endDate, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds')
   })
 
   test('long format with millis', () => {
-    const startDate = new Date()
-    const endDate = new Date(+startDate + 2123)
+    const startDate = new Date(),
+     endDate = new Date(+startDate + 2123),
 
-    const str = DateHelper.timeDifferenceString(startDate, endDate, true, true)
+     str = DateHelper.timeDifferenceString(startDate, endDate, true, true)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2 seconds, 123ms')
@@ -533,8 +533,8 @@ test('TimeframeToStartOf', () => {
 })
 
 test('LocalToUtc', () => {
-  const localDate = new Date('2024-01-01T00:00:00.000Z')
-  const utcDate = DateHelper.LocalToUtc(localDate)
+  const localDate = new Date('2024-01-01T00:00:00.000Z'),
+   utcDate = DateHelper.LocalToUtc(localDate)
 
   expect(utcDate).toBeInstanceOf(Date)
   expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
@@ -544,21 +544,21 @@ test('LocalToUtc', () => {
   )
 })
 
-// test('getFormattedTime', () => {
-//   const localDate = new Date('2024-01-01T00:00:00.000Z')
-//   const utcDate = DateHelper.getFormattedTime(+localDate)
+// Test('getFormattedTime', () => {
+//   Const localDate = new Date('2024-01-01T00:00:00.000Z')
+//   Const utcDate = DateHelper.getFormattedTime(+localDate)
 
-//   expect(utcDate).toBeInstanceOf(Date)
-//   expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
+//   Expect(utcDate).toBeInstanceOf(Date)
+//   Expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
 
-//   expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
-//     new Date('2025-12-01T17:00:00.000Z')
+//   Expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
+//     New Date('2025-12-01T17:00:00.000Z')
 //   )
 // })
 
 test('FormattedUnixTime', () => {
-  const localDate = new Date('2024-01-01T00:00:00.000Z')
-  const utcDate = DateHelper.FormattedUnixTime(+localDate)
+  const localDate = new Date('2024-01-01T00:00:00.000Z'),
+   utcDate = DateHelper.FormattedUnixTime(+localDate)
 
   expect(utcDate).toBe('Saturday, September 27th 55969, 8:00:00 pm')
 })

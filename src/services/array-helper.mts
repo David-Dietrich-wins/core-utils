@@ -191,7 +191,7 @@ export function arrayMustFindFunc<T>(
   if (!foundItem) {
     throw new AppException(
       `Unable to find ${safestr(functionSourceName, arrayMustFindFunc.name)}${
-        exceptionSuffix ? ' ' + exceptionSuffix() : ''
+        exceptionSuffix ? ` ${  exceptionSuffix()}` : ''
       }.`,
       arrayFindByName.name,
       arrItems
@@ -243,7 +243,7 @@ export function arrayOfNames<T extends IName>(arr?: Readonly<T>[]) {
 export function arrayElement<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
   const safearr = safeArray(arr)
   if (safearr.length) {
-    index = index || 0
+    index ||= 0
 
     if (index >= 0 && safearr.length > index) {
       return safearr[index]
@@ -396,8 +396,8 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
     )
   }
 
-  const sourceIndex = arrItems.findIndex((x) => sourceId === x.id)
-  const destIndex = arrItems.findIndex((x) => destId === x.id)
+  const sourceIndex = arrItems.findIndex((x) => sourceId === x.id),
+   destIndex = arrItems.findIndex((x) => destId === x.id)
 
   return arraySwapItems(arrItems, sourceIndex, destIndex)
 }
@@ -567,8 +567,8 @@ export function arrayMoveFromTo<T>(
   from: number,
   to: number
 ) {
-  const arrCopy = safeArray(arr)
-  const len = arrCopy.length
+  const arrCopy = safeArray(arr),
+   len = arrCopy.length
 
   if (from < 0 || from >= len || to < 0 || to >= len) {
     throw new AppException(

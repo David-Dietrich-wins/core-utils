@@ -1,12 +1,16 @@
-import { z, ZodString } from 'zod/v4'
-import { arrayAdd, arrayRemove, isArray } from '../services/array-helper.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { FindObjectWithField } from '../services/object-helper.mjs'
-import { zStringMinMax } from '../services/zod-helper.mjs'
+import { ZodString, z } from 'zod/v4'
+import {
+  arrayAdd,
+  arrayRemove,
+  isArray,
+  safeArray,
+} from '../services/array-helper.mjs'
 import { AppException } from './AppException.mjs'
+import { FindObjectWithField } from '../services/object-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { zStringMinMax } from '../services/zod-helper.mjs'
 
-// export type IId<T> = z.infer<ReturnType<typeof IIdSchema<z.ZodType<T>>>>
+// Export type IId<T> = z.infer<ReturnType<typeof IIdSchema<z.ZodType<T>>>>
 
 export interface IId<T = string> {
   id?: T

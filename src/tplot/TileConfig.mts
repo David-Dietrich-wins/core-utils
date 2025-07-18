@@ -1,8 +1,8 @@
+import { IIdNameValueType, IdNameValueType } from '../models/id-name.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IdNameValueType, IIdNameValueType } from '../models/id-name.mjs'
+import { IChartSettings } from './ChartSettings.mjs'
 import { newGuid } from '../services/general.mjs'
 import { safestrLowercase } from '../services/string-helper.mjs'
-import { IChartSettings } from './ChartSettings.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
@@ -114,6 +114,7 @@ export class TileConfig<Tvalue = any>
 
       default:
         throw new AppException(
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `TileConfig.CreateFromString: Unknown tile type '${type}'`,
           'TileConfig.CreateFromString'
         )
@@ -137,6 +138,7 @@ export class TileConfig<Tvalue = any>
       case TileType.empty:
         return 'Empty:'
       default:
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `Unknown: ${tile.value} - ${
           (tile.value as TileConfigContent)?.content
         }`
@@ -179,13 +181,13 @@ export class TileConfig<Tvalue = any>
 
   static CreateITileConfig(overrides?: Partial<ITileConfig> | null) {
     const iTileConfig: ITileConfig = {
-      id: newGuid(),
-      name: 'Trade Plotter',
-      value: {},
-      type: TileType.empty,
-      index: 0,
       cols: 1,
+      id: newGuid(),
+      index: 0,
+      name: 'Trade Plotter',
       rows: 1,
+      type: TileType.empty,
+      value: {},
       ...overrides,
     }
 
@@ -195,17 +197,16 @@ export class TileConfig<Tvalue = any>
   static CreateTileConfig<T = unknown>(
     overrides?: Partial<ITileConfig<T>> | null
   ) {
-    const itile = TileConfig.CreateITileConfig(overrides)
-
-    const tile = new TileConfig(
-      itile.id,
-      itile.name,
-      itile.value,
-      itile.type,
-      itile.index,
-      itile.cols,
-      itile.rows
-    )
+    const itile = TileConfig.CreateITileConfig(overrides),
+      tile = new TileConfig(
+        itile.id,
+        itile.name,
+        itile.value,
+        itile.type,
+        itile.index,
+        itile.cols,
+        itile.rows
+      )
 
     return tile
   }
@@ -294,13 +295,13 @@ export class TileConfig<Tvalue = any>
 
   get ITileConfig() {
     const itile: ITileConfig = {
-      id: this.id,
-      name: this.name,
-      value: this.value,
-      type: this.type,
-      index: this.index,
       cols: this.cols,
+      id: this.id,
+      index: this.index,
+      name: this.name,
       rows: this.rows,
+      type: this.type,
+      value: this.value,
     }
 
     return itile

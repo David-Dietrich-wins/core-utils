@@ -29,7 +29,7 @@ function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
   options?: DecodeOptions
 ): T {
   const decoded = isString(token)
-    ? JwtDecode<TInterface>(token as string, options)
+    ? JwtDecode<TInterface>(token, options)
     : token
 
   return new type(decoded)
@@ -101,7 +101,7 @@ export interface IJwtAccessToken extends IJwtWithSubject {
   email: string
   email_verified: boolean
   preferred_username: string
-  // refresh_token
+  // Refresh_token
   sid: string
 }
 
@@ -138,15 +138,15 @@ export function JwtDecode<T extends IJwtBase>(
   return decoded as T
 }
 
-// export function JwtDecodeObject<
+// Export function JwtDecodeObject<
 //   Tnew extends JwtBase,
 //   TInterface extends IJwtBase
 // >(
-//   theClass: { new (args: TInterface): Tnew },
-//   token: string | TInterface,
-//   options?: DecodeOptions
+//   TheClass: { new (args: TInterface): Tnew },
+//   Token: string | TInterface,
+//   Options?: DecodeOptions
 // ): Tnew {
-//   return createInstanceWithParams<Tnew, TInterface>(theClass, token, options)
+//   Return createInstanceWithParams<Tnew, TInterface>(theClass, token, options)
 // }
 
 export function JwtRetrieveUserId(token: string) {
@@ -165,7 +165,7 @@ export function JwtRetrieveUserId(token: string) {
 export function JwtSign(
   payload: string | object | Buffer,
   secretOrPrivateKey: string,
-  options?: SignOptions | undefined
+  options?: SignOptions  
 ) {
   const token = jwt.sign(payload, secretOrPrivateKey, options)
 
@@ -180,13 +180,13 @@ export function JwtTokenWithUserId(
   const header: JwtHeader = {
     alg: 'HS256',
     typ: 'JWT',
-  }
+  },
 
-  const signOptions: SignOptions = {
+   signOptions: SignOptions = {
     header,
-  }
+  },
 
-  const payload: JwtPayload = {
+   payload: JwtPayload = {
     sub: userId,
     ...overrides,
   }
@@ -202,13 +202,13 @@ export function JwtTokenWithEmail(
   const header: JwtHeader = {
     alg: 'HS256',
     typ: 'JWT',
-  }
+  },
 
-  const signOptions: SignOptions = {
+   signOptions: SignOptions = {
     header,
-  }
+  },
 
-  const payload: JwtPayload = {
+   payload: JwtPayload = {
     email,
     ...overrides,
   }
@@ -226,43 +226,43 @@ export function JwtTokenWithEmail(
 export function JwtVerify(
   token: string,
   secretOrPublicKey: Secret,
-  options?: VerifyOptions | undefined
+  options?: VerifyOptions  
 ) {
   const jwtret = jwt.verify(token, secretOrPublicKey, options)
 
   return jwtret
 }
 
-// const DEFAULT_JwtFusionAuthIdToken: IJwtFusionAuthIdToken = {
-//   applicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
-//   email: 'grayarrow@gmail.com',
-//   email_verified: true,
-//   family_name: 'Dietrich',
-//   given_name: 'David',
-//   roles: ['admin'],
-//   scope: 'openid offline_access email profile',
-//   sid: '0ab2f927-4858-49da-952c-ada994c7a558',
-//   sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
-//   tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
+// Const DEFAULT_JwtFusionAuthIdToken: IJwtFusionAuthIdToken = {
+//   ApplicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   Email: 'grayarrow@gmail.com',
+//   Email_verified: true,
+//   Family_name: 'Dietrich',
+//   Given_name: 'David',
+//   Roles: ['admin'],
+//   Scope: 'openid offline_access email profile',
+//   Sid: '0ab2f927-4858-49da-952c-ada994c7a558',
+//   Sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
+//   Tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
 // }
 
-// const DEFAULT_JwtClient: IJwtFusionAuthIdToken = {
-//   active: true,
-//   applicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
-//   aud: '4b396955-2792-4c59-832f-b9a969dc9ff3',
-//   auth_time: 1741349501,
-//   authenticationType: 'PASSWORD',
-//   email: 'grayarrow@gmail.com',
-//   email_verified: true,
-//   exp: 1741353101,
-//   iat: 1741349501,
-//   iss: 'tradeplotter.com',
-//   jti: '7b47b2d8-0864-4163-939f-9a1d2ce9f946',
-//   roles: ['admin'],
-//   scope: 'openid offline_access email profile',
-//   sid: '0ab2f927-4858-49da-952c-ada994c7a558',
-//   sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
-//   tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
+// Const DEFAULT_JwtClient: IJwtFusionAuthIdToken = {
+//   Active: true,
+//   ApplicationId: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   Aud: '4b396955-2792-4c59-832f-b9a969dc9ff3',
+//   Auth_time: 1741349501,
+//   AuthenticationType: 'PASSWORD',
+//   Email: 'grayarrow@gmail.com',
+//   Email_verified: true,
+//   Exp: 1741353101,
+//   Iat: 1741349501,
+//   Iss: 'tradeplotter.com',
+//   Jti: '7b47b2d8-0864-4163-939f-9a1d2ce9f946',
+//   Roles: ['admin'],
+//   Scope: 'openid offline_access email profile',
+//   Sid: '0ab2f927-4858-49da-952c-ada994c7a558',
+//   Sub: '73381ce2-f34c-4c9d-a1e4-8fdb4e286e9a',
+//   Tid: '67e40228-0e5d-4876-894b-fcebae483a8f',
 // }
 
 export class JwtBase implements IJwtBase {
@@ -308,9 +308,9 @@ export class JwtBase implements IJwtBase {
   }
 
   get ApplicationRoles() {
-    const arrRoles: WebRoles[] = []
+    const arrRoles: WebRoles[] = [],
 
-    const safeRoles = safeArray<string>(this.roles)
+     safeRoles = safeArray<string>(this.roles)
     if (safeRoles.includes(WebRoles.ADMIN)) {
       arrRoles.push(WebRoles.ADMIN)
     }
@@ -501,8 +501,8 @@ export function FromHeaders<TNew extends JwtBase>(
   headers?: Headers | IncomingHttpHeaders | null
 ) {
   let bearerToken = ''
-  const hHeaders = headers as Headers
-  const iHeaders = headers as IncomingHttpHeaders
+  const hHeaders = headers as Headers,
+   iHeaders = headers as IncomingHttpHeaders
 
   if (hHeaders && isFunction(hHeaders.get)) {
     bearerToken = HttpHeaderManagerBase.BearerTokenParseStrict(

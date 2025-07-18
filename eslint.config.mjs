@@ -1,34 +1,57 @@
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-export default [{
-    ignores: ["src/types/global.d.ts", "**/dist"],
-}, ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"), {
+export default tseslint.config(
+  {
+    ignores: [
+      'dist/**/*.ts',
+      'dist/**',
+      '.next/**',
+      'node_modules/**',
+      'coverage/**',
+      'build/**',
+      '**/*.mjs',
+      'next.config.ts',
+      'jest.config.ts',
+      'jest.setup.mts',
+      'jest.setup.ts',
+      'jsdom-extended.mts',
+      'jsdom-extended.ts',
+      'eslint.config.mjs',
+      '**/*.js',
+    ],
+  },
+  {
+    files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.mjs', 'src/**/*.mts'],
+  },
+  eslint.configs.all,
+  tseslint.configs.recommendedTypeChecked,
+  {
     languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...Object.fromEntries(Object.entries(globals.commonjs).map(([key]) => [key, "off"])),
-        },
-
-        parser: tsParser,
-        ecmaVersion: "latest",
-        sourceType: "script",
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
-
+  },
+  {
     rules: {
-        semi: ["error", "never"],
-        quotes: ["error", "single"],
+      'camelcase': 'off',
+      'consistent-return': 'off',
+      'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
+      'id-length': 'off',
+      'max-classes-per-file': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      'max-params': 'off' /*  */,
+      'max-statements': 'off',
+      'new-cap': 'off',
+      'no-empty-function': 'off',
+      'no-magic-numbers': 'off',
+      'no-nested-ternary': 'off',
+      'no-plusplus': 'off',
+      'no-ternary': 'off',
+      'no-undefined': 'off',
     },
-}];
+  }
+)

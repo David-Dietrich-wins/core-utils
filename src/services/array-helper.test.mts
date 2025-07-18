@@ -1,7 +1,11 @@
 import { AppException } from '../models/AppException.mjs'
-import { IdName, IIdName, IIdNameValue } from '../models/id-name.mjs'
+import { IIdName, IIdNameValue, IdName } from '../models/id-name.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import {
+  MapINamesToNames,
+  ToIIdNameArray,
+  ToSafeArray,
+  ToSafeArray2d,
   arrayAdd,
   arrayElement,
   arrayElementNonEmpty,
@@ -37,12 +41,8 @@ import {
   arrayUnique,
   arrayUpdateOrAdd,
   isArray,
-  MapINamesToNames,
   safeArray,
   shuffleArray,
-  ToIIdNameArray,
-  ToSafeArray,
-  ToSafeArray2d,
 } from './array-helper.mjs'
 
 test('arrayGetIds', () => {
@@ -205,8 +205,8 @@ test('arrayFilter', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
-  const filterFunc = (item: IdName<number>) => item.id === 1
+  ],
+   filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFilter([], filterFunc)).toStrictEqual([])
   expect(arrayFilter(undefined, filterFunc)).toStrictEqual([])
@@ -218,8 +218,8 @@ test('arrayFind', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
-  const filterFunc = (item: IdName<number>) => item.id === 1
+  ],
+   filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFind([], filterFunc)).toBeUndefined()
   expect(arrayFind(undefined, filterFunc)).toBeUndefined()
@@ -231,8 +231,8 @@ test('arrayMustFindFunc', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
-  const filterFunc = (item: IdName<number>) => item.id === 1
+  ],
+   filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(() => arrayMustFindFunc([], filterFunc)).toThrow(
     'Unable to find arrayMustFindFunc.'
@@ -315,9 +315,9 @@ test('arrayFirst and arrayLast', () => {
 })
 
 test('arrayFirstNonEmpty and arrayLastNonEmpty', () => {
-  const fname = 'arrayFirstNonEmpty and arrayLastNonEmpty'
+  const fname = 'arrayFirstNonEmpty and arrayLastNonEmpty',
 
-  const arr = [
+   arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
@@ -597,9 +597,9 @@ test('arrayAdd', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
+  ],
 
-  const addItem = { id: 4, name: 'name4' }
+   addItem = { id: 4, name: 'name4' }
 
   expect(arrayAdd(arr, addItem)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -630,9 +630,9 @@ test('arrayRemove', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
+  ],
 
-  const removeItem = { id: 2, name: 'name2' }
+   removeItem = { id: 2, name: 'name2' }
 
   expect(arrayRemove(arr, removeItem)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -645,10 +645,10 @@ test('arrayUpdateOrAdd', () => {
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
     { id: 3, name: 'name3' },
-  ]
+  ],
 
-  const updateItem = { id: 2, name: 'name2-updated' }
-  const addItem = { id: 4, name: 'name4' }
+   updateItem = { id: 2, name: 'name2-updated' },
+   addItem = { id: 4, name: 'name4' }
 
   expect(arrayUpdateOrAdd(arr, updateItem)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -710,8 +710,8 @@ test('MapINamesToNames', () => {
   expect(MapINamesToNames(undefined)).toStrictEqual([])
 })
 
-// test('arrayMoveFromTo', () => {
-//   const arr: IIdNameValue<string, string>[] = [
+// Test('arrayMoveFromTo', () => {
+//   Const arr: IIdNameValue<string, string>[] = [
 //     { id: '1', name: 'name1', value: 'value1' },
 //     { id: '2', name: 'name2', value: 'value2' },
 //     { id: '3', name: 'name3', value: 'value3' },
@@ -720,7 +720,7 @@ test('MapINamesToNames', () => {
 //     { id: '6', name: 'name6', value: 'value6' },
 //   ]
 
-//   expect(arrayMoveFromTo(arr, 0, 1)).toStrictEqual([
+//   Expect(arrayMoveFromTo(arr, 0, 1)).toStrictEqual([
 //     { id: '2', name: 'name2', value: 'value2' },
 //     { id: '1', name: 'name1', value: 'value1' },
 //     { id: '3', name: 'name3', value: 'value3' },
@@ -729,7 +729,7 @@ test('MapINamesToNames', () => {
 //     { id: '6', name: 'name6', value: 'value6' },
 //   ])
 
-//   expect(arrayMoveFromTo(arr, 5, 2)).toStrictEqual([
+//   Expect(arrayMoveFromTo(arr, 5, 2)).toStrictEqual([
 //     { id: '1', name: 'name1', value: 'value1' },
 //     { id: '6', name: 'name6', value: 'value6' },
 //     { id: '3', name: 'name3', value: 'value3' },

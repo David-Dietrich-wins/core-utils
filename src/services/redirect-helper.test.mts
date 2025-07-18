@@ -28,8 +28,8 @@ describe('getRedirectAfterLogin', () => {
     const result2 = RedirectHelper.CleansedRedirect('/login', '/dashboard')
     expect(result2).toBe('/dashboard')
 
-    const myCustomPath = '/test-path'
-    const nonLoggedInRedirectPath = `/login?redirectUrl=${encodeURIComponent(
+    const myCustomPath = '/test-path',
+     nonLoggedInRedirectPath = `/login?redirectUrl=${encodeURIComponent(
       myCustomPath
     )}`
     expect(RedirectHelper.CleansedRedirect('/login', myCustomPath)).toBe(

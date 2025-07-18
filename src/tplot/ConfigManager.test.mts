@@ -1,48 +1,46 @@
-import { AppException } from '../models/AppException.mjs'
-import { IConfigShort } from '../models/config.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ConfigManager,
   CreateConfigTickerInfoTabSettings,
   TpConfigNamesEnum,
 } from './ConfigManager.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { IConfigShort } from '../models/config.mjs'
 
 test('CreateConfigTickerInfoTabSettings', () => {
   const settings = CreateConfigTickerInfoTabSettings({
-    selectedTab: 'asset',
     selectedPeopleTab: 'top',
+    selectedTab: 'asset',
   })
 
   expect(settings).toEqual({
     ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
-    selectedTab: 'asset',
     selectedPeopleTab: 'top',
+    selectedTab: 'asset',
   })
 })
 
 test('constructor', () => {
   const configCharts: IConfigShort = {
-    k: 'charts',
-    v: TpConfigNamesEnum.charts,
-    userid: 'chart1',
-    createdby: 'test',
-    created: new Date(),
-    updatedby: 'test',
-    updated: new Date(),
-  }
-
-  const configDashboards: IConfigShort = {
-    k: 'dashboards',
-    v: TpConfigNamesEnum.dashboards,
-    userid: 'dashboard1',
-    createdby: 'test',
-    created: new Date(),
-    updatedby: 'test',
-    updated: new Date(),
-  }
-
-  const configs: IConfigShort[] = [configCharts, configDashboards]
-
-  const configManager = new ConfigManager(configs)
+      created: new Date(),
+      createdby: 'test',
+      k: 'charts',
+      updated: new Date(),
+      updatedby: 'test',
+      userid: 'chart1',
+      v: TpConfigNamesEnum.charts,
+    },
+    configDashboards: IConfigShort = {
+      created: new Date(),
+      createdby: 'test',
+      k: 'dashboards',
+      updated: new Date(),
+      updatedby: 'test',
+      userid: 'dashboard1',
+      v: TpConfigNamesEnum.dashboards,
+    },
+    configIes: IConfigShort[] = [configCharts, configDashboards],
+    configManager = new ConfigManager(configIes)
 
   expect(configManager.allTpUserInfoConfigs).toEqual({
     charts: 'charts',
@@ -144,16 +142,15 @@ test('ValidateConfigName', () => {
 
 test('FindConfig', () => {
   const configCharts: IConfigShort = {
-    k: 'charts',
-    v: TpConfigNamesEnum.charts,
-    userid: 'chart1',
-    createdby: 'test',
-    created: new Date(),
-    updatedby: 'test',
-    updated: new Date(),
-  }
-
-  const configManager = new ConfigManager([configCharts])
+      created: new Date(),
+      createdby: 'test',
+      k: 'charts',
+      updated: new Date(),
+      updatedby: 'test',
+      userid: 'chart1',
+      v: TpConfigNamesEnum.charts,
+    },
+    configManager = new ConfigManager([configCharts])
 
   expect(configManager.FindConfig(TpConfigNamesEnum.charts)).toBe(
     TpConfigNamesEnum.charts
@@ -228,13 +225,13 @@ test('dashboards', () => {
   })
 
   const configDashboards: IConfigShort = {
-    k: 'dashboards',
-    v: null,
-    userid: 'dashboard1',
-    createdby: 'test',
     created: new Date(),
-    updatedby: 'test',
+    createdby: 'test',
+    k: 'dashboards',
     updated: new Date(),
+    updatedby: 'test',
+    userid: 'dashboard1',
+    v: null,
   }
 
   configManager = new ConfigManager([configDashboards])

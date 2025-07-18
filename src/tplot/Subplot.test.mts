@@ -1,13 +1,13 @@
+import { Subplot } from './Subplot.mjs'
 import { ZodError } from 'zod/v4'
 import { ZodTestHelper } from '../jest.setup.mjs'
-import { Subplot } from './Subplot.mjs'
 
 test('Subplot', () => {
   const subplot = new Subplot({
-    id: '1',
     comment: 'Test comment',
     expectedTriggerDate: new Date('2023-10-01'),
     gainCeilingPercent: 10,
+    id: '1',
     lossFloorPercent: 5,
     orderNumber: 1,
     pattern: 'b28',
@@ -22,10 +22,10 @@ test('Subplot', () => {
   expect(subplot.targetHigh).toBe(155)
   expect(subplot.targetLow).toBe(145)
   expect(subplot.toApi()).toMatchObject({
-    id: '1',
     comment: 'Test comment',
     expectedTriggerDate: new Date('2023-10-01'),
     gainCeilingPercent: 10,
+    id: '1',
     lossFloorPercent: 5,
     orderNumber: 1,
     pattern: 'b28',
@@ -37,10 +37,10 @@ test('Subplot', () => {
   })
 
   expect(Subplot.zSchema.parse(subplot.toApi())).toStrictEqual({
-    id: '1',
     comment: 'Test comment',
     expectedTriggerDate: new Date('2023-10-01'),
     gainCeilingPercent: 10,
+    id: '1',
     lossFloorPercent: 5,
     orderNumber: 1,
     pattern: 'b28',
@@ -48,41 +48,40 @@ test('Subplot', () => {
     targetHigh: 155,
     targetLow: 145,
     timeframe: '1d',
-    useMinusEight: true,
     total: undefined,
+    useMinusEight: true,
   })
 })
 
 test('Renumber', () => {
   const subplot = new Subplot({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 7,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-
-  const subplot2 = new Subplot({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 5,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 7,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    subplot2 = new Subplot({
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 5,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    })
 
   expect(Subplot.Renumber([subplot, subplot2])).toStrictEqual([
     new Subplot({ ...subplot, orderNumber: 0 }),
@@ -92,10 +91,26 @@ test('Renumber', () => {
 
 test('parse', () => {
   const subplot = new Subplot({
-    id: '1',
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 1,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    subplotParsed = Subplot.zSchema.parse(subplot.toApi())
+
+  expect(subplotParsed).toStrictEqual({
     comment: 'Test comment',
     expectedTriggerDate: new Date('2023-10-01'),
     gainCeilingPercent: 10,
+    id: '1',
     lossFloorPercent: 5,
     orderNumber: 1,
     pattern: 'b28',
@@ -103,76 +118,74 @@ test('parse', () => {
     targetHigh: 155,
     targetLow: 145,
     timeframe: '1d',
-    useMinusEight: true,
-  })
-  const parsed = Subplot.zSchema.parse(subplot.toApi())
-  expect(parsed).toStrictEqual({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
     total: undefined,
+    useMinusEight: true,
   })
-  expect(parsed instanceof Subplot).toBe(false)
+  expect(subplotParsed instanceof Subplot).toBe(false)
   expect(() =>
-    Subplot.zSchema.parse({ ...parsed, orderNumber: 'not a number' })
+    Subplot.zSchema.parse({ ...subplotParsed, orderNumber: 'not a number' })
   ).toThrow(ZodError)
-  expect(() => Subplot.zSchema.parse({ ...parsed, pattern: 123 })).toThrow(
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, pattern: 123 })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, timeframe: 123 })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, targetHigh: 'not a number' })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, targetLow: 'not a number' })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({
+      ...subplotParsed,
+      gainCeilingPercent: 'not a number',
+    })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({
+      ...subplotParsed,
+      lossFloorPercent: 'not a number',
+    })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, useMinusEight: 'not a boolean' })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, scaleInverted: 'not a boolean' })
+  ).toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({
+      ...subplotParsed,
+      expectedTriggerDate: 'not a date',
+    })
+  ).toThrow(ZodError)
+  expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: 123 })).toThrow(
     ZodError
   )
-  expect(() => Subplot.zSchema.parse({ ...parsed, timeframe: 123 })).toThrow(
+  expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: null })).toThrow(
     ZodError
   )
   expect(() =>
-    Subplot.zSchema.parse({ ...parsed, targetHigh: 'not a number' })
+    Subplot.zSchema.parse({ ...subplotParsed, id: undefined })
   ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, targetLow: 'not a number' })
-  ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, gainCeilingPercent: 'not a number' })
-  ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, lossFloorPercent: 'not a number' })
-  ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, useMinusEight: 'not a boolean' })
-  ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, scaleInverted: 'not a boolean' })
-  ).toThrow(ZodError)
-  expect(() =>
-    Subplot.zSchema.parse({ ...parsed, expectedTriggerDate: 'not a date' })
-  ).toThrow(ZodError)
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: 123 })).toThrow(ZodError)
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: null })).toThrow(ZodError)
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: undefined })).toThrow(
-    ZodError
-  )
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: '' })).not.toThrow(
-    ZodError
-  )
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: ' ' })).not.toThrow(
-    ZodError
-  )
-  expect(() => Subplot.zSchema.parse({ ...parsed, id: '1' })).not.toThrow(
+  expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: '' })).not.toThrow(
     ZodError
   )
   expect(() =>
-    Subplot.zSchema.parse({ ...parsed, id: '1', total: 'not a number' })
+    Subplot.zSchema.parse({ ...subplotParsed, id: ' ' })
+  ).not.toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, id: '1' })
+  ).not.toThrow(ZodError)
+  expect(() =>
+    Subplot.zSchema.parse({ ...subplotParsed, id: '1', total: 'not a number' })
   ).toThrow(ZodError)
 
   try {
     Subplot.zSchema.parse({
-      ...parsed,
+      ...subplotParsed,
       id: '1',
       total: 'not a number',
     })
@@ -181,7 +194,7 @@ test('parse', () => {
   }
   expect(
     Subplot.zSchema.safeParse({
-      ...parsed,
+      ...subplotParsed,
       id: '1',
       total: 'not a number',
     })
@@ -194,21 +207,22 @@ test('parse', () => {
 
 test('GetFmpIndicatorQueryParams', () => {
   const subplot = new Subplot({
-    id: '1',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-  const params = Subplot.GetFmpIndicatorQueryParams('AAPL', subplot)
-  expect(params).toEqual({
+      comment: 'Test comment',
+      expectedTriggerDate: new Date('2023-10-01'),
+      gainCeilingPercent: 10,
+      id: '1',
+      lossFloorPercent: 5,
+      orderNumber: 1,
+      pattern: 'b28',
+      scaleInverted: false,
+      targetHigh: 155,
+      targetLow: 145,
+      timeframe: '1d',
+      useMinusEight: true,
+    }),
+    zparams = Subplot.GetFmpIndicatorQueryParams('AAPL', subplot)
+
+  expect(zparams).toEqual({
     from: 1764158400000,
     periodLength: 8,
     symbol: 'AAPL',
@@ -217,49 +231,14 @@ test('GetFmpIndicatorQueryParams', () => {
 })
 
 test('copyObject', () => {
-  const subplot = new Subplot({
-    id: 'abc',
-    comment: 'Test comment',
-    expectedTriggerDate: new Date('2023-10-01'),
-    gainCeilingPercent: 10,
-    lossFloorPercent: 5,
-    orderNumber: 1,
-    pattern: 'b28',
-    scaleInverted: false,
-    targetHigh: 155,
-    targetLow: 145,
-    timeframe: '1d',
-    useMinusEight: true,
-  })
-
-  const id = undefined as unknown as string
-  const copy = new Subplot({ ...subplot.toApi(), id })
-  expect(copy instanceof Subplot).toBe(true)
-  expect(copy.id).not.toBe(subplot.id)
-  expect(copy.id).toStrictEqual(expect.any(String))
-  expect(copy.orderNumber).toBe(subplot.orderNumber)
-  expect(copy.pattern).toBe(subplot.pattern)
-  expect(copy.timeframe).toBe(subplot.timeframe)
-  expect(copy.total).toBe(subplot.total)
-  expect(copy.targetLow).toBe(subplot.targetLow)
-  expect(copy.targetHigh).toBe(subplot.targetHigh)
-  expect(copy.expectedTriggerDate).toEqual(subplot.expectedTriggerDate)
-  expect(copy.comment).toBe(subplot.comment)
-  expect(copy.lossFloorPercent).toBe(subplot.lossFloorPercent)
-  expect(copy.gainCeilingPercent).toBe(subplot.gainCeilingPercent)
-  expect(copy.useMinusEight).toBe(subplot.useMinusEight)
-  expect(copy.scaleInverted).toBe(subplot.scaleInverted)
-})
-
-test('GetNewWithNextPattern', () => {
-  const subplots = [
-    new Subplot({
-      id: '1',
+  const id = undefined as unknown as string,
+    subplot = new Subplot({
       comment: 'Test comment',
       expectedTriggerDate: new Date('2023-10-01'),
       gainCeilingPercent: 10,
+      id: 'abc',
       lossFloorPercent: 5,
-      orderNumber: 0,
+      orderNumber: 1,
       pattern: 'b28',
       scaleInverted: false,
       targetHigh: 155,
@@ -267,8 +246,43 @@ test('GetNewWithNextPattern', () => {
       timeframe: '1d',
       useMinusEight: true,
     }),
-  ]
-  const newSubplot = Subplot.GetNewWithNextPattern(subplots)
+    subplotCopy = new Subplot({ ...subplot.toApi(), id })
+
+  expect(subplotCopy instanceof Subplot).toBe(true)
+  expect(subplotCopy.id).not.toBe(subplot.id)
+  expect(subplotCopy.id).toStrictEqual(expect.any(String))
+  expect(subplotCopy.orderNumber).toBe(subplot.orderNumber)
+  expect(subplotCopy.pattern).toBe(subplot.pattern)
+  expect(subplotCopy.timeframe).toBe(subplot.timeframe)
+  expect(subplotCopy.total).toBe(subplot.total)
+  expect(subplotCopy.targetLow).toBe(subplot.targetLow)
+  expect(subplotCopy.targetHigh).toBe(subplot.targetHigh)
+  expect(subplotCopy.expectedTriggerDate).toEqual(subplot.expectedTriggerDate)
+  expect(subplotCopy.comment).toBe(subplot.comment)
+  expect(subplotCopy.lossFloorPercent).toBe(subplot.lossFloorPercent)
+  expect(subplotCopy.gainCeilingPercent).toBe(subplot.gainCeilingPercent)
+  expect(subplotCopy.useMinusEight).toBe(subplot.useMinusEight)
+  expect(subplotCopy.scaleInverted).toBe(subplot.scaleInverted)
+})
+
+test('GetNewWithNextPattern', () => {
+  const asubplots = [
+      new Subplot({
+        comment: 'Test comment',
+        expectedTriggerDate: new Date('2023-10-01'),
+        gainCeilingPercent: 10,
+        id: '1',
+        lossFloorPercent: 5,
+        orderNumber: 0,
+        pattern: 'b28',
+        scaleInverted: false,
+        targetHigh: 155,
+        targetLow: 145,
+        timeframe: '1d',
+        useMinusEight: true,
+      }),
+    ],
+    newSubplot = Subplot.GetNewWithNextPattern(asubplots)
   expect(newSubplot instanceof Subplot).toBe(true)
   expect(newSubplot.pattern).toBe('ra200')
   expect(newSubplot.orderNumber).toBe(0)
@@ -283,10 +297,10 @@ test('GetNewWithNextPattern', () => {
   expect(newSubplot.scaleInverted).toBe(false)
   expect(newSubplot.total).toBe(0)
   expect(newSubplot.id).toStrictEqual(expect.any(String))
-  expect(newSubplot.id).not.toBe(subplots[0].id)
+  expect(newSubplot.id).not.toBe(asubplots[0].id)
   expect(newSubplot.id).toBeDefined()
   expect(newSubplot.id).not.toBeNull()
   expect(newSubplot.id).not.toBe('')
   expect(newSubplot.id).toBeTruthy()
-  expect(newSubplot.id).toHaveLength(36) // Assuming UUID format
+  expect(newSubplot.id).toHaveLength(36)
 })

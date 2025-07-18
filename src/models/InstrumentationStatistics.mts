@@ -1,8 +1,8 @@
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import {
-  pluralize,
   pluralSuffix,
+  pluralize,
   prefixIfHasData,
   safestr,
 } from '../services/string-helper.mjs'
@@ -15,7 +15,7 @@ import {
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import { safeArray, ToSafeArray } from '../services/array-helper.mjs'
+import { ToSafeArray, safeArray } from '../services/array-helper.mjs'
 import { AppException } from './AppException.mjs'
 
 export class InstrumentationStatistics {
@@ -71,20 +71,20 @@ export class InstrumentationStatistics {
 
       return this.msg.length
     } else if (isString(msg)) {
-      this.msg.push(msg as string)
+      this.msg.push(msg)
 
       return this.msg.length
     }
-    // else if (msg) {
-    //   const s = String(msg)
-    //   this.msg.push(s)
+    // Else if (msg) {
+    //   Const s = String(msg)
+    //   This.msg.push(s)
     // }
 
-    // return 0
+    // Return 0
     throw new AppException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
-      '' + msg
+      `${  msg}`
     )
   }
 
@@ -265,10 +265,10 @@ export class InstrumentationStatistics {
     showSkipped?: boolean
     individualStats?: ArrayOrSingle<InstrumentationStatistics>
   }) {
-    let msg = hasData(prefix) ? prefix + ' ' : ''
+    let msg = hasData(prefix) ? `${prefix  } ` : ''
 
-    const allStats = ToSafeArray(this).concat(...ToSafeArray(individualStats))
-    const allStatsCount = allStats.length
+    const allStats = ToSafeArray(this).concat(...ToSafeArray(individualStats)),
+     allStatsCount = allStats.length
     msg += allStats.reduce((prev, cur, index) => {
       if (index > 0 && index < allStatsCount - 1) {
         prev += ', '

@@ -1,24 +1,23 @@
-import { z } from 'zod/v4'
-import { IIdValue } from '../models/IdValueManager.mjs'
-import { IIdRequired } from '../models/IdManager.mjs'
-import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import {
   IAssetQuoteResponse,
   IQuoteBarEma,
   ITicker,
   zTicker,
 } from '../models/ticker-info.mjs'
+import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
+import { ISubplot, Subplot } from './Subplot.mjs'
+import { NumberHelper, getAsNumber } from '../services/number-helper.mjs'
 import {
   getPercentChangeString,
   isNullOrUndefined,
   newGuid,
 } from '../services/general.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { getAsNumber, NumberHelper } from '../services/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
-import { ISubplot, Subplot } from './Subplot.mjs'
+import { IIdRequired } from '../models/IdManager.mjs'
+import { IIdValue } from '../models/IdValueManager.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
+import { safeArray } from '../services/array-helper.mjs'
+import { z } from 'zod/v4'
 
 export interface ITradePlot
   extends IIdRequired<string>,
@@ -66,30 +65,28 @@ export class TradePlot implements ITradePlot {
   }
 
   static get zSchema() {
-    const dnow = new Date()
-
-    const schema = zTicker.extend({
-      id: z.string().default(newGuid()),
-      created: zDateTime().default(dnow),
-      createdby: z.string().default('TradePlot'),
-      updated: zDateTime().default(dnow),
-      updatedby: z.string().default('TradePlot'),
-      description: z.string().default(''),
-      goal: z.coerce.number().optional(),
-      isShort: z.boolean().default(false),
-      purchase: z.coerce.number().min(0).max(1000000).optional(),
-      shares: z.coerce.number().min(0).max(1000000).default(0),
-      subplots: z.array(Subplot.zSchema).default([]),
-    })
+    const dnow = new Date(),
+      schema = zTicker.extend({
+        created: zDateTime().default(dnow),
+        createdby: z.string().default('TradePlot'),
+        description: z.string().default(''),
+        goal: z.coerce.number().optional(),
+        id: z.string().default(newGuid()),
+        isShort: z.boolean().default(false),
+        purchase: z.coerce.number().min(0).max(1000000).optional(),
+        shares: z.coerce.number().min(0).max(1000000).default(0),
+        subplots: z.array(Subplot.zSchema).default([]),
+        updated: zDateTime().default(dnow),
+        updatedby: z.string().default('TradePlot'),
+      })
 
     return schema
   }
 
   static CreateFromTicker(ticker: string, email: string) {
-    const cleanTicker = zStringMinMax(1, 100, { trim: true }).parse(ticker)
-    const cleanEmail = z.email().parse(email)
-
-    const tp = new TradePlot()
+    const cleanEmail = z.email().parse(email),
+      cleanTicker = zStringMinMax(1, 100, { trim: true }).parse(ticker),
+      tp = new TradePlot()
     tp.ticker = cleanTicker
     tp.subplots = [Subplot.GetNewWithNextPattern()]
 
@@ -139,18 +136,18 @@ export class TradePlot implements ITradePlot {
 
   toApi() {
     const ret: ITradePlot = {
-      id: this.id,
-      ticker: this.ticker,
+      created: this.created,
+      createdby: this.createdby,
       description: this.description,
       goal: this.goal,
+      id: this.id,
       isShort: this.isShort,
       purchase: this.purchase,
       shares: this.shares,
       subplots: this.subplots.map((subplot) => subplot.toApi()),
-      updatedby: this.updatedby,
+      ticker: this.ticker,
       updated: this.updated,
-      createdby: this.createdby,
-      created: this.created,
+      updatedby: this.updatedby,
     }
 
     return ret
@@ -205,9 +202,9 @@ export class TradePlot implements ITradePlot {
   }
 
   get investmentAmountStart() {
-    return !isNullOrUndefined(this.purchase)
-      ? this.purchase * this.shares
-      : undefined
+    if (!isNullOrUndefined(this.purchase)) {
+      return this.purchase * this.shares
+    }
   }
   get investmentAmountStartDisplay() {
     if (!this.investmentAmountStart) {
@@ -250,7 +247,7 @@ export class TradePlot implements ITradePlot {
   getMaxExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       const triggerDateNum = cur.expectedTriggerDate
-        ? +cur.expectedTriggerDate
+        ? Number(cur.expectedTriggerDate)
         : 0
 
       return acc < triggerDateNum ? triggerDateNum : acc
@@ -264,7 +261,7 @@ export class TradePlot implements ITradePlot {
   getMinExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       const triggerDateNum = cur.expectedTriggerDate
-        ? +cur.expectedTriggerDate
+        ? Number(cur.expectedTriggerDate)
         : 0
 
       // If acc is 0, then we are looking for the first trigger date that is >= dateNow
@@ -284,7 +281,7 @@ export class TradePlot implements ITradePlot {
   getNextExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       const triggerDateNum = cur.expectedTriggerDate
-        ? +cur.expectedTriggerDate
+        ? Number(cur.expectedTriggerDate)
         : 0
 
       return dateNow <= triggerDateNum && acc < triggerDateNum
@@ -300,9 +297,9 @@ export class TradePlot implements ITradePlot {
   getNextOrderNumber(dateNow: number) {
     const nextDate = this.getNextExpectedTriggerDate(dateNow)
     if (nextDate) {
-      const nextDateNum = +nextDate
+      const nextDateNum = Number(nextDate)
       return this.subplots.find(
-        (x) => nextDateNum && nextDateNum === +(x.expectedTriggerDate ?? 0)
+        (x) => nextDateNum && nextDateNum === Number(x.expectedTriggerDate ?? 0)
       )?.orderNumber
     }
   }
@@ -310,7 +307,7 @@ export class TradePlot implements ITradePlot {
   getPrevExpectedTriggerDate(dateNow: number) {
     const dateNum = this.subplots.reduce((acc: number, cur) => {
       const triggerDateNum = cur.expectedTriggerDate
-        ? +cur.expectedTriggerDate
+        ? Number(cur.expectedTriggerDate)
         : 0
 
       return dateNow > triggerDateNum && acc < triggerDateNum

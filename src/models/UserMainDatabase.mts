@@ -3,7 +3,7 @@ import { IIdRequired } from './IdManager.mjs'
 export interface IUserMainDatabase extends IIdRequired<string> {
   active?: boolean
   birthDate?: string
-  // description: string
+  // Description: string
   email: string
   firstName: string
   fullName: string
@@ -16,7 +16,7 @@ export interface IUserMainDatabase extends IIdRequired<string> {
   mobilePhone: string
   passwordChangeRequired?: boolean
   passwordLastUpdateInstant?: number
-  // newUserDbId: string
+  // NewUserDbId: string
   phone1: string
   usernameStatus?: string
   verified: boolean
@@ -27,7 +27,7 @@ export interface IUserMainDatabase extends IIdRequired<string> {
 export class UserMainDatabase implements IUserMainDatabase {
   active = false
   birthDate = ''
-  // description = ''
+  // Description = ''
   email = ''
   firstName = ''
   fullName = ''
@@ -36,7 +36,7 @@ export class UserMainDatabase implements IUserMainDatabase {
   lastName = ''
   middleName = ''
   mobilePhone = ''
-  // newUserDbId = ''
+  // NewUserDbId = ''
   phone1 = ''
   verified = false
 
@@ -47,9 +47,9 @@ export class UserMainDatabase implements IUserMainDatabase {
     firstName?: string,
     middleName?: string,
     lastName?: string,
-    // displayName?: string,
+    // DisplayName?: string,
     mobilePhone?: string,
-    // description?: string,
+    // Description?: string,
     imageUrl?: string,
     fullName?: string,
     birthDate?: string,

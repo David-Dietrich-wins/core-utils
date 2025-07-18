@@ -49,9 +49,9 @@ export class IdCreated<Tid = string> implements IIdCreated<Tid> {
     created = new Date()
   ) {
     if (isObject(id)) {
-      this.copyFromDatabase(id as IIdCreated<Tid>)
+      this.copyFromDatabase(id)
     } else {
-      this.id = id as Tid
+      this.id = id
 
       this.created = created
       this.createdby = createdby

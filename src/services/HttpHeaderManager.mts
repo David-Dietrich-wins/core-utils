@@ -104,9 +104,9 @@ export class HttpHeaderManagerBase {
   }
 
   get userId() {
-    const jwt = this.jwtTokenMustExistAndBeValid
+    const jwt = this.jwtTokenMustExistAndBeValid,
 
-    const userid = jwt.FusionAuthUserId
+     userid = jwt.FusionAuthUserId
     if (!userid) {
       throw new AppException(
         'Error retrieving user information from JWT security token.',

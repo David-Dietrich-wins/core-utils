@@ -1,7 +1,7 @@
 import { z } from 'zod/v4'
 import { newGuid } from './general.mjs'
 import { IUpdated } from '../models/id-created-updated.mjs'
-import { IdManager, IIdRequired } from '../models/IdManager.mjs'
+import { IIdRequired, IdManager } from '../models/IdManager.mjs'
 import { IName, IValue } from '../models/interfaces.mjs'
 
 export const zIconConfiguration = z.object({
@@ -12,15 +12,15 @@ export const zIconConfiguration = z.object({
 export type IconConfiguration = z.infer<typeof zIconConfiguration>
 
 // This was the original pre-zod version
-// export interface IContextUI {
-//   color?: string
-//   icon?: IconConfiguration
-//   w?: number
-//   h?: number
-//   x?: number
-//   y?: number
-//   rows?: number
-//   cols?: number
+// Export interface IContextUI {
+//   Color?: string
+//   Icon?: IconConfiguration
+//   W?: number
+//   H?: number
+//   X?: number
+//   Y?: number
+//   Rows?: number
+//   Cols?: number
 // }
 /**
  * Context UI configuration

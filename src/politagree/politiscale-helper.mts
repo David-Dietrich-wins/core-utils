@@ -5,17 +5,17 @@ import { isArray, safeArray } from '../services/array-helper.mjs'
 import { isNullOrUndefined } from '../services/general.mjs'
 import { ColorHelper, type ColorRange } from '../services/color-helper.mjs'
 import {
-  type PolitiscaleName,
-  type IPolitiscale,
   IHasPolitiscales,
+  type IPolitiscale,
+  type PolitiscaleName,
 } from './politiscale.mjs'
 
-const CONST_ScaleNameClimate = 'climate'
-const CONST_ScaleNameFreeSpeech = 'freeSpeech'
-const CONST_ScaleNameReligion = 'religion'
+const CONST_ScaleNameClimate = 'climate',
+ CONST_ScaleNameFreeSpeech = 'freeSpeech',
+ CONST_ScaleNameReligion = 'religion',
 
-const ColorRangeLeft: ColorRange = ['#FF0000', '#0000FF']
-const ColorRangeRight: ColorRange = ['#0000FF', '#FF0000']
+ ColorRangeLeft: ColorRange = ['#FF0000', '#0000FF'],
+ ColorRangeRight: ColorRange = ['#0000FF', '#FF0000']
 
 export type PolitiscaleHeading = {
   name: PolitiscaleName
@@ -185,17 +185,17 @@ export abstract class PolitiscaleHelper {
     name: string | PolitiscaleName,
     rating?: number
   ): PolitiRatingLeftRight {
-    let left = rating ?? 0
-    let right = rating ?? 0
+    let left = rating ?? 0,
+     right = rating ?? 0
 
     const setting = PolitiscaleHelper.FindSetting(name).rating
 
     if (rating) {
-      // if (setting.left.active) {
+      // If (setting.left.active) {
       left = Math.round(rating * setting.left.weight)
       // }
 
-      // if (setting.right.active) {
+      // If (setting.right.active) {
       right = Math.round(rating * setting.right.weight)
       // }
     }
@@ -241,8 +241,8 @@ export abstract class PolitiscaleHelper {
   static RatingOverall(
     scales: { name: string | PolitiscaleName; value?: number }[] = []
   ): PolitiRatingLeftRight {
-    const ratingsLeft: number[] = []
-    const ratingsRight: number[] = []
+    const ratingsLeft: number[] = [],
+     ratingsRight: number[] = []
 
     safeArray(scales).forEach((scale) => {
       const pr = PolitiscaleHelper.CoreRating(scale.name, scale.value)
@@ -256,10 +256,10 @@ export abstract class PolitiscaleHelper {
       }
     })
 
-    const left = reduceRatings(ratingsLeft)
-    const right = reduceRatings(ratingsRight)
+    const left = reduceRatings(ratingsLeft),
+     right = reduceRatings(ratingsRight),
 
-    const leaning: PolitiRatingLeftRight = {
+     leaning: PolitiRatingLeftRight = {
       left: {
         isPrimary: PolitiscaleHelper.IsLeftLeaning(left),
         active: true,
@@ -310,19 +310,19 @@ export abstract class PolitiscaleHelper {
     primary: PolitiRatingLeftRight,
     applied: PolitiRatingLeftRight
   ) {
-    // if (
+    // If (
     //   !primary.left.active ||
     //   !primary.right.active ||
     //   !applied.left.active ||
     //   !applied.right.active
     // ) {
-    //   return primary
+    //   Return primary
     // }
 
-    let isLeft = primary.left.isPrimary
-    let isRight = primary.right.isPrimary
-    let ratingLeft = primary.left.active ? primary.left.value : 0
-    let ratingRight = primary.right.active ? primary.right.value : 0
+    let isLeft = primary.left.isPrimary,
+     isRight = primary.right.isPrimary,
+     ratingLeft = primary.left.active ? primary.left.value : 0,
+     ratingRight = primary.right.active ? primary.right.value : 0
 
     if (ratingLeft && applied.left.active && applied.left.value) {
       ratingLeft += applied.left.value
@@ -441,8 +441,8 @@ export abstract class PolitiscaleHelper {
   }
 
   static getNewPolitiscales(scales: IPolitiscale[], scale: IPolitiscale) {
-    const newarr = Array.from(safeArray(scales))
-    const findScale = newarr.find((x) => x.name === scale.name)
+    const newarr = Array.from(safeArray(scales)),
+     findScale = newarr.find((x) => x.name === scale.name)
     if (findScale) {
       findScale.value = scale.value
     } else {
@@ -456,11 +456,11 @@ export abstract class PolitiscaleHelper {
     name: PolitiscaleName | string,
     formDataOrScaleArray?: IHasPolitiscales | IPolitiscale[]
   ) {
-    const arrScales = this.getScales(formDataOrScaleArray)
+    const arrScales = this.getScales(formDataOrScaleArray),
 
-    const scale = arrScales.find((x) => name === x.name)
-    // if (!scale) {
-    //   throw new Error(`Attempt to get PolitiScale for invalid name ${name}.`)
+     scale = arrScales.find((x) => name === x.name)
+    // If (!scale) {
+    //   Throw new Error(`Attempt to get PolitiScale for invalid name ${name}.`)
     // }
 
     return scale
@@ -494,7 +494,7 @@ export abstract class PolitiscaleHelper {
       return 0
     }
 
-    if ('number' === typeof formDataOrScaleArray) {
+    if (typeof formDataOrScaleArray === 'number') {
       return formDataOrScaleArray
     }
 
@@ -538,8 +538,8 @@ export abstract class PolitiscaleHelper {
     return PolitiscaleHelper.ratingForScale(CONST_ScaleNameReligion, scaleval)
   }
 
-  // static  IsPoliticallyLeft(scales?: IHasPolitiscales | IPolitiscale[]) {
-  //   return formHelper.ratingOverall(scales).isLeft
+  // Static  IsPoliticallyLeft(scales?: IHasPolitiscales | IPolitiscale[]) {
+  //   Return formHelper.ratingOverall(scales).isLeft
   // }
 }
 

@@ -1,5 +1,5 @@
 import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
-import { isArray, ToSafeArray2d } from './array-helper.mjs'
+import { ToSafeArray2d, isArray } from './array-helper.mjs'
 import { hasData } from './general.mjs'
 import { HttpHeaderNamesAllowed } from './HttpHeaderManager.mjs'
 
@@ -21,10 +21,10 @@ export type HttpFetchRequestProps<
 export abstract class HtmlHelper {
   static ParamsEncoder(params?: object): string {
     return Object.entries(params || {}).reduce((acc, [key, value], index) => {
-      const encodedKey = encodeURIComponent(key)
-      const encodedValue = encodeURIComponent(value)
+      const encodedKey = encodeURIComponent(key),
+       encodedValue = encodeURIComponent(value),
       // No & before the first parameter
-      const separator = index === 0 ? '' : '&'
+       separator = index === 0 ? '' : '&'
 
       return `${acc}${separator}${encodedKey}=${encodedValue}`
     }, '')

@@ -137,9 +137,9 @@ test('CreateISymbolDetail', () => {
     createdby: '',
     updatedby: '',
     val: new ExchangeInfo(),
-  }
+  },
 
-  const isdCreate = CreateISymbolDetail()
+   isdCreate = CreateISymbolDetail()
   expect(isdCreate).toMatchObject(isd)
 })
 
@@ -157,7 +157,7 @@ test('IAssetQuoteResponseToAssetQuote', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -168,9 +168,9 @@ test('IAssetQuoteResponseToAssetQuote', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuoteResponseToAssetQuote(iaqr)
+   aqs = IAssetQuoteResponseToAssetQuote(iaqr)
   expect(aqs).toMatchObject({
     symbol: 'AAPL',
     price: 150,
@@ -192,7 +192,7 @@ test('IAssetQuoteResponseToAssetQuoteWithChanges', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -203,9 +203,9 @@ test('IAssetQuoteResponseToAssetQuoteWithChanges', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuoteResponseToAssetQuoteWithChanges(iaqr)
+   aqs = IAssetQuoteResponseToAssetQuoteWithChanges(iaqr)
   expect(aqs).toStrictEqual({
     symbol: 'AAPL',
     price: 150,
@@ -249,7 +249,7 @@ test('IAssetQuotesWithChanges', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -260,8 +260,8 @@ test('IAssetQuotesWithChanges', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
-  const iaqr2: IAssetQuoteResponse = {
+  },
+   iaqr2: IAssetQuoteResponse = {
     symbol: 'MSFT',
     price: 150,
     volume: 1000000,
@@ -274,7 +274,7 @@ test('IAssetQuotesWithChanges', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -285,9 +285,9 @@ test('IAssetQuotesWithChanges', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuotesWithChanges([iaqr, iaqr2])
+   aqs = IAssetQuotesWithChanges([iaqr, iaqr2])
   expect(aqs).toStrictEqual([
     {
       symbol: 'AAPL',
@@ -360,7 +360,7 @@ test('IAssetQuoteResponseToAssetQuoteWithIpoDate', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -371,9 +371,9 @@ test('IAssetQuoteResponseToAssetQuoteWithIpoDate', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuoteResponseToAssetQuoteWithIpoDate(iaqr)
+   aqs = IAssetQuoteResponseToAssetQuoteWithIpoDate(iaqr)
   expect(aqs).toStrictEqual({
     symbol: 'AAPL',
     price: 150,
@@ -417,7 +417,7 @@ test('IAssetQuotesWithIpoDate', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -428,8 +428,8 @@ test('IAssetQuotesWithIpoDate', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
-  const iaqr2: IAssetQuoteResponse = {
+  },
+   iaqr2: IAssetQuoteResponse = {
     symbol: 'MSFT',
     price: 150,
     volume: 1000000,
@@ -442,7 +442,7 @@ test('IAssetQuotesWithIpoDate', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -453,9 +453,9 @@ test('IAssetQuotesWithIpoDate', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuotesWithIpoDate(
+   aqs = IAssetQuotesWithIpoDate(
     'testfname',
     [iaqr, iaqr2],
     [
@@ -537,7 +537,7 @@ test('IAssetQuotesWithIpoDate exception', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -548,8 +548,8 @@ test('IAssetQuotesWithIpoDate exception', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
-  const iaqr2: IAssetQuoteResponse = {
+  },
+   iaqr2: IAssetQuoteResponse = {
     symbol: 'MSFT',
     price: 150,
     volume: 1000000,
@@ -562,7 +562,7 @@ test('IAssetQuotesWithIpoDate exception', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -573,9 +573,9 @@ test('IAssetQuotesWithIpoDate exception', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuotesWithIpoDate(
+   aqs = IAssetQuotesWithIpoDate(
     'testfname',
     [iaqr, iaqr2],
     [
@@ -610,7 +610,7 @@ test('IAssetQuotesWithIpoDate exception', () => {
       changes: 0.01,
       companyName: 'Apple Inc.',
       ticker: 'AAPL',
-      // ipoDate: undefined,
+      // IpoDate: undefined,
     },
     {
       symbol: 'MSFT',
@@ -638,7 +638,7 @@ test('IAssetQuotesWithIpoDate exception', () => {
       changes: 0.01,
       companyName: 'Microsoft Corp.',
       ticker: 'MSFT',
-      // ipoDate: undefined,
+      // IpoDate: undefined,
     },
   ])
 })
@@ -657,7 +657,7 @@ test('IAssetQuoteResponseToAssetQuoteWithScore', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -668,9 +668,9 @@ test('IAssetQuoteResponseToAssetQuoteWithScore', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuoteResponseToAssetQuoteWithScore(iaqr, 5, 25)
+   aqs = IAssetQuoteResponseToAssetQuoteWithScore(iaqr, 5, 25)
   expect(aqs).toStrictEqual({
     symbol: 'AAPL',
     price: 150,
@@ -716,7 +716,7 @@ test('IAssetQuotesWithScore', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -727,8 +727,8 @@ test('IAssetQuotesWithScore', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
-  const iaqr2: IAssetQuoteResponse = {
+  },
+   iaqr2: IAssetQuoteResponse = {
     symbol: 'MSFT',
     price: 150,
     volume: 1000000,
@@ -741,7 +741,7 @@ test('IAssetQuotesWithScore', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -752,9 +752,9 @@ test('IAssetQuotesWithScore', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const aqs = IAssetQuotesWithScore([iaqr, iaqr2], {
+   aqs = IAssetQuotesWithScore([iaqr, iaqr2], {
     AAPL: { matches: 5, score: 25 },
     MSFT: { matches: 3, score: 0 },
   })
@@ -828,8 +828,8 @@ describe('ISymbolSearch2ITickerSearch', () => {
       exchangeShortName: 'NASDAQ',
       stockExchange: 'NASDAQ',
       currency: 'USD',
-    }
-    const result = ISymbolSearch2ITickerSearch(params)
+    },
+     result = ISymbolSearch2ITickerSearch(params)
     expect(result).toMatchObject({
       ticker: 'AAPL',
       name: 'Apple Inc.',
@@ -845,15 +845,15 @@ describe('ISymbolSearch2ITickerSearch', () => {
       exchangeShortName: 'NASDAQ',
       stockExchange: 'NASDAQ',
       currency: 'USD',
-    }
-    const msft: ISymbolSearch = {
+    },
+     msft: ISymbolSearch = {
       symbol: 'MSFT',
       name: 'Microsoft Corp.',
       exchangeShortName: 'NYSE',
       stockExchange: 'New York Stock Exchange',
       currency: 'USD',
-    }
-    const result = ISymbolSearch2ITickerSearchArray([aapl, msft])
+    },
+     result = ISymbolSearch2ITickerSearchArray([aapl, msft])
     expect(result).toMatchObject([
       {
         ticker: 'AAPL',
@@ -885,7 +885,7 @@ test('IAssetQuotesWithIpoDate', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -896,9 +896,9 @@ test('IAssetQuotesWithIpoDate', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const assets = [{ ipoDate: '2024-01-01', symbol: 'AAPL' }]
+   assets = [{ ipoDate: '2024-01-01', symbol: 'AAPL' }]
 
   let ret = IAssetQuotesWithIpoDate('test', [iaqr], assets)
   expect(ret).toStrictEqual([
@@ -939,7 +939,7 @@ test('IAssetQuotesWithScore', () => {
     marketCap: 14376655872,
     priceAvg50: 211.59486,
     priceAvg200: 136.80391,
-    // volume: number    // 2006952,
+    // Volume: number    // 2006952,
     avgVolume: 9315590,
     open: 214,
     previousClose: 212.31,
@@ -950,9 +950,9 @@ test('IAssetQuotesWithScore', () => {
     timestamp: 1624635044,
     change: 0.01,
     changesPercentage: 0.01,
-  }
+  },
 
-  const assets = { AAPL: { matches: 5, score: 25 } }
+   assets = { AAPL: { matches: 5, score: 25 } }
 
   let ret = IAssetQuotesWithScore([iaqr], assets)
   expect(ret).toStrictEqual([

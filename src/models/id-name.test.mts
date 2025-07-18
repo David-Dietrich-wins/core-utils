@@ -6,21 +6,21 @@ import {
 } from './id-name.mjs'
 
 test('IdName good', () => {
-  const id = 'id'
-  const name = 'name'
-  const pr = new IdName(id, name)
+  const id = 'id',
+   name = 'name',
+   pr = new IdName(id, name)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
 })
 
 test('createValueChange good', () => {
-  const id = 'id'
-  const name = 'name'
-  const value = { id: 'id', name: 'name' }
-  const type = 'type'
-  const date = 123
-  const pr = createValueChange<IdName>(id, name, value, type, date)
+  const id = 'id',
+   name = 'name',
+   value = { id: 'id', name: 'name' },
+   type = 'type',
+   date = 123,
+   pr = createValueChange<IdName>(id, name, value, type, date)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
@@ -30,10 +30,10 @@ test('createValueChange good', () => {
 })
 
 test('createValueChange good without type and date', () => {
-  const id = 'id'
-  const name = 'name'
-  const value = { id: 'id', name: 'name' }
-  const pr = createValueChange<IdName>(id, name, value)
+  const id = 'id',
+   name = 'name',
+   value = { id: 'id', name: 'name' },
+   pr = createValueChange<IdName>(id, name, value)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
@@ -43,10 +43,10 @@ test('createValueChange good without type and date', () => {
 })
 
 test('IdNameValue good', () => {
-  const id = 'id'
-  const name = 'name'
-  const value = { id: 'id', name: 'name' }
-  const pr = new IdNameValue(id, name, value)
+  const id = 'id',
+   name = 'name',
+   value = { id: 'id', name: 'name' },
+   pr = new IdNameValue(id, name, value)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
@@ -54,10 +54,10 @@ test('IdNameValue good', () => {
 })
 
 test('IdNameValueType good', () => {
-  const id = 'id'
-  const name = 'name'
-  const value = { id: 'id', name: 'name' }
-  const pr = new IdNameValueType(id, name, value, 'string')
+  const id = 'id',
+   name = 'name',
+   value = { id: 'id', name: 'name' },
+   pr = new IdNameValueType(id, name, value, 'string')
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
@@ -66,20 +66,20 @@ test('IdNameValueType good', () => {
 })
 
 test('ToIIdName', () => {
-  const id = 'id'
-  const name = 'name'
-  const pr = IdName.ToIIdName(id, name)
+  const id = 'id',
+   name = 'name',
+   pr = IdName.ToIIdName(id, name)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)
 })
 
 test('ToIIdNameValueType', () => {
-  const id = 'id'
-  const name = 'name'
-  const value = { id: 'id', name: 'name' }
-  const type = 'type'
-  const pr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
+  const id = 'id',
+   name = 'name',
+   value = { id: 'id', name: 'name' },
+   type = 'type',
+   pr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
 
   expect(pr.id).toBe(id)
   expect(pr.name).toBe(name)

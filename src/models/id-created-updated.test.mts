@@ -4,11 +4,11 @@ import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 const suffix = Date.now()
 
 test('IdCreated good', () => {
-  const id = 'id'
-  const createdBy = `test-create-${suffix}`
-  const created = new Date()
+  const id = 'id',
+   createdBy = `test-create-${suffix}`,
+   created = new Date(),
 
-  const pr = new IdCreated(id, createdBy, created)
+   pr = new IdCreated(id, createdBy, created)
 
   expect(pr.id).toBe(id)
   expect(pr.createdby).toBe(createdBy)
@@ -16,11 +16,11 @@ test('IdCreated good', () => {
 })
 
 test('IdCreated good with object', () => {
-  const id = 'id'
-  const createdBy = `test-create-${suffix}`
-  const created = new Date()
+  const id = 'id',
+   createdBy = `test-create-${suffix}`,
+   created = new Date(),
 
-  const pr = new IdCreated(id, createdBy, created)
+   pr = new IdCreated(id, createdBy, created)
 
   expect(pr.id).toBe(id)
   expect(pr.createdby).toBe(createdBy)
@@ -33,11 +33,11 @@ test('IdCreated good with object', () => {
 })
 
 test('IdCreated undefined id', () => {
-  const id = 0
-  const createdBy = `test-create-${suffix}`
-  const created = new Date()
+  const id = 0,
+   createdBy = `test-create-${suffix}`,
+   created = new Date(),
 
-  const pr = new IdCreated(id, createdBy, created)
+   pr = new IdCreated(id, createdBy, created)
 
   expect(pr.id).toBe(id)
   expect(pr.createdby).toBe(createdBy)
@@ -50,12 +50,12 @@ test('IdCreated undefined id', () => {
 })
 
 test('IdCreatedUpdated good', () => {
-  const id = 'id'
-  const createdby = `test-create-${suffix}`
-  const updatedby = `test-update-${suffix}`
-  const created = new Date()
-  const updated = new Date()
-  const pr = new IdCreatedUpdated(id, createdby, created, updatedby, updated)
+  const id = 'id',
+   createdby = `test-create-${suffix}`,
+   updatedby = `test-update-${suffix}`,
+   created = new Date(),
+   updated = new Date(),
+   pr = new IdCreatedUpdated(id, createdby, created, updatedby, updated)
 
   expect(pr.id).toBe(id)
   expect(pr.created).toBe(created)
@@ -65,12 +65,12 @@ test('IdCreatedUpdated good', () => {
 })
 
 test('IdCreatedUpdated good with object', () => {
-  const id = 'id'
-  const createdby = `test-create-${suffix}`
-  const updatedby = `test-update-${suffix}`
-  const created = new Date()
-  const updated = new Date()
-  const pr = new IdCreatedUpdated(id, createdby, created, updatedby, updated)
+  const id = 'id',
+   createdby = `test-create-${suffix}`,
+   updatedby = `test-update-${suffix}`,
+   created = new Date(),
+   updated = new Date(),
+   pr = new IdCreatedUpdated(id, createdby, created, updatedby, updated)
 
   expect(pr.id).toBe(id)
   expect(pr.created).toBe(created)
@@ -87,10 +87,10 @@ test('IdCreatedUpdated good with object', () => {
 })
 
 test('zCreatedBy', () => {
-  const zSchema = IdCreated.zCreatedBy(z.date())
-  const data = { createdby: 'test', created: new Date() }
+  const zSchema = IdCreated.zCreatedBy(z.date()),
+   data = { createdby: 'test', created: new Date() },
 
-  const result = zSchema.safeParse(data)
+   result = zSchema.safeParse(data)
   expect(result.success).toBe(true)
   expect(result).toMatchObject({
     data: expect.objectContaining({
@@ -104,9 +104,9 @@ test('zCreatedBy', () => {
 })
 
 test('zCreatedOn', () => {
-  const zSchema = IdCreated.zCreated(z.date())
-  const data = { created: new Date() }
-  const result = zSchema.safeParse(data)
+  const zSchema = IdCreated.zCreated(z.date()),
+   data = { created: new Date() },
+   result = zSchema.safeParse(data)
   expect(result.success).toBe(true)
   expect(result.data).toEqual(data)
   expect(result.data?.created).toBeInstanceOf(Date)
@@ -114,9 +114,9 @@ test('zCreatedOn', () => {
 })
 
 test('zUpdatedBy', () => {
-  const zSchema = IdCreatedUpdated.zUpdatedBy(z.date())
-  const data = { updatedby: 'test', updated: new Date() }
-  const result = zSchema.safeParse(data)
+  const zSchema = IdCreatedUpdated.zUpdatedBy(z.date()),
+   data = { updatedby: 'test', updated: new Date() },
+   result = zSchema.safeParse(data)
   expect(result.success).toBe(true)
   expect(result).toMatchObject({
     data: expect.objectContaining({
@@ -130,9 +130,9 @@ test('zUpdatedBy', () => {
 })
 
 test('zUpdatedOn', () => {
-  const zSchema = IdCreatedUpdated.zUpdated(z.date())
-  const data = { updated: new Date() }
-  const result = zSchema.safeParse(data)
+  const zSchema = IdCreatedUpdated.zUpdated(z.date()),
+   data = { updated: new Date() },
+   result = zSchema.safeParse(data)
   expect(result.success).toBe(true)
   expect(result.data).toEqual(data)
   expect(result.data?.updated).toBeInstanceOf(Date)

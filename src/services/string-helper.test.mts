@@ -1,14 +1,15 @@
-/* eslint-disable quotes */
+ 
 import { jest } from '@jest/globals'
 import { StringOrStringArray } from '../models/types.mjs'
 import {
+  FirstCharCapitalFormatter,
+  StringHelper,
   capitalizeFirstLetter,
   capitalizeWords,
-  FirstCharCapitalFormatter,
   getCommaUpperList,
   isEmptyString,
-  pluralize,
   pluralSuffix,
+  pluralize,
   plusMinus,
   prefixIfHasData,
   safestr,
@@ -17,7 +18,6 @@ import {
   safestrUppercase,
   stringEquals,
   stringEqualsQuoted,
-  StringHelper,
   stringIf,
   stringWrapDoubleQuote,
   stringWrapParen,
@@ -197,8 +197,8 @@ test('safestrToJson', () => {
 })
 
 test('stringIf', () => {
-  const stringIfTrue = 'string if true'
-  const stringIfFalse = 'string if false'
+  const stringIfFalse = 'string if false',
+   stringIfTrue = 'string if true'
 
   expect(stringIf(true, stringIfTrue)).toBe(stringIfTrue)
   expect(stringIf(false, stringIfTrue)).toBe('')
@@ -260,11 +260,11 @@ test('plusMinus', () => {
 })
 
 test('prefixIfHasData', () => {
-  const prefix = 'prefix'
-  const str = 'string'
-  const emptyStr = ''
-  const nullStr = null
-  const undefinedStr = undefined
+  const prefix = 'prefix',
+   str = 'string',
+   emptyStr = '',
+   nullStr = null,
+   undefinedStr = undefined
 
   expect(prefixIfHasData(str, prefix)).toBe(prefix)
   expect(prefixIfHasData(' ', prefix)).toBe(prefix)
@@ -274,11 +274,11 @@ test('prefixIfHasData', () => {
 })
 
 test('FirstCharCapitalFormatter', () => {
-  const str = 'hello world'
-  const str2 = 'Hello world'
-  const str3 = 'HELLO WORLD'
-  const str4 = 'hELLO WORLD'
-  const str5 = 'hELLO wORLD'
+  const str = 'hello world',
+   str2 = 'Hello world',
+   str3 = 'HELLO WORLD',
+   str4 = 'hELLO WORLD',
+   str5 = 'hELLO wORLD'
 
   expect(FirstCharCapitalFormatter(str)).toBe('Hello world')
   expect(FirstCharCapitalFormatter(str2)).toBe('Hello world')
@@ -382,8 +382,8 @@ test('ReplaceTwoOrMoreSpacesWithSingleSpace', () => {
 })
 
 test('StringHelper.safePrefix', () => {
-  const str = 'test'
-  const prefix = 'prefix-'
+  const prefix = 'prefix-',
+   str = 'test'
 
   expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
   expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
@@ -400,8 +400,8 @@ test('StringHelper.safePrefix', () => {
 })
 
 test('StringHelper.safeSuffix', () => {
-  const str = 'test'
-  const suffix = '-suffix'
+  const str = 'test',
+   suffix = '-suffix'
 
   expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
   expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
@@ -420,9 +420,9 @@ test('StringHelper.safeSuffix', () => {
 describe('StringHelper.SplitToArray', () => {
   test('StringHelper.SplitToArray', () => {
     let strOrArray: StringOrStringArray = 'a,b , c,'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = true
+    const removeEmpties = true,
+     splitter = ',',
+     trimStrings = true
     let arr = StringHelper.SplitToArray(strOrArray)
     expect(arr).toEqual(['a', 'b', 'c'])
 
@@ -458,7 +458,7 @@ describe('StringHelper.SplitToArray', () => {
     )
     expect(arr).toEqual(['a'])
 
-    // strOrArray as Array
+    // StrOrArray as Array
     strOrArray = ['a', 'b ', ' c', '']
     arr = StringHelper.SplitToArray(strOrArray)
     expect(arr).toEqual(['a', 'b', 'c'])
@@ -486,10 +486,10 @@ describe('StringHelper.SplitToArray', () => {
 
   describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
     test('default', () => {
-      const strOrArray = 'a,b , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = true
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b , c',
+       trimStrings = true
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -522,10 +522,10 @@ describe('StringHelper.SplitToArray', () => {
     })
 
     test('no remove empties', () => {
-      const strOrArray = 'a,b   , c,'
-      const splitter = ','
-      const removeEmpties = false
-      const trimStrings = false
+      const removeEmpties = false,
+       splitter = ',',
+       strOrArray = 'a,b   , c,',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -558,10 +558,10 @@ describe('StringHelper.SplitToArray', () => {
     })
 
     test('no trim strings', () => {
-      const strOrArray = 'a,b   , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = false
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b   , c',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -604,10 +604,10 @@ describe('StringHelper.SplitToArray', () => {
 
   describe('StringHelper.SplitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
     test('default', () => {
-      const strOrArray = 'a,b , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = true
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b , c',
+       trimStrings = true
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -643,10 +643,10 @@ describe('StringHelper.SplitToArray', () => {
     })
 
     test('no remove empties', () => {
-      const strOrArray = 'a,b   , c,'
-      const splitter = ','
-      const removeEmpties = false
-      const trimStrings = false
+      const removeEmpties = false,
+       splitter = ',',
+       strOrArray = 'a,b   , c,',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -682,10 +682,10 @@ describe('StringHelper.SplitToArray', () => {
     })
 
     test('no trim strings', () => {
-      const strOrArray = 'a,b   , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = false
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b   , c',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -766,8 +766,8 @@ test('safeHtmlAttribute', () => {
 describe('StringHelper.SplitIntoArray', () => {
   test('StringHelper.SplitIntoArray', () => {
     let strOrArray: StringOrStringArray = 'a,b \n, c,'
-    const splitter = ','
-    const replaceNonprintable = false
+    const replaceNonprintable = false,
+     splitter = ','
 
     let arr = StringHelper.SplitIntoArray(strOrArray)
     expect(arr).toEqual(['a', 'b ', ' c', ''])
@@ -788,7 +788,7 @@ describe('StringHelper.SplitIntoArray', () => {
     arr = StringHelper.SplitIntoArray(strOrArray, splitter, replaceNonprintable)
     expect(arr).toEqual(['a'])
 
-    // strOrArray as Array
+    // StrOrArray as Array
     strOrArray = ['a', 'b ', ' c\t\t', '']
     arr = StringHelper.SplitIntoArray(strOrArray)
     expect(arr).toEqual(['a', 'b ', ' c', ''])
@@ -808,10 +808,10 @@ describe('StringHelper.SplitIntoArray', () => {
 
   describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
     test('default', () => {
-      const strOrArray = 'a,b , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = true
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b , c',
+       trimStrings = true
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -844,10 +844,10 @@ describe('StringHelper.SplitIntoArray', () => {
     })
 
     test('no remove empties', () => {
-      const strOrArray = 'a,b   , c,'
-      const splitter = ','
-      const removeEmpties = false
-      const trimStrings = false
+      const removeEmpties = false,
+       splitter = ',',
+       strOrArray = 'a,b   , c,',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -880,10 +880,10 @@ describe('StringHelper.SplitIntoArray', () => {
     })
 
     test('no trim strings', () => {
-      const strOrArray = 'a,b   , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = false
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b   , c',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
@@ -926,10 +926,10 @@ describe('StringHelper.SplitIntoArray', () => {
 
   describe('StringHelper.SplitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
     test('default', () => {
-      const strOrArray = 'a,b , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = true
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b , c',
+       trimStrings = true
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -965,10 +965,10 @@ describe('StringHelper.SplitIntoArray', () => {
     })
 
     test('no remove empties', () => {
-      const strOrArray = 'a,b   , c,'
-      const splitter = ','
-      const removeEmpties = false
-      const trimStrings = false
+      const removeEmpties = false,
+       splitter = ',',
+       strOrArray = 'a,b   , c,',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -1004,10 +1004,10 @@ describe('StringHelper.SplitIntoArray', () => {
     })
 
     test('no trim strings', () => {
-      const strOrArray = 'a,b   , c'
-      const splitter = ','
-      const removeEmpties = true
-      const trimStrings = false
+      const removeEmpties = true,
+       splitter = ',',
+       strOrArray = 'a,b   , c',
+       trimStrings = false
       let arr: StringOrStringArray =
         StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
@@ -1073,8 +1073,8 @@ describe('StringHelper.SplitIntoArray', () => {
 })
 
 test('GenerateRandomString', () => {
-  const length = 10
-  const randomString = StringHelper.GenerateRandomString(length)
+  const length = 10,
+   randomString = StringHelper.GenerateRandomString(length)
 
   expect(randomString).toHaveLength(length)
   expect(randomString).toMatch(/^[a-zA-Z0-9]{1,10}$/) // Check if it contains only alphanumeric characters

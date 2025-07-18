@@ -41,8 +41,8 @@ export class CryptoHelper {
       privateKeyEncoding: {
         type: 'pkcs1',
         format: 'pem',
-        // cipher: 'aes-256-cbc',
-        // passphrase,
+        // Cipher: 'aes-256-cbc',
+        // Passphrase,
       },
     })
 
@@ -94,8 +94,8 @@ export class CryptoHelper {
       {
         key: privateKey,
         // In order to decrypt the data, we need to specify the
-        // same hashing function and padding scheme that we used to
-        // encrypt the data in the previous step
+        // Same hashing function and padding scheme that we used to
+        // Encrypt the data in the previous step
         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
         oaepHash: 'sha256',
         passphrase,
@@ -131,11 +131,11 @@ export class CryptoHelper {
       },
       // We convert the data string to a buffer using `Buffer.from`
       Buffer.from(decryptedString, 'utf8')
-    )
+    ),
 
     // The encrypted data is in the form of bytes, so we print it in base64 format
-    // so that it's displayed in a more readable form
-    const encryptedString = encryptedData.toString('base64')
+    // So that it's displayed in a more readable form
+     encryptedString = encryptedData.toString('base64')
 
     return encryptedString
   }

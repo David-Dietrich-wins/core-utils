@@ -1,10 +1,11 @@
-import { DashboardScreenSetting } from './DashboardScreenSetting.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ITileConfig,
   TileConfigChart,
   TileConfigTicker,
   TileType,
 } from './TileConfig.mjs'
+import { DashboardScreenSetting } from './DashboardScreenSetting.mjs'
 
 test('constructor', () => {
   const dss = new DashboardScreenSetting('name', [])
@@ -45,60 +46,59 @@ test('CreateISetting', () => {
 
 test('CreateNew', () => {
   const iTileConfig: ITileConfig<TileConfigTicker> = {
-    id: expect.any(String), // id will be generated
-    cols: 1,
-    rows: 1,
-    name: 'Trade Plotter',
-    index: 0,
-    type: TileType.ticker,
-    value: {
-      ticker: 'AAPL',
+      cols: 1,
+      id: expect.any(String),
+      index: 0,
+      name: 'Trade Plotter',
+      rows: 1,
+      type: TileType.ticker,
+      value: {
+        ticker: 'AAPL',
+      },
     },
-  }
-  const dss = DashboardScreenSetting.CreateNew('Test', [])
+    mydss = DashboardScreenSetting.CreateNew('Test', [])
 
-  expect(dss.id).toBe('')
-  expect(dss.name).toBe('Test')
-  expect(dss.tiles).toEqual([iTileConfig])
+  expect(mydss.id).toBe('')
+  expect(mydss.name).toBe('Test')
+  expect(mydss.tiles).toEqual([iTileConfig])
 })
 test('CreateNew with tiles', () => {
   const iTileConfig: ITileConfig<TileConfigTicker> = {
-    id: '1',
-    cols: 1,
-    rows: 1,
-    name: 'Tile 1',
-    index: 0,
-    type: TileType.ticker,
-    value: {
-      ticker: 'AAPL',
+      cols: 1,
+      id: '1',
+      index: 0,
+      name: 'Tile 1',
+      rows: 1,
+      type: TileType.ticker,
+      value: {
+        ticker: 'AAPL',
+      },
     },
-  }
-  const iTileConfig2: ITileConfig<TileConfigChart> = {
-    id: '2',
-    cols: 3,
-    rows: 2,
-    name: 'Tile 2',
-    index: 1,
-    type: TileType.chart,
-    value: {
-      ticker: 'GOOGL',
-      period: 1,
-      periodType: 'd',
-      frequency: 3,
-      frequencyType: 'd',
-      granularity: '1d',
-      extendedHoursTrading: false,
-      startDate: 123456789,
-      endDate: 987654321,
+    iTileConfig2: ITileConfig<TileConfigChart> = {
+      cols: 3,
+      id: '2',
+      index: 1,
+      name: 'Tile 2',
+      rows: 2,
+      type: TileType.chart,
+      value: {
+        endDate: 987654321,
+        extendedHoursTrading: false,
+        frequency: 3,
+        frequencyType: 'd',
+        granularity: '1d',
+        period: 1,
+        periodType: 'd',
+        startDate: 123456789,
+        ticker: 'GOOGL',
+      },
     },
-  }
+    mydss = DashboardScreenSetting.CreateNew('Test', [
+      iTileConfig,
+      iTileConfig2,
+    ])
 
-  const dss = DashboardScreenSetting.CreateNew('Test', [
-    iTileConfig,
-    iTileConfig2,
-  ])
-
-  expect(dss.id).toBe('')
-  expect(dss.name).toBe('Test')
-  expect(dss.tiles).toEqual([iTileConfig, iTileConfig2])
+  expect(mydss.id).toBe('')
+  expect(mydss.name).toBe('Test')
+  expect(mydss.tiles).toEqual([iTileConfig, iTileConfig2])
 })

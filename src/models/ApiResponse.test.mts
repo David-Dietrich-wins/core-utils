@@ -8,10 +8,10 @@ import {
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IPagedResponse, PagedResponse } from './PagedResponse.mjs'
 
-const CONST_DefaultError = 'Error'
-const CONST_DefaultErrorResponseCode = -1
-const CONST_ErrorNotFound = 'Not Found'
-const CONST_success = 'success'
+const CONST_DefaultError = 'Error',
+ CONST_DefaultErrorResponseCode = -1,
+ CONST_ErrorNotFound = 'Not Found',
+ CONST_success = 'success'
 
 test('Constructor empty', () => {
   const apiResponse = new ApiResponse('')
@@ -26,12 +26,12 @@ test('Constructor empty', () => {
 })
 
 test('Constructor one param', () => {
-  const result = CONST_success
-  const apiResponse = new ApiResponse('')
-  apiResponse.result = result + 'extra'
+  const result = CONST_success,
+   apiResponse = new ApiResponse('')
+  apiResponse.result = `${result  }extra`
 
   expect(apiResponse.message).toBe('')
-  expect(apiResponse.result).toBe(result + 'extra')
+  expect(apiResponse.result).toBe(`${result  }extra`)
   expect(apiResponse.id).toBeGreaterThan(0)
   expect(apiResponse.ts).toBeGreaterThan(0)
   expect(apiResponse.responseCode).toBe(0)
@@ -40,11 +40,11 @@ test('Constructor one param', () => {
 })
 
 test('message good', () => {
-  const result = CONST_success
-  const responseCode = 200
-  const message = CONST_success
-  const obj = { message: 'Found' }
-  const apiResponse = new ApiResponse(obj, result, message, responseCode)
+  const result = CONST_success,
+   responseCode = 200,
+   message = CONST_success,
+   obj = { message: 'Found' },
+   apiResponse = new ApiResponse(obj, result, message, responseCode)
 
   expect(apiResponse.message.indexOf(message)).toBe(0)
   expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -58,11 +58,11 @@ test('message good', () => {
 
 describe('setError', () => {
   test('no params', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -85,11 +85,11 @@ describe('setError', () => {
   })
 
   test('error object', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -123,12 +123,12 @@ describe('setError', () => {
   })
 
   test('exception', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
-    const ge = new AppExceptionHttp('setError exception', 'not found')
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode),
+     ge = new AppExceptionHttp('setError exception', 'not found')
 
     apiResponse.setError(ge)
     expect(apiResponse.message.indexOf('setError exception')).toBe(0)
@@ -141,11 +141,11 @@ describe('setError', () => {
   })
 
   test('error number', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = 123
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = 123,
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -167,11 +167,11 @@ describe('setError', () => {
   })
 
   test('error string', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = 'error string'
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = 'error string',
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -194,11 +194,11 @@ describe('setError', () => {
   })
 
   test('error object with response code', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -234,11 +234,11 @@ describe('setError', () => {
   })
 
   test('error object with AppException', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -268,11 +268,11 @@ describe('setError', () => {
   })
 
   test('error object with AppException no object', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -298,11 +298,11 @@ describe('setError', () => {
   })
 
   test('error AppException with response code', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -313,8 +313,8 @@ describe('setError', () => {
     expect(apiResponse.data.message.indexOf('Found')).toBe(0)
     expect(apiResponse.data).toBe(obj)
 
-    const exceptionObject = { responseCode: 500, message: 'Not Found' }
-    const errorObj = new AppExceptionHttpNotFound(
+    const exceptionObject = { responseCode: 500, message: 'Not Found' },
+     errorObj = new AppExceptionHttpNotFound(
       'setError error object with AppExceptionHttpNotFound',
       'test',
       exceptionObject
@@ -334,11 +334,11 @@ describe('setError', () => {
   })
 
   test('error AppException without response code', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found' }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found' },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.message.indexOf(message)).toBe(0)
     expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -349,8 +349,8 @@ describe('setError', () => {
     expect(apiResponse.data.message.indexOf('Found')).toBe(0)
     expect(apiResponse.data).toBe(obj)
 
-    const exceptionObject = { message: 'No responseCode' }
-    const errorObj = new AppExceptionHttpNotFound(
+    const exceptionObject = { message: 'No responseCode' },
+     errorObj = new AppExceptionHttpNotFound(
       'setError error object with AppExceptionHttpNotFound',
       'test',
       exceptionObject
@@ -371,11 +371,11 @@ describe('setError', () => {
 })
 
 test('setSuccess with object', () => {
-  const result = CONST_success
-  const responseCode = 200
-  const message = CONST_success
-  const obj = { message: 'Found', responseCode: 1 }
-  const apiResponse = new ApiResponse(obj, result, message, responseCode)
+  const result = CONST_success,
+   responseCode = 200,
+   message = CONST_success,
+   obj = { message: 'Found', responseCode: 1 },
+   apiResponse = new ApiResponse(obj, result, message, responseCode)
 
   expect(apiResponse.message.indexOf(message)).toBe(0)
   expect(apiResponse.result.indexOf(result)).toBe(0)
@@ -451,11 +451,11 @@ describe('isSuccess', () => {
   })
 
   test('isGood', () => {
-    const result = CONST_success
-    const responseCode = 200
-    const message = CONST_success
-    const obj = { message: 'Found', responseCode: 1 }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 200,
+     message = CONST_success,
+     obj = { message: 'Found', responseCode: 1 },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.isGood).toBe(true)
     expect(apiResponse.isSuccess).toBe(true)
@@ -464,11 +464,11 @@ describe('isSuccess', () => {
   })
 
   test('isError', () => {
-    const result = CONST_success
-    const responseCode = 401
-    const message = CONST_success
-    const obj = { message: 'Found', responseCode: 1 }
-    const apiResponse = new ApiResponse(obj, result, message, responseCode)
+    const result = CONST_success,
+     responseCode = 401,
+     message = CONST_success,
+     obj = { message: 'Found', responseCode: 1 },
+     apiResponse = new ApiResponse(obj, result, message, responseCode)
 
     expect(apiResponse.isGood).toBe(false)
     expect(apiResponse.isSuccess).toBe(false)
@@ -506,9 +506,9 @@ test('CreateFromIApiResponse', () => {
     responseCode: 200,
     data: { some: 'data' },
     stats: new InstrumentationStatistics(),
-  }
+  },
 
-  const ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
+   ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
 
   expect(ret).toBeInstanceOf(ApiResponse)
   expect(ret.message).toBe('error message')
@@ -524,9 +524,9 @@ test('CreateFromIApiResponse', () => {
 })
 
 test('ErrorHandler', async () => {
-  const fname = 'test-ErrorHandler'
+  const fname = 'test-ErrorHandler',
 
-  const location = {
+   location = {
     href: 'http://localhost',
     pathname: '/test',
     search: '?query=1',
@@ -568,10 +568,10 @@ test('ErrorHandler', async () => {
 })
 
 test('VerifySuccess', () => {
-  const fname = 'test-VerifySuccess'
-  const ret = new ApiResponse('data', CONST_success, 'message', 200)
+  const fname = 'test-VerifySuccess',
+   ret = new ApiResponse('data', CONST_success, 'message', 200),
 
-  const data = ApiResponse.VerifySuccess(fname, ret)
+   data = ApiResponse.VerifySuccess(fname, ret)
   expect(data).toBe('data')
 
   expect(() => {
@@ -596,15 +596,15 @@ test('VerifySuccess', () => {
 })
 
 test('VerifySuccessPagedResponse', () => {
-  const fname = 'test-VerifySuccessPagedResponse'
-  const ret = new ApiResponse<IPagedResponse<string>>(
+  const fname = 'test-VerifySuccessPagedResponse',
+   ret = new ApiResponse<IPagedResponse<string>>(
     { dataPage: [], totalCount: 0 },
     CONST_success,
     'message',
     200
-  )
+  ),
 
-  const data = ApiResponse.VerifySuccessPagedResponse(fname, ret)
+   data = ApiResponse.VerifySuccessPagedResponse(fname, ret)
   expect(data).toBeInstanceOf(PagedResponse)
   expect(data.dataPage).toEqual([])
   expect(data.totalCount).toBe(0)

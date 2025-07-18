@@ -48,9 +48,7 @@ export function getCommaUpperList(stringOrArray: StringOrStringArray) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isEmptyString(s: any, allowFunction = true) {
-  const testString = (str: unknown) => {
-    return !str || (isString(str) && '' === str)
-  }
+  const testString = (str: unknown) => !str || (isString(str) && str === '')
 
   return testString(s) || (allowFunction && isFunction(s) && testString(s()))
 }
@@ -64,7 +62,7 @@ export function isEmptyString(s: any, allowFunction = true) {
  */
 export function isString(obj: unknown, minlength = 0): obj is string {
   return (
-    ('string' === typeof obj || obj instanceof String) &&
+    (typeof obj === 'string' || obj instanceof String) &&
     obj.length >= minlength
   )
 }
@@ -163,7 +161,7 @@ export const pluralSuffix = (num: number, suffix = 's') =>
  * @returns The suffix string if the number is not 1.
  */
 export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
-  if (isNumber(num) && 1 === num) {
+  if (isNumber(num) && num === 1) {
     return safestr(textIfSingle)
   }
 
@@ -204,11 +202,11 @@ export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
 export function stringEquals(name: string, value: string, valueWrapper = '') {
   if (hasData(name)) {
     return (
-      name +
-      '=' +
-      (hasData(valueWrapper)
+      `${name 
+      }=${ 
+      hasData(valueWrapper)
         ? stringWrap(valueWrapper, value, valueWrapper)
-        : safestr(value))
+        : safestr(value)}`
     )
   }
 
@@ -229,11 +227,11 @@ export function stringEqualsQuoted(
 ) {
   if (hasData(name)) {
     return (
-      name +
-      '=' +
-      (useSingleQuote || false
+      `${name 
+      }=${ 
+      useSingleQuote || false
         ? stringWrapSingleQuote(value)
-        : stringWrapDoubleQuote(value))
+        : stringWrapDoubleQuote(value)}`
     )
   }
 
@@ -274,7 +272,7 @@ export function stringWrapParen(str: string) {
  * @returns The 'str' wrapped string.
  */
 export function stringWrapSingleQuote(str: string) {
-  // eslint-disable-next-line quotes
+   
   return stringWrap("'", str, "'")
 }
 
@@ -369,8 +367,7 @@ export class StringHelper {
 
   static GenerateRandomString(length: number, characters?: string) {
     let result = ''
-    characters =
-      characters ||
+    characters ||=
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
     const charactersLength = characters.length

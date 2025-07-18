@@ -1,27 +1,27 @@
-/* eslint-disable quotes */
+ 
 import { jest } from '@jest/globals'
 import { IId } from '../models/IdManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import {
-  addObjectToList,
-  coalesce,
-  deepCloneJson,
-  deepDiffMapper,
   FindObjectWithField,
-  getNullObject,
-  getObjectValue,
-  isObject,
   ObjectFindKeyAndReturnValue,
   ObjectHelper,
   ObjectMustHaveKeyAndReturnValue,
   ObjectTypesToString,
+  UpdateFieldValue,
+  addObjectToList,
+  coalesce,
+  deepCloneJson,
+  deepDiffMapper,
+  getNullObject,
+  getObjectValue,
+  isObject,
   renameProperty,
   runOnAllMembers,
   safeJsonToString,
   safeObject,
   searchObjectForArray,
-  UpdateFieldValue,
 } from './object-helper.mjs'
 import { pluralize, plusMinus } from './string-helper.mjs'
 
@@ -31,10 +31,10 @@ describe('ObjectFindKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'key1'
-    const result = ObjectFindKeyAndReturnValue(obj, keyToFind)
+     keyToFind = 'key1',
+     result = ObjectFindKeyAndReturnValue(obj, keyToFind)
 
     expect(result).toBe('value1')
   })
@@ -44,11 +44,11 @@ describe('ObjectFindKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = true
-    const result = ObjectFindKeyAndReturnValue(
+     keyToFind = 'key1',
+     matchLowercaseAndTrimKey = true,
+     result = ObjectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -62,11 +62,11 @@ describe('ObjectFindKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = ''
-    const matchLowercaseAndTrimKey = false
-    const result = ObjectFindKeyAndReturnValue(
+     keyToFind = '',
+     matchLowercaseAndTrimKey = false,
+     result = ObjectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -80,11 +80,11 @@ describe('ObjectFindKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'kEy1'
-    const matchLowercaseAndTrimKey = false
-    const result = ObjectFindKeyAndReturnValue(
+     keyToFind = 'kEy1',
+     matchLowercaseAndTrimKey = false,
+     result = ObjectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -98,11 +98,11 @@ describe('ObjectFindKeyAndReturnValue', () => {
       kEy1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = false
-    const result = ObjectFindKeyAndReturnValue(
+     keyToFind = 'key1',
+     matchLowercaseAndTrimKey = false,
+     result = ObjectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -116,11 +116,11 @@ describe('ObjectFindKeyAndReturnValue', () => {
       kEY1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'KEy1'
-    const matchLowercaseAndTrimKey = true
-    const result = ObjectFindKeyAndReturnValue(
+     keyToFind = 'KEy1',
+     matchLowercaseAndTrimKey = true,
+     result = ObjectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -136,11 +136,11 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'key1'
+     keyToFind = 'key1',
 
-    const result = ObjectMustHaveKeyAndReturnValue('test', obj, keyToFind)
+     result = ObjectMustHaveKeyAndReturnValue('test', obj, keyToFind)
     expect(result).toBe('value1')
 
     expect(() => ObjectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow()
@@ -151,12 +151,12 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
       key1: 'value1',
       key2: 'value2',
       key3: 'value3',
-    }
+    },
 
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = true
+     keyToFind = 'key1',
+     matchLowercaseAndTrimKey = true,
 
-    const result = ObjectMustHaveKeyAndReturnValue(
+     result = ObjectMustHaveKeyAndReturnValue(
       'test',
       obj,
       keyToFind,
@@ -188,34 +188,34 @@ describe('ObjectTypesToString', () => {
     expect(ret).toBe('')
   })
 
-  // test('http fetch get good', async () => {
-  //   const url = `${CONST_AceRestBaseUrl}/Patrons/`
+  // Test('http fetch get good', async () => {
+  //   Const url = `${CONST_AceRestBaseUrl}/Patrons/`
 
-  //   const retjson = {
-  //     testing: 'testing',
+  //   Const retjson = {
+  //     Testing: 'testing',
   //   }
 
-  //   mockServer.use(
-  //     http.get(url, () => {
+  //   MockServer.use(
+  //     Http.get(url, () => {
   //       // const anyIdNumber = req.url.searchParams.get('AnyIdNumber')
   //       // const siteId = req.url.searchParams.get('SiteId')
 
-  //       return HttpResponse.json(retjson)
+  //       Return HttpResponse.json(retjson)
   //     })
   //   )
 
-  //   const abc = await fetch(url)
+  //   Const abc = await fetch(url)
 
-  //   const ret = ObjectTypesToString(abc)
-  //   expect(ret).toBe('[object Response]')
-  //   const body = await abc.json()
-  //   expect(body).toEqual(retjson)
+  //   Const ret = ObjectTypesToString(abc)
+  //   Expect(ret).toBe('[object Response]')
+  //   Const body = await abc.json()
+  //   Expect(body).toEqual(retjson)
   // })
 
   test('JS Error response', async () => {
-    const e = new Error('test error')
+    const e = new Error('test error'),
 
-    const ret = ObjectTypesToString(e)
+     ret = ObjectTypesToString(e)
     expect(ret).toContain('Error')
     expect(ret).toContain("message: 'test error'")
   })
@@ -246,23 +246,23 @@ describe('ObjectTypesToString', () => {
   }
 
   test('File object', async () => {
-    const e = new File('', 'test.txt')
+    const e = new File('', 'test.txt'),
 
-    const ret = ObjectTypesToString(e)
+     ret = ObjectTypesToString(e)
     expect(ret).toEqual("File { data: '', name: 'test.txt' }")
   })
 
   test('FileList object', async () => {
-    const e = new FileList('', 'test.txt')
+    const e = new FileList('', 'test.txt'),
 
-    const ret = ObjectTypesToString(e)
+     ret = ObjectTypesToString(e)
     expect(ret).toEqual("FileList { data: '', name: 'test.txt' }")
   })
 
   test('Object generic', async () => {
-    const e = { data: '', name: 'test.txt' }
+    const e = { data: '', name: 'test.txt' },
 
-    const ret = ObjectTypesToString(e)
+     ret = ObjectTypesToString(e)
     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
   })
 })
@@ -304,9 +304,7 @@ test('searchObjectForArray', () => {
 test('runOnAllMembers', () => {
   expect(() =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    runOnAllMembers(1 as any, (key: string, value: unknown) => {
-      return key + value
-    })
+    runOnAllMembers(1 as any, (key: string, value: unknown) => key + value)
   ).toThrow('runOnAllMembers() received an empty object.')
 
   expect(() =>
@@ -314,9 +312,7 @@ test('runOnAllMembers', () => {
     runOnAllMembers({ a: 'a' }, null as any)
   ).toThrow('runOnAllMembers() received an empty function operator.')
 
-  const funcToRunOnAllMembers = (key: string, value: unknown) => {
-    return key + value
-  }
+  const funcToRunOnAllMembers = (key: string, value: unknown) => key + value
 
   expect(
     runOnAllMembers({ a: 'a', b: 'b' }, funcToRunOnAllMembers)
@@ -350,12 +346,12 @@ test('runOnAllMembers', () => {
   })
 })
 test('renameProperty', () => {
-  let obj = { a: 'a', b: 'b', c: 'c' }
-  let retobj = { b: 'b', c: 'c', d: 'a' }
+  let obj = { a: 'a', b: 'b', c: 'c' },
+   retobj = { b: 'b', c: 'c', d: 'a' },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let oldKey: any = 'a'
+   oldKey: any = 'a',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let newKey: any = 'd'
+   newKey: any = 'd'
 
   renameProperty(obj, oldKey, newKey)
   expect(obj).toStrictEqual(retobj)
@@ -478,17 +474,17 @@ test('addObjectToList', () => {
 
 describe('deepDiffMapper', () => {
   test('compareValues', () => {
-    const anum = 1
-    const bnum = 1
+    const anum = 1,
+     bnum = 1,
 
-    const astr = 'a'
-    const bstr = 'a'
+     astr = 'a',
+     bstr = 'a',
 
-    const aDate = new Date()
-    const bDate = new Date(aDate)
+     aDate = new Date(),
+     bDate = new Date(aDate)
 
-    let a: Record<string, unknown> = { a: 'a' }
-    let b: Record<string, unknown> = { b: 'b' }
+    let a: Record<string, unknown> = { a: 'a' },
+     b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().anyChanges(a, b)).toBe(true)
     expect(deepDiffMapper().compareValues(a, b)).toStrictEqual('updated')
@@ -503,7 +499,7 @@ describe('deepDiffMapper', () => {
     expect(deepDiffMapper().compareValues(astr, bstr)).toStrictEqual(
       'unchanged'
     )
-    expect(deepDiffMapper().compareValues(astr, bstr + 'a')).toStrictEqual(
+    expect(deepDiffMapper().compareValues(astr, `${bstr  }a`)).toStrictEqual(
       'updated'
     )
 
@@ -524,8 +520,8 @@ describe('deepDiffMapper', () => {
       { name: 'climate', value: 90 },
       { name: 'freeSpeech', value: 80 },
       { name: 'religion', value: 81 },
-    ]
-    const b = [
+    ],
+     b = [
       { name: 'climate', value: 90 },
       { name: 'freeSpeech', value: 80 },
       { name: 'religion', value: 82 },
@@ -539,9 +535,9 @@ describe('deepDiffMapper', () => {
         b: { name: 'freeSpeech', value: 80 },
         c: { name: 'religion', value: 81 },
       },
-    ]
+    ],
 
-    const d = [
+     d = [
       {
         a: { name: 'climate', value: 90 },
         b: { name: 'freeSpeech', value: 80 },
@@ -580,23 +576,23 @@ describe('deepDiffMapper', () => {
   })
 
   test('getChanges', () => {
-    const anum = 1
-    const bnum = 1
+    const anum = 1,
+     bnum = 1,
 
-    const astr = 'a'
-    const bstr = 'a'
+     astr = 'a',
+     bstr = 'a',
 
-    const aDate = new Date()
-    const bDate = new Date(aDate)
+     aDate = new Date(),
+     bDate = new Date(aDate),
 
-    const a: Record<string, unknown> = { a: 'a' }
-    const b: Record<string, unknown> = { b: 'b' }
+     a: Record<string, unknown> = { a: 'a' },
+     b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().getChanges(anum, bnum)).toBe(false)
     expect(deepDiffMapper().getChanges(anum, bnum + 1)).toBe(true)
 
     expect(deepDiffMapper().getChanges(astr, bstr)).toBe(false)
-    expect(deepDiffMapper().getChanges(astr, bstr + 'a')).toBe(true)
+    expect(deepDiffMapper().getChanges(astr, `${bstr  }a`)).toBe(true)
 
     expect(deepDiffMapper().getChanges(aDate, bDate)).toBe(false)
     expect(deepDiffMapper().getChanges(aDate, new Date(+bDate + 1))).toBe(true)
@@ -608,8 +604,8 @@ describe('deepDiffMapper', () => {
   })
 
   test('various tests', () => {
-    let a: Record<string, unknown> = { a: 'a' }
-    let b: Record<string, unknown> = { b: 'b' }
+    let a: Record<string, unknown> = { a: 'a' },
+     b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().anyChanges(a, b)).toBe(true)
 
@@ -713,9 +709,7 @@ test('getFirstNewWithException', () => {
     _theClass: IConstructor<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     ..._args: any[]
-  ) => {
-    return undefined as Tid as unknown as T
-  }
+  ) => undefined as Tid as unknown as T
 
   expect(() =>
     ObjectHelper.getFirstNewWithException(
@@ -731,9 +725,7 @@ test('getFirstNewWithException', () => {
     _theClass: IConstructor<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     ..._args: any[]
-  ) => {
-    return undefined as Tid as unknown as T
-  }
+  ) => undefined as Tid as unknown as T
   expect(() =>
     ObjectHelper.getFirstNewWithException(
       IdValueManager,
@@ -793,23 +785,23 @@ describe('ObjectHelper', () => {
       b: 'b',
       a: 'a',
       c: 'c',
-    }
+    },
 
-    const clonedObj = ObjectHelper.CloneObjectAlphabetizingKeys(obj)
+     clonedObj = ObjectHelper.CloneObjectAlphabetizingKeys(obj)
 
     expect(clonedObj).toEqual({ a: 'a', b: 'b', c: 'c' })
   })
 
   test('DecodeBase64ToObject', () => {
-    const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' }))
-    const decodedObj = ObjectHelper.DecodeBase64ToObject(base64String)
+    const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' })),
+     decodedObj = ObjectHelper.DecodeBase64ToObject(base64String)
 
     expect(decodedObj).toEqual({ a: 'a', b: 'b' })
   })
 
   test('EncodeObjectToBase64', () => {
-    const obj = { a: 'a', b: 'b' }
-    const encodedString = ObjectHelper.EncodeObjectToBase64(obj)
+    const obj = { a: 'a', b: 'b' },
+     encodedString = ObjectHelper.EncodeObjectToBase64(obj)
 
     expect(encodedString).toBe(btoa(JSON.stringify(obj)))
   })
@@ -822,9 +814,9 @@ describe('ObjectHelper', () => {
         d: 'd',
         e: undefined,
       },
-    }
+    },
 
-    const clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
+     clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
 
     expect(clonedObj).toEqual({
       a: 'a',
@@ -843,9 +835,9 @@ describe('ObjectHelper', () => {
         d: 'd',
         e: undefined,
       },
-    }
+    },
 
-    const clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
+     clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(obj)
 
     expect(clonedObj).toEqual({
       a: 'a',

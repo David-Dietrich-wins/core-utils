@@ -1,12 +1,12 @@
 import {
-  IdCreatedUpdated,
   IIdCreatedUpdated,
+  IdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
 import { IIdVal } from '../models/id-val.mjs'
+import { IKeyValueShort } from './key-val.mjs'
+import { IName } from './interfaces.mjs'
 import { INameVal } from './NameValManager.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import { IName } from './interfaces.mjs'
-import { IKeyValueShort } from './key-val.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,
@@ -35,9 +35,9 @@ export class Config<Tid = string, Tval = boolean>
   ) {
     super(id, createdby, created, updatedby, updated)
     if (isObject(id)) {
-      this.copyFromDatabase(id as IConfig<Tid, Tval>)
+      this.copyFromDatabase(id)
     } else {
-      // constructor items
+      // Constructor items
       this.userid = userid
       this.name = name
       this.val = val
@@ -89,9 +89,9 @@ export class ConfigShort<Tid = string, Tval = unknown>
     super(id, createdby, created, updatedby, updated)
 
     if (isObject(id)) {
-      this.copyFromDatabase(id as IConfigShort<Tid, Tval>)
+      this.copyFromDatabase(id)
     } else {
-      // constructor items
+      // Constructor items
       this.userid = userid
       this.k = k
       this.v = v

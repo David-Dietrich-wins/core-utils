@@ -47,9 +47,9 @@ test('constructor object', () => {
     exactMatch: true,
     pageIndex: 0,
     pageSize: 20,
-  }
+  },
 
-  const srv = new SearchRequestView(isrv)
+   srv = new SearchRequestView(isrv)
   expect(srv.term).toBe('test')
   expect(srv.sortColumn).toBe('column')
   expect(srv.sortDirection).toBe('asc')
@@ -82,9 +82,9 @@ test('pageIndex and pageSize', () => {
     exactMatch: true,
     pageIndex: 2,
     pageSize: 20,
-  }
+  },
 
-  const srv = new SearchRequestView(isrv)
+   srv = new SearchRequestView(isrv)
   expect(srv.pageIndex).toBe(2)
   expect(srv.pageSize).toBe(20)
   expect(srv.CalculatedPageSize).toBe(20)
@@ -112,8 +112,8 @@ describe('getItems', () => {
       })
     }
 
-    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true)
-    const [result, count] = srv.getItems(items, 10)
+    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true),
+     [result, count] = srv.getItems(items, 10)
     expect(result.length).toBe(10)
     expect(count).toBe(100)
 
@@ -206,7 +206,7 @@ describe('getItems', () => {
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
 
-    // trying to to test line 148
+    // Trying to to test line 148
     items.push(items[0])
     srv.term = 'xxxxX'
     const [result9, count9] = srv.getItems(items, 0, 'name', true)
@@ -299,8 +299,8 @@ describe('getItems', () => {
       }
     }
 
-    const srv = new SearchRequestView('test', '', 'asc', 5, 2, true)
-    const [result, count] = srv.getItems(items, 11)
+    const srv = new SearchRequestView('test', '', 'asc', 5, 2, true),
+     [result, count] = srv.getItems(items, 11)
     expect(result.length).toBe(5)
     expect(count).toBe(11)
   })
@@ -317,8 +317,8 @@ describe('getItems', () => {
       })
     }
 
-    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true)
-    const [result, count] = srv.getItems(items, 10)
+    const srv = new SearchRequestView('test', 'name', 'asc', 10, 0, true),
+     [result, count] = srv.getItems(items, 10)
     expect(result.length).toBe(10)
     expect(count).toBe(100)
 
@@ -424,9 +424,9 @@ describe('zSchema', () => {
   })
 
   test('valid parse', () => {
-    const schema = SearchRequestView.zSearchRequestView
+    const schema = SearchRequestView.zSearchRequestView,
 
-    const srv: ISearchRequestView = {
+     srv: ISearchRequestView = {
       term: 'name',
       sortColumn: 'name',
       sortDirection: 'asc',
@@ -441,9 +441,9 @@ describe('zSchema', () => {
   })
 
   test('term array', () => {
-    const schema = SearchRequestView.zSearchRequestView
+    const schema = SearchRequestView.zSearchRequestView,
 
-    const srv: ISearchRequestView = {
+     srv: ISearchRequestView = {
       term: ['name', 'value'],
       sortColumn: 'name',
       sortDirection: 'asc',
@@ -458,9 +458,9 @@ describe('zSchema', () => {
   })
 
   test('bad limit', () => {
-    const schema = SearchRequestView.zSearchRequestView
+    const schema = SearchRequestView.zSearchRequestView,
 
-    const company: ISearchRequestView = {
+     company: ISearchRequestView = {
       term: 'name',
       sortColumn: 'name',
       sortDirection: 'asc',

@@ -1,5 +1,5 @@
-import { safeArray } from '../services/array-helper.mjs'
 import { IDashboardScreenSetting } from './DashboardScreenSetting.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 
 export interface IDashboardSetting {
   screens: IDashboardScreenSetting[]

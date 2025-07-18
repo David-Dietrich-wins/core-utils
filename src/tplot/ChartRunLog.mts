@@ -1,8 +1,8 @@
-import { safestr } from '../services/string-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { ChartSettings } from './ChartSettings.mjs'
 import { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
+import { ChartSettings } from './ChartSettings.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { safestr } from '../services/string-helper.mjs'
 
 export interface IChartRunLog<T = string> extends IUserId<T>, ITicker {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,11 +59,11 @@ export class ChartRunLog implements IChartRunLog {
       Object.assign(this, settings)
     }
 
-    // if (settings.hasStartDate) {
-    //   this.startDate = settings.startDateAsDate
+    // If (settings.hasStartDate) {
+    //   This.startDate = settings.startDateAsDate
     // }
-    // if (settings.hasEndDate) {
-    //   this.endDate = settings.endDateAsDate
+    // If (settings.hasEndDate) {
+    //   This.endDate = settings.endDateAsDate
     // }
   }
 
@@ -80,20 +80,19 @@ export class ChartRunLog implements IChartRunLog {
   }
 
   static toApi(settings: IChartRunLog) {
-    const cs = ChartRunLog.fromDb(settings)
+    const cs = ChartRunLog.fromDb(settings),
+      csret: IChartRunLogApiReturn = {
+        created: cs.created,
+        endDate: cs.endDate ? Number(cs.endDate) : 0,
+        frequency: ChartSettings.frequencyTypeString(
+          cs.frequencyType,
+          cs.granularity
+        ),
+        period: ChartSettings.periodWithTypeString(cs.period, cs.periodType),
+        startDate: cs.startDate ? Number(cs.startDate) : 0,
+        ticker: cs.ticker,
+      }
 
-    const apiret: IChartRunLogApiReturn = {
-      frequency: ChartSettings.frequencyTypeString(
-        cs.frequencyType,
-        cs.granularity
-      ),
-      period: ChartSettings.periodWithTypeString(cs.period, cs.periodType),
-      endDate: cs.endDate ? +cs.endDate : 0,
-      startDate: cs.startDate ? +cs.startDate : 0,
-      ticker: cs.ticker,
-      created: cs.created,
-    }
-
-    return apiret
+    return csret
   }
 }

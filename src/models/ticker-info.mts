@@ -45,7 +45,7 @@ export const zTickersArray = z.object({
 export type ITickersArray = z.infer<typeof zTickersArray>
 
 export const zVolume = z.object({
-  volume: z.coerce.number().min(1).max(1000000000000), //z.preprocess(Number, z.number()),
+  volume: z.coerce.number().min(1).max(1000000000000), //Z.preprocess(Number, z.number()),
 })
 
 export type IVolume = z.infer<typeof zVolume>
@@ -84,9 +84,9 @@ export function ISymbolSearch2ITickerSearchArray(
 }
 
 export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
-  // symbol: string    // GME,
-  // name: string      // GameStop Corp.,
-  // price: number     // 203.0601,
+  // Symbol: string    // GME,
+  // Name: string      // GameStop Corp.,
+  // Price: number     // 203.0601,
   dayLow: number // 201.35,
   dayHigh: number // 214.0353,
   yearHigh: number // 483,
@@ -94,13 +94,13 @@ export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   marketCap: number // 14376655872,
   priceAvg50: number // 211.59486,
   priceAvg200: number // 136.80391,
-  // volume: number    // 2006952,
+  // Volume: number    // 2006952,
   avgVolume?: number | null // 9315590,
   exchange: string // NYSE,
   open?: number | null // 214,
   previousClose?: number | null // 212.31,
   eps?: number | null // -1.78,
-  pe?: number | null // null,
+  pe?: number | null // Null,
   earningsAnnouncement?: string | null // 2021-06-09T16:09:00.000+0000,
   sharesOutstanding?: number | null // 70800004,
   timestamp: number // 1624635044
@@ -254,8 +254,8 @@ export interface ICompanyScales
 }
 
 export interface ICompanyProfile extends ISymbolPrice {
-  // symbol: string
-  // price: number
+  // Symbol: string
+  // Price: number
   beta: number
   volAvg: number
   mktCap: number
@@ -333,12 +333,12 @@ export interface IRelativeStrengthIndicator {
 }
 
 export interface IQuoteBar<Tdate = string> extends IDate<Tdate>, IVolume {
-  // date: string      // 2021-06-24,
+  // Date: string      // 2021-06-24,
   open: number // 221.16,
   high: number // 227.45,
   low: number // 211.6,
   close: number // 212.31,
-  // volume: number    // 3866565,
+  // Volume: number    // 3866565,
 }
 
 export interface IQuoteBarEma extends IQuoteBar, IExtendedMovingAverage {}
@@ -468,7 +468,7 @@ export interface IMarketHolidays {
   'year': number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
-  // eslint-disable-next-line quotes
+   
   "Washington's Birthday": string
   'Good Friday': string
   'Memorial Day': string
@@ -826,8 +826,8 @@ export function IAssetQuotesWithIpoDate(
     try {
       const found = retobj.find((spac) => aqr.symbol === spac.symbol)
       if (found && isString(found?.ipoDate, 1)) {
-        const t = moment(found.ipoDate, 'M-D-YYYY')
-        const val = t.valueOf()
+        const t = moment(found.ipoDate, 'M-D-YYYY'),
+         val = t.valueOf()
         if (isNaN(val)) {
           throw new AppException(
             `IAssetQuotesWithIpoDate: ${fname} - Invalid IPO date for symbol ${aqr.symbol}`
@@ -872,11 +872,11 @@ export function IAssetQuotesWithScore(
   }, 0)
 
   return safeArray(iaqrs).map((iaqr) => {
-    const symbol = safestrUppercase(iaqr.symbol)
+    const symbol = safestrUppercase(iaqr.symbol),
 
-    const dictsym = retobj[symbol]
-    let scorePercentage = 0
-    let matches = 0
+     dictsym = retobj[symbol]
+    let matches = 0,
+     scorePercentage = 0
     if (isObject(dictsym) && totalScore) {
       scorePercentage = dictsym.score ? dictsym.score / totalScore : 0
       matches = dictsym.matches

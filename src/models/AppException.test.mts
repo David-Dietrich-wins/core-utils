@@ -1,11 +1,11 @@
 import {
+  AppException,
   AppExceptionHttp,
   AppExceptionHttpForbidden,
   AppExceptionHttpNotAcceptable,
   AppExceptionHttpNotAllowed,
   AppExceptionHttpNotFound,
   AppExceptionHttpUnauthorized,
-  AppException,
   AppExceptionSecurity,
   isErrorWithMessage,
 } from './AppException.mjs'

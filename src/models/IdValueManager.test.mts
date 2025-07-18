@@ -1,10 +1,10 @@
-import { IdValue, IdValueManager, IIdValue } from './IdValueManager.mjs'
+import { IIdValue, IdValue, IdValueManager } from './IdValueManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 test('IdValue good', () => {
-  const id = 'id'
-  const value = 'value'
-  const pr = new IdValue(id, value)
+  const id = 'id',
+   value = 'value',
+   pr = new IdValue(id, value)
 
   expect(pr.id).toBe(id)
   expect(pr.value).toBe(value)
@@ -15,9 +15,9 @@ test('good', () => {
     { id: '1', value: '10' },
     { id: '2', value: '20' },
     { id: '3', value: '30' },
-  ]
+  ],
 
-  const idm = new IdValueManager(ids, new InstrumentationStatistics())
+   idm = new IdValueManager(ids, new InstrumentationStatistics())
 
   expect(idm.list).toBe(ids)
   expect(idm.stats?.totalProcessed).toBe(0)
@@ -52,9 +52,9 @@ test('CreateIdValueManager', () => {
     { id: '1', value: '10' },
     { id: '2', value: '20' },
     { id: '3', value: '30' },
-  ]
+  ],
 
-  const idm = IdValueManager.CreateIdValueManager(
+   idm = IdValueManager.CreateIdValueManager(
     ids,
     new InstrumentationStatistics()
   )
@@ -77,17 +77,17 @@ test('CreateIdValueManager', () => {
 })
 
 test('CreateIIdValue', () => {
-  const id = 'id'
-  const value = 'value'
-  const pr = IdValueManager.CreateIIdValue(id, value)
+  const id = 'id',
+   value = 'value',
+   pr = IdValueManager.CreateIIdValue(id, value)
 
   expect(pr.id).toBe(id)
   expect(pr.value).toBe(value)
 })
 test('CreateIIdValue with default values', () => {
-  const id = 'id'
-  const value = 'value'
-  const pr = IdValueManager.CreateIIdValue(id, value)
+  const id = 'id',
+   value = 'value',
+   pr = IdValueManager.CreateIIdValue(id, value)
 
   expect(pr.id).toBe(id)
   expect(pr.value).toBe('value')

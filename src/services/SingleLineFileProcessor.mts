@@ -36,9 +36,9 @@ export class SingleLineFileProcessor<T = unknown> {
    * @returns An instance of InstrumentationStatistics containing the results of the processing.
    */
   async processFile() {
-    const stats = new InstrumentationStatistics()
+    const stats = new InstrumentationStatistics(),
 
-    const { action, fileName, logger, trimLine = true, typeName } = this.config
+     { action, fileName, logger, trimLine = true, typeName } = this.config
 
     let lineNumber = 1
 

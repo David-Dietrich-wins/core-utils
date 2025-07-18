@@ -4,7 +4,7 @@ export class AppObject {
   }
 
   classMethodString(methodName?: string, addSemi = false) {
-    return `${this.className}:${methodName ? ' ' + methodName : ''}${
+    return `${this.className}:${methodName ? ` ${  methodName}` : ''}${
       addSemi ? ':' : ''
     }`
   }

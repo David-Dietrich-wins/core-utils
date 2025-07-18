@@ -4,13 +4,13 @@ import { HTTP_Ok } from './AppException.mjs'
 import UserState from './UserState.mjs'
 import WebState from './WebState.mjs'
 
-const startTime = new Date()
+const startTime = new Date(),
 
-const TestConfig = {
+ TestConfig = {
   getTestServerState() {
-    const dtNow = new Date()
+    const dtNow = new Date(),
 
-    const server: IServerState = {
+     server: IServerState = {
       currentTime: dtNow,
       message: 'Operational',
       ready: true,
@@ -25,13 +25,13 @@ const TestConfig = {
 }
 
 test('WebState good', () => {
-  const serverState = TestConfig.getTestServerState()
+  const serverState = TestConfig.getTestServerState(),
 
-  const userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+   userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
     data: 'hello',
-  })
+  }),
 
-  const webState = new WebState(0, 0, 'success', serverState, userState)
+   webState = new WebState(0, 0, 'success', serverState, userState)
 
   expect(webState.totalFailures).toBe(0)
   expect(webState.totalRequests).toBe(0)
@@ -47,13 +47,13 @@ test('WebState default constructor', () => {
 })
 
 test('WebState constructor good', () => {
-  const serverState = TestConfig.getTestServerState()
+  const serverState = TestConfig.getTestServerState(),
 
-  const userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+   userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
     data: 'hello',
-  })
+  }),
 
-  const webState = new WebState(
+   webState = new WebState(
     1,
     1,
     'fail',

@@ -47,9 +47,9 @@ test('constructor with ICompany', () => {
     updated: getCurrentDate(),
     updatedby: 'updatedby',
     zip: 'zip',
-  }
+  },
 
-  const company = new Company(ic)
+   company = new Company(ic)
   expect(company).toEqual({
     address1: 'address1',
     address2: 'address2',
@@ -83,13 +83,13 @@ test('CreateICompany', () => {
     createdby: 'TradePlotter',
     description: '',
     email: '',
-    // id: 'TradePlotter',
+    // Id: 'TradePlotter',
     imageuri: '',
     imageurihref: '',
     name: '',
     state: '',
     phone: '',
-    // scales: undefined,
+    // Scales: undefined,
     status: 0,
     updated: getCurrentDate(),
     updatedby: 'TradePlotter',
@@ -116,11 +116,11 @@ describe('zSchema', () => {
       expect(zerr.issues[0].code).toBe('invalid_type')
       expect(zerr).toMatchObject(
         expect.arrayContaining([
-          // expect.objectContaining({
-          //   expected: 'number',
-          //   code: 'invalid_type',
-          //   path: ['status'],
-          //   message: 'Invalid input: expected number, received undefined',
+          // Expect.objectContaining({
+          //   Expected: 'number',
+          //   Code: 'invalid_type',
+          //   Path: ['status'],
+          //   Message: 'Invalid input: expected number, received undefined',
           //   // issues: [
           //   //   {
           //   //     code: 'invalid_type',
@@ -137,9 +137,9 @@ describe('zSchema', () => {
   })
 
   test('valid parse', () => {
-    const schema = Company.zCompany
+    const schema = Company.zCompany,
 
-    const company = Company.CreateICompany({
+     company = Company.CreateICompany({
       name: 'name',
     })
 
@@ -147,9 +147,9 @@ describe('zSchema', () => {
   })
 
   test('no name', () => {
-    const schema = Company.zCompany
+    const schema = Company.zCompany,
 
-    const company = Company.CreateICompany()
+     company = Company.CreateICompany()
 
     expect(() => schema.parse(company)).toThrow()
   })
@@ -164,9 +164,9 @@ describe('CompanyNamezSchema', () => {
   })
 
   test('valid parse', () => {
-    const schema = Company.CompanyNamezSchema
+    const schema = Company.CompanyNamezSchema,
 
-    const company = Company.CreateICompany({
+     company = Company.CreateICompany({
       name: 'name',
     })
 
@@ -174,9 +174,9 @@ describe('CompanyNamezSchema', () => {
   })
 
   test('no name', () => {
-    const schema = Company.CompanyNamezSchema
+    const schema = Company.CompanyNamezSchema,
 
-    const company = Company.CreateICompany()
+     company = Company.CreateICompany()
 
     expect(() => schema.parse(company)).toThrow()
   })

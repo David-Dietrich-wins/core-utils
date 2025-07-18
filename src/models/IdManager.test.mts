@@ -1,12 +1,12 @@
 import z from 'zod/v4'
-import { IdManager, IId } from './IdManager.mjs'
+import { IId, IdManager } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 test('good', () => {
-  const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }]
+  const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
 
-  const idm = new IdManager(ids, new InstrumentationStatistics())
+   idm = new IdManager(ids, new InstrumentationStatistics())
 
   expect(idm.list).toBe(ids)
   expect(idm.stats?.totalProcessed).toBe(0)
@@ -37,9 +37,9 @@ test('default constructor', () => {
 })
 
 test('IdManager.Create', () => {
-  const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }]
+  const ids: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
 
-  const idm = IdManager.CreateIdManager(ids, new InstrumentationStatistics())
+   idm = IdManager.CreateIdManager(ids, new InstrumentationStatistics())
 
   expect(idm.list).toBe(ids)
   expect(idm.stats?.totalProcessed).toBe(0)
@@ -50,16 +50,16 @@ test('IdManager.FindWithObjectId', () => {
     { id: '1', b: '11' },
     { id: '2', b: '22' },
     { id: '3', b: '33' },
-  ]
+  ],
 
-  const idm = IdManager.FindObjectWithId(ids, '2')
+   idm = IdManager.FindObjectWithId(ids, '2')
 
   expect(idm).toMatchObject({ id: '2', b: '22' })
 })
 
 test('zIId', () => {
   const zId = IdManager.zIId(zStringMinMax(1, 50))
-  // const ret = zId.safeParse({ id: 'test' })
+  // Const ret = zId.safeParse({ id: 'test' })
   expect(zId.safeParse({ id: 'test' }).success).toBe(true)
   expect(zId.safeParse({}).success).toBe(true)
   expect(zId.safeParse({ id: 123 }).success).toBe(false)

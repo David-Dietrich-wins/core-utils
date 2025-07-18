@@ -11,9 +11,9 @@ test('constructor', async () => {
   cacheManager.set('key1', Date.now() + 60000, 'value1')
   cacheManager.set('key2', Date.now() + 60000, 'value2')
 
-  const keyvals = [{ id: 'key1', value: 'abc' }]
+  const keyvals = [{ id: 'key1', value: 'abc' }],
 
-  const fnCache = async (arrKeys: ArrayOrSingle<string>) =>
+   fnCache = async (arrKeys: ArrayOrSingle<string>) =>
     keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
 
   expect(await cacheManager.get('key1', fnCache)).toBe('abc')
@@ -21,11 +21,11 @@ test('constructor', async () => {
 })
 
 test('getSingle', async () => {
-  const cacheManager = new CacheManager<string, string>('testCache', 60)
+  const cacheManager = new CacheManager<string, string>('testCache', 60),
 
-  const keyvals = [{ id: 'key1', value: 'abc' }]
+   keyvals = [{ id: 'key1', value: 'abc' }],
 
-  const fnCache = async (key: string) =>
+   fnCache = async (key: string) =>
     IdValueManager.CreateIIdValue(
       key,
       keyvals.find((x) => x.id === key)?.value || ''
@@ -46,17 +46,17 @@ test('getSingle', async () => {
 })
 
 test('getAll', async () => {
-  const cacheManager = new CacheManager<string, string>('testCache', 60)
+  const cacheManager = new CacheManager<string, string>('testCache', 60),
 
-  const keyvals = [
+   keyvals = [
     { id: 'key1', value: 'abc' },
     { id: 'key2', value: 'def' },
-  ]
+  ],
 
-  const fnCache = async (arrKeys: ArrayOrSingle<string>) =>
-    keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+   fnCache = async (arrKeys: ArrayOrSingle<string>) =>
+    keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value)),
 
-  const result = await cacheManager.getAll(['key1', 'key2'], fnCache)
+   result = await cacheManager.getAll(['key1', 'key2'], fnCache)
 
   expect(result.length).toBe(2)
   expect(result[0].valueOf()).toBe('abc')

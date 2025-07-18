@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const
 export const HTTP_Accepted = 202 as const
@@ -18,10 +19,9 @@ export function isErrorWithMessage(
 ): error is { message: string } {
   return (
     typeof error === 'object' &&
-    error != null &&
+    error !== null &&
     'message' in error &&
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    typeof (error as any).message === 'string'
+    typeof (error as { message?: string }).message === 'string'
   )
 }
 
@@ -42,7 +42,7 @@ export class AppException<Tobj = string> extends Error {
     this.obj = obj
     this.responseCode = responseCode
 
-    // new.target is the constructor that was called (even if it's a subclass)
+    // New.target is the constructor that was called (even if it's a subclass)
     // Object.setPrototypeOf(this, new.target.prototype) is used to set the prototype of the instance to the prototype of the class
     // This is necessary to ensure that instanceof checks work correctly
     Object.setPrototypeOf(this, new.target.prototype)

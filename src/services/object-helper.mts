@@ -93,9 +93,9 @@ export function ObjectTypesToString(e: unknown): string {
   } else if (etoString === '[object Object]') {
     return util.inspect(e, true, CONST_JsonDepth)
     // } else if (etoString === '[object FileList]') {
-    //   return util.inspect(e.toArray(), true, CONST_JsonDepth)
+    //   Return util.inspect(e.toArray(), true, CONST_JsonDepth)
     // } else if (etoString === '[object File]') {
-    //   return util.inspect(e.toObject(), true, CONST_JsonDepth)
+    //   Return util.inspect(e.toObject(), true, CONST_JsonDepth)
   }
 
   return etoString
@@ -107,7 +107,7 @@ export function FindObjectWithField(
   value: string | number | boolean,
   depth = 0
 ): object | undefined {
-  let found: object | undefined = undefined
+  let found: object | undefined
 
   if (depth > 100) {
     return found
@@ -156,8 +156,8 @@ export class ObjectHelper {
   static EncodeObjectToBase64(obj: object) {
     const jsonString = JSON.stringify(
       ObjectHelper.CloneObjectAlphabetizingKeys(obj)
-    )
-    const encodedString = Buffer.from(jsonString)
+    ),
+     encodedString = Buffer.from(jsonString)
 
     return encodedString.toString('base64')
   }
@@ -173,7 +173,7 @@ export class ObjectHelper {
     obj: T,
     fname?: string
   ) {
-    fname = fname || 'deepCloneJsonWithUndefined'
+    fname ||= 'deepCloneJsonWithUndefined'
 
     return safestrToJson<T>(safeJsonToString(obj, fname), fname)
   }
@@ -228,7 +228,7 @@ export function searchObjectForArray<T = unknown>(obj: object) {
   if (isObject(obj)) {
     const found = Object.values(obj).find((x) => isArray<T>(x))
     if (found) {
-      return found as T[]
+      return found
     }
   }
 
@@ -259,7 +259,7 @@ export function runOnAllMembers<T extends object = object>(
     if (!mustHaveValue || (mustHaveValue && value)) {
       objAsRecord[key] = func(key, value)
     }
-    // console.log(`${key}: ${value}`)
+    // Console.log(`${key}: ${value}`)
   })
 
   return obj
@@ -316,9 +316,9 @@ export function deepDiffMapper() {
     anyChanges(obj1: unknown, obj2: unknown) {
       const changed = this.getChanges(obj1, obj2)
 
-      // console.log('skky.deepDiffMapper.anyChanges: changed:', changed, ', isNullOrUndefined:', isNullOrUndefined(changed));
+      // Console.log('skky.deepDiffMapper.anyChanges: changed:', changed, ', isNullOrUndefined:', isNullOrUndefined(changed));
       return !isNullOrUndefined(changed)
-      // return Object.values(objChanges).filter(x => isNullOrUndefined(x) || ('unchanged' !== x)).length > 0;
+      // Return Object.values(objChanges).filter(x => isNullOrUndefined(x) || ('unchanged' !== x)).length > 0;
     },
     /**
      * Checks if there are any changes between two objects and returns the changes.
@@ -327,21 +327,21 @@ export function deepDiffMapper() {
      * @returns The changed items between the two objects.
      */
     getChanges(obj1: unknown, obj2: unknown) {
-      const objChanges = this.map(obj1, obj2)
-      const changeEntries = Object.entries(objChanges)
+      const objChanges = this.map(obj1, obj2),
+       changeEntries = Object.entries(objChanges)
 
-      // console.log('hasType:', this.isObject(objChanges, 'type'),
+      // Console.log('hasType:', this.isObject(objChanges, 'type'),
       //             ', objChanges:', objChanges,
       //             ', values:', Object.values(objChanges),
       //             ', obj1:', obj1,
       //             ', obj2:', obj2);
       // Are we dealing with a simple value comparison?
       if (
-        2 === changeEntries.length &&
+        changeEntries.length === 2 &&
         isObject(objChanges, 'type') &&
         isObject(objChanges, 'data')
       ) {
-        return 'unchanged' !== (objChanges as { type: string }).type
+        return (objChanges as { type: string }).type !== 'unchanged'
       }
 
       // We are dealing with a larger object or array comparison.
@@ -352,8 +352,8 @@ export function deepDiffMapper() {
       const found =
         isObject(value, 'type') &&
         isObject(value, 'data') &&
-        2 === Object.entries(value).length &&
-        'unchanged' !== (value as { type: string }).type
+        Object.entries(value).length === 2 &&
+        (value as { type: string }).type !== 'unchanged'
 
       return found
     },
@@ -370,7 +370,7 @@ export function deepDiffMapper() {
       }
 
       if (isObject(value)) {
-        // const foundItems = Object.values(value).find(this.findFunction)
+        // Const foundItems = Object.values(value).find(this.findFunction)
         const foundItems = Object.entries(value).find(this.findTypeData, this)
 
         if (foundItems) {
@@ -391,7 +391,7 @@ export function deepDiffMapper() {
       if (this.isFunction(obj1) || this.isFunction(obj2)) {
         throw new Error('Invalid argument. Function given, object expected.')
       }
-      // console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
+      // Console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
       if (this.isValue(obj1) || this.isValue(obj2)) {
         return {
           type: this.compareValues(obj1, obj2),
@@ -405,7 +405,7 @@ export function deepDiffMapper() {
           continue
         }
 
-        let value2 = undefined
+        let value2
         if (obj2[key] !== undefined) {
           value2 = obj2[key]
         }
@@ -486,7 +486,7 @@ export function getObjectValue(obj: AnyObject, keyToFind: string) {
 }
 export function isEmptyObject(obj: unknown) {
   return (
-    null == obj ||
+    obj == null ||
     (isObject(obj) &&
       safeArray(Object.keys(obj)).length === 0 &&
       obj.constructor === Object)
@@ -504,7 +504,7 @@ export function isObject(
   obj: unknown,
   minLengthOrContainsField: number | string = 0
 ): obj is object {
-  const isok = obj && 'object' === typeof obj && !isArray(obj)
+  const isok = obj && typeof obj === 'object' && !isArray(obj)
   if (!isok) {
     return false
   }
@@ -518,8 +518,8 @@ export function isObject(
   }
 
   if (isString(minLengthOrContainsField)) {
-    const keys = Object.keys(obj)
-    const incs = safeArray(keys).includes(minLengthOrContainsField)
+    const keys = Object.keys(obj),
+     incs = safeArray(keys).includes(minLengthOrContainsField)
 
     return incs
   }
@@ -606,7 +606,7 @@ export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
   fname?: string
 ) {
-  fname = fname || 'deepCloneJson'
+  fname ||= 'deepCloneJson'
   const ret = safestrToJson<T>(safeJsonToString(obj, fname), fname)
 
   return ret!
@@ -630,7 +630,7 @@ export function getBody(ret: unknown) {
 type CoalesceType<T> = T | (() => T) | undefined
 
 export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
-  let retItem: T | undefined = undefined
+  let retItem: T | undefined
 
   for (const item of all) {
     if (isFunction(item)) {

@@ -1,8 +1,8 @@
-import { ISymbolName } from '../models/ticker-info.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
+import { ISymbolName } from '../models/ticker-info.mjs'
 import { isObject } from '../services/object-helper.mjs'
 
 export interface ITvChartLayout extends IUserCreatedUpdatedTable, ISymbolName {
@@ -45,7 +45,7 @@ export class TvChartLayout
     super(userid, updatedby, updated, createdby, created)
 
     if (isObject(userid)) {
-      this.copyFromDatabase(userid as ITvChartLayout)
+      this.copyFromDatabase(userid)
     }
   }
 

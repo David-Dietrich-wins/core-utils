@@ -57,8 +57,8 @@ test('copyFromDatabase', () => {
 })
 
 test('fromApi good', () => {
-  const nameVal = { name: 'key', val: 'value' }
-  const userConfig = UserConfig.fromApi(
+  const nameVal = { name: 'key', val: 'value' },
+   userConfig = UserConfig.fromApi(
     undefined,
     nameVal,
     'userId',
@@ -75,8 +75,8 @@ test('fromApi good', () => {
 })
 
 test('fromNameVal good', () => {
-  const nameVal = { name: 'key', val: 'value' }
-  const userConfig = UserConfig.fromNameVal(
+  const nameVal = { name: 'key', val: 'value' },
+   userConfig = UserConfig.fromNameVal(
     nameVal,
     'userId',
     'email@email.com'
@@ -92,8 +92,8 @@ test('fromNameVal good', () => {
 })
 
 test('api', () => {
-  const userConfig = new UserConfig('userId', 'key', 'value')
-  const apiData = userConfig.api()
+  const userConfig = new UserConfig('userId', 'key', 'value'),
+   apiData = userConfig.api()
 
   expect(apiData).toEqual({ name: 'key', val: 'value' })
   expect(apiData.name).toBe('key')

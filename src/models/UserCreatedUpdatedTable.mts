@@ -24,9 +24,9 @@ export class CreatedTable<Tid = string> implements ICreatedTable<Tid> {
     created?: Date
   ) {
     if (isObject(createdby)) {
-      this.copyFromDatabase(createdby as ICreatedTable)
+      this.copyFromDatabase(createdby)
     } else {
-      this.createdby = createdby as string
+      this.createdby = createdby
       if (created) {
         this.created = created
       }
@@ -58,9 +58,9 @@ export class CreatedUpdatedTable
   ) {
     super(createdby, created)
     if (updatedby && isObject(updatedby)) {
-      this.copyFromDatabase(updatedby as ICreatedUpdatedTable)
+      this.copyFromDatabase(updatedby)
     } else {
-      this.updatedby = updatedby as string
+      this.updatedby = updatedby
       if (updated) {
         this.updated = updated
       }
@@ -95,7 +95,7 @@ export class UserCreatedUpdatedTable<T = string>
     super(updatedby, updated, createdby, created)
 
     if (isObject(userid)) {
-      this.copyFromDatabase(userid as IUserCreatedUpdatedTable<T>)
+      this.copyFromDatabase(userid)
     } else {
       this.userid = userid
     }
@@ -103,7 +103,7 @@ export class UserCreatedUpdatedTable<T = string>
 
   static fixupForUpsert(
     obj: AnyObject,
-    // userid: string,
+    // Userid: string,
     username: string,
     dateToSetTo?: Date
   ) {

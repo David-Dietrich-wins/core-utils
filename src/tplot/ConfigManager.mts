@@ -1,18 +1,18 @@
-import { AppException } from '../models/AppException.mjs'
-import { IConfigShort } from '../models/config.mjs'
-import { IdName } from '../models/id-name.mjs'
-import { IIdValRequired } from '../models/id-val.mjs'
-import { IKeyValueShort } from '../models/key-val.mjs'
 import {
   IContext,
   IContextUI,
   IContextValue,
 } from '../services/ContextManager.mjs'
 import { hasData, newGuid } from '../services/general.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { IConfigShort } from '../models/config.mjs'
+import { IDashboardSetting } from './DashboardSetting.mjs'
+import { IIdValRequired } from '../models/id-val.mjs'
+import { IKeyValueShort } from '../models/key-val.mjs'
+import { IdName } from '../models/id-name.mjs'
+import { TileType } from './TileConfig.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
 import { safestrTrim } from '../services/string-helper.mjs'
-import { IDashboardSetting } from './DashboardSetting.mjs'
-import { TileType } from './TileConfig.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac'
 export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
@@ -27,7 +27,7 @@ export type IdeasTabNames =
 export type ConfigTickerInfoTabSettings = {
   selectedTab: ConfigTickerInfoTabNames
   selectedPeopleTab: string
-  // selectedRatioTab: string
+  // SelectedRatioTab: string
 }
 
 export type FuncTabSettingsGet = (
@@ -65,17 +65,6 @@ export interface IConfigCharts extends IContext {
   down: IContextUI
   neutral: IContextUI
   up: IContextUI
-}
-
-export function CreateConfigTickerInfoTabSettings(
-  overrides?: Partial<ConfigTickerInfoTabSettings>
-) {
-  const ret: ConfigTickerInfoTabSettings = {
-    ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
-    ...overrides,
-  }
-
-  return ret
 }
 
 export interface IConfigOperations extends IContext {
@@ -148,113 +137,109 @@ export class ConfigManager {
 
   static get defaults(): TpUserInfoAllConfigs {
     const cfgCharts: IConfigCharts = {
-      id: newGuid(),
-      updated: Date.now(),
-      down: { color: '#FF0000' },
-      neutral: { color: '#000000' },
-      up: { color: '#00FF00' },
-    }
-
-    const cfgDashboards: IDashboardSetting = {
-      screens: [
-        {
-          id: 'default',
-          name: 'default',
-          tiles: [
-            {
-              id: 'initial-tile-left',
-              cols: 1,
-              name: 'Trade Plotter',
-              rows: 2,
-              color: 'white',
-              index: 0,
-              type: TileType.empty,
-              value: {},
-            },
-            {
-              id: 'initial-tile-right',
-              cols: 1,
-              name: 'Trade Plotter',
-              rows: 2,
-              color: 'white',
-              index: 0,
-              type: TileType.empty,
-              value: {},
-            },
-          ],
+        down: { color: '#FF0000' },
+        id: newGuid(),
+        neutral: { color: '#000000' },
+        up: { color: '#00FF00' },
+        updated: Date.now(),
+      },
+      cfgDashboards: IDashboardSetting = {
+        screens: [
+          {
+            id: 'default',
+            name: 'default',
+            tiles: [
+              {
+                color: 'white',
+                cols: 1,
+                id: 'initial-tile-left',
+                index: 0,
+                name: 'Trade Plotter',
+                rows: 2,
+                type: TileType.empty,
+                value: {},
+              },
+              {
+                color: 'white',
+                cols: 1,
+                id: 'initial-tile-right',
+                index: 0,
+                name: 'Trade Plotter',
+                rows: 2,
+                type: TileType.empty,
+                value: {},
+              },
+            ],
+          },
+          // Example for a chart and a plotlist.
+          // [
+          //   {
+          //     Id: 'AAPL',
+          //     Index: 0,
+          //     Typeid: 3,
+          //     Cols: 1,
+          //     Rows: 2
+          //   },
+          //   {
+          //     Id: 'Trade Plotter',
+          //     Index: 2,
+          //     Typeid: 1,
+          //     Cols: 2,
+          //     Rows: 2
+          //   }
+          // ],
+        ],
+      },
+      cfgHeaderTickerBars: IConfigTickerBars = {
+        asset: {
+          id: newGuid(),
+          tickers: ['AAPL'],
+          updated: Date.now(),
         },
-        // Example for a chart and a plotlist.
-        // [
-        //   {
-        //     id: 'AAPL',
-        //     index: 0,
-        //     typeid: 3,
-        //     cols: 1,
-        //     rows: 2
-        //   },
-        //   {
-        //     id: 'Trade Plotter',
-        //     index: 2,
-        //     typeid: 1,
-        //     cols: 2,
-        //     rows: 2
-        //   }
-        // ],
-      ],
-    }
-
-    const cfgHeaderTickerBars: IConfigTickerBars = {
-      id: newGuid(),
-      updated: Date.now(),
-      asset: { id: newGuid(), updated: Date.now(), tickers: ['AAPL'] },
-      crypto: {
+        crypto: {
+          id: newGuid(),
+          tickers: ['BTCUSD', 'ETHUSD'],
+          updated: Date.now(),
+        },
         id: newGuid(),
         updated: Date.now(),
-        tickers: ['BTCUSD', 'ETHUSD'],
       },
-    }
+      cfgIdeaCryptoTabSelected: IdName<number> = {
+        id: 0,
+        name: 'crypto',
+      },
+      cfgIdeaTabSelected: IdName<number> = {
+        id: 0,
+        name: 'most-active',
+      },
+      cfgOperations: IConfigOperations = {
+        id: newGuid(),
+        updated: Date.now(),
+        useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
+      },
+      cfgTickerInfo: ConfigTickerInfoTabSettings = {
+        selectedPeopleTab: '',
+        selectedTab: 'asset',
+        // SelectedRatioTab: 'ratio',
+      },
+      cfgWebsite: IConfigWebsite = {
+        hideHelp: { id: newGuid(), updated: Date.now(), value: false },
+        hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
+        id: newGuid(),
+        openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
+        updated: Date.now(),
+      },
+      items: Readonly<TpUserInfoAllConfigs> = {
+        [TpConfigNamesEnum.charts]: cfgCharts,
+        [TpConfigNamesEnum.dashboards]: cfgDashboards,
 
-    const cfgOperations: IConfigOperations = {
-      id: newGuid(),
-      updated: Date.now(),
-      useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
-    }
-
-    const cfgWebsite: IConfigWebsite = {
-      id: newGuid(),
-      updated: Date.now(),
-      hideHelp: { id: newGuid(), updated: Date.now(), value: false },
-      hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
-      openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
-    }
-
-    const cfgIdeaTabSelected: IdName<number> = {
-      id: 0,
-      name: 'most-active',
-    }
-
-    const cfgIdeaCryptoTabSelected: IdName<number> = {
-      id: 0,
-      name: 'crypto',
-    }
-
-    const cfgTickerInfo: ConfigTickerInfoTabSettings = {
-      selectedTab: 'asset',
-      selectedPeopleTab: '',
-      // selectedRatioTab: 'ratio',
-    }
-
-    const items: Readonly<TpUserInfoAllConfigs> = {
-      [TpConfigNamesEnum.charts]: cfgCharts,
-      [TpConfigNamesEnum.dashboards]: cfgDashboards,
-
-      [TpConfigNamesEnum.headerTickerBars]: cfgHeaderTickerBars,
-      [TpConfigNamesEnum.ideaTabSelected]: cfgIdeaTabSelected,
-      [TpConfigNamesEnum.ideaCryptoTabSelected]: cfgIdeaCryptoTabSelected,
-      [TpConfigNamesEnum.operations]: cfgOperations,
-      [TpConfigNamesEnum.website]: cfgWebsite,
-      [TpConfigNamesEnum.tickerInfo]: cfgTickerInfo,
-    }
+        [TpConfigNamesEnum.headerTickerBars]: cfgHeaderTickerBars,
+        [TpConfigNamesEnum.ideaTabSelected]: cfgIdeaTabSelected,
+        [TpConfigNamesEnum.ideaCryptoTabSelected]: cfgIdeaCryptoTabSelected,
+        [TpConfigNamesEnum.operations]: cfgOperations,
+        [TpConfigNamesEnum.website]: cfgWebsite,
+        [TpConfigNamesEnum.tickerInfo]: cfgTickerInfo,
+      }
 
     return deepCloneJson(items)
   }
@@ -264,8 +249,8 @@ export class ConfigManager {
       charts: this.charts,
       dashboards: this.dashboards,
       headerTickerBars: this.headerTickerBars,
-      ideaTabSelected: this.ideaTabSelected,
       ideaCryptoTabSelected: this.ideaCryptoTabSelected,
+      ideaTabSelected: this.ideaTabSelected,
       operations: this.operations,
       website: this.website,
     }
@@ -315,6 +300,7 @@ export class ConfigManager {
    * @returns The config if found, otherwise the default value for that config.
    */
   FindConfig<T = string>(name: TpConfigNamesEnum) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     const found = this.configs.find((config) => name === config.k)
     if (found) {
       return found.v as T
@@ -333,4 +319,15 @@ export class ConfigManager {
   findScreen(screenName: string) {
     return this.dashboards.screens.find((screen) => screen.name === screenName)
   }
+}
+
+export function CreateConfigTickerInfoTabSettings(
+  overrides?: Partial<ConfigTickerInfoTabSettings>
+) {
+  const ret: ConfigTickerInfoTabSettings = {
+    ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
+    ...overrides,
+  }
+
+  return ret
 }

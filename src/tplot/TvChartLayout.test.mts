@@ -1,24 +1,24 @@
 import { ITvChartLayout, TvChartLayout } from './TvChartLayout.mjs'
 
 const itv: ITvChartLayout = {
-  publish_request_id: '',
-  description: '',
-  resolution: '',
-  symbol_type: '',
-  exchange: 'New York Stock Exchange',
-  listed_exchange: 'NYSE',
-  short_name: '',
-  legs: '',
-  is_realtime: '',
   content: '',
-  createdby: 'IdCreatedUpdated',
   created: new Date(),
-  updatedby: 'IdCreatedUpdated',
-  updated: new Date(),
-  userid: undefined,
+  createdby: 'IdCreatedUpdated',
+  description: '',
+  exchange: 'New York Stock Exchange',
   id: undefined,
+  is_realtime: '',
+  legs: '',
+  listed_exchange: 'NYSE',
   name: 'test name',
+  publish_request_id: '',
+  resolution: '',
+  short_name: '',
   symbol: 'AAPL',
+  symbol_type: '',
+  updated: new Date(),
+  updatedby: 'IdCreatedUpdated',
+  userid: undefined,
 }
 
 test('constructor', () => {

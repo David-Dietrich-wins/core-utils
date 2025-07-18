@@ -86,31 +86,31 @@ test('GetColorFromChange color neutral', () => {
 })
 
 test('InterpolateColorRange', () => {
-  const colorRange: ColorRange = ['#000000', '#FFFFFF']
-  const percent = 50
-  const result = ColorHelper.InterpolateColorRange(colorRange, percent)
+  const colorRange: ColorRange = ['#000000', '#FFFFFF'],
+   percent = 50,
+   result = ColorHelper.InterpolateColorRange(colorRange, percent)
   expect(result).toBe('#808080') // Expecting the middle gray color
 })
 
 test('InterpolateColorRange with different colors', () => {
-  const colorRange: ColorRange = ['FF0000', '00FF00'] // Red to Green
-  const percent = 50
-  const result = ColorHelper.InterpolateColorRange(colorRange, percent)
+  const colorRange: ColorRange = ['FF0000', '00FF00'], // Red to Green
+   percent = 50,
+   result = ColorHelper.InterpolateColorRange(colorRange, percent)
   expect(result).toBe('#808000') // Expecting the middle yellow color
 })
 
 test('InterpolateColorRange with no colors', () => {
-  const colorRange: ColorRange = ['', ''] // Empty colors
-  const percent = 50
-  const result = ColorHelper.InterpolateColorRange(colorRange, percent)
+  const colorRange: ColorRange = ['', ''], // Empty colors
+   percent = 50,
+   result = ColorHelper.InterpolateColorRange(colorRange, percent)
   expect(result).toBe('#000000') // Expecting black
 })
 
 test('InterpolateWeightedColorRange', () => {
-  const colorRange: ColorRange = ['#0000FF', '#FF00FF'] // Blue to Magenta
-  const startWeight = 25
-  const endWeight = 75
-  const result = ColorHelper.InterpolateWeightedColorRange(
+  const colorRange: ColorRange = ['#0000FF', '#FF00FF'], // Blue to Magenta
+   startWeight = 25,
+   endWeight = 75,
+   result = ColorHelper.InterpolateWeightedColorRange(
     colorRange,
     startWeight,
     endWeight

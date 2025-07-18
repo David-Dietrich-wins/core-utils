@@ -10,9 +10,7 @@ test('PagedResponse good', () => {
   expect(pr.dataPage[0].data).toBe('hello')
   expect(pr.totalCount).toBe(1)
 
-  pr = pr.createNewFromMap((pageIn) => {
-    return { data: pageIn.data }
-  })
+  pr = pr.createNewFromMap((pageIn) => ({ data: pageIn.data }))
   expect(pr.totalCount).toBe(1)
   expect(pr.dataPage[0].data).toBe('hello')
 
@@ -48,15 +46,15 @@ test('API response', () => {
 test('zPagedResponse', () => {
   const zPagedResponse = PagedResponse.zPagedResponse(
     z.object({ data: z.string() })
-  )
+  ),
 
-  const validData = {
+   validData = {
     rowCount: 2,
     totalCount: 5,
     dataPage: [{ data: 'hello' }, { data: 'world' }],
-  }
+  },
 
-  const result = zPagedResponse.safeParse(validData)
+   result = zPagedResponse.safeParse(validData)
   expect(result.success).toBe(true)
   expect(result.data?.rowCount).toBe(2)
   expect(result.data?.totalCount).toBe(5)
@@ -64,8 +62,8 @@ test('zPagedResponse', () => {
 })
 
 test('CreateFromPromise', async () => {
-  const mockPromise = Promise.resolve([{ data: 'hello' }, { data: 'world' }])
-  const mockCountPromise = Promise.resolve(2)
+  const mockPromise = Promise.resolve([{ data: 'hello' }, { data: 'world' }]),
+   mockCountPromise = Promise.resolve(2)
   let pagedResponse = await PagedResponse.CreateFromPromise(
     mockPromise,
     mockCountPromise
@@ -101,8 +99,8 @@ test('CreateFromPromise', async () => {
 })
 
 test('toIPagedResponse', () => {
-  const pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
-  const ipr = pr.toIPagedResponse()
+  const pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1),
+   ipr = pr.toIPagedResponse()
 
   expect(ipr.dataPage[0].data).toBe('hello')
   expect(ipr.totalCount).toBe(1)

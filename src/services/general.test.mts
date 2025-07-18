@@ -1,4 +1,4 @@
-/* eslint-disable quotes */
+ 
 import {
   getBoolean,
   getBooleanUndefined,
@@ -17,34 +17,34 @@ describe('URL Join', () => {
   const baseUrl = 'https://localhost:3000'
 
   test('Slash relative path', () => {
-    const path = '/'
-    const url = urlJoin(baseUrl, path)
+    const path = '/',
+     url = urlJoin(baseUrl, path)
 
     expect(url).not.toBe(`${baseUrl}//`)
     expect(url).not.toBe(`${baseUrl}`)
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Extra slashes relative path', () => {
-    const path = '/'
-    const url = urlJoin(baseUrl + '/', path)
+    const path = '/',
+     url = urlJoin(`${baseUrl  }/`, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Many slashes relative path', () => {
-    const path = '/'
-    const url = urlJoin(baseUrl + '///', path)
+    const path = '/',
+     url = urlJoin(`${baseUrl  }///`, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Undefined relative path', () => {
-    const path = undefined
-    const url = urlJoin(baseUrl, path)
+    const path = undefined,
+     url = urlJoin(baseUrl, path)
 
     expect(url).toBe(`${baseUrl}/`)
   })
   test('No relative path', () => {
-    const path = undefined
-    const url = urlJoin(baseUrl, path, false)
+    const path = undefined,
+     url = urlJoin(baseUrl, path, false)
 
     expect(url).toBe(`${baseUrl}`)
   })
@@ -65,38 +65,38 @@ describe('URL Join', () => {
 
 describe('URL Join', () => {
   test('add trailing slash', () => {
-    const baseUrl = 'https://localhost:3000'
-    const relativePath = '/test'
-    const addTrailingSlash = true
+    const baseUrl = 'https://localhost:3000',
+     relativePath = '/test',
+     addTrailingSlash = true,
 
-    const url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe(`https://localhost:3000/test/`)
   })
 
   test('no trailing slash', () => {
-    const baseUrl = 'https://localhost:3000'
-    const relativePath = '/test'
-    const addTrailingSlash = false
+    const baseUrl = 'https://localhost:3000',
+     relativePath = '/test',
+     addTrailingSlash = false,
 
-    const url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 
   test('URL end in /', () => {
-    const baseUrl = 'https://localhost:3000/'
-    const relativePath = '/test'
-    const addTrailingSlash = false
+    const baseUrl = 'https://localhost:3000/',
+     relativePath = '/test',
+     addTrailingSlash = false,
 
-    const url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 
   test('relative path and url end in /', () => {
-    const baseUrl = 'https://localhost:3000/'
-    const relativePath = '/test/'
-    const addTrailingSlash = false
+    const baseUrl = 'https://localhost:3000/',
+     relativePath = '/test/',
+     addTrailingSlash = false,
 
-    const url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+     url = urlJoin(baseUrl, relativePath, addTrailingSlash)
     expect(url).toBe('https://localhost:3000/test')
   })
 })
@@ -130,8 +130,8 @@ describe('toHex', () => {
 
 describe('sortFunction', () => {
   test('number', () => {
-    const a = 0
-    const b = 1
+    const a = 0,
+     b = 1
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -143,8 +143,8 @@ describe('sortFunction', () => {
   })
 
   test('string', () => {
-    const a = 'a'
-    const b = 'b'
+    const a = 'a',
+     b = 'b'
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -164,8 +164,8 @@ describe('sortFunction', () => {
   })
 
   test('empty', () => {
-    let a: string | undefined = 'a'
-    let b: string | undefined = undefined
+    let a: string | undefined = 'a',
+     b: string | undefined
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -187,8 +187,8 @@ describe('sortFunction', () => {
   })
 
   test('date', () => {
-    const a = new Date()
-    const b = new Date(+a + 1000)
+    const a = new Date(),
+     b = new Date(+a + 1000)
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)
@@ -200,8 +200,8 @@ describe('sortFunction', () => {
   })
 
   test('array', () => {
-    const a = ['a', 'b']
-    const b = ['a', 'c']
+    const a = ['a', 'b'],
+     b = ['a', 'c']
 
     expect(sortFunction(a, b)).toEqual(-1)
     expect(sortFunction(a, a)).toEqual(0)

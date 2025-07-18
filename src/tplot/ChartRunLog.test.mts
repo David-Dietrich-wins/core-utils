@@ -2,18 +2,18 @@ import { ChartRunLog, IChartRunLog } from './ChartRunLog.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
 
 test('ChartRunLog constructor', () => {
-  const userid = 'user123'
-  const ticker = 'AAPL'
-  const lang = 'en'
-  const browser = 'Chrome'
-  const ip = '192.168.1.1'
+  const browser = 'Chrome',
+    ip = '192.168.1.1',
+    lang = 'en',
+    ticker = 'AAPL',
+    userid = 'user123',
+    zchartRunLog = new ChartRunLog(userid, ticker, lang, browser, ip)
 
-  const chartRunLog = new ChartRunLog(userid, ticker, lang, browser, ip)
-  expect(chartRunLog.userid).toBe(userid)
-  expect(chartRunLog.ticker).toBe(ticker)
-  expect(chartRunLog.lang).toBe(lang)
-  expect(chartRunLog.browser).toBe(browser)
-  expect(chartRunLog.ip).toBe(ip)
+  expect(zchartRunLog.userid).toBe(userid)
+  expect(zchartRunLog.ticker).toBe(ticker)
+  expect(zchartRunLog.lang).toBe(lang)
+  expect(zchartRunLog.browser).toBe(browser)
+  expect(zchartRunLog.ip).toBe(ip)
 })
 
 test('ChartRunLog default values', () => {
@@ -33,42 +33,44 @@ test('ChartRunLog default values', () => {
 })
 
 test('ChartRunLog object properties', () => {
-  const cs: ChartSettings = new ChartSettings(
-    'AAPL',
-    2,
-    'day',
-    1,
-    'min',
-    '1min',
-    1700000000000, // Example start date in milliseconds
-    1700003600000, // Example end date in milliseconds
-    true
-  )
+  const acs: ChartSettings = new ChartSettings(
+      'AAPL',
+      2,
+      'day',
+      1,
+      'min',
+      '1min',
+      1700000000000,
+      1700003600000,
+      true
+    ),
+    aicrl: IChartRunLog = {
+      browser: 'Chrome',
+      endDate: new Date(1700003600000),
+      frequency: 1,
+      frequencyType: 'min',
+      granularity: '1min',
+      ip: '192.168.1.1',
+      lang: 'en',
+      needExtendedHoursTrading: false,
+      period: 2,
+      periodType: 'day',
+      settings: acs,
+      startDate: new Date(1700000000000),
+      ticker: 'AAPL',
+      userid: 'user123',
+    },
+    chartRunLog = new ChartRunLog(
+      aicrl.userid ?? '',
+      aicrl.ticker ?? '',
+      aicrl.lang ?? '',
+      aicrl.browser ?? '',
+      aicrl.ip ?? '',
+      acs
+    ),
+    crl = ChartRunLog.fromDb(aicrl),
+    crlapi = ChartRunLog.toApi(aicrl)
 
-  const icrl: IChartRunLog = {
-    userid: 'user123',
-    ticker: 'AAPL',
-    lang: 'en',
-    browser: 'Chrome',
-    ip: '192.168.1.1',
-    startDate: new Date(1700000000000),
-    endDate: new Date(1700003600000),
-    frequency: 1,
-    frequencyType: 'min',
-    granularity: '1min',
-    needExtendedHoursTrading: false,
-    settings: cs,
-    period: 2,
-    periodType: 'day',
-  }
-  const chartRunLog = new ChartRunLog(
-    icrl.userid ?? '',
-    icrl.ticker ?? '',
-    icrl.lang ?? '',
-    icrl.browser ?? '',
-    icrl.ip ?? '',
-    cs
-  )
   expect(chartRunLog.startDate).toBe(1700000000000)
   expect(chartRunLog.endDate).toBe(1700003600000)
   expect(chartRunLog.frequency).toBe(1)
@@ -76,7 +78,6 @@ test('ChartRunLog object properties', () => {
   expect(chartRunLog.granularity).toBe('1min')
   expect(chartRunLog.needExtendedHoursTrading).toBe(false)
 
-  const crl = ChartRunLog.fromDb(icrl)
   expect(crl.userid).toBe('user123')
   expect(crl.ticker).toBe('AAPL')
   expect(crl.lang).toBe('en')
@@ -91,17 +92,17 @@ test('ChartRunLog object properties', () => {
   expect(crl.period).toBe(2)
   expect(crl.periodType).toBe('day')
 
-  const apiSettings = ChartRunLog.toApi(icrl)
-  expect(apiSettings.ticker).toBe('AAPL')
-  expect(apiSettings.frequency).toBe('min')
-  expect(apiSettings.period).toBe('2 day')
-  expect(apiSettings.startDate).toBe(1700000000000)
-  expect(apiSettings.endDate).toBe(1700003600000)
-  expect(apiSettings.created).toBeInstanceOf(Date)
+  expect(crlapi.ticker).toBe('AAPL')
+  expect(crlapi.frequency).toBe('min')
+  expect(crlapi.period).toBe('2 day')
+  expect(crlapi.startDate).toBe(1700000000000)
+  expect(crlapi.endDate).toBe(1700003600000)
+  expect(crlapi.created).toBeInstanceOf(Date)
 
-  icrl.startDate = undefined
-  icrl.endDate = undefined
-  const apiSettingsWithoutDates = ChartRunLog.toApi(icrl)
+  aicrl.startDate = undefined
+  aicrl.endDate = undefined
+  // eslint-disable-next-line one-var
+  const apiSettingsWithoutDates = ChartRunLog.toApi(aicrl)
   expect(apiSettingsWithoutDates.startDate).toBe(0)
   expect(apiSettingsWithoutDates.endDate).toBe(0)
   expect(apiSettingsWithoutDates.created).toBeInstanceOf(Date)

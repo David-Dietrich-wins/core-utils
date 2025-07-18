@@ -22,11 +22,11 @@ test('Constructor', () => {
     rsaPrivateKey: TEST_Parameters_DEV.rsaPrivateKey,
     rsaPublicKey: TEST_Parameters_DEV.rsaPublicKey,
     rsaPassPhrase: '',
-  }
-  const ch = new CryptoHelper(cryptoSettings)
+  },
+   ch = new CryptoHelper(cryptoSettings),
 
-  const encrypted = ch.rsaEncrypt(StringToEncrypt)
-  const decrypted = ch.rsaDecrypt(encrypted)
+   encrypted = ch.rsaEncrypt(StringToEncrypt),
+   decrypted = ch.rsaDecrypt(encrypted)
 
   expect(decrypted).toBe(StringToEncrypt)
 })
@@ -39,8 +39,8 @@ test('RSA generate key pair', () => {
 })
 
 test('RSA encrypt and decrypt', () => {
-  const lengthForRandomString = 4
-  const randomString = StringToEncrypt // CryptoHelper.GenerateRandomPin(lengthForRandomString)
+  const lengthForRandomString = 4,
+   randomString = StringToEncrypt // CryptoHelper.GenerateRandomPin(lengthForRandomString)
 
   expect(randomString).toHaveLength(lengthForRandomString)
   const cipherText = CryptoHelper.rsaEncryptStatic(
@@ -58,71 +58,71 @@ test('RSA encrypt and decrypt', () => {
   expect(decrypted).toEqual(randomString)
 })
 
-// describe('Generate random PIN', () => {
-//   test('length for random PIN', () => {
-//     const lengthForRandomString = 4
-//     const ranstr = CryptoHelper.GenerateRandomPin(lengthForRandomString)
+// Describe('Generate random PIN', () => {
+//   Test('length for random PIN', () => {
+//     Const lengthForRandomString = 4
+//     Const ranstr = CryptoHelper.GenerateRandomPin(lengthForRandomString)
 
-//     expect(ranstr).toHaveLength(lengthForRandomString)
+//     Expect(ranstr).toHaveLength(lengthForRandomString)
 //   })
-//   test('using chars and numbers', () => {
-//     const lengthForRandomString = 4
-//     const ranstr = CryptoHelper.GenerateRandomPin(
-//       lengthForRandomString,
+//   Test('using chars and numbers', () => {
+//     Const lengthForRandomString = 4
+//     Const ranstr = CryptoHelper.GenerateRandomPin(
+//       LengthForRandomString,
 //       CryptoHelper.CONST_CharsNumbers
 //     )
 
-//     expect(ranstr).toHaveLength(lengthForRandomString)
+//     Expect(ranstr).toHaveLength(lengthForRandomString)
 //   })
 
-//   test('cannot verify', () => {
-//     const mockStaticF = jest.fn().mockReturnValue(true)
+//   Test('cannot verify', () => {
+//     Const mockStaticF = jest.fn().mockReturnValue(true)
 //     AceApiHelper.verifyPin = mockStaticF
 
-//     const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockReturnValue()
+//     Const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockReturnValue()
 
-//     expect(AceApiHelper.verifyPin('1234')).toBeUndefined()
+//     Expect(AceApiHelper.verifyPin('1234')).toBeUndefined()
 
 //     // unnecessary in this case, putting it here just to illustrate how to "unmock" a method
-//     spy.mockRestore()
+//     Spy.mockRestore()
 //   })
 
-//   test('cannot verify, too long', () => {
-//     const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockImplementation(() => {
-//       throw new Error('Your PIN cannot be greater than 4 numbers.')
+//   Test('cannot verify, too long', () => {
+//     Const spy = jest.spyOn(AceApiHelper, 'verifyPin').mockImplementation(() => {
+//       Throw new Error('Your PIN cannot be greater than 4 numbers.')
 //     })
 
-//     expect(spy).toThrow()
+//     Expect(spy).toThrow()
 
-//     const lengthForRandomString = 4
-//     expect(() =>
+//     Const lengthForRandomString = 4
+//     Expect(() =>
 //       CryptoHelper.GenerateRandomPin(
-//         lengthForRandomString,
+//         LengthForRandomString,
 //         CryptoHelper.CONST_CharsNumbers
 //       )
 //     ).toThrow()
 
 //     // unnecessary in this case, putting it here just to illustrate how to "unmock" a method
-//     spy.mockRestore()
+//     Spy.mockRestore()
 //   })
 // })
 
 describe('Generate random string', () => {
   test('no params', () => {
-    const lengthForRandomString = 4
-    const ranstr = CryptoHelper.GenerateRandomString()
+    const lengthForRandomString = 4,
+     ranstr = CryptoHelper.GenerateRandomString()
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
   test('proper length', () => {
-    const lengthForRandomString = 4
-    const ranstr = CryptoHelper.GenerateRandomString(lengthForRandomString)
+    const lengthForRandomString = 4,
+     ranstr = CryptoHelper.GenerateRandomString(lengthForRandomString)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
   test('using chars and numbers', () => {
-    const lengthForRandomString = 4
-    const ranstr = CryptoHelper.GenerateRandomString(
+    const lengthForRandomString = 4,
+     ranstr = CryptoHelper.GenerateRandomString(
       lengthForRandomString,
       CryptoHelper.CONST_CharsNumbers
     )
@@ -132,10 +132,10 @@ describe('Generate random string', () => {
 })
 
 test('rsaDecryptStaticObject with JSON', () => {
-  const lengthForRandomString = 4
-  const randomString = CryptoHelper.GenerateRandomString(lengthForRandomString)
-  const jsonObject = { data: randomString }
-  const cipherText = CryptoHelper.rsaEncryptStaticObject(
+  const lengthForRandomString = 4,
+   randomString = CryptoHelper.GenerateRandomString(lengthForRandomString),
+   jsonObject = { data: randomString },
+   cipherText = CryptoHelper.rsaEncryptStaticObject(
     jsonObject,
     TEST_Parameters_DEV.rsaPublicKey
   )

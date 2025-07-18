@@ -1,16 +1,14 @@
-import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
+import { ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
   getPercentChange,
   getPercentChangeString,
-  hasData,
   isNullOrUndefined,
 } from '../services/general.mjs'
-import { safestrLowercase } from '../services/string-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
+import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
-import { ITradePlot, TradePlot } from './TradePlot.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
+import { safeArray } from '../services/array-helper.mjs'
+import { safestrLowercase } from '../services/string-helper.mjs'
 
 export interface ITradePlotProfitizer extends ITradePlot {
   profit?: number
@@ -72,10 +70,12 @@ export class TradePlotProfitizer
   }
 
   static Create(obj: ITradePlot, tprice?: IAssetQuoteResponse) {
-    const tplot = new TradePlotProfitizer()
+    const dateNow = new Date().getTime(),
+      price = tprice?.price,
+      tplot = new TradePlotProfitizer()
+
     tplot.copyObject(obj)
 
-    const price = tprice?.price
     tplot.profit = tplot.getProfit(price)
 
     tplot.patternCount = tplot.getPatternCount()
@@ -92,7 +92,6 @@ export class TradePlotProfitizer
     tplot.percentToTargetLow = tplot.getPercentToTargetLow(price)
     tplot.percentToTargetHigh = tplot.getPercentToTargetHigh(price)
 
-    const dateNow = new Date().getTime()
     tplot.nextOrderNumber = tplot.getNextOrderNumber(dateNow)
     tplot.nextExpectedTriggerDate = tplot.getNextExpectedTriggerDate(dateNow)
     tplot.prevExpectedTriggerDate = tplot.getPrevExpectedTriggerDate(dateNow)
@@ -108,29 +107,29 @@ export class TradePlotProfitizer
     return safeArray(rows).reduce((acc, tprow) => acc + (tprow?.profit || 0), 0)
   }
 
-  static MapToPlotMsg(x: ITradePlotProfitizer) {
-    {
-      let msg = ''
-      if (isNullOrUndefined(x.profit)) {
-        msg = 'Please setup targets in your trade plot.'
-      } else if (!x.profit) {
-        msg = 'Currently break even.'
-      } else if (x.profit > 0) {
-        msg = `Currently up ${NumberHelper.PriceInDollars(x.profit)}!`
-      } else {
-        msg = `Currently down ${NumberHelper.PriceInDollars(x.profit)}.`
-      }
+  static MapToPlotMsg(this: void, x: ITradePlotProfitizer) {
+    // eslint-disable-next-line no-useless-assignment
+    let msg = ''
 
-      const pl: IPlotMsg = {
-        symbol: x.ticker,
-        price: x.purchase,
-        quantity: x.shares,
-        lineColor: x.isShort ? '#f2c200' : '#00ff00',
-        msgText: msg,
-      }
-
-      return pl
+    if (isNullOrUndefined(x.profit)) {
+      msg = 'Please setup targets in your trade plot.'
+    } else if (!x.profit) {
+      msg = 'Currently break even.'
+    } else if (x.profit > 0) {
+      msg = `Currently up ${NumberHelper.PriceInDollars(x.profit)}!`
+    } else {
+      msg = `Currently down ${NumberHelper.PriceInDollars(x.profit)}.`
     }
+
+    const pl: IPlotMsg = {
+      lineColor: x.isShort ? '#f2c200' : '#00ff00',
+      msgText: msg,
+      price: x.purchase,
+      quantity: x.shares,
+      symbol: x.ticker,
+    }
+
+    return pl
   }
 
   static MapToPlotMsgs(x: ITradePlotProfitizer[]) {
@@ -146,7 +145,7 @@ export class TradePlotProfitizer
    * @param pattern Pattern key to get the comment for.
    * @return string Comment text.
    */
-  getCommentFromPattern(pattern: string) {
+  static GetCommentFromPattern(pattern: string) {
     switch (safestrLowercase(pattern)) {
       case 'b28':
         return 'This is a back to the 8. It is one of the most common fundamentals in moving averages.'
@@ -167,7 +166,7 @@ export class TradePlotProfitizer
         return 'When the 8- and 21-day moving averages cross each other. Follow the 8.'
 
       default:
-        // throw new Error('Invalid pattern');
+        // Throw new Error('Invalid pattern');
         return ''
     }
   }
@@ -196,7 +195,7 @@ export class TradePlotProfitizer
       this.goalStart,
       this.investmentAmountCurrent,
       true
-      // this.maxDecimalPlaces
+      // This.maxDecimalPlaces
     )
 
     if (percent2goal < 0) {
@@ -238,22 +237,22 @@ export class TradePlotProfitizer
   }
 
   get profitLoss() {
-    // return (this.currentPrice - this.purchasePrice) * this.shares
+    // Return (this.currentPrice - this.purchasePrice) * this.shares
     return this.investmentAmountCurrent - this.investmentAmountStart
   }
   get profitLossText() {
-    return NumberHelper.NumberWithDecimalPlaces(this.profitLoss) //, this.maxDecimalPlaces)
+    return NumberHelper.NumberWithDecimalPlaces(this.profitLoss)
   }
 
   get subplotCount() {
     return this.subplots.length
   }
 
-  // title(index: number) {
-  //   const curtf = this.getPatternField(index, 'timeframe')
-  //   const pf = ChartConfig.TimeFrameOptions.find((x) => x.name === curtf)
+  // Title(index: number) {
+  //   Const curtf = this.getPatternField(index, 'timeframe')
+  //   Const pf = ChartConfig.TimeFrameOptions.find((x) => x.name === curtf)
 
   //   // console.log('pf:', pf, ', curtf:', curtf);
-  //   return pf ? pf.value : 'No range selected yet'
+  //   Return pf ? pf.value : 'No range selected yet'
   // }
 }

@@ -1,16 +1,16 @@
-import { DateHelper } from '../services/DateHelper.mjs'
 import {
   ChartPlotReturn,
   ChartSettings,
   IChartSettings,
 } from './ChartSettings.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
 
 test('ChartPlotReturn', () => {
   const result = new ChartPlotReturn()
   expect(result).toEqual({
-    plotlist: [],
     drawings: {},
     facets: [],
+    plotlist: [],
     positions: [],
   })
 })
@@ -43,145 +43,145 @@ test('constructor', () => {
       true
     )
   ).toMatchObject({
-    ticker: 'AAPL',
-    period: 2,
-    periodType: 'day',
+    endDate: 1700000000000,
+    extendedHoursTrading: true,
     frequency: 5,
     frequencyType: 'minute',
     granularity: '1',
+    period: 2,
+    periodType: 'day',
     startDate: -1,
-    endDate: 1700000000000,
-    extendedHoursTrading: true,
+    ticker: 'AAPL',
   })
 })
 
 test('ChartSettings with settings', () => {
   const iChartSettings: IChartSettings = {
-    endDate: undefined,
-    extendedHoursTrading: false,
-    frequency: 4,
-    frequencyType: '1d',
-    granularity: '1d',
-    period: 3,
-    periodType: 'd',
-    startDate: undefined,
-    ticker: 'AAPL',
-  }
+      endDate: undefined,
+      extendedHoursTrading: false,
+      frequency: 4,
+      frequencyType: '1d',
+      granularity: '1d',
+      period: 3,
+      periodType: 'd',
+      startDate: undefined,
+      ticker: 'AAPL',
+    },
+    myChartSettings = new ChartSettings(
+      iChartSettings.ticker,
+      iChartSettings.period,
+      iChartSettings.periodType,
+      iChartSettings.frequency,
+      iChartSettings.frequencyType,
+      iChartSettings.granularity,
+      iChartSettings.startDate,
+      iChartSettings.endDate,
+      iChartSettings.extendedHoursTrading
+    )
 
-  const chartSettings = new ChartSettings(
-    iChartSettings.ticker,
-    iChartSettings.period,
-    iChartSettings.periodType,
-    iChartSettings.frequency,
-    iChartSettings.frequencyType,
-    iChartSettings.granularity,
-    iChartSettings.startDate,
-    iChartSettings.endDate,
-    iChartSettings.extendedHoursTrading
-  )
-  expect(chartSettings).toMatchObject(iChartSettings)
+  expect(myChartSettings).toMatchObject(iChartSettings)
 })
 
 test('ChartSettings.Create', () => {
-  const ics: IChartSettings = {
-    endDate: undefined,
-    extendedHoursTrading: false,
-    frequency: 4,
-    frequencyType: '1d',
-    granularity: '1d',
-    period: 3,
-    periodType: 'd',
-    startDate: undefined,
-    ticker: 'AAPL',
-  }
+  const acs: IChartSettings = {
+      endDate: undefined,
+      extendedHoursTrading: false,
+      frequency: 4,
+      frequencyType: '1d',
+      granularity: '1d',
+      period: 3,
+      periodType: 'd',
+      startDate: undefined,
+      ticker: 'AAPL',
+    },
+    chartSettings = ChartSettings.Create(acs),
+    chartSettingsWithExtendedHours = ChartSettings.Create(acs)
 
-  const chartSettings = ChartSettings.Create(ics)
-  expect(chartSettings).toMatchObject(ics)
+  expect(chartSettings).toMatchObject(acs)
 
-  ics.extendedHoursTrading = undefined
-  ics.startDate = 0
-  ics.endDate = 0
-  const chartSettingsWithExtendedHours = ChartSettings.Create(ics)
+  acs.extendedHoursTrading = undefined
+  acs.startDate = 0
+  acs.endDate = 0
   expect(chartSettingsWithExtendedHours).toMatchObject({
-    ...ics,
-    startDate: undefined,
+    ...acs,
     endDate: undefined,
     extendedHoursTrading: false,
+    startDate: undefined,
   })
 
-  ics.startDate = +new Date('2025-01-01')
-  ics.endDate = +new Date('2026-01-01')
-  const chartSettingsWithDates = ChartSettings.Create(ics)
+  acs.startDate = Number(new Date('2025-01-01'))
+  acs.endDate = Number(new Date('2026-01-01'))
+  // eslint-disable-next-line one-var
+  const chartSettingsWithDates = ChartSettings.Create(acs)
   expect(chartSettingsWithDates).toMatchObject({
-    ...ics,
+    ...acs,
+    endDate: acs.endDate,
     extendedHoursTrading: false,
-    startDate: ics.startDate,
-    endDate: ics.endDate,
+    startDate: acs.startDate,
   })
 })
 
 test('CreateISettings', () => {
-  const ics: IChartSettings = {
-    endDate: undefined,
-    extendedHoursTrading: false,
-    frequency: 4,
-    frequencyType: '1d',
-    granularity: '1d',
-    period: 3,
-    periodType: 'd',
-    startDate: undefined,
-    ticker: 'aapl',
-  }
+  const acs: IChartSettings = {
+      endDate: undefined,
+      extendedHoursTrading: false,
+      frequency: 4,
+      frequencyType: '1d',
+      granularity: '1d',
+      period: 3,
+      periodType: 'd',
+      startDate: undefined,
+      ticker: 'aapl',
+    },
+    chartSettings = ChartSettings.CreateISettings(acs)
 
-  const chartSettings = ChartSettings.CreateISettings(ics)
-  expect(chartSettings).toMatchObject({ ...ics, ticker: 'AAPL' })
+  expect(chartSettings).toMatchObject({ ...acs, ticker: 'AAPL' })
 })
 
 test('CreateForTradingView', () => {
-  const ics: IChartSettings = {
-    endDate: undefined,
-    extendedHoursTrading: false,
-    frequency: 4,
-    frequencyType: '1d',
-    granularity: '1d',
-    period: 3,
-    periodType: 'd',
-    startDate: undefined,
-    ticker: 'AAPL',
-  }
-
-  const chartSettings = ChartSettings.CreateForTradingView(
-    ics.ticker,
-    ics.startDate,
-    ics.endDate,
-    '1d',
-    true
-  )
+  const acs: IChartSettings = {
+      endDate: undefined,
+      extendedHoursTrading: false,
+      frequency: 4,
+      frequencyType: '1d',
+      granularity: '1d',
+      period: 3,
+      periodType: 'd',
+      startDate: undefined,
+      ticker: 'AAPL',
+    },
+    chartSettings = ChartSettings.CreateForTradingView(
+      acs.ticker,
+      acs.startDate,
+      acs.endDate,
+      '1d',
+      true
+    )
 
   expect(chartSettings).toMatchObject({
-    ticker: ics.ticker,
-    period: 1,
-    periodType: 'day',
+    endDate: acs.endDate,
+    extendedHoursTrading: true,
     frequency: 1,
     frequencyType: 'minute',
-    granularity: ics.granularity,
-    startDate: ics.startDate,
-    endDate: ics.endDate,
-    extendedHoursTrading: true,
+    granularity: acs.granularity,
+    period: 1,
+    periodType: 'day',
+    startDate: acs.startDate,
+    ticker: acs.ticker,
   })
 
   expect(
     ChartSettings.CreateForTradingView('AAPL', undefined, undefined, '1d')
   ).toMatchObject({
-    ticker: 'AAPL',
-    period: 1,
-    periodType: 'day',
+    endDate: undefined,
+    extendedHoursTrading: true,
     frequency: 1,
     frequencyType: 'minute',
     granularity: '1d',
+    period: 1,
+    periodType: 'day',
     startDate: undefined,
-    endDate: undefined,
-    extendedHoursTrading: true,
+    ticker: 'AAPL',
   })
 
   expect(
@@ -194,15 +194,15 @@ test('CreateForTradingView', () => {
       true
     )
   ).toMatchObject({
-    ticker: 'AAPL',
-    period: 1,
-    periodType: 'day',
+    endDate: 1764590400000,
+    extendedHoursTrading: false,
     frequency: 1,
     frequencyType: 'minute',
     granularity: '1d',
+    period: 1,
+    periodType: 'day',
     startDate: 1733054400000,
-    endDate: 1764590400000,
-    extendedHoursTrading: false,
+    ticker: 'AAPL',
   })
 })
 
@@ -270,15 +270,15 @@ test('zChartSettings', () => {
   }
 
   expect(ChartSettings.zChartSettings.parse(ics)).toEqual({
-    ticker: 'AAPL',
-    period: 3,
-    periodType: 'd',
+    endDate: undefined,
+    extendedHoursTrading: false,
     frequency: 4,
     frequencyType: '1d',
     granularity: '1d',
+    period: 3,
+    periodType: 'd',
     startDate: undefined,
-    endDate: undefined,
-    extendedHoursTrading: false,
+    ticker: 'AAPL',
   })
 })
 
@@ -287,8 +287,8 @@ test('debugMessage', () => {
 
   expect(cs.debugMessage).toBe('Daily')
 
-  cs.startDate = +DateHelper.LocalToUtc('2025-01-01')
-  cs.endDate = +DateHelper.LocalToUtc('2026-01-01')
+  cs.startDate = Number(DateHelper.LocalToUtc('2025-01-01'))
+  cs.endDate = Number(DateHelper.LocalToUtc('2026-01-01'))
 
   expect(cs.debugMessage).toBe('Daily from 2025-01-01 to 2026-01-01')
 })

@@ -1,167 +1,168 @@
-import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ISubplot, Subplot } from './Subplot.mjs'
 import {
   ITradePlotProfitizer,
   TradePlotProfitizer,
 } from './TradePlotProfitizer.mjs'
+import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
+import { deepCloneJson } from '../services/object-helper.mjs'
 
 const itpp: ITradePlotProfitizer = {
-  id: '',
-  ticker: '',
-  description: '',
-  goal: undefined,
-  isShort: false,
-  purchase: undefined,
-  shares: 0,
-  subplots: [],
-  updatedby: 'TradePlot',
-  updated: new Date(),
-  createdby: 'TradePlot',
-  created: new Date(),
-  profit: undefined,
-  patternCount: 0,
-  numSubplots: 0,
-  targetLow: undefined,
-  targetHigh: undefined,
-  currentPrice: undefined,
-  previousClose: undefined,
-  openPrice: undefined,
-  quoteTimeInLong: undefined,
-  amountToTargetLow: undefined,
-  amountToTargetHigh: undefined,
-  percentToTargetLow: undefined,
-  percentToTargetHigh: undefined,
-  amountToGoal: undefined,
-  percentToGoal: undefined,
-  nextOrderNumber: undefined,
-  nextExpectedTriggerDate: undefined,
-  prevExpectedTriggerDate: undefined,
-  maxExpectedTriggerDate: undefined,
-  minExpectedTriggerDate: undefined,
-}
-
-const assetQuote: IAssetQuoteResponse = {
-  symbol: 'LU1799934499.SG',
-  name: 'Lyxor MSCI World ESG Leaders Extra (DR) UCITS ETF',
-  price: 18.97,
-  changesPercentage: 12.6618,
-  change: 2.132,
-  dayLow: 16.752,
-  dayHigh: 18.97,
-  yearHigh: 18.97,
-  yearLow: 16.752,
-  marketCap: 0,
-  priceAvg50: 0,
-  priceAvg200: 0,
-  exchange: 'STU',
-  volume: 0,
-  avgVolume: 0,
-  open: 16.838,
-  previousClose: null,
-  eps: 0,
-  pe: 0,
-  earningsAnnouncement: null,
-  sharesOutstanding: 0,
-  timestamp: 1706804186,
-}
-
-const iSubplot: ISubplot = {
-  id: '123',
-  orderNumber: 1,
-  pattern: 'TestPattern',
-  timeframe: '1D',
-  total: 0,
-  targetLow: 150,
-  targetHigh: 200,
-  expectedTriggerDate: new Date('2024-01-01'),
-  comment: 'Test Subplot',
-  lossFloorPercent: 0.05,
-  gainCeilingPercent: 0.1,
-  useMinusEight: false,
-  scaleInverted: false,
-}
-
-const arrITradePlotProfitizer: ITradePlotProfitizer[] = [
-  {
-    id: '',
-    ticker: 'AAPL',
+    amountToGoal: undefined,
+    amountToTargetHigh: undefined,
+    amountToTargetLow: undefined,
+    created: new Date(),
+    createdby: 'TradePlot',
+    currentPrice: undefined,
     description: '',
     goal: undefined,
+    id: '',
     isShort: false,
-    purchase: undefined,
-    shares: 100,
-    subplots: [iSubplot],
-    updatedby: 'TradePlot',
-    updated: new Date(),
-    createdby: 'TradePlot',
-    created: new Date(),
-    profit: 100,
-    patternCount: 0,
-    numSubplots: 0,
-    targetLow: undefined,
-    targetHigh: undefined,
-    currentPrice: undefined,
-    previousClose: undefined,
-    openPrice: undefined,
-    quoteTimeInLong: undefined,
-    amountToTargetLow: undefined,
-    amountToTargetHigh: undefined,
-    percentToTargetLow: undefined,
-    percentToTargetHigh: undefined,
-    amountToGoal: undefined,
-    percentToGoal: undefined,
-    nextOrderNumber: undefined,
-    nextExpectedTriggerDate: undefined,
-    prevExpectedTriggerDate: undefined,
     maxExpectedTriggerDate: undefined,
     minExpectedTriggerDate: undefined,
+    nextExpectedTriggerDate: undefined,
+    nextOrderNumber: undefined,
+    numSubplots: 0,
+    openPrice: undefined,
+    patternCount: 0,
+    percentToGoal: undefined,
+    percentToTargetHigh: undefined,
+    percentToTargetLow: undefined,
+    prevExpectedTriggerDate: undefined,
+    previousClose: undefined,
+    profit: undefined,
+    purchase: undefined,
+    quoteTimeInLong: undefined,
+    shares: 0,
+    subplots: [],
+    targetHigh: undefined,
+    targetLow: undefined,
+    ticker: '',
+    updated: new Date(),
+    updatedby: 'TradePlot',
   },
-]
+  // eslint-disable-next-line sort-vars
+  assetQuote: IAssetQuoteResponse = {
+    avgVolume: 0,
+    change: 2.132,
+    changesPercentage: 12.6618,
+    dayHigh: 18.97,
+    dayLow: 16.752,
+    earningsAnnouncement: null,
+    eps: 0,
+    exchange: 'STU',
+    marketCap: 0,
+    name: 'Lyxor MSCI World ESG Leaders Extra (DR) UCITS ETF',
+    open: 16.838,
+    pe: 0,
+    previousClose: null,
+    price: 18.97,
+    priceAvg200: 0,
+    priceAvg50: 0,
+    sharesOutstanding: 0,
+    symbol: 'LU1799934499.SG',
+    timestamp: 1706804186,
+    volume: 0,
+    yearHigh: 18.97,
+    yearLow: 16.752,
+  },
+  // eslint-disable-next-line sort-vars
+  iSubplot: ISubplot = {
+    comment: 'Test Subplot',
+    expectedTriggerDate: new Date('2024-01-01'),
+    gainCeilingPercent: 0.1,
+    id: '123',
+    lossFloorPercent: 0.05,
+    orderNumber: 1,
+    pattern: 'TestPattern',
+    scaleInverted: false,
+    targetHigh: 200,
+    targetLow: 150,
+    timeframe: '1D',
+    total: 0,
+    useMinusEight: false,
+  },
+  // eslint-disable-next-line sort-vars
+  arrITradePlotProfitizer: ITradePlotProfitizer[] = [
+    {
+      amountToGoal: undefined,
+      amountToTargetHigh: undefined,
+      amountToTargetLow: undefined,
+      created: new Date(),
+      createdby: 'TradePlot',
+      currentPrice: undefined,
+      description: '',
+      goal: undefined,
+      id: '',
+      isShort: false,
+      maxExpectedTriggerDate: undefined,
+      minExpectedTriggerDate: undefined,
+      nextExpectedTriggerDate: undefined,
+      nextOrderNumber: undefined,
+      numSubplots: 0,
+      openPrice: undefined,
+      patternCount: 0,
+      percentToGoal: undefined,
+      percentToTargetHigh: undefined,
+      percentToTargetLow: undefined,
+      prevExpectedTriggerDate: undefined,
+      previousClose: undefined,
+      profit: 100,
+      purchase: undefined,
+      quoteTimeInLong: undefined,
+      shares: 100,
+      subplots: [iSubplot],
+      targetHigh: undefined,
+      targetLow: undefined,
+      ticker: 'AAPL',
+      updated: new Date(),
+      updatedby: 'TradePlot',
+    },
+  ]
 
 test('constructor', () => {
   const profitizer = new TradePlotProfitizer()
   expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
 
   expect(profitizer).toMatchObject({
-    id: expect.any(String),
-    ticker: '',
+    amountToGoal: undefined,
+    amountToTargetHigh: undefined,
+    amountToTargetLow: undefined,
+    created: expect.any(Date),
+    createdby: 'TradePlot',
+    currentPrice: undefined,
     description: '',
     goal: undefined,
+    id: expect.any(String),
     isShort: false,
-    purchase: undefined,
-    shares: 0,
-    subplots: [],
-    updatedby: 'TradePlot',
-    updated: expect.any(Date),
-    createdby: 'TradePlot',
-    created: expect.any(Date),
-    profit: undefined,
-    patternCount: 0,
-    numSubplots: 0,
-    targetLow: undefined,
-    targetHigh: undefined,
-    currentPrice: undefined,
-    previousClose: undefined,
-    openPrice: undefined,
-    quoteTimeInLong: undefined,
-    amountToTargetLow: undefined,
-    amountToTargetHigh: undefined,
-    percentToTargetLow: undefined,
-    percentToTargetHigh: undefined,
-    amountToGoal: undefined,
-    percentToGoal: undefined,
-    nextOrderNumber: undefined,
-    nextExpectedTriggerDate: undefined,
-    prevExpectedTriggerDate: undefined,
     maxExpectedTriggerDate: undefined,
     minExpectedTriggerDate: undefined,
+    nextExpectedTriggerDate: undefined,
+    nextOrderNumber: undefined,
+    numSubplots: 0,
+    openPrice: undefined,
+    patternCount: 0,
+    percentToGoal: undefined,
+    percentToTargetHigh: undefined,
+    percentToTargetLow: undefined,
+    prevExpectedTriggerDate: undefined,
+    previousClose: undefined,
+    profit: undefined,
+    purchase: undefined,
+    quoteTimeInLong: undefined,
+    shares: 0,
+    subplots: [],
+    targetHigh: undefined,
+    targetLow: undefined,
+    ticker: '',
+    updated: expect.any(Date),
+    updatedby: 'TradePlot',
   })
 
   expect(new TradePlotProfitizer(itpp)).toMatchObject({
     ...itpp,
-    updated: expect.any(Date),
     created: expect.any(Date),
+    updated: expect.any(Date),
   })
 })
 
@@ -171,9 +172,9 @@ test('copyObject', () => {
 
   expect(profitizer).toMatchObject({
     ...itpp,
+    created: expect.any(Date),
     id: expect.any(String),
     updated: expect.any(Date),
-    created: expect.any(Date),
   })
 })
 
@@ -183,47 +184,49 @@ test('Create', () => {
   expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
   expect(profitizer).toMatchObject({
     ...itpp,
-    id: expect.any(String),
-    updated: expect.any(Date),
     created: expect.any(Date),
+    id: expect.any(String),
     targetHigh: Infinity,
     targetLow: Infinity,
+    updated: expect.any(Date),
   })
 
   profitizer = TradePlotProfitizer.Create(itpp, assetQuote)
   expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
   expect(profitizer).toMatchObject({
     ...itpp,
-    id: expect.any(String),
-    updated: expect.any(Date),
-    created: expect.any(Date),
-    targetHigh: Infinity,
-    targetLow: Infinity,
-    currentPrice: 18.97,
-    previousClose: null,
-    openPrice: 16.838,
-    quoteTimeInLong: 1706804186,
-    percentToTargetHigh: Infinity,
-    percentToTargetLow: -Infinity,
     amountToTargetHigh: undefined,
     amountToTargetLow: undefined,
+    created: expect.any(Date),
+    currentPrice: 18.97,
+    id: expect.any(String),
+    openPrice: 16.838,
+    percentToTargetHigh: Infinity,
+    percentToTargetLow: -Infinity,
+    previousClose: null,
+    quoteTimeInLong: 1706804186,
+    targetHigh: Infinity,
+    targetLow: Infinity,
+    updated: expect.any(Date),
   })
 })
 
 test('GetProfitForRowItems', () => {
   const profitizer = TradePlotProfitizer.GetProfitForRowItems(
-    arrITradePlotProfitizer
-  )
+      arrITradePlotProfitizer
+    ),
+    tpp = deepCloneJson(arrITradePlotProfitizer[0])
 
   expect(profitizer).toBe(100)
 
-  const tpp = deepCloneJson(arrITradePlotProfitizer[0])
   tpp.profit = undefined
   expect(TradePlotProfitizer.GetProfitForRowItems([tpp])).toBe(0)
 })
 
 test('MapToPlotMsg', () => {
-  const profitizer = TradePlotProfitizer.MapToPlotMsg(itpp)
+  const itp: ITradePlotProfitizer = deepCloneJson(arrITradePlotProfitizer[0]),
+    itpNoProfit: ITradePlotProfitizer = deepCloneJson(itp),
+    profitizer = TradePlotProfitizer.MapToPlotMsg(itpp)
 
   expect(profitizer).toMatchObject({
     lineColor: '#00ff00',
@@ -233,7 +236,6 @@ test('MapToPlotMsg', () => {
     symbol: '',
   })
 
-  const itp: ITradePlotProfitizer = deepCloneJson(arrITradePlotProfitizer[0])
   expect(TradePlotProfitizer.MapToPlotMsg(itp)).toMatchObject({
     lineColor: '#00ff00',
     msgText: 'Currently up $100.00!',
@@ -242,7 +244,6 @@ test('MapToPlotMsg', () => {
     symbol: 'AAPL',
   })
 
-  const itpNoProfit: ITradePlotProfitizer = deepCloneJson(itp)
   itpNoProfit.profit = 0
   expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
     lineColor: '#00ff00',
@@ -295,15 +296,13 @@ test('get currentPriceDisplay', () => {
 })
 
 test('getCommentFromPattern', () => {
-  const profitizer = new TradePlotProfitizer()
-  const comment = profitizer.getCommentFromPattern('TestPattern')
+  const comment = TradePlotProfitizer.GetCommentFromPattern('TestPattern')
 
   expect(comment).toBe('')
 })
 
 test('getCommentFromPattern with unknown pattern', () => {
-  const profitizer = new TradePlotProfitizer()
-  const comment = profitizer.getCommentFromPattern('UnknownPattern')
+  const comment = TradePlotProfitizer.GetCommentFromPattern('UnknownPattern')
 
   expect(comment).toBe('')
 })
@@ -445,26 +444,24 @@ test('get subplotCount', () => {
 })
 
 test('getCommentFromPattern', () => {
-  const profitizer = new TradePlotProfitizer()
-
-  expect(profitizer.getCommentFromPattern('TestPattern')).toBe('')
-  expect(profitizer.getCommentFromPattern('b28')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('TestPattern')).toBe('')
+  expect(TradePlotProfitizer.GetCommentFromPattern('b28')).toBe(
     'This is a back to the 8. It is one of the most common fundamentals in moving averages.'
   )
-  expect(profitizer.getCommentFromPattern('ra200')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('ra200')).toBe(
     'When you have resistance at the 200-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
   )
-  expect(profitizer.getCommentFromPattern('ra50')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('ra50')).toBe(
     'When you have resistance at the 50-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
   )
-  expect(profitizer.getCommentFromPattern('spt200')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('spt200')).toBe(
     'When you have support at the 200-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
   )
-  expect(profitizer.getCommentFromPattern('spt50')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('spt50')).toBe(
     'When you have support at the 50-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
   )
-  expect(profitizer.getCommentFromPattern('x8x21')).toBe(
+  expect(TradePlotProfitizer.GetCommentFromPattern('x8x21')).toBe(
     'When the 8- and 21-day moving averages cross each other. Follow the 8.'
   )
-  expect(profitizer.getCommentFromPattern('unknownPattern')).toBe('')
+  expect(TradePlotProfitizer.GetCommentFromPattern('unknownPattern')).toBe('')
 })

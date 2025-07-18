@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import winston, { format, Logger, transport, transports } from 'winston'
+import winston, { Logger, format, transport, transports } from 'winston'
 import DailyRotateFile, {
   DailyRotateFileTransportOptions,
 } from 'winston-daily-rotate-file'
@@ -9,9 +9,9 @@ import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 
-const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH'
-const DEFAULT_RotateMaxFiles = 500
-const DEFAULT_RotateMaxSize = 1000000000 // 1GB
+const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH',
+ DEFAULT_RotateMaxFiles = 500,
+ DEFAULT_RotateMaxSize = 1000000000 // 1GB
 
 export type LogManagerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
 
@@ -79,9 +79,9 @@ export class LogManager {
       return `${DateHelper.FormatDateTimeWithMillis()}: [${
         this.componentName
       }] [${level}] ${msg}`
-    })
+    }),
 
-    const transports: transport[] = LogManager.WinstonLogTransports(
+     transports: transport[] = LogManager.WinstonLogTransports(
       logLevel,
       logFileName,
       logBaseFileName,
@@ -101,8 +101,8 @@ export class LogManager {
 
   static ConsoleLogger(logLineFormat: winston.Logform.Format) {
     // If we're not in production then **ALSO** log to the `console`
-    // with the colorized simple format.
-    // if (safestrLowercase(process.env.NODE_ENV) !== 'production') {
+    // With the colorized simple format.
+    // If (safestrLowercase(process.env.NODE_ENV) !== 'production') {
     const consoleTransport = new transports.Console({
       format: format.combine(format.colorize(), logLineFormat),
     })
@@ -134,7 +134,7 @@ export class LogManager {
       filename: `./logs/${safestrTrim(rotateBaseFileName)}-%DATE%.log`,
       format: logLineFormat,
       level: logLevel,
-      // localTime: true,
+      // LocalTime: true,
       maxFiles,
       maxSize,
       zippedArchive: false,
@@ -171,14 +171,14 @@ export class LogManager {
     logLineFormat: winston.Logform.Format
   ) {
     const cleanLogFileName =
-      './logs/' +
-      (safestrTrim(logFileName)
+      `./logs/${ 
+      safestrTrim(logFileName)
         ? safestrTrim(logFileName)
         : `${safestrTrim(logBaseFileName)}-${DateHelper.FormatDateTime(
             suffixDatePattern
-          )}.log`)
+          )}.log`}`,
 
-    const logfileTransportOptions = new transports.File({
+     logfileTransportOptions = new transports.File({
       level: 'info',
       filename: cleanLogFileName,
       format: logLineFormat,

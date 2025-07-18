@@ -21,8 +21,8 @@ test('getStatus', () => {
 })
 
 test('InitialState', () => {
-  const initialData = { key: 'value' }
-  const state = ReduxHelper.InitialState(initialData)
+  const initialData = { key: 'value' },
+   state = ReduxHelper.InitialState(initialData)
 
   expect(state.status).toBe('idle')
   expect(state.data).toEqual(initialData)
@@ -31,9 +31,9 @@ test('InitialState', () => {
 })
 
 test('Fulfilled', () => {
-  const update = { key: 'new value' }
-  const message = 'Update successful'
-  const state = ReduxHelper.Fulfilled(update, message)
+  const update = { key: 'new value' },
+   message = 'Update successful',
+   state = ReduxHelper.Fulfilled(update, message)
 
   expect(state.status).toBe('fulfilled')
   expect(state.data).toEqual(update)
@@ -50,9 +50,9 @@ test('FulfilledOnly', () => {
     isLoading: false,
     lastUpdate: Date.now(),
     message: undefined,
-  }
+  },
 
-  const message = 'Update successful'
+   message = 'Update successful'
   ReduxHelper.FulfilledOnly(state, message)
   expect(state).toMatchObject({
     status: 'fulfilled',
@@ -82,10 +82,10 @@ test('RejectAndResetState', () => {
     isLoading: true,
     lastUpdate: Date.now(),
     message: undefined,
-  }
+  },
 
-  const error = 'An error occurred'
-  const ret = ReduxHelper.RejectAndResetState(state, error)
+   error = 'An error occurred',
+   ret = ReduxHelper.RejectAndResetState(state, error)
 
   expect(ret).toMatchObject({
     status: 'rejected',
@@ -105,11 +105,11 @@ test('RejectAndResetState with message', () => {
     isLoading: true,
     lastUpdate: Date.now(),
     message: undefined,
-  }
+  },
 
-  const error = 'An error occurred'
-  const message = 'Operation failed'
-  const ret = ReduxHelper.RejectAndResetState(state, error, message)
+   error = 'An error occurred',
+   message = 'Operation failed',
+   ret = ReduxHelper.RejectAndResetState(state, error, message)
 
   expect(ret).toMatchObject({
     status: 'rejected',
@@ -128,9 +128,9 @@ test('RejectAndResetState with empty error', () => {
     isLoading: true,
     lastUpdate: Date.now(),
     message: undefined,
-  }
+  },
 
-  const ret = ReduxHelper.RejectAndResetState(state)
+   ret = ReduxHelper.RejectAndResetState(state)
 
   expect(ret).toMatchObject({
     status: 'rejected',
@@ -150,10 +150,10 @@ test('RejectOnly', () => {
     isLoading: true,
     lastUpdate: Date.now(),
     message: undefined,
-  }
+  },
 
-  const error = 'An error occurred'
-  const message = 'Operation failed'
+   error = 'An error occurred',
+   message = 'Operation failed'
   ReduxHelper.RejectOnly(state, error, message)
 
   expect(state).toMatchObject({

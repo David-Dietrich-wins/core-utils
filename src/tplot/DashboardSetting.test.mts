@@ -14,13 +14,12 @@ test('constructor', () => {
 })
 
 test('screens', () => {
-  const screens = [
-    new DashboardScreenSetting('screen1'),
-    new DashboardScreenSetting('screen2'),
-  ]
+  const ascreens = [
+      new DashboardScreenSetting('screen1'),
+      new DashboardScreenSetting('screen2'),
+    ],
+    ds = new DashboardSetting(ascreens)
 
-  const ds = new DashboardSetting(screens)
-
-  expect(ds.screens).toEqual(screens)
+  expect(ds.screens).toEqual(ascreens)
   expect(ds.screenNames).toEqual(['screen1', 'screen2'])
 })

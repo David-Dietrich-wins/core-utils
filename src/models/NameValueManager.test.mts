@@ -9,19 +9,19 @@ import {
 } from './NameValueManager.mjs'
 
 test('NameValue good', () => {
-  const name = 'name'
-  const value = 'value'
-  const pr = new NameValue(name, value)
+  const name = 'name',
+   value = 'value',
+   pr = new NameValue(name, value)
 
   expect(pr.name).toBe(name)
   expect(pr.value).toBe(value)
 })
 
 test('NameValueType good', () => {
-  const name = 'name'
-  const value = 'value'
-  const type = 'type'
-  const pr = new NameValueType(name, value, type)
+  const name = 'name',
+   value = 'value',
+   type = 'type',
+   pr = new NameValueType(name, value, type)
 
   expect(pr.name).toBe(name)
   expect(pr.value).toBe(value)
@@ -30,11 +30,11 @@ test('NameValueType good', () => {
 
 describe('NameValueManager', () => {
   test('constructor', () => {
-    const name = 'name'
-    const value = 'value'
-    const type = 'type'
-    const pr = new NameValueType(name, value, type)
-    const manager = new NameValueManager([pr])
+    const name = 'name',
+     value = 'value',
+     type = 'type',
+     pr = new NameValueType(name, value, type),
+     manager = new NameValueManager([pr])
 
     expect(manager.list.length).toBe(1)
     expect(manager.list[0].name).toBe(name)
@@ -47,11 +47,11 @@ describe('NameValueManager', () => {
   })
 
   test('CreateNameValueManager', () => {
-    const name = 'name'
-    const value = 'value'
-    const type = 'type'
-    const pr = new NameValueType(name, value, type)
-    const manager = NameValueManager.CreateNameValueManager([pr])
+    const name = 'name',
+     value = 'value',
+     type = 'type',
+     pr = new NameValueType(name, value, type),
+     manager = NameValueManager.CreateNameValueManager([pr])
 
     expect(manager.list.length).toBe(1)
     expect(manager.list[0].name).toBe(name)
@@ -69,9 +69,9 @@ describe('NameValueManager', () => {
   })
 
   test('CreateINameValue', () => {
-    const name = 'name'
-    const value = 'value'
-    const item = NameValueManager.CreateINameValue(name, value)
+    const name = 'name',
+     value = 'value',
+     item = NameValueManager.CreateINameValue(name, value)
 
     expect(item.name).toBe(name)
     expect(item.value).toBe(value)
@@ -79,10 +79,10 @@ describe('NameValueManager', () => {
 })
 
 test('NameValueWithStyle', () => {
-  const name = 'name'
-  const value = 'value'
-  const tooltip = 'tooltip'
-  const pr = new NameValueWithStyle(name, value, DollarFormatter, tooltip)
+  const name = 'name',
+   value = 'value',
+   tooltip = 'tooltip',
+   pr = new NameValueWithStyle(name, value, DollarFormatter, tooltip)
 
   expect(pr.name).toBe(name)
   expect(pr.value).toBe(value)
@@ -91,13 +91,13 @@ test('NameValueWithStyle', () => {
 })
 
 test('NameValueLineFormatter', () => {
-  const key = 'key'
-  const keyDisplayValue = 'keyDisplayValue'
-  const order = 1
-  const formatter = DollarFormatter
-  const tooltip = 'tooltip'
-  const style = { color: 'red' }
-  const formatNumberOrString = (
+  const key = 'key',
+   keyDisplayValue = 'keyDisplayValue',
+   order = 1,
+   formatter = DollarFormatter,
+   tooltip = 'tooltip',
+   style = { color: 'red' },
+   formatNumberOrString = (
     value: number | string | null | undefined
   ): string => {
     if (typeof value === 'number') {
@@ -105,8 +105,8 @@ test('NameValueLineFormatter', () => {
     }
 
     return value || ''
-  }
-  const pr = new NameValueLineFormatter(
+  },
+   pr = new NameValueLineFormatter(
     key,
     keyDisplayValue,
     order,
@@ -149,13 +149,13 @@ test('NameValueLineFormatter', () => {
 
 describe('NameValueLineFormatManager', () => {
   test('with constructor arguments', () => {
-    const key = 'key'
-    const keyDisplayValue = 'keyDisplayValue'
-    const order = 1
-    const formatter = DollarFormatter
-    const tooltip = 'tooltip'
-    const style = { color: 'red' }
-    const formatNumberOrString = (
+    const key = 'key',
+     keyDisplayValue = 'keyDisplayValue',
+     order = 1,
+     formatter = DollarFormatter,
+     tooltip = 'tooltip',
+     style = { color: 'red' },
+     formatNumberOrString = (
       value: number | string | null | undefined
     ): string => {
       if (typeof value === 'number') {
@@ -163,8 +163,8 @@ describe('NameValueLineFormatManager', () => {
       }
 
       return value || ''
-    }
-    const pr = new NameValueLineFormatter(
+    },
+     pr = new NameValueLineFormatter(
       key,
       keyDisplayValue,
       order,
@@ -172,9 +172,9 @@ describe('NameValueLineFormatManager', () => {
       tooltip,
       style,
       formatNumberOrString
-    )
+    ),
 
-    const mgr = new NameValueLineFormatManager([pr])
+     mgr = new NameValueLineFormatManager([pr])
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist.length).toBe(1)
     expect(mgr.nvlist[0].key).toBe(key)
@@ -185,13 +185,13 @@ describe('NameValueLineFormatManager', () => {
     expect(mgr.nvlist[0].style).toBe(style)
     expect(mgr.nvlist[0].formatNumberOrString).toBe(formatNumberOrString)
 
-    const nv = new NameValue('testName', '100')
-    const arrnvf = mgr.FormatWithStyle([nv], 'name', true)
+    const nv = new NameValue('testName', '100'),
+     arrnvf = mgr.FormatWithStyle([nv], 'name', true)
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf.length).toBe(0)
 
-    const nvkey = new NameValue('key', '100')
-    const arrnvfName = mgr.FormatWithStyle([nvkey], 'name', false)
+    const nvkey = new NameValue('key', '100'),
+     arrnvfName = mgr.FormatWithStyle([nvkey], 'name', false)
     expect(arrnvfName).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfName.length).toBe(1)
     expect(arrnvfName[0]).toBeInstanceOf(NameValueWithStyle)
@@ -288,17 +288,17 @@ describe('NameValueLineFormatManager', () => {
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist.length).toBe(0)
 
-    const nv = new NameValue('testName', '100')
-    const arrnvf = mgr.FormatWithStyle([nv], 'name', true)
+    const nv = new NameValue('testName', '100'),
+     arrnvf = mgr.FormatWithStyle([nv], 'name', true)
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf.length).toBe(0)
   })
 
   test('no style found', () => {
-    const key = 'key'
-    const keyDisplayValue = 'keyDisplayValue'
-    const pr = new NameValueLineFormatter(key, keyDisplayValue)
-    const pr2 = new NameValueLineFormatter(key, keyDisplayValue)
+    const key = 'key',
+     keyDisplayValue = 'keyDisplayValue',
+     pr = new NameValueLineFormatter(key, keyDisplayValue),
+     pr2 = new NameValueLineFormatter(key, keyDisplayValue)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pr.FromStyle = undefined as any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -308,9 +308,9 @@ describe('NameValueLineFormatManager', () => {
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist.length).toBe(2)
 
-    const nv = new NameValue(key, '100')
-    const nvNotFound = new NameValue(key, '200')
-    const arrnvf = mgr.FormatWithStyle([nv, nvNotFound], 'name', true)
+    const nv = new NameValue(key, '100'),
+     nvNotFound = new NameValue(key, '200'),
+     arrnvf = mgr.FormatWithStyle([nv, nvNotFound], 'name', true)
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf.length).toBe(2)
   })
