@@ -1,4 +1,5 @@
 import {
+  StringHelper,
   isString,
   pluralSuffix,
   prefixIfHasData,
@@ -16,7 +17,7 @@ export type DateTypeAcceptable =
   | null
   | undefined
 
-export class DateHelper {
+export abstract class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
   static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
   static readonly FormatLocalWithoutTimezone = 'YYYY-MM-DDTHH:mm:ss.SSS'
@@ -369,8 +370,7 @@ export class DateHelper {
   }
 
   static TimeframeToStartOf(timeframe: string) {
-    // eslint-disable-next-line default-case
-    switch (timeframe) {
+    switch (StringHelper.RemoveLeadingNumbersAndWhitespace(timeframe)) {
       case 'd':
         return 'day'
       case 'h':
@@ -379,12 +379,17 @@ export class DateHelper {
         return 'minute'
       case 's':
         return 'second'
-      case 'w':
-        return 'week'
       case 'M':
         return 'month'
       case 'y':
+      case '':
         return 'year'
+      case 'q':
+        return 'quarter'
+      case 'w':
+        return 'week'
+      default:
+        break
     }
 
     return timeframe

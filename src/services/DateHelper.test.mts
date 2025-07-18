@@ -61,7 +61,7 @@ test(DateHelper.ConvertToDateObject.name, () => {
   )
 })
 
-test('Add Milliseconds', () => {
+test(DateHelper.addMillisToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addMillisToDate(
       anumToAdd,
@@ -73,7 +73,7 @@ test('Add Milliseconds', () => {
   ).toEqual(anumToAdd)
 })
 
-test('Add Seconds', () => {
+test(DateHelper.addSecondsToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addSecondsToDate(
       anumToAdd,
@@ -85,7 +85,7 @@ test('Add Seconds', () => {
   ).toEqual(anumToAdd * 1000)
 })
 
-test('Add Minutes', () => {
+test(DateHelper.addMinutesToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addMinutesToDate(
       anumToAdd,
@@ -97,7 +97,7 @@ test('Add Minutes', () => {
   ).toEqual(anumToAdd * 1000 * 60)
 })
 
-test('Add Hours', () => {
+test(DateHelper.addHoursToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addHoursToDate(
       anumToAdd,
@@ -109,7 +109,7 @@ test('Add Hours', () => {
   ).toEqual(anumToAdd * 1000 * 60 * 60)
 })
 
-test('Add Days', () => {
+test(DateHelper.addDaysToDate.name, () => {
   const anumToAdd = 26,
     newDate = DateHelper.addDaysToDate(
       anumToAdd,
@@ -121,7 +121,7 @@ test('Add Days', () => {
   ).toEqual(anumToAdd * 1000 * 60 * 60 * 24)
 })
 
-describe('toIsoString', () => {
+describe(DateHelper.toIsoString.name, () => {
   test('empty undefined', () => {
     const ret = DateHelper.toIsoString()
 
@@ -154,7 +154,7 @@ describe('toIsoString', () => {
   })
 })
 
-describe('SqlUtcToUtcString', () => {
+describe(DateHelper.SqlUtcToUtcString.name, () => {
   test('empty', () => {
     const ret = DateHelper.SqlUtcToUtcString('')
 
@@ -188,7 +188,7 @@ describe('SqlUtcToUtcString', () => {
   })
 })
 
-describe('toIsoStringSafe', () => {
+describe(DateHelper.toIsoStringSafe.name, () => {
   test('empty', () => {
     const ret = DateHelper.toIsoStringSafe()
 
@@ -214,7 +214,7 @@ describe('toIsoStringSafe', () => {
   })
 })
 
-describe('addMillisToDate', () => {
+describe(DateHelper.addMillisToDate.name, () => {
   test('empty', () => {
     const retDate = DateHelper.addMillisToDate(5000),
       retTimeMillis = Number(retDate),
@@ -264,7 +264,7 @@ describe('addMillisToDate', () => {
   })
 })
 
-describe('FormatDateTime', () => {
+describe(DateHelper.FormatDateTime.name, () => {
   test('empty', () => {
     // Const startDate = new Date()
 
@@ -319,19 +319,19 @@ test.each([
   '2024-10-31 12:31:45',
   '2024-10-31 12:31:45.999',
   '2024-10-31 23:31:45.000',
-])('FormatDateTimeWithMillis %s', (dateToTest) => {
+])(`${DateHelper.FormatDateTimeWithMillis.name} %s`, (dateToTest) => {
   const ret = DateHelper.FormatDateTimeWithMillis(dateToTest)
 
   expect(ret).toMatch(/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/u)
 })
 
-test('toLocalStringWithoutTimezone', () => {
+test(DateHelper.toLocalStringWithoutTimezone.name, () => {
   const ret = DateHelper.toLocalStringWithoutTimezone()
 
   expect(ret).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}/u)
 })
 
-describe('DateFormatForUi', () => {
+describe(DateHelper.DateFormatForUi.name, () => {
   test('default', () => {
     const ret = DateHelper.DateFormatForUi()
 
@@ -348,7 +348,8 @@ describe('DateFormatForUi', () => {
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
 })
-describe('DateHelper.timeDifference', () => {
+
+describe(DateHelper.timeDifference.name, () => {
   test('startTime', () => {
     const astartDate = new Date(Date.now() - 2000),
       millis = DateHelper.timeDifference(astartDate)
@@ -362,7 +363,8 @@ describe('DateHelper.timeDifference', () => {
     )
   })
 })
-describe('DateHelper.timeDifferenceString', () => {
+
+describe(DateHelper.timeDifferenceString.name, () => {
   test('2s', () => {
     const astartDate = new Date(),
       endDate = new Date(Number(astartDate) + 2000),
@@ -409,7 +411,7 @@ describe('DateHelper.timeDifferenceString', () => {
   })
 })
 
-describe('DateHelper.timeDifferenceStringFromMillis', () => {
+describe(DateHelper.timeDifferenceStringFromMillis.name, () => {
   test('2s', () => {
     const str = DateHelper.timeDifferenceStringFromMillis(2000)
 
@@ -489,7 +491,7 @@ describe('DateHelper.timeDifferenceStringFromMillis', () => {
   })
 })
 
-test('isDateObject', () => {
+test(DateHelper.isDateObject.name, () => {
   expect(DateHelper.isDateObject(new Date())).toBe(true)
   expect(DateHelper.isDateObject(1)).toBe(false)
   expect(DateHelper.isDateObject(0)).toBe(false)
@@ -507,7 +509,7 @@ test('isDateObject', () => {
   ).toBe(true)
 })
 
-test('IsValidDate', () => {
+test(DateHelper.IsValidDate.name, () => {
   expect(DateHelper.IsValidDate(new Date())).toBe(true)
   expect(DateHelper.IsValidDate(1)).toBe(true)
   expect(DateHelper.IsValidDate(0)).toBe(true)
@@ -528,7 +530,7 @@ test('IsValidDate', () => {
   expect(DateHelper.IsValidDate(undefined)).toBe(false)
 })
 
-test('TimeframeToStartOf', () => {
+test(DateHelper.TimeframeToStartOf.name, () => {
   expect(DateHelper.TimeframeToStartOf('d')).toBe('day')
   expect(DateHelper.TimeframeToStartOf('h')).toBe('hour')
   expect(DateHelper.TimeframeToStartOf('m')).toBe('minute')
@@ -537,9 +539,14 @@ test('TimeframeToStartOf', () => {
   expect(DateHelper.TimeframeToStartOf('M')).toBe('month')
   expect(DateHelper.TimeframeToStartOf('y')).toBe('year')
   expect(DateHelper.TimeframeToStartOf('v')).toBe('v')
+  expect(DateHelper.TimeframeToStartOf('q')).toBe('quarter')
+  expect(DateHelper.TimeframeToStartOf('v')).toBe('v')
+  expect(DateHelper.TimeframeToStartOf('')).toBe('year')
+  expect(DateHelper.TimeframeToStartOf('  ')).toBe('year')
+  expect(DateHelper.TimeframeToStartOf(' 3  y')).toBe('year')
 })
 
-test('LocalToUtc', () => {
+test(DateHelper.LocalToUtc.name, () => {
   const localDate = new Date('2024-01-01T00:00:00.000Z'),
     utcDate = DateHelper.LocalToUtc(localDate)
 
@@ -563,32 +570,32 @@ test('LocalToUtc', () => {
 //   )
 // })
 
-test('FormattedUnixTime', () => {
+test(DateHelper.FormattedUnixTime.name, () => {
   const localDate = new Date('2024-01-01T00:00:00.000Z'),
     utcDate = DateHelper.FormattedUnixTime(localDate.getTime())
 
   expect(utcDate).toBe('Saturday, September 27th 55969, 8:00:00 pm')
 })
 
-test('TimezoneOffsetInMinutes', () => {
+test(DateHelper.TimezoneOffsetInMinutes.name, () => {
   const utcDate = DateHelper.TimezoneOffsetInMinutes()
 
   expect(utcDate).toBe(-300)
 })
 
-test('UnixTimeFormat', () => {
+test(DateHelper.UnixTimeFormat.name, () => {
   const utcDate = DateHelper.UnixTimeFormat(new Date().getTime())
 
   expect(utcDate).toBe('Dec 1, 2025 7:00 AM')
 })
 
-test('UnixTimeFormatForTheDow', () => {
+test(DateHelper.UnixTimeFormatForTheDow.name, () => {
   const utcDate = DateHelper.UnixTimeFormatForTheDow(new Date().getTime())
 
   expect(utcDate).toBe('Monday, December 1st 2025, 7:00:00 AM')
 })
 
-test('DateFormatForUiWithTime', () => {
+test(DateHelper.DateFormatForUiWithTime.name, () => {
   expect(DateHelper.DateFormatForUiWithTime(new Date().getTime())).toBe(
     '12/1/25 7:00 am'
   )
@@ -603,13 +610,13 @@ test('DateFormatForUiWithTime', () => {
   ).toBe('12/1/2025 7:00:00 am')
 })
 
-test('DateFormatForApiCalls', () => {
+test(DateHelper.DateFormatForApiCalls.name, () => {
   const utcDate = DateHelper.DateFormatForApiCalls(new Date().getTime())
 
   expect(utcDate).toBe('2025-12-01')
 })
 
-test('Midnight', () => {
+test(DateHelper.Midnight.name, () => {
   const utcDate = DateHelper.Midnight(new Date())
 
   expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
@@ -624,7 +631,7 @@ test('Midnight bad date', () => {
   expect(utcDate).toBeUndefined()
 })
 
-test('MidnightSafe', () => {
+test(DateHelper.MidnightSafe.name, () => {
   const utcDate = DateHelper.MidnightSafe(new Date())
 
   expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
@@ -632,7 +639,7 @@ test('MidnightSafe', () => {
   expect(() => DateHelper.MidnightSafe(undefined)).toThrow()
 })
 
-test('NextBoundaryUp', () => {
+test(DateHelper.NextBoundaryUp.name, () => {
   expect(DateHelper.NextBoundaryUp(new Date(), 'year')).toStrictEqual(
     new Date('2026-01-01T00:00:00.000Z')
   )
@@ -671,7 +678,7 @@ test('NextBoundaryUp', () => {
   )
 })
 
-test('FormatLocaleDateString', () => {
+test(DateHelper.FormatLocaleDateString.name, () => {
   expect(DateHelper.FormatLocaleDateString()).toBe('December 1, 2025')
   expect(DateHelper.FormatLocaleDateString(null)).toBe('December 1, 2025')
   expect(DateHelper.FormatLocaleDateString(undefined)).toBe('December 1, 2025')
