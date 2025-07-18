@@ -1,11 +1,11 @@
-import { AppException } from '../../models/AppException.mjs'
-import type { ISymbol } from '../../models/ticker-info.mjs'
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
-import { isArray } from '../array-helper.mjs'
-import { DateHelper } from '../DateHelper.mjs'
 import { getAsNumber, getAsNumberOrUndefined } from '../number-helper.mjs'
-import { safestr } from '../string-helper.mjs'
+import { AppException } from '../../models/AppException.mjs'
+import { DateHelper } from '../DateHelper.mjs'
+import type { ISymbol } from '../../models/ticker-info.mjs'
 import { TradingClientBase } from './TradingClientBase.mjs'
+import { isArray } from '../array-helper.mjs'
+import { safestr } from '../string-helper.mjs'
 
 export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
   FromTo<TFromTo> & {
@@ -18,20 +18,23 @@ export class FinancialModelingPrep extends TradingClientBase {
     fmp: FmpIndicatorQueryParams<number>
   ) {
     const { from, timeframe } = fmp,
-     fmpNew = { ...fmp },
-
-     regex = /(\d+)|([A-Z]+)/gi,
-     matches = safestr(timeframe).match(regex)
-    if (isArray(matches, 2) && matches[0] !== timeframe) {
-      const [units, unit] = matches
+      fmpNew = { ...fmp },
+      regex = /(?<temp2>\d+)|(?<temp1>[A-Z]+)/giu,
+      regexMatches = safestr(timeframe).match(regex)
+    if (isArray(regexMatches, 2) && regexMatches[0] !== timeframe) {
+      const [units, unit] = regexMatches
       if (from) {
-        fmpNew.from = +DateHelper.NextBoundaryUp(from, unit, +units)
+        fmpNew.from = Number(
+          DateHelper.NextBoundaryUp(from, unit, Number(units))
+        )
       }
 
-      fmpNew.to = +DateHelper.NextBoundaryUp(
-        fmpNew.to ? fmpNew.to : Date.now(),
-        unit,
-        +units
+      fmpNew.to = Number(
+        DateHelper.NextBoundaryUp(
+          fmpNew.to ? fmpNew.to : Date.now(),
+          unit,
+          Number(units)
+        )
       )
     }
 
@@ -54,21 +57,23 @@ export class FinancialModelingPrep extends TradingClientBase {
   }
 
   static FmpIndicatorParamsFromObject(body: AnyRecord) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const from = getAsNumberOrUndefined(body.from),
-     to = getAsNumberOrUndefined(body.to),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      to = getAsNumberOrUndefined(body.to),
+      zfmp: FmpIndicatorQueryParams<number> = {
+        from,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        periodLength: getAsNumber(body.periodLength),
+        symbol: safestr(body.symbol, body.ticker),
+        timeframe: safestr(body.timeframe),
+        to,
+      }
 
-     fmp: FmpIndicatorQueryParams<number> = {
-      symbol: safestr(body.symbol, body.ticker),
-      periodLength: getAsNumber(body.periodLength),
-      timeframe: safestr(body.timeframe),
-      from,
-      to,
+    if (!zfmp.symbol) {
+      throw new AppException('No ticker.', 'asset.js FinancialRatios:', zfmp)
     }
 
-    if (!fmp.symbol) {
-      throw new AppException('No ticker.', 'asset.js FinancialRatios:', fmp)
-    }
-
-    return fmp
+    return zfmp
   }
 }

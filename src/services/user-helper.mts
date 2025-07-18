@@ -6,12 +6,12 @@ export enum UserLoginRequestTypes {
 }
 
 export const zUserLoginRequest = z.object({
+  appName: z.string().optional(),
+  password: z.string().min(8),
+  redirectUrl: z.string().optional(),
+  remember: z.boolean().optional(),
   type: z.enum(UserLoginRequestTypes),
   username: z.email().max(250),
-  password: z.string().min(8),
-  remember: z.boolean().optional(),
-  appName: z.string().optional(),
-  redirectUrl: z.string().optional(),
 })
 
 export type IUserLoginRequest = z.infer<typeof zUserLoginRequest>
