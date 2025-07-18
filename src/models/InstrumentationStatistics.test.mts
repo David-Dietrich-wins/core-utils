@@ -1,6 +1,7 @@
 import { DateHelper } from '../services/DateHelper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
+import { AppException } from './AppException.mjs'
 
 const CONST_DefaultSecondsMs = new RegExp('^(\\d+ seconds?|\\d+m?s)$')
 

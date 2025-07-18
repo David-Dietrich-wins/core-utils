@@ -7,7 +7,6 @@ import {
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { AppException } from '../models/AppException.mjs'
 import { isNullOrUndefined } from './general.mjs'
-import { isNumber } from './number-helper.mjs'
 
 export type DateTypeAcceptable =
   | Date
@@ -44,40 +43,44 @@ export class DateHelper {
    * @returns true if the date is valid. false otherwise.
    */
   static IsValidDate(date: DateTypeAcceptable) {
-    // eslint-disable-next-line init-declarations
-    let dateCheck: Date | undefined
+    try {
+      DateHelper.ConvertToDateObject(date, false)
 
-    if (date) {
-      if (DateHelper.isDateObject(date)) {
-        dateCheck = date
-      } else if (moment.isMoment(date)) {
-        dateCheck = date.toDate()
-      } else if (isString(date) || isNumber(date)) {
-        // If it's a string or number, we can try to convert it to a Date object
-        dateCheck = new Date(date)
-      }
-    }
-
-    if (dateCheck instanceof Date && !isNaN(dateCheck.getTime())) {
-      // It is a date object
       return true
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(`${DateHelper.name}.${DateHelper.IsValidDate.name}:`, e)
     }
 
     return false
   }
 
-  static VerifyDateOrNowIfEmpty(
-    date: Date | string | number | null | undefined
-  ) {
-    const dateClean = isNullOrUndefined(date) ? new Date() : new Date(date)
-    if (!DateHelper.isDateObject(dateClean)) {
-      throw new AppException(
-        `Invalid date: ${safestr(date)}`,
-        'DateHelper.VerifyDateOrNowIfInvalid'
-      )
+  static ConvertToDateObject(date: DateTypeAcceptable, setToNowIfEmpty = true) {
+    // eslint-disable-next-line init-declarations
+    let dateClean: Date | undefined
+
+    if (isNullOrUndefined(date)) {
+      if (setToNowIfEmpty) {
+        dateClean = new Date()
+      }
+    } else if (DateHelper.isDateObject(date)) {
+      dateClean = date
+    } else if (moment.isMoment(date)) {
+      dateClean = date.toDate()
+    } else {
+      // If it's a string or number, we can try to convert it to a Date object
+      dateClean = new Date(date)
     }
 
-    return dateClean
+    if (dateClean instanceof Date && !isNaN(dateClean.getTime())) {
+      return dateClean
+    }
+
+    throw new AppException(
+      `Invalid date: ${safestr(date)}`,
+      `${DateHelper.name}.${DateHelper.ConvertToDateObject.name}`,
+      date
+    )
   }
 
   /**
@@ -139,7 +142,7 @@ export class DateHelper {
 
   static FormatDateTime(
     format?: string,
-    dateToFormat?: Moment | Date | number | string,
+    dateToFormat?: DateTypeAcceptable,
     isUtc = false
   ) {
     let m = dateToFormat ? moment(dateToFormat) : moment()
@@ -151,7 +154,7 @@ export class DateHelper {
   }
 
   static FormatDateTimeWithMillis(
-    dateToFormat?: Moment | Date | number | string,
+    dateToFormat?: DateTypeAcceptable,
     isUtc = false
   ) {
     return DateHelper.FormatDateTime(
@@ -170,7 +173,7 @@ export class DateHelper {
         month: 'long',
         year: 'numeric',
       },
-      now = DateHelper.VerifyDateOrNowIfEmpty(date).toLocaleDateString(
+      now = DateHelper.ConvertToDateObject(date).toLocaleDateString(
         locale,
         intlOptions
       )
@@ -264,7 +267,7 @@ export class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static fileDateTime(date?: Moment | Date | number | string, isUtc = false) {
+  static fileDateTime(date?: DateTypeAcceptable, isUtc = false) {
     return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date, isUtc)
   }
 
@@ -424,16 +427,22 @@ export class DateHelper {
    * @returns The absolute value of milliseconds difference between the two times.
    */
 
-  static timeDifference(startTime: Date, endTime?: Date) {
+  static timeDifference(
+    startTime: DateTypeAcceptable,
+    endTime?: DateTypeAcceptable
+  ) {
     if (!startTime) {
       throw new AppException(
         `${DateHelper.name}.${DateHelper.timeDifference.name}: You must have a start time.`
       )
     }
 
-    const endTimeNotEmpty = endTime ?? new Date()
+    const endTimeNotEmpty = DateHelper.ConvertToDateObject(endTime)
 
-    return Math.abs(endTimeNotEmpty.getTime() - startTime.getTime())
+    return Math.abs(
+      endTimeNotEmpty.getTime() -
+        DateHelper.ConvertToDateObject(startTime).getTime()
+    )
   }
   /**
    * Returns the number of seconds between two times.
@@ -441,7 +450,10 @@ export class DateHelper {
    * @param endTime The ending time for the diff. If none provided, the current time is used.
    * @returns The absolute value of seconds difference between the two times rounded down (even if milliseconds is > 500)
    */
-  static timeDifferenceInSeconds(startTime: Date, endTime?: Date) {
+  static timeDifferenceInSeconds(
+    startTime: DateTypeAcceptable,
+    endTime?: DateTypeAcceptable
+  ) {
     return Math.floor(DateHelper.timeDifference(startTime, endTime) / 1000)
   }
   /**
@@ -454,8 +466,8 @@ export class DateHelper {
    * @returns The absolute value of seconds or milliseconds difference between the two times as a string.
    */
   static timeDifferenceString(
-    startTime: Date,
-    endTime?: Date,
+    startTime: DateTypeAcceptable,
+    endTime?: DateTypeAcceptable,
     longFormat = false,
     showMilliseconds = false
   ) {

@@ -7,40 +7,58 @@ import { safestr } from './string-helper.mjs'
 const AAPL_IPO = '1980-12-12',
   AAPL_IPO_AND_TIMEZONE = `${AAPL_IPO}T00:00:00.000Z`,
   AAPL_IPO_DATE = new Date(AAPL_IPO),
-  AAPL_IPO_DATE_MILLISECONDS = AAPL_IPO_DATE.getTime()
+  AAPL_IPO_DATE_MILLISECONDS = AAPL_IPO_DATE.getTime(),
+  AAPL_IPO_MOMENT = moment(AAPL_IPO_AND_TIMEZONE)
 
-test('VerifyDateOrNowIfEmpty', () => {
-  let date = DateHelper.VerifyDateOrNowIfEmpty(
+test(DateHelper.ConvertToDateObject.name, () => {
+  let date = DateHelper.ConvertToDateObject(
     TEST_Parameters_DEV.currentDateString
   )
   expect(date.getTime()).toEqual(TEST_Parameters_DEV.currentDateInMilliseconds)
 
-  date = DateHelper.VerifyDateOrNowIfEmpty('2025-12-01T00:00:00.000Z')
+  // Test for epoch 0
+  expect(DateHelper.ConvertToDateObject(0)).toEqual(
+    new Date('1970-01-01T00:00:00.000Z')
+  )
+  expect(DateHelper.ConvertToDateObject('1970-01-01T00:00:00.000Z')).toEqual(
+    new Date('1970-01-01T00:00:00.000Z')
+  )
+
+  date = DateHelper.ConvertToDateObject('2025-12-01T00:00:00.000Z')
   expect(date.getTime()).toEqual(new Date('2025-12-01T00:00:00.000Z').getTime())
 
   // AAPL IPO date
-  date = DateHelper.VerifyDateOrNowIfEmpty(AAPL_IPO_DATE_MILLISECONDS)
+  date = DateHelper.ConvertToDateObject(AAPL_IPO_DATE_MILLISECONDS)
   expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
 
-  date = DateHelper.VerifyDateOrNowIfEmpty(AAPL_IPO)
+  date = DateHelper.ConvertToDateObject(AAPL_IPO)
   expect(date.getTime()).toEqual(new Date(AAPL_IPO_AND_TIMEZONE).getTime())
 
-  expect(DateHelper.VerifyDateOrNowIfEmpty(1740481297461)).toEqual(
+  expect(DateHelper.ConvertToDateObject(AAPL_IPO_MOMENT)).toEqual(
+    new Date(AAPL_IPO_AND_TIMEZONE)
+  )
+  expect(DateHelper.ConvertToDateObject(1740481297461)).toEqual(
     new Date('2025-02-25T11:01:37.461Z')
   )
 
-  expect(DateHelper.VerifyDateOrNowIfEmpty(undefined)).toEqual(
+  expect(DateHelper.ConvertToDateObject(undefined)).toEqual(
     TEST_Parameters_DEV.currentDate
   )
-  expect(DateHelper.VerifyDateOrNowIfEmpty(0)).toEqual(
+  expect(DateHelper.ConvertToDateObject(0)).toEqual(
     new Date('1970-01-01T00:00:00.000Z')
   )
-  expect(DateHelper.VerifyDateOrNowIfEmpty(null)).toEqual(
+  expect(DateHelper.ConvertToDateObject(null)).toEqual(
     TEST_Parameters_DEV.currentDate
   )
   expect(() =>
-    DateHelper.VerifyDateOrNowIfEmpty('2025-13-01T00:00:00.000Z')
+    DateHelper.ConvertToDateObject('2025-13-01T00:00:00.000Z')
   ).toThrow(AppException)
+  expect(() => DateHelper.ConvertToDateObject(null, false)).toThrow(
+    AppException
+  )
+  expect(() => DateHelper.ConvertToDateObject(undefined, false)).toThrow(
+    AppException
+  )
 })
 
 test('Add Milliseconds', () => {
@@ -347,11 +365,8 @@ describe('DateHelper.timeDifference', () => {
 describe('DateHelper.timeDifferenceString', () => {
   test('2s', () => {
     const astartDate = new Date(),
-      endDate = new Date(Number(astartDate))
-
-    endDate.setSeconds(endDate.getSeconds() - 2)
-    // eslint-disable-next-line one-var
-    const str = DateHelper.timeDifferenceString(astartDate, endDate)
+      endDate = new Date(Number(astartDate) + 2000),
+      str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('2s')
@@ -359,11 +374,8 @@ describe('DateHelper.timeDifferenceString', () => {
 
   test('4h', () => {
     const astartDate = new Date(),
-      endDate = new Date(astartDate.getTime())
-
-    endDate.setHours(endDate.getHours() + 4)
-    // eslint-disable-next-line one-var
-    const str = DateHelper.timeDifferenceString(astartDate, endDate)
+      endDate = new Date(astartDate.getTime() + 4 * 60 * 60 * 1000),
+      str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toBe('4h')
@@ -371,11 +383,8 @@ describe('DateHelper.timeDifferenceString', () => {
 
   test('21d', () => {
     const astartDate = getCurrentDate(),
-      endDate = new Date(astartDate)
-
-    endDate.setDate(endDate.getDate() + 21)
-    // eslint-disable-next-line one-var
-    const str = DateHelper.timeDifferenceString(astartDate, endDate)
+      endDate = DateHelper.addDaysToDate(21, new Date(astartDate)),
+      str = DateHelper.timeDifferenceString(astartDate, endDate)
 
     expect(safestr(str).length).toBeGreaterThan(1)
     expect(str).toMatch(/21d(?<temp1> 1h)?/u)
@@ -399,6 +408,7 @@ describe('DateHelper.timeDifferenceString', () => {
     expect(str).toBe('2 seconds, 123ms')
   })
 })
+
 describe('DateHelper.timeDifferenceStringFromMillis', () => {
   test('2s', () => {
     const str = DateHelper.timeDifferenceStringFromMillis(2000)
@@ -500,9 +510,11 @@ test('isDateObject', () => {
 test('IsValidDate', () => {
   expect(DateHelper.IsValidDate(new Date())).toBe(true)
   expect(DateHelper.IsValidDate(1)).toBe(true)
-  expect(DateHelper.IsValidDate(0)).toBe(false)
+  expect(DateHelper.IsValidDate(0)).toBe(true)
   expect(DateHelper.IsValidDate('')).toBe(false)
   expect(DateHelper.IsValidDate(new Date('2022'))).toBe(true)
+  expect(DateHelper.IsValidDate('1970-01-01')).toBe(true)
+  expect(DateHelper.IsValidDate('1960-01-01')).toBe(true)
   expect(DateHelper.IsValidDate('2022-10-24')).toBe(true)
   expect(DateHelper.IsValidDate('2022-10-24')).toBe(true)
   expect(DateHelper.IsValidDate(new Date('20'))).toBe(false)
@@ -511,6 +523,9 @@ test('IsValidDate', () => {
   expect(
     DateHelper.IsValidDate(moment('2022-10-24T00:00:00.000Z').toDate())
   ).toBe(true)
+  expect(DateHelper.IsValidDate('-24z')).toBe(false)
+  expect(DateHelper.IsValidDate(null)).toBe(false)
+  expect(DateHelper.IsValidDate(undefined)).toBe(false)
 })
 
 test('TimeframeToStartOf', () => {
