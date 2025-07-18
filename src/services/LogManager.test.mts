@@ -45,7 +45,7 @@ const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
   const msg =
     String(timestamp) +
     (message as unknown[])
-      .map((e: unknown) => ObjectTypesToString(e, false, false))
+      .map((e) => ObjectTypesToString(e, false, false))
       .join(' ')
 
   return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
