@@ -1,56 +1,15 @@
-import { AppException } from '../models/AppException.mjs'
 import {
   ArrayOrSingleBasicTypes,
   StringOrStringArray,
 } from '../models/types.mjs'
-import { isArray, safeArray } from './array-helper.mjs'
 import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 
 export function capitalizeFirstLetter(str?: string | null) {
   return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''
-}
-
-export function capitalizeWords(str?: string | null) {
-  return safestr(str).split(' ').map(capitalizeFirstLetter).join(' ')
-}
-/**
- * Gets a comma separated list of unique items.
- * @param stringOrArray The {@link StringOrStringArray} to flatten then separate by commas.
- * @returns The flattened, comma-separated string.
- */
-
-export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
-  if (isString(stringOrArray)) {
-    return stringOrArray
-  }
-
-  const myset = new Set(stringOrArray)
-  return [...myset].join(',')
-}
-
-/**
- * Gets a comma separated list of unique items in uppercase.
- * @param stringOrArray The {@link StringOrStringArray} to uppercase and separate by commas.
- * @returns The flattened, comma-separated string in uppercase.
- */
-export function getCommaUpperList(stringOrArray: StringOrStringArray) {
-  return safestrUppercase(getCommaSeparatedList(stringOrArray))
-}
-
-/**
- * Checks a variable to see if it is empty.
- * If it is a string, then checks for "".
- * @param s A variable to test if it is a string and is empty.
- * @param allowFunction True if s is a function and you want to call the function to get s.
- * @returns True if the object s is an empty string.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isEmptyString(s: any, allowFunction = true) {
-  const testString = (str: unknown) => !str || (isString(str) && str === '')
-
-  return testString(s) || (allowFunction && isFunction(s) && testString(s()))
 }
 
 /**
@@ -91,6 +50,33 @@ export function safestr(...args: unknown[]): string {
   return ''
 }
 
+export function capitalizeWords(str?: string | null) {
+  return safestr(str).split(' ').map(capitalizeFirstLetter).join(' ')
+}
+/**
+ * Gets a comma separated list of unique items.
+ * @param stringOrArray The {@link StringOrStringArray} to flatten then separate by commas.
+ * @returns The flattened, comma-separated string.
+ */
+
+export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
+  if (isString(stringOrArray)) {
+    return stringOrArray
+  }
+
+  const myset = new Set(stringOrArray)
+  return [...myset].join(',')
+}
+
+/**
+ * Returns a guaranteed valid string that is trimmed. If all strings are empty, null or undefined, then an empty string is returned.
+ * @param s A string to set to trim. If null or undefined, empty string is returned.
+ * @returns A guaranteed string to be nonnull and trimmed.
+ */
+export function safestrTrim(...s: (string | null | undefined)[]) {
+  return safestr(...safeArray(s).map((x) => safestr(x).trim()))
+}
+
 /**
  * Returns a guaranteed valid string to be lowercase.
  * @param s A string to set to lowercase. If null or undefined, empty string is returned.
@@ -98,11 +84,41 @@ export function safestr(...args: unknown[]): string {
  * @returns A guaranteed string to be nonnull and lowercase.
  */
 export function safestrLowercase(s?: string | null, trim = true) {
-  if (trim) {
-    s = safestrTrim(s)
-  }
+  return (trim ? safestrTrim(s) : safestr(s)).toLowerCase()
+}
 
-  return safestr(s).toLowerCase()
+/**
+ * Returns a guaranteed valid string to be uppercase.
+ * @param s A string to set to uppercase. If null or undefined, empty string is returned.
+ * @param trim Optionally trim the string also.
+ * @returns A guaranteed string to be nonnull and uppercase.
+ */
+export function safestrUppercase(s?: string | null, trim = true) {
+  return (trim ? safestrTrim(s) : safestr(s)).toUpperCase()
+}
+
+/**
+ * Gets a comma separated list of unique items in uppercase.
+ * @param stringOrArray The {@link StringOrStringArray} to uppercase and separate by commas.
+ * @returns The flattened, comma-separated string in uppercase.
+ */
+export function getCommaUpperList(stringOrArray: StringOrStringArray) {
+  return safestrUppercase(getCommaSeparatedList(stringOrArray))
+}
+
+/**
+ * Checks a variable to see if it is empty.
+ * If it is a string, then checks for "".
+ * @param s A variable to test if it is a string and is empty.
+ * @param allowFunction True if s is a function and you want to call the function to get s.
+ * @returns True if the object s is an empty string.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isEmptyString(s: any, allowFunction = true) {
+  const testString = (str: unknown) => !str || (isString(str) && str === '')
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  return testString(s) || (allowFunction && isFunction(s) && testString(s()))
 }
 
 /**
@@ -116,43 +132,13 @@ export function safestrToJson<T>(
   fname?: string
 ): T | undefined {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(safestr(strjson))
   } catch (ex) {
+    // eslint-disable-next-line no-console
     console.log(fname ? fname : 'safestrToJson', ex)
   }
 }
-
-/**
- * Returns a guaranteed valid string that is trimmed. If all strings are empty, null or undefined, then an empty string is returned.
- * @param s A string to set to trim. If null or undefined, empty string is returned.
- * @returns A guaranteed string to be nonnull and trimmed.
- */
-export function safestrTrim(...s: (string | null | undefined)[]) {
-  return safestr(...safeArray(s).map((x) => safestr(x).trim()))
-}
-
-/**
- * Returns a guaranteed valid string to be uppercase.
- * @param s A string to set to uppercase. If null or undefined, empty string is returned.
- * @param trim Optionally trim the string also.
- * @returns A guaranteed string to be nonnull and uppercase.
- */
-export function safestrUppercase(s?: string | null, trim = true) {
-  if (trim) {
-    s = safestrTrim(s)
-  }
-
-  return safestr(s).toUpperCase()
-}
-
-/**
- * Returns an s if the number passed in should be pluralized.
- * @param isPlural A number that is used to determine if the plural suffix is added.
- * @param suffix The suffix to add if the number should be pluralized.
- * @returns The suffix string if the number is not 1.
- */
-export const pluralSuffix = (num: number, suffix = 's') =>
-  pluralize(num, '', suffix)
 
 /**
  * Returns an s if the number passed in should be pluralized.
@@ -166,6 +152,16 @@ export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
   }
 
   return safestr(textIfPlural)
+}
+
+/**
+ * Returns an s if the number passed in should be pluralized.
+ * @param isPlural A number that is used to determine if the plural suffix is added.
+ * @param suffix The suffix to add if the number should be pluralized.
+ * @returns The suffix string if the number is not 1.
+ */
+export function pluralSuffix(num: number, suffix = 's') {
+  return pluralize(num, '', suffix)
 }
 
 /**
@@ -193,6 +189,47 @@ export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
 }
 
 /**
+ * Wraps a given string str with a prefix and suffix.
+ * @param left The prefix to put in front of the str.
+ * @param str The string to be wrapped.
+ * @param right The suffix to put after str.
+ * @returns A string of left + str + right. Guaranteed to be a safe string.
+ */
+export function stringWrap(left: string, str: string, right?: string) {
+  return (
+    safestr(left) +
+    safestr(str) +
+    (isNullOrUndefined(right) ? safestr(left) : safestr(right))
+  )
+}
+/**
+ * Creates a string as "str".
+ * @param str The string to wrap in double quotes.
+ * @returns The "str" wrapped string.
+ */
+export function stringWrapDoubleQuote(str: string) {
+  return stringWrap('"', str)
+}
+
+/**
+ * Creates a string as (str) wrapped in parentheses.
+ * @param str The string to wrap in parentheses.
+ * @returns The (str) wrapped string.
+ */
+export function stringWrapParen(str: string) {
+  return stringWrap('(', str, ')')
+}
+
+/**
+ * Creates a string as 'str'.
+ * @param str The string to wrap in single quotes.
+ * @returns The 'str' wrapped string.
+ */
+export function stringWrapSingleQuote(str: string) {
+  return stringWrap("'", str)
+}
+
+/**
  * Creates a string with a name=value. Optional wrapping of the value is provided.
  * @param name The name.
  * @param value The value to set the name.
@@ -201,13 +238,11 @@ export function prefixIfHasData(s: string | null | undefined, prefix = ', ') {
  */
 export function stringEquals(name: string, value: string, valueWrapper = '') {
   if (hasData(name)) {
-    return (
-      `${name 
-      }=${ 
+    return `${name}=${
       hasData(valueWrapper)
         ? stringWrap(valueWrapper, value, valueWrapper)
-        : safestr(value)}`
-    )
+        : safestr(value)
+    }`
   }
 
   return ''
@@ -226,54 +261,14 @@ export function stringEqualsQuoted(
   useSingleQuote = true
 ) {
   if (hasData(name)) {
-    return (
-      `${name 
-      }=${ 
+    return `${name}=${
       useSingleQuote || false
         ? stringWrapSingleQuote(value)
-        : stringWrapDoubleQuote(value)}`
-    )
+        : stringWrapDoubleQuote(value)
+    }`
   }
 
   return ''
-}
-
-/**
- * Wraps a given string str with a prefix and suffix.
- * @param left The prefix to put in front of the str.
- * @param str The string to be wrapped.
- * @param right The suffix to put after str.
- * @returns A string of left + str + right. Guaranteed to be a safe string.
- */
-export function stringWrap(left: string, str: string, right: string) {
-  return safestr(left) + safestr(str) + safestr(right)
-}
-/**
- * Creates a string as "str".
- * @param str The string to wrap in double quotes.
- * @returns The "str" wrapped string.
- */
-export function stringWrapDoubleQuote(str: string) {
-  return stringWrap('"', str, '"')
-}
-
-/**
- * Creates a string as (str) wrapped in parentheses.
- * @param str The string to wrap in parentheses.
- * @returns The (str) wrapped string.
- */
-export function stringWrapParen(str: string) {
-  return stringWrap('(', str, ')')
-}
-
-/**
- * Creates a string as 'str'.
- * @param str The string to wrap in single quotes.
- * @returns The 'str' wrapped string.
- */
-export function stringWrapSingleQuote(str: string) {
-   
-  return stringWrap("'", str, "'")
 }
 
 export function stringIf(
@@ -288,8 +283,9 @@ export function FirstCharCapitalFormatter(s: string) {
 }
 
 export class StringHelper {
+  // eslint-disable-next-line complexity
   static safestr(
-    s?: string | number | boolean | null,
+    str?: string | number | boolean | null,
     ifEmpty?:
       | string
       | {
@@ -304,6 +300,7 @@ export class StringHelper {
         }
       | null
   ): string {
+    let s = str
     if (isNullOrUndefined(s)) {
       s = ''
     } else if (!isString(s)) {
@@ -365,12 +362,20 @@ export class StringHelper {
     return s
   }
 
-  static GenerateRandomString(length: number, characters?: string) {
-    let result = ''
-    characters ||=
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  static ReplaceAll(str: string, regex: RegExp, replaceWith = ''): string {
+    return safestr(str).replaceAll(regex, replaceWith)
+  }
+  static RemoveLeadingNumbersAndWhitespace(str: string) {
+    return StringHelper.ReplaceAll(str, /^\s*\d*\s*/gu)
+  }
 
-    const charactersLength = characters.length
+  static GenerateRandomString(length: number, charactersToAllow?: string) {
+    let result = ''
+    const characters =
+        safestr(charactersToAllow) ||
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+      charactersLength = characters.length
+
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
@@ -379,11 +384,11 @@ export class StringHelper {
   }
 
   static ReplaceNonPrintable(str: string | null | undefined) {
-    return safestr(str).replaceAll(/[^\x20-\x7E]/g, '')
+    return safestr(str).replaceAll(/[^\x20-\x7E]/gu, '')
   }
 
   static ReplaceTwoOrMoreSpacesWithSingleSpace(str: string | null | undefined) {
-    return safestr(str).replaceAll(/[ \t\r\n]{2,}/g, ' ')
+    return safestr(str).replaceAll(/[ \t\r\n]{2,}/gu, ' ')
   }
 
   static safeHtmlAttribute(items: ArrayOrSingleBasicTypes, separator = '-') {

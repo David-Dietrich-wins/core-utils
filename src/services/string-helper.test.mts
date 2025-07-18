@@ -1101,3 +1101,16 @@ test('GenerateRandomString', () => {
   expect(randomString2).toHaveLength(length)
   expect(randomString2).toMatch(/^[abcde]{1,10}$/u)
 })
+
+test(StringHelper.RemoveLeadingNumbersAndWhitespace.name, () => {
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   123abc')).toBe(
+    'abc'
+  )
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   abc')).toBe(
+    'abc'
+  )
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
+})
