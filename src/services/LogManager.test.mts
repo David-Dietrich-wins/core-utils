@@ -1,37 +1,55 @@
 import { jest } from '@jest/globals'
 import { LogManagerOptions } from './LogManager.mjs'
 jest.unstable_unmockModule('./services/LogManager.mjs')
-// import winston from 'winston'
-// import { DateHelper } from './DateHelper.mjs'
-// import { ObjectTypesToString } from './object-helper.mjs'
+import winston from 'winston'
+import { DateHelper } from './DateHelper.mjs'
+import { ObjectTypesToString } from './object-helper.mjs'
+import type DailyRotateFile from 'winston-daily-rotate-file'
 const { LogManager } = await import('./LogManager.mjs')
 
-// const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
-//   const msg =
-//     String(timestamp) +
-//     (message as unknown[])
-//       .map((e: unknown) => ObjectTypesToString(e, false, false))
-//       .join(' ')
+let logManagerOptions: LogManagerOptions
 
-//   return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
-// })
+const lmOptionsNoFiles: LogManagerOptions = {
+  componentName: 'TestComponent',
+  includeHttpRequestDataInTheLog: true,
+  includeHttpResponseDataInTheLog: true,
+  logCallback: jest.fn(),
+  logBaseFileName: '',
+  logFileName: '',
+  logLevel: 'info',
+  maxFiles: 5,
+  maxSize: 100,
+  rotateBaseFileName: '',
+  showConsole: true,
+  suffixDatePattern: 'YYYY-MM-DD',
+}
+
+// const mockLoggerCreateInstance = (LogManager.CreateInstance = jest.fn(
+//   (options: LogManagerOptions) => {
+//     return new LogManager(options)
+//   }
+// ))
+
+beforeEach(() => {
+  logManagerOptions = { ...lmOptionsNoFiles }
+})
+
+const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
+  const msg =
+    String(timestamp) +
+    (message as unknown[])
+      .map((e: unknown) => ObjectTypesToString(e, false, false))
+      .join(' ')
+
+  return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
+})
 
 describe('constructor', () => {
-  const lmOptionsGood: LogManagerOptions = {
-    componentName: 'TestComponent',
-    includeHttpRequestDataInTheLog: true,
-    includeHttpResponseDataInTheLog: true,
-    logCallback: (logLevel, msg) => {
-      console.log(`Log Callback: ${logLevel} - ${msg}`)
-    },
+  const lmOptionsGood = {
+    ...logManagerOptions,
     logBaseFileName: 'test_base.log',
     logFileName: 'test.log',
-    logLevel: 'info',
-    maxFiles: 5,
-    maxSize: 100,
     rotateBaseFileName: 'test_rotate.log',
-    showConsole: true,
-    suffixDatePattern: 'YYYY-MM-DD',
   }
 
   test('good', () => {
@@ -45,21 +63,6 @@ describe('constructor', () => {
   })
 
   test('bad: no logBaseFileName, logFileName, or rotateBaseFileName', () => {
-    const lmOptionsNoFiles: LogManagerOptions = {
-      componentName: 'TestComponent',
-      includeHttpRequestDataInTheLog: true,
-      includeHttpResponseDataInTheLog: true,
-      logCallback: jest.fn(),
-      logBaseFileName: '',
-      logFileName: '',
-      logLevel: 'info',
-      maxFiles: 5,
-      maxSize: 100,
-      rotateBaseFileName: '',
-      showConsole: true,
-      suffixDatePattern: 'YYYY-MM-DD',
-    }
-
     expect(() => new LogManager(lmOptionsNoFiles)).toThrow(
       'You must provide a logBaseFileName, an explicit logFileName or a rotateBaseFileName.'
     )
@@ -126,18 +129,66 @@ describe('log levels', () => {
   })
 })
 
-// test('Winston transports', () => {
-//   const ret = LogManager.WinstonLogTransports(
-//     'info',
-//     'TEST.WinstonLogTransports-logFileName.log',
-//     'TEST.WinstonLogTransports-logBaseFileName.log',
-//     'TEST.WinstonLogTransports-rotateBaseFileName.log',
-//     'YYY-MM-DD',
-//     10,
-//     1024,
-//     false,
-//     lineFormatter
-//   )
+describe('Winston transports', () => {
+  test('with log file names', () => {
+    const ret = LogManager.WinstonLogTransports(
+      'info',
+      'TEST.WinstonLogTransports-logFileName.log',
+      'TEST.WinstonLogTransports-logBaseFileName.log',
+      'TEST.WinstonLogTransports-rotateBaseFileName.log',
+      'YYY-MM-DD',
+      10,
+      1024,
+      false,
+      lineFormatter
+    )
 
-//   expect(ret.length).toBe(2)
-// })
+    expect(ret.length).toBe(2)
+  })
+
+  test('no daily rotate file', () => {
+    const mockDailyRotateFileLogger = (LogManager.DailyRotateFileLogger =
+      jest.fn(() => null as unknown as DailyRotateFile))
+
+    const ret = LogManager.WinstonLogTransports(
+      'info',
+      'TEST.WinstonLogTransports-logFileName.log',
+      'TEST.WinstonLogTransports-logBaseFileName.log',
+      'TEST.WinstonLogTransports-rotateBaseFileName.log',
+      'YYY-MM-DD',
+      10,
+      1024,
+      false,
+      lineFormatter
+    )
+
+    expect(mockDailyRotateFileLogger).toHaveBeenCalledWith(
+      'info',
+      'TEST.WinstonLogTransports-rotateBaseFileName.log',
+      'YYY-MM-DD',
+      10,
+      1024,
+      lineFormatter
+    )
+    expect(mockDailyRotateFileLogger).toHaveBeenCalledTimes(1)
+    mockDailyRotateFileLogger.mockRestore()
+
+    expect(ret.length).toBe(1)
+  })
+
+  test('without log file names', () => {
+    const ret = LogManager.WinstonLogTransports(
+      'info',
+      '',
+      '',
+      '',
+      'YYY-MM-DD',
+      10,
+      1024,
+      false,
+      lineFormatter
+    )
+
+    expect(ret.length).toBe(0)
+  })
+})
