@@ -1,5 +1,4 @@
 import util from 'util'
-import Axios, { AxiosError } from 'axios'
 import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import { safestr, safestrLowercase, safestrToJson } from './string-helper.mjs'
 import { isString } from './string-helper.mjs'
@@ -9,7 +8,6 @@ import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
 import { arrayElement, arrayFirst, safeArray } from './array-helper.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
-import type { IStatus } from '../models/ApiResponse.mjs'
 
 export function UpdateFieldValue<T extends IId>(
   parentObject: Readonly<T>,
@@ -25,20 +23,6 @@ export function UpdateFieldValue<T extends IId>(
 }
 
 const CONST_JsonDepth = 5
-
-type AxiosErrorWrapper = IStatus & {
-  code?: string
-  lastRequestTime?: number
-  message: string
-  method?: string
-  name: string
-  requestData?: string
-  responseData?: string
-  retryCount?: number
-  stack?: string
-  type: string
-  url?: string
-}
 
 /**
  * Searches an object's keys for a specific key and returns the value
@@ -92,48 +76,11 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
   )
 }
 
-export function ObjectTypesToString(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  e: any,
-  saveHttpResponseData = false,
-  saveHttpRequestData = false
-) {
+export function ObjectTypesToString(e: unknown): string {
   const etoString: string = isNullOrUndefined(e) ? '' : e.toString()
 
   if (Array.isArray(e)) {
     return util.inspect(e, true, CONST_JsonDepth)
-  } else if (Axios.isAxiosError(e)) {
-    const axerr: AxiosError = e
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const axRetry = (axerr.config as any)?.['axios-retry']
-
-    const axiosJsonError: AxiosErrorWrapper = {
-      type: 'AxiosError',
-      name: axerr.name,
-      code: axerr.code,
-      method: axerr.config?.method,
-      url: axerr.config?.url,
-      message: axerr.message,
-      lastRequestTime: axRetry?.lastRequestTime,
-      retryCount: axRetry?.retryCount,
-      stack: axerr.stack,
-    }
-
-    if (axerr.response?.status) {
-      axiosJsonError.status = axerr.response.status
-    }
-    if (axerr.response?.statusText) {
-      axiosJsonError.statusText = axerr.response.statusText
-    }
-
-    if (saveHttpRequestData && axerr.config?.data) {
-      axiosJsonError.requestData = axerr.config.data
-    }
-    if (saveHttpResponseData && axerr.response?.data) {
-      axiosJsonError.responseData = safeJsonToString(axerr.response.data)
-    }
-
-    return util.inspect(axiosJsonError, true, CONST_JsonDepth)
   } else if (e instanceof Error) {
     const jerr = {
       message: e.message,
