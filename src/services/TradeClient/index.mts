@@ -1,2 +1,2 @@
-export * from './FinancialModelingPrep-old.mjs'
+export * from './FinancialModelingPrep.mjs'
 export * from './TradingClientBase.mjs'

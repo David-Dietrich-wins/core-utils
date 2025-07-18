@@ -2,7 +2,7 @@ import { AppException, AppExceptionHttp } from './AppException.mjs'
 import { safestr, safestrLowercase } from '../services/string-helper.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { IDataWithStats } from './types.mjs'
-import { FetchDataTypesAllowed } from '../services/fetch-http.mjs'
+import { FetchDataTypesAllowed } from '../services/html-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { PagedResponse, type IPagedResponse } from './PagedResponse.mjs'
 
