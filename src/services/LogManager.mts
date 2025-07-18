@@ -4,7 +4,7 @@ import DailyRotateFile, {
   DailyRotateFileTransportOptions,
 } from 'winston-daily-rotate-file'
 import { hasData } from './general.mjs'
-import { safestr, safestrTrim } from './string-helper.mjs'
+import { safestrTrim } from './string-helper.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -73,13 +73,7 @@ export class LogManager {
 
     const logLineFormat = winston.format.printf(({ level, message }) => {
       const msg = (message as any)
-        .map((e: unknown) =>
-          ObjectTypesToString(
-            e,
-            includeHttpResponseDataInTheLog,
-            includeHttpRequestDataInTheLog
-          )
-        )
+        .map((e: unknown) => ObjectTypesToString(e))
         .join(' ')
 
       return `${DateHelper.FormatDateTimeWithMillis()}: [${
@@ -176,16 +170,17 @@ export class LogManager {
     maxsize: number | undefined,
     logLineFormat: winston.Logform.Format
   ) {
+    const cleanLogFileName =
+      './logs/' +
+      (safestrTrim(logFileName)
+        ? safestrTrim(logFileName)
+        : `${safestrTrim(logBaseFileName)}-${DateHelper.FormatDateTime(
+            suffixDatePattern
+          )}.log`)
+
     const logfileTransportOptions = new transports.File({
       level: 'info',
-
-      filename: safestr(
-        safestrTrim(logFileName),
-        `./logs/${safestrTrim(logBaseFileName)}-${DateHelper.FormatDateTime(
-          suffixDatePattern
-        )}.log`
-      ),
-
+      filename: cleanLogFileName,
       format: logLineFormat,
       maxFiles,
       maxsize,

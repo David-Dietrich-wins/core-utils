@@ -44,18 +44,16 @@ beforeEach(() => {
 const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
   const msg =
     String(timestamp) +
-    (message as unknown[])
-      .map((e) => ObjectTypesToString(e, false, false))
-      .join(' ')
+    (message as unknown[]).map((e) => ObjectTypesToString(e)).join(' ')
 
   return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
 })
 
 describe('constructor', () => {
   const lmOptionsGood = GetTestLogManagerOptions({
-    logBaseFileName: 'test_base.log',
-    logFileName: 'test.log',
-    rotateBaseFileName: 'test_rotate.log',
+    logBaseFileName: 'constructor1-BaseFileName.log',
+    logFileName: 'constructor2-FileName.log',
+    rotateBaseFileName: 'constructor3-RotateBaseFileName.log',
   })
 
   test('good', () => {
@@ -82,9 +80,9 @@ describe('constructor', () => {
 
 describe('log levels', () => {
   const logManagerOptions = GetTestLogManagerOptions({
-    logBaseFileName: 'test_base.log',
-    logFileName: 'test.log',
-    rotateBaseFileName: 'test_rotate.log',
+    logBaseFileName: 'logLevels1-BaseFileName.log',
+    logFileName: 'logLevels2-FileName.log',
+    rotateBaseFileName: 'logLevels3-RotateBaseFileName.log',
     suffixDatePattern: 'YYYY-MM-DD',
   })
 
@@ -129,14 +127,34 @@ describe('log levels', () => {
   })
 })
 
-describe('Winston transports', () => {
+describe('transports', () => {
+  test('TransportFileLogger', () => {
+    const ret = LogManager.TransportFileLogger(
+      '',
+      'TransportFileLogger',
+      'YYYY-MM-DD',
+      10,
+      1024,
+      lineFormatter
+    )
+
+    expect(ret).toBeDefined()
+    expect(ret.filename).toMatch(/^TransportFileLogger.2025-12-01.log/)
+    expect(ret.level).toBe('info')
+    expect(ret.format).toBeDefined()
+    expect(ret.maxFiles).toBe(10)
+    expect(ret.maxsize).toBe(1024)
+    expect(ret.tailable).toBe(true)
+    expect(ret.zippedArchive).toBe(false)
+  })
+
   test('with log file names', () => {
     const ret = LogManager.WinstonLogTransports(
       'info',
-      'TEST.WinstonLogTransports-logFileName.log',
-      'TEST.WinstonLogTransports-logBaseFileName.log',
-      'TEST.WinstonLogTransports-rotateBaseFileName.log',
-      'YYY-MM-DD',
+      'WinstonLogTransports-FileName.log',
+      'WinstonLogTransports-BaseFileName.log',
+      'WinstonLogTransports-RotateBaseFileName.log',
+      'YYYY-MM-DD',
       10,
       1024,
       false,
@@ -152,9 +170,9 @@ describe('Winston transports', () => {
 
     const ret = LogManager.WinstonLogTransports(
       'info',
-      'TEST.WinstonLogTransports-logFileName.log',
-      'TEST.WinstonLogTransports-logBaseFileName.log',
-      'TEST.WinstonLogTransports-rotateBaseFileName.log',
+      'TEST4.WinstonLogTransports-logFileName.log',
+      'TEST5.WinstonLogTransports-logBaseFileName.log',
+      'TEST6.WinstonLogTransports-rotateBaseFileName.log',
       'YYY-MM-DD',
       10,
       1024,
@@ -164,7 +182,7 @@ describe('Winston transports', () => {
 
     expect(mockDailyRotateFileLogger).toHaveBeenCalledWith(
       'info',
-      'TEST.WinstonLogTransports-rotateBaseFileName.log',
+      'TEST6.WinstonLogTransports-rotateBaseFileName.log',
       'YYY-MM-DD',
       10,
       1024,
