@@ -1,27 +1,23 @@
-import winston, { Logger } from 'winston'
-import { DateHelper } from './DateHelper.mjs'
-import { ObjectTypesToString } from './object-helper.mjs'
-import { LogManager, LogManagerOptions } from './LogManager.mjs'
-import {
-  getGlobalLogger,
-  mockLoggerDebug,
-  mockLoggerError,
-  mockLoggerInfo,
-  mockLoggerLog,
-  mockLoggerSilly,
-  mockLoggerWarn,
-} from '../jest.setup.mjs'
+import { jest } from '@jest/globals'
+import { LogManagerOptions } from './LogManager.mjs'
+jest.unstable_unmockModule('./services/LogManager.mjs')
+// import winston from 'winston'
+// import { DateHelper } from './DateHelper.mjs'
+// import { ObjectTypesToString } from './object-helper.mjs'
+const { LogManager } = await import('./LogManager.mjs')
 
-const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
-  const msg = (message as any)
-    .map((e: unknown) => ObjectTypesToString(e, false, false))
-    .join(' ')
+// const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
+//   const msg =
+//     String(timestamp) +
+//     (message as unknown[])
+//       .map((e: unknown) => ObjectTypesToString(e, false, false))
+//       .join(' ')
 
-  return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
-})
+//   return `${DateHelper.FormatDateTimeWithMillis()}: [${level}]: ${msg}`
+// })
 
-test('constructor', () => {
-  const lmopts: LogManagerOptions = {
+describe('constructor', () => {
+  const lmOptionsGood: LogManagerOptions = {
     componentName: 'TestComponent',
     includeHttpRequestDataInTheLog: true,
     includeHttpResponseDataInTheLog: true,
@@ -38,83 +34,95 @@ test('constructor', () => {
     suffixDatePattern: 'YYYY-MM-DD',
   }
 
-  const logManager = new LogManager(lmopts)
-  expect(logManager).toBeDefined()
+  test('good', () => {
+    const logManager = new LogManager(lmOptionsGood)
+    expect(logManager).toBeInstanceOf(LogManager)
 
-  // expect(logManager.componentName).toBe('TestComponent')
-  // expect(logManager.logLevel).toBe('info')
-  // expect(logManager.includeHttpRequestDataInTheLog).toBe(false)
-  // expect(logManager.includeHttpResponseDataInTheLog).toBe(false)
+    // expect(logManager.componentName).toBe('TestComponent')
+    // expect(logManager.logLevel).toBe('info')
+    // expect(logManager.includeHttpRequestDataInTheLog).toBe(false)
+    // expect(logManager.includeHttpResponseDataInTheLog).toBe(false)
+  })
+
+  test('bad: no logBaseFileName, logFileName, or rotateBaseFileName', () => {
+    const lmOptionsNoFiles: LogManagerOptions = {
+      componentName: 'TestComponent',
+      includeHttpRequestDataInTheLog: true,
+      includeHttpResponseDataInTheLog: true,
+      logCallback: jest.fn(),
+      logBaseFileName: '',
+      logFileName: '',
+      logLevel: 'info',
+      maxFiles: 5,
+      maxSize: 100,
+      rotateBaseFileName: '',
+      showConsole: true,
+      suffixDatePattern: 'YYYY-MM-DD',
+    }
+
+    expect(() => new LogManager(lmOptionsNoFiles)).toThrow(
+      'You must provide a logBaseFileName, an explicit logFileName or a rotateBaseFileName.'
+    )
+  })
+
+  test('CreateInstance', () => {
+    const logManager = LogManager.CreateInstance(lmOptionsGood)
+    expect(logManager).toBeInstanceOf(LogManager)
+  })
 })
 
 describe('log levels', () => {
-  beforeEach(() => {
-    mockLoggerDebug.mockRestore()
-    mockLoggerError.mockRestore()
-    mockLoggerInfo.mockRestore()
-    mockLoggerLog.mockRestore()
-    mockLoggerSilly.mockRestore()
-    mockLoggerWarn.mockRestore()
-  })
+  const logManagerOptions: LogManagerOptions = {
+    componentName: 'TestComponent',
+    includeHttpRequestDataInTheLog: true,
+    includeHttpResponseDataInTheLog: true,
+    logCallback: jest.fn(),
+    logBaseFileName: 'test_base.log',
+    logFileName: 'test.log',
+    logLevel: 'debug',
+    maxFiles: 5,
+    maxSize: 100,
+    rotateBaseFileName: 'test_rotate.log',
+    showConsole: true,
+    suffixDatePattern: 'YYYY-MM-DD',
+  }
+  const lm = new LogManager(logManagerOptions)
 
   test('debug', () => {
-    getGlobalLogger().debug('1', '2', '3', '4', '5')
+    expect(lm).toBeDefined()
+    const wlogger = lm.debug('1', '2', '3', '4', '5')
 
-    expect(getGlobalLogger().debug).toHaveBeenCalledTimes(1)
-    expect(getGlobalLogger().debug).toHaveBeenCalledWith(
-      '1',
-      '2',
-      '3',
-      '4',
-      '5'
-    )
+    expect(wlogger).toBeDefined()
   })
 
   test('error', () => {
-    getGlobalLogger().error('1', '2', '3', '4', '5')
+    const wlogger = lm.error('1', '2', '3', '4', '5')
 
-    expect(getGlobalLogger().error).toHaveBeenCalledTimes(1)
-    expect(getGlobalLogger().error).toHaveBeenCalledWith(
-      '1',
-      '2',
-      '3',
-      '4',
-      '5'
-    )
+    expect(wlogger).toBeDefined()
   })
 
   test('info', () => {
-    getGlobalLogger().info('1', '2', '3', '4', '5')
+    const wlogger = lm.info('1', '2', '3', '4', '5')
 
-    expect(getGlobalLogger().info).toHaveBeenCalledTimes(1)
-    expect(getGlobalLogger().info).toHaveBeenCalledWith('1', '2', '3', '4', '5')
+    expect(wlogger).toBeDefined()
   })
 
-  // test('log', () => {
-  //   getGlobalLogger().log('1', '2', '3', '4', '5')
+  test('logToFile', () => {
+    const wlogger = lm.logToFile('1', '2', '3', '4', '5')
 
-  //   expect(getGlobalLogger().log).toHaveBeenCalledTimes(1)
-  //   expect(getGlobalLogger().log).toHaveBeenCalledWith('1', '2', '3', '4', '5')
-  // })
+    expect(wlogger).toBeDefined()
+  })
 
   test('silly', () => {
-    getGlobalLogger().silly('1', '2', '3', '4', '5')
+    const wlogger = lm.silly('1', '2', '3', '4', '5')
 
-    expect(getGlobalLogger().silly).toHaveBeenCalledTimes(1)
-    expect(getGlobalLogger().silly).toHaveBeenCalledWith(
-      '1',
-      '2',
-      '3',
-      '4',
-      '5'
-    )
+    expect(wlogger).toBeDefined()
   })
 
   test('warn', () => {
-    getGlobalLogger().warn('1', '2', '3', '4', '5')
+    const wlogger = lm.warn('1', '2', '3', '4', '5')
 
-    expect(getGlobalLogger().warn).toHaveBeenCalledTimes(1)
-    expect(getGlobalLogger().warn).toHaveBeenCalledWith('1', '2', '3', '4', '5')
+    expect(wlogger).toBeDefined()
   })
 })
 
