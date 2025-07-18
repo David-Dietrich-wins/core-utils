@@ -1,7 +1,8 @@
 import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
 import { ToSafeArray2d, isArray } from './array-helper.mjs'
-import { hasData } from './general.mjs'
 import { HttpHeaderNamesAllowed } from './HttpHeaderManager.mjs'
+import { hasData } from './general.mjs'
+import { safestr } from './string-helper.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 
@@ -22,9 +23,9 @@ export abstract class HtmlHelper {
   static ParamsEncoder(params?: object): string {
     return Object.entries(params || {}).reduce((acc, [key, value], index) => {
       const encodedKey = encodeURIComponent(key),
-       encodedValue = encodeURIComponent(value),
-      // No & before the first parameter
-       separator = index === 0 ? '' : '&'
+        encodedValue = encodeURIComponent(safestr(value)),
+        // No & before the first parameter
+        separator = index === 0 ? '' : '&'
 
       return `${acc}${separator}${encodedKey}=${encodedValue}`
     }, '')
