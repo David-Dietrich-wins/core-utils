@@ -349,7 +349,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
       granularity: acs.granularity,
       period: 1,
       periodType: 'day',
-      startDate: 1733054400000,
+      startDate: 1678190400000,
       ticker: acs.ticker,
     })
   })
@@ -388,7 +388,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
       granularity: acs.granularity,
       period: 1,
       periodType: 'day',
-      startDate: 1733054400000,
+      startDate: 1678190400000,
       ticker: acs.ticker,
     })
   })
@@ -416,6 +416,45 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         'minute',
         true,
         365,
+        false
+      )
+
+    expect(chartSettings).toMatchObject({
+      endDate: 1764590400000,
+      extendedHoursTrading: true,
+      frequency: 1,
+      frequencyType: 'minute',
+      granularity: acs.granularity,
+      period: 1,
+      periodType: 'day',
+      startDate: 1764524400000,
+      ticker: acs.ticker,
+    })
+  })
+
+  test('num intervals > 1000', () => {
+    const acs: IChartSettings = {
+        endDate: undefined,
+        extendedHoursTrading: false,
+        frequency: 4,
+        frequencyType: '1d',
+        granularity: 'minute',
+        period: 3,
+        periodType: 'd',
+        startDate: DateHelper.AddTimeToDate(
+          TEST_Parameters_DEV.currentDateString,
+          'm',
+          -1100
+        ).getTime(),
+        ticker: 'AAPL',
+      },
+      chartSettings = FinancialModelingPrep.ChartSettings(
+        acs.ticker,
+        acs.startDate,
+        acs.endDate,
+        'minute',
+        true,
+        1100,
         false
       )
 
