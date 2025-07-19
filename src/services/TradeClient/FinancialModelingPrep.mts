@@ -1,6 +1,7 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
 import { getAsNumber, getAsNumberOrUndefined } from '../number-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
+import { ChartSettings } from '../../tplot/ChartSettings.mjs'
 import { DateHelper } from '../DateHelper.mjs'
 import type { ISymbol } from '../../models/ticker-info.mjs'
 import { TradingClientBase } from './TradingClientBase.mjs'
@@ -75,5 +76,44 @@ export class FinancialModelingPrep extends TradingClientBase {
     }
 
     return zfmp
+  }
+
+  static ChartSettings(
+    ticker: string,
+    startDate?: number,
+    endDate?: number,
+    resolution?: string,
+    extendedHoursTrading = true,
+    numIntervals?: number,
+    firstDataRequest = false
+  ) {
+    let startTime = startDate
+    const endTime = endDate ?? Date.now(),
+      intervals = firstDataRequest || !numIntervals ? 1000 : numIntervals
+
+    if (numIntervals || firstDataRequest) {
+      const resolutionLower = safestr(resolution, 'day').toLowerCase(),
+        stime = DateHelper.AddTimeToDate(
+          endTime,
+          resolutionLower,
+          -intervals
+        ).getTime()
+
+      if (!startTime || startTime > stime) {
+        startTime = stime
+      }
+    }
+
+    return ChartSettings.Create({
+      endDate: endTime,
+      extendedHoursTrading,
+      frequency: 1,
+      frequencyType: 'minute',
+      granularity: resolution,
+      period: 1,
+      periodType: 'day',
+      startDate: startTime,
+      ticker: safestr(ticker),
+    }).toISettings()
   }
 }
