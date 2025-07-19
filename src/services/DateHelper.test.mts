@@ -10,6 +10,16 @@ const AAPL_IPO = '1980-12-12',
   AAPL_IPO_DATE_MILLISECONDS = AAPL_IPO_DATE.getTime(),
   AAPL_IPO_MOMENT = moment(AAPL_IPO_AND_TIMEZONE)
 
+test(DateHelper.GetTime.name, () => {
+  expect(
+    DateHelper.GetTime(TEST_Parameters_DEV.currentDateInMilliseconds)
+  ).toEqual(TEST_Parameters_DEV.currentDateInMilliseconds)
+
+  expect(DateHelper.GetTime(TEST_Parameters_DEV.currentDateString)).toEqual(
+    TEST_Parameters_DEV.currentDateInMilliseconds
+  )
+})
+
 test(DateHelper.ConvertToDateObject.name, () => {
   let date = DateHelper.ConvertToDateObject(
     TEST_Parameters_DEV.currentDateString

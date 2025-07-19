@@ -11,6 +11,11 @@ import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './general.mjs'
 
+export const MILLIS_PER_DAY = 86400000,
+  MILLIS_PER_HOUR = 3600000,
+  MILLIS_PER_MINUTE = 60000,
+  MILLIS_PER_SECOND = 1000
+
 export type DateTypeAcceptable =
   | Date
   | string
@@ -95,6 +100,14 @@ export abstract class DateHelper {
     )
   }
 
+  static GetTime(date: DateTypeAcceptable) {
+    if (isNumber(date)) {
+      return date
+    }
+
+    return DateHelper.ConvertToDateObject(date).getTime()
+  }
+
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
    * If no Date is provided, the current Date now is used.
@@ -103,9 +116,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of seconds added.
    */
   static addMillisToDate(millisToAdd: number, date?: Date | number | string) {
-    const d = date ? new Date(date) : new Date()
-
-    return new Date(d.getTime() + millisToAdd)
+    return new Date(DateHelper.GetTime(date) + millisToAdd)
   }
 
   /**
@@ -144,7 +155,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of seconds added.
    */
   static addSecondsToDate(secondsToAdd: number, date?: Date | number | string) {
-    return DateHelper.addMillisToDate(secondsToAdd * 1000, date)
+    return DateHelper.addMillisToDate(secondsToAdd * MILLIS_PER_SECOND, date)
   }
 
   /**
@@ -155,7 +166,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of minutes added.
    */
   static addMinutesToDate(minutesToAdd: number, date?: Date | number | string) {
-    return DateHelper.addMillisToDate(minutesToAdd * 60 * 1000, date)
+    return DateHelper.addMillisToDate(minutesToAdd * MILLIS_PER_MINUTE, date)
   }
 
   /**
@@ -166,7 +177,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of hours added.
    */
   static addHoursToDate(hoursToAdd: number, date?: Date | number | string) {
-    return DateHelper.addMillisToDate(hoursToAdd * 60 * 60 * 1000, date)
+    return DateHelper.addMillisToDate(hoursToAdd * MILLIS_PER_HOUR, date)
   }
 
   /**
@@ -177,7 +188,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of days added.
    */
   static addDaysToDate(daysToAdd: number, date?: Date | number | string) {
-    return DateHelper.addMillisToDate(daysToAdd * 24 * 60 * 60 * 1000, date)
+    return DateHelper.addMillisToDate(daysToAdd * MILLIS_PER_DAY, date)
   }
 
   static FormatDateTime(
@@ -674,10 +685,10 @@ export abstract class DateHelper {
     showMilliseconds = false,
     showMillisecondsIfUnderASecond = true
   ) {
-    const aMinutes = Math.floor(millis / 60000),
-      aSeconds = Math.floor(millis / 1000),
-      asHours = Math.floor(aSeconds / 3600),
-      numDays = Math.floor(asHours / 24),
+    const aMinutes = Math.floor(millis / MILLIS_PER_MINUTE),
+      aSeconds = Math.floor(millis / MILLIS_PER_SECOND),
+      asHours = Math.floor(millis / MILLIS_PER_HOUR),
+      numDays = Math.floor(millis / MILLIS_PER_DAY),
       numHours = asHours % 24,
       numMinutes = aMinutes % 60,
       numSeconds = aSeconds % 60,
