@@ -1,8 +1,8 @@
-import { safeArray } from '../services/array-helper.mjs'
-import { isNullOrUndefined, sortFunction } from '../services/general.mjs'
-import { safestrLowercase } from '../services/string-helper.mjs'
-import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { INameTypeValue, INameValue } from './interfaces.mjs'
+import { isNullOrUndefined, sortFunction } from '../services/general.mjs'
+import { safestr, safestrLowercase } from '../services/string-helper.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 
 export class NameValue<Tvalue = string> implements INameValue<Tvalue> {
   name: string
@@ -81,7 +81,7 @@ export class NameValueWithStyle {
 }
 
 type StyleFormatter = (
-  val: number | bigint | string | null | undefined,
+  val: number | string | null | undefined,
   showZeroValues: boolean,
   numDecimalPlaces: number
 ) => string
@@ -130,20 +130,19 @@ export class NameValueLineFormatManager<T extends object> {
 
   FormatWithStyle(data: NameValue[], sortField?: string, sortDirection = true) {
     const itemMapper = (item: NameValueWithStyle) => {
-      const nvlf = this.nvlist.find((x) => x.key === item.name)
+        const nvlf = this.nvlist.find((x) => x.key === item.name)
 
-      return nvlf?.FromStyle
-        ? nvlf.FromStyle(item.name, item.value)
-        : new NameValueWithStyle(
-            item.name,
-            item.value,
-            nvlf?.style,
-            nvlf?.tooltip
-          )
-    },
-
-     ordered: NameValueWithStyle[] = [],
-     unordered: NameValueWithStyle[] = []
+        return nvlf?.FromStyle
+          ? nvlf.FromStyle(item.name, item.value)
+          : new NameValueWithStyle(
+              item.name,
+              item.value,
+              nvlf?.style,
+              nvlf?.tooltip
+            )
+      },
+      ordered: NameValueWithStyle[] = [],
+      unordered: NameValueWithStyle[] = []
     safeArray(data).forEach((item) => {
       const nvlf = this.nvlist.find((x) => x.key === item.name)
 
@@ -173,7 +172,7 @@ export class NameValueLineFormatManager<T extends object> {
   FromObject(obj?: object, sortField?: string, sortDirection = true) {
     return this.FormatWithStyle(
       Object.entries(obj || {}).map(
-        ([key, value]) => new NameValue(key, value)
+        ([key, value]) => new NameValue(key, safestr(value))
       ),
       sortField,
       sortDirection
