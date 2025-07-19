@@ -822,6 +822,9 @@ test(DateHelper.AddTimeToDate.name, () => {
   expect(DateHelper.AddTimeToDate(addDate, '1d', 1).toISOString()).toBe(
     '2025-12-02T00:00:00.000Z'
   )
+  expect(DateHelper.AddTimeToDate(addDate, '1d').toISOString()).toBe(
+    '2025-12-02T00:00:00.000Z'
+  )
   expect(DateHelper.AddTimeToDate(addDate, 'minute', 2).toISOString()).toBe(
     '2025-12-01T00:02:00.000Z'
   )

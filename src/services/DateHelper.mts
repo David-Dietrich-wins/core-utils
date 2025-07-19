@@ -1,3 +1,4 @@
+import { NumberHelper, getAsNumber, isNumber } from './number-helper.mjs'
 import {
   StringHelper,
   isString,
@@ -5,7 +6,6 @@ import {
   prefixIfHasData,
   safestr,
 } from './string-helper.mjs'
-import { getAsNumber, isNumber } from './number-helper.mjs'
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
@@ -444,13 +444,25 @@ export abstract class DateHelper {
     // )
   }
 
+  /**
+   * Adds a specified amount of time to a date.
+   * @param date The date to modify.
+   * @param periodType The type of time period to add (e.g., 'day', 'hour'). You can also pass a number with the period type, like '1d' for 1 day.
+   * If numberOfPeriods is not provided, it will use the first number in the periodType string.
+   * @param numberOfPeriods The number of periods to add. If not provided, it will use the first number found in the periodType string.
+   * If periodType is '1d', then numberOfPeriods will be 1.
+   * If periodType is '2h', then numberOfPeriods will be 2.
+   * @returns The new date with the added time.
+   */
   static AddTimeToDate(
     date: Readonly<DateTypeAcceptable>,
     periodType: string,
     numberOfPeriods?: number | string | null
   ) {
     const dateClean = DateHelper.ConvertToDateObject(date),
-      numPeriods = getAsNumber(numberOfPeriods),
+      numPeriods = isNullOrUndefined(numberOfPeriods)
+        ? NumberHelper.FirstNumberInString(periodType)
+        : getAsNumber(numberOfPeriods),
       period = DateHelper.PeriodType(periodType)
 
     switch (period) {
