@@ -8,6 +8,8 @@ import { TradingClientBase } from './TradingClientBase.mjs'
 import { isArray } from '../array-helper.mjs'
 import { safestr } from '../string-helper.mjs'
 
+const MIN_CHART_INTERVALS = 1000
+
 export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
   FromTo<TFromTo> & {
     periodLength: number
@@ -89,7 +91,10 @@ export class FinancialModelingPrep extends TradingClientBase {
   ) {
     let startTime = startDate
     const endTime = endDate ?? Date.now(),
-      intervals = firstDataRequest || !numIntervals ? 1000 : numIntervals
+      intervals =
+        firstDataRequest || !numIntervals || numIntervals < MIN_CHART_INTERVALS
+          ? MIN_CHART_INTERVALS
+          : numIntervals
 
     if (numIntervals || firstDataRequest) {
       const resolutionLower = safestr(resolution, 'day').toLowerCase(),
