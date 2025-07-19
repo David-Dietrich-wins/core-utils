@@ -189,12 +189,6 @@ export function GenerateSignedJwtToken(
 }
 
 beforeAll(() => {
-  TEST_Parameters_DEV.currentDate = new Date(
-    TEST_Parameters_DEV.currentDateString
-  )
-  TEST_Parameters_DEV.currentDateInMilliseconds =
-    TEST_Parameters_DEV.currentDate.getTime()
-
   // Process.env.NODE_ENV = 'test'
   const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail)
 
@@ -256,6 +250,12 @@ beforeEach(() => {
   mockLoggerLog.mockClear()
   mockLoggerSilly.mockClear()
   mockLoggerWarn.mockClear()
+
+  TEST_Parameters_DEV.currentDate = new Date(
+    TEST_Parameters_DEV.currentDateString
+  )
+  TEST_Parameters_DEV.currentDateInMilliseconds =
+    TEST_Parameters_DEV.currentDate.getTime()
 })
 
 afterEach(() => {

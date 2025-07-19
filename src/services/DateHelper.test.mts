@@ -97,6 +97,30 @@ test(DateHelper.addMinutesToDate.name, () => {
   ).toEqual(anumToAdd * 1000 * 60)
 })
 
+test(DateHelper.addMonthsToDate.name, () => {
+  const anumToAdd = 24,
+    newDate = DateHelper.addMonthsToDate(
+      anumToAdd,
+      new Date(TEST_Parameters_DEV.currentDateInMilliseconds)
+    )
+
+  expect(newDate).toEqual(
+    new Date(TEST_Parameters_DEV.currentDateString.replace(/2025/u, '2027'))
+  )
+})
+
+test(DateHelper.addYearsToDate.name, () => {
+  const anumToAdd = 2,
+    newDate = DateHelper.addYearsToDate(
+      anumToAdd,
+      new Date(TEST_Parameters_DEV.currentDateInMilliseconds)
+    )
+
+  expect(newDate).toEqual(
+    new Date(TEST_Parameters_DEV.currentDateString.replace(/2025/u, '2027'))
+  )
+})
+
 test(DateHelper.addHoursToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addHoursToDate(
@@ -530,20 +554,39 @@ test(DateHelper.IsValidDate.name, () => {
   expect(DateHelper.IsValidDate(undefined)).toBe(false)
 })
 
-test(DateHelper.TimeframeToStartOf.name, () => {
-  expect(DateHelper.TimeframeToStartOf('d')).toBe('day')
-  expect(DateHelper.TimeframeToStartOf('h')).toBe('hour')
-  expect(DateHelper.TimeframeToStartOf('m')).toBe('minute')
-  expect(DateHelper.TimeframeToStartOf('s')).toBe('second')
-  expect(DateHelper.TimeframeToStartOf('w')).toBe('week')
-  expect(DateHelper.TimeframeToStartOf('M')).toBe('month')
-  expect(DateHelper.TimeframeToStartOf('y')).toBe('year')
-  expect(DateHelper.TimeframeToStartOf('v')).toBe('v')
-  expect(DateHelper.TimeframeToStartOf('q')).toBe('quarter')
-  expect(DateHelper.TimeframeToStartOf('v')).toBe('v')
-  expect(DateHelper.TimeframeToStartOf('')).toBe('year')
-  expect(DateHelper.TimeframeToStartOf('  ')).toBe('year')
-  expect(DateHelper.TimeframeToStartOf(' 3  y')).toBe('year')
+describe(DateHelper.PeriodType.name, () => {
+  test.each(['day', '2d', '  DAYS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('day')
+  })
+  test.each(['hour', '2h', '  HOURS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('hour')
+  })
+  test.each(['minute', '2m', '  MINUTES of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('minute')
+  })
+  test.each(['second', '2s', '  SECONDS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('second')
+  })
+  test.each(['week', '2w', '  WEEKS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('week')
+  })
+  test.each(['month', '2MONTH', '  MONTHS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('month')
+  })
+  test.each(['year', '2y', '  YEARS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('year')
+  })
+  test.each(['quarter', '2q', '  QUARTERS of our lives'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('quarter')
+  })
+  test.each(['', '  ', ' 3  y'])('%s', (timeframe) => {
+    expect(DateHelper.PeriodType(timeframe)).toBe('year')
+  })
+
+  test('invalid timeframe', () => {
+    expect(DateHelper.PeriodType('v')).toBe('v')
+    expect(DateHelper.PeriodType('invalid')).toBe('invalid')
+  })
 })
 
 test(DateHelper.LocalToUtc.name, () => {
@@ -719,4 +762,51 @@ test(DateHelper.FormatLocaleDateString.name, () => {
   expect(DateHelper.FormatLocaleDateString(345427200000)).toEqual(
     'December 11, 1980'
   )
+})
+
+/*
+// test(DateHelper.FromToPeriodsFromEndDate.name, () => {
+//   const dateEnd = new Date('2025-12-01T00:00:00.000Z'),
+//     periods = DateHelper.FromToPeriodsFromEndDate(dateEnd, 'day', 3)
+
+//   expect(periods.from.toISOString()).toBe('2025-11-28T00:00:00.000Z')
+//   expect(periods.to.toISOString()).toBe('2025-11-29T00:00:00.000Z')
+// })
+*/
+test(DateHelper.FromToPeriodsFromStartDate.name, () => {
+  const beginDate = '2025-12-01T00:00:00.000Z',
+    periods = DateHelper.FromToPeriodsFromStartDate(beginDate, 'day', 1)
+
+  expect(periods.from).toBe(
+    // 1764460800000
+    new Date('2025-11-30T00:00:00.000Z').getTime()
+  )
+  expect(periods.to).toBe(new Date('2025-12-02T00:00:00.000Z').getTime())
+})
+
+test(DateHelper.FromToPeriodsFromStartDateAsDates.name, () => {
+  const beginDate = '2025-12-01T00:00:00.000Z',
+    periods = DateHelper.FromToPeriodsFromStartDateAsDates(beginDate, 'day', 1)
+
+  expect(periods.from).toStrictEqual(new Date('2025-11-30T00:00:00.000Z'))
+  expect(periods.to).toStrictEqual(new Date('2025-12-02T00:00:00.000Z'))
+})
+
+test(DateHelper.FromToPeriodsFromEndDate.name, () => {
+  const endDate = '2025-12-01T00:00:00.000Z',
+    periods = DateHelper.FromToPeriodsFromEndDate(endDate, 'day', 1)
+
+  expect(periods.from).toBe(
+    // 1764460800000
+    new Date('2025-11-30T00:00:00.000Z').getTime()
+  )
+  expect(periods.to).toBe(new Date('2025-12-02T00:00:00.000Z').getTime())
+})
+
+test(DateHelper.FromToPeriodsFromEndDateAsDates.name, () => {
+  const endDate = '2025-12-01T00:00:00.000Z',
+    periods = DateHelper.FromToPeriodsFromEndDateAsDates(endDate, 'day', 1)
+
+  expect(periods.from).toStrictEqual(new Date('2025-11-30T00:00:00.000Z'))
+  expect(periods.to).toStrictEqual(new Date('2025-12-02T00:00:00.000Z'))
 })

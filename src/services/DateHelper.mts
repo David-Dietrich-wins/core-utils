@@ -7,7 +7,9 @@ import {
 } from './string-helper.mjs'
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { AppException } from '../models/AppException.mjs'
+import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './general.mjs'
+import { isNumber } from './number-helper.mjs'
 
 export type DateTypeAcceptable =
   | Date
@@ -56,26 +58,35 @@ export abstract class DateHelper {
     return false
   }
 
-  static ConvertToDateObject(date: DateTypeAcceptable, setToNowIfEmpty = true) {
-    // eslint-disable-next-line init-declarations
-    let dateClean: Date | undefined
-
+  static ConvertToDateObject(
+    date: DateTypeAcceptable,
+    setToNowIfEmpty = true
+  ): Date {
     if (isNullOrUndefined(date)) {
       if (setToNowIfEmpty) {
-        dateClean = new Date()
+        return new Date()
       }
     } else if (DateHelper.isDateObject(date)) {
-      dateClean = date
+      return date
     } else if (moment.isMoment(date)) {
-      dateClean = date.toDate()
+      return date.toDate()
+    } else if (isNumber(date)) {
+      return new Date(date)
     } else {
-      // If it's a string or number, we can try to convert it to a Date object
-      dateClean = new Date(date)
+      // If it's a string, we can try to convert it to a Date object
+      const d = new Date(date)
+      if (!isNullOrUndefined(d) && !isNaN(d.getTime())) {
+        return d
+      }
     }
 
-    if (dateClean instanceof Date && !isNaN(dateClean.getTime())) {
-      return dateClean
-    }
+    // if (!isNullOrUndefined(msSinceEpoch) && !isNaN(msSinceEpoch)) {
+    //   if (useUtc) {
+    //     msSinceEpoch += new Date().getTimezoneOffset() * 60000
+    //   }
+
+    //   return new Date(msSinceEpoch)
+    // }
 
     throw new AppException(
       `Invalid date: ${safestr(date)}`,
@@ -95,6 +106,34 @@ export abstract class DateHelper {
     const d = date ? new Date(date) : new Date()
 
     return new Date(d.getTime() + millisToAdd)
+  }
+
+  /**
+   * Adds (or subtracts if secondsToAdd is negative) any number of seconds to a Date.
+   * If no Date is provided, the current Date now is used.
+   * @param millisToAdd The number of seconds to add to the optional Date passed in.
+   * @param date Optional Date. Will use new Date() if none passed in.
+   * @returns A new Date object with the number of seconds added.
+   */
+  static addMonthsToDate(monthsToAdd: number, date?: Date | number | string) {
+    const d = DateHelper.ConvertToDateObject(date)
+    d.setMonth(d.getMonth() + monthsToAdd)
+
+    return d
+  }
+
+  /**
+   * Adds (or subtracts if secondsToAdd is negative) any number of seconds to a Date.
+   * If no Date is provided, the current Date now is used.
+   * @param millisToAdd The number of seconds to add to the optional Date passed in.
+   * @param date Optional Date. Will use new Date() if none passed in.
+   * @returns A new Date object with the number of seconds added.
+   */
+  static addYearsToDate(yearsToAdd: number, date?: Date | number | string) {
+    const d = DateHelper.ConvertToDateObject(date)
+    d.setFullYear(d.getFullYear() + yearsToAdd)
+
+    return d
   }
 
   /**
@@ -165,10 +204,7 @@ export abstract class DateHelper {
     )
   }
 
-  static FormatLocaleDateString(
-    date?: Date | string | number | null,
-    locale = 'en-US'
-  ) {
+  static FormatLocaleDateString(date?: DateTypeAcceptable, locale = 'en-US') {
     const intlOptions: Intl.DateTimeFormatOptions = {
         day: 'numeric',
         month: 'long',
@@ -369,8 +405,17 @@ export abstract class DateHelper {
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
   }
 
-  static TimeframeToStartOf(timeframe: string) {
-    switch (StringHelper.RemoveLeadingNumbersAndWhitespace(timeframe)) {
+  static PeriodType(period: string) {
+    let speriodString = StringHelper.RemoveLeadingNumbersAndWhitespace(period)
+    if (speriodString.length > 0) {
+      if (speriodString.toLowerCase().startsWith('month')) {
+        speriodString = 'M'
+      } else {
+        speriodString = speriodString[0].toLowerCase()
+      }
+    }
+
+    switch (speriodString) {
       case 'd':
         return 'day'
       case 'h':
@@ -392,15 +437,135 @@ export abstract class DateHelper {
         break
     }
 
-    return timeframe
+    return period
     // Throw new AppException(
     //   `Invalid timeframe: ${timeframe}`,
     //   'DateHelper.NextBoundaryUp'
     // )
   }
 
-  static LocalToUtc(date: Date | string | number | null | undefined) {
-    const dateNonEmpty = date ? new Date(date) : new Date(),
+  static AddTimeToDate(
+    date: DateTypeAcceptable,
+    periodType: string,
+    numberOfPeriods: number
+  ) {
+    const dateClean = DateHelper.ConvertToDateObject(date),
+      period = DateHelper.PeriodType(periodType)
+
+    switch (period) {
+      case 'day':
+        return DateHelper.addDaysToDate(numberOfPeriods, dateClean)
+      case 'hour':
+        return DateHelper.addHoursToDate(numberOfPeriods, dateClean)
+      case 'minute':
+        return DateHelper.addMinutesToDate(numberOfPeriods, dateClean)
+      case 'second':
+        return DateHelper.addSecondsToDate(numberOfPeriods, dateClean)
+      case 'month':
+        return DateHelper.addMonthsToDate(numberOfPeriods, dateClean)
+      case 'year':
+        return DateHelper.addYearsToDate(numberOfPeriods, dateClean)
+      case 'quarter':
+        return DateHelper.addMonthsToDate(numberOfPeriods * 3, dateClean)
+      case 'week':
+        return DateHelper.addDaysToDate(numberOfPeriods * 7, dateClean)
+      default:
+        throw new AppException(
+          `Invalid period type: ${periodType}`,
+          'DateHelper.AddTimeToDate'
+        )
+    }
+  }
+
+  static FromTo(from: DateTypeAcceptable, to: DateTypeAcceptable) {
+    const fromDate = DateHelper.ConvertToDateObject(from),
+      fromTime = fromDate.getTime(),
+      toDate = DateHelper.ConvertToDateObject(to),
+      toTime = toDate.getTime(),
+      zret: Required<FromTo<number>> = {
+        from: fromTime > toTime ? toTime : fromTime,
+        to: toTime < fromTime ? fromTime : toTime,
+      }
+
+    return zret
+  }
+
+  static FromToPeriodsFromEndDate(
+    endDate: DateTypeAcceptable,
+    periodType: string,
+    numberOfPeriods: number
+  ) {
+    const date = DateHelper.ConvertToDateObject(endDate),
+      from = DateHelper.AddTimeToDate(
+        date,
+        DateHelper.PeriodType(periodType),
+        -1
+      ),
+      to = DateHelper.AddTimeToDate(
+        date,
+        DateHelper.PeriodType(periodType),
+        numberOfPeriods
+      )
+
+    return DateHelper.FromTo(from, to)
+  }
+  static FromToPeriodsFromEndDateAsDates(
+    startDate: DateTypeAcceptable,
+    periodType: string,
+    numberOfPeriods: number
+  ) {
+    const ft = DateHelper.FromToPeriodsFromEndDate(
+        startDate,
+        periodType,
+        numberOfPeriods
+      ),
+      ret: Required<FromTo<Date>> = {
+        from: DateHelper.ConvertToDateObject(ft.from),
+        to: DateHelper.ConvertToDateObject(ft.to),
+      }
+
+    return ret
+  }
+
+  static FromToPeriodsFromStartDate(
+    startDate: DateTypeAcceptable,
+    periodType: string,
+    numberOfPeriods: number
+  ) {
+    const date = DateHelper.ConvertToDateObject(startDate),
+      from = DateHelper.AddTimeToDate(
+        date,
+        DateHelper.PeriodType(periodType),
+        -1
+      ),
+      to = DateHelper.AddTimeToDate(
+        date,
+        DateHelper.PeriodType(periodType),
+        numberOfPeriods
+      )
+
+    return DateHelper.FromTo(from, to)
+  }
+  static FromToPeriodsFromStartDateAsDates(
+    startDate: DateTypeAcceptable,
+    periodType: string,
+    numberOfPeriods: number
+  ) {
+    const ft = DateHelper.FromToPeriodsFromStartDate(
+        startDate,
+        periodType,
+        numberOfPeriods
+      ),
+      ret: Required<FromTo<Date>> = {
+        from: DateHelper.ConvertToDateObject(ft.from),
+        to: DateHelper.ConvertToDateObject(ft.to),
+      }
+
+    return ret
+  }
+
+  static LocalToUtc(date: DateTypeAcceptable) {
+    const dateNonEmpty = DateHelper.ConvertToDateObject(date),
       utc = new Date(
         dateNonEmpty.getTime() + dateNonEmpty.getTimezoneOffset() * 60000
       )
@@ -414,7 +579,7 @@ export abstract class DateHelper {
     units: number = 1
   ) {
     const mom = moment.utc(date),
-      momTimeframe = DateHelper.TimeframeToStartOf(unit as string),
+      momTimeframe = DateHelper.PeriodType(unit as string),
       momUtcStart = mom
         .utc()
         .startOf(momTimeframe as moment.unitOfTime.StartOf),

@@ -37,6 +37,7 @@ export default tseslint.config(
   {
     rules: {
       'camelcase': 'off',
+      'capitalized-comments': 'off',
       'consistent-return': 'off',
       'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
       'id-length': 'off',
