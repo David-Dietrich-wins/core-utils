@@ -5,11 +5,11 @@ import {
   prefixIfHasData,
   safestr,
 } from './string-helper.mjs'
+import { getAsNumber, isNumber } from './number-helper.mjs'
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './general.mjs'
-import { isNumber } from './number-helper.mjs'
 
 export type DateTypeAcceptable =
   | Date
@@ -67,7 +67,7 @@ export abstract class DateHelper {
         return new Date()
       }
     } else if (DateHelper.isDateObject(date)) {
-      return date
+      return new Date(date.getTime())
     } else if (moment.isMoment(date)) {
       return date.toDate()
     } else if (isNumber(date)) {
@@ -445,30 +445,31 @@ export abstract class DateHelper {
   }
 
   static AddTimeToDate(
-    date: DateTypeAcceptable,
+    date: Readonly<DateTypeAcceptable>,
     periodType: string,
-    numberOfPeriods: number
+    numberOfPeriods?: number | string | null
   ) {
     const dateClean = DateHelper.ConvertToDateObject(date),
+      numPeriods = getAsNumber(numberOfPeriods),
       period = DateHelper.PeriodType(periodType)
 
     switch (period) {
       case 'day':
-        return DateHelper.addDaysToDate(numberOfPeriods, dateClean)
+        return DateHelper.addDaysToDate(numPeriods, dateClean)
       case 'hour':
-        return DateHelper.addHoursToDate(numberOfPeriods, dateClean)
+        return DateHelper.addHoursToDate(numPeriods, dateClean)
       case 'minute':
-        return DateHelper.addMinutesToDate(numberOfPeriods, dateClean)
+        return DateHelper.addMinutesToDate(numPeriods, dateClean)
       case 'second':
-        return DateHelper.addSecondsToDate(numberOfPeriods, dateClean)
+        return DateHelper.addSecondsToDate(numPeriods, dateClean)
       case 'month':
-        return DateHelper.addMonthsToDate(numberOfPeriods, dateClean)
+        return DateHelper.addMonthsToDate(numPeriods, dateClean)
       case 'year':
-        return DateHelper.addYearsToDate(numberOfPeriods, dateClean)
+        return DateHelper.addYearsToDate(numPeriods, dateClean)
       case 'quarter':
-        return DateHelper.addMonthsToDate(numberOfPeriods * 3, dateClean)
+        return DateHelper.addMonthsToDate(numPeriods * 3, dateClean)
       case 'week':
-        return DateHelper.addDaysToDate(numberOfPeriods * 7, dateClean)
+        return DateHelper.addDaysToDate(numPeriods * 7, dateClean)
       default:
         throw new AppException(
           `Invalid period type: ${periodType}`,

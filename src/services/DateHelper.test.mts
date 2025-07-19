@@ -764,15 +764,16 @@ test(DateHelper.FormatLocaleDateString.name, () => {
   )
 })
 
-/*
-// test(DateHelper.FromToPeriodsFromEndDate.name, () => {
-//   const dateEnd = new Date('2025-12-01T00:00:00.000Z'),
-//     periods = DateHelper.FromToPeriodsFromEndDate(dateEnd, 'day', 3)
+test(DateHelper.FromTo.name, () => {
+  const dateEnd = new Date('2025-12-01T00:00:00.000Z'),
+    dateStart = new Date('2025-12-02T00:00:00.000Z'),
+    periods = DateHelper.FromTo(dateStart, dateEnd)
 
-//   expect(periods.from.toISOString()).toBe('2025-11-28T00:00:00.000Z')
-//   expect(periods.to.toISOString()).toBe('2025-11-29T00:00:00.000Z')
-// })
-*/
+  // Should be reversed
+  expect(periods.from).toBe(dateEnd.getTime())
+  expect(periods.to).toBe(dateStart.getTime())
+})
+
 test(DateHelper.FromToPeriodsFromStartDate.name, () => {
   const beginDate = '2025-12-01T00:00:00.000Z',
     periods = DateHelper.FromToPeriodsFromStartDate(beginDate, 'day', 1)
@@ -809,4 +810,49 @@ test(DateHelper.FromToPeriodsFromEndDateAsDates.name, () => {
 
   expect(periods.from).toStrictEqual(new Date('2025-11-30T00:00:00.000Z'))
   expect(periods.to).toStrictEqual(new Date('2025-12-02T00:00:00.000Z'))
+})
+
+test(DateHelper.AddTimeToDate.name, () => {
+  const addDate = new Date('2025-12-01T00:00:00.000Z')
+
+  expect(() => DateHelper.AddTimeToDate(addDate, 'invalid', 1)).toThrow(
+    'Invalid period type: invalid'
+  )
+  expect(addDate.toISOString()).toBe('2025-12-01T00:00:00.000Z')
+  expect(DateHelper.AddTimeToDate(addDate, '1d', 1).toISOString()).toBe(
+    '2025-12-02T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'minute', 2).toISOString()).toBe(
+    '2025-12-01T00:02:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'hour', 2).toISOString()).toBe(
+    '2025-12-01T02:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'hour', 48).toISOString()).toBe(
+    '2025-12-03T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'day', 1).toISOString()).toBe(
+    '2025-12-02T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'week', 1).toISOString()).toBe(
+    '2025-12-08T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'second', 1).toISOString()).toBe(
+    '2025-12-01T00:00:01.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'second', 120).toISOString()).toBe(
+    '2025-12-01T00:02:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'year', 2).toISOString()).toBe(
+    '2027-12-01T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'quarter', 2).toISOString()).toBe(
+    '2026-05-30T23:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'month', 1).toISOString()).toBe(
+    '2025-12-31T00:00:00.000Z'
+  )
+  expect(DateHelper.AddTimeToDate(addDate, 'month', 12).toISOString()).toBe(
+    '2026-12-01T00:00:00.000Z'
+  )
 })
