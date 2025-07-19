@@ -11,7 +11,6 @@ import {
   elementTopLeftCoords,
   getAsNumber,
   getAsNumberOrUndefined,
-  getMantissa,
   isNumber,
   isNumeric,
 } from './number-helper.mjs'
@@ -159,14 +158,14 @@ test(NumberHelper.getNumberFormatted.name, () => {
   expect(NumberHelper.getNumberFormatted(undefined, true, 2)).toBe(0)
 })
 
-test(getMantissa.name, () => {
-  expect(getMantissa(0)).toBe(0)
-  expect(getMantissa(1000)).toBe(0)
-  expect(getMantissa(0.1)).toBe(1)
-  expect(getMantissa(-4234.99)).toBe(99)
-  expect(getMantissa(34.012)).toBe(12)
+test(NumberHelper.getMantissa.name, () => {
+  expect(NumberHelper.getMantissa(0)).toBe(0)
+  expect(NumberHelper.getMantissa(1000)).toBe(0)
+  expect(NumberHelper.getMantissa(0.1)).toBe(1)
+  expect(NumberHelper.getMantissa(-4234.99)).toBe(99)
+  expect(NumberHelper.getMantissa(34.012)).toBe(12)
 
-  expect(getMantissa(34)).toBe(0)
+  expect(NumberHelper.getMantissa(34)).toBe(0)
 })
 
 test(NumberHelper.toFixedPrefixed.name, () => {
@@ -490,4 +489,15 @@ test(elementTopLeftCoords.name, () => {
     left: 7,
     top: 5,
   })
+})
+
+test(NumberHelper.FirstNumberInString.name, () => {
+  expect(NumberHelper.FirstNumberInString('')).toBe(0)
+  expect(NumberHelper.FirstNumberInString(null)).toBe(0)
+  expect(NumberHelper.FirstNumberInString(undefined)).toBe(0)
+  expect(NumberHelper.FirstNumberInString('   ')).toBe(0)
+  expect(NumberHelper.FirstNumberInString('abc 123')).toBe(0)
+  expect(NumberHelper.FirstNumberInString('abc -123.45')).toBe(0)
+  expect(NumberHelper.FirstNumberInString(' 123')).toBe(123)
+  expect(NumberHelper.FirstNumberInString(' -123.45')).toBe(-123.45)
 })

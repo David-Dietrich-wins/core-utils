@@ -329,6 +329,25 @@ export abstract class NumberHelper {
     })
   }
 
+  /**
+   * Returns the mantissa as a whole number.
+   * @param num The decimal number to get the mantissa for.
+   * @returns The whole number value of the mantissa.
+   */
+  static getMantissa(num: number) {
+    if (!num) {
+      return 0
+    }
+
+    const str = `${num}`,
+      strArray = str.split('.')
+    if (isArray(strArray, 2) && hasData(strArray[1])) {
+      return Number(strArray[1])
+    }
+
+    return 0
+  }
+
   static toFixedPrefixed(
     val: string | number | null | undefined,
     showZeroValues = true,
@@ -353,6 +372,15 @@ export abstract class NumberHelper {
     return !showZeroValues && !hasData(s)
       ? ''
       : StringHelper.safeSuffix(s, suffix)
+  }
+
+  static FirstNumberInString(str: string | null | undefined) {
+    if (!str) {
+      return 0
+    }
+
+    const match = str.match(/^\s*(?:-?\d+(?:\.\d+)?)/u)
+    return match ? parseFloat(match[0]) : 0
   }
 }
 
@@ -387,25 +415,6 @@ export function getAsNumberOrUndefined(
       minDecimalPlaces
     )
   }
-}
-/**
- * Returns the mantissa as a whole number.
- * @param num The decimal number to get the mantissa for.
- * @returns The whole number value of the mantissa.
- */
-
-export function getMantissa(num: number) {
-  if (!num) {
-    return 0
-  }
-
-  const str = `${num}`,
-    strArray = str.split('.')
-  if (isArray(strArray, 2) && hasData(strArray[1])) {
-    return Number(strArray[1])
-  }
-
-  return 0
 }
 
 export function NumberFormatter(
