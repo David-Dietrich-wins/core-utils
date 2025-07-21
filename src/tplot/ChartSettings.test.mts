@@ -111,7 +111,7 @@ test('ChartSettings.Create', () => {
 
   acs.startDate = Number(new Date('2025-01-01'))
   acs.endDate = Number(new Date('2026-01-01'))
-  // eslint-disable-next-line one-var
+
   const chartSettingsWithDates = ChartSettings.Create(acs)
   expect(chartSettingsWithDates).toMatchObject({
     ...acs,

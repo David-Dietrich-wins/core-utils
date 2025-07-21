@@ -101,7 +101,7 @@ test('ChartRunLog object properties', () => {
 
   aicrl.startDate = undefined
   aicrl.endDate = undefined
-  // eslint-disable-next-line one-var
+
   const apiSettingsWithoutDates = ChartRunLog.toApi(aicrl)
   expect(apiSettingsWithoutDates.startDate).toBe(0)
   expect(apiSettingsWithoutDates.endDate).toBe(0)

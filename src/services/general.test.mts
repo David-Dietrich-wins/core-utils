@@ -165,7 +165,7 @@ describe('sortFunction', () => {
 
   test('empty', () => {
     let a: string | undefined = 'a',
-      // eslint-disable-next-line init-declarations, prefer-const
+      // eslint-disable-next-line prefer-const
       b: string | undefined
 
     expect(sortFunction(a, b)).toEqual(-1)

@@ -504,7 +504,6 @@ describe('zToStringArray', () => {
       success: true,
     })
 
-    // eslint-disable-next-line one-var
     const ret = schema.safeParse(['hi', 'there'])
     expect(ret.success).toBe(false)
     expect(ret.error).toBeInstanceOf(ZodError)
@@ -681,7 +680,6 @@ describe('zToStringArray', () => {
       success: false,
     })
 
-    // eslint-disable-next-line one-var
     const ret = schema.safeParse([
       'this is a long string',
       'another long string',
@@ -763,7 +761,6 @@ test('zDateTime', () => {
     success: false,
   })
 
-  // eslint-disable-next-line one-var
   const ret = schema.safeParse(null)
   expect(ret.success).toBe(false)
   expect(ret.error).toBeInstanceOf(ZodError)

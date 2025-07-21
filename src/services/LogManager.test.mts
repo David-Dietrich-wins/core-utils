@@ -43,7 +43,6 @@ beforeEach(() => {
   logManagerOptions = GetTestLogManagerOptions()
 })
 
-// eslint-disable-next-line one-var
 const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
   const msg =
     String(timestamp) +

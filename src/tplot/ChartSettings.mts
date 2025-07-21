@@ -69,7 +69,6 @@ export const ChartTimeFrameOptions: (IIdName<string> & {
 
 export type ChartTimeFrameOption = (typeof ChartTimeFrameOptions)[number]['id']
 
-// eslint-disable-next-line one-var
 export const TradeSubplotTimeFrames: ChartTimeFrameOption[] = [
   '15m',
   '30m',
@@ -78,13 +77,11 @@ export const TradeSubplotTimeFrames: ChartTimeFrameOption[] = [
   '1d',
 ] as const
 
-// eslint-disable-next-line one-var
 export const TradeSubplotTimeFrameOptions = arrayFindByIds(
   ChartTimeFrameOptions,
   TradeSubplotTimeFrames
 )
 
-// eslint-disable-next-line one-var
 export const ChartPatternOptions: (IIdName<string> & {
   periodLength: number
 })[] = [

@@ -41,6 +41,7 @@ export default tseslint.config(
       'consistent-return': 'off',
       'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
       'id-length': 'off',
+      'init-declarations': 'off',
       'max-classes-per-file': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',
@@ -53,6 +54,7 @@ export default tseslint.config(
       'no-plusplus': 'off',
       'no-ternary': 'off',
       'no-undefined': 'off',
+      'one-var': 'off',
     },
   }
 )

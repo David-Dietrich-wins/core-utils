@@ -259,12 +259,11 @@ test('FixupForSave', () => {
   tradePlot.subplots[0].expectedTriggerDate = new Date('2023-10-01')
   expect(tradePlot.subplots[0].expectedTriggerDate).toEqual(expect.any(Date))
 
-  // eslint-disable-next-line one-var
   const fixedTradePlot = TradePlot.FixupForSave(tradePlot)
   expect(fixedTradePlot.subplots[0].expectedTriggerDate).toBeUndefined()
 
   delete tradePlot.subplots[0].expectedTriggerDate
-  // eslint-disable-next-line one-var
+
   const fixedTradePlot2 = TradePlot.FixupForSave(tradePlot)
   expect(fixedTradePlot2.subplots[0].expectedTriggerDate).toBeUndefined()
 })
