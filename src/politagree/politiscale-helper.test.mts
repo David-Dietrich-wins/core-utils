@@ -1,25 +1,26 @@
 import {
+  CreatePolitiscaleSearchParams,
+  type IHasPolitiscales,
+  type IPolitiscale,
+  Politiscale,
+  type PolitiscaleName,
+} from './politiscale.mjs'
+import {
   type PolitiRatingLeftRight,
   PolitiscaleHelper,
 } from './politiscale-helper.mjs'
-import {
-  CreatePolitiscaleSearchParams,
-  type IHasPolitiscales,
-  Politiscale,
-} from './politiscale.mjs'
 
 test('UserColorFromScales', () => {
-  const scales = [
-    { name: 'climate', value: 0 },
-    { name: 'freeSpeech', value: 0 },
-    { name: 'religion', value: 0 },
-  ],
-
-   userScales = [
-    { name: 'climate', value: 20 },
-    { name: 'freeSpeech', value: 20 },
-    { name: 'religion', value: 20 },
-  ]
+  const scales: IPolitiscale[] = [
+      { name: 'climate', value: 0 },
+      { name: 'freeSpeech', value: 0 },
+      { name: 'religion', value: 0 },
+    ],
+    userScales: IPolitiscale[] = [
+      { name: 'climate', value: 20 },
+      { name: 'freeSpeech', value: 20 },
+      { name: 'religion', value: 20 },
+    ]
 
   expect(PolitiscaleHelper.UserColorFromScales(scales, userScales)).toBe(
     '#EEEEEE'
@@ -289,10 +290,10 @@ test('PolitiscaleRating', () => {
 
 test('CreatePolitiscaleSearchParams', () => {
   const params = CreatePolitiscaleSearchParams({
-    term: 'test',
     climate: 50,
     freeSpeech: 80,
     religion: 100,
+    term: 'test',
   })
 
   expect(params.term).toBe('test')
@@ -427,36 +428,37 @@ test('setPolitiscaleValue', () => {
 })
 
 test('getNewPolitiscales', () => {
-  let scales: Politiscale[] = [
-    { name: 'climate', value: 0 },
-    { name: 'freeSpeech', value: 0 },
-    { name: 'religion', value: 0 },
-  ],
-   scale = new Politiscale('climate', 10)
-  expect(PolitiscaleHelper.getNewPolitiscales(scales, scale)).toStrictEqual([
+  let arrscales: Politiscale[] = [
+      { name: 'climate', value: 0 },
+      { name: 'freeSpeech', value: 0 },
+      { name: 'religion', value: 0 },
+    ],
+    scale = new Politiscale('climate', 10)
+
+  expect(PolitiscaleHelper.getNewPolitiscales(arrscales, scale)).toStrictEqual([
     { name: 'climate', value: 10 },
     { name: 'freeSpeech', value: 0 },
     { name: 'religion', value: 0 },
   ])
 
-  scales = [
+  arrscales = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 20 },
     { name: 'religion', value: 20 },
   ]
   scale = new Politiscale('climate', 30)
-  expect(PolitiscaleHelper.getNewPolitiscales(scales, scale)).toStrictEqual([
+  expect(PolitiscaleHelper.getNewPolitiscales(arrscales, scale)).toStrictEqual([
     { name: 'climate', value: 30 },
     { name: 'freeSpeech', value: 20 },
     { name: 'religion', value: 20 },
   ])
 
-  scales = [
+  arrscales = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 20 },
   ]
   scale = new Politiscale('religion', 30)
-  expect(PolitiscaleHelper.getNewPolitiscales(scales, scale)).toStrictEqual([
+  expect(PolitiscaleHelper.getNewPolitiscales(arrscales, scale)).toStrictEqual([
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 20 },
     scale,
@@ -484,14 +486,14 @@ test('ColorRangeOfParty', () => {
 })
 
 test('CombineRatings', () => {
-  const primary: PolitiRatingLeftRight = {
-    left: { active: false, isPrimary: true, value: 0, weight: 0 },
-    right: { active: false, isPrimary: false, value: 0, weight: 0 },
-  },
-   applied: PolitiRatingLeftRight = {
-    left: { active: false, isPrimary: true, value: 0, weight: 0 },
-    right: { active: false, isPrimary: false, value: 0, weight: 0 },
-  }
+  const applied: PolitiRatingLeftRight = {
+      left: { active: false, isPrimary: true, value: 0, weight: 0 },
+      right: { active: false, isPrimary: false, value: 0, weight: 0 },
+    },
+    primary: PolitiRatingLeftRight = {
+      left: { active: false, isPrimary: true, value: 0, weight: 0 },
+      right: { active: false, isPrimary: false, value: 0, weight: 0 },
+    }
 
   expect(PolitiscaleHelper.CombineRatings(primary, applied)).toStrictEqual({
     left: { active: false, isPrimary: true, value: 0, weight: 0 },
@@ -619,15 +621,15 @@ test('CombineRatings', () => {
 })
 
 test('UserRatingOverall', () => {
-  const scales = [
-    { name: 'climate', value: 20 },
-    { name: 'freeSpeech', value: 50 },
-    { name: 'religion', value: 80 },
-  ],
-   userRating = PolitiscaleHelper.UserRatingOverall(
-    scales,
-    'anything' as unknown as IHasPolitiscales
-  )
+  const scales: IPolitiscale[] = [
+      { name: 'climate', value: 20 },
+      { name: 'freeSpeech', value: 50 },
+      { name: 'religion', value: 80 },
+    ],
+    userRating = PolitiscaleHelper.UserRatingOverall(
+      scales,
+      'anything' as unknown as IHasPolitiscales
+    )
   expect(userRating).toStrictEqual({
     left: { active: true, isPrimary: true, value: 16, weight: 0 },
     right: { active: true, isPrimary: false, value: 36, weight: 0 },
@@ -652,7 +654,7 @@ test('UserRatingOverall', () => {
 })
 
 test('ratingForScaleRaw', () => {
-  const scales = [
+  const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
@@ -660,7 +662,12 @@ test('ratingForScaleRaw', () => {
   expect(PolitiscaleHelper.ratingForScaleRaw('climate', scales)).toBe(20)
   expect(PolitiscaleHelper.ratingForScaleRaw('freeSpeech', scales)).toBe(50)
   expect(PolitiscaleHelper.ratingForScaleRaw('religion', scales)).toBe(80)
-  expect(PolitiscaleHelper.ratingForScaleRaw('unknown', scales)).toBe(0)
+  expect(
+    PolitiscaleHelper.ratingForScaleRaw(
+      'unknown' as unknown as PolitiscaleName,
+      scales
+    )
+  ).toBe(0)
 
   expect(PolitiscaleHelper.ratingForScaleRaw('climate', 50)).toBe(50)
   expect(PolitiscaleHelper.ratingForScaleRaw('freeSpeech', 50)).toBe(50)
@@ -676,7 +683,7 @@ test('ratingForScaleRaw', () => {
 })
 
 test('ratingForScale', () => {
-  const scales = [
+  const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
@@ -697,7 +704,7 @@ test('ratingClimate', () => {
   expect(PolitiscaleHelper.ratingClimate(80)).toBe(80)
   expect(PolitiscaleHelper.ratingClimate(100)).toBe(100)
 
-  const scales = [
+  const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
@@ -712,7 +719,7 @@ test('ratingFreeSpeech', () => {
   expect(PolitiscaleHelper.ratingFreeSpeech(80)).toBe(40)
   expect(PolitiscaleHelper.ratingFreeSpeech(100)).toBe(50)
 
-  const scales = [
+  const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
@@ -727,7 +734,7 @@ test('ratingReligion', () => {
   expect(PolitiscaleHelper.ratingReligion(80)).toBe(80)
   expect(PolitiscaleHelper.ratingReligion(100)).toBe(100)
 
-  const scales = [
+  const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
     { name: 'religion', value: 80 },
@@ -782,9 +789,9 @@ test('findSetting', () => {
       right: { active: true, isPrimary: true, value: 0, weight: 1 },
     },
   })
-  expect(() => PolitiscaleHelper.FindSetting('unknown')).toThrow(
-    'Attempt to find setting for invalid name unknown.'
-  )
+  expect(() =>
+    PolitiscaleHelper.FindSetting('unknown' as unknown as PolitiscaleName)
+  ).toThrow('Attempt to find setting for invalid name unknown.')
 })
 
 test('IsLeftLeaning', () => {

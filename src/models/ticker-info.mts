@@ -1,18 +1,18 @@
-import moment from 'moment'
-import { z } from 'zod/v4'
-import { IdName } from '../models/id-name.mjs'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
 import { isString, safestrUppercase } from '../services/string-helper.mjs'
 import {
   zFromStringOrStringArray,
   zStringMinMax,
   zToStringArray,
 } from '../services/zod-helper.mjs'
-import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { AppException } from './AppException.mjs'
+import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'
+import { IdName } from '../models/id-name.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import moment from 'moment'
+import { safeArray } from '../services/array-helper.mjs'
+import { z } from 'zod/v4'
 
 const CONST_TickerMaxLength = 20
 
@@ -45,7 +45,8 @@ export const zTickersArray = z.object({
 export type ITickersArray = z.infer<typeof zTickersArray>
 
 export const zVolume = z.object({
-  volume: z.coerce.number().min(1).max(1000000000000), //Z.preprocess(Number, z.number()),
+  //Z.preprocess(Number, z.number()),
+  volume: z.coerce.number().min(1).max(1000000000000),
 })
 
 export type IVolume = z.infer<typeof zVolume>
@@ -83,27 +84,35 @@ export function ISymbolSearch2ITickerSearchArray(
   return safeArray(iss).map(ISymbolSearch2ITickerSearch)
 }
 
+export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
+  change?: number | null
+  changesPercentage?: number | null
+}
+
+export interface ISymbolPriceVolumeChanges
+  extends ISymbolPriceChanges,
+    IVolume {}
+
 export interface IAssetQuoteResponse extends ISymbolPriceVolumeChanges {
   // Symbol: string    // GME,
   // Name: string      // GameStop Corp.,
   // Price: number     // 203.0601,
-  dayLow: number // 201.35,
-  dayHigh: number // 214.0353,
-  yearHigh: number // 483,
-  yearLow: number // 3.77,
-  marketCap: number // 14376655872,
-  priceAvg50: number // 211.59486,
-  priceAvg200: number // 136.80391,
-  // Volume: number    // 2006952,
-  avgVolume?: number | null // 9315590,
-  exchange: string // NYSE,
-  open?: number | null // 214,
-  previousClose?: number | null // 212.31,
-  eps?: number | null // -1.78,
-  pe?: number | null // Null,
-  earningsAnnouncement?: string | null // 2021-06-09T16:09:00.000+0000,
-  sharesOutstanding?: number | null // 70800004,
-  timestamp: number // 1624635044
+  dayLow: number
+  dayHigh: number
+  yearHigh: number
+  yearLow: number
+  marketCap: number
+  priceAvg50: number
+  priceAvg200: number
+  avgVolume?: number | null
+  exchange: string
+  open?: number | null
+  previousClose?: number | null
+  eps?: number | null
+  pe?: number | null
+  earningsAnnouncement?: string | null
+  sharesOutstanding?: number | null
+  timestamp: number
 }
 
 export interface IUsersWithCount<Tid = string> extends IId<Tid> {
@@ -292,15 +301,6 @@ export interface ICompanyProfile extends ISymbolPrice {
   defaultImage?: boolean | null
 }
 
-export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
-  change?: number | null
-  changesPercentage?: number | null
-}
-
-export interface ISymbolPriceVolumeChanges
-  extends ISymbolPriceChanges,
-    IVolume {}
-
 export interface IIpoCalendar extends ISymbol, IDate {
   company: string
   exchange: string
@@ -334,10 +334,10 @@ export interface IRelativeStrengthIndicator {
 
 export interface IQuoteBar<Tdate = string> extends IDate<Tdate>, IVolume {
   // Date: string      // 2021-06-24,
-  open: number // 221.16,
-  high: number // 227.45,
-  low: number // 211.6,
-  close: number // 212.31,
+  open: number
+  high: number
+  low: number
+  close: number
   // Volume: number    // 3866565,
 }
 
@@ -347,17 +347,17 @@ export interface IQuoteBarWma extends IQuoteBar, IWeightedMovingAverage {}
 export interface IQuoteBarRsi extends IQuoteBar, IRelativeStrengthIndicator {}
 
 export interface IPriceHistoricalFull extends IQuoteBar {
-  adjClose: number // 212.31,
-  unadjustedVolume: number // 3866565,
-  change: number // -8.85,
-  changePercent: number // -4.002,
-  vwap: number // 217.12, Volume Weighted Average Price
-  label: string // June 24, 21,
-  changeOverTime: number // -0.04002,
+  adjClose: number
+  unadjustedVolume: number
+  change: number
+  changePercent: number
+  vwap: number
+  label: string
+  changeOverTime: number
 }
 
 export interface IQuoteBarWithDateTime extends IQuoteBar {
-  datetime: number // 1624507200000
+  datetime: number
 }
 
 export interface ISpac extends ISymbolName {
@@ -376,47 +376,6 @@ export interface ISpac extends ISymbolName {
 
 export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {
   profile: ICompanyProfile
-}
-
-export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
-  const isd: ISymbolDetail = {
-    name: '',
-    profile: new CompanyProfile(),
-    ticker: '',
-    scales: [],
-    type: '',
-    sector: '',
-    industry: '',
-    exchange: '',
-    id: '',
-    minmov: 0,
-    minmov2: 0,
-    pricescale: 0,
-    createdby: '',
-    updatedby: '',
-    val: new ExchangeInfo(),
-    ...overrides,
-  }
-
-  return isd
-}
-
-export interface ISymbolPrices extends ISymbol {
-  candles: IQuoteBarWithDateTime[]
-  midprice: number
-  requestDate: number
-}
-
-export class AssetQuoteShort implements ISymbolPriceVolume {
-  symbol = ''
-  price = 0
-  volume = 0
-
-  constructor(obj?: AssetQuoteShort) {
-    if (isObject(obj)) {
-      Object.assign(this, obj)
-    }
-  }
 }
 
 export class CompanyProfile implements ICompanyProfile {
@@ -459,16 +418,57 @@ export class ExchangeInfo implements IExchangeInfo {
   symbol = ''
   name = ''
   price = 0
-  volume = 0 // Not sure about this one
+  volume = 0
   exchange = ''
   exchangeShortName = ''
+}
+
+export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
+  const isd: ISymbolDetail = {
+    createdby: '',
+    exchange: '',
+    id: '',
+    industry: '',
+    minmov: 0,
+    minmov2: 0,
+    name: '',
+    pricescale: 0,
+    profile: new CompanyProfile(),
+    scales: [],
+    sector: '',
+    ticker: '',
+    type: '',
+    updatedby: '',
+    val: new ExchangeInfo(),
+    ...overrides,
+  }
+
+  return isd
+}
+
+export interface ISymbolPrices extends ISymbol {
+  candles: IQuoteBarWithDateTime[]
+  midprice: number
+  requestDate: number
+}
+
+export class AssetQuoteShort implements ISymbolPriceVolume {
+  symbol = ''
+  price = 0
+  volume = 0
+
+  constructor(obj?: AssetQuoteShort) {
+    if (isObject(obj)) {
+      Object.assign(this, obj)
+    }
+  }
 }
 
 export interface IMarketHolidays {
   'year': number
   'New Years Day': string
   'Martin Luther King, Jr. Day': string
-   
+
   "Washington's Birthday": string
   'Good Friday': string
   'Memorial Day': string
@@ -493,20 +493,20 @@ export interface IMarketHours {
 }
 
 export class PriceHistoricalResponse implements IPriceHistoricalFull {
-  date = '' // 2021-06-24,
-  open = 0 // 221.16,
-  high = 0 // 227.45,
-  low = 0 // 211.6,
-  close = 0 // 212.31,
-  adjClose = 0 // 212.31,
-  volume = 0 // 3866565,
-  unadjustedVolume = 0 // 3866565,
-  change = 0 // -8.85,
-  changePercent = 0 // -4.002,
-  vwap = 0 // 217.12,
-  label = '' // June 24, 21,
-  changeOverTime = 0 // -0.04002,
-  datetime = 0 // 1624507200000
+  date = ''
+  open = 0
+  high = 0
+  low = 0
+  close = 0
+  adjClose = 0
+  volume = 0
+  unadjustedVolume = 0
+  change = 0
+  changePercent = 0
+  vwap = 0
+  label = ''
+  changeOverTime = 0
+  datetime = 0
 
   constructor(obj?: IPriceHistoricalFull) {
     if (isObject(obj)) {
@@ -779,8 +779,8 @@ export type CompanyAssetInfo = {
 
 export function IAssetQuoteResponseToAssetQuote(obj: IAssetQuoteResponse) {
   return new AssetQuoteShort({
-    symbol: obj.symbol,
     price: obj.price,
+    symbol: obj.symbol,
     volume: obj.volume,
   })
 }
@@ -827,7 +827,7 @@ export function IAssetQuotesWithIpoDate(
       const found = retobj.find((spac) => aqr.symbol === spac.symbol)
       if (found && isString(found?.ipoDate, 1)) {
         const t = moment(found.ipoDate, 'M-D-YYYY'),
-         val = t.valueOf()
+          val = t.valueOf()
         if (isNaN(val)) {
           throw new AppException(
             `IAssetQuotesWithIpoDate: ${fname} - Invalid IPO date for symbol ${aqr.symbol}`
@@ -837,6 +837,7 @@ export function IAssetQuotesWithIpoDate(
         aqripo.ipoDate = val
       }
     } catch (ex) {
+      // eslint-disable-next-line no-console
       console.error(fname, ex)
     }
 
@@ -854,8 +855,8 @@ export function IAssetQuoteResponseToAssetQuoteWithScore(
     changes: x.change,
     companyName: x.name,
     matches,
-    ticker: x.symbol,
     scorePercentage,
+    ticker: x.symbol,
   }
 
   return aqr
@@ -866,19 +867,20 @@ export function IAssetQuotesWithScore(
   retobj: { [key: string]: { matches: number; score?: number } }
 ) {
   const totalScore = Object.values(retobj).reduce((acc, cur) => {
+    // eslint-disable-next-line no-param-reassign
     acc += cur.score || 0
 
     return acc
   }, 0)
 
   return safeArray(iaqrs).map((iaqr) => {
-    const symbol = safestrUppercase(iaqr.symbol),
-
-     dictsym = retobj[symbol]
+    const asymbol = safestrUppercase(iaqr.symbol),
+      dictsym = retobj[asymbol]
     let matches = 0,
-     scorePercentage = 0
+      scorePercentage = 0
     if (isObject(dictsym) && totalScore) {
       scorePercentage = dictsym.score ? dictsym.score / totalScore : 0
+      // eslint-disable-next-line prefer-destructuring
       matches = dictsym.matches
     }
 

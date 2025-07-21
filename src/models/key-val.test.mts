@@ -2,18 +2,18 @@ import { KeyVal, KeyValueShort } from './key-val.mjs'
 
 test('KeyVal good', () => {
   const key = 'key',
-   val = 'val',
-   pr = new KeyVal(key, val)
+    kval = 'val',
+    pr = new KeyVal(key, kval)
 
   expect(pr.key).toBe(key)
-  expect(pr.val).toBe(val)
+  expect(pr.val).toBe(kval)
 })
 
 test('KeyValueShort good', () => {
   const key = 'key',
-   val = 'value',
-   pr = new KeyValueShort(key, val)
+    kval = 'value',
+    pr = new KeyValueShort(key, kval)
 
   expect(pr.k).toBe(key)
-  expect(pr.v).toBe(val)
+  expect(pr.v).toBe(kval)
 })

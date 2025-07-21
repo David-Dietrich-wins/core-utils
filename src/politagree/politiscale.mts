@@ -1,12 +1,12 @@
+import { ICity } from './city.mjs'
+import { ICompany } from './company.mjs'
 import type { INameValue } from '../models/interfaces.mjs'
 import { ISearchRequestView } from '../services/SearchRequestView.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import { ICity } from './city.mjs'
-import { ICompany } from './company.mjs'
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 
-export type IPolitiscale = INameValue<number>
+export type IPolitiscale = INameValue<number, PolitiscaleName>
 
 export type IPolitiscales = {
   [key in PolitiscaleName]: number
@@ -20,23 +20,22 @@ export function CreatePolitiscaleSearchParams(
   overrides?: Partial<IPolitiscaleSearchParams>
 ) {
   const DEFAULT_params: IPolitiscaleSearchParams = {
-    term: '',
-    climate: 0,
-    exactMatch: false,
-    freeSpeech: 0,
-    religion: 0,
-    limit: 0,
-    offset: 0,
-    pageIndex: 0,
-    pageSize: 0,
-    sortColumn: '',
-    sortDirection: 'asc',
-  },
-
-   ret: IPolitiscaleSearchParams = {
-    ...DEFAULT_params,
-    ...overrides,
-  }
+      climate: 0,
+      exactMatch: false,
+      freeSpeech: 0,
+      limit: 0,
+      offset: 0,
+      pageIndex: 0,
+      pageSize: 0,
+      religion: 0,
+      sortColumn: '',
+      sortDirection: 'asc',
+      term: '',
+    },
+    ret: IPolitiscaleSearchParams = {
+      ...DEFAULT_params,
+      ...overrides,
+    }
 
   return ret
 }

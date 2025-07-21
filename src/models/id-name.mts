@@ -58,7 +58,12 @@ export class IdNameValueType<Tvalue = string, Type = string, Tid = string>
     value: Tvalue,
     type: Type
   ): IIdNameValueType<Tvalue, Type, Tid> {
-    return { id, name, value, type }
+    return {
+      id,
+      name,
+      type,
+      value,
+    }
   }
 }
 
@@ -83,10 +88,10 @@ export function createValueChange<T = string>(
   date?: number
 ): IValueChange<T> {
   return {
+    date: date ?? Date.now(),
     id,
     name,
-    value,
     type: type ?? '',
-    date: date ?? Date.now(),
+    value,
   }
 }

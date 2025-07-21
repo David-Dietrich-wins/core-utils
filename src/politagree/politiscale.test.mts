@@ -15,7 +15,7 @@ test('constructor', () => {
 
 test('constructor with object', () => {
   const ip: IPolitiscale = { name: 'religion', value: 5 },
-   politiscale = new Politiscale(ip, 0)
+    politiscale = new Politiscale(ip, 0)
   expect(politiscale).toEqual({
     name: 'religion',
     value: 5,
@@ -24,22 +24,22 @@ test('constructor with object', () => {
 
 test('CreatePolitiscaleSearchParams', () => {
   const ret = CreatePolitiscaleSearchParams({
-    term: 'test',
     sortDirection: 'desc',
+    term: 'test',
   })
 
   expect(ret).toEqual({
-    term: 'test',
     climate: 0,
     exactMatch: false,
     freeSpeech: 0,
-    religion: 0,
     limit: 0,
     offset: 0,
     pageIndex: 0,
     pageSize: 0,
+    religion: 0,
     sortColumn: '',
     sortDirection: 'desc',
+    term: 'test',
   })
 })
 

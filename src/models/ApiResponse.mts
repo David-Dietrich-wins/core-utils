@@ -82,6 +82,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
         return false
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error verifying API response:', error)
       }
     }
@@ -153,14 +154,18 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     fname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,
+    /* Should be an HTML window.location object. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    location?: any /* Should be an HTML window.location object. */
+    location?: any
   ) {
+    // eslint-disable-next-line no-console
     console.error(fname, err)
     if (location && err instanceof AppExceptionHttp) {
       if (err.httpStatusCode === 403) {
         setTimeout(() => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           location.href = `/login?callbackUrl=${encodeURIComponent(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             location.pathname + location.search
           )}`
         }, 100)
@@ -243,6 +248,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
         }
 
         if (errobj.obj) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           this.data = errobj.obj
         }
       } else {
@@ -254,7 +260,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
             this.responseCode = errobj
             break
           default:
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
             this.data = errobj as any
             break
         }

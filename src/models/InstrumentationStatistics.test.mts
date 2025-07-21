@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'
-import { AppException } from './AppException.mjs'
 
-const CONST_DefaultSecondsMs = new RegExp('^(\\d+ seconds?|\\d+m?s)$')
+const CONST_DefaultSecondsMs = /^(?<temp1>\d+ seconds?|\d+m?s)$/u
 
 test('String message', () => {
   const msg = 'string',
@@ -54,10 +56,10 @@ test('messageSuccessFail good', () => {
       1,
       5
     ),
-    msg = istats.messageSuccessFail({ individualStats: [stats2, stats3] }),
     stringResultShouldStartWith =
       'Sent 24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
-    truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
+    strmsg = istats.messageSuccessFail({ individualStats: [stats2, stats3] }),
+    truncatedMsg = strmsg.slice(0, stringResultShouldStartWith.length)
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
 
@@ -71,13 +73,13 @@ test('messageSuccessFail good without prefix', () => {
       1,
       5
     ),
-    msg = istats.messageSuccessFail({
+    stringResultShouldStartWith =
+      '24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
+    strmsg = istats.messageSuccessFail({
       individualStats: [stats2, stats3],
       prefix: '',
     }),
-    stringResultShouldStartWith =
-      '24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
-    truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
+    truncatedMsg = strmsg.slice(0, stringResultShouldStartWith.length)
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
 
@@ -343,7 +345,7 @@ test('finish time good', () => {
 
   const finishTime = istats.finished()
 
-  expect(Date.now() - +finishTime).toBeLessThan(1000)
+  expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
 test('clear good', () => {
@@ -373,7 +375,7 @@ test('clear good', () => {
 
   const finishTime = istats.finished()
 
-  expect(Date.now() - +finishTime).toBeLessThan(1000)
+  expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
 test('clear times also', () => {
@@ -403,13 +405,13 @@ test('clear times also', () => {
 
   const finishTime = istats.finished()
 
-  expect(Date.now() - +finishTime).toBeLessThan(1000)
+  expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
 test('addMessage bad', () => {
-  let passed = false
-  const arrMessages = 1, // ['string', 'array']
+  const arrMessages = 1,
     istats = new InstrumentationStatistics()
+
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     istats.addMessage(arrMessages as any)
@@ -417,11 +419,12 @@ test('addMessage bad', () => {
     throw new AppException('Should never get here')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    expect(err.message).toBe('Message is not a string or set of strings.')
-    passed = true
+    if (err instanceof Error) {
+      expect(err.message).toBe('Message is not a string or set of strings.')
+    }
   }
 
-  expect(passed).toBe(true)
+  expect.assertions(1)
 })
 
 describe('addStats', () => {
@@ -518,7 +521,7 @@ describe('processedTimesArray', () => {
     expect(totalAvgProcessingTimeString).toMatch(CONST_DefaultSecondsMs)
 
     stats.totalProcessed = 100
-    stats.finishTime = new Date(+stats.startTime + 10000)
+    stats.finishTime = new Date(stats.startTime.getTime() + 10000)
     expect(stats.processingTimeInSeconds).toBe(10)
     expect(totalRecordsProcessed).toBe('0')
     // Expect(totalAvgRecordsPerSecond).toBe('10.0')
@@ -546,7 +549,9 @@ describe('processedTimesArray', () => {
   ])('seconds %s, %s', (totalProcessed, secondsToAdvance) => {
     const stats = new InstrumentationStatistics()
     stats.totalProcessed = totalProcessed
-    stats.finishTime = new Date(+stats.startTime + secondsToAdvance * 1000)
+    stats.finishTime = new Date(
+      stats.startTime.getTime() + secondsToAdvance * 1000
+    )
 
     const [
         totalRecordsProcessed,
@@ -557,7 +562,9 @@ describe('processedTimesArray', () => {
         totalProcessed / (secondsToAdvance ? secondsToAdvance : 1)
 
     expect(stats.processingTimeInSeconds).toBe(
-      Math.round((+(stats.finishTime ?? 0) - +stats.startTime) / 1000)
+      Math.round(
+        (Number(stats.finishTime ?? 0) - stats.startTime.getTime()) / 1000
+      )
     )
     expect(totalRecordsProcessed).toBe(
       `${NumberHelper.NumberToString(totalProcessed)}`

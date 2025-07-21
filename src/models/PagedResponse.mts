@@ -1,7 +1,7 @@
-import { z } from 'zod/v4'
-import { safeArray } from '../services/array-helper.mjs'
 import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
 import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import { safeArray } from '../services/array-helper.mjs'
+import { z } from 'zod/v4'
 
 /*Export interface IPagedResponse<T> {
   dataPage: T[]
@@ -29,10 +29,9 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     prom: Promise<T[] | undefined>,
     promCounts?: Promise<number>
   ) {
-    const ret = await Promise.all([prom, promCounts ?? Promise.resolve(0)]),
-
-     arr = safeArray(ret[0])
-    return new PagedResponse<T>(arr, ret[1] || arr.length)
+    const aret = await Promise.all([prom, promCounts ?? Promise.resolve(0)]),
+      arr = safeArray(aret[0])
+    return new PagedResponse<T>(arr, aret[1] || arr.length)
   }
 
   static CreateFromIPagedResponse<T>(ret: IPagedResponse<T>) {
@@ -99,9 +98,9 @@ export class PagedResponse<T> implements IPagedResponse<T> {
   static zPagedResponse<T extends z.ZodType>(recordSchema: T) {
     return z.object({
       // Ctx: IContext<unknown>,
+      dataPage: z.array(recordSchema),
       rowCount: z.number().int().nonnegative().optional(),
       totalCount: z.number().int().nonnegative(),
-      dataPage: z.array(recordSchema),
     })
   }
 }

@@ -253,6 +253,22 @@ describe('ObjectTypesToString', () => {
       ret = ObjectTypesToString(e)
     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
   })
+
+  test('Object with toString', () => {
+    const e = {
+      data: '',
+      name: 'test.txt',
+      toString: () => 'Custom toString',
+    }
+    const ret = ObjectTypesToString(e)
+    expect(ret).toEqual(
+      `{
+  data: '',
+  name: 'test.txt',
+  toString: [Function: toString] { [length]: 0, [name]: 'toString' }
+}`
+    )
+  })
 })
 
 test('UpdateFieldValue', () => {
@@ -691,6 +707,7 @@ test('FindObjectWithField', () => {
   expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
   expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deepObj = createDeepObject(101, 'value')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()

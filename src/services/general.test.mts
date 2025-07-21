@@ -375,7 +375,6 @@ test('getBooleanUndefined', () => {
 })
 
 test('getBody', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   expect(() => getBody('')).toThrow('Object body not found')
   expect(
     getBody({

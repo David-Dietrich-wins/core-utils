@@ -1,5 +1,5 @@
-import { hasData } from './general.mjs'
 import { safestr, safestrTrim, stringIf } from './string-helper.mjs'
+import { hasData } from './general.mjs'
 
 export abstract class RedirectHelper {
   static readonly ProtectedPaths = ['dashboard', 'admin', 'settings', 'profile']
@@ -31,27 +31,24 @@ export abstract class RedirectHelper {
     searchParamRequestUrl?: string | null,
     redirectAfterLoginIfIllegalRedirectLocation = '/'
   ): string {
-    const winParamRedirectUrl = decodeURI(safestrTrim(searchParamRequestUrl)),
-     winPathName = safestrTrim(windowPathname),
-
-     desiredRedirectUrl = safestr(winParamRedirectUrl, winPathName),
-     redirectAfterLogin = RedirectHelper.getRedirectAfterLogin(
-      desiredRedirectUrl,
-      redirectAfterLoginIfIllegalRedirectLocation
-    ),
-
-     isNotLogin =
-      hasData(desiredRedirectUrl) &&
-      RedirectHelper.IllegalRedirectPaths.includes(winPathName),
-
-     encodedRedirectUrl = stringIf(isNotLogin, '', '/login?redirectUrl=')
+    const awinParamRedirectUrl = decodeURI(safestrTrim(searchParamRequestUrl)),
+      awinPathName = safestrTrim(windowPathname),
+      desiredRedirectUrl = safestr(awinParamRedirectUrl, awinPathName),
+      desiredRedirectUrlAfterLogin = RedirectHelper.getRedirectAfterLogin(
+        desiredRedirectUrl,
+        redirectAfterLoginIfIllegalRedirectLocation
+      ),
+      disNotLogin =
+        hasData(desiredRedirectUrl) &&
+        RedirectHelper.IllegalRedirectPaths.includes(awinPathName),
+      encodedRedirectUrl = stringIf(disNotLogin, '', '/login?redirectUrl=')
 
     return (
       encodedRedirectUrl +
       stringIf(
         hasData(encodedRedirectUrl),
-        encodeURIComponent(redirectAfterLogin),
-        redirectAfterLogin
+        encodeURIComponent(desiredRedirectUrlAfterLogin),
+        desiredRedirectUrlAfterLogin
       )
     )
   }

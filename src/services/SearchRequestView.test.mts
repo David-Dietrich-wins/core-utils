@@ -1,4 +1,3 @@
-/* eslint-disable one-var */
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { IIdNameValue } from '../models/id-name.mjs'
 import { StringHelper } from './string-helper.mjs'

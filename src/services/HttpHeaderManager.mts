@@ -1,14 +1,14 @@
-import { IncomingHttpHeaders } from 'node:http'
+import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
+import { safestr, safestrLowercase } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IdType } from '../models/id-name.mjs'
+import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
-import { getBoolean } from './general.mjs'
-import { safestr, safestrLowercase } from './string-helper.mjs'
-import { isObject } from './object-helper.mjs'
 import { arrayFirst } from './array-helper.mjs'
-import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
+import { getBoolean } from './general.mjs'
+import { isObject } from './object-helper.mjs'
 
-const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /
+const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /u
 
 export const CONST_AppNamePolitagree = 'politagree'
 export const CONST_AppNameTradePlotter = 'tradeplotter'
@@ -72,15 +72,15 @@ export class HttpHeaderManagerBase {
     return Object.keys(this.headers).includes(name)
   }
 
-  _bearerTokenCache = ''
+  bearerTokenCache = ''
   get bearerToken() {
-    if (!this._bearerTokenCache) {
-      this._bearerTokenCache = HttpHeaderManagerBase.BearerTokenParseStrict(
+    if (!this.bearerTokenCache) {
+      this.bearerTokenCache = HttpHeaderManagerBase.BearerTokenParseStrict(
         this.getHeaderStringSafe(HttpHeaderNamesAllowed.Authorization)
       )
     }
 
-    return this._bearerTokenCache
+    return this.bearerTokenCache
   }
 
   get jwtToken() {
@@ -105,8 +105,7 @@ export class HttpHeaderManagerBase {
 
   get userId() {
     const jwt = this.jwtTokenMustExistAndBeValid,
-
-     userid = jwt.FusionAuthUserId
+      userid = jwt.FusionAuthUserId
     if (!userid) {
       throw new AppException(
         'Error retrieving user information from JWT security token.',
@@ -127,6 +126,7 @@ export class HttpHeaderManager extends HttpHeaderManagerBase {
     const arrNormalizedHeaders: StringOrStringArrayObject = {}
 
     if (isObject(headers)) {
+      // eslint-disable-next-line guard-for-in
       for (const key in headers) {
         arrNormalizedHeaders[key] = headers[key] ?? ''
       }

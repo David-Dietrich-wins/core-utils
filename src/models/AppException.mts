@@ -1,4 +1,3 @@
-/* eslint-disable one-var */
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const
 export const HTTP_Accepted = 202 as const

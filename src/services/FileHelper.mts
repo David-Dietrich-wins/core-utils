@@ -1,11 +1,10 @@
-import fs from 'node:fs'
 import { FileHandle, open } from 'node:fs/promises'
-import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import { safestr } from './string-helper.mjs'
-import { isObject } from './object-helper.mjs'
-import { isArray } from './array-helper.mjs'
-import { safeArray } from './array-helper.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
+import fs from 'node:fs'
+import { isObject } from './object-helper.mjs'
+import { safestr } from './string-helper.mjs'
 
 export class FileHelper {
   filename: string = ''
@@ -22,6 +21,7 @@ export class FileHelper {
       return await fn(fileHelper)
     } catch (error) {
       throw new AppException(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `FileHelper: Error processing file ${filename}: ${error}`
       )
     } finally {
@@ -44,10 +44,12 @@ export class FileHelper {
       stats.add += await fw.write('[')
 
       let i = 0
-      for await (const item of safeArray(arrT)) {
+      for (const item of safeArray(arrT)) {
         const mappedItem = mapFn ? mapFn(item) : item
 
+        // eslint-disable-next-line no-await-in-loop
         stats.add += await fw.addCommaIfNotFirst(i)
+        // eslint-disable-next-line no-await-in-loop
         stats.add += await fw.write(mappedItem)
 
         ++i
@@ -59,8 +61,10 @@ export class FileHelper {
 
       return stats
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       stats.addFailure(`Error writing to file ${filename}: ${error}`)
       throw new AppException(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `FileHelper: Error writing to file ${filename}: ${error}`
       )
     } finally {
@@ -110,6 +114,7 @@ export class FileHelper {
   async open(openMode) {
     await this.close()
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.fileHandle = await open(this.filename, openMode)
 
     return this.fileHandle
@@ -140,9 +145,7 @@ export class FileHelper {
 
   async write(str: unknown, prefix = '', suffix = '') {
     const strToWrite =
-      isObject(str) || isArray(str)
-        ? JSON.stringify(str)
-        : (str ?? '').toString()
+      isObject(str) || isArray(str) ? JSON.stringify(str) : safestr(str)
 
     if (!this.fileHandle) {
       throw new AppException(

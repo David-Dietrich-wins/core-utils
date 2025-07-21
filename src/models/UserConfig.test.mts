@@ -16,13 +16,13 @@ test('create an instance', () => {
 test('copyFromDatabase', () => {
   let userConfig = new UserConfig('userId', 'key', 'value')
   const dbtp = {
-    k: 'newKey',
-    v: 'newValue',
-    userid: 'newUserId',
-    updatedby: 'newUpdatedBy',
-    updated: new Date('2025-12-01T12:00:00.000Z'),
-    createdby: 'newCreatedBy',
     created: new Date('2025-12-01T12:00:00.000Z'),
+    createdby: 'newCreatedBy',
+    k: 'newKey',
+    updated: new Date('2025-12-01T12:00:00.000Z'),
+    updatedby: 'newUpdatedBy',
+    userid: 'newUserId',
+    v: 'newValue',
   }
 
   userConfig.copyFromDatabase(dbtp)
@@ -58,12 +58,12 @@ test('copyFromDatabase', () => {
 
 test('fromApi good', () => {
   const nameVal = { name: 'key', val: 'value' },
-   userConfig = UserConfig.fromApi(
-    undefined,
-    nameVal,
-    'userId',
-    'email@email.com'
-  )
+    userConfig = UserConfig.fromApi(
+      undefined,
+      nameVal,
+      'userId',
+      'email@email.com'
+    )
 
   expect(userConfig.k).toBe('key')
   expect(userConfig.v).toBe('value')
@@ -76,11 +76,7 @@ test('fromApi good', () => {
 
 test('fromNameVal good', () => {
   const nameVal = { name: 'key', val: 'value' },
-   userConfig = UserConfig.fromNameVal(
-    nameVal,
-    'userId',
-    'email@email.com'
-  )
+    userConfig = UserConfig.fromNameVal(nameVal, 'userId', 'email@email.com')
 
   expect(userConfig.k).toBe('key')
   expect(userConfig.v).toBe('value')
@@ -93,11 +89,11 @@ test('fromNameVal good', () => {
 
 test('api', () => {
   const userConfig = new UserConfig('userId', 'key', 'value'),
-   apiData = userConfig.api()
+    userData = userConfig.api()
 
-  expect(apiData).toEqual({ name: 'key', val: 'value' })
-  expect(apiData.name).toBe('key')
-  expect(apiData.val).toBe('value')
+  expect(userData).toEqual({ name: 'key', val: 'value' })
+  expect(userData.name).toBe('key')
+  expect(userData.val).toBe('value')
   expect(userConfig.k).toBe('key')
   expect(userConfig.v).toBe('value')
   expect(userConfig.userid).toBe('userId')

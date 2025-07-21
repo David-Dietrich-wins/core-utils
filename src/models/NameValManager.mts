@@ -1,6 +1,6 @@
-import { safeArray } from '../services/array-helper.mjs'
-import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { IName, IVal } from './interfaces.mjs'
+import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { safeArray } from '../services/array-helper.mjs'
 
 export interface INameVal<Tval = string> extends IName, IVal<Tval> {}
 

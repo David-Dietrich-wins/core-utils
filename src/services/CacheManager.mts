@@ -1,8 +1,7 @@
-import { IIdValue } from '../models/IdValueManager.mjs'
+import { arrayFirst, safeArray } from './array-helper.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
-import { arrayFirst } from './array-helper.mjs'
+import { IIdValue } from '../models/IdValueManager.mjs'
 import { isNullOrUndefined } from './general.mjs'
-import { safeArray } from './array-helper.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }
 
@@ -32,20 +31,20 @@ export class CacheManager<T = object, Tkey = string> {
     fnData: (key: Tkey) => Promise<IIdValue<Tkey, T>>
   ) {
     const fnall = async (symbols: ArrayOrSingle<Tkey>) => {
-      const items: IIdValue<Tkey, T>[] = []
+        const items: IIdValue<Tkey, T>[] = []
 
-      for await (const symbol of safeArray(symbols)) {
-        const idv = await fnData(symbol)
+        for (const symbol of safeArray(symbols)) {
+          // eslint-disable-next-line no-await-in-loop
+          const idv = await fnData(symbol)
 
-        items.push(idv)
-      }
+          items.push(idv)
+        }
 
-      return items
-    },
+        return items
+      },
+      zallItems = await this.getAll([key], fnall)
 
-     allItems = await this.getAll([key], fnall)
-
-    return arrayFirst(allItems)
+    return arrayFirst(zallItems)
   }
 
   async getAll(
@@ -53,17 +52,17 @@ export class CacheManager<T = object, Tkey = string> {
     fnData: (arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const arrKeys = safeArray(keys),
-     now = Date.now(),
+      now = Date.now(),
+      zexpiredKeys = arrKeys.filter((key) => {
+        const cacheObj = this.cache.get(key)
 
-     expiredKeys = arrKeys.filter((key) => {
-      const cacheObj = this.cache.get(key)
+        return !cacheObj || cacheObj.expire < now
+      })
 
-      return !cacheObj || cacheObj.expire < now
-    })
-
+    // eslint-disable-next-line no-console
     console.log(
       `CacheManager (${this.name}):`,
-      expiredKeys.length,
+      zexpiredKeys.length,
       'expired, ',
       arrKeys.length,
       'local, ',
@@ -73,8 +72,7 @@ export class CacheManager<T = object, Tkey = string> {
       // SafeJsonToString(this.keys.join)
     )
     const expire = now + this.cacheTimeInSeconds * 1000,
-
-     ret = await fnData(expiredKeys)
+      ret = await fnData(zexpiredKeys)
     safeArray(ret).forEach((item) => {
       // Console.log('CacheManager:', this.name, 'set', item.id)
       this.set(item.id, expire, item.value)

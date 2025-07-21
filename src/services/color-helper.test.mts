@@ -87,36 +87,45 @@ test('GetColorFromChange color neutral', () => {
 
 test('InterpolateColorRange', () => {
   const colorRange: ColorRange = ['#000000', '#FFFFFF'],
-   percent = 50,
-   result = ColorHelper.InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#808080') // Expecting the middle gray color
+    percent = 50,
+    result = ColorHelper.InterpolateColorRange(colorRange, percent)
+
+  // Expecting the middle gray color
+  expect(result).toBe('#808080')
 })
 
 test('InterpolateColorRange with different colors', () => {
-  const colorRange: ColorRange = ['FF0000', '00FF00'], // Red to Green
-   percent = 50,
-   result = ColorHelper.InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#808000') // Expecting the middle yellow color
+  // Red to Green
+  const colorRange: ColorRange = ['FF0000', '00FF00'],
+    percent = 50,
+    result = ColorHelper.InterpolateColorRange(colorRange, percent)
+
+  // Expecting the middle yellow color
+  expect(result).toBe('#808000')
 })
 
 test('InterpolateColorRange with no colors', () => {
-  const colorRange: ColorRange = ['', ''], // Empty colors
-   percent = 50,
-   result = ColorHelper.InterpolateColorRange(colorRange, percent)
-  expect(result).toBe('#000000') // Expecting black
+  // Empty colors
+  const colorRange: ColorRange = ['', ''],
+    percent = 50,
+    result = ColorHelper.InterpolateColorRange(colorRange, percent)
+
+  // Expecting black
+  expect(result).toBe('#000000')
 })
 
 test('InterpolateWeightedColorRange', () => {
-  const colorRange: ColorRange = ['#0000FF', '#FF00FF'], // Blue to Magenta
-   startWeight = 25,
-   endWeight = 75,
-   result = ColorHelper.InterpolateWeightedColorRange(
-    colorRange,
-    startWeight,
-    endWeight
-  )
+  // Blue to Magenta
+  const colorRange: ColorRange = ['#0000FF', '#FF00FF'],
+    endWeight = 75,
+    startWeight = 25,
+    zresult = ColorHelper.InterpolateWeightedColorRange(
+      colorRange,
+      startWeight,
+      endWeight
+    )
 
-  expect(result).toStrictEqual([
+  expect(zresult).toStrictEqual([
     ColorHelper.InterpolateColorRange(colorRange, startWeight),
     ColorHelper.InterpolateColorRange(colorRange, endWeight),
   ])

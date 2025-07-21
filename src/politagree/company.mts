@@ -1,10 +1,10 @@
 import * as z from 'zod/v4'
+import { IHasPolitiscales, Politiscale } from './politiscale.mjs'
 import {
   IIdCreatedUpdated,
   IdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
 import { isObject } from '../services/object-helper.mjs'
-import { IHasPolitiscales, Politiscale } from './politiscale.mjs'
 
 export interface ICompany extends IIdCreatedUpdated, IHasPolitiscales {
   name: string
@@ -46,22 +46,22 @@ export class Company extends IdCreatedUpdated implements ICompany {
 
   static CreateICompany(overrides?: Partial<ICompany>): ICompany {
     const company: ICompany = {
-      name: '',
-      status: 0,
-      imageuri: '',
-      imageurihref: '',
-      description: '',
-      phone: '',
-      email: '',
       address1: '',
       address2: '',
       city: '',
-      state: '',
-      zip: '',
       created: new Date(),
       createdby: 'TradePlotter',
+      description: '',
+      email: '',
+      imageuri: '',
+      imageurihref: '',
+      name: '',
+      phone: '',
+      state: '',
+      status: 0,
       updated: new Date(),
       updatedby: 'TradePlotter',
+      zip: '',
       ...overrides,
     }
 
@@ -80,36 +80,36 @@ export class Company extends IdCreatedUpdated implements ICompany {
     // https://medium.com/@charuwaka/supercharge-your-react-forms-with-react-hook-form-zod-and-mui-a-powerful-trio-47b653e7dce0
     // Define Zod schema for form validation
     const schema = z.object({
-      id: z.string().optional(),
-      name: z.string().min(1, 'Name is required'),
-      status: z.number(),
       // .min(0, 'Status must be 0 or 1')
+      address1: z.string().optional(),
+      address2: z.string().nullish().optional(),
+      city: z.string().optional(),
+      description: z.string().nullable().optional(),
+      email: z
+        .email('Invalid email')
+        .min(1, 'Email is required')
+        .optional()
+        .or(z.literal('')),
+      id: z.string().optional(),
       imageuri: z.url('Invalid URL').optional().or(z.literal('')),
       imageurihref: z.url('Invalid URL').optional().or(z.literal('')),
-      description: z.string().nullable().optional(),
+      name: z.string().min(1, 'Name is required'),
       phone: z
         .string()
         .min(10, 'Phone number must be at least 10 digits')
         .max(10)
         .optional()
         .or(z.literal('')),
-      email: z
-        .email('Invalid email')
-        .min(1, 'Email is required')
-        .optional()
-        .or(z.literal('')),
-      address1: z.string().optional(),
-      address2: z.string().nullish().optional(),
-      city: z.string().optional(),
       state: z
         .string()
         .min(2, 'State is required')
         .optional()
         .or(z.literal('')),
+      status: z.number(),
       zip: z
         .string()
         .min(5, 'Zip code must be at least 5 characters long')
-        .refine((value) => /^\d+$/.test(value), {
+        .refine((value) => /^\d+$/u.test(value), {
           message: 'Zip code must contain only numeric characters',
         })
         .or(z.literal('')),

@@ -1,22 +1,21 @@
-import { hasData, isNullOrUndefined } from '../services/general.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import {
-  pluralSuffix,
-  pluralize,
-  prefixIfHasData,
-  safestr,
-} from '../services/string-helper.mjs'
-import { isString } from '../services/string-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { isArray } from '../services/array-helper.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
 import {
   ArrayOrSingle,
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import { ToSafeArray, safeArray } from '../services/array-helper.mjs'
+import { ToSafeArray, isArray, safeArray } from '../services/array-helper.mjs'
+import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import {
+  isString,
+  pluralSuffix,
+  pluralize,
+  prefixIfHasData,
+  safestr,
+} from '../services/string-helper.mjs'
 import { AppException } from './AppException.mjs'
+import { DateHelper } from '../services/DateHelper.mjs'
+import { NumberHelper } from '../services/number-helper.mjs'
+import { isObject } from '../services/object-helper.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
@@ -84,7 +83,7 @@ export class InstrumentationStatistics {
     throw new AppException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
-      `${  msg}`
+      `${msg}`
     )
   }
 
@@ -188,6 +187,7 @@ export class InstrumentationStatistics {
     )
   }
 
+  // eslint-disable-next-line class-methods-use-this
   lineSeparator(isOneLine = false, multilineSeparator?: string) {
     if (isOneLine) {
       return ', '
@@ -265,17 +265,20 @@ export class InstrumentationStatistics {
     showSkipped?: boolean
     individualStats?: ArrayOrSingle<InstrumentationStatistics>
   }) {
-    let msg = hasData(prefix) ? `${prefix  } ` : ''
+    let msg = hasData(prefix) ? `${prefix} ` : ''
 
     const allStats = ToSafeArray(this).concat(...ToSafeArray(individualStats)),
-     allStatsCount = allStats.length
+      allStatsCount = allStats.length
     msg += allStats.reduce((prev, cur, index) => {
       if (index > 0 && index < allStatsCount - 1) {
+        // eslint-disable-next-line no-param-reassign
         prev += ', '
       } else if (index && index === allStatsCount - 1) {
+        // eslint-disable-next-line no-param-reassign
         prev += ' and '
       }
 
+      // eslint-disable-next-line no-param-reassign
       prev += cur.messageTotalProcessedWithSuccessFail(
         showSuccessFailIf0,
         showSkipped
@@ -351,6 +354,7 @@ export class InstrumentationStatistics {
     } else if (this.msg.length) {
       s += '\n\nMessages:'
 
+      // eslint-disable-next-line no-param-reassign, no-useless-assignment
       s += this.msg.reduce((acc, cur) => (acc += `\n${cur}`), '')
     }
 
@@ -384,19 +388,19 @@ export class InstrumentationStatistics {
     const statswf: WithoutFunctions<InstrumentationStatistics> = {
       add: this.add,
       delete: this.delete,
-      update: this.update,
-      upsert: this.upsert,
-      msg: this.msg,
-      skipped: this.skipped,
-      startTime: this.startTime,
+      failures: this.failures,
       finishTime: this.finishTime,
+      msg: this.msg,
       processingTime: this.processingTime,
       processingTimeInSeconds: this.processingTimeInSeconds,
-      suffixWhenSingle: this.suffixWhenSingle,
-      suffixWhenPlural: this.suffixWhenPlural,
-      totalProcessed: this.totalProcessed,
+      skipped: this.skipped,
+      startTime: this.startTime,
       successes: this.successes,
-      failures: this.failures,
+      suffixWhenPlural: this.suffixWhenPlural,
+      suffixWhenSingle: this.suffixWhenSingle,
+      totalProcessed: this.totalProcessed,
+      update: this.update,
+      upsert: this.upsert,
     }
 
     return statswf

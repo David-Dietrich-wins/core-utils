@@ -1,7 +1,7 @@
-import { getCurrentDate } from '../jest.setup.mjs'
-import { StringHelper } from '../services/string-helper.mjs'
-import { Company } from './company.mjs'
 import { ZodError, ZodObject } from 'zod/v4'
+import { Company } from './company.mjs'
+import { StringHelper } from '../services/string-helper.mjs'
+import { getCurrentDate } from '../jest.setup.mjs'
 
 test('constructor', () => {
   const company = new Company()
@@ -17,9 +17,9 @@ test('constructor', () => {
     imageuri: '',
     imageurihref: '',
     name: '',
-    state: '',
     phone: '',
     scales: undefined,
+    state: '',
     status: 0,
     updated: getCurrentDate(),
     updatedby: 'IdCreatedUpdated',
@@ -28,28 +28,27 @@ test('constructor', () => {
 })
 
 test('constructor with ICompany', () => {
-  const ic = {
-    address1: 'address1',
-    address2: 'address2',
-    city: 'city',
-    created: getCurrentDate(),
-    createdby: 'createdby',
-    description: 'description',
-    email: 'email',
-    id: 'id',
-    imageuri: 'imageuri',
-    imageurihref: 'imageurihref',
-    name: 'name',
-    state: 'state',
-    phone: 'phone',
-    scales: [],
-    status: 1,
-    updated: getCurrentDate(),
-    updatedby: 'updatedby',
-    zip: 'zip',
-  },
-
-   company = new Company(ic)
+  const aic = {
+      address1: 'address1',
+      address2: 'address2',
+      city: 'city',
+      created: getCurrentDate(),
+      createdby: 'createdby',
+      description: 'description',
+      email: 'email',
+      id: 'id',
+      imageuri: 'imageuri',
+      imageurihref: 'imageurihref',
+      name: 'name',
+      phone: 'phone',
+      scales: [],
+      state: 'state',
+      status: 1,
+      updated: getCurrentDate(),
+      updatedby: 'updatedby',
+      zip: 'zip',
+    },
+    company = new Company(aic)
   expect(company).toEqual({
     address1: 'address1',
     address2: 'address2',
@@ -62,9 +61,9 @@ test('constructor with ICompany', () => {
     imageuri: 'imageuri',
     imageurihref: 'imageurihref',
     name: 'name',
-    state: 'state',
     phone: 'phone',
     scales: [],
+    state: 'state',
     status: 1,
     updated: getCurrentDate(),
     updatedby: 'updatedby',
@@ -76,6 +75,8 @@ test('CreateICompany', () => {
   const company = Company.CreateICompany()
 
   expect(company).toEqual({
+    // Id: 'TradePlotter',
+    // Scales: undefined,
     address1: '',
     address2: '',
     city: '',
@@ -83,13 +84,11 @@ test('CreateICompany', () => {
     createdby: 'TradePlotter',
     description: '',
     email: '',
-    // Id: 'TradePlotter',
     imageuri: '',
     imageurihref: '',
     name: '',
-    state: '',
     phone: '',
-    // Scales: undefined,
+    state: '',
     status: 0,
     updated: getCurrentDate(),
     updatedby: 'TradePlotter',
@@ -137,21 +136,19 @@ describe('zSchema', () => {
   })
 
   test('valid parse', () => {
-    const schema = Company.zCompany,
+    const aschema = Company.zCompany,
+      company = Company.CreateICompany({
+        name: 'name',
+      })
 
-     company = Company.CreateICompany({
-      name: 'name',
-    })
-
-    expect(() => schema.parse(company)).not.toThrow()
+    expect(() => aschema.parse(company)).not.toThrow()
   })
 
   test('no name', () => {
-    const schema = Company.zCompany,
+    const aschema = Company.zCompany,
+      company = Company.CreateICompany()
 
-     company = Company.CreateICompany()
-
-    expect(() => schema.parse(company)).toThrow()
+    expect(() => aschema.parse(company)).toThrow()
   })
 })
 
@@ -164,21 +161,19 @@ describe('CompanyNamezSchema', () => {
   })
 
   test('valid parse', () => {
-    const schema = Company.CompanyNamezSchema,
+    const aschema = Company.CompanyNamezSchema,
+      company = Company.CreateICompany({
+        name: 'name',
+      })
 
-     company = Company.CreateICompany({
-      name: 'name',
-    })
-
-    expect(() => schema.parse(company)).not.toThrow()
+    expect(() => aschema.parse(company)).not.toThrow()
   })
 
   test('no name', () => {
-    const schema = Company.CompanyNamezSchema,
+    const aschema = Company.CompanyNamezSchema,
+      company = Company.CreateICompany()
 
-     company = Company.CreateICompany()
-
-    expect(() => schema.parse(company)).toThrow()
+    expect(() => aschema.parse(company)).toThrow()
   })
 
   test('invalid name', () => {

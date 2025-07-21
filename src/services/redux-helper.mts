@@ -28,12 +28,12 @@ export abstract class ReduxHelper {
 
   static InitialState<T extends object = object>(data: T): ReduxAsyncStatus<T> {
     const state: ReduxAsyncStatus<T> = {
-      status: 'idle',
-      error: undefined,
       data: deepCloneJson(data),
+      error: undefined,
       isLoading: false,
       lastUpdate: Date.now(),
       message: undefined,
+      status: 'idle',
     }
 
     return state
@@ -77,8 +77,8 @@ export abstract class ReduxHelper {
       ...deepCloneJson(state),
       error: safestr(error, 'Unknown error'),
       isLoading: false,
-      message,
       lastUpdate: Date.now(),
+      message,
       status: 'rejected',
     }
 

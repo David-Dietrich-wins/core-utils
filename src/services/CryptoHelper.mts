@@ -1,18 +1,18 @@
 import crypto from 'crypto'
-import { safestrToJson } from './string-helper.mjs'
 import { safeJsonToString } from './object-helper.mjs'
+import { safestrToJson } from './string-helper.mjs'
 
 export const CONST_RegexRsaPrivateKeyPem =
-  /-----BEGIN RSA PRIVATE KEY-----(\n|\r|\r\n)([0-9a-zA-Z+/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z+/=]{1,63}(\n|\r|\r\n))?-----END RSA PRIVATE KEY-----/
+  /-----BEGIN RSA PRIVATE KEY-----(?<temp5>\n|\r|\r\n)(?<temp4>[0-9a-zA-Z+/=]{64}(?<temp3>\n|\r|\r\n))*(?<temp2>[0-9a-zA-Z+/=]{1,63}(?<temp1>\n|\r|\r\n))?-----END RSA PRIVATE KEY-----/u
 
 export const CONST_RegexRsaPublicKeyPem =
-  /-----BEGIN( RSA)? PUBLIC KEY-----(\n|\r|\r\n)([0-9a-zA-Z+/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z+/=]{1,63}(\n|\r|\r\n))?-----END( RSA)? PUBLIC KEY-----/
+  /-----BEGIN(?<temp7> RSA)? PUBLIC KEY-----(?<temp6>\n|\r|\r\n)(?<temp5>[0-9a-zA-Z+/=]{64}(?<temp4>\n|\r|\r\n))*(?<temp3>[0-9a-zA-Z+/=]{1,63}(?<temp2>\n|\r|\r\n))?-----END(?<temp1> RSA)? PUBLIC KEY-----/u
 
 export const CONST_RegexRsaPrivateKey =
-  /-----BEGIN RSA PRIVATE KEY-----([^-!]+)-----END RSA PRIVATE KEY-----/
+  /-----BEGIN RSA PRIVATE KEY-----(?<temp1>[^-!]+)-----END RSA PRIVATE KEY-----/u
 
 export const CONST_RegexRsaPublicKey =
-  /-----BEGIN RSA PUBLIC KEY-----([^-!]+)-----END RSA PUBLIC KEY-----/
+  /-----BEGIN RSA PUBLIC KEY-----(?<temp1>[^-!]+)-----END RSA PUBLIC KEY-----/u
 
 export interface ICryptoSettings {
   rsaPrivateKey: string
@@ -34,25 +34,29 @@ export class CryptoHelper {
   static GenerateRsaKeyPair() {
     const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
       modulusLength: 4096,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
-      },
       privateKeyEncoding: {
-        type: 'pkcs1',
         format: 'pem',
+        type: 'pkcs1',
         // Cipher: 'aes-256-cbc',
         // Passphrase,
       },
+      publicKeyEncoding: {
+        format: 'pem',
+        type: 'spki',
+      },
     })
 
-    return { rsaPublicKey: publicKey, rsaPrivateKey: privateKey }
+    return {
+      rsaPrivateKey: privateKey,
+      rsaPublicKey: publicKey,
+    }
   }
 
   static GenerateRandomString(
     exactLength = 4,
     charsToUse = CryptoHelper.CONST_CharsToUseForRandomString
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return [...Array(exactLength)]
       .map(() => charsToUse[Math.floor(Math.random() * charsToUse.length)])
       .join('')
@@ -96,8 +100,8 @@ export class CryptoHelper {
         // In order to decrypt the data, we need to specify the
         // Same hashing function and padding scheme that we used to
         // Encrypt the data in the previous step
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
         oaepHash: 'sha256',
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
         passphrase,
       },
       Buffer.from(encryptedString, 'base64')
@@ -123,19 +127,18 @@ export class CryptoHelper {
     passphrase?: string
   ) {
     const encryptedData = crypto.publicEncrypt(
-      {
-        key: publicKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash: 'sha256',
-        passphrase,
-      },
-      // We convert the data string to a buffer using `Buffer.from`
-      Buffer.from(decryptedString, 'utf8')
-    ),
-
-    // The encrypted data is in the form of bytes, so we print it in base64 format
-    // So that it's displayed in a more readable form
-     encryptedString = encryptedData.toString('base64')
+        {
+          key: publicKey,
+          oaepHash: 'sha256',
+          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+          passphrase,
+        },
+        // We convert the data string to a buffer using `Buffer.from`
+        Buffer.from(decryptedString, 'utf8')
+      ),
+      // The encrypted data is in the form of bytes, so we print it in base64 format
+      // So that it's displayed in a more readable form
+      encryptedString = encryptedData.toString('base64')
 
     return encryptedString
   }

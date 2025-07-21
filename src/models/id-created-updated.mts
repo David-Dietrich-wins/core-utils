@@ -1,6 +1,6 @@
-import { z } from 'zod/v4'
-import { isObject } from '../services/object-helper.mjs'
 import { IId } from './IdManager.mjs'
+import { isObject } from '../services/object-helper.mjs'
+import { z } from 'zod/v4'
 
 export type ICreated<T extends string | number | Date = Date> = z.infer<
   ReturnType<typeof IdCreated.zCreated<T>>

@@ -1,37 +1,33 @@
 import { DateHelper } from '../services/DateHelper.mjs'
-import { IServerState } from './ApplicationState.mjs'
 import { HTTP_Ok } from './AppException.mjs'
+import { IServerState } from './ApplicationState.mjs'
 import UserState from './UserState.mjs'
 import WebState from './WebState.mjs'
 
 const startTime = new Date(),
+  testConfig = {
+    getTestServerState() {
+      const dtNow = new Date(),
+        server: IServerState = {
+          currentTime: dtNow,
+          message: 'Operational',
+          ready: true,
+          startTime,
+          state: 1,
+          statusCode: HTTP_Ok,
+          uptime: DateHelper.timeDifferenceString(startTime),
+        }
 
- TestConfig = {
-  getTestServerState() {
-    const dtNow = new Date(),
-
-     server: IServerState = {
-      currentTime: dtNow,
-      message: 'Operational',
-      ready: true,
-      state: 1,
-      startTime,
-      statusCode: HTTP_Ok,
-      uptime: DateHelper.timeDifferenceString(startTime),
-    }
-
-    return server
-  },
-}
+      return server
+    },
+  }
 
 test('WebState good', () => {
-  const serverState = TestConfig.getTestServerState(),
-
-   userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
-    data: 'hello',
-  }),
-
-   webState = new WebState(0, 0, 'success', serverState, userState)
+  const serverState = testConfig.getTestServerState(),
+    userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+      data: 'hello',
+    }),
+    webState = new WebState(0, 0, 'success', serverState, userState)
 
   expect(webState.totalFailures).toBe(0)
   expect(webState.totalRequests).toBe(0)
@@ -47,22 +43,20 @@ test('WebState default constructor', () => {
 })
 
 test('WebState constructor good', () => {
-  const serverState = TestConfig.getTestServerState(),
-
-   userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
-    data: 'hello',
-  }),
-
-   webState = new WebState(
-    1,
-    1,
-    'fail',
-    serverState,
-    userState,
-    '1.0.0',
-    ['msg'],
-    ['errMsg']
-  )
+  const serverState = testConfig.getTestServerState(),
+    userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+      data: 'hello',
+    }),
+    webState = new WebState(
+      1,
+      1,
+      'fail',
+      serverState,
+      userState,
+      '1.0.0',
+      ['msg'],
+      ['errMsg']
+    )
 
   expect(webState.totalFailures).toBe(1)
   expect(webState.totalRequests).toBe(1)

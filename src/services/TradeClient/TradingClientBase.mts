@@ -6,9 +6,10 @@ export abstract class TradingClientBase {
     stopLossPrice: number
   ): number {
     const riskAmount = accountBalance * riskPercentage,
-     tradeRisk = entryPrice - stopLossPrice,
-     positionSize = riskAmount / tradeRisk
-    return positionSize
+      tradeRisk = entryPrice - stopLossPrice,
+      zpositionSize = riskAmount / tradeRisk
+
+    return zpositionSize
   }
 
   static CalculateRiskReward(
@@ -16,9 +17,9 @@ export abstract class TradingClientBase {
     takeProfitPrice: number,
     stopLossPrice: number
   ): number {
-    const potentialProfit = takeProfitPrice - entryPrice,
-     potentialLoss = entryPrice - stopLossPrice,
-     riskRewardRatio = potentialProfit / potentialLoss
+    const potentialLoss = entryPrice - stopLossPrice,
+      potentialProfit = takeProfitPrice - entryPrice,
+      riskRewardRatio = potentialProfit / potentialLoss
 
     return riskRewardRatio
   }

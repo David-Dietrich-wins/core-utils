@@ -1,14 +1,14 @@
-import { AppException } from '../models/AppException.mjs'
-import type { ValueChangeHandler } from '../models/id-name.mjs'
-import type { IValue } from '../models/interfaces.mjs'
-import { isArray, safeArray } from '../services/array-helper.mjs'
-import { isNullOrUndefined } from '../services/general.mjs'
 import { ColorHelper, type ColorRange } from '../services/color-helper.mjs'
 import {
   IHasPolitiscales,
   type IPolitiscale,
   type PolitiscaleName,
 } from './politiscale.mjs'
+import { isArray, safeArray } from '../services/array-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
+import type { IValue } from '../models/interfaces.mjs'
+import type { ValueChangeHandler } from '../models/id-name.mjs'
+import { isNullOrUndefined } from '../services/general.mjs'
 
 const CONST_ScaleNameClimate = 'climate',
   CONST_ScaleNameFreeSpeech = 'freeSpeech',
@@ -32,7 +32,8 @@ export type PolitiRatingLeftRight = {
 }
 
 interface PolitiscaleSetting extends PolitiscaleHeading {
-  rating: PolitiRatingLeftRight // Where on the scale from left to right (0 - 100)
+  // Where on the scale from left to right (0 - 100)
+  rating: PolitiRatingLeftRight
   colorRange: ColorRange
 }
 
@@ -78,8 +79,13 @@ export abstract class PolitiscaleHelper {
     PolitiscaleSetting
   ] = [
     {
-      name: CONST_ScaleNameClimate,
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeLeft,
+        90,
+        100
+      ),
       heading: 'Climate Rating',
+      name: CONST_ScaleNameClimate,
       rating: {
         left: {
           active: true,
@@ -94,15 +100,15 @@ export abstract class PolitiscaleHelper {
           weight: 0.1,
         },
       },
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeLeft,
-        90,
-        100
-      ),
     },
     {
-      name: CONST_ScaleNameFreeSpeech,
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeRight,
+        40,
+        60
+      ),
       heading: 'Free Speech',
+      name: CONST_ScaleNameFreeSpeech,
       rating: {
         left: {
           active: true,
@@ -117,15 +123,15 @@ export abstract class PolitiscaleHelper {
           weight: 0.5,
         },
       },
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeRight,
-        40,
-        60
-      ),
     },
     {
-      name: CONST_ScaleNameReligion,
+      colorRange: ColorHelper.InterpolateWeightedColorRange(
+        ColorRangeRight,
+        90,
+        100
+      ),
       heading: 'Religious Freedom',
+      name: CONST_ScaleNameReligion,
       rating: {
         left: {
           active: true,
@@ -140,15 +146,10 @@ export abstract class PolitiscaleHelper {
           weight: 1,
         },
       },
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeRight,
-        90,
-        100
-      ),
     },
   ]
 
-  static FindSetting(name: string | PolitiscaleName): PolitiscaleSetting {
+  static FindSetting(name: PolitiscaleName): PolitiscaleSetting {
     const setting = PolitiscaleHelper.settings.find((x) => x.name === name)
     if (!setting) {
       throw new AppException(
@@ -160,15 +161,15 @@ export abstract class PolitiscaleHelper {
     return setting
   }
 
-  static getColorRange(name: string | PolitiscaleName): ColorRange {
+  static getColorRange(name: PolitiscaleName): ColorRange {
     return PolitiscaleHelper.FindSetting(name).colorRange
   }
 
   static PolitiscaleHeadings(): PolitiscaleHeading[] {
     return this.settings.map((x) => {
       const heading: PolitiscaleHeading = {
-        name: x.name,
         heading: x.heading,
+        name: x.name,
       }
 
       return heading
@@ -181,7 +182,7 @@ export abstract class PolitiscaleHelper {
    * @param rating The rating to be translated.
    */
   static CoreRating(
-    name: string | PolitiscaleName,
+    name: PolitiscaleName,
     rating?: number
   ): PolitiRatingLeftRight {
     let left = rating ?? 0,
@@ -201,14 +202,14 @@ export abstract class PolitiscaleHelper {
 
     const leaning: Readonly<PolitiRatingLeftRight> = {
       left: {
-        isPrimary: setting.left.isPrimary,
         active: setting.left.active,
+        isPrimary: setting.left.isPrimary,
         value: left,
         weight: setting.left.weight,
       },
       right: {
-        isPrimary: setting.right.isPrimary,
         active: setting.right.active,
+        isPrimary: setting.right.isPrimary,
         value: right,
         weight: setting.right.weight,
       },
@@ -217,7 +218,7 @@ export abstract class PolitiscaleHelper {
     return leaning
   }
   static CoreRatingValueTuple(
-    name: string | PolitiscaleName,
+    name: PolitiscaleName,
     rating?: number
   ): [number, number] {
     const pr = PolitiscaleHelper.CoreRating(name, rating)
@@ -228,17 +229,14 @@ export abstract class PolitiscaleHelper {
     ]
   }
 
-  static PrimaryRating(
-    name: string | PolitiscaleName,
-    rating?: number
-  ): number {
+  static PrimaryRating(name: PolitiscaleName, rating?: number): number {
     const pr = PolitiscaleHelper.CoreRating(name, rating)
 
     return pr.left.isPrimary ? pr.left.value : pr.right.value
   }
 
   static RatingOverall(
-    scales: { name: string | PolitiscaleName; value?: number }[] = []
+    scales: { name: PolitiscaleName; value?: number }[] = []
   ): PolitiRatingLeftRight {
     const ratingsLeft: number[] = [],
       ratingsRight: number[] = []
@@ -255,19 +253,19 @@ export abstract class PolitiscaleHelper {
       }
     })
 
-    const left = reduceRatings(ratingsLeft),
-      right = reduceRatings(ratingsRight),
+    const aleft = reduceRatings(ratingsLeft),
+      aright = reduceRatings(ratingsRight),
       leaning: PolitiRatingLeftRight = {
         left: {
-          isPrimary: PolitiscaleHelper.IsLeftLeaning(left),
           active: true,
-          value: left,
+          isPrimary: PolitiscaleHelper.IsLeftLeaning(aleft),
+          value: aleft,
           weight: 0,
         },
         right: {
-          isPrimary: PolitiscaleHelper.IsRightLeaning(right),
           active: true,
-          value: right,
+          isPrimary: PolitiscaleHelper.IsRightLeaning(aright),
+          value: aright,
           weight: 0,
         },
       }
@@ -285,7 +283,7 @@ export abstract class PolitiscaleHelper {
 
     if (isArray(userScales as unknown)) {
       const userRating = PolitiscaleHelper.RatingOverall(
-        PolitiscaleHelper.getScales(userScales)
+        PolitiscaleHelper.getScales(userScales as IPolitiscale[])
       )
 
       return PolitiscaleHelper.CombineRatings(rating, userRating)
@@ -342,16 +340,16 @@ export abstract class PolitiscaleHelper {
 
     const pl: PolitiRatingLeftRight = {
       left: {
-        isPrimary: isLeft,
         active: primary.left.active,
+        isPrimary: isLeft,
         value: ratingLeft,
         weight: applied.left.weight
           ? primary.left.weight * applied.left.weight
           : primary.left.weight,
       },
       right: {
-        isPrimary: isRight,
         active: primary.right.active,
+        isPrimary: isRight,
         value: ratingRight,
         weight: applied.right.weight
           ? primary.right.weight * applied.right.weight
@@ -362,7 +360,7 @@ export abstract class PolitiscaleHelper {
     return pl
   }
 
-  static PolitiscaleColor(name: PolitiscaleName | string, rating: number) {
+  static PolitiscaleColor(name: PolitiscaleName, rating: number) {
     return ColorHelper.InterpolateColorRange(
       PolitiscaleHelper.PolitiscaleColorRange(name),
       rating
@@ -384,12 +382,12 @@ export abstract class PolitiscaleHelper {
 
     return colorIfEmpty
   }
-  static PolitiscaleColorRange(name: PolitiscaleName | string) {
+  static PolitiscaleColorRange(name: PolitiscaleName) {
     return PolitiscaleHelper.getColorRange(name)
   }
 
   static PolitiscaleRating(
-    scales?: { name: string | PolitiscaleName; value?: number }[]
+    scales?: { name: PolitiscaleName; value?: number }[]
   ) {
     return PolitiscaleHelper.RatingOverall(scales)
   }
@@ -439,19 +437,19 @@ export abstract class PolitiscaleHelper {
   }
 
   static getNewPolitiscales(scales: IPolitiscale[], scale: IPolitiscale) {
-    const newarr = Array.from(safeArray(scales)),
-      findScale = newarr.find((x) => x.name === scale.name)
+    const farr = Array.from(safeArray(scales)),
+      findScale = farr.find((x) => x.name === scale.name)
     if (findScale) {
       findScale.value = scale.value
     } else {
-      newarr.push(scale)
+      farr.push(scale)
     }
 
-    return newarr
+    return farr
   }
 
   static getScale(
-    name: PolitiscaleName | string,
+    name: PolitiscaleName,
     formDataOrScaleArray?: IHasPolitiscales | IPolitiscale[]
   ) {
     const arrScales = this.getScales(formDataOrScaleArray),
@@ -472,7 +470,7 @@ export abstract class PolitiscaleHelper {
   }
 
   static ratingForScale(
-    name: PolitiscaleName | string,
+    name: PolitiscaleName,
     formDataOrScaleArray: number | IHasPolitiscales | IPolitiscale[]
   ) {
     const rating = PolitiscaleHelper.ratingForScaleRaw(
@@ -484,7 +482,7 @@ export abstract class PolitiscaleHelper {
   }
 
   static ratingForScaleRaw(
-    name: PolitiscaleName | string,
+    name: PolitiscaleName,
     formDataOrScaleArray?: number | IHasPolitiscales | IPolitiscale[] | null
   ) {
     if (isNullOrUndefined(formDataOrScaleArray)) {
@@ -527,11 +525,13 @@ export abstract class PolitiscaleHelper {
     return PolitiscaleHelper.ratingForScale(CONST_ScaleNameClimate, scaleval)
   }
 
-  static ratingFreeSpeech(scaleval) {
+  static ratingFreeSpeech(
+    scaleval: number | IHasPolitiscales | IPolitiscale[]
+  ) {
     return PolitiscaleHelper.ratingForScale(CONST_ScaleNameFreeSpeech, scaleval)
   }
 
-  static ratingReligion(scaleval) {
+  static ratingReligion(scaleval: number | IHasPolitiscales | IPolitiscale[]) {
     return PolitiscaleHelper.ratingForScale(CONST_ScaleNameReligion, scaleval)
   }
 

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable one-var */
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import { JwtPayload } from 'jsonwebtoken'

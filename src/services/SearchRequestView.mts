@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as z from 'zod/v4'
 import {
   AnyObject,
@@ -5,10 +6,6 @@ import {
   SortOrder,
   SortOrderAsBoolean,
 } from '../models/types.mjs'
-import { isArray, safeArray } from './array-helper.mjs'
-import { hasData, sortFunction } from './general.mjs'
-import { getAsNumber } from './number-helper.mjs'
-import { isObject } from './object-helper.mjs'
 import {
   StringHelper,
   isString,
@@ -16,6 +13,10 @@ import {
   safestrLowercase,
   safestrTrim,
 } from './string-helper.mjs'
+import { hasData, sortFunction } from './general.mjs'
+import { isArray, safeArray } from './array-helper.mjs'
+import { getAsNumber } from './number-helper.mjs'
+import { isObject } from './object-helper.mjs'
 
 export type ISearchRequestView = z.infer<
   typeof SearchRequestView.zSearchRequestView
@@ -43,8 +44,8 @@ export class SearchRequestView implements ISearchRequestView {
   static readonly TermMaxLength = 100
   static readonly LimitAndOffsetMax = 10000
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  addToQuery?: any // Additional query parameters for MongoDb.
+  // Additional query parameters for MongoDb.
+  addToQuery?: any
   searchColumns?: ISearchRequestView['searchColumns']
   where?: SearchWhere
 
@@ -59,11 +60,16 @@ export class SearchRequestView implements ISearchRequestView {
   pageSize: ISearchRequestView['pageSize'] = 0
 
   constructor(
-    term?: ISearchRequestView['term'] | object, // Search term
-    sortColumn = '', // ORDER BY column
-    sortDirection: SortOrder = 1, // ORDER BY direction
-    limit = 0, // LIMIT the result set to # of rows
-    offset = 0, // Start at OFFSET
+    // Search term
+    term?: ISearchRequestView['term'] | object,
+    // ORDER BY column
+    sortColumn = '',
+    // ORDER BY direction
+    sortDirection: SortOrder = 1,
+    // LIMIT the result set to # of rows
+    limit = 0,
+    // Start at OFFSET
+    offset = 0,
     exactMatch = false,
     pageIndex = 0,
     pageSize = 0
@@ -87,14 +93,14 @@ export class SearchRequestView implements ISearchRequestView {
 
   static Create(overrides?: Partial<ISearchRequestView>): ISearchRequestView {
     const iSearchRequestView: ISearchRequestView = {
-      term: '',
-      sortColumn: '',
-      sortDirection: 'asc',
+      exactMatch: false,
       limit: 0,
       offset: 0,
-      exactMatch: false,
       pageIndex: 0,
       pageSize: 0,
+      sortColumn: '',
+      sortDirection: 'asc',
+      term: '',
       ...overrides,
     }
 
@@ -133,12 +139,11 @@ export class SearchRequestView implements ISearchRequestView {
     }
 
     const lterm = isString(this.term)
-      ? lowerCaseSearch
-        ? safestrLowercase(this.term, false)
-        : safestr(this.term)
-      : this.term,
-
-     searchColumns = safeArray(this.searchColumns)
+        ? lowerCaseSearch
+          ? safestrLowercase(this.term, false)
+          : safestr(this.term)
+        : this.term,
+      searchColumns = safeArray(this.searchColumns)
 
     if (lterm && isArray(searchColumns, 1)) {
       ret = ret.filter((x) => {
@@ -146,6 +151,7 @@ export class SearchRequestView implements ISearchRequestView {
 
         searchColumns.forEach((scol) => {
           if (!found && x[scol]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const s =
               isString(x[scol]) && lowerCaseSearch
                 ? safestrLowercase(x[scol])
@@ -163,8 +169,7 @@ export class SearchRequestView implements ISearchRequestView {
     }
 
     const numFound = ret.length,
-
-     sortColumn = safestrTrim(this.sortColumn)
+      sortColumn = safestrTrim(this.sortColumn)
     if (hasData(sortColumn)) {
       const lsortDirection = SortOrderAsBoolean(this.sortDirection)
 
@@ -174,7 +179,7 @@ export class SearchRequestView implements ISearchRequestView {
     }
 
     const offset = this.CalculatedOffset,
-     pageSize = this.CalculatedPageSize
+      pageSize = this.CalculatedPageSize
     if (pageSize > 0) {
       ret = ret.slice(offset, offset + pageSize)
     } else if (offset > 0) {
@@ -246,14 +251,17 @@ export class SearchRequestView implements ISearchRequestView {
         .optional(),
       sortColumn: z.string().max(SearchRequestView.TermMaxLength).default(''),
       sortDirection: z
-        .number()
-        .min(-1)
-        .max(1)
-        .or(z.literal('asc'))
-        .or(z.literal('desc'))
-        .or(z.literal(1))
-        .or(z.literal(-1))
-        .or(z.boolean())
+        .union([
+          z.literal(1),
+          z.literal(-1),
+          z.literal('a'),
+          z.literal('d'),
+          z.literal('asc'),
+          z.literal('desc'),
+          z.literal(1),
+          z.literal(-1),
+          z.boolean(),
+        ])
         .default(1),
 
       term: z

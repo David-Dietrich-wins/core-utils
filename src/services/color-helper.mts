@@ -1,5 +1,5 @@
-import { safeArray } from './array-helper.mjs'
 import { NumberHelper } from './number-helper.mjs'
+import { safeArray } from './array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
 
@@ -29,10 +29,10 @@ export class ColorHelper {
    * @param percent The percentage of the gradient scale you want returned.
    * @returns An HTML #FFFFFF formatted color that is the middle color of the percent between the start and end colors.
    */
-  static InterpolateColorRange(colorRange: ColorRange, percent: number) {
+  static InterpolateColorRange(colorRange: ColorRange, percentOfRange: number) {
     let [startColor, endColor] = colorRange
 
-    percent /= 100
+    const percent = percentOfRange / 100
 
     if (startColor.startsWith('#')) {
       startColor = startColor.substring(1)
@@ -41,25 +41,21 @@ export class ColorHelper {
       endColor = endColor.substring(1)
     }
 
-    const startMatch = startColor.match(/.{1,2}/g),
-     endMatch = endColor.match(/.{1,2}/g),
+    const endMatch = endColor.match(/.{1,2}/gu),
+      startMatch = startColor.match(/.{1,2}/gu),
+      tn0 = startMatch
+        ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent))
+        : [0, 0, 0],
+      tn1 = endMatch
+        ? safeArray(endMatch).map((oct) => parseInt(oct, 16) * percent)
+        : [0, 0, 0],
+      zci = [0, 1, 2].map((i) => Math.min(Math.round(tn0[i] + tn1[i]), 255))
 
-     n0 = startMatch
-      ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent))
-      : [0, 0, 0],
-     n1 = endMatch
-      ? safeArray(endMatch).map((oct) => parseInt(oct, 16) * percent)
-      : [0, 0, 0],
-
-     ci = [0, 1, 2].map((i) => Math.min(Math.round(n0[i] + n1[i]), 255))
-
-    return (
-      `#${ 
-      ci
-        .reduce((a, v) => (a << 8) + v, 0)
-        .toString(16)
-        .padStart(6, '0')}`
-    )
+    return `#${zci
+      // eslint-disable-next-line no-bitwise
+      .reduce((a, v) => (a << 8) + v, 0)
+      .toString(16)
+      .padStart(6, '0')}`
   }
 
   /**

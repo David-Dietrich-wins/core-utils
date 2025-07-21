@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ContextManager } from './ContextManager.mjs'
 
 test('ContextManager', () => {

@@ -1,11 +1,11 @@
-import { IconConfiguration } from '../services/ContextManager.mjs'
-import { isNullOrUndefined } from '../services/general.mjs'
-import { LogManagerLevel } from '../services/LogManager.mjs'
 import { getAsNumber, isNumber } from '../services/number-helper.mjs'
 import { isString, safestrLowercase } from '../services/string-helper.mjs'
+import { IUserInfo } from './UserInfo.mjs'
+import { IconConfiguration } from '../services/ContextManager.mjs'
 import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { IUserInfo } from './UserInfo.mjs'
+import { LogManagerLevel } from '../services/LogManager.mjs'
+import { isNullOrUndefined } from '../services/general.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }
@@ -65,6 +65,7 @@ export type IConstructor<T> = new (...args: any[]) => T
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CreateClass<T>(type: IConstructor<T>, ...args: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return new type(...args)
 }
 
@@ -93,12 +94,10 @@ export type OmitUserId<T extends { userid?: unknown }> = Omit<T, 'userid'>
 
 export type Opaque<K, T = string> = T & { __TYPE__: K }
 
-export type SortOrderString = 'asc' | 'desc'
+export type SortOrderString = 'a' | 'd' | 'asc' | 'desc'
 export type SortOrderNumeric = 1 | -1
 export type SortOrder = SortOrderString | SortOrderNumeric | boolean
-export function SortOrderAsBoolean(
-  order?: SortOrder | string | number | boolean | null
-) {
+export function SortOrderAsBoolean(order?: SortOrder | null) {
   if (isNullOrUndefined(order)) {
     return true
   }
@@ -118,9 +117,7 @@ export function SortOrderAsBoolean(
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsNumeric(
-  order?: SortOrder | string | number | boolean | null
-) {
+export function SortOrderAsNumeric(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 1 : -1
 }
 /**
@@ -128,9 +125,7 @@ export function SortOrderAsNumeric(
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsString(
-  order?: SortOrder | string | number | boolean | null
-) {
+export function SortOrderAsString(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
 

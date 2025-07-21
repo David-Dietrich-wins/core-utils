@@ -1,9 +1,9 @@
-import { existsSync } from 'node:fs'
-import { open } from 'node:fs/promises'
-import { LogManager } from './LogManager.mjs'
-import { hasData } from './general.mjs'
-import { safestrTrim } from './string-helper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
+import { LogManager } from './LogManager.mjs'
+import { existsSync } from 'node:fs'
+import { hasData } from './general.mjs'
+import { open } from 'node:fs/promises'
+import { safestrTrim } from './string-helper.mjs'
 
 export type SingleLineFileProcessorConfig<T = unknown> = {
   fileName: string
@@ -37,8 +37,7 @@ export class SingleLineFileProcessor<T = unknown> {
    */
   async processFile() {
     const stats = new InstrumentationStatistics(),
-
-     { action, fileName, logger, trimLine = true, typeName } = this.config
+      { action, fileName, logger, trimLine = true, typeName } = this.config
 
     let lineNumber = 1
 

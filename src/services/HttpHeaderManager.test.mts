@@ -1,47 +1,50 @@
-import { StringOrStringArrayObject } from '../models/types.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import {
   HttpHeaderManager,
   HttpHeaderManagerBase,
   HttpHeaderNamesAllowed,
 } from './HttpHeaderManager.mjs'
-import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
-import { JwtTokenWithUserId } from './jwt.mjs'
 import { IncomingHttpHeaders } from 'node:http'
+import { JwtTokenWithUserId } from './jwt.mjs'
+import { StringOrStringArrayObject } from '../models/types.mjs'
 
 test('getHeaderString', () => {
-  const init: StringOrStringArrayObject = {
+  const ainit: StringOrStringArrayObject = {
       [HttpHeaderNamesAllowed.Authorization]: TEST_Settings.jwt,
     },
-    hm = new HttpHeaderManagerBase(init),
-    headerString = hm.getHeaderString(HttpHeaderNamesAllowed.Authorization)
+    ham = new HttpHeaderManagerBase(ainit),
+    headerString = ham.getHeaderString(HttpHeaderNamesAllowed.Authorization)
   expect(headerString).toBe(TEST_Settings.jwt)
 })
 
 test('bearerToken', () => {
-  const val = TEST_Settings.jwt,
-    init: StringOrStringArrayObject = {
-      [HttpHeaderNamesAllowed.Authorization]: val,
+  const aaval = TEST_Settings.jwt,
+    ainit: StringOrStringArrayObject = {
+      [HttpHeaderNamesAllowed.Authorization]: aaval,
     },
-    hm = new HttpHeaderManagerBase(init),
-    bt = hm.bearerToken
-  expect(bt).toBeDefined()
+    hm = new HttpHeaderManagerBase(ainit),
+    hmbt = hm.bearerToken
+
+  expect(hmbt).toBeDefined()
 })
 
 test('uppercase header name', () => {
-  const init: StringOrStringArrayObject = {
+  const ainit: StringOrStringArrayObject = {
       [HttpHeaderNamesAllowed.Authorization.toUpperCase()]: TEST_Settings.jwt,
     },
-    hm = new HttpHeaderManagerBase(init),
-    bt = hm.bearerToken
-  expect(bt).toBeDefined()
+    hm = new HttpHeaderManagerBase(ainit),
+    hmbt = hm.bearerToken
+
+  expect(hmbt).toBeDefined()
 })
 
 test('jwtTokenMustExistAndBeValid', () => {
-  const val = TEST_Settings.jwt,
-    init: StringOrStringArrayObject = {
-      [HttpHeaderNamesAllowed.Authorization]: val,
+  const aaval = TEST_Settings.jwt,
+    ainit: StringOrStringArrayObject = {
+      [HttpHeaderNamesAllowed.Authorization]: aaval,
     },
-    hm = new HttpHeaderManagerBase(init)
+    hm = new HttpHeaderManagerBase(ainit)
 
   expect(() => hm.jwtTokenMustExistAndBeValid).toThrow(
     'Invalid security token when attempting to decode the JWT.'
@@ -49,37 +52,38 @@ test('jwtTokenMustExistAndBeValid', () => {
 })
 
 test('jwtToken', () => {
-  const init: StringOrStringArrayObject = {
+  const ainit: StringOrStringArrayObject = {
       [HttpHeaderNamesAllowed.Authorization]: `Bearer ${TEST_Settings.jwt}`,
     },
-    hm = new HttpHeaderManagerBase(init),
+    hm = new HttpHeaderManagerBase(ainit),
     jwt = hm.jwtToken
   expect(jwt?.email).toBe(TEST_Settings.userIdGoodEmail)
 
-  init.authorization = ''
-  expect(new HttpHeaderManagerBase(init).jwtToken).toBeUndefined()
+  ainit.authorization = ''
+  expect(new HttpHeaderManagerBase(ainit).jwtToken).toBeUndefined()
 })
 
 describe('userIdFromJwt', () => {
   test('raw header for JWT', () => {
-    const val = JwtTokenWithUserId(
+    const aaval = JwtTokenWithUserId(
         TEST_Settings.userIdGood.toString(),
         TEST_Settings.rsaPassPhrase
       ),
-      init: StringOrStringArrayObject = {
-        [HttpHeaderNamesAllowed.Authorization]: `Bearer ${val}`,
+      ainit: StringOrStringArrayObject = {
+        [HttpHeaderNamesAllowed.Authorization]: `Bearer ${aaval}`,
       },
-      hm = new HttpHeaderManagerBase(init),
+      hm = new HttpHeaderManagerBase(ainit),
       userid = hm.userId
+
     expect(userid).toBe(TEST_Settings.userIdGood.toString())
   })
 
   test('userId is 0', () => {
-    const jwt = GenerateSignedJwtToken(''),
-      init: StringOrStringArrayObject = {
-        [HttpHeaderNamesAllowed.Authorization]: `Bearer ${jwt}`,
+    const ajwt = GenerateSignedJwtToken(''),
+      binit: StringOrStringArrayObject = {
+        [HttpHeaderNamesAllowed.Authorization]: `Bearer ${ajwt}`,
       },
-      hm = new HttpHeaderManagerBase(init)
+      hm = new HttpHeaderManagerBase(binit)
 
     expect(() => hm.userId).toThrow()
   })
@@ -91,10 +95,10 @@ describe('HttpHeaderManager', () => {
         body: { 'my-test': 'my-test' },
         headers: { 'my-test': 'my-test', 'my2': undefined },
       },
-      ab = new HttpHeaderManager(req.headers)
+      zab = new HttpHeaderManager(req.headers)
 
-    expect(ab).toBeInstanceOf(HttpHeaderManager)
-    expect(ab.headers).toEqual({ 'my-test': 'my-test', 'my2': '' })
+    expect(zab).toBeInstanceOf(HttpHeaderManager)
+    expect(zab.headers).toEqual({ 'my-test': 'my-test', 'my2': '' })
   })
 
   test('Constructor with raw Headers', () => {
@@ -121,11 +125,11 @@ test('showDebug', () => {
   const hmno = new HttpHeaderManagerBase({})
   expect(hmno.showDebugExists).toBe(false)
 
-  const val = 'true',
-    init: StringOrStringArrayObject = {
-      [HttpHeaderNamesAllowed.ShowDebug]: val,
+  const aaval = 'true',
+    ainit: StringOrStringArrayObject = {
+      [HttpHeaderNamesAllowed.ShowDebug]: aaval,
     },
-    hm = new HttpHeaderManagerBase(init)
+    hm = new HttpHeaderManagerBase(ainit)
 
   expect(hm.showDebug).toBe(true)
 })
@@ -145,10 +149,10 @@ test('referrer', () => {
       body: { 'my-test': 'my-test' },
       headers: { referer: 'anything.com' },
     },
-    ab = new HttpHeaderManager(req.headers)
+    zab = new HttpHeaderManager(req.headers)
 
-  expect(ab).toBeInstanceOf(HttpHeaderManager)
-  expect(ab.referrer).toBe('anything.com')
+  expect(zab).toBeInstanceOf(HttpHeaderManager)
+  expect(zab.referrer).toBe('anything.com')
 })
 
 test('applicationName', () => {
@@ -156,9 +160,9 @@ test('applicationName', () => {
       body: { 'my-test': 'my-test' },
       headers: { [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp' },
     },
-    ab = new HttpHeaderManager(req.headers)
-  expect(ab).toBeInstanceOf(HttpHeaderManager)
-  expect(ab.applicationName).toBe('TestApp')
+    zab = new HttpHeaderManager(req.headers)
+  expect(zab).toBeInstanceOf(HttpHeaderManager)
+  expect(zab.applicationName).toBe('TestApp')
 })
 
 test('HeadersToStringOrStringObject', () => {
@@ -170,14 +174,15 @@ test('HeadersToStringOrStringObject', () => {
         [HttpHeaderNamesAllowed.ShowDebug]: 'true',
       },
     },
-    ab = new HttpHeaderManager(req.headers)
-  expect(ab).toBeInstanceOf(HttpHeaderManager)
-  expect(ab.headers).toEqual({
+    zab = new HttpHeaderManager(req.headers)
+
+  expect(zab).toBeInstanceOf(HttpHeaderManager)
+  expect(zab.headers).toEqual({
     [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp',
     [HttpHeaderNamesAllowed.Authorization]: TEST_Settings.jwt,
     [HttpHeaderNamesAllowed.ShowDebug]: 'true',
   })
-  expect(HttpHeaderManager.HeadersToStringOrStringObject(ab.headers)).toEqual({
+  expect(HttpHeaderManager.HeadersToStringOrStringObject(zab.headers)).toEqual({
     [HttpHeaderNamesAllowed.ApplicationName]: 'TestApp',
     [HttpHeaderNamesAllowed.Authorization]: TEST_Settings.jwt,
     [HttpHeaderNamesAllowed.ShowDebug]: 'true',

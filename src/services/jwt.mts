@@ -1,3 +1,4 @@
+import { isString, safestr } from './string-helper.mjs'
 import jwt, {
   DecodeOptions,
   JwtHeader,
@@ -6,14 +7,12 @@ import jwt, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { isFunction } from './general.mjs'
-import { safestr } from './string-helper.mjs'
-import { isString } from './string-helper.mjs'
-import { safeArray } from './array-helper.mjs'
-import { IncomingHttpHeaders } from 'node:http'
-import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { AppException } from '../models/AppException.mjs'
+import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
+import { IncomingHttpHeaders } from 'node:http'
+import { isFunction } from './general.mjs'
+import { safeArray } from './array-helper.mjs'
 
 export enum WebRoles {
   USER = 'user',
@@ -22,6 +21,24 @@ export enum WebRoles {
 }
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
+
+export function JwtDecode<T extends IJwtBase>(
+  token?: string,
+  options?: DecodeOptions
+) {
+  const decoded = jwt.decode(
+    HttpHeaderManagerBase.BearerTokenParse(token),
+    options
+  )
+  if (!decoded || isString(decoded)) {
+    throw new AppException(
+      'Invalid security token when attempting to decode the JWT.',
+      'JwtDecode'
+    )
+  }
+
+  return decoded as T
+}
 
 function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
   type: IConstructor<T>,
@@ -120,24 +137,6 @@ export interface IJwtFusionAuthIdToken extends IJwtAccessToken {
   picture: string
 }
 
-export function JwtDecode<T extends IJwtBase>(
-  token?: string,
-  options?: DecodeOptions
-) {
-  const decoded = jwt.decode(
-    HttpHeaderManagerBase.BearerTokenParse(token),
-    options
-  )
-  if (!decoded || isString(decoded)) {
-    throw new AppException(
-      'Invalid security token when attempting to decode the JWT.',
-      'JwtDecode'
-    )
-  }
-
-  return decoded as T
-}
-
 // Export function JwtDecodeObject<
 //   Tnew extends JwtBase,
 //   TInterface extends IJwtBase
@@ -165,7 +164,7 @@ export function JwtRetrieveUserId(token: string) {
 export function JwtSign(
   payload: string | object | Buffer,
   secretOrPrivateKey: string,
-  options?: SignOptions  
+  options?: SignOptions
 ) {
   const token = jwt.sign(payload, secretOrPrivateKey, options)
 
@@ -178,18 +177,16 @@ export function JwtTokenWithUserId(
   overrides?: Partial<JwtPayload>
 ) {
   const header: JwtHeader = {
-    alg: 'HS256',
-    typ: 'JWT',
-  },
-
-   signOptions: SignOptions = {
-    header,
-  },
-
-   payload: JwtPayload = {
-    sub: userId,
-    ...overrides,
-  }
+      alg: 'HS256',
+      typ: 'JWT',
+    },
+    payload: JwtPayload = {
+      sub: userId,
+      ...overrides,
+    },
+    signOptions: SignOptions = {
+      header,
+    }
 
   return JwtSign(payload, secretOrPrivateKey, signOptions)
 }
@@ -200,18 +197,16 @@ export function JwtTokenWithEmail(
   overrides?: Partial<JwtPayload>
 ) {
   const header: JwtHeader = {
-    alg: 'HS256',
-    typ: 'JWT',
-  },
-
-   signOptions: SignOptions = {
-    header,
-  },
-
-   payload: JwtPayload = {
-    email,
-    ...overrides,
-  }
+      alg: 'HS256',
+      typ: 'JWT',
+    },
+    payload: JwtPayload = {
+      email,
+      ...overrides,
+    },
+    signOptions: SignOptions = {
+      header,
+    }
 
   return JwtSign(payload, secretOrPrivateKey, signOptions)
 }
@@ -226,7 +221,7 @@ export function JwtTokenWithEmail(
 export function JwtVerify(
   token: string,
   secretOrPublicKey: Secret,
-  options?: VerifyOptions  
+  options?: VerifyOptions
 ) {
   const jwtret = jwt.verify(token, secretOrPublicKey, options)
 
@@ -292,7 +287,7 @@ export class JwtBase implements IJwtBase {
   }
 
   static DefaultJwt(overrides?: Partial<IJwtBase> | null) {
-    const jwt: IJwtBase = {
+    const ajwt: IJwtBase = {
       aud: '',
       exp: 0,
       iat: 0,
@@ -304,13 +299,12 @@ export class JwtBase implements IJwtBase {
       ...overrides,
     }
 
-    return jwt
+    return ajwt
   }
 
   get ApplicationRoles() {
     const arrRoles: WebRoles[] = [],
-
-     safeRoles = safeArray<string>(this.roles)
+      safeRoles = safeArray<string>(this.roles)
     if (safeRoles.includes(WebRoles.ADMIN)) {
       arrRoles.push(WebRoles.ADMIN)
     }
@@ -347,7 +341,7 @@ export class JwtBase implements IJwtBase {
   }
 
   get issuer() {
-    return safestr(this.iss).replace(new RegExp('.com$'), '')
+    return safestr(this.iss).replace(/.com$/u, '')
   }
 
   get isPolitagree() {
@@ -395,7 +389,7 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
   }
 
   static DefaultJwt(overrides?: Partial<IJwtWithSubject> | null) {
-    const jwt: IJwtWithSubject = {
+    const ajwt: IJwtWithSubject = {
       ...super.DefaultJwt(),
       ...{
         sub: '',
@@ -403,7 +397,7 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
       ...overrides,
     }
 
-    return jwt
+    return ajwt
   }
 
   get FusionAuthUserId() {
@@ -439,7 +433,7 @@ export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
   }
 
   static DefaultJwt(overrides?: Partial<IJwtAccessToken> | null) {
-    const jwt: IJwtAccessToken = {
+    const ajwt: IJwtAccessToken = {
       ...super.DefaultJwt(),
       ...{
         applicationId: '',
@@ -453,7 +447,7 @@ export class JwtAccessToken extends JwtWithSubject implements IJwtAccessToken {
       ...overrides,
     }
 
-    return jwt
+    return ajwt
   }
 
   get authenticationTime() {
@@ -484,7 +478,7 @@ export class JwtFusionAuthClientCredentials
   static DefaultJwt(
     overrides?: Partial<IJwtFusionAuthClientCredentials> | null
   ) {
-    const jwt: IJwtFusionAuthClientCredentials = {
+    const ajwt: IJwtFusionAuthClientCredentials = {
       ...super.DefaultJwt(),
       ...{
         permissions: [],
@@ -492,8 +486,15 @@ export class JwtFusionAuthClientCredentials
       ...overrides,
     }
 
-    return jwt
+    return ajwt
   }
+}
+
+export function FromBearerToken<TNew extends JwtBase>(
+  type: IConstructor<TNew>,
+  token: string
+) {
+  return JwtCreate(type, token)
 }
 
 export function FromHeaders<TNew extends JwtBase>(
@@ -502,7 +503,7 @@ export function FromHeaders<TNew extends JwtBase>(
 ) {
   let bearerToken = ''
   const hHeaders = headers as Headers,
-   iHeaders = headers as IncomingHttpHeaders
+    iHeaders = headers as IncomingHttpHeaders
 
   if (hHeaders && isFunction(hHeaders.get)) {
     bearerToken = HttpHeaderManagerBase.BearerTokenParseStrict(
@@ -513,13 +514,6 @@ export function FromHeaders<TNew extends JwtBase>(
   }
 
   return FromBearerToken(type, bearerToken)
-}
-
-export function FromBearerToken<TNew extends JwtBase>(
-  type: IConstructor<TNew>,
-  token: string
-) {
-  return JwtCreate(type, token)
 }
 
 export class JwtFusionAuthIdToken
@@ -562,7 +556,7 @@ export class JwtFusionAuthIdToken
   }
 
   static DefaultJwt(overrides?: Partial<IJwtFusionAuthIdToken> | null) {
-    const jwt: IJwtFusionAuthIdToken = {
+    const ajwt: IJwtFusionAuthIdToken = {
       ...super.DefaultJwt(),
       ...{
         active: false,
@@ -581,6 +575,6 @@ export class JwtFusionAuthIdToken
       ...overrides,
     }
 
-    return jwt
+    return ajwt
   }
 }

@@ -1,6 +1,6 @@
-import { AppException } from '../models/AppException.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IIdName, IIdNameValue, IdName } from '../models/id-name.mjs'
-import { ArrayOrSingle } from '../models/types.mjs'
 import {
   MapINamesToNames,
   ToIIdNameArray,
@@ -44,6 +44,8 @@ import {
   safeArray,
   shuffleArray,
 } from './array-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { ArrayOrSingle } from '../models/types.mjs'
 
 test('arrayGetIds', () => {
   const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
@@ -202,11 +204,11 @@ test('arrayMustFindByName', () => {
 
 test('arrayFilter', () => {
   const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-   filterFunc = (item: IdName<number>) => item.id === 1
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFilter([], filterFunc)).toStrictEqual([])
   expect(arrayFilter(undefined, filterFunc)).toStrictEqual([])
@@ -215,11 +217,11 @@ test('arrayFilter', () => {
 
 test('arrayFind', () => {
   const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-   filterFunc = (item: IdName<number>) => item.id === 1
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(arrayFind([], filterFunc)).toBeUndefined()
   expect(arrayFind(undefined, filterFunc)).toBeUndefined()
@@ -228,11 +230,11 @@ test('arrayFind', () => {
 
 test('arrayMustFindFunc', () => {
   const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-   filterFunc = (item: IdName<number>) => item.id === 1
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    filterFunc = (item: IdName<number>) => item.id === 1
 
   expect(() => arrayMustFindFunc([], filterFunc)).toThrow(
     'Unable to find arrayMustFindFunc.'
@@ -315,13 +317,12 @@ test('arrayFirst and arrayLast', () => {
 })
 
 test('arrayFirstNonEmpty and arrayLastNonEmpty', () => {
-  const fname = 'arrayFirstNonEmpty and arrayLastNonEmpty',
-
-   arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ]
+  const arr = [
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    fname = 'arrayFirstNonEmpty and arrayLastNonEmpty'
 
   expect(() => arrayFirstNonEmpty()).toThrow()
   expect(() => arrayFirstNonEmpty([])).toThrow()
@@ -593,13 +594,12 @@ test('arrayUnique', () => {
 })
 
 test('arrayAdd', () => {
-  const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-
-   addItem = { id: 4, name: 'name4' }
+  const addItem = { id: 4, name: 'name4' },
+    arr = [
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ]
 
   expect(arrayAdd(arr, addItem)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -627,12 +627,11 @@ test('arrayAdd', () => {
 
 test('arrayRemove', () => {
   const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-
-   removeItem = { id: 2, name: 'name2' }
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    removeItem = { id: 2, name: 'name2' }
 
   expect(arrayRemove(arr, removeItem)).toStrictEqual([
     { id: 1, name: 'name1' },
@@ -641,14 +640,13 @@ test('arrayRemove', () => {
 })
 
 test('arrayUpdateOrAdd', () => {
-  const arr = [
-    { id: 1, name: 'name1' },
-    { id: 2, name: 'name2' },
-    { id: 3, name: 'name3' },
-  ],
-
-   updateItem = { id: 2, name: 'name2-updated' },
-   addItem = { id: 4, name: 'name4' }
+  const addItem = { id: 4, name: 'name4' },
+    arr = [
+      { id: 1, name: 'name1' },
+      { id: 2, name: 'name2' },
+      { id: 3, name: 'name3' },
+    ],
+    updateItem = { id: 2, name: 'name2-updated' }
 
   expect(arrayUpdateOrAdd(arr, updateItem)).toStrictEqual([
     { id: 1, name: 'name1' },

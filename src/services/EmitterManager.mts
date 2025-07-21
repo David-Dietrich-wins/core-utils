@@ -1,5 +1,5 @@
-import EventEmitter from 'events'
 import { AnyRecord } from '../models/types.mjs'
+import EventEmitter from 'events'
 
 type EventKey<T extends AnyRecord> = string & keyof T
 type EventReceiver<T> = (params: T) => void
@@ -30,15 +30,15 @@ export function CreateEmitterManager<T>(name: string) {
   const emitterManager = new EmitterManager<{ [name]: T }>()
 
   return {
-    on: (fn: EventReceiver<T>) => {
-      emitterManager.on(name, fn)
+    emit(event: T) {
+      emitterManager.emit(name, event)
     },
+
     off(fn: EventReceiver<T>) {
       emitterManager.off(name, fn)
     },
-
-    emit(event: T) {
-      emitterManager.emit(name, event)
+    on: (fn: EventReceiver<T>) => {
+      emitterManager.on(name, fn)
     },
   }
 }

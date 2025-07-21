@@ -1,14 +1,45 @@
-import { AppException } from '../models/AppException.mjs'
 import {
   ArrayOrSingle,
   SortOrder,
   SortOrderAsBoolean,
 } from '../models/types.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
+import { isString, safestr, safestrLowercase } from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
-import { isString, safestr, safestrLowercase } from './string-helper.mjs'
+
+/**
+ * Tests an object to determine if it is a type boolean.
+ * @param obj Any object to test if it is a boolean value.
+ * @returns True if the object is a boolean.
+ */
+export function isBoolean(obj: unknown): obj is boolean {
+  return typeof obj === 'boolean'
+}
+
+/**
+ * Tests an object to determine if it is a function.
+ * @param obj Any object to test if it is a function.
+ * @returns True if the object is a function.
+ */
+export function isFunction(obj: unknown) {
+  return typeof obj === 'function'
+}
+
+/**
+ * Tests if a variable is null or undefined.
+ * @param obj Any variable to test if it is null or undefined.
+ * @returns True if the object passed in is null or undefined.
+ */
+export function isNullOrUndefined(obj: unknown): obj is undefined | null {
+  return typeof obj === 'undefined' || obj === null
+}
+
+export function isSymbol(value: unknown): value is symbol {
+  return typeof value === 'symbol'
+}
 
 /**
  * When getting form data from a UI, the textbox data is always a string.
@@ -123,6 +154,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
     }
 
     if (isFunction(o)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       return hasData(o(), minlength)
     }
 
@@ -177,6 +209,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
 
     return isArray(Object.keys(o), minlength)
   } catch (ex) {
+    // eslint-disable-next-line no-console
     console.error(hasData.name, ex)
   }
 
@@ -184,44 +217,15 @@ export function hasData(o: unknown, minlength = 1): boolean {
 }
 
 /**
- * Tests an object to determine if it is a type boolean.
- * @param obj Any object to test if it is a boolean value.
- * @returns True if the object is a boolean.
- */
-export function isBoolean(obj: unknown): obj is boolean {
-  return typeof obj === 'boolean'
-}
-
-/**
- * Tests an object to determine if it is a function.
- * @param obj Any object to test if it is a function.
- * @returns True if the object is a function.
- */
-export function isFunction(obj: unknown) {
-  return typeof obj === 'function'
-}
-
-/**
- * Tests if a variable is null or undefined.
- * @param obj Any variable to test if it is null or undefined.
- * @returns True if the object passed in is null or undefined.
- */
-export function isNullOrUndefined(obj: unknown): obj is undefined | null {
-  return typeof obj === 'undefined' || obj == null
-}
-
-export function isSymbol(value: unknown): value is symbol {
-  return typeof value === 'symbol'
-}
-
-/**
  * Returns a new global unique identifier (GUID).
  * @returns A global unique identifier as a 16 character string.
  */
 export function newGuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/gu, (c) => {
+    // eslint-disable-next-line no-bitwise
     const r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8
+      // eslint-disable-next-line no-bitwise
+      v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
 }
@@ -240,9 +244,10 @@ export function sortFunction(
   sortOrder: SortOrder = true,
   compareStringsLowercase = true
 ) {
-  const isAsc = SortOrderAsBoolean(sortOrder),
-    aEmpty = isNullOrUndefined(a),
-    bEmpty = isNullOrUndefined(b)
+  const aEmpty = isNullOrUndefined(a),
+    bEmpty = isNullOrUndefined(b),
+    isAsc = SortOrderAsBoolean(sortOrder)
+
   if (aEmpty && bEmpty) {
     return 0
   }
@@ -278,6 +283,7 @@ export function sortFunction(
  */
 export function toHex(decimal?: number, chars = 2) {
   if (isNullOrUndefined(chars)) {
+    // eslint-disable-next-line no-param-reassign
     chars = 2
   }
 
@@ -297,8 +303,7 @@ export function urlJoin(
   relativePath?: ArrayOrSingle<string | number | null | undefined> | null,
   addTrailingSlash = true
 ) {
-  let url = safestr(baseUrl),
-    pathname = safeArray(relativePath)
+  let pathname = safeArray(relativePath)
       .map((x) => {
         if (isNullOrUndefined(x)) {
           throw new AppException(
@@ -310,7 +315,8 @@ export function urlJoin(
 
         return isNumber(x) ? x.toString() : x
       })
-      .join('/')
+      .join('/'),
+    url = safestr(baseUrl)
 
   // Remove any trailing slashes before adding a trailing slash.
   while (url.endsWith('/')) {
@@ -329,16 +335,17 @@ export function urlJoin(
     url += `/${pathname}`
   }
 
+  let trailingSlash = addTrailingSlash
   if (
     url.includes('?') ||
     url.includes('&') ||
     url.includes('#') ||
     url.includes('=')
   ) {
-    addTrailingSlash = false
+    trailingSlash = false
   }
 
-  if (addTrailingSlash && !url.endsWith('/')) {
+  if (trailingSlash && !url.endsWith('/')) {
     url += '/'
   }
 

@@ -1,13 +1,55 @@
-import util from 'util'
-import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
-import { safestr, safestrLowercase, safestrToJson } from './string-helper.mjs'
-import { isString } from './string-helper.mjs'
-import { isArray } from './array-helper.mjs'
-import { AppException } from '../models/AppException.mjs'
 import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
-import { arrayElement, arrayFirst, safeArray } from './array-helper.mjs'
+import {
+  arrayElement,
+  arrayFirst,
+  isArray,
+  safeArray,
+} from './array-helper.mjs'
+import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
+import {
+  isString,
+  safestr,
+  safestrLowercase,
+  safestrToJson,
+} from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
+import util from 'util'
+
+/**
+ * Checks if the variable passed in is a JavaScript object that is not an array.
+ * Optionally can test for a minimum number of member objects, or if a member of the object is a named by the minLengthOrContainsField parameter.
+ * @param obj The object to test if it is indeed a JavaScript object.
+ * @param minLengthOrContainsField The minimum number of items that must be in the object. Or if a string, the object must contain a member named the string provided.
+ * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
+ */
+export function isObject(
+  obj: unknown,
+  minLengthOrContainsField: number | string = 0
+): obj is object {
+  const isok = obj && typeof obj === 'object' && !isArray(obj)
+  if (!isok) {
+    return false
+  }
+
+  if (isNumber(minLengthOrContainsField)) {
+    if (minLengthOrContainsField <= 0) {
+      return true
+    }
+
+    return safeArray(Object.keys(obj)).length >= minLengthOrContainsField
+  }
+
+  if (isString(minLengthOrContainsField)) {
+    const keys = Object.keys(obj),
+      zincs = safeArray(keys).includes(minLengthOrContainsField)
+
+    return zincs
+  }
+
+  return true
+}
 
 export function UpdateFieldValue<T extends IId>(
   parentObject: Readonly<T>,
@@ -77,9 +119,9 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
 }
 
 export function ObjectTypesToString(e: unknown): string {
-  const etoString: string = isNullOrUndefined(e) ? '' : e.toString()
-
-  if (Array.isArray(e)) {
+  if (isNullOrUndefined(e)) {
+    return ''
+  } else if (Array.isArray(e)) {
     return util.inspect(e, true, CONST_JsonDepth)
   } else if (e instanceof Error) {
     const jerr = {
@@ -90,15 +132,51 @@ export function ObjectTypesToString(e: unknown): string {
     }
 
     return util.inspect(jerr, true, CONST_JsonDepth)
-  } else if (etoString === '[object Object]') {
+  } else if (isObject(e)) {
     return util.inspect(e, true, CONST_JsonDepth)
-    // } else if (etoString === '[object FileList]') {
-    //   Return util.inspect(e.toArray(), true, CONST_JsonDepth)
-    // } else if (etoString === '[object File]') {
-    //   Return util.inspect(e.toObject(), true, CONST_JsonDepth)
   }
 
-  return etoString
+  return safestr(e)
+}
+
+/**
+ * Tests if the passed in obj is in fact an object that is not undefined or null.
+ * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
+ * @param obj An object to test for not being null or undefined.
+ * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
+ * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
+ */
+export function safeObject(obj?: object, ifEmpty?: object) {
+  if (obj && isObject(obj)) {
+    return obj
+  }
+
+  return isObject(ifEmpty) ? ifEmpty : {}
+}
+/**
+ * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
+ * @param json The JSON object to convert to a string.
+ * @param fname The optional function name that is the source of the operation. Used for exception logging.
+ * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
+ */
+export function safeJsonToString<T extends object | Array<T>>(
+  json: T,
+  fname?: string,
+  replacer?: (number | string)[],
+  space?: string | number
+) {
+  try {
+    return JSON.stringify(
+      isArray(json) ? safeArray(json) : safeObject(json),
+      replacer,
+      space
+    )
+  } catch (ex) {
+    // eslint-disable-next-line no-console
+    console.log(fname ? fname : 'safeJsonToString', ex)
+  }
+
+  return ''
 }
 
 export function FindObjectWithField(
@@ -113,6 +191,7 @@ export function FindObjectWithField(
     return found
   }
 
+  // eslint-disable-next-line guard-for-in
   for (const key in obj) {
     if (isObject(obj[key])) {
       found = FindObjectWithField(obj[key], fieldName, value, depth + 1)
@@ -122,6 +201,7 @@ export function FindObjectWithField(
         const arrobj = arr as object[]
         for (let i = 0; i < arrobj.length; ++i) {
           found = FindObjectWithField(arrobj[i], fieldName, value, depth + 1)
+          // eslint-disable-next-line max-depth
           if (found) {
             break
           }
@@ -157,9 +237,9 @@ export class ObjectHelper {
     const jsonString = JSON.stringify(
         ObjectHelper.CloneObjectAlphabetizingKeys(obj)
       ),
-      encodedString = Buffer.from(jsonString)
+      zencodedString = Buffer.from(jsonString)
 
-    return encodedString.toString('base64')
+    return zencodedString.toString('base64')
   }
 
   /**
@@ -173,9 +253,9 @@ export class ObjectHelper {
     obj: T,
     fname?: string
   ) {
-    fname ||= 'deepCloneJsonWithUndefined'
+    const funcname = safestr(fname, 'deepCloneJsonWithUndefined')
 
-    return safestrToJson<T>(safeJsonToString(obj, fname), fname)
+    return safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
   }
 
   static getFirstNewWithException<T>(
@@ -197,6 +277,7 @@ export class ObjectHelper {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new theClass(...args)
   }
 
@@ -206,6 +287,7 @@ export class ObjectHelper {
     constructorArgs: any[],
     index = 0
   ): T {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (
       ObjectHelper.getInstance(theClass, constructorArgs),
       arrayElement(constructorArgs, index)
@@ -226,6 +308,7 @@ export function searchObjectForArray<T = unknown>(obj: object) {
   }
 
   if (isObject(obj)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const found = Object.values(obj).find((x) => isArray<T>(x))
     if (found) {
       return found
@@ -292,7 +375,7 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
   }
 
   Object.defineProperty(obj, newKey, propdesc)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
   delete (obj as any)[oldKey]
 
   return obj
@@ -307,9 +390,9 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
 export function deepDiffMapper() {
   return {
     VALUE_CREATED: 'created',
-    VALUE_UPDATED: 'updated',
     VALUE_DELETED: 'deleted',
     VALUE_UNCHANGED: 'unchanged',
+    VALUE_UPDATED: 'updated',
 
     /**
      * Checks if there are any changes between two objects.
@@ -324,112 +407,7 @@ export function deepDiffMapper() {
       return !isNullOrUndefined(changed)
       // Return Object.values(objChanges).filter(x => isNullOrUndefined(x) || ('unchanged' !== x)).length > 0;
     },
-    /**
-     * Checks if there are any changes between two objects and returns the changes.
-     * @param obj1 First object to compare.
-     * @param obj2 Second object to compare.
-     * @returns The changed items between the two objects.
-     */
-    getChanges(obj1: unknown, obj2: unknown) {
-      const objChanges = this.map(obj1, obj2),
-        changeEntries = Object.entries(objChanges)
 
-      // Console.log('hasType:', this.isObject(objChanges, 'type'),
-      //             ', objChanges:', objChanges,
-      //             ', values:', Object.values(objChanges),
-      //             ', obj1:', obj1,
-      //             ', obj2:', obj2);
-      // Are we dealing with a simple value comparison?
-      if (
-        changeEntries.length === 2 &&
-        isObject(objChanges, 'type') &&
-        isObject(objChanges, 'data')
-      ) {
-        return (objChanges as { type: string }).type !== 'unchanged'
-      }
-
-      // We are dealing with a larger object or array comparison.
-      return changeEntries.find(this.findTypeData, this)
-    },
-
-    findFunction(value: unknown) {
-      const found =
-        isObject(value, 'type') &&
-        isObject(value, 'data') &&
-        Object.entries(value).length === 2 &&
-        (value as { type: string }).type !== 'unchanged'
-
-      return found
-    },
-
-    /**
-     * Looks for an object with key value pairs and returns if it found changes.
-     * @param param0 A key value pair to look for changes. Deep inspection
-     * @returns True if an object with type and data is found with changes present.
-     */
-    findTypeData([, value]: [string, unknown]) {
-      const found = this.findFunction(value)
-      if (found) {
-        return true
-      }
-
-      if (isObject(value)) {
-        // Const foundItems = Object.values(value).find(this.findFunction)
-        const foundItems = Object.entries(value).find(this.findTypeData, this)
-
-        if (foundItems) {
-          return true
-        }
-      }
-
-      return false
-    },
-    /**
-     * Maps all changes between two objects.
-     * @param obj1 The first object to compare.
-     * @param obj2 The second object to compare.
-     * @returns A {type: string, value: object} object with all changes.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    map(obj1: any, obj2: any): object {
-      if (this.isFunction(obj1) || this.isFunction(obj2)) {
-        throw new AppException(
-          'Invalid argument. Function given, object expected.'
-        )
-      }
-      // Console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
-      if (this.isValue(obj1) || this.isValue(obj2)) {
-        return {
-          type: this.compareValues(obj1, obj2),
-          data: obj1 === undefined ? obj2 : obj1,
-        }
-      }
-
-      let diff: Record<string, unknown> = {}
-      for (const key in obj1) {
-        if (this.isFunction(obj1[key])) {
-          continue
-        }
-
-        let value2
-        if (obj2[key] !== undefined) {
-          value2 = obj2[key]
-        }
-
-        diff = { ...diff, [key]: this.map(obj1[key], value2) }
-      }
-
-      for (const key in obj2) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
-          continue
-        }
-
-        diff = { ...diff, [key]: this.map(undefined, obj2[key]) }
-      }
-
-      return diff
-    },
     /**
      * Returns a comparison string defining the type of change, or unchanged.
      * @param value1 The first value to compare.
@@ -460,20 +438,140 @@ export function deepDiffMapper() {
 
       return this.VALUE_UPDATED
     },
-    isFunction(x: unknown) {
-      return Object.prototype.toString.call(x) === '[object Function]'
+
+    findFunction(value: unknown) {
+      const found =
+        isObject(value, 'type') &&
+        isObject(value, 'data') &&
+        Object.entries(value).length === 2 &&
+        (value as { type: string }).type !== 'unchanged'
+
+      return found
     },
+
+    /**
+     * Looks for an object with key value pairs and returns if it found changes.
+     * @param param0 A key value pair to look for changes. Deep inspection
+     * @returns True if an object with type and data is found with changes present.
+     */
+    findTypeData([, value]: [string, unknown]) {
+      const found = this.findFunction(value)
+      if (found) {
+        return true
+      }
+
+      if (isObject(value)) {
+        // Const foundItems = Object.values(value).find(this.findFunction)
+        const foundItems = Object.entries(value).find((x) =>
+          this.findTypeData(x)
+        )
+
+        if (foundItems) {
+          return true
+        }
+      }
+
+      return false
+    },
+
+    /**
+     * Checks if there are any changes between two objects and returns the changes.
+     * @param obj1 First object to compare.
+     * @param obj2 Second object to compare.
+     * @returns The changed items between the two objects.
+     */
+    getChanges(obj1: unknown, obj2: unknown) {
+      const aobjChanges = this.map(obj1, obj2),
+        changeEntries = Object.entries(aobjChanges)
+
+      // Console.log('hasType:', this.isObject(objChanges, 'type'),
+      //             ', objChanges:', objChanges,
+      //             ', values:', Object.values(objChanges),
+      //             ', obj1:', obj1,
+      //             ', obj2:', obj2);
+      // Are we dealing with a simple value comparison?
+      if (
+        changeEntries.length === 2 &&
+        isObject(aobjChanges, 'type') &&
+        isObject(aobjChanges, 'data')
+      ) {
+        return (aobjChanges as { type: string }).type !== 'unchanged'
+      }
+
+      // We are dealing with a larger object or array comparison.
+      return changeEntries.find((x) => this.findTypeData(x))
+    },
+
     isArray(x: unknown): x is Array<unknown> {
       return Object.prototype.toString.call(x) === '[object Array]'
     },
     isDate(x: unknown): x is Date {
       return Object.prototype.toString.call(x) === '[object Date]'
     },
+    isFunction(x: unknown) {
+      return Object.prototype.toString.call(x) === '[object Function]'
+    },
     isObject(x: unknown): x is object {
       return Object.prototype.toString.call(x) === '[object Object]'
     },
     isValue(x: unknown) {
       return !this.isObject(x) && !this.isArray(x)
+    },
+
+    /**
+     * Maps all changes between two objects.
+     * @param obj1 The first object to compare.
+     * @param obj2 The second object to compare.
+     * @returns A {type: string, value: object} object with all changes.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map(obj1: any, obj2: any): object {
+      if (this.isFunction(obj1) || this.isFunction(obj2)) {
+        throw new AppException(
+          'Invalid argument. Function given, object expected.'
+        )
+      }
+      // Console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
+      if (this.isValue(obj1) || this.isValue(obj2)) {
+        return {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          data: obj1 === undefined ? obj2 : obj1,
+          type: this.compareValues(obj1, obj2),
+        }
+      }
+
+      let diff: Record<string, unknown> = {}
+      for (const key in obj1) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (this.isFunction(obj1[key])) {
+          // eslint-disable-next-line no-continue
+          continue
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let value2: any
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (obj2[key] !== undefined) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          value2 = obj2[key]
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        diff = { ...diff, [key]: this.map(obj1[key], value2) }
+      }
+
+      for (const key in obj2) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+        if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
+          // eslint-disable-next-line no-continue
+          continue
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        diff = { ...diff, [key]: this.map(undefined, obj2[key]) }
+      }
+
+      return diff
     },
   }
 }
@@ -485,6 +583,7 @@ export function deepDiffMapper() {
  */
 export function getObjectValue(obj: AnyObject, keyToFind: string) {
   if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return obj[keyToFind]
   }
 
@@ -492,45 +591,11 @@ export function getObjectValue(obj: AnyObject, keyToFind: string) {
 }
 export function isEmptyObject(obj: unknown) {
   return (
-    obj == null ||
+    obj === null ||
     (isObject(obj) &&
       safeArray(Object.keys(obj)).length === 0 &&
       obj.constructor === Object)
   )
-}
-
-/**
- * Checks if the variable passed in is a JavaScript object that is not an array.
- * Optionally can test for a minimum number of member objects, or if a member of the object is a named by the minLengthOrContainsField parameter.
- * @param obj The object to test if it is indeed a JavaScript object.
- * @param minLengthOrContainsField The minimum number of items that must be in the object. Or if a string, the object must contain a member named the string provided.
- * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
- */
-export function isObject(
-  obj: unknown,
-  minLengthOrContainsField: number | string = 0
-): obj is object {
-  const isok = obj && typeof obj === 'object' && !isArray(obj)
-  if (!isok) {
-    return false
-  }
-
-  if (isNumber(minLengthOrContainsField)) {
-    if (minLengthOrContainsField <= 0) {
-      return true
-    }
-
-    return safeArray(Object.keys(obj)).length >= minLengthOrContainsField
-  }
-
-  if (isString(minLengthOrContainsField)) {
-    const keys = Object.keys(obj),
-      incs = safeArray(keys).includes(minLengthOrContainsField)
-
-    return incs
-  }
-
-  return true
 }
 
 /**
@@ -541,46 +606,7 @@ export function isObject(
 export function getNullObject<T>(obj: T) {
   return isEmptyObject(obj) ? null : obj
 }
-/**
- * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
- * @param json The JSON object to convert to a string.
- * @param fname The optional function name that is the source of the operation. Used for exception logging.
- * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
- */
 
-export function safeJsonToString<T extends object | Array<T>>(
-  json: T,
-  fname?: string,
-  replacer?: (number | string)[],
-  space?: string | number
-) {
-  try {
-    return JSON.stringify(
-      isArray(json) ? safeArray(json) : safeObject(json),
-      replacer,
-      space
-    )
-  } catch (ex) {
-    console.log(fname ? fname : 'safeJsonToString', ex)
-  }
-
-  return ''
-}
-/**
- * Tests if the passed in obj is in fact an object that is not undefined or null.
- * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
- * @param obj An object to test for not being null or undefined.
- * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
- * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
- */
-
-export function safeObject(obj?: object, ifEmpty?: object) {
-  if (obj && isObject(obj)) {
-    return obj
-  }
-
-  return isObject(ifEmpty) ? ifEmpty : {}
-}
 /**
  * Adds obj to the list of objects, creating the list if it doesn't exist.
  * If obj is an array, loops through the array.
@@ -593,27 +619,27 @@ export function addObjectToList<T>(
   listObjects: ArrayOrSingle<T>,
   obj: ArrayOrSingle<T>
 ) {
-  listObjects = safeArray(listObjects)
+  const mylistObjects = safeArray(listObjects)
 
   if (!isNullOrUndefined(obj)) {
     const len = safeArray(obj).length
     for (let i = 0; i < len; ++i) {
       const objCurrent = arrayElement(obj, i)
       if (!isNullOrUndefined(objCurrent)) {
-        listObjects.push(objCurrent)
+        mylistObjects.push(objCurrent)
       }
     }
   }
 
-  return listObjects
+  return mylistObjects
 }
 
 export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
   fname?: string
 ) {
-  fname ||= 'deepCloneJson'
-  const ret = safestrToJson<T>(safeJsonToString(obj, fname), fname)
+  const funcname = safestr(fname, 'deepCloneJson')
+  const ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
 
   return ret!
 }
@@ -629,8 +655,7 @@ export function getBody(ret: unknown) {
     throw new AppException('Object body not found')
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (ret as { body: any }).body
+  return (ret as { body: unknown }).body
 }
 
 type CoalesceType<T> = T | (() => T) | undefined

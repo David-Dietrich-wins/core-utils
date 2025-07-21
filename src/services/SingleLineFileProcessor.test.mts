@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
-import { writeFileSync } from 'node:fs'
-import { safestr } from './string-helper.mjs'
+// eslint-disable-next-line sort-imports
 import { fileSync, setGracefulCleanup } from 'tmp'
 import {
   getGlobalLogger,
@@ -11,9 +10,12 @@ import {
   mockLoggerSilly,
   mockLoggerWarn,
 } from '../jest.setup.mjs'
+import { safestr } from './string-helper.mjs'
+import { writeFileSync } from 'node:fs'
 
 const sflp = await import('./SingleLineFileProcessor.mjs'),
- { SingleLineFileProcessor } = sflp
+  { SingleLineFileProcessor } = sflp
+// eslint-disable-next-line sort-imports
 import type { SingleLineFileProcessorConfig } from './SingleLineFileProcessor.mjs'
 
 const CONST_DelayTime = 50000
@@ -22,24 +24,28 @@ const CONST_DelayTime = 50000
 setGracefulCleanup()
 
 test('constructor', async () => {
-  const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  const tmpFile = fileSync({
+    mode: 0o644,
+    postfix: '.txt',
+    prefix: 'prefix-',
+  })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.resolve(1)),
-   config: SingleLineFileProcessorConfig<number> = {
-    action: fnaction,
-    fileName: tmpFile.name,
-    logger: getGlobalLogger(),
-    typeName: 'type',
-  },
+  const action = jest.fn(() => Promise.resolve(1)),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: tmpFile.name,
+      logger: getGlobalLogger(),
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
 
-   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
   // Expect(open).toHaveBeenCalledTimes(1)
-  expect(fnaction).toHaveBeenCalledTimes(5)
+  expect(action).toHaveBeenCalledTimes(5)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(0)
@@ -155,11 +161,13 @@ test('constructor', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(0)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual([])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(2)
   expect(stats.successes).toBe(5)
   expect(stats.suffixWhenPlural).toBe('s')
@@ -172,20 +180,20 @@ test('constructor', async () => {
 test('constructor file not found', async () => {
   // Const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
   // Fs.writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
-  const fnaction = jest.fn(() => Promise.resolve(1)),
-   config: SingleLineFileProcessorConfig<number> = {
-    action: fnaction,
-    fileName: 'notfound.txt',
-    logger: getGlobalLogger(),
-    typeName: 'type',
-  },
+  const action = jest.fn(() => Promise.resolve(1)),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: 'notfound.txt',
+      logger: getGlobalLogger(),
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
 
-   processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
-  expect(fnaction).toHaveBeenCalledTimes(0)
+  expect(action).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(1)
@@ -202,11 +210,13 @@ test('constructor file not found', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(1)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual(['File not found: notfound.txt.'])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(0)
   expect(stats.successes).toBe(0)
   expect(stats.suffixWhenPlural).toBe('s')
@@ -219,25 +229,24 @@ test('constructor file not found', async () => {
 test('action exception', async () => {
   const tmpFile = fileSync({
     mode: 0o644,
-    prefix: 'prefix-',
     postfix: '.txt',
+    prefix: 'prefix-',
   })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.reject(new Error('action exception'))),
-
-   config: SingleLineFileProcessorConfig<number> = {
-    fileName: tmpFile.name,
-    logger: getGlobalLogger(),
-    typeName: 'type',
-    action: fnaction,
-  },
-   processor = new SingleLineFileProcessor(config)
+  const action = jest.fn(() => Promise.reject(new Error('action exception'))),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: tmpFile.name,
+      logger: getGlobalLogger(),
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
-  expect(fnaction).toHaveBeenCalledTimes(5)
+  expect(action).toHaveBeenCalledTimes(5)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(5)
@@ -248,11 +257,13 @@ test('action exception', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(5)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual([])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(2)
   expect(stats.successes).toBe(0)
   expect(stats.suffixWhenPlural).toBe('s')
@@ -263,18 +274,24 @@ test('action exception', async () => {
 })
 
 test('action exception with trimline', async () => {
-  const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  const tmpFile = fileSync({
+    mode: 0o644,
+    postfix: '.txt',
+    prefix: 'prefix-',
+  })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn((safeline: string) => Promise.resolve(safestr(safeline).length)),
-   config: SingleLineFileProcessorConfig<number> = {
-    fileName: tmpFile.name,
-    logger: getGlobalLogger(),
-    typeName: 'type',
-    action: fnaction,
-    trimLine: false,
-  },
-   processor = new SingleLineFileProcessor(config)
+  const action = jest.fn((safeline: string) =>
+      Promise.resolve(safestr(safeline).length)
+    ),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: tmpFile.name,
+      logger: getGlobalLogger(),
+      trimLine: false,
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
@@ -392,11 +409,13 @@ test('action exception with trimline', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(0)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual([])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(2)
   expect(stats.successes).toBe(5)
   expect(stats.suffixWhenPlural).toBe('s')
@@ -407,23 +426,26 @@ test('action exception with trimline', async () => {
 })
 
 test('processFile bad', async () => {
-  const tmpFile = fileSync({ mode: 0o644, prefix: 'prefix-', postfix: '.txt' })
+  const tmpFile = fileSync({
+    mode: 0o644,
+    postfix: '.txt',
+    prefix: 'prefix-',
+  })
   writeFileSync(tmpFile.name, '1\n2\n3\n4\n5\n\n# comment\n')
 
-  const fnaction = jest.fn(() => Promise.reject(new Error('action exception'))),
-
-   config: SingleLineFileProcessorConfig<number> = {
-    action: fnaction,
-    fileName: tmpFile.name,
-    logger: getGlobalLogger(),
-    typeName: 'type',
-  },
-   processor = new SingleLineFileProcessor(config)
+  const action = jest.fn(() => Promise.reject(new Error('action exception'))),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: tmpFile.name,
+      logger: getGlobalLogger(),
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
-  expect(fnaction).toHaveBeenCalledTimes(5)
+  expect(action).toHaveBeenCalledTimes(5)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(5)
@@ -436,35 +458,35 @@ test('processFile bad', async () => {
   let err = mockLoggerError.mock.calls[0][2] as Error
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBe('action exception')
-  expect(err.stack).toMatch(/^Error: action exception/)
+  expect(err.stack).toMatch(/^Error: action exception/u)
 
   expect(mockLoggerError.mock.calls[1][0]).toBe('Error processing line')
   expect(mockLoggerError.mock.calls[1][1]).toBe(2)
   err = mockLoggerError.mock.calls[1][2] as Error
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBe('action exception')
-  expect(err.stack).toMatch(/^Error: action exception/)
+  expect(err.stack).toMatch(/^Error: action exception/u)
 
   expect(mockLoggerError.mock.calls[2][0]).toBe('Error processing line')
   expect(mockLoggerError.mock.calls[2][1]).toBe(3)
   err = mockLoggerError.mock.calls[2][2] as Error
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBe('action exception')
-  expect(err.stack).toMatch(/^Error: action exception/)
+  expect(err.stack).toMatch(/^Error: action exception/u)
 
   expect(mockLoggerError.mock.calls[3][0]).toBe('Error processing line')
   expect(mockLoggerError.mock.calls[3][1]).toBe(4)
   err = mockLoggerError.mock.calls[3][2] as Error
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBe('action exception')
-  expect(err.stack).toMatch(/^Error: action exception/)
+  expect(err.stack).toMatch(/^Error: action exception/u)
 
   expect(mockLoggerError.mock.calls[4][0]).toBe('Error processing line')
   expect(mockLoggerError.mock.calls[4][1]).toBe(5)
   err = mockLoggerError.mock.calls[4][2] as Error
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBe('action exception')
-  expect(err.stack).toMatch(/^Error: action exception/)
+  expect(err.stack).toMatch(/^Error: action exception/u)
 
   expect(mockLoggerInfo.mock.calls[0]).toStrictEqual([
     'Processing',
@@ -573,11 +595,13 @@ test('processFile bad', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(5)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual([])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(2)
   expect(stats.successes).toBe(0)
   expect(stats.suffixWhenPlural).toBe('s')
@@ -592,20 +616,19 @@ test('open fails', async () => {
   //   Return Promise.reject(new Error('open failed'))
   // })
 
-  const fnaction = jest.fn(() => Promise.resolve(1)),
-   config: SingleLineFileProcessorConfig<number> = {
-    action: fnaction,
-    fileName: 'notfound.txt',
-    logger: getGlobalLogger(),
-    typeName: 'type',
-  },
-
-   processor = new SingleLineFileProcessor(config)
+  const action = jest.fn(() => Promise.resolve(1)),
+    config: SingleLineFileProcessorConfig<number> = {
+      action,
+      fileName: 'notfound.txt',
+      logger: getGlobalLogger(),
+      typeName: 'type',
+    },
+    processor = new SingleLineFileProcessor(config)
   expect(processor.config).toBe(config)
 
   const stats = await processor.processFile()
 
-  expect(fnaction).toHaveBeenCalledTimes(0)
+  expect(action).toHaveBeenCalledTimes(0)
 
   expect(mockLoggerDebug).toHaveBeenCalledTimes(0)
   expect(mockLoggerError).toHaveBeenCalledTimes(1)
@@ -622,11 +645,13 @@ test('open fails', async () => {
   expect(stats.add).toBe(0)
   expect(stats.delete).toBe(0)
   expect(stats.failures).toBe(1)
-  expect(stats.finishTime ? +stats.finishTime : 0).toBeGreaterThanOrEqual(
-    Date.now()
-  )
+  expect(
+    stats.finishTime ? stats.finishTime.getTime() : 0
+  ).toBeGreaterThanOrEqual(Date.now())
   expect(stats.msg).toStrictEqual(['File not found: notfound.txt.'])
-  expect(+stats.startTime).toBeGreaterThan(Date.now() - CONST_DelayTime)
+  expect(stats.startTime.getTime()).toBeGreaterThan(
+    Date.now() - CONST_DelayTime
+  )
   expect(stats.skipped).toBe(0)
   expect(stats.successes).toBe(0)
   expect(stats.suffixWhenPlural).toBe('s')

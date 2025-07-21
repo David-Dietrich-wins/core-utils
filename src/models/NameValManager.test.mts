@@ -23,14 +23,14 @@ test('NameValType good', () => {
 describe('NameValManager', () => {
   test('constructor', () => {
     const name = 'name',
-      value = 'value',
       type = 'type',
-      pr = new NameValType(name, value, type),
-      manager = new NameValManager([pr])
+      value = 'value',
+      vpr = new NameValType(name, value, type),
+      zmanager = new NameValManager([vpr])
 
-    expect(manager.list.length).toBe(1)
-    expect(manager.list[0].name).toBe(name)
-    expect(manager.list[0].val).toBe(value)
+    expect(zmanager.list.length).toBe(1)
+    expect(zmanager.list[0].name).toBe(name)
+    expect(zmanager.list[0].val).toBe(value)
   })
   test('constructor defaults', () => {
     const manager = new NameValManager()
@@ -40,14 +40,14 @@ describe('NameValManager', () => {
 
   test('CreateNameValManager', () => {
     const name = 'name',
-      value = 'value',
       type = 'type',
-      pr = new NameValType(name, value, type),
-      manager = NameValManager.CreateNameValManager([pr])
+      value = 'value',
+      vpr = new NameValType(name, value, type),
+      zmanager = NameValManager.CreateNameValManager([vpr])
 
-    expect(manager.list.length).toBe(1)
-    expect(manager.list[0].name).toBe(name)
-    expect(manager.list[0].val).toBe(value)
+    expect(zmanager.list.length).toBe(1)
+    expect(zmanager.list[0].name).toBe(name)
+    expect(zmanager.list[0].val).toBe(value)
   })
   test('CreateNameValManager with null', () => {
     const manager = NameValManager.CreateNameValManager(null)
@@ -63,11 +63,11 @@ describe('NameValManager', () => {
   test('NameVal.CreateINameVal', () => {
     const name = 'name',
       value = 'value',
-      item = NameVal.CreateINameVal(name, value)
+      zitem = NameVal.CreateINameVal(name, value)
 
-    expect(item.name).toBe(name)
-    expect(item.val).toBe(value)
-    expect(item).toEqual({ name, val: value })
+    expect(zitem.name).toBe(name)
+    expect(zitem.val).toBe(value)
+    expect(zitem).toEqual({ name, val: value })
 
     const item2 = NameVal.CreateINameVal<{ id: number }>(name, {
       id: 123,
@@ -79,11 +79,11 @@ describe('NameValManager', () => {
   test('NameValManager.CreateINameVal', () => {
     const name = 'name',
       value = 'value',
-      item = NameValManager.ToINameVal(name, value)
+      zitem = NameValManager.ToINameVal(name, value)
 
-    expect(item.name).toBe(name)
-    expect(item.val).toBe(value)
-    expect(item).toEqual({ name, val: value })
+    expect(zitem.name).toBe(name)
+    expect(zitem.val).toBe(value)
+    expect(zitem).toEqual({ name, val: value })
 
     const item2 = NameValManager.ToINameVal<{ id: number }>(name, {
       id: 123,

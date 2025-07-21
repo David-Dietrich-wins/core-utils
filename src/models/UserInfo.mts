@@ -1,7 +1,7 @@
-import { isArray } from '../services/array-helper.mjs'
-import { getBoolean } from '../services/general.mjs'
-import { ICompany } from '../politagree/company.mjs'
 import { ConfigManager, TpUserInfoConfigs } from '../tplot/ConfigManager.mjs'
+import { ICompany } from '../politagree/company.mjs'
+import { getBoolean } from '../services/general.mjs'
+import { isArray } from '../services/array-helper.mjs'
 
 export interface IUserInfo {
   companies: ICompany[]

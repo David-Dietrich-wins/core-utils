@@ -1,6 +1,6 @@
 import { IServerState, IWebStateResponse } from './interfaces.mjs'
-import { safestr } from '../services/string-helper.mjs'
 import { IUserState } from './UserState.mjs'
+import { safestr } from '../services/string-helper.mjs'
 
 export interface ICryptoRequest {
   pin: string
@@ -80,12 +80,12 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
       },
     },
     ready: true,
-    state: 1,
     startTime: new Date('2023-11-27T20:36:04.932Z'),
+    state: 1,
     statusCode: 200,
     uptime: '2h 54m 40s',
   },
-  version: `${safestr(process.env.npm_package_version)}-test`,
   totalFailures: 0,
   totalRequests: 31,
+  version: `${safestr(process.env.npm_package_version)}-test`,
 }

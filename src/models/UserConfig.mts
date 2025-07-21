@@ -1,9 +1,9 @@
-import { IKeyValueShort } from './key-val.mjs'
-import { INameVal } from './NameValManager.mjs'
 import {
   IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
+import { IKeyValueShort } from './key-val.mjs'
+import { INameVal } from './NameValManager.mjs'
 import { hasData } from '../services/general.mjs'
 import { safestr } from '../services/string-helper.mjs'
 
@@ -54,22 +54,20 @@ export class UserConfig<TValue = any>
     email: string,
     curDate?: Date
   ) {
-    const fname = 'fromNameVal'
+    const date = curDate ?? new Date(),
+      fname = 'fromNameVal',
+      userEmail = safestr(email, fname),
+      zconfig: IUserConfig<TFromNameVal> = {
+        created: date,
+        createdby: userEmail,
+        k: nv.name,
+        updated: date,
+        updatedby: userEmail,
+        userid,
+        v: nv.val,
+      }
 
-    curDate ??= new Date()
-    const userEmail = safestr(email, fname),
-
-     config: IUserConfig<TFromNameVal> = {
-      k: nv.name,
-      v: nv.val,
-      userid,
-      created: curDate,
-      createdby: userEmail,
-      updated: curDate,
-      updatedby: userEmail,
-    }
-
-    return config
+    return zconfig
   }
 
   copyFromDatabase(dbtp: IUserConfig<TValue>) {

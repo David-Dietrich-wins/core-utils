@@ -3,23 +3,22 @@ import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 test('IdValue good', () => {
   const id = 'id',
-   value = 'value',
-   pr = new IdValue(id, value)
+    value = 'value',
+    zpr = new IdValue(id, value)
 
-  expect(pr.id).toBe(id)
-  expect(pr.value).toBe(value)
+  expect(zpr.id).toBe(id)
+  expect(zpr.value).toBe(value)
 })
 
 test('good', () => {
-  const ids: IIdValue[] = [
-    { id: '1', value: '10' },
-    { id: '2', value: '20' },
-    { id: '3', value: '30' },
-  ],
+  const aids: IIdValue[] = [
+      { id: '1', value: '10' },
+      { id: '2', value: '20' },
+      { id: '3', value: '30' },
+    ],
+    idm = new IdValueManager(aids, new InstrumentationStatistics())
 
-   idm = new IdValueManager(ids, new InstrumentationStatistics())
-
-  expect(idm.list).toBe(ids)
+  expect(idm.list).toBe(aids)
   expect(idm.stats?.totalProcessed).toBe(0)
 
   idm.add({ id: '4', value: '40' })
@@ -28,7 +27,7 @@ test('good', () => {
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
 
-  idm.remove(ids[1])
+  idm.remove(aids[1])
   expect(idm.list.length).toBe(3)
   expect(idm.stats?.totalProcessed).toBe(2)
   expect(idm.stats?.add).toBe(0)
@@ -48,18 +47,17 @@ test('default constructor', () => {
 })
 
 test('CreateIdValueManager', () => {
-  const ids: IIdValue[] = [
-    { id: '1', value: '10' },
-    { id: '2', value: '20' },
-    { id: '3', value: '30' },
-  ],
+  const aids: IIdValue[] = [
+      { id: '1', value: '10' },
+      { id: '2', value: '20' },
+      { id: '3', value: '30' },
+    ],
+    idm = IdValueManager.CreateIdValueManager(
+      aids,
+      new InstrumentationStatistics()
+    )
 
-   idm = IdValueManager.CreateIdValueManager(
-    ids,
-    new InstrumentationStatistics()
-  )
-
-  expect(idm.list).toBe(ids)
+  expect(idm.list).toBe(aids)
   expect(idm.stats?.totalProcessed).toBe(0)
 
   idm.add({ id: '4', value: '40' })
@@ -68,7 +66,7 @@ test('CreateIdValueManager', () => {
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
 
-  idm.remove(ids[1])
+  idm.remove(aids[1])
   expect(idm.list.length).toBe(3)
   expect(idm.stats?.totalProcessed).toBe(2)
   expect(idm.stats?.add).toBe(0)
@@ -78,17 +76,17 @@ test('CreateIdValueManager', () => {
 
 test('CreateIIdValue', () => {
   const id = 'id',
-   value = 'value',
-   pr = IdValueManager.CreateIIdValue(id, value)
+    value = 'value',
+    zpr = IdValueManager.CreateIIdValue(id, value)
 
-  expect(pr.id).toBe(id)
-  expect(pr.value).toBe(value)
+  expect(zpr.id).toBe(id)
+  expect(zpr.value).toBe(value)
 })
 test('CreateIIdValue with default values', () => {
   const id = 'id',
-   value = 'value',
-   pr = IdValueManager.CreateIIdValue(id, value)
+    value = 'value',
+    zpr = IdValueManager.CreateIIdValue(id, value)
 
-  expect(pr.id).toBe(id)
-  expect(pr.value).toBe('value')
+  expect(zpr.id).toBe(id)
+  expect(zpr.value).toBe('value')
 })

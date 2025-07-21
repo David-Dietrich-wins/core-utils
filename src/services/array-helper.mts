@@ -1,11 +1,56 @@
-import { AppException } from '../models/AppException.mjs'
-import { IIdName } from '../models/id-name.mjs'
 import { IId, IIdRequired } from '../models/IdManager.mjs'
-import { IName } from '../models/interfaces.mjs'
+import { isString, safestr } from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
+import { IIdName } from '../models/id-name.mjs'
+import { IName } from '../models/interfaces.mjs'
 import { isNullOrUndefined } from './general.mjs'
 import { isNumber } from './number-helper.mjs'
-import { isString, safestr } from './string-helper.mjs'
+
+/**
+ * Checks an object if it is an array. If so, then tests if there is an optional minimum number of items.
+ * If minLengthOrIncludes is not a number, checks that the array includes the item.
+ * @param arr Any object to test if it is an array.
+ * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
+ * @returns True if arr is an array and meets any minimum requirements.
+ */
+
+export function isArray<T = unknown>(
+  arr?: ArrayOrSingle<T> | null,
+  minLengthOrIncludes?: T | number
+): arr is Array<T> {
+  if (!arr || !Array.isArray(arr)) {
+    return false
+  }
+
+  if (isNullOrUndefined(minLengthOrIncludes)) {
+    return true
+  }
+
+  if (isNumber(minLengthOrIncludes)) {
+    return arr.length >= minLengthOrIncludes
+  }
+
+  return arr.includes(minLengthOrIncludes)
+}
+
+export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
+  if (arrOrT) {
+    return Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
+  }
+
+  return []
+}
+export function ToSafeArray2d<T = unknown>(
+  arrOrT?: Readonly<ArrayOrSingle<T>>
+) {
+  if (arrOrT) {
+    const arr = Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
+    return arr.every((x) => Array.isArray(x)) ? (arrOrT as T[]) : [arrOrT as T]
+  }
+
+  return []
+}
 
 /**
  * Tests if the passed in arr is in fact an array that is not undefined or null.
@@ -52,6 +97,13 @@ export function arrayGetNames<T extends IName, Tname = T['name']>(
   callback?: (item: T) => Tname
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.name))
+}
+
+export function arrayFind<T>(
+  arrItems: ArrayOrSingle<T> | null | undefined,
+  findFunc: (item: T) => boolean
+) {
+  return safeArray(arrItems).find(findFunc)
 }
 
 /**
@@ -144,6 +196,7 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
       `Unable to find ${safestr(
         functionSourceName,
         arrayFindById.name
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       )} id: ${id}.`,
       arrayFindById.name,
       arrItems
@@ -173,13 +226,6 @@ export function arrayFilter<T>(
   return safeArray(arrItems).filter(filterFunc)
 }
 
-export function arrayFind<T>(
-  arrItems: ArrayOrSingle<T> | null | undefined,
-  findFunc: (item: T) => boolean
-) {
-  return safeArray(arrItems).find(findFunc)
-}
-
 export function arrayMustFindFunc<T>(
   arrItems: ArrayOrSingle<T> | null | undefined,
   findFunc: (item: T) => boolean,
@@ -191,7 +237,7 @@ export function arrayMustFindFunc<T>(
   if (!foundItem) {
     throw new AppException(
       `Unable to find ${safestr(functionSourceName, arrayMustFindFunc.name)}${
-        exceptionSuffix ? ` ${  exceptionSuffix()}` : ''
+        exceptionSuffix ? ` ${exceptionSuffix()}` : ''
       }.`,
       arrayFindByName.name,
       arrItems
@@ -212,6 +258,35 @@ export function arrayMustFindByName<T extends IName>(
     functionSourceName,
     () => `name: ${name}`
   )
+}
+
+/**
+ * Helper function to reduce an array of objects or arrays.
+ * Takes care of handling undefined, objects and/or arrays and returns a guaranteed flattened array of type TreturnType.
+ * Keep in mind, this is only for when you want to return an array of IId<T> type derived objects.
+ * @param arr The array or single item to iterate over. ToSafeArray is called.
+ * @param funcArrayResults Callback that returns undefined or an object or array of TreturnType.
+ * @returns The reduced array of all objects and arrays returned funcArrayResults. Will be [] if all returns were undefined or the calling array is undefined.
+ */
+export function arrayReduceArrayReturns<T, TreturnType = T>(
+  arr: Readonly<ArrayOrSingle<T>> | undefined,
+  funcArrayResults: (
+    item: T,
+    index: number
+  ) => ArrayOrSingle<TreturnType> | undefined
+) {
+  return ToSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
+    const res = funcArrayResults(cur, index)
+    if (res) {
+      if (Array.isArray(res)) {
+        return acc.concat(res)
+      }
+
+      acc.push(res)
+    }
+
+    return acc
+  }, [])
 }
 
 export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(
@@ -243,6 +318,7 @@ export function arrayOfNames<T extends IName>(arr?: Readonly<T>[]) {
 export function arrayElement<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
   const safearr = safeArray(arr)
   if (safearr.length) {
+    // eslint-disable-next-line no-param-reassign
     index ||= 0
 
     if (index >= 0 && safearr.length > index) {
@@ -322,86 +398,6 @@ export function arrayForEachReturns<T>(
   safeArray(arr).forEach((cur) => funcArrayResults(cur))
 }
 
-export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
-  if (arrOrT) {
-    return Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
-  }
-
-  return []
-}
-export function ToSafeArray2d<T = unknown>(
-  arrOrT?: Readonly<ArrayOrSingle<T>>
-) {
-  if (arrOrT) {
-    const arr = Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
-    return arr.every((x) => Array.isArray(x)) ? (arrOrT as T[]) : [arrOrT as T]
-  }
-
-  return []
-}
-
-/**
- * Helper function to reduce an array of objects or arrays.
- * Takes care of handling undefined, objects and/or arrays and returns a guaranteed flattened array of type TreturnType.
- * Keep in mind, this is only for when you want to return an array of IId<T> type derived objects.
- * @param arr The array or single item to iterate over. ToSafeArray is called.
- * @param funcArrayResults Callback that returns undefined or an object or array of TreturnType.
- * @returns The reduced array of all objects and arrays returned funcArrayResults. Will be [] if all returns were undefined or the calling array is undefined.
- */
-export function arrayReduceArrayReturns<T, TreturnType = T>(
-  arr: Readonly<ArrayOrSingle<T>> | undefined,
-  funcArrayResults: (
-    item: T,
-    index: number
-  ) => ArrayOrSingle<TreturnType> | undefined
-) {
-  return ToSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
-    const res = funcArrayResults(cur, index)
-    if (res) {
-      if (Array.isArray(res)) {
-        return acc.concat(res)
-      }
-
-      acc.push(res)
-    }
-
-    return acc
-  }, [])
-}
-
-export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
-  arrItems: T[],
-  sourceId: Tid,
-  destId: Tid
-) {
-  if (!arrItems || sourceId === destId) {
-    return []
-  }
-
-  const source = arrayFindById(arrItems, sourceId)
-  if (!source || !source.id) {
-    throw new AppException(
-      `Invalid source id of ${sourceId} when swapping array elements.`,
-      arraySwapItems.name,
-      arrItems
-    )
-  }
-
-  const dest = arrayFindById(arrItems, destId)
-  if (!dest || !dest.id) {
-    throw new AppException(
-      `Invalid destination index of ${destId} when swapping array elements.`,
-      arraySwapItems.name,
-      arrItems
-    )
-  }
-
-  const sourceIndex = arrItems.findIndex((x) => sourceId === x.id),
-   destIndex = arrItems.findIndex((x) => destId === x.id)
-
-  return arraySwapItems(arrItems, sourceIndex, destIndex)
-}
-
 export function arraySwapItems<T>(
   arrItems: T[],
   sourceIndex: number,
@@ -433,6 +429,41 @@ export function arraySwapItems<T>(
   return arrItems
 }
 
+export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[],
+  sourceId: Tid,
+  destId: Tid
+) {
+  if (!arrItems || sourceId === destId) {
+    return []
+  }
+
+  const source = arrayFindById(arrItems, sourceId)
+  if (!source || !source.id) {
+    throw new AppException(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `Invalid source id of ${sourceId} when swapping array elements.`,
+      arraySwapItemsById.name,
+      arrItems
+    )
+  }
+
+  const dest = arrayFindById(arrItems, destId)
+  if (!dest || !dest.id) {
+    throw new AppException(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `Invalid destination index of ${destId} when swapping array elements.`,
+      arraySwapItemsById.name,
+      arrItems
+    )
+  }
+
+  const destIndex = arrItems.findIndex((x) => destId === x.id),
+    sourceIndex = arrItems.findIndex((x) => sourceId === x.id)
+
+  return arraySwapItems(arrItems, sourceIndex, destIndex)
+}
+
 export function arrayAdd<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[],
   item: T,
@@ -448,19 +479,17 @@ export function arrayAdd<T extends IId<Tid>, Tid = T['id']>(
   return arrItems
 }
 
+export function arrayRemoveById<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[] | null | undefined,
+  id: T['id']
+) {
+  return safeArray(arrItems).filter((x) => x.id !== id)
+}
 export function arrayRemove<T extends IId<Tid>, Tid = T['id']>(
   arrItems: T[] | null | undefined,
   item: T
 ) {
   return arrayRemoveById(arrItems, item.id)
-}
-export function arrayRemoveById<T extends IId<Tid>, Tid = T['id']>(
-  arrItems: T[] | null | undefined,
-  id: T['id']
-) {
-  arrItems = safeArray(arrItems).filter((x) => x.id !== id)
-
-  return arrItems
 }
 
 export function arrayUnique<T>(arrItems: T[] | null | undefined) {
@@ -477,14 +506,18 @@ export function arrayUpdateOrAdd<T extends IId<Tid>, Tid = T['id']>(
   // If the index is out of bounds, just push the item to the end of the array.
   if (insertAtFront) {
     if (foundIndex >= 0) {
-      arrItems = arrayRemoveById(arrItems, item.id) // Remove the existing item from the array if it exists.
+      // Remove the existing item from the array if it exists.
+      // eslint-disable-next-line no-param-reassign
+      arrItems = arrayRemoveById(arrItems, item.id)
     }
 
-    arrItems.splice(0, 0, item) // Remove the existing item from the array if it exists.
+    // Remove the existing item from the array if it exists.
+    arrItems.splice(0, 0, item)
   } else if (arrItems.length === 0 || foundIndex === -1) {
     arrItems.push(item)
   } else {
-    arrItems.splice(foundIndex, 1, item) // Remove the existing item from the array if it exists.
+    // Remove the existing item from the array if it exists.
+    arrItems.splice(foundIndex, 1, item)
   }
 
   return arrItems
@@ -535,32 +568,6 @@ export function ToIIdNameArray<T extends IIdName<string>>(
 export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
   return safeArray(arr).map((x) => x.name)
 }
-/**
- * Checks an object if it is an array. If so, then tests if there is an optional minimum number of items.
- * If minLengthOrIncludes is not a number, checks that the array includes the item.
- * @param arr Any object to test if it is an array.
- * @param minLengthOrIncludes If a number, specifies the minimum number of items to be in the array. If not a number, the array must include the item.
- * @returns True if arr is an array and meets any minimum requirements.
- */
-
-export function isArray<T = unknown>(
-  arr?: ArrayOrSingle<T> | null,
-  minLengthOrIncludes?: T | number
-): arr is Array<T> {
-  if (!arr || !Array.isArray(arr)) {
-    return false
-  }
-
-  if (isNullOrUndefined(minLengthOrIncludes)) {
-    return true
-  }
-
-  if (isNumber(minLengthOrIncludes)) {
-    return arr.length >= minLengthOrIncludes
-  }
-
-  return arr.includes(minLengthOrIncludes)
-}
 
 export function arrayMoveFromTo<T>(
   arr: ArrayOrSingle<T>,
@@ -568,7 +575,7 @@ export function arrayMoveFromTo<T>(
   to: number
 ) {
   const arrCopy = safeArray(arr),
-   len = arrCopy.length
+    len = arrCopy.length
 
   if (from < 0 || from >= len || to < 0 || to >= len) {
     throw new AppException(

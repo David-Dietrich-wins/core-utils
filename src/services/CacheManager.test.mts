@@ -1,6 +1,6 @@
-import { IdValueManager } from '../models/IdValueManager.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { CacheManager } from './CacheManager.mjs'
+import { IdValueManager } from '../models/IdValueManager.mjs'
 
 test('constructor', async () => {
   const cacheManager = new CacheManager<string, string>('testCache', 60)
@@ -11,25 +11,26 @@ test('constructor', async () => {
   cacheManager.set('key1', Date.now() + 60000, 'value1')
   cacheManager.set('key2', Date.now() + 60000, 'value2')
 
-  const keyvals = [{ id: 'key1', value: 'abc' }],
-
-   fnCache = async (arrKeys: ArrayOrSingle<string>) =>
-    keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+  const akeyvals = [{ id: 'key1', value: 'abc' }],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    fnCache = async (arrKeys: ArrayOrSingle<string>) =>
+      Promise.resolve(
+        akeyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+      )
 
   expect(await cacheManager.get('key1', fnCache)).toBe('abc')
   expect(await cacheManager.get('key2', fnCache)).toBe('value2')
 })
 
 test('getSingle', async () => {
-  const cacheManager = new CacheManager<string, string>('testCache', 60),
-
-   keyvals = [{ id: 'key1', value: 'abc' }],
-
-   fnCache = async (key: string) =>
-    IdValueManager.CreateIIdValue(
-      key,
-      keyvals.find((x) => x.id === key)?.value || ''
-    )
+  const akeyvals = [{ id: 'key1', value: 'abc' }],
+    cacheManager = new CacheManager<string, string>('testCache', 60),
+    // eslint-disable-next-line @typescript-eslint/require-await
+    fnCache = async (key: string) =>
+      IdValueManager.CreateIIdValue(
+        key,
+        akeyvals.find((x) => x.id === key)?.value || ''
+      )
 
   expect(cacheManager.has('key1')).toBe(false)
   expect(await cacheManager.getSingle('key1', fnCache)).toBe('abc')
@@ -47,16 +48,16 @@ test('getSingle', async () => {
 
 test('getAll', async () => {
   const cacheManager = new CacheManager<string, string>('testCache', 60),
-
-   keyvals = [
-    { id: 'key1', value: 'abc' },
-    { id: 'key2', value: 'def' },
-  ],
-
-   fnCache = async (arrKeys: ArrayOrSingle<string>) =>
-    keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value)),
-
-   result = await cacheManager.getAll(['key1', 'key2'], fnCache)
+    keyvals = [
+      { id: 'key1', value: 'abc' },
+      { id: 'key2', value: 'def' },
+    ],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    kvCache = async (arrKeys: ArrayOrSingle<string>) =>
+      Promise.resolve(
+        keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+      ),
+    result = await cacheManager.getAll(['key1', 'key2'], kvCache)
 
   expect(result.length).toBe(2)
   expect(result[0].valueOf()).toBe('abc')

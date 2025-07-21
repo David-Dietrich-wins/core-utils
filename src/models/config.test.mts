@@ -12,17 +12,17 @@ test('constructor', () => {
 })
 
 test('constructor with IConfig', () => {
-  const ic: IConfig<number> = {
-    id: 1,
-    userid: 1,
-    name: 'name',
-    val: true,
-    created: new Date(),
-    createdby: 'test',
-    updated: new Date(),
-    updatedby: 'test',
-  },
-   config = new Config(ic, 0, '', false)
+  const aic: IConfig<number> = {
+      created: new Date(),
+      createdby: 'test',
+      id: 1,
+      name: 'name',
+      updated: new Date(),
+      updatedby: 'test',
+      userid: 1,
+      val: true,
+    },
+    config = new Config(aic, 0, '', false)
 
   expect(config.id).toBe(1)
   expect(config.userid).toBe(1)
@@ -31,10 +31,10 @@ test('constructor with IConfig', () => {
   expect(config.createdby).toBe('test')
   expect(config.updatedby).toBe('test')
 
-  expect(config.created).toBe(ic.created)
-  expect(config.createdby).toBe(ic.createdby)
-  expect(config.updated).toBe(ic.updated)
-  expect(config.updatedby).toBe(ic.updatedby)
+  expect(config.created).toBe(aic.created)
+  expect(config.createdby).toBe(aic.createdby)
+  expect(config.updated).toBe(aic.updated)
+  expect(config.updatedby).toBe(aic.updatedby)
 
   expect(config.api()).toEqual({ name: 'name', val: true })
 })
@@ -52,17 +52,17 @@ describe('ConfigShort', () => {
   })
 
   test('constructor with IConfig', () => {
-    const ic: IConfigShort<number> = {
-      id: 1,
-      userid: 1,
-      k: 1,
-      v: 1,
-      created: new Date(),
-      createdby: 'test',
-      updated: new Date(),
-      updatedby: 'test',
-    },
-     config = new ConfigShort(ic, 0, 1, false)
+    const aic: IConfigShort<number> = {
+        created: new Date(),
+        createdby: 'test',
+        id: 1,
+        k: 1,
+        updated: new Date(),
+        updatedby: 'test',
+        userid: 1,
+        v: 1,
+      },
+      config = new ConfigShort(aic, 0, 1, false)
 
     expect(config.id).toBe(1)
     expect(config.userid).toBe(1)
@@ -71,10 +71,10 @@ describe('ConfigShort', () => {
     expect(config.createdby).toBe('test')
     expect(config.updatedby).toBe('test')
 
-    expect(config.created).toBe(ic.created)
-    expect(config.createdby).toBe(ic.createdby)
-    expect(config.updated).toBe(ic.updated)
-    expect(config.updatedby).toBe(ic.updatedby)
+    expect(config.created).toBe(aic.created)
+    expect(config.createdby).toBe(aic.createdby)
+    expect(config.updated).toBe(aic.updated)
+    expect(config.updatedby).toBe(aic.updatedby)
 
     expect(config.api()).toEqual({ name: '1', val: 1 })
   })

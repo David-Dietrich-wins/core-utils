@@ -1,4 +1,3 @@
-/* eslint-disable one-var */
 import {
   NameValue,
   NameValueLineFormatManager,

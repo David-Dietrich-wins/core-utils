@@ -1,8 +1,8 @@
-import { z } from 'zod/v4'
-import { newGuid } from './general.mjs'
-import { IUpdated } from '../models/id-created-updated.mjs'
 import { IIdRequired, IdManager } from '../models/IdManager.mjs'
 import { IName, IValue } from '../models/interfaces.mjs'
+import { IUpdated } from '../models/id-created-updated.mjs'
+import { newGuid } from './general.mjs'
+import { z } from 'zod/v4'
 
 export const zIconConfiguration = z.object({
   alt: z.string().min(1).max(100),
@@ -62,13 +62,13 @@ export class ContextManager
 
   static readonly zContextUi = z.object({
     color: z.string().optional(),
-    icon: zIconConfiguration.optional(),
-    w: z.number().int().nonnegative().optional(),
+    cols: z.number().int().nonnegative().optional(),
     h: z.number().int().nonnegative().optional(),
+    icon: zIconConfiguration.optional(),
+    rows: z.number().int().nonnegative().optional(),
+    w: z.number().int().nonnegative().optional(),
     x: z.number().int().nonnegative().optional(),
     y: z.number().int().nonnegative().optional(),
-    rows: z.number().int().nonnegative().optional(),
-    cols: z.number().int().nonnegative().optional(),
   })
 
   public static getInstance(): ContextManager {
