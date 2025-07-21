@@ -1,13 +1,13 @@
 import { jest } from '@jest/globals'
+// eslint-disable-next-line sort-imports
 import { LogManagerOptions } from './LogManager.mjs'
 jest.unstable_unmockModule('./services/LogManager.mjs')
-import winston from 'winston'
+// eslint-disable-next-line sort-imports
+import type DailyRotateFile from 'winston-daily-rotate-file'
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
-import type DailyRotateFile from 'winston-daily-rotate-file'
+import winston from 'winston'
 const { LogManager } = await import('./LogManager.mjs')
-
-let logManagerOptions: LogManagerOptions
 
 // Const mockLoggerCreateInstance = (LogManager.CreateInstance = jest.fn(
 //   (options: LogManagerOptions) => {
@@ -18,12 +18,12 @@ let logManagerOptions: LogManagerOptions
 function GetTestLogManagerOptions(
   overrides?: Partial<LogManagerOptions>
 ): LogManagerOptions {
-  const logManagerOptions: LogManagerOptions = {
+  const lmo: LogManagerOptions = {
     componentName: 'TestComponent',
     includeHttpRequestDataInTheLog: true,
     includeHttpResponseDataInTheLog: true,
-    logCallback: jest.fn(),
     logBaseFileName: '',
+    logCallback: jest.fn(),
     logFileName: '',
     logLevel: 'info',
     maxFiles: 5,
@@ -34,13 +34,16 @@ function GetTestLogManagerOptions(
     ...overrides,
   }
 
-  return logManagerOptions
+  return lmo
 }
+
+let logManagerOptions = GetTestLogManagerOptions()
 
 beforeEach(() => {
   logManagerOptions = GetTestLogManagerOptions()
 })
 
+// eslint-disable-next-line one-var
 const lineFormatter = winston.format.printf(({ level, message, timestamp }) => {
   const msg =
     String(timestamp) +
@@ -79,21 +82,20 @@ describe('constructor', () => {
 })
 
 describe('log levels', () => {
-  const logManagerOptions = GetTestLogManagerOptions({
-    logBaseFileName: 'logLevels1-BaseFileName.log',
-    logFileName: 'logLevels2-FileName.log',
-    rotateBaseFileName: 'logLevels3-RotateBaseFileName.log',
-    suffixDatePattern: 'YYYY-MM-DD',
-  }),
-
-   lm = new LogManager(logManagerOptions)
+  const almo = GetTestLogManagerOptions({
+      logBaseFileName: 'logLevels1-BaseFileName.log',
+      logFileName: 'logLevels2-FileName.log',
+      rotateBaseFileName: 'logLevels3-RotateBaseFileName.log',
+      suffixDatePattern: 'YYYY-MM-DD',
+    }),
+    lm = new LogManager(almo)
 
   test('debug', () => {
     expect(lm).toBeDefined()
     const wlogger = lm.debug('1', '2', '3', '4', '5')
 
     expect(wlogger).toBeDefined()
-    expect(logManagerOptions.logCallback).toHaveBeenCalledTimes(0)
+    expect(almo.logCallback).toHaveBeenCalledTimes(0)
   })
 
   test('error', () => {
@@ -139,7 +141,7 @@ describe('transports', () => {
     )
 
     expect(ret).toBeDefined()
-    expect(ret.filename).toMatch(/^TransportFileLogger.2025-12-01.log/)
+    expect(ret.filename).toMatch(/^TransportFileLogger.2025-12-01.log/u)
     expect(ret.level).toBe('info')
     expect(ret.format).toBeDefined()
     expect(ret.maxFiles).toBe(10)
@@ -165,20 +167,20 @@ describe('transports', () => {
   })
 
   test('no daily rotate file', () => {
+    // eslint-disable-next-line no-multi-assign
     const mockDailyRotateFileLogger = (LogManager.DailyRotateFileLogger =
-      jest.fn(() => null as unknown as DailyRotateFile)),
-
-     ret = LogManager.WinstonLogTransports(
-      'info',
-      'TEST4.WinstonLogTransports-logFileName.log',
-      'TEST5.WinstonLogTransports-logBaseFileName.log',
-      'TEST6.WinstonLogTransports-rotateBaseFileName.log',
-      'YYY-MM-DD',
-      10,
-      1024,
-      false,
-      lineFormatter
-    )
+        jest.fn(() => null as unknown as DailyRotateFile)),
+      ret = LogManager.WinstonLogTransports(
+        'info',
+        'TEST4.WinstonLogTransports-logFileName.log',
+        'TEST5.WinstonLogTransports-logBaseFileName.log',
+        'TEST6.WinstonLogTransports-rotateBaseFileName.log',
+        'YYY-MM-DD',
+        10,
+        1024,
+        false,
+        lineFormatter
+      )
 
     expect(mockDailyRotateFileLogger).toHaveBeenCalledWith(
       'info',

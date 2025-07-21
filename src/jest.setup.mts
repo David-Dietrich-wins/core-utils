@@ -2,7 +2,6 @@
 /* eslint-disable one-var */
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
-import { ApiProps } from './models/types.mjs'
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
@@ -267,11 +266,3 @@ afterEach(() => {
 // AfterAll(() => {
 //   MockServer.close()
 // })
-
-export function getAceApiParams() {
-  const apiParams: ApiProps = {
-    baseUrl: TEST_Parameters_DEV.apiBaseUrl,
-  }
-
-  return apiParams
-}
