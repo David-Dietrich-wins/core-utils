@@ -16,22 +16,22 @@ import {
   JwtWithSubject,
 } from './jwt.mjs'
 import { safestr } from './string-helper.mjs'
-import { GenerateSignedJwtToken, TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import { CONST_AppNameTradePlotter } from './HttpHeaderManager.mjs'
 
 describe('JwtDecode', () => {
   let jwt = ''
   beforeAll(() => {
     jwt = JwtSign(
-      { userId: TEST_Parameters_DEV.userIdGood },
-      safestr(TEST_Parameters_DEV.rsaPassPhrase)
+      { userId: TEST_Settings.userIdGood },
+      safestr(TEST_Settings.rsaPassPhrase)
     )
   })
 
   test('good', () => {
     const jwtdata = JwtDecode<IJwtWithUserId>(jwt)
 
-    expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
   })
 
   test('bad', () => {
@@ -54,91 +54,82 @@ describe('JwtDecode', () => {
   test('JwtRetrieveUserId', () => {
     const jwtdata = JwtRetrieveUserId(jwt)
 
-    expect(jwtdata).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwtdata).toBe(TEST_Settings.userIdGood)
   })
 
   test('JwtDecode', () => {
     const jwtdata: string | JwtPayload | null = JwtDecode(jwt)
 
-    expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+    expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
   })
 })
 
 test('JwtSign', () => {
   const header: JwtHeader = {
-    alg: 'HS256',
-    typ: 'JWT',
-  },
-
-   signOptions: SignOptions = {
-    header,
-  },
-
-   payload = {
-    userId: TEST_Parameters_DEV.userIdGood,
-  },
-
-   jwtToken = JwtSign(
-    payload,
-    safestr(TEST_Parameters_DEV.rsaPassPhrase),
-    signOptions
-  )
+      alg: 'HS256',
+      typ: 'JWT',
+    },
+    signOptions: SignOptions = {
+      header,
+    },
+    payload = {
+      userId: TEST_Settings.userIdGood,
+    },
+    jwtToken = JwtSign(
+      payload,
+      safestr(TEST_Settings.rsaPassPhrase),
+      signOptions
+    )
   expect(jwtToken.length).toBeGreaterThan(10)
 
   const jwtdata = JwtDecode<IJwtWithUserId>(jwtToken)
 
-  expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
 })
 
 test('JwtVerify bad', () => {
   const secretOrPublicKey: Secret = 'anything'
 
-  expect(() => JwtVerify(TEST_Parameters_DEV.jwt, secretOrPublicKey)).toThrow()
+  expect(() => JwtVerify(TEST_Settings.jwt, secretOrPublicKey)).toThrow()
 })
 
 test('JwtVerify good', () => {
   const header: JwtHeader = {
-    alg: 'HS256',
-    typ: 'JWT',
-  },
-
-   signOptions: SignOptions = {
-    header,
-  },
-
-   payload = {
-    userId: TEST_Parameters_DEV.userIdGood,
-  },
-
-   jwtToken = JwtSign(
-    payload,
-    safestr(TEST_Parameters_DEV.rsaPassPhrase),
-    signOptions
-  )
+      alg: 'HS256',
+      typ: 'JWT',
+    },
+    signOptions: SignOptions = {
+      header,
+    },
+    payload = {
+      userId: TEST_Settings.userIdGood,
+    },
+    jwtToken = JwtSign(
+      payload,
+      safestr(TEST_Settings.rsaPassPhrase),
+      signOptions
+    )
   expect(jwtToken.length).toBeGreaterThan(10)
 
   const jwtdata = JwtDecode<IJwtWithUserId>(jwtToken)
 
-  expect(jwtdata.userId).toBe(TEST_Parameters_DEV.userIdGood)
+  expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
 
-  const secretOrPublicKey: Secret = safestr(TEST_Parameters_DEV.rsaPassPhrase),
-
-   verified = JwtVerify(jwtToken, secretOrPublicKey)
-  expect((verified as IJwtWithUserId).userId).toBe(
-    TEST_Parameters_DEV.userIdGood
-  )
+  const secretOrPublicKey: Secret = safestr(TEST_Settings.rsaPassPhrase),
+    verified = JwtVerify(jwtToken, secretOrPublicKey)
+  expect((verified as IJwtWithUserId).userId).toBe(TEST_Settings.userIdGood)
 })
 
 describe('JwtAccessClient', () => {
   test('Constructor from token', () => {
-    expect(JwtAccessToken.Create(TEST_Parameters_DEV.jwt).email).toBe(
-      TEST_Parameters_DEV.userIdGoodEmail
+    expect(JwtAccessToken.Create(TEST_Settings.jwt).email).toBe(
+      TEST_Settings.userIdGoodEmail
     )
   })
   test('Constructor from string', () => {
-    const jwt = JwtAccessToken.Create(TEST_Parameters_DEV.jwt)
+    const jwt = JwtAccessToken.Create(TEST_Settings.jwt)
 
-    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+    expect(jwt.email).toBe(TEST_Settings.userIdGoodEmail)
   })
   test('Constructor from null', () => {
     expect(() => JwtAccessToken.Create('')).toThrow(
@@ -148,28 +139,26 @@ describe('JwtAccessClient', () => {
 
   test('FromHeaders', () => {
     const headers = {
-      authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
-    },
+        authorization: `Bearer ${TEST_Settings.jwt}`,
+      },
+      jwt = FromHeaders(JwtAccessToken, headers)
 
-     jwt = FromHeaders(JwtAccessToken, headers)
-
-    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+    expect(jwt.email).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('FromHeaders Headers object', () => {
     const headers = {
-      authorization: `Bearer ${TEST_Parameters_DEV.jwt}`,
-      get: (key: string) => headers[key],
-    } as unknown as Headers,
+        authorization: `Bearer ${TEST_Settings.jwt}`,
+        get: (key: string) => headers[key],
+      } as unknown as Headers,
+      jwt = FromHeaders(JwtAccessToken, headers)
 
-     jwt = FromHeaders(JwtAccessToken, headers)
-
-    expect(jwt.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+    expect(jwt.email).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('FromHeaders fail no Bearer', () => {
     const headers = {
-      authorization: `${TEST_Parameters_DEV.jwt}`,
+      authorization: `${TEST_Settings.jwt}`,
       get: (key: string) => headers[key],
     } as unknown as Headers
 
@@ -186,32 +175,32 @@ describe('JwtAccessClient', () => {
 
   test('FromString', () => {
     expect(
-      FromBearerToken(JwtAccessToken, `Bearer ${TEST_Parameters_DEV.jwt}`).email
-    ).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+      FromBearerToken(JwtAccessToken, `Bearer ${TEST_Settings.jwt}`).email
+    ).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('issuer', () => {
-    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
-      iss: 'anything.com',
-    }),
-     jhelper = FromBearerToken(JwtAccessToken, jwt)
+    const jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
+        iss: 'anything.com',
+      }),
+      jhelper = FromBearerToken(JwtAccessToken, jwt)
 
-    expect(jhelper.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+    expect(jhelper.email).toBe(TEST_Settings.userIdGoodEmail)
     expect(jhelper.issuer).toBe('anything')
   })
 
   test('Application Roles', () => {
-    let jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
-      iss: 'anything.com',
-      roles: ['admin', 'user'],
-    }),
-     jhelper = JwtAccessToken.Create(jwt)
+    let jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
+        iss: 'anything.com',
+        roles: ['admin', 'user'],
+      }),
+      jhelper = JwtAccessToken.Create(jwt)
     expect(jhelper.ApplicationRoles).toEqual(['admin', 'user'])
     expect(jhelper.isAdmin).toBeTruthy()
     expect(jhelper.isManager).toBeTruthy()
     expect(jhelper.isUser).toBeTruthy()
 
-    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
+    jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
       roles: ['admin'],
     })
     jhelper = JwtAccessToken.Create(jwt)
@@ -226,7 +215,7 @@ describe('JwtAccessClient', () => {
     expect(jhelper.isManager).toBeFalsy()
     expect(jhelper.isUser).toBeTruthy()
 
-    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
+    jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
       roles: ['manager'],
     })
     jhelper = JwtAccessToken.Create(jwt)
@@ -235,7 +224,7 @@ describe('JwtAccessClient', () => {
     expect(jhelper.isManager).toBeTruthy()
     expect(jhelper.isUser).toBeTruthy()
 
-    jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
+    jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
       roles: ['user'],
     })
     jhelper = JwtAccessToken.Create(jwt)
@@ -246,19 +235,19 @@ describe('JwtAccessClient', () => {
   })
 
   test('others', () => {
-    const jwt = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail, {
-      aud: 'anything',
-      auth_time: 123,
-      iat: 2048,
-      sid: 'refresh',
-      sub: 'my FusionAuthUserId',
-      tid: 'tenant',
-    }),
-     jhelper = FromBearerToken(JwtAccessToken, jwt)
+    const jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail, {
+        aud: 'anything',
+        auth_time: 123,
+        iat: 2048,
+        sid: 'refresh',
+        sub: 'my FusionAuthUserId',
+        tid: 'tenant',
+      }),
+      jhelper = FromBearerToken(JwtAccessToken, jwt)
 
     expect(jhelper.audience).toBe('anything')
     expect(jhelper.authenticationTime).toBe(123)
-    expect(jhelper.email).toBe(TEST_Parameters_DEV.userIdGoodEmail)
+    expect(jhelper.email).toBe(TEST_Settings.userIdGoodEmail)
     expect(jhelper.FusionAuthUserId).toBe('my FusionAuthUserId')
     expect(jhelper.issuedTime).toBe(2048)
     expect(jhelper.refreshToken).toBe('refresh')
@@ -278,9 +267,8 @@ test('JwtBase create', () => {
     tid: 'tenant',
   }
 
-  let jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase)),
-
-   jhelper = JwtBase.Create(jwt)
+  let jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jhelper = JwtBase.Create(jwt)
   expect(jhelper.audience).toBe('audience')
   expect(jhelper.exp).toBe(123)
   expect(jhelper.iat).toBe(456)
@@ -294,7 +282,7 @@ test('JwtBase create', () => {
   expect(jhelper.isUser).toBeTruthy()
 
   jwtPayload.iss = 'tradeplotter.com'
-  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
   jhelper = JwtBase.Create(jwt)
 
   expect(jhelper.isAdmin).toBeFalsy()
@@ -307,7 +295,7 @@ test('JwtBase create', () => {
   expect(jhelper.isPolitagreeUser).toBeFalsy()
 
   jwtPayload.roles = ['admin']
-  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
   jhelper = JwtBase.Create(jwt)
 
   expect(jhelper.isAdmin).toBeTruthy()
@@ -321,7 +309,7 @@ test('JwtBase create', () => {
 
   jwtPayload.iss = 'politagree.com'
   jwtPayload.roles = ['user']
-  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
   jhelper = JwtBase.Create(jwt)
 
   expect(jhelper.isAdmin).toBeFalsy()
@@ -334,7 +322,7 @@ test('JwtBase create', () => {
   expect(jhelper.isPolitagreeUser).toBeTruthy()
 
   jwtPayload.roles = ['admin']
-  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
   jhelper = JwtBase.Create(jwt)
 
   expect(jhelper.isAdmin).toBeTruthy()
@@ -360,13 +348,12 @@ test('JwtWithSubject', () => {
     sub: 'subject',
   }
 
-  let jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase)),
-
-   jhelper = JwtWithSubject.Create(jwt)
+  let jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jhelper = JwtWithSubject.Create(jwt)
   expect(jhelper.sub).toBe('subject')
 
   jwtPayload.sub = 'new subject'
-  jwt = JwtSign(jwtPayload, safestr(TEST_Parameters_DEV.rsaPassPhrase))
+  jwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
   jhelper = JwtWithSubject.Create(jwt)
 
   expect(jhelper.sub).toBe('new subject')
@@ -374,23 +361,19 @@ test('JwtWithSubject', () => {
 
 test('JwtFusionAuthClientCredentials', () => {
   const jwtPayload = {
-    aud: 'audience',
-    exp: 123,
-    iat: 456,
-    iss: 'tradeplotter.com',
-    jti: 'jti',
-    roles: ['user'],
-    permissions: ['user'],
-    scope: 'scope',
-    tid: 'tenant',
-    sub: 'subject',
-  },
-
-   jwtsign = JwtSign(
-    jwtPayload,
-    safestr(TEST_Parameters_DEV.rsaPassPhrase)
-  ),
-   jwt = JwtFusionAuthClientCredentials.Create(jwtsign)
+      aud: 'audience',
+      exp: 123,
+      iat: 456,
+      iss: 'tradeplotter.com',
+      jti: 'jti',
+      roles: ['user'],
+      permissions: ['user'],
+      scope: 'scope',
+      tid: 'tenant',
+      sub: 'subject',
+    },
+    jwtsign = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jwt = JwtFusionAuthClientCredentials.Create(jwtsign)
 
   expect(jwt.permissions).toStrictEqual(['user'])
   expect(jwt.roles).toStrictEqual(['user'])
@@ -415,42 +398,38 @@ test('JwtFusionAuthClientCredentials', () => {
 
 test('JwtFusionAuthIdToken with roles', () => {
   const jwtPayload: IJwtFusionAuthIdToken = {
-    aud: 'audience',
-    exp: 123,
-    iat: 456,
-    iss: 'tradeplotter.com',
-    jti: 'jti',
-    roles: ['user'],
-    scope: 'scope',
-    tid: 'tenant',
-    sub: 'subject',
+      aud: 'audience',
+      exp: 123,
+      iat: 456,
+      iss: 'tradeplotter.com',
+      jti: 'jti',
+      roles: ['user'],
+      scope: 'scope',
+      tid: 'tenant',
+      sub: 'subject',
 
-    applicationId: 'application',
-    auth_time: 123,
-    sid: 'refresh',
+      applicationId: 'application',
+      auth_time: 123,
+      sid: 'refresh',
 
-    active: true,
-    at_hash: 'at_hash',
-    authenticationType: 'JWT',
-    birthdate: '123',
-    c_hash: 'c_hash',
-    email: 'email',
-    email_verified: true,
-    family_name: 'family',
-    given_name: 'given',
-    middle_name: 'middle',
-    name: 'name',
-    nonce: 'nonce',
-    phone_number: 'phone',
-    picture: 'picture',
-    preferred_username: 'username',
-  },
-
-   jwtsign = JwtSign(
-    jwtPayload,
-    safestr(TEST_Parameters_DEV.rsaPassPhrase)
-  ),
-   jwt = JwtFusionAuthIdToken.Create(jwtsign)
+      active: true,
+      at_hash: 'at_hash',
+      authenticationType: 'JWT',
+      birthdate: '123',
+      c_hash: 'c_hash',
+      email: 'email',
+      email_verified: true,
+      family_name: 'family',
+      given_name: 'given',
+      middle_name: 'middle',
+      name: 'name',
+      nonce: 'nonce',
+      phone_number: 'phone',
+      picture: 'picture',
+      preferred_username: 'username',
+    },
+    jwtsign = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jwt = JwtFusionAuthIdToken.Create(jwtsign)
   expect(jwt.applicationId).toBe('application')
   expect(jwt.auth_time).toBe(123)
   expect(jwt.sid).toBe('refresh')
@@ -492,23 +471,21 @@ test('JwtFusionAuthIdToken with roles', () => {
 
 test('JwtTokenWithUserId', () => {
   const jwtPayload = {
-    aud: 'audience',
-    exp: 123,
-    iat: 456,
-    iss: 'tradeplotter.com',
-    jti: 'jti',
-    roles: ['user'],
-    scope: 'scope',
-    tid: 'tenant',
-  },
-
-   jwtToken = JwtTokenWithUserId(
-    'myuserId',
-    TEST_Parameters_DEV.rsaPassPhrase,
-    jwtPayload
-  ),
-
-   jwt = JwtWithSubject.Create(jwtToken)
+      aud: 'audience',
+      exp: 123,
+      iat: 456,
+      iss: 'tradeplotter.com',
+      jti: 'jti',
+      roles: ['user'],
+      scope: 'scope',
+      tid: 'tenant',
+    },
+    jwtToken = JwtTokenWithUserId(
+      'myuserId',
+      TEST_Settings.rsaPassPhrase,
+      jwtPayload
+    ),
+    jwt = JwtWithSubject.Create(jwtToken)
 
   expect(jwt.FusionAuthUserId).toBe('myuserId')
 })

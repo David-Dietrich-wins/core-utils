@@ -4,7 +4,7 @@ import {
 } from './FinancialModelingPrep.mjs'
 import { DateHelper } from '../DateHelper.mjs'
 import type { IChartSettings } from '../../tplot/ChartSettings.mjs'
-import { TEST_Parameters_DEV } from '../../jest.setup.mjs'
+import { TEST_Settings } from '../../jest.setup.mjs'
 
 test('FmpIndicatorParamsSetDateBoundary', () => {
   const aparams: FmpIndicatorQueryParams = {
@@ -364,7 +364,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         period: 3,
         periodType: 'd',
         startDate: DateHelper.AddTimeToDate(
-          TEST_Parameters_DEV.currentDateString,
+          TEST_Settings.currentDateString,
           'd',
           -2
         ).getTime(),
@@ -403,7 +403,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         period: 3,
         periodType: 'd',
         startDate: DateHelper.AddTimeToDate(
-          TEST_Parameters_DEV.currentDateString,
+          TEST_Settings.currentDateString,
           'm',
           -1100
         ).getTime(),
@@ -442,7 +442,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         period: 3,
         periodType: 'd',
         startDate: DateHelper.AddTimeToDate(
-          TEST_Parameters_DEV.currentDateString,
+          TEST_Settings.currentDateString,
           'm',
           -1100
         ).getTime(),

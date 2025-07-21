@@ -1,4 +1,4 @@
-import { TEST_Parameters_DEV, getCurrentDate } from '../jest.setup.mjs'
+import { TEST_Settings, getCurrentDate } from '../jest.setup.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import moment from 'moment'
@@ -11,20 +11,18 @@ const AAPL_IPO = '1980-12-12',
   AAPL_IPO_MOMENT = moment(AAPL_IPO_AND_TIMEZONE)
 
 test(DateHelper.GetTime.name, () => {
-  expect(
-    DateHelper.GetTime(TEST_Parameters_DEV.currentDateInMilliseconds)
-  ).toEqual(TEST_Parameters_DEV.currentDateInMilliseconds)
+  expect(DateHelper.GetTime(TEST_Settings.currentDateInMilliseconds)).toEqual(
+    TEST_Settings.currentDateInMilliseconds
+  )
 
-  expect(DateHelper.GetTime(TEST_Parameters_DEV.currentDateString)).toEqual(
-    TEST_Parameters_DEV.currentDateInMilliseconds
+  expect(DateHelper.GetTime(TEST_Settings.currentDateString)).toEqual(
+    TEST_Settings.currentDateInMilliseconds
   )
 })
 
 test(DateHelper.ConvertToDateObject.name, () => {
-  let date = DateHelper.ConvertToDateObject(
-    TEST_Parameters_DEV.currentDateString
-  )
-  expect(date.getTime()).toEqual(TEST_Parameters_DEV.currentDateInMilliseconds)
+  let date = DateHelper.ConvertToDateObject(TEST_Settings.currentDateString)
+  expect(date.getTime()).toEqual(TEST_Settings.currentDateInMilliseconds)
 
   // Test for epoch 0
   expect(DateHelper.ConvertToDateObject(0)).toEqual(
@@ -52,13 +50,13 @@ test(DateHelper.ConvertToDateObject.name, () => {
   )
 
   expect(DateHelper.ConvertToDateObject(undefined)).toEqual(
-    TEST_Parameters_DEV.currentDate
+    TEST_Settings.currentDate
   )
   expect(DateHelper.ConvertToDateObject(0)).toEqual(
     new Date('1970-01-01T00:00:00.000Z')
   )
   expect(DateHelper.ConvertToDateObject(null)).toEqual(
-    TEST_Parameters_DEV.currentDate
+    TEST_Settings.currentDate
   )
   expect(() =>
     DateHelper.ConvertToDateObject('2025-13-01T00:00:00.000Z')
@@ -73,49 +71,40 @@ test(DateHelper.ConvertToDateObject.name, () => {
 
 test(DateHelper.addMillisToDate.name, () => {
   const anumToAdd = 2456,
-    newDate = DateHelper.addMillisToDate(
-      anumToAdd,
-      TEST_Parameters_DEV.currentDate
-    )
+    newDate = DateHelper.addMillisToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(
-    newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(anumToAdd)
+  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
+    anumToAdd
+  )
 })
 
 test(DateHelper.addSecondsToDate.name, () => {
   const anumToAdd = 2456,
-    newDate = DateHelper.addSecondsToDate(
-      anumToAdd,
-      TEST_Parameters_DEV.currentDate
-    )
+    newDate = DateHelper.addSecondsToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(
-    newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(anumToAdd * 1000)
+  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
+    anumToAdd * 1000
+  )
 })
 
 test(DateHelper.addMinutesToDate.name, () => {
   const anumToAdd = 2456,
-    newDate = DateHelper.addMinutesToDate(
-      anumToAdd,
-      TEST_Parameters_DEV.currentDate
-    )
+    newDate = DateHelper.addMinutesToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(
-    newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(anumToAdd * 1000 * 60)
+  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
+    anumToAdd * 1000 * 60
+  )
 })
 
 test(DateHelper.addMonthsToDate.name, () => {
   const anumToAdd = 24,
     newDate = DateHelper.addMonthsToDate(
       anumToAdd,
-      new Date(TEST_Parameters_DEV.currentDateInMilliseconds)
+      new Date(TEST_Settings.currentDateInMilliseconds)
     )
 
   expect(newDate).toEqual(
-    new Date(TEST_Parameters_DEV.currentDateString.replace(/2025/u, '2027'))
+    new Date(TEST_Settings.currentDateString.replace(/2025/u, '2027'))
   )
 })
 
@@ -123,36 +112,30 @@ test(DateHelper.addYearsToDate.name, () => {
   const anumToAdd = 2,
     newDate = DateHelper.addYearsToDate(
       anumToAdd,
-      new Date(TEST_Parameters_DEV.currentDateInMilliseconds)
+      new Date(TEST_Settings.currentDateInMilliseconds)
     )
 
   expect(newDate).toEqual(
-    new Date(TEST_Parameters_DEV.currentDateString.replace(/2025/u, '2027'))
+    new Date(TEST_Settings.currentDateString.replace(/2025/u, '2027'))
   )
 })
 
 test(DateHelper.addHoursToDate.name, () => {
   const anumToAdd = 2456,
-    newDate = DateHelper.addHoursToDate(
-      anumToAdd,
-      TEST_Parameters_DEV.currentDate
-    )
+    newDate = DateHelper.addHoursToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(
-    newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(anumToAdd * 1000 * 60 * 60)
+  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
+    anumToAdd * 1000 * 60 * 60
+  )
 })
 
 test(DateHelper.addDaysToDate.name, () => {
   const anumToAdd = 26,
-    newDate = DateHelper.addDaysToDate(
-      anumToAdd,
-      TEST_Parameters_DEV.currentDate
-    )
+    newDate = DateHelper.addDaysToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(
-    newDate.getTime() - TEST_Parameters_DEV.currentDateInMilliseconds
-  ).toEqual(anumToAdd * 1000 * 60 * 60 * 24)
+  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
+    anumToAdd * 1000 * 60 * 60 * 24
+  )
 })
 
 describe(DateHelper.toIsoString.name, () => {
@@ -735,25 +718,21 @@ test(DateHelper.FormatLocaleDateString.name, () => {
   expect(DateHelper.FormatLocaleDateString()).toBe('December 1, 2025')
   expect(DateHelper.FormatLocaleDateString(null)).toBe('December 1, 2025')
   expect(DateHelper.FormatLocaleDateString(undefined)).toBe('December 1, 2025')
+  expect(DateHelper.FormatLocaleDateString(TEST_Settings.currentDate)).toBe(
+    'December 1, 2025'
+  )
   expect(
-    DateHelper.FormatLocaleDateString(TEST_Parameters_DEV.currentDate)
+    DateHelper.FormatLocaleDateString(TEST_Settings.currentDateString)
   ).toBe('December 1, 2025')
   expect(
-    DateHelper.FormatLocaleDateString(TEST_Parameters_DEV.currentDateString)
+    DateHelper.FormatLocaleDateString(new Date(TEST_Settings.currentDateString))
   ).toBe('December 1, 2025')
   expect(
-    DateHelper.FormatLocaleDateString(
-      new Date(TEST_Parameters_DEV.currentDateString)
-    )
-  ).toBe('December 1, 2025')
-  expect(
-    DateHelper.FormatLocaleDateString(
-      TEST_Parameters_DEV.currentDateInMilliseconds
-    )
+    DateHelper.FormatLocaleDateString(TEST_Settings.currentDateInMilliseconds)
   ).toBe('December 1, 2025')
 
   expect(
-    DateHelper.FormatLocaleDateString(TEST_Parameters_DEV.currentDate, 'es-ES')
+    DateHelper.FormatLocaleDateString(TEST_Settings.currentDate, 'es-ES')
   ).toBe('1 de diciembre de 2025')
 
   expect(DateHelper.FormatLocaleDateString('1980-12-12')).toEqual(

@@ -1,4 +1,4 @@
-import { TEST_Parameters_DEV } from '../jest.setup.mjs'
+import { TEST_Settings } from '../jest.setup.mjs'
 import {
   CONST_RegexRsaPrivateKeyPem,
   CONST_RegexRsaPublicKeyPem,
@@ -19,8 +19,8 @@ const StringToEncrypt = '1233'
 
 test('Constructor', () => {
   const cryptoSettings: ICryptoSettings = {
-      rsaPrivateKey: TEST_Parameters_DEV.rsaPrivateKey,
-      rsaPublicKey: TEST_Parameters_DEV.rsaPublicKey,
+      rsaPrivateKey: TEST_Settings.rsaPrivateKey,
+      rsaPublicKey: TEST_Settings.rsaPublicKey,
       rsaPassPhrase: '',
     },
     ch = new CryptoHelper(cryptoSettings),
@@ -44,13 +44,13 @@ test('RSA encrypt and decrypt', () => {
   expect(randomString).toHaveLength(lengthForRandomString)
   const cipherText = CryptoHelper.rsaEncryptStatic(
     randomString,
-    TEST_Parameters_DEV.rsaPublicKey
+    TEST_Settings.rsaPublicKey
   )
   expect(cipherText).not.toBeNull()
   const decrypted = CryptoHelper.rsaDecryptStatic(
     cipherText,
-    TEST_Parameters_DEV.rsaPrivateKey,
-    '' //TEST_Parameters_DEV.rsaPassPhrase
+    TEST_Settings.rsaPrivateKey,
+    '' //TEST_Settings.rsaPassPhrase
   )
   expect(decrypted).not.toBeNull()
 
@@ -136,13 +136,13 @@ test('rsaDecryptStaticObject with JSON', () => {
     jsonObject = { data: randomString },
     cipherText = CryptoHelper.rsaEncryptStaticObject(
       jsonObject,
-      TEST_Parameters_DEV.rsaPublicKey
+      TEST_Settings.rsaPublicKey
     )
   expect(cipherText).not.toBeNull()
   const decrypted = CryptoHelper.rsaDecryptStaticObject(
     cipherText,
-    TEST_Parameters_DEV.rsaPrivateKey,
-    '' //TEST_Parameters_DEV.rsaPassPhrase
+    TEST_Settings.rsaPrivateKey,
+    '' //TEST_Settings.rsaPassPhrase
   )
   expect(decrypted).not.toBeNull()
   expect(decrypted).toEqual(jsonObject)

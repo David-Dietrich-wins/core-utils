@@ -166,7 +166,7 @@ export function getGlobalLogger() {
 
 // Export const mockServer = setupServer(...httpHandlers)
 
-export const TEST_Parameters_DEV = {
+export const TEST_Settings = {
   apiBaseUrl: 'http://localhost:3000',
   currentDate: new Date('2025-12-01T12:00:00.000Z'),
   currentDateInMilliseconds: 0,
@@ -181,17 +181,17 @@ export const TEST_Parameters_DEV = {
 }
 
 export function GenerateSignedJwtToken(
-  email: string = TEST_Parameters_DEV.userIdGoodEmail,
+  email: string = TEST_Settings.userIdGoodEmail,
   overrides?: Partial<JwtPayload>
 ) {
-  return JwtTokenWithEmail(email, TEST_Parameters_DEV.rsaPassPhrase, overrides)
+  return JwtTokenWithEmail(email, TEST_Settings.rsaPassPhrase, overrides)
 }
 
 beforeAll(() => {
   // Process.env.NODE_ENV = 'test'
-  const jwtToken = GenerateSignedJwtToken(TEST_Parameters_DEV.userIdGoodEmail)
+  const jwtToken = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
 
-  TEST_Parameters_DEV.jwt = jwtToken
+  TEST_Settings.jwt = jwtToken
 
   // MockServer.listen({
   //   // This tells MSW to throw an error whenever it
@@ -205,7 +205,7 @@ beforeAll(() => {
     doNotFake: ['queueMicrotask'],
   })
 
-  jest.setSystemTime(TEST_Parameters_DEV.currentDate)
+  jest.setSystemTime(TEST_Settings.currentDate)
 })
 
 afterAll(() => {
@@ -213,7 +213,7 @@ afterAll(() => {
 })
 
 export function getCurrentDate() {
-  return TEST_Parameters_DEV.currentDate
+  return TEST_Settings.currentDate
 }
 
 export const mockConsoleDebug = jest
@@ -250,11 +250,8 @@ beforeEach(() => {
   mockLoggerSilly.mockClear()
   mockLoggerWarn.mockClear()
 
-  TEST_Parameters_DEV.currentDate = new Date(
-    TEST_Parameters_DEV.currentDateString
-  )
-  TEST_Parameters_DEV.currentDateInMilliseconds =
-    TEST_Parameters_DEV.currentDate.getTime()
+  TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
+  TEST_Settings.currentDateInMilliseconds = TEST_Settings.currentDate.getTime()
 })
 
 afterEach(() => {
