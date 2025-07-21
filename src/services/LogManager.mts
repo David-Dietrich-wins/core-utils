@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import winston, { Logger, format, transport, transports } from 'winston'
 import DailyRotateFile, {
   DailyRotateFileTransportOptions,
 } from 'winston-daily-rotate-file'
-import { hasData } from './general.mjs'
-import { safestrTrim } from './string-helper.mjs'
+import winston, { Logger, format, transport, transports } from 'winston'
+import { AppException } from '../models/AppException.mjs'
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
-import { AppException } from '../models/AppException.mjs'
+import { hasData } from './general.mjs'
+import { safestrTrim } from './string-helper.mjs'
 
 const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH',
- DEFAULT_RotateMaxFiles = 500,
- DEFAULT_RotateMaxSize = 1000000000 // 1GB
+  DEFAULT_RotateMaxFiles = 500,
+  // 1GB
+  DEFAULT_RotateMaxSize = 1000000000
 
 export type LogManagerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
 
@@ -71,31 +72,30 @@ export class LogManager {
       )
     }
 
-    const logLineFormat = winston.format.printf(({ level, message }) => {
-      const msg = (message as any)
-        .map((e: unknown) => ObjectTypesToString(e))
-        .join(' ')
+    const alogLineFormat = winston.format.printf(({ level, message }) => {
+        const msg = (message as unknown[])
+          .map((e: unknown) => ObjectTypesToString(e))
+          .join(' ')
 
-      return `${DateHelper.FormatDateTimeWithMillis()}: [${
-        this.componentName
-      }] [${level}] ${msg}`
-    }),
-
-     transports: transport[] = LogManager.WinstonLogTransports(
-      logLevel,
-      logFileName,
-      logBaseFileName,
-      rotateBaseFileName,
-      suffixDatePattern,
-      maxFiles,
-      maxSize,
-      showConsole,
-      logLineFormat
-    )
+        return `${DateHelper.FormatDateTimeWithMillis()}: [${
+          this.componentName
+        }] [${level}] ${msg}`
+      }),
+      arrTransports: transport[] = LogManager.WinstonLogTransports(
+        logLevel,
+        logFileName,
+        logBaseFileName,
+        rotateBaseFileName,
+        suffixDatePattern,
+        maxFiles,
+        maxSize,
+        showConsole,
+        alogLineFormat
+      )
 
     this.logger = winston.createLogger({
       level: logLevel,
-      transports,
+      transports: arrTransports,
     })
   }
 
@@ -170,23 +170,22 @@ export class LogManager {
     maxsize: number | undefined,
     logLineFormat: winston.Logform.Format
   ) {
-    const cleanLogFileName =
-      `./logs/${ 
-      safestrTrim(logFileName)
-        ? safestrTrim(logFileName)
-        : `${safestrTrim(logBaseFileName)}-${DateHelper.FormatDateTime(
-            suffixDatePattern
-          )}.log`}`,
-
-     logfileTransportOptions = new transports.File({
-      level: 'info',
-      filename: cleanLogFileName,
-      format: logLineFormat,
-      maxFiles,
-      maxsize,
-      tailable: true,
-      zippedArchive: false,
-    })
+    const cleanLogFileName = `./logs/${
+        safestrTrim(logFileName)
+          ? safestrTrim(logFileName)
+          : `${safestrTrim(logBaseFileName)}-${DateHelper.FormatDateTime(
+              suffixDatePattern
+            )}.log`
+      }`,
+      logfileTransportOptions = new transports.File({
+        filename: cleanLogFileName,
+        format: logLineFormat,
+        level: 'info',
+        maxFiles,
+        maxsize,
+        tailable: true,
+        zippedArchive: false,
+      })
 
     return logfileTransportOptions
   }
