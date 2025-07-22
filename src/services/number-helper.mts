@@ -340,7 +340,8 @@ export abstract class NumberHelper {
       return 0
     }
 
-    const str = NumberHelper.NumberToString(num, true, 4),
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const str = `${num}`,
       strArray = str.split('.')
     if (isArray(strArray, 2) && hasData(strArray[1])) {
       return Number(strArray[1])
