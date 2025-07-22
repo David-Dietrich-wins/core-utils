@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import {
   CreatedTable,
   CreatedUpdatedTable,

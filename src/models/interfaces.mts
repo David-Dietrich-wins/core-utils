@@ -62,7 +62,7 @@ export const zErrorMessage = z.object({
 export type IErrorMessage = z.infer<typeof zErrorMessage>
 
 export interface IEventLogin<T = string>
-  extends IId<string>,
+  extends IId,
     IUserId<T>,
     ICreatedBy {
   ip: string

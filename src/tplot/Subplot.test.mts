@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-spread */
 import { Subplot } from './Subplot.mjs'
 import { ZodError } from 'zod/v4'
 import { ZodTestHelper } from '../jest.setup.mjs'

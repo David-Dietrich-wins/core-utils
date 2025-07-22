@@ -22,6 +22,7 @@ export enum WebRoles {
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function JwtDecode<T extends IJwtBase>(
   token?: string,
   options?: DecodeOptions
@@ -40,6 +41,7 @@ export function JwtDecode<T extends IJwtBase>(
   return decoded as T
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
   type: IConstructor<T>,
   token: string | TInterface,
@@ -505,10 +507,12 @@ export function FromHeaders<TNew extends JwtBase>(
   const hHeaders = headers as Headers,
     iHeaders = headers as IncomingHttpHeaders
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (hHeaders && isFunction(hHeaders.get)) {
     bearerToken = HttpHeaderManagerBase.BearerTokenParseStrict(
       hHeaders.get('Authorization') ?? hHeaders.get('authorization')
     )
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (iHeaders) {
     bearerToken = safestr(iHeaders.authorization)
   }

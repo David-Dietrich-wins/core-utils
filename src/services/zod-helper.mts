@@ -49,6 +49,7 @@ export function zFromStringOrStringArray(
         items = items.map((item) => item.toLowerCase())
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-confusing-void-expression
       return isArray(items, 2) ? items : arrayFirst(items) ?? []
     })
 }

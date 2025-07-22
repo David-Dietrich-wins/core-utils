@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IIdName, IIdNameValue, IdName } from '../models/id-name.mjs'
@@ -678,7 +679,7 @@ test('arrayUpdateOrAdd', () => {
 })
 
 test('ToIIdNameArray', () => {
-  const arr: IIdNameValue<string, string>[] = [
+  const arr: IIdNameValue[] = [
     { id: '1', name: 'name1', value: 'value1' },
     { id: '2', name: 'name2', value: 'value2' },
     { id: '3', name: 'name3', value: 'value3' },
@@ -697,7 +698,7 @@ test('ToIIdNameArray', () => {
 })
 
 test('MapINamesToNames', () => {
-  const arr: IIdNameValue<string, string>[] = [
+  const arr: IIdNameValue[] = [
     { id: '1', name: 'name1', value: 'value1' },
     { id: '2', name: 'name2', value: 'value2' },
     { id: '3', name: 'name3', value: 'value3' },

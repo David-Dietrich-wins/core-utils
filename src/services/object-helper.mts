@@ -219,6 +219,7 @@ export function FindObjectWithField(
   return found
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ObjectHelper {
   static CloneObjectAlphabetizingKeys<T>(obj: Readonly<T>): T {
     const sortedObj = Object.fromEntries(
@@ -228,6 +229,7 @@ export class ObjectHelper {
     return sortedObj as T
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static DecodeBase64ToObject<T = object>(base64String: string) {
     const decodedString = Buffer.from(base64String, 'base64')
 
@@ -341,7 +343,7 @@ export function runOnAllMembers<T extends object = object>(
 
   const objAsRecord = obj as Record<string, unknown>
   Object.entries(obj).forEach(([key, value]) => {
-    if (!mustHaveValue || (mustHaveValue && value)) {
+    if (!mustHaveValue || value) {
       objAsRecord[key] = func(key, value)
     }
     // Console.log(`${key}: ${value}`)
@@ -375,7 +377,7 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
   }
 
   Object.defineProperty(obj, newKey, propdesc)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
   delete (obj as any)[oldKey]
 
   return obj
@@ -640,8 +642,14 @@ export function deepCloneJson<T extends object | Array<T>>(
 ) {
   const funcname = safestr(fname, 'deepCloneJson')
   const ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
+  if (!ret) {
+    throw new AppException(
+      `deepCloneJson() failed to clone object ${safestr(obj)}`,
+      funcname
+    )
+  }
 
-  return ret!
+  return ret
 }
 /**
  * Looks for a ret.body object to return.

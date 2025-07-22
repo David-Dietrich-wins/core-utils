@@ -42,10 +42,10 @@ export type FuncTabSettingsTickerInfoUpsert = (
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
 export type FuncDashboardPeopleTabGet = (
-  params: IIdValRequired<string, string>
+  params: IIdValRequired
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 export type FuncDashboardPeopleTabSave = (
-  params: IIdValRequired<string, string>
+  params: IIdValRequired
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
 export interface IContextTickers extends IContext {
@@ -299,6 +299,7 @@ export class ConfigManager {
    * @param name - The name of the config to find.
    * @returns The config if found, otherwise the default value for that config.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   FindConfig<T = string>(name: TpConfigNamesEnum) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     const found = this.configs.find((config) => name === config.k)
@@ -313,7 +314,7 @@ export class ConfigManager {
     return this.FindConfig<boolean>(name)
   }
   FindString(name: TpConfigNamesEnum) {
-    return this.FindConfig<string>(name)
+    return this.FindConfig(name)
   }
 
   findScreen(screenName: string) {

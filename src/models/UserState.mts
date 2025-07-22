@@ -1,6 +1,6 @@
 import { IIdName, IdName } from './id-name.mjs'
 
-export interface IUserState<T = unknown> extends IIdName<string> {
+export interface IUserState<T = unknown> extends IIdName {
   message?: string
   obj?: T
   status: string
@@ -9,7 +9,7 @@ export interface IUserState<T = unknown> extends IIdName<string> {
 
 // Custom API error to throw
 export default class UserState<T = unknown>
-  extends IdName<string>
+  extends IdName
   implements IUserState<T>
 {
   status: string

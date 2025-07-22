@@ -1,11 +1,11 @@
 import { IId, IIdRequired } from '../models/IdManager.mjs'
+import { NumberHelper, isNumber } from './number-helper.mjs'
 import { isString, safestr } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IName } from '../models/interfaces.mjs'
 import { isNullOrUndefined } from './general.mjs'
-import { isNumber } from './number-helper.mjs'
 
 /**
  * Checks an object if it is an array. If so, then tests if there is an optional minimum number of items.
@@ -293,6 +293,7 @@ export function arrayOfIds<T extends IId<Tid>, Tid = T['id']>(
   arr?: Readonly<T>[]
 ) {
   return arrayReduceArrayReturns(arr, (cur) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (cur?.id) {
       return cur.id
     }
@@ -395,7 +396,9 @@ export function arrayForEachReturns<T>(
   arr: ArrayOrSingle<T> | null | undefined,
   funcArrayResults: (item: T) => void
 ) {
-  safeArray(arr).forEach((cur) => funcArrayResults(cur))
+  safeArray(arr).forEach((cur) => {
+    funcArrayResults(cur)
+  })
 }
 
 export function arraySwapItems<T>(
@@ -403,20 +406,25 @@ export function arraySwapItems<T>(
   sourceIndex: number,
   destIndex: number
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!arrItems || sourceIndex === destIndex) {
     return []
   }
 
   if (sourceIndex < 0 || sourceIndex >= arrItems.length) {
     throw new AppException(
-      `Invalid source index of ${sourceIndex} when swapping array elements.`,
+      `Invalid source index of ${NumberHelper.NumberToString(
+        sourceIndex
+      )} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
     )
   }
   if (destIndex < 0 || destIndex >= arrItems.length) {
     throw new AppException(
-      `Invalid destination index of ${destIndex} when swapping array elements.`,
+      `Invalid destination index of ${NumberHelper.NumberToString(
+        destIndex
+      )} when swapping array elements.`,
       arraySwapItems.name,
       arrItems
     )
@@ -434,6 +442,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
   sourceId: Tid,
   destId: Tid
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!arrItems || sourceId === destId) {
     return []
   }
@@ -547,7 +556,7 @@ export function shuffleArray<T>(array: T[], maxItems?: number) {
     : shuffledArray.slice(0, maxItems)
 }
 
-export function ToIIdNameArray<T extends IIdName<string>>(
+export function ToIIdNameArray<T extends IIdName>(
   arr: Readonly<T | string>[] | null | undefined
 ) {
   return safeArray(arr).map((x) => {
@@ -579,7 +588,9 @@ export function arrayMoveFromTo<T>(
 
   if (from < 0 || from >= len || to < 0 || to >= len) {
     throw new AppException(
-      `Invalid source index of ${from} or destination index of ${to} when moving array elements.`,
+      `Invalid source index of ${safestr(
+        from
+      )} or destination index of ${safestr(to)} when moving array elements.`,
       arrayMoveFromTo.name,
       arrCopy
     )

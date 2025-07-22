@@ -3,6 +3,7 @@ import { safeArray } from './array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ColorHelper {
   static readonly Help = '#1A90FF'
   static readonly PolitagreeBlue = '#464377'

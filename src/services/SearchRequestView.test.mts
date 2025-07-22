@@ -1,5 +1,6 @@
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { IIdNameValue } from '../models/id-name.mjs'
+import { NumberHelper } from './number-helper.mjs'
 import { StringHelper } from './string-helper.mjs'
 import { ZodType } from 'zod/v4'
 
@@ -101,12 +102,14 @@ describe('getItems', () => {
   test('limit', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+      const randomString = `${NumberHelper.NumberToString(
+        i
+      )}-${StringHelper.GenerateRandomString(10)}`
 
       items.push({
         id: i,
         name: i < 50 ? `xxxxX-${randomString}` : randomString,
-        value: `Value ${i}`,
+        value: `Value ${NumberHelper.NumberToString(i)}`,
       })
     }
 
@@ -228,7 +231,9 @@ describe('getItems', () => {
   test('found true', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+      const randomString = `${NumberHelper.NumberToString(
+        i
+      )}-${StringHelper.GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -254,7 +259,9 @@ describe('getItems', () => {
   test('offset of 0 when no page size', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+      const randomString = `${NumberHelper.NumberToString(
+        i
+      )}-${StringHelper.GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -281,7 +288,9 @@ describe('getItems', () => {
   test('empty search column', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+      const randomString = `${NumberHelper.NumberToString(
+        i
+      )}-${StringHelper.GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -306,7 +315,9 @@ describe('getItems', () => {
   test('numbers', () => {
     const items: IIdNameValue<number, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${i}-${StringHelper.GenerateRandomString(10)}`
+      const randomString = `${NumberHelper.NumberToString(
+        i
+      )}-${StringHelper.GenerateRandomString(10)}`
 
       items.push({
         id: i,

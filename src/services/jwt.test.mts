@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-spread */
 import {
   FromBearerToken,
   FromHeaders,
@@ -162,7 +163,7 @@ describe('JwtAccessClient', () => {
 
   test('FromHeaders fail no Bearer', () => {
     const headers = {
-      authorization: `${TEST_Settings.jwt}`,
+      authorization: TEST_Settings.jwt,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       get: (key: string) => headers[key],
     } as unknown as Headers

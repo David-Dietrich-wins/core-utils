@@ -21,7 +21,7 @@ describe('URL Join', () => {
       url = urlJoin(baseUrl, path)
 
     expect(url).not.toBe(`${baseUrl}//`)
-    expect(url).not.toBe(`${baseUrl}`)
+    expect(url).not.toBe(baseUrl)
     expect(url).toBe(`${baseUrl}/`)
   })
   test('Extra slashes relative path', () => {
@@ -46,7 +46,7 @@ describe('URL Join', () => {
     const path = undefined,
       url = urlJoin(baseUrl, path, false)
 
-    expect(url).toBe(`${baseUrl}`)
+    expect(url).toBe(baseUrl)
   })
   test('No trailing slash', () => {
     expect(urlJoin(baseUrl, '?x=1', true)).toBe(`${baseUrl}/?x=1`)

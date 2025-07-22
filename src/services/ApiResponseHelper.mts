@@ -5,6 +5,7 @@ import { isString } from './string-helper.mjs'
 /**
  * Used to wrap all API return calls in a standard wrapper.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ApiResponseHelper {
   static Error<T = unknown>(obj: T) {
     // Uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)

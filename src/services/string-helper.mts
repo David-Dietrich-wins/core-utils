@@ -127,6 +127,7 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @param fname The optional function name that is the source of the operation. Used for exception logging.
  * @returns A the JSON.parsed object or undefined if there was an exception.
  */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function safestrToJson<T>(
   strjson?: string | null,
   fname?: string
@@ -262,7 +263,7 @@ export function stringEqualsQuoted(
 ) {
   if (hasData(name)) {
     return `${name}=${
-      useSingleQuote || false
+      useSingleQuote
         ? stringWrapSingleQuote(value)
         : stringWrapDoubleQuote(value)
     }`
@@ -282,6 +283,7 @@ export function FirstCharCapitalFormatter(s: string) {
   return capitalizeFirstLetter(s)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class StringHelper {
   // eslint-disable-next-line complexity
   static safestr(
@@ -311,7 +313,7 @@ export class StringHelper {
       !hasData(s) &&
       (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
     ) {
-      return (ifEmpty as string) ?? ''
+      return (ifEmpty as string) || ''
     }
 
     if (isObject(ifEmpty)) {

@@ -24,6 +24,7 @@ export type DateTypeAcceptable =
   | null
   | undefined
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
   static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
@@ -506,7 +507,7 @@ export abstract class DateHelper {
       fromTime = fromDate.getTime(),
       toDate = DateHelper.ConvertToDateObject(to),
       toTime = toDate.getTime(),
-      zret: Required<FromTo<number>> = {
+      zret: Required<FromTo> = {
         from: fromTime > toTime ? toTime : fromTime,
         to: toTime < fromTime ? fromTime : toTime,
       }
@@ -696,33 +697,46 @@ export abstract class DateHelper {
 
     let s = ''
     if (numDays > 0) {
-      s += longFormat ? `${numDays} day${pluralSuffix(numDays)}` : `${numDays}d`
+      s += longFormat
+        ? `${NumberHelper.NumberToString(numDays)} day${pluralSuffix(numDays)}`
+        : `${NumberHelper.NumberToString(numDays)}d`
     }
 
     if (numHours > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${numHours} hour${pluralSuffix(numHours)}`
-        : `${prefixIfHasData(s, ' ')}${numHours}h`
+        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
+            numHours
+          )} hour${pluralSuffix(numHours)}`
+        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(numHours)}h`
     }
 
     if (numMinutes > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${numMinutes} minute${pluralSuffix(numMinutes)}`
-        : `${prefixIfHasData(s, ' ')}${numMinutes}m`
+        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
+            numMinutes
+          )} minute${pluralSuffix(numMinutes)}`
+        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(
+            numMinutes
+          )}m`
     }
 
     if (secondsModulo > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${secondsModulo} second${pluralSuffix(
+        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
             secondsModulo
-          )}`
-        : `${prefixIfHasData(s, ' ')}${secondsModulo}s`
+          )} second${pluralSuffix(secondsModulo)}`
+        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(
+            secondsModulo
+          )}s`
     }
 
     if (showMilliseconds || (showMillisecondsIfUnderASecond && millis < 1000)) {
       const micros = millis % 1000
       if (micros > 0) {
-        s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${micros % 1000}ms`
+        s += `${prefixIfHasData(
+          s,
+          longFormat ? ', ' : ' '
+        )}${NumberHelper.NumberToString(micros % 1000)}ms`
       }
     }
 

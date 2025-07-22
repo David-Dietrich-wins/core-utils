@@ -25,7 +25,7 @@ export default tseslint.config(
     files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.mjs', 'src/**/*.mts'],
   },
   eslint.configs.all,
-  tseslint.configs.recommendedTypeChecked,
+  tseslint.configs.strictTypeChecked,
   {
     languageOptions: {
       parserOptions: {

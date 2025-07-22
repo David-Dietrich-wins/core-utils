@@ -13,7 +13,7 @@ import { arrayFindByIds } from '../services/array-helper.mjs'
 import { hasData } from '../services/general.mjs'
 import { z } from 'zod/v4'
 
-export const ChartTimeFrameOptions: (IIdName<string> & {
+export const ChartTimeFrameOptions: (IIdName & {
   fmpTimeFrame: string
 })[] = [
   {
@@ -82,7 +82,7 @@ export const TradeSubplotTimeFrameOptions = arrayFindByIds(
   TradeSubplotTimeFrames
 )
 
-export const ChartPatternOptions: (IIdName<string> & {
+export const ChartPatternOptions: (IIdName & {
   periodLength: number
 })[] = [
   { id: 'b28', name: 'Back to the 8', periodLength: 8 },
@@ -514,7 +514,7 @@ export class ChartSettings implements IChartSettings {
   }
 
   static periodWithTypeString(period: number, periodType: string) {
-    let str = period > 0 ? `${period}` : '1'
+    let str = safestr(period > 0 ? period : '1')
 
     str += ` ${hasData(periodType) ? periodType : 'year'}`
 

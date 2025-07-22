@@ -104,9 +104,10 @@ export class TradePlotProfitizer
   }
 
   static GetProfitForRowItems(rows: ITradePlotProfitizer[]) {
-    return safeArray(rows).reduce((acc, tprow) => acc + (tprow?.profit || 0), 0)
+    return safeArray(rows).reduce((acc, tprow) => acc + (tprow.profit || 0), 0)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   static MapToPlotMsg(this: void, x: ITradePlotProfitizer) {
     // eslint-disable-next-line no-useless-assignment
     let msg = ''

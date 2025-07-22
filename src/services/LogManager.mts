@@ -229,9 +229,7 @@ export class LogManager {
         logLineFormat
       )
 
-      if (dailyRotateFile) {
-        tports.push(dailyRotateFile)
-      }
+      tports.push(dailyRotateFile)
     }
 
     if (showConsole) {

@@ -38,7 +38,7 @@ interface PolitiscaleSetting extends PolitiscaleHeading {
 }
 
 function reduceRatings(ratings: number[]) {
-  if (ratings && ratings.length) {
+  if (ratings.length) {
     const scalesRating = ratings.reduce((acc, curNumber) => acc + curNumber, 0)
 
     return Math.round(scalesRating / ratings.length)
@@ -72,6 +72,7 @@ export interface PolirangeProps {
   valueLabelDisplay: 'on' | 'auto' | 'off'
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class PolitiscaleHelper {
   static readonly settings: [
     PolitiscaleSetting,
@@ -464,7 +465,7 @@ export abstract class PolitiscaleHelper {
   static getScales(scales: IHasPolitiscales | IPolitiscale[] = []) {
     const arrScales: IPolitiscale[] = isArray(scales as unknown)
       ? (scales as IPolitiscale[])
-      : safeArray((scales as IHasPolitiscales)?.scales)
+      : safeArray((scales as IHasPolitiscales).scales)
 
     return safeArray(arrScales)
   }

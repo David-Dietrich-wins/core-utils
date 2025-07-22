@@ -11,7 +11,7 @@ import { newGuid } from '../services/general.mjs'
 import { z } from 'zod/v4'
 import { zDateTime } from '../services/zod-helper.mjs'
 
-export interface ISubplot extends IIdRequired<string> {
+export interface ISubplot extends IIdRequired {
   orderNumber: number
   pattern: string
   timeframe: string
@@ -141,7 +141,7 @@ export class Subplot implements ISubplot {
   }
 
   copyObject(dbtp: ISubplot) {
-    this.id = dbtp.id ?? newGuid()
+    this.id = dbtp.id || newGuid()
     this.orderNumber = dbtp.orderNumber
     this.pattern = dbtp.pattern
     this.timeframe = dbtp.timeframe

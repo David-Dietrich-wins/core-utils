@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+ 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
@@ -567,7 +567,7 @@ describe('processedTimesArray', () => {
       )
     )
     expect(totalRecordsProcessed).toBe(
-      `${NumberHelper.NumberToString(totalProcessed)}`
+      NumberHelper.NumberToString(totalProcessed)
     )
     expect(totalAvgRecordsPerSecond).toBe(avgRecordsPerSecond.toFixed(1))
     expect(totalAvgProcessingTimeString).toBe(

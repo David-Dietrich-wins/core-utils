@@ -146,6 +146,7 @@ export class SearchRequestView implements ISearchRequestView {
       searchColumns = safeArray(this.searchColumns)
 
     if (lterm && isArray(searchColumns, 1)) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       ret = ret.filter((x) => {
         let found = false
 

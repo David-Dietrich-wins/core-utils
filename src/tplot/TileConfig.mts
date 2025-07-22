@@ -43,7 +43,7 @@ export type TileTypes = {
 }
 
 export interface ITileConfig<Tvalue = unknown>
-  extends IIdNameValueType<Tvalue, TileType, string> {
+  extends IIdNameValueType<Tvalue, TileType> {
   // The type of the tile
   index: number
   color?: string
@@ -55,7 +55,7 @@ export interface ITileConfig<Tvalue = unknown>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class TileConfig<Tvalue = any>
-  extends IdNameValueType<Tvalue, TileType, string>
+  extends IdNameValueType<Tvalue, TileType>
   implements ITileConfig<Tvalue>
 {
   constructor(
@@ -134,13 +134,13 @@ export class TileConfig<Tvalue = any>
       case TileType.news:
         return 'News:'
       case TileType.content:
-        return `Content: ${(tile.value as TileConfigContent)?.content}`
+        return `Content: ${(tile.value as TileConfigContent).content ?? ''}`
       case TileType.empty:
         return 'Empty:'
       default:
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `Unknown: ${tile.value} - ${
-          (tile.value as TileConfigContent)?.content
+          (tile.value as TileConfigContent).content ?? ''
         }`
     }
   }

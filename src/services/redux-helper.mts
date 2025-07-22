@@ -10,6 +10,7 @@ export type ReduxAsyncStatus<T = unknown> = {
   message?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class ReduxHelper {
   static getStatus<T = unknown>(
     state: ReduxAsyncStatus<T>,

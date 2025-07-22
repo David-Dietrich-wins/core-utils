@@ -1,6 +1,6 @@
 import { IIdRequired } from './IdManager.mjs'
 
-export interface IUserMainDatabase extends IIdRequired<string> {
+export interface IUserMainDatabase extends IIdRequired {
   active?: boolean
   birthDate?: string
   // Description: string

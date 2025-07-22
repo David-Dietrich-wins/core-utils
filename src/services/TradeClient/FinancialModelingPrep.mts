@@ -1,5 +1,9 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
-import { getAsNumber, getAsNumberOrUndefined } from '../number-helper.mjs'
+import {
+  NumberHelper,
+  getAsNumber,
+  getAsNumberOrUndefined,
+} from '../number-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import { ChartSettings } from '../../tplot/ChartSettings.mjs'
 import { DateHelper } from '../DateHelper.mjs'
@@ -17,9 +21,7 @@ export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
   }
 
 export class FinancialModelingPrep extends TradingClientBase {
-  static FmpIndicatorParamsSetDateBoundary(
-    fmp: FmpIndicatorQueryParams<number>
-  ) {
+  static FmpIndicatorParamsSetDateBoundary(fmp: FmpIndicatorQueryParams) {
     const { from, timeframe } = fmp,
       fmpNew = { ...fmp },
       regex = /(?<temp2>\d+)|(?<temp1>[A-Z]+)/giu,
@@ -45,15 +47,19 @@ export class FinancialModelingPrep extends TradingClientBase {
   }
 
   static FmpIndicatorParamsToPath(
-    params: FmpIndicatorQueryParams<number>,
+    params: FmpIndicatorQueryParams,
     existingQueryParams = ''
   ) {
-    let qp = `${existingQueryParams}&symbol=${params.symbol}&periodLength=${params.periodLength}&timeframe=${params.timeframe}`
+    let qp = `${existingQueryParams}&symbol=${
+      params.symbol
+    }&periodLength=${NumberHelper.NumberToString(
+      params.periodLength
+    )}&timeframe=${params.timeframe}`
     if (params.from) {
-      qp += `&from=${params.from}`
+      qp += `&from=${NumberHelper.NumberToString(params.from)}`
     }
     if (params.to) {
-      qp += `&to=${params.to}`
+      qp += `&to=${NumberHelper.NumberToString(params.to)}`
     }
 
     return qp
@@ -64,7 +70,7 @@ export class FinancialModelingPrep extends TradingClientBase {
     const from = getAsNumberOrUndefined(body.from),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       to = getAsNumberOrUndefined(body.to),
-      zfmp: FmpIndicatorQueryParams<number> = {
+      zfmp: FmpIndicatorQueryParams = {
         from,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         periodLength: getAsNumber(body.periodLength),

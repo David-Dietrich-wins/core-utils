@@ -60,7 +60,7 @@ export class InstrumentationStatistics {
     }
   }
 
-  addMessage(msg?: StringOrStringArray | object) {
+  addMessage(msg?: unknown) {
     if (isArray(msg)) {
       this.msg = this.msg.concat(msg as string[])
 
@@ -83,11 +83,11 @@ export class InstrumentationStatistics {
     throw new AppException(
       'Message is not a string or set of strings.',
       this.addMessage.name,
-      `${msg}`
+      safestr(msg)
     )
   }
 
-  addFailure(msg?: StringOrStringArray | object) {
+  addFailure(msg?: unknown) {
     ++this.failures
     this.addProcessed(msg)
 
@@ -150,7 +150,7 @@ export class InstrumentationStatistics {
     return this.upsert
   }
 
-  addProcessed(msg?: StringOrStringArray | object) {
+  addProcessed(msg?: unknown) {
     ++this.totalProcessed
 
     if (!isNullOrUndefined(msg)) {

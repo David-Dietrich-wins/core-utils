@@ -165,7 +165,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
         setTimeout(() => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           location.href = `/login?callbackUrl=${encodeURIComponent(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-plus-operands
             location.pathname + location.search
           )}`
         }, 100)
@@ -213,6 +213,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
       )
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!allowNoDataReturned && !ret.data) {
       throw new AppException('No data returned', fname)
     }
@@ -233,6 +234,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return this.isGood && ApiResponse.isSuccess(this)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   setError<TError = unknown>(errobj?: TError) {
     this.result = 'Error'
     this.responseCode = -1
@@ -276,6 +278,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static responseCodeIsGood<TResponse extends { responseCode: number }>(
     ret?: TResponse
   ) {
@@ -286,6 +289,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return false
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static isSuccess<TResponse extends { result: string }>(ret?: TResponse) {
     if (ret && isObject(ret, 'result')) {
       return safestrLowercase(ret.result) === 'success'

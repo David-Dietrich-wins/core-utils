@@ -71,7 +71,7 @@ export class IdNameValueType<Tvalue = string, Type = string, Tid = string>
  * Used for sending data to a parent handler in a structured way with contextual id and name.
  */
 export interface IValueChange<Tvalue = string>
-  extends IIdNameValueType<Tvalue, string, string>,
+  extends IIdNameValueType<Tvalue>,
     IDate<number> {}
 /**
  * Used to pass structured data back to a caller. Especially for event handlers.

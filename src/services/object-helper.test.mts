@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 /* eslint-disable no-console */
 import {
   FindObjectWithField,
@@ -19,7 +20,7 @@ import {
   safeObject,
   searchObjectForArray,
 } from './object-helper.mjs'
-import { pluralize, plusMinus } from './string-helper.mjs'
+import { pluralize, plusMinus, safestr } from './string-helper.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
@@ -378,7 +379,7 @@ test('renameProperty', () => {
   oldKey = 'notToBeFound'
   newKey = 'd'
   expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
-    `Cannot renameProperty. Property: ${oldKey} not found.`
+    `Cannot renameProperty. Property: ${safestr(oldKey)} not found.`
   )
 
   obj = { a: 'a', b: 'b', c: 'c' }

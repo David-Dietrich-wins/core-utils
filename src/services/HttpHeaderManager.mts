@@ -61,7 +61,7 @@ export class HttpHeaderManagerBase {
   }
   getHeaderString(name: string) {
     return arrayFirst(
-      this.getHeader(name) ?? this.getHeader(safestrLowercase(name))
+      this.getHeader(name) || this.getHeader(safestrLowercase(name))
     )
   }
   getHeaderStringSafe(name: string) {

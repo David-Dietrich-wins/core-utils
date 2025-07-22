@@ -19,6 +19,7 @@ export type HttpFetchRequestProps<
   statusCodesToBypassErrorHandler?: number[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class HtmlHelper {
   static ParamsEncoder(params?: object): string {
     return Object.entries(params || {}).reduce((acc, [key, value], index) => {
@@ -46,7 +47,7 @@ export abstract class HtmlHelper {
     ]
 
     if (hasData(bearerToken)) {
-      headers.push(['Authorization', `Bearer ${bearerToken}`])
+      headers.push(['Authorization', `Bearer ${safestr(bearerToken)}`])
     }
 
     return HtmlHelper.GetHttpHeaders(headers)

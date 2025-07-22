@@ -20,7 +20,7 @@ import { safeArray } from '../services/array-helper.mjs'
 import { z } from 'zod/v4'
 
 export interface ITradePlot
-  extends IIdRequired<string>,
+  extends IIdRequired,
     ITicker,
     ICreatedBy,
     IUpdatedBy {

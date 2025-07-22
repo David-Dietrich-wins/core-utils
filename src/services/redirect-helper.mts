@@ -1,6 +1,7 @@
 import { safestr, safestrTrim, stringIf } from './string-helper.mjs'
 import { hasData } from './general.mjs'
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class RedirectHelper {
   static readonly ProtectedPaths = ['dashboard', 'admin', 'settings', 'profile']
   static readonly IllegalRedirectPaths = [

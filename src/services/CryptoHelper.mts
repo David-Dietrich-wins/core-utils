@@ -76,6 +76,7 @@ export class CryptoHelper {
     )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static rsaDecryptStaticObject<T = object>(
     encryptedString: string,
     privateKey: string,

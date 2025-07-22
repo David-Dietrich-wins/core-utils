@@ -4,6 +4,7 @@ import { jest } from '@jest/globals'
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
+import { NumberHelper } from './services/number-helper.mjs'
 import { ZodError } from 'zod/v4'
 import { safestr } from './services/string-helper.mjs'
 
@@ -25,6 +26,7 @@ export const mockLoggerLog = jest.fn()
 export const mockLoggerSilly = jest.fn()
 export const mockLoggerWarn = jest.fn()
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ZodTestHelper {
   static Issue(error: object) {
     return {
@@ -95,7 +97,9 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected string to have <=${maximum} characters`,
+      message: `Too big: expected string to have <=${NumberHelper.NumberToString(
+        maximum
+      )} characters`,
       origin: 'string',
       path,
     }
@@ -103,7 +107,9 @@ export class ZodTestHelper {
   static StringTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected string to have >=${minimum} characters`,
+      message: `Too small: expected string to have >=${NumberHelper.NumberToString(
+        minimum
+      )} characters`,
       minimum,
       origin: 'string',
       path,
@@ -114,7 +120,9 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected array to have <=${maximum} items`,
+      message: `Too big: expected array to have <=${NumberHelper.NumberToString(
+        maximum
+      )} items`,
       origin: 'array',
       path,
     }
@@ -122,7 +130,9 @@ export class ZodTestHelper {
   static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected array to have >=${minimum} items`,
+      message: `Too small: expected array to have >=${NumberHelper.NumberToString(
+        minimum
+      )} items`,
       minimum,
       origin: 'array',
       path,

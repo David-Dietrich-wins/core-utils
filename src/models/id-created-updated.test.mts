@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 import { z } from 'zod/v4'

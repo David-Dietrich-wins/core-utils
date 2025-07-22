@@ -36,7 +36,7 @@ export type IconConfiguration = z.infer<typeof zIconConfiguration>
 export type IContextUI = z.infer<typeof ContextManager.zContextUi>
 
 export interface IContext
-  extends IIdRequired<string>,
+  extends IIdRequired,
     IUpdated<number>,
     Partial<IName> {
   disabled?: boolean
@@ -47,10 +47,7 @@ export interface IContext
 }
 export interface IContextValue<T> extends IContext, IValue<T> {}
 
-export class ContextManager
-  extends IdManager<IContext>
-  implements IIdRequired<string>
-{
+export class ContextManager extends IdManager<IContext> implements IIdRequired {
   private static instance: ContextManager
 
   id = newGuid()
@@ -72,6 +69,7 @@ export class ContextManager
   })
 
   public static getInstance(): ContextManager {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!ContextManager.instance) {
       ContextManager.instance = new ContextManager()
     }

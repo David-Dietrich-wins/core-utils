@@ -36,7 +36,7 @@ export type INameValueNumber = INameValue<number>
 
 export type NameValueBoolean = NameValueType<boolean>
 export type NameValueNumber = NameValueType<number>
-export type NameValueString = NameValueType<string>
+export type NameValueString = NameValueType
 
 export class NameValueManager<TValue = string> {
   list: INameValue<TValue>[]

@@ -39,6 +39,7 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     return new IdManager(safeArray(arr), stats)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static FindObjectWithId<T extends object = object>(
     obj: T,
     id: string | number

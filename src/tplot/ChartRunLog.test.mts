@@ -62,10 +62,10 @@ test('ChartRunLog object properties', () => {
     },
     chartRunLog = new ChartRunLog(
       aicrl.userid ?? '',
-      aicrl.ticker ?? '',
-      aicrl.lang ?? '',
-      aicrl.browser ?? '',
-      aicrl.ip ?? '',
+      aicrl.ticker,
+      aicrl.lang,
+      aicrl.browser,
+      aicrl.ip,
       acs
     ),
     crl = ChartRunLog.fromDb(aicrl),

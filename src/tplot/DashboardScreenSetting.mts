@@ -2,7 +2,7 @@ import { ITileConfig, TileConfig } from './TileConfig.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { isArray } from '../services/array-helper.mjs'
 
-export interface IDashboardScreenSetting extends IIdName<string> {
+export interface IDashboardScreenSetting extends IIdName {
   tiles: ITileConfig[]
 }
 
@@ -16,6 +16,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   }
   static CreateISetting(overrides?: Partial<IDashboardScreenSetting>) {
     const idss: IDashboardScreenSetting = {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...DashboardScreenSetting.CreateNew('New Dashboard'),
       ...overrides,
     }

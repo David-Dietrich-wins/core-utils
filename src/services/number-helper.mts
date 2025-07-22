@@ -62,6 +62,7 @@ export function isNumeric(value?: string | number | bigint): boolean {
 // Export function numberWithCommas(x) {
 //   Return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class NumberHelper {
   static FormatPrefixSuffixZero(
     val?: string | number | null,
@@ -339,7 +340,7 @@ export abstract class NumberHelper {
       return 0
     }
 
-    const str = `${num}`,
+    const str = NumberHelper.NumberToString(num, true, 4),
       strArray = str.split('.')
     if (isArray(strArray, 2) && hasData(strArray[1])) {
       return Number(strArray[1])
@@ -508,7 +509,7 @@ export function StockVolumeFormatter(
     const num = NumberFormatter(
       volume ?? 0,
       showZeroValues,
-      numDecimalPlaces ?? 0
+      numDecimalPlaces || 0
     )
 
     if (showZeroValues || !/^0*\.?0*$/u.test(num)) {
@@ -533,9 +534,9 @@ export function elementTopLeftCoords(element: any): {
     top = 0
   do {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    top += element.offsetTop || 0
+    top += getAsNumber(safestr(element.offsetTop))
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    left += element.offsetLeft || 0
+    left += getAsNumber(safestr(element.offsetLeft))
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-param-reassign
     element = element.offsetParent
   } while (element)

@@ -142,9 +142,7 @@ export interface ILoginWithCount {
   logoutTime: Date
 }
 
-export interface IExchangeInfo
-  extends ISymbolPriceName,
-    Partial<IType<string>> {
+export interface IExchangeInfo extends ISymbolPriceName, Partial<IType> {
   exchange: string
   exchangeShortName: string
 }
@@ -825,7 +823,7 @@ export function IAssetQuotesWithIpoDate(
 
     try {
       const found = retobj.find((spac) => aqr.symbol === spac.symbol)
-      if (found && isString(found?.ipoDate, 1)) {
+      if (found && isString(found.ipoDate, 1)) {
         const t = moment(found.ipoDate, 'M-D-YYYY'),
           val = t.valueOf()
         if (isNaN(val)) {

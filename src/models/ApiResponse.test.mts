@@ -80,7 +80,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
     expect(zapiResponse.data).toBe(obj)
   })
 
@@ -97,7 +97,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
     expect(zapiResponse.data).toBe(obj)
 
     zapiResponse.setError(obj)
@@ -179,7 +179,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(zapiResponse.data?.indexOf('error string')).toBe(0)
+    expect(zapiResponse.data.indexOf('error string')).toBe(0)
     expect(zapiResponse.data).toBe(obj)
 
     zapiResponse.setError(obj)
@@ -189,7 +189,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(CONST_DefaultErrorResponseCode)
 
-    expect(zapiResponse.data?.indexOf('error string')).toBe(0)
+    expect(zapiResponse.data.indexOf('error string')).toBe(0)
     expect(zapiResponse.data).toBe(obj)
   })
 
@@ -226,7 +226,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(-21)
 
-    expect(zapiResponse.data?.message.indexOf('test Not Found')).toBe(0)
+    expect(zapiResponse.data.message.indexOf('test Not Found')).toBe(0)
     expect(zapiResponse.data).toStrictEqual({
       message: 'test Not Found',
       responseCode: 404,
@@ -284,7 +284,7 @@ describe('setError', () => {
     expect(zapiResponse.ts).toBeGreaterThan(0)
     expect(zapiResponse.responseCode).toBe(responseCode)
 
-    expect(zapiResponse.data?.message.indexOf('Found')).toBe(0)
+    expect(zapiResponse.data.message.indexOf('Found')).toBe(0)
     expect(zapiResponse.data).toBe(obj)
 
     zapiResponse.setError(errorObj)
