@@ -1,8 +1,8 @@
 import { IIdNameValueType, IdNameValueType } from '../models/id-name.mjs'
+import { safestr, safestrLowercase } from '../services/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IChartSettings } from './ChartSettings.mjs'
 import { newGuid } from '../services/general.mjs'
-import { safestrLowercase } from '../services/string-helper.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
@@ -139,9 +139,9 @@ export class TileConfig<Tvalue = any>
         return 'Empty:'
       default:
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `Unknown: ${tile.value} - ${
-          (tile.value as TileConfigContent).content ?? ''
-        }`
+        return `Unknown: ${tile.value} - ${safestr(
+          (tile.value as TileConfigContent).content
+        )}`
     }
   }
 

@@ -302,6 +302,15 @@ test('TileText', () => {
   expect(
     TileConfig.TileText(TileConfig.CreateFromTileType(TileType.ticker))
   ).toBe('Ticker: AAPL')
+  expect(
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.content))
+  ).toBe('Content: ')
+  expect(
+    TileConfig.TileText({
+      ...tileConfig,
+      type: '45' as unknown as TileType,
+    } as ITileConfig)
+  ).toBe('Unknown: [object Object] - This is a test tile content.')
 })
 
 test('getITileConfig', () => {
