@@ -1,6 +1,6 @@
+import { DateHelper, DateNowIsPastExpiry } from './DateHelper.mjs'
 import { TEST_Settings, getCurrentDate } from '../jest.setup.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { DateHelper } from './DateHelper.mjs'
 import moment from 'moment'
 import { safestr } from './string-helper.mjs'
 
@@ -847,4 +847,16 @@ test(DateHelper.AddTimeToDate.name, () => {
   expect(DateHelper.AddTimeToDate(addDate, 'month', 12).toISOString()).toBe(
     '2026-12-01T00:00:00.000Z'
   )
+})
+
+test(DateNowIsPastExpiry.name, () => {
+  const anow = Date.now(),
+    // 1 day in the future
+    futureDate = new Date(anow + 1000 * 60 * 60 * 24),
+    // 1 day ago
+    pastDate = new Date(anow - 1000 * 60 * 60 * 24)
+
+  expect(DateNowIsPastExpiry(pastDate)).toBe(true)
+  expect(DateNowIsPastExpiry(futureDate)).toBe(false)
+  expect(DateNowIsPastExpiry(new Date())).toBe(false)
 })

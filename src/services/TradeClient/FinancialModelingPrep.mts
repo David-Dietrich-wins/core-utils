@@ -56,10 +56,10 @@ export class FinancialModelingPrep extends TradingClientBase {
       params.periodLength
     )}&timeframe=${params.timeframe}`
     if (params.from) {
-      qp += `&from=${NumberHelper.NumberToString(params.from)}`
+      qp += `&from=${params.from.toString()}`
     }
     if (params.to) {
-      qp += `&to=${NumberHelper.NumberToString(params.to)}`
+      qp += `&to=${params.to.toString()}`
     }
 
     return qp

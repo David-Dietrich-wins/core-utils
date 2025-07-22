@@ -462,7 +462,13 @@ export abstract class PolitiscaleHelper {
     return scale
   }
 
-  static getScales(scales: IHasPolitiscales | IPolitiscale[] = []) {
+  static getScales(
+    scales: IHasPolitiscales | IPolitiscale[] | null | undefined = []
+  ) {
+    if (isNullOrUndefined(scales)) {
+      return []
+    }
+
     const arrScales: IPolitiscale[] = isArray(scales as unknown)
       ? (scales as IPolitiscale[])
       : safeArray((scales as IHasPolitiscales).scales)

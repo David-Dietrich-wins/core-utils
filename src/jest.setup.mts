@@ -97,9 +97,7 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected string to have <=${NumberHelper.NumberToString(
-        maximum
-      )} characters`,
+      message: `Too big: expected string to have <=${maximum.toString()} characters`,
       origin: 'string',
       path,
     }
