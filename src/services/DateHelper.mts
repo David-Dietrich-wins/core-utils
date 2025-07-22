@@ -743,3 +743,13 @@ export abstract class DateHelper {
     return safestr(s, longFormat ? '0 seconds' : '0s')
   }
 }
+
+export function DateNowIsPastExpiry(expiryDate: DateTypeAcceptable) {
+  if (!expiryDate) {
+    return true
+  }
+
+  const expiry = DateHelper.ConvertToDateObject(expiryDate)
+
+  return Date.now() > expiry.getTime()
+}
