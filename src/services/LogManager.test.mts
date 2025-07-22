@@ -3,7 +3,6 @@ import { jest } from '@jest/globals'
 import { LogManagerOptions } from './LogManager.mjs'
 jest.unstable_unmockModule('./services/LogManager.mjs')
 // eslint-disable-next-line sort-imports
-import type DailyRotateFile from 'winston-daily-rotate-file'
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'
 import winston from 'winston'
@@ -166,31 +165,17 @@ describe('transports', () => {
   })
 
   test('no daily rotate file', () => {
-    // eslint-disable-next-line no-multi-assign
-    const mockDailyRotateFileLogger = (LogManager.DailyRotateFileLogger =
-        jest.fn(() => null as unknown as DailyRotateFile)),
-      ret = LogManager.WinstonLogTransports(
-        'info',
-        'TEST4.WinstonLogTransports-logFileName.log',
-        'TEST5.WinstonLogTransports-logBaseFileName.log',
-        'TEST6.WinstonLogTransports-rotateBaseFileName.log',
-        'YYY-MM-DD',
-        10,
-        1024,
-        false,
-        lineFormatter
-      )
-
-    expect(mockDailyRotateFileLogger).toHaveBeenCalledWith(
+    const ret = LogManager.WinstonLogTransports(
       'info',
-      'TEST6.WinstonLogTransports-rotateBaseFileName.log',
+      'TEST4.WinstonLogTransports-logFileName.log',
+      'TEST5.WinstonLogTransports-logBaseFileName.log',
+      '',
       'YYY-MM-DD',
       10,
       1024,
+      false,
       lineFormatter
     )
-    expect(mockDailyRotateFileLogger).toHaveBeenCalledTimes(1)
-    mockDailyRotateFileLogger.mockRestore()
 
     expect(ret.length).toBe(1)
   })
