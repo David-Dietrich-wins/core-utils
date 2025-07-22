@@ -10,20 +10,19 @@ import { isObject } from './object-helper.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /u
 
-export const CONST_AppNamePolitagree = 'politagree'
-export const CONST_AppNameTradePlotter = 'tradeplotter'
-
 export enum HttpHeaderNamesAllowed {
   Authorization = 'authorization',
   ShowDebug = 'ShowDebug',
   ApplicationName = 'x-application-name',
 }
 
-export const HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
-  { id: HttpHeaderNamesAllowed.ApplicationName, type: 'string' },
-  { id: HttpHeaderNamesAllowed.Authorization, type: 'string' },
-  { id: HttpHeaderNamesAllowed.ShowDebug, type: 'boolean' },
-] as const
+export const CONST_AppNamePolitagree = 'politagree',
+  CONST_AppNameTradePlotter = 'tradeplotter',
+  HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
+    { id: HttpHeaderNamesAllowed.ApplicationName, type: 'string' },
+    { id: HttpHeaderNamesAllowed.Authorization, type: 'string' },
+    { id: HttpHeaderNamesAllowed.ShowDebug, type: 'boolean' },
+  ] as const
 
 /**
  * Base class for managing HTTP Headers. Including JWT support for extracting data.
