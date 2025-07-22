@@ -742,6 +742,29 @@ test('ratingReligion', () => {
   expect(PolitiscaleHelper.ratingReligion(scales)).toBe(80)
 })
 
+test('getScales', () => {
+  const scales: Politiscale[] = [
+      { name: 'climate', value: 20 },
+      { name: 'freeSpeech', value: 50 },
+      { name: 'religion', value: 80 },
+    ],
+    scalesHasPolitiscales: IHasPolitiscales = {
+      scales,
+    }
+
+  expect(PolitiscaleHelper.getScales(scales)).toStrictEqual(scales)
+  expect(PolitiscaleHelper.getScales(scalesHasPolitiscales)).toStrictEqual(
+    scales
+  )
+  expect(
+    PolitiscaleHelper.getScales(null as unknown as IHasPolitiscales)
+  ).toStrictEqual([])
+  expect(
+    PolitiscaleHelper.getScales(undefined as unknown as IHasPolitiscales)
+  ).toStrictEqual([])
+  expect(PolitiscaleHelper.getScales([])).toStrictEqual([])
+})
+
 test('getRating', () => {
   const scales: Politiscale[] = [
     { name: 'climate', value: 20 },
