@@ -262,6 +262,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  jest.resetModules()
   // MockServer.resetHandlers()
 
   process.env = originalEnv

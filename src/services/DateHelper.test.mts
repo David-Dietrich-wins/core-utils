@@ -856,6 +856,7 @@ test(DateNowIsPastExpiry.name, () => {
     // 1 day ago
     pastDate = new Date(anow - 1000 * 60 * 60 * 24)
 
+  expect(DateNowIsPastExpiry(undefined)).toBe(true)
   expect(DateNowIsPastExpiry(pastDate)).toBe(true)
   expect(DateNowIsPastExpiry(futureDate)).toBe(false)
   expect(DateNowIsPastExpiry(new Date())).toBe(false)
