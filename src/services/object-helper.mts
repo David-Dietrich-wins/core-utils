@@ -642,12 +642,12 @@ export function deepCloneJson<T extends object | Array<T>>(
 ) {
   const funcname = safestr(fname, 'deepCloneJson')
   const ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
-  // if (!ret) {
-  //   throw new AppException(
-  //     `deepCloneJson() failed to clone object ${safestr(obj)}`,
-  //     funcname
-  //   )
-  // }
+  if (!ret) {
+    throw new AppException(
+      `deepCloneJson() failed to clone object ${safestr(obj)}`,
+      funcname
+    )
+  }
 
   return ret
 }
