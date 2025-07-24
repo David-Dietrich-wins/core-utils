@@ -304,7 +304,14 @@ export interface ICompanyProfile extends ISymbolPrice {
   website: string
   zip: string
 }
-export interface IIpoCalendar extends ISymbol, IDate {}
+export interface IIpoCalendar extends ISymbol, IDate {
+  actions: string
+  company: string
+  exchange: string
+  marketCap?: number | null
+  priceRange?: string | null
+  shares?: number | null
+}
 
 export interface IPlotPricesWithMidpoint extends ISymbol {
   endDate: number
