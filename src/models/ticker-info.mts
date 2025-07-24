@@ -222,6 +222,7 @@ export interface ICompanyInfo
     IVal<IExchangeInfo>,
     IType {
   ceo?: string | null
+  createdby: string
   date?: number | null
   description?: string | null
   exchange: string
@@ -233,13 +234,12 @@ export interface ICompanyInfo
   minmov: number
   minmov2: number
   pricescale: number
-  profile: ICompanyProfile
+  profile?: ICompanyProfile
   sector: string
-  createdby: string
-  updatedby: string
-  website?: string | null
   slug?: string | null
   tags?: string[] | null
+  updatedby: string
+  website?: string | null
 }
 
 export interface ICompanyScales
@@ -248,73 +248,71 @@ export interface ICompanyScales
     Required<IHasPolitiscales>,
     ITicker,
     IType {
+  ceo: string
   description: string
-  sector: string
-  industry: string
   exchange: string
   exchangeShortName: string
-  website: string
-  ceo: string
-  imageUrl: string
   fullTimeEmployees: number
+  imageUrl: string
+  industry: string
   ipoDate: string
+  sector: string
+  website: string
 }
 
 export interface ICompanyProfile extends ISymbolPrice {
   // Symbol: string
   // Price: number
+
+  actions: string
+  address: string
   beta: number
-  volAvg: number
-  mktCap: number
-  lastDiv: number
-  range: string
+  ceo: string
   changes: number
-  companyName: string
-  currency: string
   cik?: string | null
-  isin: string
-  isEtf: boolean
-  isActivelyTrading?: boolean | null
-  isAdr?: boolean | null
-  isFund?: boolean | null
+  city: string
+  company: string
+  companyName: string
+  country: string
+  currency: string
   cusip: string
+  dcf: number
+  dcfDiff: number
+  defaultImage?: boolean | null
+  description: string
   exchange: string
   exchangeShortName: string
-  industry: string
-  website: string
-  description: string
-  ceo: string
-  sector: string
-  country: string
   fullTimeEmployees: string
-  phone: string
-  address: string
-  city: string
-  state: string
-  zip: string
-  dcfDiff: number
-  dcf: number
   image: string
+  industry: string
   ipoDate: string
-  defaultImage?: boolean | null
-}
-
-export interface IIpoCalendar extends ISymbol, IDate {
-  company: string
-  exchange: string
-  actions: string
-  shares?: number | null
-  priceRange?: string | null
+  isActivelyTrading?: boolean | null
+  isAdr?: boolean | null
+  isEtf: boolean
+  isFund?: boolean | null
+  isin: string
+  lastDiv: number
   marketCap?: number | null
+  mktCap: number
+  phone: string
+  priceRange?: string | null
+  range: string
+  sector: string
+  shares?: number | null
+  state: string
+  volAvg: number
+  website: string
+  zip: string
 }
+export interface IIpoCalendar extends ISymbol, IDate {}
 
 export interface IPlotPricesWithMidpoint extends ISymbol {
-  startPrice: number
-  startDate: number
-  endPrice: number
   endDate: number
+  endPrice: number
   midprice: number
   requestDate: number
+  startDate: number
+  startPrice: number
 }
 
 export interface IExtendedMovingAverage {
@@ -332,10 +330,10 @@ export interface IRelativeStrengthIndicator {
 
 export interface IQuoteBar<Tdate = string> extends IDate<Tdate>, IVolume {
   // Date: string      // 2021-06-24,
-  open: number
+  close: number
   high: number
   low: number
-  close: number
+  open: number
   // Volume: number    // 3866565,
 }
 
@@ -346,12 +344,12 @@ export interface IQuoteBarRsi extends IQuoteBar, IRelativeStrengthIndicator {}
 
 export interface IPriceHistoricalFull extends IQuoteBar {
   adjClose: number
-  unadjustedVolume: number
   change: number
-  changePercent: number
-  vwap: number
-  label: string
   changeOverTime: number
+  changePercent: number
+  label: string
+  unadjustedVolume: number
+  vwap: number
 }
 
 export interface IQuoteBarWithDateTime extends IQuoteBar {
@@ -359,66 +357,66 @@ export interface IQuoteBarWithDateTime extends IQuoteBar {
 }
 
 export interface ISpac extends ISymbolName {
+  action: string
+  averageTradingVolume: string
   ipoDate: string
+  lastClosePrice: number
+  leverageFactor: number
   marketCap: string
   mergerPending: string
-  leverageFactor: number
   momentumFactor10: number
   momentumFactor200: number
-  lastClosePrice: number
-  sharesOutstanding: string
-  averageTradingVolume: string
   percentTraded: string
-  action: string
+  sharesOutstanding: string
 }
 
-export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {
-  profile: ICompanyProfile
-}
+export interface ISymbolDetail extends ICompanyInfo, ITicker, IName {}
 
 export class CompanyProfile implements ICompanyProfile {
-  symbol = ''
-  price = 0
+  actions = ''
+  address = ''
   beta = 0
-  volAvg = 0
-  mktCap = 0
-  lastDiv = 0
-  range = ''
+  ceo = ''
   changes = 0
-  companyName = ''
-  currency = ''
   cik = ''
-  isin = ''
-  isEtf = false
+  city = ''
+  company = ''
+  companyName = ''
+  country = ''
+  currency = ''
   cusip = ''
+  dcf = 0
+  dcfDiff = 0
+  defaultImage = false
+  description = ''
   exchange = ''
   exchangeShortName = ''
-  industry = ''
-  website = ''
-  description = ''
-  ceo = ''
-  sector = ''
-  country = ''
   fullTimeEmployees = ''
-  phone = ''
-  address = ''
-  city = ''
-  state = ''
-  zip = ''
-  dcfDiff = 0
-  dcf = 0
   image = ''
+  industry = ''
   ipoDate = ''
-  defaultImage = false
+  isEtf = false
+  isin = ''
+  lastDiv = 0
+  mktCap = 0
+  phone = ''
+  price = 0
+  range = ''
+  sector = ''
+  state = ''
+  symbol = ''
+  volAvg = 0
+  website = ''
+  zip = ''
 }
 
 export class ExchangeInfo implements IExchangeInfo {
-  symbol = ''
-  name = ''
-  price = 0
-  volume = 0
   exchange = ''
   exchangeShortName = ''
+  name = ''
+  price = 0
+  symbol = ''
+  volume = 0
 }
 
 export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
@@ -451,8 +449,8 @@ export interface ISymbolPrices extends ISymbol {
 }
 
 export class AssetQuoteShort implements ISymbolPriceVolume {
-  symbol = ''
   price = 0
+  symbol = ''
   volume = 0
 
   constructor(obj?: AssetQuoteShort) {
@@ -477,34 +475,34 @@ export interface IMarketHolidays {
   'Christmas': string
 }
 export interface IMarketOpenCloseHours {
-  openingHour: string
   closingHour: string
+  openingHour: string
 }
 export interface IMarketHours {
-  stockExchangeName: string
-  stockMarketHours: IMarketOpenCloseHours
-  stockMarketHolidays: IMarketHolidays[]
-  isTheStockMarketOpen: boolean
+  isTheCryptoMarketOpen: boolean
   isTheEuronextMarketOpen: boolean
   isTheForexMarketOpen: boolean
-  isTheCryptoMarketOpen: boolean
+  isTheStockMarketOpen: boolean
+  stockExchangeName: string
+  stockMarketHolidays: IMarketHolidays[]
+  stockMarketHours: IMarketOpenCloseHours
 }
 
 export class PriceHistoricalResponse implements IPriceHistoricalFull {
-  date = ''
-  open = 0
-  high = 0
-  low = 0
-  close = 0
   adjClose = 0
-  volume = 0
-  unadjustedVolume = 0
   change = 0
-  changePercent = 0
-  vwap = 0
-  label = ''
   changeOverTime = 0
+  changePercent = 0
+  close = 0
+  date = ''
   datetime = 0
+  high = 0
+  label = ''
+  low = 0
+  open = 0
+  unadjustedVolume = 0
+  volume = 0
+  vwap = 0
 
   constructor(obj?: IPriceHistoricalFull) {
     if (isObject(obj)) {
@@ -517,8 +515,8 @@ export interface IRatioCashFlow {
   capitalExpenditureCoverageRatios: string
   cashFlowCoverageRatios: string
   cashPerShare: string
-  dividendPayoutRatio: string
   dividendpaidAndCapexCoverageRatios: string
+  dividendPayoutRatio: string
   freeCashFlowOperatingCashFlowRatio: string
   freeCashFlowPerShare: string
   operatingCashFlowPerShare: string
@@ -578,8 +576,8 @@ export interface IRatioProfitability {
   eBTperEBIT: string
   effectiveTaxRate: string
   grossProfitMargin: string
-  nIperEBT: string
   netProfitMargin: string
+  nIperEBT: string
   operatingProfitMargin: string
   pretaxProfitMargin: string
   returnOnAssets: string
@@ -588,126 +586,126 @@ export interface IRatioProfitability {
 }
 
 export interface IRatio extends ISymbol, IDate {
-  period: string
-  calendarYear?: string | null
-  currentRatio: number
-  quickRatio: number
-  cashRatio: number
-  daysOfSalesOutstanding: number
-  daysOfInventoryOutstanding: number
-  operatingCycle: number
-  daysOfPayablesOutstanding: number
-  cashConversionCycle: number
-  grossProfitMargin: number
-  operatingProfitMargin: number
-  pretaxProfitMargin: number
-  netProfitMargin: number
-  effectiveTaxRate: number
-  returnOnAssets: number
-  returnOnEquity: number
-  returnOnCapitalEmployed: number
-  netIncomePerEBT: number
-  ebtPerEbit: number
-  ebitPerRevenue: number
-  debtRatio: number
-  debtEquityRatio: number
-  longTermDebtToCapitalization: number
-  totalDebtToCapitalization: number
-  interestCoverage: number
-  cashFlowToDebtRatio: number
-  companyEquityMultiplier: number
-  receivablesTurnover: number
-  payablesTurnover: number
-  inventoryTurnover: number
-  fixedAssetTurnover: number
   assetTurnover: number
-  operatingCashFlowPerShare: number
-  freeCashFlowPerShare: number
-  cashPerShare: number
-  payoutRatio: number
-  operatingCashFlowSalesRatio: number
-  freeCashFlowOperatingCashFlowRatio: number
-  cashFlowCoverageRatios: number
-  shortTermCoverageRatios: number
+  calendarYear?: string | null
   capitalExpenditureCoverageRatio: number
+  cashConversionCycle: number
+  cashFlowCoverageRatios: number
+  cashFlowToDebtRatio: number
+  cashPerShare: number
+  cashRatio: number
+  companyEquityMultiplier: number
+  currentRatio: number
+  daysOfInventoryOutstanding: number
+  daysOfPayablesOutstanding: number
+  daysOfSalesOutstanding: number
+  debtEquityRatio: number
+  debtRatio: number
   dividendPaidAndCapexCoverageRatio: number
   dividendPayoutRatio: number
+  dividendYield: number
+  ebitPerRevenue: number
+  ebtPerEbit: number
+  effectiveTaxRate: number
+  enterpriseValueMultiple: number
+  fixedAssetTurnover: number
+  freeCashFlowOperatingCashFlowRatio: number
+  freeCashFlowPerShare: number
+  grossProfitMargin: number
+  interestCoverage: number
+  inventoryTurnover: number
+  longTermDebtToCapitalization: number
+  netIncomePerEBT: number
+  netProfitMargin: number
+  operatingCashFlowPerShare: number
+  operatingCashFlowSalesRatio: number
+  operatingCycle: number
+  operatingProfitMargin: number
+  payablesTurnover: number
+  payoutRatio: number
+  period: string
+  pretaxProfitMargin: number
   priceBookValueRatio: number
-  priceToBookRatio: number
-  priceToSalesRatio: number
+  priceCashFlowRatio: number
   priceEarningsRatio: number
+  priceEarningsToGrowthRatio: number
+  priceFairValue: number
+  priceSalesRatio: number
+  priceToBookRatio: number
   priceToFreeCashFlowsRatio: number
   priceToOperatingCashFlowsRatio: number
-  priceCashFlowRatio: number
-  priceEarningsToGrowthRatio: number
-  priceSalesRatio: number
-  dividendYield: number
-  enterpriseValueMultiple: number
-  priceFairValue: number
+  priceToSalesRatio: number
+  quickRatio: number
+  receivablesTurnover: number
+  returnOnAssets: number
+  returnOnCapitalEmployed: number
+  returnOnEquity: number
+  shortTermCoverageRatios: number
+  totalDebtToCapitalization: number
 }
 
 export interface IRatioNew extends ISymbol, IDate {
-  fiscalYear: string
-  period: string
-  reportedCurrency: string
-  grossProfitMargin: number
-  ebitMargin: number
-  ebitdaMargin: number
-  operatingProfitMargin: number
-  pretaxProfitMargin: number
-  continuousOperationsProfitMargin: number
-  netProfitMargin: number
-  bottomLineProfitMargin: number
-  receivablesTurnover: number
-  payablesTurnover: number
-  inventoryTurnover: number
-  fixedAssetTurnover: number
   assetTurnover: number
-  currentRatio: number
-  quickRatio: number
-  solvencyRatio: number
-  cashRatio: number
-  priceToEarningsRatio: number
-  priceToEarningsGrowthRatio: number
-  forwardPriceToEarningsGrowthRatio: number
-  priceToBookRatio: number
-  priceToSalesRatio: number
-  priceToFreeCashFlowRatio: number
-  priceToOperatingCashFlowRatio: number
-  debtToAssetsRatio: number
-  debtToEquityRatio: number
-  debtToCapitalRatio: number
-  longTermDebtToCapitalRatio: number
-  financialLeverageRatio: number
-  workingCapitalTurnoverRatio: number
-  operatingCashFlowRatio: number
-  operatingCashFlowSalesRatio: number
-  freeCashFlowOperatingCashFlowRatio: number
-  debtServiceCoverageRatio: number
-  interestCoverageRatio: number
-  shortTermOperatingCashFlowCoverageRatio: number
-  operatingCashFlowCoverageRatio: number
+  bookValuePerShare: number
+  bottomLineProfitMargin: number
+  capexPerShare: number
   capitalExpenditureCoverageRatio: number
+  cashPerShare: number
+  cashRatio: number
+  continuousOperationsProfitMargin: number
+  currentRatio: number
+  debtServiceCoverageRatio: number
+  debtToAssetsRatio: number
+  debtToCapitalRatio: number
+  debtToEquityRatio: number
+  debtToMarketCap: number
   dividendPaidAndCapexCoverageRatio: number
   dividendPayoutRatio: number
   dividendYield: number
   dividendYieldPercentage: number
-  revenuePerShare: number
-  netIncomePerShare: number
-  interestDebtPerShare: number
-  cashPerShare: number
-  bookValuePerShare: number
-  tangibleBookValuePerShare: number
-  shareholdersEquityPerShare: number
-  operatingCashFlowPerShare: number
-  capexPerShare: number
-  freeCashFlowPerShare: number
-  netIncomePerEBT: number
+  ebitdaMargin: number
+  ebitMargin: number
   ebtPerEbit: number
-  priceToFairValue: number
-  debtToMarketCap: number
   effectiveTaxRate: number
   enterpriseValueMultiple: number
+  financialLeverageRatio: number
+  fiscalYear: string
+  fixedAssetTurnover: number
+  forwardPriceToEarningsGrowthRatio: number
+  freeCashFlowOperatingCashFlowRatio: number
+  freeCashFlowPerShare: number
+  grossProfitMargin: number
+  interestCoverageRatio: number
+  interestDebtPerShare: number
+  inventoryTurnover: number
+  longTermDebtToCapitalRatio: number
+  netIncomePerEBT: number
+  netIncomePerShare: number
+  netProfitMargin: number
+  operatingCashFlowCoverageRatio: number
+  operatingCashFlowPerShare: number
+  operatingCashFlowRatio: number
+  operatingCashFlowSalesRatio: number
+  operatingProfitMargin: number
+  payablesTurnover: number
+  period: string
+  pretaxProfitMargin: number
+  priceToBookRatio: number
+  priceToEarningsGrowthRatio: number
+  priceToEarningsRatio: number
+  priceToFairValue: number
+  priceToFreeCashFlowRatio: number
+  priceToOperatingCashFlowRatio: number
+  priceToSalesRatio: number
+  quickRatio: number
+  receivablesTurnover: number
+  reportedCurrency: string
+  revenuePerShare: number
+  shareholdersEquityPerShare: number
+  shortTermOperatingCashFlowCoverageRatio: number
+  solvencyRatio: number
+  tangibleBookValuePerShare: number
+  workingCapitalTurnoverRatio: number
 }
 
 export interface IFinancialRatios extends IDate {
@@ -729,7 +727,6 @@ export interface ISectorChangePercentage {
 }
 
 export interface ISectorsHistorical extends IDate {
-  utilitiesChangesPercentage: number
   basicMaterialsChangesPercentage: number
   communicationServicesChangesPercentage: number
   conglomeratesChangesPercentage: number
@@ -743,6 +740,7 @@ export interface ISectorsHistorical extends IDate {
   realEstateChangesPercentage: number
   servicesChangesPercentage: number
   technologyChangesPercentage: number
+  utilitiesChangesPercentage: number
 }
 
 export interface ITickerSearch
@@ -753,8 +751,8 @@ export interface ITickerSearch
     IHasPolitiscales {
   description: string
   exchange: string
-  imageUrl?: string
   full_name: string
+  imageUrl?: string
 }
 
 export interface ITickerType extends IdName, ITicker, IType {}
