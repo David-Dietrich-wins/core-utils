@@ -19,23 +19,20 @@ export interface IPolitiscaleSearchParams
 export function CreatePolitiscaleSearchParams(
   overrides?: Partial<IPolitiscaleSearchParams>
 ) {
-  const DEFAULT_params: IPolitiscaleSearchParams = {
-      climate: 0,
-      exactMatch: false,
-      freeSpeech: 0,
-      limit: 0,
-      offset: 0,
-      pageIndex: 0,
-      pageSize: 0,
-      religion: 0,
-      sortColumn: '',
-      sortDirection: 'asc',
-      term: '',
-    },
-    ret: IPolitiscaleSearchParams = {
-      ...DEFAULT_params,
-      ...overrides,
-    }
+  const ret: IPolitiscaleSearchParams = {
+    climate: 0,
+    exactMatch: false,
+    freeSpeech: 0,
+    limit: 0,
+    offset: 0,
+    pageIndex: 0,
+    pageSize: 0,
+    religion: 0,
+    sortColumn: '',
+    sortDirection: 'asc',
+    term: '',
+    ...overrides,
+  }
 
   return ret
 }
