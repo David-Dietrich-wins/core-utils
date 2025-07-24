@@ -121,27 +121,34 @@ describe('zFromStringOrStringArray', () => {
       data: str1000,
       success: true,
     })
-    expect(schema.safeParse(str1001)).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [expect.objectContaining(ZodTestHelper.StringTooBig(1000))],
-        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-      ])
-    )
+
+    expect(schema.safeParse(str1001)).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(1000)),
+        ]),
+      }),
+      success: false,
+    })
 
     expect(schema.safeParse('  hello  ')).toEqual({
       data: 'hello',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
-        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-      ])
-    )
+    expect(schema.safeParse('hi')).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
+        ]),
+      }),
+      success: false,
+    })
+
     expect(schema.safeParse('this is a long string')).toEqual({
       data: 'this is a long string',
       success: true,
     })
+
     expect(schema.safeParse(['hELlo', 'World'])).toEqual({
       data: ['hELlo', 'World'],
       success: true,
@@ -173,61 +180,68 @@ describe('zFromStringOrStringArray', () => {
       data: 'hello',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
-        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-      ])
-    )
-    expect(schema.safeParse('this is a long string')).toEqual({
+    expect(schema.safeParse('hi')).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
         ]),
       }),
       success: false,
     })
-    expect(schema.safeParse('hello world')).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-        [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-      ])
-    )
+    expect(schema.safeParse('this is a long string')).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
+        ]),
+      }),
+      success: false,
+    })
+
+    expect(schema.safeParse('hello world')).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
+        ]),
+      }),
+      success: false,
+    })
+
     expect(schema.safeParse(['hELlo', 'World'])).toEqual({
       data: ['hello', 'world'],
       success: true,
     })
-    expect(schema.safeParse(['hi', 'there'])).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [
-          expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-          expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-        ],
-        [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
-      ])
-    )
+    expect(schema.safeParse(['hi', 'there'])).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0], true)),
+        ]),
+      }),
+      success: false,
+    })
+
     expect(
       schema.safeParse(['this is a long string', 'another long string'])
-    ).toEqual(
-      ZodTestHelper.SuccessFalse([
-        [
-          expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-          expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-        ],
-        [
-          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
-          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
-        ],
-      ])
-    )
+    ).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1], true)),
+        ]),
+      }),
+      success: false,
+    })
+
+    expect(
+      schema.safeParse(['this is a long string', 'another long string'])
+    ).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1], true)),
+        ]),
+      }),
+      success: false,
+    })
   })
 
   test('uppercase', () => {
@@ -242,51 +256,30 @@ describe('zFromStringOrStringArray', () => {
     expect(schema.safeParse('hi')).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
         ]),
       }),
       success: false,
     })
+
     expect(schema.safeParse('this is a long string')).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
         ]),
       }),
       success: false,
     })
+
     expect(schema.safeParse('hello world')).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
         ]),
       }),
       success: false,
     })
+
     expect(schema.safeParse(['hello', 'world'])).toEqual({
       data: ['HELLO', 'WORLD'],
       success: true,
@@ -294,42 +287,19 @@ describe('zFromStringOrStringArray', () => {
     expect(schema.safeParse(['hi', 'there'])).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-              ],
-              [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0], true)),
         ]),
       }),
       success: false,
     })
+
     expect(
       schema.safeParse(['this is a long string', 'another long string'])
     ).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-              ],
-              [
-                expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
-                expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
-              ],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1], true)),
         ]),
       }),
       success: false,
@@ -367,22 +337,13 @@ describe('zToStringArray', () => {
       data: [str1000],
       success: true,
     })
-    expect(schema.safeParse(str1001)).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(1000))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
+
+    const ret = schema.safeParse(str1001)
+    expect(ret.success).toBe(false)
+    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(1000, [], true),
+    ])
 
     expect(schema.safeParse('  hello  ')).toEqual({
       data: ['hello'],
@@ -391,15 +352,7 @@ describe('zToStringArray', () => {
     expect(schema.safeParse('hi')).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooSmall(3))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
+          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
         ]),
       }),
       success: false,
@@ -439,118 +392,35 @@ describe('zToStringArray', () => {
       data: ['hello'],
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([]),
-            // Message: 'String must contain at least 3 character(s)',
-          }),
-        ]),
-      }),
-      success: false,
-      //     [
-      //       Expect.objectContaining({
-      //         Code: 'too_small',
-      //         Message: 'Too small: expected string to have >3 characters',
-      //       }),
-      //     ],
-      //   ]),
-      // }),
-      // Path: [],
-      // Message: 'Invalid input',
-      // Issues: expect.arrayContaining([
-      //   Expect.objectContaining({
-      //     Code: 'invalid_union',
-      //     // message: 'String must contain at least 3 character(s)',
-      //   }),
-      // ]),
-    })
-    expect(schema.safeParse('this is a long string')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
-    expect(schema.safeParse('hello world')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [expect.objectContaining(ZodTestHelper.StringTooBig(10))],
-              [expect.objectContaining(ZodTestHelper.InvalidTypeArrayString())],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
+    expect(schema.safeParse('hi')).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
+    )
+    expect(schema.safeParse('this is a long string')).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
+    )
+    expect(schema.safeParse('hello world')).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
+    )
     expect(schema.safeParse(['hELlo', 'worLD'])).toEqual({
       data: ['hello', 'world'],
       success: true,
     })
 
-    const ret = schema.safeParse(['hi', 'there'])
+    let ret = schema.safeParse(['hi', 'there'])
     expect(ret.success).toBe(false)
     expect(ret.error).toBeInstanceOf(ZodError)
     // Expect(ret.error?.issues).toEqual([])
-    expect(schema.safeParse(['hi', 'there'])).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-              ],
-              [expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0]))],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
-    expect(
-      schema.safeParse(['this is a long string', 'another long string'])
-    ).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining(ZodTestHelper.InvalidTypeStringArray()),
-                expect.objectContaining(ZodTestHelper.ArrayTooSmall(3)),
-              ],
-              [
-                expect.objectContaining(ZodTestHelper.StringTooBig(10, [0])),
-                expect.objectContaining(ZodTestHelper.StringTooBig(10, [1])),
-              ],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
+    expect(schema.safeParse(['hi', 'there'])).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3, [0]))
+    )
+
+    ret = schema.safeParse(['this is a long string', 'another long string'])
+    expect(ret.success).toBe(false)
+    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [0], true),
+      ZodTestHelper.StringTooBig(10, [1], true),
+    ])
   })
 
   test('uppercase', () => {
@@ -577,160 +447,49 @@ describe('zToStringArray', () => {
       }),
       success: false,
     })
-    expect(schema.safeParse('this is a long string')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining({
-                  code: 'too_big',
-                  maximum: 10,
-                  message: 'Too big: expected string to have <=10 characters',
-                  origin: 'string',
-                  path: [],
-                }),
-              ],
-              [
-                expect.objectContaining({
-                  code: 'invalid_type',
-                  expected: 'array',
-                  message: 'Invalid input: expected array, received string',
-                  path: [],
-                }),
-              ],
-            ]),
-          }),
-        ]),
-      }),
-      success: false,
-    })
-    expect(schema.safeParse('hello world')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              [
-                expect.objectContaining({
-                  code: 'too_big',
-                  maximum: 10,
-                  message: 'Too big: expected string to have <=10 characters',
-                  origin: 'string',
-                  path: [],
-                }),
-              ],
-              [
-                expect.objectContaining({
-                  code: 'invalid_type',
-                  expected: 'array',
-                  message: 'Invalid input: expected array, received string',
-                  path: [],
-                }),
-              ],
-            ]),
-          }),
-        ]),
-      }),
-      success: false,
-    })
+    expect(schema.safeParse('this is a long string')).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
+    )
+    expect(schema.safeParse('hello world')).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
+    )
     expect(schema.safeParse(['hello', 'world'])).toEqual({
       data: ['HELLO', 'WORLD'],
       success: true,
     })
-    expect(schema.safeParse(['hi', 'there'])).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining({
-            code: 'invalid_union',
-            errors: expect.arrayContaining([
-              // [
-              //   Expect.objectContaining({
-              //     Expected: 'string',
-              //     Code: 'invalid_type',
-              //     Path: [],
-              //     Message: 'Invalid input: expected string, received array',
-              //   }),
-              // ],
-              // [
-              //   Expect.objectContaining({
-              //     Origin: 'array',
-              //     Code: 'too_small',
-              //     Maximum: 3,
-              //     Path: [],
-              //     Message: 'Too small: expected array to have >3 items',
-              //   }),
-              // ],
-              // [
-              //   Expect.objectContaining({
-              //     Expected: 'string',
-              //     Code: 'too_small',
-              //     Minimum: 3,
-              //     Path: [0],
-              //     Message: 'Too small: expected string to have >3 characters',
-              //   }),
-              // ],
-            ]),
-            message: 'Invalid input',
-            path: [],
-          }),
-        ]),
-      }),
-      success: false,
-    })
+    expect(schema.safeParse(['hi', 'there'])).toEqual(
+      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3, [0]))
+    )
 
     const ret = schema.safeParse([
       'this is a long string',
       'another long string',
     ])
+    expect(ret).toEqual({
+      error: expect.objectContaining({
+        issues: expect.arrayContaining([
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
+          expect.objectContaining(ZodTestHelper.StringTooBig(10, [1], true)),
+        ]),
+      }),
+      success: false,
+    })
     expect(ret.success).toBe(false)
     expect(ret.error).toBeInstanceOf(ZodError)
     expect(ret.error?.issues).toEqual([
-      {
-        code: 'invalid_union',
-        errors: [
-          [
-            {
-              code: 'invalid_type',
-              expected: 'string',
-              message: 'Invalid input: expected string, received array',
-              path: [],
-            },
-            {
-              code: 'too_small',
-              inclusive: true,
-              message: 'Too small: expected array to have >=3 items',
-              minimum: 3,
-              origin: 'array',
-              path: [],
-            },
-          ],
-          [
-            {
-              code: 'too_big',
-              inclusive: true,
-              maximum: 10,
-              message: 'Too big: expected string to have <=10 characters',
-              origin: 'string',
-              path: [0],
-            },
-            {
-              code: 'too_big',
-              inclusive: true,
-              maximum: 10,
-              message: 'Too big: expected string to have <=10 characters',
-              origin: 'string',
-              path: [1],
-            },
-          ],
-        ],
-        message: 'Invalid input',
-        path: [],
-      },
+      ZodTestHelper.StringTooBig(10, [0], true),
+      ZodTestHelper.StringTooBig(10, [1], true),
     ])
   })
 })
+
+// test.only('debug-test', () => {
+//   const schema = zToStringArray(3, 10, { trim: true, uppercase: true })
+//   const ret = schema.safeParse('this is a long string')
+//   expect(ret).toEqual(
+//     ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
+//   )
+// })
 
 test('zDateTime', () => {
   const schema = zDateTime()

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
+import type { ZodTooBigIssue, ZodTooSmallIssue } from 'zod/v3'
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
@@ -93,17 +94,31 @@ export class ZodTestHelper {
     return ZodTestHelper.InvalidType('string', 'array')
   }
 
-  static StringTooBig(maximum: number, path: (string | number)[] = []) {
-    return {
+  static StringTooBig(
+    maximum: number,
+    path: (string | number)[] = [],
+    inclusive = false
+  ) {
+    const ret: Partial<ZodTooBigIssue & { origin: string }> = {
       code: 'too_big',
       maximum,
       message: `Too big: expected string to have <=${maximum.toString()} characters`,
       origin: 'string',
       path,
     }
+
+    if (inclusive) {
+      ret.inclusive = true
+    }
+
+    return ret
   }
-  static StringTooSmall(minimum: number, path: (string | number)[] = []) {
-    return {
+  static StringTooSmall(
+    minimum: number,
+    path: (string | number)[] = [],
+    inclusive = false
+  ) {
+    const ret: Partial<ZodTooSmallIssue & { origin: string }> = {
       code: 'too_small',
       message: `Too small: expected string to have >=${NumberHelper.NumberToString(
         minimum
@@ -112,6 +127,12 @@ export class ZodTestHelper {
       origin: 'string',
       path,
     }
+
+    if (inclusive) {
+      ret.inclusive = true
+    }
+
+    return ret
   }
 
   static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
