@@ -1,13 +1,16 @@
 import { ColorHelper, type ColorRange } from '../services/color-helper.mjs'
+import type { ICity, IdNameSlugWithScales } from './city.mjs'
 import {
   IHasPolitiscales,
   type IPolitiscale,
   type PolitiscaleName,
 } from './politiscale.mjs'
+import type { ISymbolDetail, ITickerSearch } from '../models/ticker-info.mjs'
+import type { IdNameValue, ValueChangeHandler } from '../models/id-name.mjs'
 import { isArray, safeArray } from '../services/array-helper.mjs'
+import { safestr, safestrLowercase } from '../services/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IValue } from '../models/interfaces.mjs'
-import type { ValueChangeHandler } from '../models/id-name.mjs'
 import { isNullOrUndefined } from '../services/general.mjs'
 
 const CONST_ScaleNameClimate = 'climate',
@@ -553,4 +556,72 @@ export type PolitiscalesEditorProps = {
   showMarks?: boolean
   onChangeCommittedHandler?: ValueChangeHandler<IPolitiscale[]>
   onChangeHandler?: ValueChangeHandler<IPolitiscale[]>
+}
+
+export type PolitiscaleCardProps = {
+  description?: string
+  scales?: IPolitiscale[]
+  slug: string
+  title: string
+  titleHref?: string
+  titleImageSrc?: string
+  visitText?: string
+}
+
+export function MapSlugWithScalesToIdNameValue(
+  slugsWithScales: IdNameSlugWithScales[]
+) {
+  return safeArray(slugsWithScales).map((x) => {
+    const inv: IdNameValue = {
+      id: x.slug,
+      name: x.name,
+      value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+    }
+
+    return inv
+  })
+}
+
+export function MapTickerSearchToIdNameValue(tickers: ITickerSearch[]) {
+  return safeArray(tickers).map((x) => {
+    const inv: IdNameValue = {
+      id: x.ticker,
+      name: x.name,
+      value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+    }
+
+    return inv
+  })
+}
+
+export function MapSymbolDetailToPolitiscaleCardProps(
+  symbolDetail: ISymbolDetail
+): PolitiscaleCardProps {
+  const inv: PolitiscaleCardProps = {
+    description: safestr(symbolDetail.profile?.description),
+    scales: safeArray(symbolDetail.scales),
+    slug: symbolDetail.ticker,
+    title: symbolDetail.name,
+    titleHref: `/company/${safestrLowercase(symbolDetail.ticker)}`,
+    titleImageSrc: safestr(symbolDetail.profile?.image),
+    visitText: 'Open company website in new window',
+  }
+
+  return inv
+}
+
+export function MapCityToPolitiscaleCardProps(
+  symbolDetail: ICity
+): PolitiscaleCardProps {
+  const inv: PolitiscaleCardProps = {
+    description: safestr(symbolDetail.description),
+    scales: safeArray(symbolDetail.scales),
+    slug: symbolDetail.slug,
+    title: symbolDetail.name,
+    titleHref: `/city/${safestrLowercase(symbolDetail.slug)}`,
+    titleImageSrc: symbolDetail.city_img,
+    visitText: 'Link to more details',
+  }
+
+  return inv
 }
