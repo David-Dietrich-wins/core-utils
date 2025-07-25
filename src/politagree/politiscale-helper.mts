@@ -560,9 +560,9 @@ export type PolitiscalesEditorProps = {
 
 export type PolitiscaleCardProps = {
   description?: string
+  name: string
   scales?: IPolitiscale[]
   slug: string
-  title: string
   titleHref?: string
   titleImageSrc?: string
   visitText?: string
@@ -599,9 +599,9 @@ export function MapSymbolDetailToPolitiscaleCardProps(
 ): PolitiscaleCardProps {
   const inv: PolitiscaleCardProps = {
     description: safestr(symbolDetail.profile?.description),
+    name: symbolDetail.name,
     scales: safeArray(symbolDetail.scales),
     slug: symbolDetail.ticker,
-    title: symbolDetail.name,
     titleHref: `/company/${safestrLowercase(symbolDetail.ticker)}`,
     titleImageSrc: safestr(symbolDetail.profile?.image),
     visitText: 'Open company website in new window',
@@ -615,9 +615,9 @@ export function MapCityToPolitiscaleCardProps(
 ): PolitiscaleCardProps {
   const inv: PolitiscaleCardProps = {
     description: safestr(symbolDetail.description),
+    name: symbolDetail.name,
     scales: safeArray(symbolDetail.scales),
     slug: symbolDetail.slug,
-    title: symbolDetail.name,
     titleHref: `/city/${safestrLowercase(symbolDetail.slug)}`,
     titleImageSrc: symbolDetail.city_img,
     visitText: 'Link to more details',
