@@ -568,18 +568,14 @@ export type PolitiscaleCardProps = {
   visitText?: string
 }
 
-export function MapSlugWithScalesToIdNameValue(
-  slugsWithScales: IdNameSlugWithScales[]
-) {
-  return safeArray(slugsWithScales).map((x) => {
-    const inv: IdNameValue = {
-      id: x.slug,
-      name: x.name,
-      value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
-    }
+export function MapSlugWithScalesToIdNameValue(x: IdNameSlugWithScales) {
+  const inv: IdNameValue = {
+    id: x.slug,
+    name: x.name,
+    value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+  }
 
-    return inv
-  })
+  return inv
 }
 
 export function MapTickerSearchToIdNameValue(x: ITickerSearch) {
