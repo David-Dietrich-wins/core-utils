@@ -582,16 +582,14 @@ export function MapSlugWithScalesToIdNameValue(
   })
 }
 
-export function MapTickerSearchToIdNameValue(tickers: ITickerSearch[]) {
-  return safeArray(tickers).map((x) => {
-    const inv: IdNameValue = {
-      id: x.ticker,
-      name: x.name,
-      value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
-    }
+export function MapTickerSearchToIdNameValue(x: ITickerSearch) {
+  const inv: IdNameValue = {
+    id: x.ticker,
+    name: x.name,
+    value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+  }
 
-    return inv
-  })
+  return inv
 }
 
 export function MapSymbolDetailToPolitiscaleCardProps(
