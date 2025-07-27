@@ -604,3 +604,17 @@ export function arrayMoveFromTo<T>(
 
   return arrCopy
 }
+
+export function arrayFilterMap<T, R>(
+  arr: ArrayOrSingle<T> | null | undefined,
+  mapFunc: (item: T) => R,
+  filterFunc?: (item: T) => boolean
+): R[] {
+  let myarr = safeArray(arr)
+
+  if (filterFunc) {
+    myarr = myarr.filter(filterFunc)
+  }
+
+  return myarr.map(mapFunc)
+}
