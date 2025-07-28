@@ -145,20 +145,16 @@ export type StringOrStringArray = ArrayOrSingle<string>
 // Function App and/or Express request header types.
 export type StringOrStringArrayObject = AnyObject<StringOrStringArray>
 
-export type UserLoginRefreshTokenResponse = {
+export type UserAccessRefreshToken = {
   access_token: string
   expires_in: number
-  refresh_token?: string
+  refresh_token: string
 }
 
-export type BearerTokenResponse = {
-  token: string
-  tokenExpirationInstant: number
-  refreshToken: string
-}
-export type UserInfoWithTokens = BearerTokenResponse & {
+export type UserInfoUser = {
   user: IUserInfo
 }
+export type UserInfoWithTokens = UserAccessRefreshToken & UserInfoUser
 
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
 
