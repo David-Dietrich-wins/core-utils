@@ -11,6 +11,7 @@ import {
   arrayElement,
   arrayElementNonEmpty,
   arrayFilter,
+  arrayFilterMap,
   arrayFind,
   arrayFindById,
   arrayFindByIds,
@@ -753,4 +754,33 @@ test('arrayMoveFromTo', () => {
 
   expect(() => arrayMoveFromTo([...arr], 7, 0)).toThrow(AppException)
   expect(() => arrayMoveFromTo([...arr], -1, 0)).toThrow(AppException)
+})
+
+test('arrayFilterMap', () => {
+  const arr: IdName<number>[] = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  const filterFunc = (item: IdName<number>) => item.id !== 2
+  const mapFunc = (item: IdName<number>) => {
+    const ret: IdName<number> = {
+      id: item.id,
+      name: item.name.toUpperCase(),
+    }
+
+    return ret
+  }
+
+  expect(arrayFilterMap(arr, mapFunc)).toStrictEqual([
+    { id: 1, name: 'NAME1' },
+    { id: 2, name: 'NAME2' },
+    { id: 3, name: 'NAME3' },
+  ])
+
+  expect(arrayFilterMap(arr, mapFunc, filterFunc)).toStrictEqual([
+    { id: 1, name: 'NAME1' },
+    { id: 3, name: 'NAME3' },
+  ])
 })
