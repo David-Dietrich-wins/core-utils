@@ -1,4 +1,4 @@
-import type { ArrayOrSingle } from '../index.mjs'
+import type { ArrayOrSingle } from '../models/types.mjs'
 import { HtmlHelper } from './html-helper.mjs'
 
 test('ParamsEncoder', () => {

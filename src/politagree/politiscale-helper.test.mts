@@ -5,7 +5,13 @@ import {
   Politiscale,
   type PolitiscaleName,
 } from './politiscale.mjs'
+import type { ICity, IdNameSlugWithScales } from './city.mjs'
+import type { ISymbolDetail, ITickerSearch } from '../models/ticker-info.mjs'
 import {
+  MapCityToPolitiscaleCardProps,
+  MapSlugWithScalesToIdNameValue,
+  MapSymbolDetailToPolitiscaleCardProps,
+  MapTickerSearchToIdNameValue,
   type PolitiRatingLeftRight,
   PolitiscaleHelper,
 } from './politiscale-helper.mjs'
@@ -860,5 +866,133 @@ test('CoreRating', () => {
   expect(PolitiscaleHelper.CoreRating('climate', 20)).toStrictEqual({
     left: { active: true, isPrimary: true, value: 20, weight: 1 },
     right: { active: true, isPrimary: false, value: 2, weight: 0.1 },
+  })
+})
+
+test('MapSlugWithScalesToIdNameValue', () => {
+  const scales: IdNameSlugWithScales[] = [
+    {
+      id: 'climate',
+      name: 'climate',
+      scales: [{ name: 'climate', value: 20 }],
+      slug: 'climate',
+    },
+    {
+      id: 'freeSpeech',
+      name: 'freeSpeech',
+      scales: [{ name: 'freeSpeech', value: 50 }],
+      slug: 'freeSpeech',
+    },
+    {
+      id: 'religion',
+      name: 'religion',
+      scales: [{ name: 'religion', value: 80 }],
+      slug: 'religion',
+    },
+  ]
+
+  // const scales: IPolitiscale[] = [
+  //   { name: 'climate', value: 20 },
+  //   { name: 'freeSpeech', value: 50 },
+  //   { name: 'religion', value: 80 },
+  // ]
+  const result = MapSlugWithScalesToIdNameValue(scales[0])
+  expect(result).toStrictEqual({
+    id: 'climate',
+    name: 'climate',
+    value: '#cc0033',
+  })
+
+  expect(MapSlugWithScalesToIdNameValue(scales[1])).toStrictEqual({
+    id: 'freeSpeech',
+    name: 'freeSpeech',
+    value: '#cc0033',
+  })
+
+  expect(MapSlugWithScalesToIdNameValue(scales[2])).toStrictEqual({
+    id: 'religion',
+    name: 'religion',
+    value: '#eb0014',
+  })
+})
+
+test('MapTickerSearchToIdNameValue', () => {
+  const its: ITickerSearch = {
+    description: 'Apple Inc.',
+    exchange: 'NASDAQ',
+    full_name: 'Apple Inc.',
+    id: 'climate',
+    name: 'climate',
+    scales: [{ name: 'climate', value: 20 }],
+    symbol: 'AAPL',
+    ticker: 'AAPL',
+    type: 'stock',
+  }
+  const result = MapTickerSearchToIdNameValue(its)
+  expect(result).toStrictEqual({
+    id: 'AAPL',
+    name: 'climate',
+    value: '#cc0033',
+  })
+})
+
+test('MapSymbolDetailToPolitiscaleCardProps', () => {
+  const symbolDetail: ISymbolDetail = {
+    createdby: 'user123',
+    description: 'Apple Inc.',
+    exchange: 'NASDAQ',
+    id: 'AAPL',
+    industry: 'Technology',
+    minmov: 1,
+    minmov2: 0,
+    name: 'Apple Inc.',
+    pricescale: 100,
+    scales: [{ name: 'climate', value: 20 }],
+    sector: 'Technology',
+    slug: 'climate',
+    ticker: 'AAPL',
+    type: 'stock',
+    updatedby: 'user456',
+    val: {
+      exchange: 'NASDAQ',
+      exchangeShortName: 'NASDAQ',
+      name: 'Apple Inc.',
+      price: 150.0,
+      symbol: 'AAPL',
+    },
+  }
+
+  const result = MapSymbolDetailToPolitiscaleCardProps(symbolDetail)
+  expect(result).toStrictEqual({
+    description: '',
+    name: 'Apple Inc.',
+    scales: [{ name: 'climate', value: 20 }],
+    slug: 'AAPL',
+    titleHref: '/company/aapl',
+    titleImageSrc: '',
+    visitText: 'Open company website in new window',
+  })
+})
+
+test('MapCityToPolitiscaleCardProps', () => {
+  const city: ICity = {
+    city: 'New York',
+    city_img: '',
+    description: '',
+    name: 'New York',
+    scales: [{ name: 'climate', value: 20 }],
+    slug: '1',
+    sourceUrl: '',
+  }
+
+  const result = MapCityToPolitiscaleCardProps(city)
+  expect(result).toStrictEqual({
+    description: '',
+    name: 'New York',
+    scales: [{ name: 'climate', value: 20 }],
+    slug: '1',
+    titleHref: '/city/1',
+    titleImageSrc: '',
+    visitText: 'Link to more details',
   })
 })
