@@ -838,14 +838,14 @@ export declare type ResolutionString = Nominal<string, 'ResolutionString'>
 //   SendBackwardEnabled: boolean
 //   SendToBackEnabled: boolean
 // }
-// Export interface Bar {
-//   Time: number
-//   Open: number
-//   High: number
-//   Low: number
-//   Close: number
-//   Volume?: number
-// }
+export interface Bar {
+  time: number
+  open: number
+  high: number
+  low: number
+  close: number
+  volume?: number
+}
 // Export interface BarStylePreferences {
 //   UpColor: string
 //   DownColor: string
@@ -992,13 +992,13 @@ export interface ChartData {
   resolution: ResolutionString
   content: string
 }
-// Export interface ChartMetaInfo {
-//   Id: number
-//   Name: string
-//   Symbol: string
-//   Resolution: ResolutionString
-//   Timestamp: number
-// }
+export interface ChartMetaInfo {
+  id: number
+  name: string
+  symbol: string
+  resolution: ResolutionString
+  timestamp: number
+}
 // Export interface ChartingLibraryWidgetConstructor {
 //   New (
 //     Options: ChartingLibraryWidgetOptions | TradingTerminalWidgetOptions
