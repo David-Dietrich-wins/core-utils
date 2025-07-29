@@ -152,7 +152,6 @@ export class SearchRequestView implements ISearchRequestView {
 
         searchColumns.forEach((scol) => {
           if (!found && x[scol]) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const s =
               isString(x[scol]) && lowerCaseSearch
                 ? safestrLowercase(x[scol])

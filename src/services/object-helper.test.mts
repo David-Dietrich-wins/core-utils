@@ -674,7 +674,6 @@ describe('deepDiffMapper', () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDeepObject(depth: number, value: any) {
   return {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-param-reassign, no-useless-assignment
     item: depth > 0 ? createDeepObject(--depth, value) : value,
   }
 }
@@ -708,7 +707,6 @@ test('FindObjectWithField', () => {
   expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
   expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deepObj = createDeepObject(101, 'value')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()

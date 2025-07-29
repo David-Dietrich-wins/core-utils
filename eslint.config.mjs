@@ -34,6 +34,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
       'consistent-return': 'off',

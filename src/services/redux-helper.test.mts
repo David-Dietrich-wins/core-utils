@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ReduxAsyncStatus, ReduxHelper } from './redux-helper.mjs'
 
 test('getStatus', () => {

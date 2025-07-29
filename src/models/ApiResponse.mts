@@ -250,7 +250,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
         }
 
         if (errobj.obj) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           this.data = errobj.obj
         }
       } else {
@@ -262,7 +261,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
             this.responseCode = errobj
             break
           default:
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
             this.data = errobj as any
             break
         }

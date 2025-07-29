@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ISubplot, Subplot } from './Subplot.mjs'
 import {
   ITradePlotProfitizer,

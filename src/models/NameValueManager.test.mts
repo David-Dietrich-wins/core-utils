@@ -298,9 +298,7 @@ describe('NameValueLineFormatManager', () => {
       keyDisplayValue = 'keyDisplayValue',
       pr = new NameValueLineFormatter(key, keyDisplayValue),
       pr2 = new NameValueLineFormatter(key, keyDisplayValue)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
     pr.FromStyle = undefined as any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
     pr2.FromStyle = undefined as any
 
     const mgr = new NameValueLineFormatManager([pr, pr2])

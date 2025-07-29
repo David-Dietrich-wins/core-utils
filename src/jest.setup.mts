@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import type { ZodTooBigIssue, ZodTooSmallIssue } from 'zod/v3'

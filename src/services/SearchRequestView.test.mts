@@ -399,7 +399,6 @@ describe('getItems', () => {
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
     srv.term = 100 as any
     srv.limit = 0
     srv.offset = 2

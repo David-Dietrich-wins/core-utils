@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ConfigManager, TpConfigNamesEnum } from '../tplot/ConfigManager.mjs'
 import { UserInfo } from './UserInfo.mjs'
 

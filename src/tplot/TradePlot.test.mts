@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
 import { ZodError } from 'zod/v4'

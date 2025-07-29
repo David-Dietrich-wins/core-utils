@@ -1,5 +1,3 @@
- 
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'

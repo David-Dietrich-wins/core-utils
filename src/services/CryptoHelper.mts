@@ -56,7 +56,6 @@ export class CryptoHelper {
     exactLength = 4,
     charsToUse = CryptoHelper.CONST_CharsToUseForRandomString
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return [...Array(exactLength)]
       .map(() => charsToUse[Math.floor(Math.random() * charsToUse.length)])
       .join('')

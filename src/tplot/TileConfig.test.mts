@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ITileConfig, TileConfig, TileType } from './TileConfig.mjs'
 import { AppException } from '../models/AppException.mjs'
 

@@ -104,7 +104,6 @@ export abstract class NumberHelper {
     maxDecimalPlaces?: number,
     minDecimalPlaces?: number
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let num = numToFormat
 
     if (isString(num, 1)) {
@@ -295,7 +294,6 @@ export abstract class NumberHelper {
             : isString(val)
             ? parseFloat(val)
             : NaN,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           robjval: any = (objRight as any)[key],
           rval = isNumber(robjval)
             ? robjval
@@ -538,7 +536,6 @@ export function elementTopLeftCoords(element: any): {
     top += getAsNumber(safestr(element.offsetTop))
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     left += getAsNumber(safestr(element.offsetLeft))
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-param-reassign
     element = element.offsetParent
   } while (element)
 

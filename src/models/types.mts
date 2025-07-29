@@ -12,13 +12,26 @@ export type AnyObject<T = any> = { [key: string]: T }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyRecord<T = any> = Record<string, T>
 
-export type ApiProps = {
+type CookieSettings = {
+  httpOnly?: boolean
+  maxAge?: number
+  name: string
+  path?: string
+  sameSite?: 'strict' | 'lax' | 'none'
+  secure?: boolean
+}
+
+export type ApiPropsCookieAuthNames = {
+  accessToken: CookieSettings
+  refreshToken: CookieSettings
+}
+
+export type ApiPropsDigicrew = {
   apiKey?: string
   apiVersion: string
   appName: string
   baseUrl: string
-  cookieAuthAccessTokenName?: string
-  cookieAuthRefreshTokenName?: string
+  cookies: ApiPropsCookieAuthNames
   logLevel?: LogManagerLevel
   logFilename?: string
   loginUrl?: string

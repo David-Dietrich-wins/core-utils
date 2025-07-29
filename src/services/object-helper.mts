@@ -536,7 +536,6 @@ export function deepDiffMapper() {
       // Console.log('skky.deepDiff:', this.isValue(obj1), this.isValue(obj2), ', obj1:', obj1, ', obj2:', obj2);
       if (this.isValue(obj1) || this.isValue(obj2)) {
         return {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data: obj1 === undefined ? obj2 : obj1,
           type: this.compareValues(obj1, obj2),
         }
@@ -554,7 +553,6 @@ export function deepDiffMapper() {
         let value2: any
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (obj2[key] !== undefined) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           value2 = obj2[key]
         }
 
