@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
-/* eslint-disable no-console */
 import {
   FindObjectWithField,
   ObjectFindKeyAndReturnValue,

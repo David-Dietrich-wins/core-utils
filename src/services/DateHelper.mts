@@ -57,7 +57,6 @@ export abstract class DateHelper {
 
       return true
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(`${DateHelper.name}.${DateHelper.IsValidDate.name}:`, e)
     }
 

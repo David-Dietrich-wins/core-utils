@@ -209,7 +209,6 @@ export function hasData(o: unknown, minlength = 1): boolean {
 
     return isArray(Object.keys(o), minlength)
   } catch (ex) {
-    // eslint-disable-next-line no-console
     console.error(hasData.name, ex)
   }
 

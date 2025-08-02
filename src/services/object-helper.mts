@@ -172,7 +172,6 @@ export function safeJsonToString<T extends object | Array<T>>(
       space
     )
   } catch (ex) {
-    // eslint-disable-next-line no-console
     console.log(fname ? fname : 'safeJsonToString', ex)
   }
 
@@ -553,6 +552,7 @@ export function deepDiffMapper() {
         let value2: any
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (obj2[key] !== undefined) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           value2 = obj2[key]
         }
 

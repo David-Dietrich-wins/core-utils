@@ -47,6 +47,7 @@ export default tseslint.config(
       'max-params': 'off' /*  */,
       'max-statements': 'off',
       'new-cap': 'off',
+      'no-console': 'off',
       'no-empty-function': 'off',
       'no-magic-numbers': 'off',
       'no-nested-ternary': 'off',

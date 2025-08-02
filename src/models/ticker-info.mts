@@ -840,7 +840,6 @@ export function IAssetQuotesWithIpoDate(
         aqripo.ipoDate = val
       }
     } catch (ex) {
-      // eslint-disable-next-line no-console
       console.error(fname, ex)
     }
 

@@ -59,7 +59,6 @@ export class CacheManager<T = object, Tkey = string> {
         return !cacheObj || cacheObj.expire < now
       })
 
-    // eslint-disable-next-line no-console
     console.log(
       `CacheManager (${this.name}):`,
       zexpiredKeys.length,

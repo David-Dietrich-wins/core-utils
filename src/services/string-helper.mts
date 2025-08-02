@@ -136,7 +136,6 @@ export function safestrToJson<T>(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(safestr(strjson))
   } catch (ex) {
-    // eslint-disable-next-line no-console
     console.log(fname ? fname : 'safestrToJson', ex)
   }
 }

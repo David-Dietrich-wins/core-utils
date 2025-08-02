@@ -82,7 +82,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
         return false
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error verifying API response:', error)
       }
     }
@@ -158,7 +157,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     location?: any
   ) {
-    // eslint-disable-next-line no-console
     console.error(fname, err)
     if (location && err instanceof AppExceptionHttp) {
       if (err.httpStatusCode === 403) {
