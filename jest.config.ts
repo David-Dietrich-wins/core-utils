@@ -22,15 +22,15 @@ const config: Config = {
 
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   setupFilesAfterEnv: ['./src/jest.setup.mts'],
-  // transform: {},
-  transform: {
-    '^.+\\.(mt|t|cj|j)s$': [
-      'ts-jest',
-      {
-        useESM: true,
-      },
-    ],
-  },
+  transform: {},
+  // transform: {
+  //   '^.+\\.(mt|t|cj|j)s$': [
+  //     'ts-jest',
+  //     {
+  //       useESM: true,
+  //     },
+  //   ],
+  // },
 }
 
 export default config

@@ -44,13 +44,25 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
   id = Date.now()
   ts = this.id
 
+  data: TData
+  result = ''
+  message = ''
+  responseCode = 0
+  stats: InstrumentationStatistics
+
   constructor(
-    public data: TData,
-    public result = '',
-    public message = '',
-    public responseCode = 0,
-    public stats = new InstrumentationStatistics()
-  ) {}
+    data: TData,
+    result = '',
+    message = '',
+    responseCode = 0,
+    stats = new InstrumentationStatistics()
+  ) {
+    this.data = data
+    this.result = result
+    this.message = message
+    this.responseCode = responseCode
+    this.stats = stats
+  }
 
   static IsStatus(obj: unknown): obj is IStatus {
     return isObject(obj, 'status') || isObject(obj, 'statusText')
@@ -259,7 +271,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
             this.responseCode = errobj
             break
           default:
-            this.data = errobj as any
+            this.data = errobj as unknown as TData
             break
         }
       }

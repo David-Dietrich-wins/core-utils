@@ -9,9 +9,9 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:clean": "npm run clean && npm run build",
+    "build:clean:test": "npm run build:clean && npm run test:coverage",
     "clean": "npm run clean:files && npm install",
     "clean:files": "rimraf .next _next build dist lib node_modules out package-lock.json pnpm-lock.yaml yarn.lock",
-    "clean:files:test": "npm run clean:files && npm run test",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
@@ -60,6 +60,6 @@
     "moment": "^2.30.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "zod": "^4.0.10"
+    "zod": "latest"
   }
 }

@@ -20,6 +20,7 @@ import {
   searchObjectForArray,
 } from './object-helper.mjs'
 import { pluralize, plusMinus, safestr } from './string-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
@@ -456,6 +457,33 @@ test('getObjectValue', () => {
   expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
 })
 
+describe('deepCloneJson empty JSON.parse', () => {
+  let originalParse
+  beforeEach(() => {
+    // Store the original JSON.parse to restore it later
+    originalParse = JSON.parse
+  })
+
+  afterEach(() => {
+    // Restore JSON.parse after each test to prevent interference
+    JSON.parse = originalParse
+  })
+
+  test('deepCloneJson', () => {
+    JSON.parse = jest.fn(() => null)
+    // console.log('deepCloneJson', safestrToJson('{"a": "a"}'))
+    expect(() => deepCloneJson({ a: 'a' })).toThrow(AppException)
+
+    expect(() => deepCloneJson({})).toThrow(AppException)
+    expect(() => deepCloneJson([])).toThrow(AppException)
+
+    expect(() => deepCloneJson(undefined as unknown as object)).toThrow(
+      AppException
+    )
+    expect(() => deepCloneJson(null as unknown as object)).toThrow(AppException)
+  })
+})
+
 test('deepCloneJson', () => {
   expect(deepCloneJson({ a: 'a' })).toStrictEqual({ a: 'a' })
 
@@ -673,6 +701,7 @@ describe('deepDiffMapper', () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDeepObject(depth: number, value: any) {
   return {
+    // eslint-disable-next-line no-param-reassign, no-useless-assignment
     item: depth > 0 ? createDeepObject(--depth, value) : value,
   }
 }
