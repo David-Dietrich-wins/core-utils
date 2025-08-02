@@ -11,6 +11,7 @@
     "build:clean": "npm run clean && npm run build",
     "clean": "npm run clean:files && npm install",
     "clean:files": "rimraf .next _next build dist lib node_modules out package-lock.json pnpm-lock.yaml yarn.lock",
+    "clean:files:test": "npm run clean:files && npm run test",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
