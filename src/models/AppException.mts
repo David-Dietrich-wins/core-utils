@@ -1,3 +1,5 @@
+import { safestr } from '../services/string-helper.mjs'
+
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const
 export const HTTP_Accepted = 202 as const
@@ -13,15 +15,20 @@ export const HTTP_NetworkAuthenticationRequired = 511 as const
 /**
  * Type predicate to narrow an unknown error to an object with a string 'message' property
  */
-export function isErrorWithMessage(
-  error: unknown
-): error is { message: string } {
+export function IsErrorMessage(error: unknown): error is { message: string } {
   return (
-    typeof error === 'object' &&
     error !== null &&
+    typeof error === 'object' &&
     'message' in error &&
     typeof (error as { message?: string }).message === 'string'
   )
+}
+export function GetErrorMessage(error: unknown): string {
+  if (IsErrorMessage(error)) {
+    return error.message
+  }
+
+  return safestr(error, 'Unknown error')
 }
 
 export class AppException<Tobj = string> extends Error {

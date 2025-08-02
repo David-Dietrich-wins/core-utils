@@ -7,7 +7,8 @@ import {
   AppExceptionHttpNotFound,
   AppExceptionHttpUnauthorized,
   AppExceptionSecurity,
-  isErrorWithMessage,
+  GetErrorMessage,
+  IsErrorMessage,
 } from './AppException.mjs'
 
 test('AppException good', () => {
@@ -152,11 +153,20 @@ test('AppExceptionHttpNotFound default', () => {
   )
 })
 
-test('isErrorWithMessage', () => {
-  expect(isErrorWithMessage('Test')).toBe(false)
-  expect(isErrorWithMessage(new Error('Test'))).toBe(true)
-  expect(isErrorWithMessage(new AppException('Test'))).toBe(true)
-  expect(isErrorWithMessage({})).toBe(false)
-  expect(isErrorWithMessage(null)).toBe(false)
-  expect(isErrorWithMessage(undefined)).toBe(false)
+test('IsErrorMessage', () => {
+  expect(IsErrorMessage('Test')).toBe(false)
+  expect(IsErrorMessage(new Error('Test'))).toBe(true)
+  expect(IsErrorMessage(new AppException('Test'))).toBe(true)
+  expect(IsErrorMessage({})).toBe(false)
+  expect(IsErrorMessage(null)).toBe(false)
+  expect(IsErrorMessage(undefined)).toBe(false)
+})
+
+test('GetErrorMessage', () => {
+  expect(GetErrorMessage('Test')).toBe('Test')
+  expect(GetErrorMessage(new Error('Test'))).toBe('Test')
+  expect(GetErrorMessage(new AppException('Test'))).toBe('Test')
+  expect(GetErrorMessage({})).toBe('Unknown error')
+  expect(GetErrorMessage(null)).toBe('Unknown error')
+  expect(GetErrorMessage(undefined)).toBe('Unknown error')
 })
