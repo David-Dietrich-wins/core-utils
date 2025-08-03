@@ -1,5 +1,5 @@
+import * as EventEmitter from 'events'
 import { AnyRecord } from '../models/types.mjs'
-import EventEmitter from 'events'
 
 type EventKey<T extends AnyRecord> = string & keyof T
 type EventReceiver<T> = (params: T) => void
@@ -11,7 +11,7 @@ interface Emitter<T extends AnyRecord> {
 }
 
 class EmitterManager<T extends AnyRecord> implements Emitter<T> {
-  private emitter = new EventEmitter()
+  private emitter = new EventEmitter.EventEmitter()
 
   on<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>) {
     this.emitter.on(eventName, fn)

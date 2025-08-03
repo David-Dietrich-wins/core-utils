@@ -14,11 +14,12 @@ import { IncomingHttpHeaders } from 'node:http'
 import { isFunction } from './general.mjs'
 import { safeArray } from './array-helper.mjs'
 
-export enum WebRoles {
-  USER = 'user',
-  MANAGER = 'manager',
-  ADMIN = 'admin',
-}
+export const WebRoles = {
+  ADMIN: 'admin',
+  MANAGER: 'manager',
+  USER: 'user',
+} as const
+export type WebRoles = (typeof WebRoles)[keyof typeof WebRoles]
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 

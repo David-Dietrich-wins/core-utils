@@ -1,3 +1,4 @@
+import * as util from 'util'
 import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
 import {
   arrayElement,
@@ -15,7 +16,6 @@ import {
 import { AppException } from '../models/AppException.mjs'
 import { IId } from '../models/IdManager.mjs'
 import { isNumber } from './number-helper.mjs'
-import util from 'util'
 
 /**
  * Checks if the variable passed in is a JavaScript object that is not an array.

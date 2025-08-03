@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import {
   IAssetQuoteResponse,
   IQuoteBarEma,
@@ -17,7 +18,6 @@ import { IIdRequired } from '../models/IdManager.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 import { safeArray } from '../services/array-helper.mjs'
-import { z } from 'zod/v4'
 
 export interface ITradePlot
   extends IIdRequired,

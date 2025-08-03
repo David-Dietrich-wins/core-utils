@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import * as crypto from 'crypto'
 import { safeJsonToString } from './object-helper.mjs'
 import { safestrToJson } from './string-helper.mjs'
 
@@ -29,7 +29,11 @@ export class CryptoHelper {
     CryptoHelper.CONST_CharsAlphabetUpper +
     CryptoHelper.CONST_CharsNumbers
 
-  constructor(public cryptoSettings: ICryptoSettings) {}
+  private cryptoSettings: ICryptoSettings
+
+  constructor(cryptoSettings: ICryptoSettings) {
+    this.cryptoSettings = cryptoSettings
+  }
 
   static GenerateRsaKeyPair() {
     const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {

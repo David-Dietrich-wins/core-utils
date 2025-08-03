@@ -8,8 +8,13 @@ export interface IDashboardScreenSetting extends IIdName {
 
 export class DashboardScreenSetting implements IDashboardScreenSetting {
   id = ''
+  name = ''
+  tiles: ITileConfig[] = []
 
-  constructor(public name = '', public tiles: ITileConfig[] = []) {}
+  constructor(name = '', tiles: ITileConfig[] = []) {
+    this.name = name
+    this.tiles = tiles
+  }
 
   static Create(overrides?: Partial<IDashboardScreenSetting>) {
     return Object.assign(new DashboardScreenSetting(), overrides)

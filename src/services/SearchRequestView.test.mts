@@ -2,7 +2,7 @@ import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { IIdNameValue } from '../models/id-name.mjs'
 import { NumberHelper } from './number-helper.mjs'
 import { StringHelper } from './string-helper.mjs'
-import { ZodType } from 'zod/v4'
+import { ZodType } from 'zod'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(

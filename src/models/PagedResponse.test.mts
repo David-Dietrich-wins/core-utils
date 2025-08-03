@@ -1,6 +1,6 @@
 import { ApiResponse } from './ApiResponse.mjs'
 import { PagedResponse } from './PagedResponse.mjs'
-import z from 'zod/v4'
+import z from 'zod'
 
 test('PagedResponse good', () => {
   expect(new PagedResponse().dataPage).toEqual([])

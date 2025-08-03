@@ -1,6 +1,6 @@
+import * as z from 'zod'
 import { IId, IdManager } from './IdManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import z from 'zod/v4'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 test('good', () => {

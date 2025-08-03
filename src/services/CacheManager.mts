@@ -8,7 +8,13 @@ type CacheManagerObject<T = object> = { expire: number; obj: T }
 export class CacheManager<T = object, Tkey = string> {
   private cache: Map<Tkey, CacheManagerObject<T>> = new Map()
 
-  constructor(private name: string, public cacheTimeInSeconds: number) {}
+  name: string
+  cacheTimeInSeconds: number
+
+  constructor(name: string, cacheTimeInSeconds: number) {
+    this.name = name
+    this.cacheTimeInSeconds = cacheTimeInSeconds
+  }
 
   set(key: Tkey, expire: number, obj: T) {
     this.cache.set(key, {

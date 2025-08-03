@@ -66,13 +66,17 @@ export class AppExceptionSecurity<Tobj = string> extends AppException<Tobj> {
 }
 
 export class AppExceptionHttp<Tobj = Response> extends AppException<Tobj> {
+  httpStatusCode = 500
+
   constructor(
     m: string,
     functionNameSource = new.target.name,
-    public httpStatusCode = 500,
+    httpStatusCode = 500,
     response?: Tobj
   ) {
     super(m, functionNameSource, response)
+
+    this.httpStatusCode = httpStatusCode
   }
 }
 

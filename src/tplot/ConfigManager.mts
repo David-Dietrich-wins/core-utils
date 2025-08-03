@@ -82,16 +82,26 @@ export type ConfigTickerInfo<
   U = `tickerInfo-${Tticker}`
 > = IKeyValueShort<ConfigTickerInfoTabSettings, U>
 
-export enum TpConfigNamesEnum {
-  charts = 'charts',
-  dashboards = 'dashboards',
-  headerTickerBars = 'headerTickerBars',
-  ideaTabSelected = 'ideaTabSelected',
-  ideaCryptoTabSelected = 'ideaCryptoTabSelected',
-  website = 'website',
-  operations = 'operations',
-  tickerInfo = 'tickerInfo',
-}
+export type TpConfigNamesEnum =
+  | 'charts'
+  | 'dashboards'
+  | 'headerTickerBars'
+  | 'ideaTabSelected'
+  | 'ideaCryptoTabSelected'
+  | 'website'
+  | 'operations'
+  | 'tickerInfo'
+
+export const TpConfigNamesEnum = {
+  charts: 'charts',
+  dashboards: 'dashboards',
+  headerTickerBars: 'headerTickerBars',
+  ideaCryptoTabSelected: 'ideaCryptoTabSelected',
+  ideaTabSelected: 'ideaTabSelected',
+  operations: 'operations',
+  tickerInfo: 'tickerInfo',
+  website: 'website',
+} as const
 
 export type TpUserInfoConfigs = {
   [TpConfigNamesEnum.charts]: IConfigCharts
@@ -108,7 +118,11 @@ export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
 }
 
 export class ConfigManager {
-  constructor(public configs: IConfigShort[]) {}
+  configs: IConfigShort[] = []
+
+  constructor(configs: IConfigShort[]) {
+    this.configs = configs
+  }
 
   static ValidateConfigName(name: string | null | undefined): string {
     if (!name || !hasData(name) || name.length > 50) {
@@ -301,7 +315,6 @@ export class ConfigManager {
    */
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   FindConfig<T = string>(name: TpConfigNamesEnum) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     const found = this.configs.find((config) => name === config.k)
     if (found) {
       return found.v as T

@@ -10,11 +10,13 @@ import { isObject } from './object-helper.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /u
 
-export enum HttpHeaderNamesAllowed {
-  Authorization = 'authorization',
-  ShowDebug = 'ShowDebug',
-  ApplicationName = 'x-application-name',
-}
+export const HttpHeaderNamesAllowed = {
+  ApplicationName: 'x-application-name',
+  Authorization: 'authorization',
+  ShowDebug: 'ShowDebug',
+} as const
+export type HttpHeaderNamesAllowed =
+  (typeof HttpHeaderNamesAllowed)[keyof typeof HttpHeaderNamesAllowed]
 
 export const CONST_AppNamePolitagree = 'politagree',
   CONST_AppNameTradePlotter = 'tradeplotter',
@@ -28,7 +30,11 @@ export const CONST_AppNamePolitagree = 'politagree',
  * Base class for managing HTTP Headers. Including JWT support for extracting data.
  */
 export class HttpHeaderManagerBase {
-  constructor(public headers: StringOrStringArrayObject) {}
+  headers: StringOrStringArrayObject
+
+  constructor(headers: StringOrStringArrayObject) {
+    this.headers = headers
+  }
 
   static BearerTokenParse(token?: string) {
     let bearerToken = safestr(token)

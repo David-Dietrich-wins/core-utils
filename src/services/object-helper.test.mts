@@ -214,7 +214,13 @@ describe('ObjectTypesToString', () => {
 
   // Mock HTTP objects
   class File {
-    constructor(public readonly data: string, public readonly name: string) {}
+    data: string
+    name: string
+
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
+    }
 
     toArray() {
       return [this.data, this.name]
@@ -226,7 +232,13 @@ describe('ObjectTypesToString', () => {
   }
 
   class FileList {
-    constructor(public readonly data: string, public readonly name: string) {}
+    data: string
+    name: string
+
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
+    }
 
     toArray() {
       return [this.data, this.name]

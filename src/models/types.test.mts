@@ -8,7 +8,7 @@ import {
 
 test('SortOrderAsBoolean', () => {
   const soasc: SortOrder = 'asc',
-   sodesc: SortOrder = 'desc'
+    sodesc: SortOrder = 'desc'
 
   expect(SortOrderAsBoolean(soasc)).toBe(true)
   expect(SortOrderAsBoolean(sodesc)).toBe(false)
@@ -22,7 +22,7 @@ test('SortOrderAsBoolean', () => {
 
 test('SortOrderAsNumeric', () => {
   const soasc: SortOrder = 'asc',
-   sodesc: SortOrder = 'desc'
+    sodesc: SortOrder = 'desc'
 
   expect(SortOrderAsNumeric(soasc)).toBe(1)
   expect(SortOrderAsNumeric(sodesc)).toBe(-1)
@@ -36,7 +36,7 @@ test('SortOrderAsNumeric', () => {
 
 test('SortOrderAsString', () => {
   const soasc: SortOrder = 'asc',
-   sodesc: SortOrder = 'desc'
+    sodesc: SortOrder = 'desc'
 
   expect(SortOrderAsString(soasc)).toBe('asc')
   expect(SortOrderAsString(sodesc)).toBe('desc')
@@ -50,7 +50,11 @@ test('SortOrderAsString', () => {
 
 test('CreateClass', () => {
   class TestClass {
-    constructor(public name: string) {}
+    name: string
+
+    constructor(name: string) {
+      this.name = name
+    }
   }
   const instance = CreateClass(TestClass, 'TestName')
   expect(instance).toBeInstanceOf(TestClass)

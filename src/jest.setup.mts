@@ -5,7 +5,7 @@ import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
 import { NumberHelper } from './services/number-helper.mjs'
-import { ZodError } from 'zod/v4'
+import { ZodError } from 'zod'
 import { safestr } from './services/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'

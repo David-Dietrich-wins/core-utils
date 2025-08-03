@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
     "declaration": true,
     "declarationMap": true,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": true,
@@ -10,8 +11,8 @@
     "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "outDir": "./dist",

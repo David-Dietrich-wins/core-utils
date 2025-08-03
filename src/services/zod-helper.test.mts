@@ -4,7 +4,7 @@ import {
   zStringMinMax,
   zToStringArray,
 } from './zod-helper.mjs'
-import { ZodError } from 'zod/v4'
+import { ZodError } from 'zod'
 import { ZodTestHelper } from '../jest.setup.mjs'
 
 describe('zStringMinMax', () => {

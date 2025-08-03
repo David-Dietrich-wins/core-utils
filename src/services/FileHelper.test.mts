@@ -1,8 +1,8 @@
+import * as fs from 'node:fs'
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import { FileHelper } from './FileHelper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import fs from 'node:fs'
 import { safeJsonToString } from './object-helper.mjs'
 import tmp from 'tmp'
 

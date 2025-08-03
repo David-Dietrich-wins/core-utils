@@ -1,7 +1,7 @@
+import * as z from 'zod'
 import { StringHelper, isString } from './string-helper.mjs'
 import { arrayFirst, isArray } from './array-helper.mjs'
 import { isNumber } from './number-helper.mjs'
-import { z } from 'zod/v4'
 
 type StringSettings = {
   arrayStringMax?: number

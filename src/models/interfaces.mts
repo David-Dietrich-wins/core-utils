@@ -1,8 +1,8 @@
+import * as z from 'zod'
 import { ICreatedBy } from './id-created-updated.mjs'
 import { IId } from './IdManager.mjs'
 import { ITicker } from './ticker-info.mjs'
 import { IWebState } from './WebState.mjs'
-import { z } from 'zod/v4'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 export interface IDate<T = string> {
@@ -61,10 +61,7 @@ export const zErrorMessage = z.object({
 })
 export type IErrorMessage = z.infer<typeof zErrorMessage>
 
-export interface IEventLogin<T = string>
-  extends IId,
-    IUserId<T>,
-    ICreatedBy {
+export interface IEventLogin<T = string> extends IId, IUserId<T>, ICreatedBy {
   ip: string
   logoutTime?: Date
 }

@@ -1,8 +1,8 @@
+import * as fs from 'node:fs'
 import { FileHandle, open } from 'node:fs/promises'
 import { isArray, safeArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import fs from 'node:fs'
 import { isObject } from './object-helper.mjs'
 import { safestr } from './string-helper.mjs'
 

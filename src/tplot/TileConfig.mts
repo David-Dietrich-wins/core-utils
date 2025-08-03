@@ -6,15 +6,17 @@ import { newGuid } from '../services/general.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
-export enum TileType {
-  chart = 'chart',
-  content = 'content',
-  empty = 'empty',
-  news = 'news',
-  plotlist = 'plotlist',
-  table = 'table',
-  ticker = 'ticker-info',
-}
+export const TileType = {
+  chart: 'chart',
+  content: 'content',
+  empty: 'empty',
+  news: 'news',
+  plotlist: 'plotlist',
+  table: 'table',
+  ticker: 'ticker-info',
+} as const
+
+export type TileType = (typeof TileType)[keyof typeof TileType]
 
 export type TileConfigChart = IChartSettings & {
   useProfileColors?: boolean
@@ -58,16 +60,24 @@ export class TileConfig<Tvalue = any>
   extends IdNameValueType<Tvalue, TileType>
   implements ITileConfig<Tvalue>
 {
+  index: number
+  cols: number
+  rows: number
+
   constructor(
     id: string,
     name: string,
     value: Tvalue,
     type: TileType,
-    public index: number,
-    public cols: number,
-    public rows: number
+    index: number,
+    cols: number,
+    rows: number
   ) {
     super(id, name, value, type)
+
+    this.index = index
+    this.cols = cols
+    this.rows = rows
   }
 
   static CreateFromTileType(

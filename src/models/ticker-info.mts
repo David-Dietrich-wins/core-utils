@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
 import { isString, safestrUppercase } from '../services/string-helper.mjs'
 import {
@@ -12,7 +13,6 @@ import { IdName } from '../models/id-name.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import moment from 'moment'
 import { safeArray } from '../services/array-helper.mjs'
-import { z } from 'zod/v4'
 
 const CONST_TickerMaxLength = 20
 

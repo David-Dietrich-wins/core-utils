@@ -30,13 +30,25 @@ export class InstrumentationStatistics {
   startTime = new Date()
   finishTime?: Date
 
+  suffixWhenSingle = ''
+  suffixWhenPlural = 's'
+  totalProcessed = 0
+  successes = 0
+  failures = 0
+
   constructor(
-    public suffixWhenSingle = '',
-    public suffixWhenPlural = 's',
-    public totalProcessed = 0,
-    public successes = 0,
-    public failures = 0
-  ) {}
+    suffixWhenSingle = '',
+    suffixWhenPlural = 's',
+    totalProcessed = 0,
+    successes = 0,
+    failures = 0
+  ) {
+    this.suffixWhenSingle = suffixWhenSingle
+    this.suffixWhenPlural = suffixWhenPlural
+    this.totalProcessed = totalProcessed
+    this.successes = successes
+    this.failures = failures
+  }
 
   addStats(
     statsToAdd?: Readonly<ArrayOrSingle<InstrumentationStatistics>>,

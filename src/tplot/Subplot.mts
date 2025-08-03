@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,
@@ -8,7 +9,6 @@ import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModeli
 import { IIdRequired } from '../models/IdManager.mjs'
 import { isObject } from '../services/object-helper.mjs'
 import { newGuid } from '../services/general.mjs'
-import { z } from 'zod/v4'
 import { zDateTime } from '../services/zod-helper.mjs'
 
 export interface ISubplot extends IIdRequired {

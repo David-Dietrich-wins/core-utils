@@ -71,13 +71,25 @@ export class NameValueManager<TValue = string> {
 }
 
 export class NameValueWithStyle {
+  name: string
+  value: string | number | undefined
+  style?: object
+  tooltip?: string
+  order?: number
+
   constructor(
-    public name: string,
-    public value?: string | number,
-    public style?: object,
-    public tooltip?: string,
-    public order?: number
-  ) {}
+    name: string,
+    value?: string | number,
+    style?: object,
+    tooltip?: string,
+    order?: number
+  ) {
+    this.name = name
+    this.value = value
+    this.style = style
+    this.tooltip = tooltip
+    this.order = order
+  }
 }
 
 type StyleFormatter = (
@@ -87,17 +99,31 @@ type StyleFormatter = (
 ) => string
 
 export class NameValueLineFormatter<T extends object> {
+  key: keyof T
+  keyDisplayValue: string
+  order?: number
+  formatter?: StyleFormatter
+  tooltip?: string
+  style?: object
+  formatNumberOrString?: (val: number | string | null | undefined) => string
+
   constructor(
-    public key: keyof T,
-    public keyDisplayValue: string,
-    public order?: number,
-    public formatter?: StyleFormatter,
-    public tooltip?: string,
-    public style?: object,
-    public formatNumberOrString?: (
-      val: number | string | null | undefined
-    ) => string
-  ) {}
+    key: keyof T,
+    keyDisplayValue: string,
+    order?: number,
+    formatter?: StyleFormatter,
+    tooltip?: string,
+    style?: object,
+    formatNumberOrString?: (val: number | string | null | undefined) => string
+  ) {
+    this.key = key
+    this.keyDisplayValue = keyDisplayValue
+    this.order = order
+    this.formatter = formatter
+    this.tooltip = tooltip
+    this.style = style
+    this.formatNumberOrString = formatNumberOrString
+  }
 
   FromStyle(
     name: string,
@@ -126,7 +152,11 @@ export class NameValueLineFormatter<T extends object> {
 }
 
 export class NameValueLineFormatManager<T extends object> {
-  constructor(public nvlist: NameValueLineFormatter<T>[] = []) {}
+  nvlist: NameValueLineFormatter<T>[] = []
+
+  constructor(nvlist: NameValueLineFormatter<T>[] = []) {
+    this.nvlist = nvlist
+  }
 
   FormatWithStyle(data: NameValue[], sortField?: string, sortDirection = true) {
     const itemMapper = (item: NameValueWithStyle) => {

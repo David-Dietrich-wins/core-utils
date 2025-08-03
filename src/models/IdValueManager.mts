@@ -28,8 +28,8 @@ export class IdValueManager<Tid = string, Tvalue = string> extends IdManager<
   IIdValue<Tid, Tvalue>
 > {
   constructor(
-    public list: IIdValue<Tid, Tvalue>[] = [],
-    public stats?: InstrumentationStatistics
+    list: IIdValue<Tid, Tvalue>[] = [],
+    stats?: InstrumentationStatistics
   ) {
     super(list, stats)
   }

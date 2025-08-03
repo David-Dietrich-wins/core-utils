@@ -14,7 +14,11 @@ export type SingleLineFileProcessorConfig<T = unknown> = {
 }
 
 export class SingleLineFileProcessor<T = unknown> {
-  constructor(public config: SingleLineFileProcessorConfig<T>) {}
+  config: SingleLineFileProcessorConfig<T>
+
+  constructor(config: SingleLineFileProcessorConfig<T>) {
+    this.config = config
+  }
 
   async openExistingFile(stats: InstrumentationStatistics) {
     const { fileName, logger, typeName } = this.config

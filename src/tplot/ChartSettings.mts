@@ -1,3 +1,4 @@
+import * as z from 'zod'
 import { IPlotPricesWithMidpoint, zTicker } from '../models/ticker-info.mjs'
 import moment, { Moment } from 'moment'
 import {
@@ -11,7 +12,6 @@ import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { arrayFindByIds } from '../services/array-helper.mjs'
 import { hasData } from '../services/general.mjs'
-import { z } from 'zod/v4'
 
 export const ChartTimeFrameOptions: (IIdName & {
   fmpTimeFrame: string

@@ -1,4 +1,4 @@
-import { ZodString, z } from 'zod/v4'
+import * as z from 'zod'
 import {
   arrayAdd,
   arrayRemove,
@@ -47,7 +47,7 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     return FindObjectWithField(obj, 'id', id)
   }
 
-  static zIId<T extends z.ZodType = ZodString>(id: T) {
+  static zIId<T extends z.ZodType = z.ZodString>(id: T) {
     return z.object({
       id: id.optional(),
     })

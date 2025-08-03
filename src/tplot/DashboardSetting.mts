@@ -6,7 +6,9 @@ export interface IDashboardSetting {
 }
 
 export class DashboardSetting implements IDashboardSetting {
-  constructor(public screens: IDashboardScreenSetting[] = []) {
+  screens: IDashboardScreenSetting[] = []
+
+  constructor(screens: IDashboardScreenSetting[] = []) {
     this.screens = safeArray(screens)
   }
 
