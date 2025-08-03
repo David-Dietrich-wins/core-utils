@@ -1,10 +1,10 @@
+import * as z from 'zod'
 import {
   zDateTime,
   zFromStringOrStringArray,
   zStringMinMax,
   zToStringArray,
 } from './zod-helper.mjs'
-import { ZodError } from 'zod'
 import { ZodTestHelper } from '../jest.setup.mjs'
 
 describe('zStringMinMax', () => {
@@ -338,7 +338,7 @@ describe('zToStringArray', () => {
 
     const ret = schema.safeParse(str1001)
     expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error).toBeInstanceOf(z.ZodError)
     expect(ret.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(1000, [], true),
     ])
@@ -406,7 +406,7 @@ describe('zToStringArray', () => {
 
     let ret = schema.safeParse(['hi', 'there'])
     expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error).toBeInstanceOf(z.ZodError)
     // Expect(ret.error?.issues).toEqual([])
     expect(schema.safeParse(['hi', 'there'])).toEqual(
       ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3, [0]))
@@ -414,7 +414,7 @@ describe('zToStringArray', () => {
 
     ret = schema.safeParse(['this is a long string', 'another long string'])
     expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error).toBeInstanceOf(z.ZodError)
     expect(ret.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(10, [0], true),
       ZodTestHelper.StringTooBig(10, [1], true),
@@ -473,7 +473,7 @@ describe('zToStringArray', () => {
       success: false,
     })
     expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(ZodError)
+    expect(ret.error).toBeInstanceOf(z.ZodError)
     expect(ret.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(10, [0], true),
       ZodTestHelper.StringTooBig(10, [1], true),
@@ -520,7 +520,7 @@ test('zDateTime', () => {
 
   const ret = schema.safeParse(null)
   expect(ret.success).toBe(false)
-  expect(ret.error).toBeInstanceOf(ZodError)
+  expect(ret.error).toBeInstanceOf(z.ZodError)
   expect(ret.error?.issues).toEqual(
     expect.arrayContaining([
       expect.objectContaining({

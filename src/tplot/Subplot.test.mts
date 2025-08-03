@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
+import * as z from 'zod'
 import { Subplot } from './Subplot.mjs'
-import { ZodError } from 'zod'
 import { ZodTestHelper } from '../jest.setup.mjs'
 
 test('Subplot', () => {
@@ -125,64 +125,64 @@ test('parse', () => {
   expect(subplotParsed instanceof Subplot).toBe(false)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, orderNumber: 'not a number' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, pattern: 123 })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, timeframe: 123 })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, targetHigh: 'not a number' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, targetLow: 'not a number' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({
       ...subplotParsed,
       gainCeilingPercent: 'not a number',
     })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({
       ...subplotParsed,
       lossFloorPercent: 'not a number',
     })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, useMinusEight: 'not a boolean' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, scaleInverted: 'not a boolean' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({
       ...subplotParsed,
       expectedTriggerDate: 'not a date',
     })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: 123 })).toThrow(
-    ZodError
+    z.ZodError
   )
   expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: null })).toThrow(
-    ZodError
+    z.ZodError
   )
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, id: undefined })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
   expect(() => Subplot.zSchema.parse({ ...subplotParsed, id: '' })).not.toThrow(
-    ZodError
+    z.ZodError
   )
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, id: ' ' })
-  ).not.toThrow(ZodError)
+  ).not.toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, id: '1' })
-  ).not.toThrow(ZodError)
+  ).not.toThrow(z.ZodError)
   expect(() =>
     Subplot.zSchema.parse({ ...subplotParsed, id: '1', total: 'not a number' })
-  ).toThrow(ZodError)
+  ).toThrow(z.ZodError)
 
   try {
     Subplot.zSchema.parse({
@@ -191,7 +191,7 @@ test('parse', () => {
       total: 'not a number',
     })
   } catch (e) {
-    expect(e).toBeInstanceOf(ZodError)
+    expect(e).toBeInstanceOf(z.ZodError)
   }
   expect(
     Subplot.zSchema.safeParse({

@@ -1,4 +1,4 @@
-import { ZodError, ZodObject } from 'zod'
+import * as z from 'zod'
 import { Company } from './company.mjs'
 import { StringHelper } from '../services/string-helper.mjs'
 import { getCurrentDate } from '../jest.setup.mjs'
@@ -101,15 +101,15 @@ describe('zSchema', () => {
     const schema = Company.zCompany
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodObject)
+    expect(schema).toBeInstanceOf(z.ZodObject)
 
     try {
       schema.parse({
         name: 'name',
       })
     } catch (err) {
-      expect(err).toBeInstanceOf(ZodError)
-      const zerr = err as ZodError
+      expect(err).toBeInstanceOf(z.ZodError)
+      const zerr = err as z.ZodError
       expect(zerr.issues).toBeDefined()
       expect(zerr.issues.length).toBeGreaterThan(0)
       expect(zerr.issues[0].code).toBe('invalid_type')
@@ -157,7 +157,7 @@ describe('CompanyNamezSchema', () => {
     const schema = Company.CompanyNamezSchema
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodObject)
+    expect(schema).toBeInstanceOf(z.ZodObject)
   })
 
   test('valid parse', () => {

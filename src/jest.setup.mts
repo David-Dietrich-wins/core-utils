@@ -1,11 +1,10 @@
+import * as z from 'zod'
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
-import type { ZodTooBigIssue, ZodTooSmallIssue } from 'zod/v3'
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
 import { NumberHelper } from './services/number-helper.mjs'
-import { ZodError } from 'zod'
 import { safestr } from './services/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'
@@ -43,13 +42,13 @@ export class ZodTestHelper {
     }
   }
 
-  static SuccessFalse(errors: ZodError[][]) {
+  static SuccessFalse(errors: z.ZodError[][]) {
     return {
       error: expect.objectContaining(ZodTestHelper.InvalidUnion(errors)),
       success: false,
     }
   }
-  static InvalidUnion(errors: ZodError[][]) {
+  static InvalidUnion(errors: z.ZodError[][]) {
     return {
       issues: expect.arrayContaining([
         expect.objectContaining({
@@ -96,18 +95,15 @@ export class ZodTestHelper {
   static StringTooBig(
     maximum: number,
     path: (string | number)[] = [],
-    inclusive = false
+    inclusive?: boolean
   ) {
-    const ret: Partial<ZodTooBigIssue & { origin: string }> = {
+    const ret: Partial<z.core.$ZodIssueTooBig & { origin: string }> = {
       code: 'too_big',
+      inclusive,
       maximum,
       message: `Too big: expected string to have <=${maximum.toString()} characters`,
       origin: 'string',
       path,
-    }
-
-    if (inclusive) {
-      ret.inclusive = true
     }
 
     return ret
@@ -115,20 +111,17 @@ export class ZodTestHelper {
   static StringTooSmall(
     minimum: number,
     path: (string | number)[] = [],
-    inclusive = false
+    inclusive?: boolean
   ) {
-    const ret: Partial<ZodTooSmallIssue & { origin: string }> = {
+    const ret: Partial<z.core.$ZodIssueTooSmall & { origin: string }> = {
       code: 'too_small',
+      inclusive,
       message: `Too small: expected string to have >=${NumberHelper.NumberToString(
         minimum
       )} characters`,
       minimum,
       origin: 'string',
       path,
-    }
-
-    if (inclusive) {
-      ret.inclusive = true
     }
 
     return ret

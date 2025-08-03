@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
+import * as z from 'zod'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
-import { ZodError } from 'zod'
 import { ZodTestHelper } from '../jest.setup.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
 
@@ -226,9 +226,9 @@ describe('CreateFromTicker', () => {
     try {
       TradePlot.CreateFromTicker('AAPL', 'Test Trade Plot')
     } catch (e) {
-      expect(e).toBeInstanceOf(ZodError)
-      expect((e as ZodError).issues.length).toBe(1)
-      expect((e as ZodError).stack).toBeDefined()
+      expect(e).toBeInstanceOf(z.ZodError)
+      expect((e as z.ZodError).issues.length).toBe(1)
+      expect((e as z.ZodError).stack).toBeDefined()
 
       expect(e).toMatchObject(ZodTestHelper.Issue(ZodTestHelper.InvalidEmail()))
     }
@@ -241,9 +241,9 @@ describe('CreateFromTicker', () => {
       TradePlot.CreateFromTicker('', 'test@test.com')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      expect(e).toBeInstanceOf(ZodError)
-      expect((e as ZodError).issues.length).toBe(1)
-      expect((e as ZodError).stack).toBeDefined()
+      expect(e).toBeInstanceOf(z.ZodError)
+      expect((e as z.ZodError).issues.length).toBe(1)
+      expect((e as z.ZodError).stack).toBeDefined()
 
       expect(e).toMatchObject(
         ZodTestHelper.Issue(ZodTestHelper.StringTooSmall(1))

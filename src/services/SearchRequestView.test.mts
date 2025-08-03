@@ -1,8 +1,8 @@
+import * as z from 'zod'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { IIdNameValue } from '../models/id-name.mjs'
 import { NumberHelper } from './number-helper.mjs'
 import { StringHelper } from './string-helper.mjs'
-import { ZodType } from 'zod'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(
@@ -399,6 +399,7 @@ describe('getItems', () => {
     expect(srv.isDescending).toBe(false)
     expect(srv.CapLimit(10)).toBe(10)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     srv.term = 100 as any
     srv.limit = 0
     srv.offset = 2
@@ -428,7 +429,7 @@ describe('zSchema', () => {
     const schema = SearchRequestView.zSearchRequestView
 
     expect(schema).toBeDefined()
-    expect(schema).toBeInstanceOf(ZodType)
+    expect(schema).toBeInstanceOf(z.ZodType)
   })
 
   test('valid parse', () => {
