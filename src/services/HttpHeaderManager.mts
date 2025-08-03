@@ -10,20 +10,20 @@ import { isObject } from './object-helper.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /u
 
-export const HttpHeaderNamesAllowed = {
+export const HttpHeaderNamesAllowedKeys = {
   ApplicationName: 'x-application-name',
   Authorization: 'authorization',
   ShowDebug: 'ShowDebug',
 } as const
 export type HttpHeaderNamesAllowed =
-  (typeof HttpHeaderNamesAllowed)[keyof typeof HttpHeaderNamesAllowed]
+  (typeof HttpHeaderNamesAllowedKeys)[keyof typeof HttpHeaderNamesAllowedKeys]
 
 export const CONST_AppNamePolitagree = 'politagree',
   CONST_AppNameTradePlotter = 'tradeplotter',
   HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
-    { id: HttpHeaderNamesAllowed.ApplicationName, type: 'string' },
-    { id: HttpHeaderNamesAllowed.Authorization, type: 'string' },
-    { id: HttpHeaderNamesAllowed.ShowDebug, type: 'boolean' },
+    { id: HttpHeaderNamesAllowedKeys.ApplicationName, type: 'string' },
+    { id: HttpHeaderNamesAllowedKeys.Authorization, type: 'string' },
+    { id: HttpHeaderNamesAllowedKeys.ShowDebug, type: 'boolean' },
   ] as const
 
 /**
@@ -55,7 +55,7 @@ export class HttpHeaderManagerBase {
   }
 
   get applicationName() {
-    return this.getHeaderStringSafe(HttpHeaderNamesAllowed.ApplicationName)
+    return this.getHeaderStringSafe(HttpHeaderNamesAllowedKeys.ApplicationName)
   }
 
   getBoolean(name: string) {
@@ -81,7 +81,7 @@ export class HttpHeaderManagerBase {
   get bearerToken() {
     if (!this.bearerTokenCache) {
       this.bearerTokenCache = HttpHeaderManagerBase.BearerTokenParseStrict(
-        this.getHeaderStringSafe(HttpHeaderNamesAllowed.Authorization)
+        this.getHeaderStringSafe(HttpHeaderNamesAllowedKeys.Authorization)
       )
     }
 
@@ -102,10 +102,10 @@ export class HttpHeaderManagerBase {
   }
 
   get showDebug() {
-    return this.getBoolean(HttpHeaderNamesAllowed.ShowDebug)
+    return this.getBoolean(HttpHeaderNamesAllowedKeys.ShowDebug)
   }
   get showDebugExists() {
-    return this.has(HttpHeaderNamesAllowed.ShowDebug)
+    return this.has(HttpHeaderNamesAllowedKeys.ShowDebug)
   }
 
   get userId() {

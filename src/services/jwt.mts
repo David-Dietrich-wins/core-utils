@@ -14,12 +14,12 @@ import { IncomingHttpHeaders } from 'node:http'
 import { isFunction } from './general.mjs'
 import { safeArray } from './array-helper.mjs'
 
-export const WebRoles = {
+export const WebRoleKeys = {
   ADMIN: 'admin',
   MANAGER: 'manager',
   USER: 'user',
 } as const
-export type WebRoles = (typeof WebRoles)[keyof typeof WebRoles]
+export type WebRoles = (typeof WebRoleKeys)[keyof typeof WebRoleKeys]
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
@@ -308,16 +308,16 @@ export class JwtBase implements IJwtBase {
   get ApplicationRoles() {
     const arrRoles: WebRoles[] = [],
       safeRoles = safeArray<string>(this.roles)
-    if (safeRoles.includes(WebRoles.ADMIN)) {
-      arrRoles.push(WebRoles.ADMIN)
+    if (safeRoles.includes(WebRoleKeys.ADMIN)) {
+      arrRoles.push(WebRoleKeys.ADMIN)
     }
 
-    if (safeRoles.includes(WebRoles.MANAGER)) {
-      arrRoles.push(WebRoles.MANAGER)
+    if (safeRoles.includes(WebRoleKeys.MANAGER)) {
+      arrRoles.push(WebRoleKeys.MANAGER)
     }
 
-    if (safeRoles.includes(WebRoles.USER)) {
-      arrRoles.push(WebRoles.USER)
+    if (safeRoles.includes(WebRoleKeys.USER)) {
+      arrRoles.push(WebRoleKeys.USER)
     }
 
     return arrRoles
@@ -332,15 +332,15 @@ export class JwtBase implements IJwtBase {
   }
 
   get isAdmin() {
-    return this.ApplicationRoles.includes(WebRoles.ADMIN)
+    return this.ApplicationRoles.includes(WebRoleKeys.ADMIN)
   }
 
   get isManager() {
-    return this.ApplicationRoles.includes(WebRoles.MANAGER) || this.isAdmin
+    return this.ApplicationRoles.includes(WebRoleKeys.MANAGER) || this.isAdmin
   }
 
   get isUser() {
-    return this.ApplicationRoles.includes(WebRoles.USER) || this.isManager
+    return this.ApplicationRoles.includes(WebRoleKeys.USER) || this.isManager
   }
 
   get issuer() {

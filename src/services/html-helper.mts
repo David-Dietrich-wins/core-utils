@@ -1,6 +1,6 @@
 import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
 import { ToSafeArray2d, isArray } from './array-helper.mjs'
-import { HttpHeaderNamesAllowed } from './HttpHeaderManager.mjs'
+import { HttpHeaderNamesAllowedKeys } from './HttpHeaderManager.mjs'
 import { hasData } from './general.mjs'
 import { safestr } from './string-helper.mjs'
 
@@ -54,7 +54,7 @@ export abstract class HtmlHelper {
   }
 
   static GetHttpHeaderApplicationName(appName: string) {
-    return [HttpHeaderNamesAllowed.ApplicationName, appName] as const
+    return [HttpHeaderNamesAllowedKeys.ApplicationName, appName] as const
   }
 
   static GetHttpHeaders(headers: ArrayOrSingle<Readonly<[string, string]>>) {

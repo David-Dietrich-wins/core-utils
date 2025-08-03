@@ -10,7 +10,7 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { IIdValRequired } from '../models/id-val.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { IdName } from '../models/id-name.mjs'
-import { TileType } from './TileConfig.mjs'
+import { TileTypeKeys } from './TileConfig.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
 import { safestrTrim } from '../services/string-helper.mjs'
 
@@ -170,7 +170,7 @@ export class ConfigManager {
                 index: 0,
                 name: 'Trade Plotter',
                 rows: 2,
-                type: TileType.empty,
+                type: TileTypeKeys.empty,
                 value: {},
               },
               {
@@ -180,7 +180,7 @@ export class ConfigManager {
                 index: 0,
                 name: 'Trade Plotter',
                 rows: 2,
-                type: TileType.empty,
+                type: TileTypeKeys.empty,
                 value: {},
               },
             ],

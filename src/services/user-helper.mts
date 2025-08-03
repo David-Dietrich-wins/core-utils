@@ -1,16 +1,16 @@
 import * as z from 'zod'
 
-export const UserLoginRequestTypes = {
+export const UserLoginRequestTypeKeys = {
   google: 'google',
   login: 'login',
 } as const
-export type UserLoginRequestTypes = keyof typeof UserLoginRequestTypes
+export type UserLoginRequestTypes = keyof typeof UserLoginRequestTypeKeys
 
 export const zUserLoginRequest = z.object({
   appName: z.string().optional(),
   password: z.string().min(8),
   redirectUrl: z.string().optional(),
-  type: z.enum([UserLoginRequestTypes.login, UserLoginRequestTypes.google]),
+  type: z.enum(UserLoginRequestTypeKeys),
   username: z.email().max(250),
 })
 

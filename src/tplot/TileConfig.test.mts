@@ -1,4 +1,9 @@
-import { ITileConfig, TileConfig, TileType } from './TileConfig.mjs'
+import {
+  ITileConfig,
+  TileConfig,
+  type TileType,
+  TileTypeKeys,
+} from './TileConfig.mjs'
 import { AppException } from '../models/AppException.mjs'
 
 test('create TileConfig', () => {
@@ -6,7 +11,7 @@ test('create TileConfig', () => {
     cols: 6,
     id: 'test-id',
     rows: 4,
-    type: TileType.content,
+    type: TileTypeKeys.content,
     value: {
       content: 'This is a test tile content.',
       title: 'Test Tile',
@@ -21,7 +26,7 @@ test('create TileConfig', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 4,
-    type: TileType.content,
+    type: TileTypeKeys.content,
     value: {
       content: 'This is a test tile content.',
       title: 'Test Tile',
@@ -54,7 +59,7 @@ test('CreateChart', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 3,
-    type: TileType.chart,
+    type: TileTypeKeys.chart,
     value: {
       frequency: 1,
       frequencyType: 'daily',
@@ -77,7 +82,7 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 2,
-    type: TileType.content,
+    type: TileTypeKeys.content,
     value: {},
   })
 
@@ -87,7 +92,7 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.empty,
+    type: TileTypeKeys.empty,
     value: {},
   })
 
@@ -97,7 +102,7 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.news,
+    type: TileTypeKeys.news,
     value: {},
   })
 
@@ -107,7 +112,7 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.ticker,
+    type: TileTypeKeys.ticker,
     value: {
       ticker: 'AAPL',
     },
@@ -119,7 +124,7 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.plotlist,
+    type: TileTypeKeys.plotlist,
     value: {},
   })
 
@@ -129,14 +134,14 @@ test('Creates', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.table,
+    type: TileTypeKeys.table,
     value: {},
   })
 })
 
 test('CreateFromTileType', () => {
   expect(
-    TileConfig.CreateFromTileType(TileType.content, {
+    TileConfig.CreateFromTileType(TileTypeKeys.content, {
       cols: 3,
       rows: 2,
     })
@@ -146,12 +151,12 @@ test('CreateFromTileType', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 2,
-    type: TileType.content,
+    type: TileTypeKeys.content,
     value: {},
   })
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const chartTile = TileConfig.CreateFromTileType(TileType.chart, {
+  const chartTile = TileConfig.CreateFromTileType(TileTypeKeys.chart, {
     cols: 4,
     rows: 3,
     ticker: 'AAPL',
@@ -163,7 +168,7 @@ test('CreateFromTileType', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 3,
-    type: TileType.chart,
+    type: TileTypeKeys.chart,
     value: {
       frequency: 1,
       frequencyType: 'daily',
@@ -173,7 +178,7 @@ test('CreateFromTileType', () => {
     },
   })
   expect(
-    TileConfig.CreateFromTileType(TileType.content, {
+    TileConfig.CreateFromTileType(TileTypeKeys.content, {
       cols: 3,
       rows: 2,
     })
@@ -183,33 +188,33 @@ test('CreateFromTileType', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 2,
-    type: TileType.content,
+    type: TileTypeKeys.content,
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileType.empty)).toEqual({
+  expect(TileConfig.CreateFromTileType(TileTypeKeys.empty)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.empty,
+    type: TileTypeKeys.empty,
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileType.news)).toEqual({
+  expect(TileConfig.CreateFromTileType(TileTypeKeys.news)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.news,
+    type: TileTypeKeys.news,
     value: {},
   })
 
   expect(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    TileConfig.CreateFromTileType(TileType.ticker, {
+    TileConfig.CreateFromTileType(TileTypeKeys.ticker, {
       ticker: 'AAPL',
     } as TileConfig['value'])
   ).toEqual({
@@ -218,29 +223,29 @@ test('CreateFromTileType', () => {
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.ticker,
+    type: TileTypeKeys.ticker,
     value: {
       ticker: 'AAPL',
     },
   })
 
-  expect(TileConfig.CreateFromTileType(TileType.plotlist)).toEqual({
+  expect(TileConfig.CreateFromTileType(TileTypeKeys.plotlist)).toEqual({
     cols: 12,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.plotlist,
+    type: TileTypeKeys.plotlist,
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileType.table)).toEqual({
+  expect(TileConfig.CreateFromTileType(TileTypeKeys.table)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
     name: 'Trade Plotter',
     rows: 1,
-    type: TileType.table,
+    type: TileTypeKeys.table,
     value: {},
   })
 
@@ -250,13 +255,13 @@ test('CreateFromTileType', () => {
 })
 
 test('TileTypeFromString', () => {
-  expect(TileConfig.TileTypeFromString('chart')).toBe(TileType.chart)
-  expect(TileConfig.TileTypeFromString('content')).toBe(TileType.content)
-  expect(TileConfig.TileTypeFromString('empty')).toBe(TileType.empty)
-  expect(TileConfig.TileTypeFromString('news')).toBe(TileType.news)
-  expect(TileConfig.TileTypeFromString('plotlist')).toBe(TileType.plotlist)
-  expect(TileConfig.TileTypeFromString('table')).toBe(TileType.table)
-  expect(TileConfig.TileTypeFromString('ticker-info')).toBe(TileType.ticker)
+  expect(TileConfig.TileTypeFromString('chart')).toBe(TileTypeKeys.chart)
+  expect(TileConfig.TileTypeFromString('content')).toBe(TileTypeKeys.content)
+  expect(TileConfig.TileTypeFromString('empty')).toBe(TileTypeKeys.empty)
+  expect(TileConfig.TileTypeFromString('news')).toBe(TileTypeKeys.news)
+  expect(TileConfig.TileTypeFromString('plotlist')).toBe(TileTypeKeys.plotlist)
+  expect(TileConfig.TileTypeFromString('table')).toBe(TileTypeKeys.table)
+  expect(TileConfig.TileTypeFromString('ticker-info')).toBe(TileTypeKeys.ticker)
 
   expect(() => TileConfig.TileTypeFromString('unknown')).toThrow(AppException)
 })
@@ -277,32 +282,32 @@ test('TileText', () => {
   )
 
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.chart))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.chart))
   ).toBe('Chart: AAPL')
   expect(
     TileConfig.TileText(
-      TileConfig.CreateFromTileType(TileType.content, {
+      TileConfig.CreateFromTileType(TileTypeKeys.content, {
         value: { content: 'test content' },
       })
     )
   ).toBe('Content: test content')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.empty))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.empty))
   ).toBe('Empty:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.news))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.news))
   ).toBe('News:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.plotlist))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.plotlist))
   ).toBe('PlotList')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.table))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.table))
   ).toBe('Table:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.ticker))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.ticker))
   ).toBe('Ticker: AAPL')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileType.content))
+    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.content))
   ).toBe('Content: ')
   expect(
     TileConfig.TileText({
@@ -317,7 +322,7 @@ test('getITileConfig', () => {
       'test-id',
       'Test Tile',
       {},
-      TileType.empty,
+      TileTypeKeys.empty,
       0,
       1,
       1
@@ -330,7 +335,7 @@ test('getITileConfig', () => {
     index: 0,
     name: 'Test Tile',
     rows: 1,
-    type: TileType.empty,
+    type: TileTypeKeys.empty,
     value: {},
   })
 })

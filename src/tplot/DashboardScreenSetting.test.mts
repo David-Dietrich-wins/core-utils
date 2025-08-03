@@ -2,7 +2,7 @@ import {
   ITileConfig,
   TileConfigChart,
   TileConfigTicker,
-  TileType,
+  TileTypeKeys,
 } from './TileConfig.mjs'
 import { DashboardScreenSetting } from './DashboardScreenSetting.mjs'
 
@@ -50,7 +50,7 @@ test('CreateNew', () => {
       index: 0,
       name: 'Trade Plotter',
       rows: 1,
-      type: TileType.ticker,
+      type: TileTypeKeys.ticker,
       value: {
         ticker: 'AAPL',
       },
@@ -68,7 +68,7 @@ test('CreateNew with tiles', () => {
       index: 0,
       name: 'Tile 1',
       rows: 1,
-      type: TileType.ticker,
+      type: TileTypeKeys.ticker,
       value: {
         ticker: 'AAPL',
       },
@@ -79,7 +79,7 @@ test('CreateNew with tiles', () => {
       index: 1,
       name: 'Tile 2',
       rows: 2,
-      type: TileType.chart,
+      type: TileTypeKeys.chart,
       value: {
         endDate: 987654321,
         extendedHoursTrading: false,

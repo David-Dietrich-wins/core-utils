@@ -6,7 +6,7 @@ import { newGuid } from '../services/general.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
-export const TileType = {
+export const TileTypeKeys = {
   chart: 'chart',
   content: 'content',
   empty: 'empty',
@@ -16,7 +16,7 @@ export const TileType = {
   ticker: 'ticker-info',
 } as const
 
-export type TileType = (typeof TileType)[keyof typeof TileType]
+export type TileType = (typeof TileTypeKeys)[keyof typeof TileTypeKeys]
 
 export type TileConfigChart = IChartSettings & {
   useProfileColors?: boolean
@@ -35,13 +35,13 @@ export type TileConfigContent<T = string> = {
 }
 
 export type TileTypes = {
-  [TileType.chart]: TileConfigChart
-  [TileType.content]: TileConfigContent
-  [TileType.empty]: TileConfigContent
-  [TileType.news]: TileConfigContent
-  [TileType.plotlist]: TileConfigContent
-  [TileType.table]: TileConfigContent
-  [TileType.ticker]: TileConfigTicker
+  [TileTypeKeys.chart]: TileConfigChart
+  [TileTypeKeys.content]: TileConfigContent
+  [TileTypeKeys.empty]: TileConfigContent
+  [TileTypeKeys.news]: TileConfigContent
+  [TileTypeKeys.plotlist]: TileConfigContent
+  [TileTypeKeys.table]: TileConfigContent
+  [TileTypeKeys.ticker]: TileConfigTicker
 }
 
 export interface ITileConfig<Tvalue = unknown>
@@ -85,38 +85,38 @@ export class TileConfig<Tvalue = any>
     overrides?: Partial<ITileConfig> | null
   ) {
     switch (type) {
-      case TileType.chart:
+      case TileTypeKeys.chart:
         return TileConfig.CreateChart(
           CONST_DefaultTicker,
           overrides as Partial<ITileConfig<TileConfigChart>>
         )
 
-      case TileType.content:
+      case TileTypeKeys.content:
         return TileConfig.CreateContent(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
-      case TileType.empty:
+      case TileTypeKeys.empty:
         return TileConfig.CreateEmpty(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
-      case TileType.news:
+      case TileTypeKeys.news:
         return TileConfig.CreateNews(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
-      case TileType.plotlist:
+      case TileTypeKeys.plotlist:
         return TileConfig.CreatePlotlist(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
-      case TileType.table:
+      case TileTypeKeys.table:
         return TileConfig.CreateTable(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
-      case TileType.ticker:
+      case TileTypeKeys.ticker:
         return TileConfig.CreateTicker(
           CONST_DefaultTicker,
           overrides as Partial<ITileConfig<TileConfigTicker>>
@@ -133,19 +133,19 @@ export class TileConfig<Tvalue = any>
 
   static TileText(tile: ITileConfig) {
     switch (tile.type) {
-      case TileType.plotlist:
+      case TileTypeKeys.plotlist:
         return 'PlotList'
-      case TileType.chart:
+      case TileTypeKeys.chart:
         return `Chart: ${(tile.value as TileConfigChart).ticker}`
-      case TileType.table:
+      case TileTypeKeys.table:
         return 'Table:'
-      case TileType.ticker:
+      case TileTypeKeys.ticker:
         return `Ticker: ${(tile.value as TileConfigTicker).ticker}`
-      case TileType.news:
+      case TileTypeKeys.news:
         return 'News:'
-      case TileType.content:
+      case TileTypeKeys.content:
         return `Content: ${(tile.value as TileConfigContent).content ?? ''}`
-      case TileType.empty:
+      case TileTypeKeys.empty:
         return 'Empty:'
       default:
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -160,26 +160,26 @@ export class TileConfig<Tvalue = any>
 
     switch (ltype) {
       case 'chart':
-        return TileType.chart
+        return TileTypeKeys.chart
 
       case 'content':
-        return TileType.content
+        return TileTypeKeys.content
 
       case 'empty':
-        return TileType.empty
+        return TileTypeKeys.empty
 
       case 'news':
-        return TileType.news
+        return TileTypeKeys.news
 
       case 'plotlist':
-        return TileType.plotlist
+        return TileTypeKeys.plotlist
 
       case 'table':
-        return TileType.table
+        return TileTypeKeys.table
 
       default:
         if (ltype.startsWith('ticker')) {
-          return TileType.ticker
+          return TileTypeKeys.ticker
         }
     }
 
@@ -196,7 +196,7 @@ export class TileConfig<Tvalue = any>
       index: 0,
       name: 'Trade Plotter',
       rows: 1,
-      type: TileType.empty,
+      type: TileTypeKeys.empty,
       value: {},
       ...overrides,
     }
@@ -241,7 +241,7 @@ export class TileConfig<Tvalue = any>
     return TileConfig.CreateTileConfig({
       value: TileConfig.ChartDefault({ ticker }),
       ...overrides,
-      type: TileType.chart,
+      type: TileTypeKeys.chart,
     })
   }
 
@@ -250,7 +250,7 @@ export class TileConfig<Tvalue = any>
   ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      type: TileType.content,
+      type: TileTypeKeys.content,
     })
   }
 
@@ -259,7 +259,7 @@ export class TileConfig<Tvalue = any>
   ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      type: TileType.empty,
+      type: TileTypeKeys.empty,
     })
   }
 
@@ -268,7 +268,7 @@ export class TileConfig<Tvalue = any>
   ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      type: TileType.news,
+      type: TileTypeKeys.news,
     })
   }
 
@@ -279,7 +279,7 @@ export class TileConfig<Tvalue = any>
       value: {},
       ...overrides,
       cols: 12,
-      type: TileType.plotlist,
+      type: TileTypeKeys.plotlist,
     })
   }
 
@@ -288,7 +288,7 @@ export class TileConfig<Tvalue = any>
   ) {
     return TileConfig.CreateTileConfig({
       ...overrides,
-      type: TileType.table,
+      type: TileTypeKeys.table,
     })
   }
 
@@ -299,7 +299,7 @@ export class TileConfig<Tvalue = any>
     return TileConfig.CreateTileConfig({
       value: { ticker },
       ...overrides,
-      type: TileType.ticker,
+      type: TileTypeKeys.ticker,
     })
   }
 
