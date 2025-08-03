@@ -12,7 +12,7 @@ import { safestr } from './services/string-helper.mjs'
 // Import { setupServer } from 'msw/node'
 
 // Set to 60 seconds. We are going over Global VPN.
-jest.setTimeout(600000)
+// jest.setTimeout(600000)
 
 export const CONST_RegexUptimeMatcher = /^\d+m*s$/u
 export const CONST_RegexForElapsedTime = /^(?:\d+ seconds|1 second|\d+m?s)/u
