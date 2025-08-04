@@ -193,17 +193,17 @@ test('parse', () => {
   } catch (e) {
     expect(e).toBeInstanceOf(z.ZodError)
   }
-  expect(
-    Subplot.zSchema.safeParse({
-      ...subplotParsed,
-      id: '1',
-      total: 'not a number',
-    })
-  ).toEqual(
-    ZodTestHelper.SuccessFalseSingle(
-      ZodTestHelper.InvalidType('number', 'string', ['total'])
-    )
-  )
+
+  const retzod = Subplot.zSchema.safeParse({
+    ...subplotParsed,
+    id: '1',
+    total: 'not a number',
+  })
+  expect(retzod.success).toBe(false)
+  expect(retzod.error).toBeInstanceOf(z.ZodError)
+  expect(retzod.error?.issues).toEqual([
+    ZodTestHelper.InvalidType('number', 'string', ['total']),
+  ])
 })
 
 test('GetFmpIndicatorQueryParams', () => {

@@ -17,17 +17,26 @@ describe('zStringMinMax', () => {
       data: str1000,
       success: true,
     })
-    expect(schema.safeParse(str1001)).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(1000))
-    )
+
+    let retzod = schema.safeParse(str1001)
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(1000, undefined, true),
+    ])
 
     expect(schema.safeParse('  hello  ')).toEqual({
       data: '  hello  ',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
-    )
+
+    retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, undefined, true),
+    ])
+
     expect(schema.safeParse('this is a long string')).toEqual({
       data: 'this is a long string',
       success: true,
@@ -55,15 +64,28 @@ describe('zStringMinMax', () => {
       data: 'hello',
       success: true,
     })
-    expect(schema.safeParse('Hi')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
-    )
-    expect(schema.safeParse('this IS a long string')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
-    expect(schema.safeParse('heLLO world')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
+
+    let retzod = schema.safeParse('Hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, undefined, true),
+    ])
+
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, undefined, true),
+    ])
+
+    retzod = schema.safeParse('heLLO world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, undefined, true),
+    ])
+
     expect(schema.safeParse('heLLO Wd')).toEqual({
       data: 'hello wd',
       success: true,
@@ -76,16 +98,26 @@ describe('zStringMinMax', () => {
       data: 'HELLO',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
-    )
+    let retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, undefined, true),
+    ])
 
-    expect(schema.safeParse('this is a long string')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
-    expect(schema.safeParse('hello world')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, undefined, true),
+    ])
+
+    retzod = schema.safeParse('hello world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, undefined, true),
+    ])
   })
 })
 
@@ -120,27 +152,24 @@ describe('zFromStringOrStringArray', () => {
       success: true,
     })
 
-    expect(schema.safeParse(str1001)).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooBig(1000)),
-        ]),
-      }),
-      success: false,
-    })
+    let retzod = schema.safeParse(str1001)
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(1000, undefined, true),
+    ])
 
     expect(schema.safeParse('  hello  ')).toEqual({
       data: 'hello',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
-        ]),
-      }),
-      success: false,
-    })
+
+    retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
 
     expect(schema.safeParse('this is a long string')).toEqual({
       data: 'this is a long string',
@@ -178,44 +207,39 @@ describe('zFromStringOrStringArray', () => {
       data: 'hello',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
-        ]),
-      }),
-      success: false,
-    })
-    expect(schema.safeParse('this is a long string')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
-        ]),
-      }),
-      success: false,
-    })
 
-    expect(schema.safeParse('hello world')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
-        ]),
-      }),
-      success: false,
-    })
+    let retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
+
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
+    retzod = schema.safeParse('hello world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
 
     expect(schema.safeParse(['hELlo', 'World'])).toEqual({
       data: ['hello', 'world'],
       success: true,
     })
-    expect(schema.safeParse(['hi', 'there'])).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0], true)),
-        ]),
-      }),
-      success: false,
-    })
+
+    retzod = schema.safeParse(['hi', 'there'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [0], true),
+    ])
 
     expect(
       schema.safeParse(['this is a long string', 'another long string'])
@@ -251,49 +275,42 @@ describe('zFromStringOrStringArray', () => {
       data: 'HELLO',
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
-        ]),
-      }),
-      success: false,
-    })
 
-    expect(schema.safeParse('this is a long string')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
-        ]),
-      }),
-      success: false,
-    })
+    let retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
 
-    expect(schema.safeParse('hello world')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooBig(10)),
-        ]),
-      }),
-      success: false,
-    })
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
+    retzod = schema.safeParse('hello world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
 
     expect(schema.safeParse(['hello', 'world'])).toEqual({
       data: ['HELLO', 'WORLD'],
       success: true,
     })
-    expect(schema.safeParse(['hi', 'there'])).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3, [0], true)),
-        ]),
-      }),
-      success: false,
-    })
 
-    expect(
-      schema.safeParse(['this is a long string', 'another long string'])
-    ).toEqual({
+    retzod = schema.safeParse(['hi', 'there'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [0], true),
+    ])
+
+    retzod = schema.safeParse(['this is a long string', 'another long string'])
+    expect(retzod).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
           expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
@@ -336,10 +353,10 @@ describe('zToStringArray', () => {
       success: true,
     })
 
-    const ret = schema.safeParse(str1001)
-    expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(z.ZodError)
-    expect(ret.error?.issues).toEqual([
+    let retzod = schema.safeParse(str1001)
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(1000, [], true),
     ])
 
@@ -347,14 +364,14 @@ describe('zToStringArray', () => {
       data: ['hello'],
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        issues: expect.arrayContaining([
-          expect.objectContaining(ZodTestHelper.StringTooSmall(3)),
-        ]),
-      }),
-      success: false,
-    })
+
+    retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
+
     expect(schema.safeParse('this is a long string')).toEqual({
       data: ['this is a long string'],
       success: true,
@@ -390,32 +407,48 @@ describe('zToStringArray', () => {
       data: ['hello'],
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3))
-    )
-    expect(schema.safeParse('this is a long string')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
-    expect(schema.safeParse('hello world')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
+
+    let retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
+
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
+    retzod = schema.safeParse('hello world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
     expect(schema.safeParse(['hELlo', 'worLD'])).toEqual({
       data: ['hello', 'world'],
       success: true,
     })
 
-    let ret = schema.safeParse(['hi', 'there'])
-    expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(z.ZodError)
+    retzod = schema.safeParse(['hi', 'there'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
     // Expect(ret.error?.issues).toEqual([])
-    expect(schema.safeParse(['hi', 'there'])).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3, [0]))
-    )
+    retzod = schema.safeParse(['hi', 'there'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [0], true),
+    ])
 
-    ret = schema.safeParse(['this is a long string', 'another long string'])
-    expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(z.ZodError)
-    expect(ret.error?.issues).toEqual([
+    retzod = schema.safeParse(['this is a long string', 'another long string'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(10, [0], true),
       ZodTestHelper.StringTooBig(10, [1], true),
     ])
@@ -427,43 +460,59 @@ describe('zToStringArray', () => {
       data: ['HELLO'],
       success: true,
     })
-    expect(schema.safeParse('hi')).toEqual({
-      error: expect.objectContaining({
-        // Code: 'invalid_union',
-        // Errors: expect.arrayContaining([
-        //   Expect.objectContaining({
-        //     Code: 'too_small',
-        //     Message: 'Too small: expected string to have >3 characters',
-        //   }),
-        //   Expect.objectContaining({
-        //     Expected: 'array',
-        //     Code: 'invalid_type',
-        //     Path: [],
-        //     Message: 'Invalid input: expected array, received string',
-        //   }),
-        // ]),
-      }),
-      success: false,
-    })
-    expect(schema.safeParse('this is a long string')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
-    expect(schema.safeParse('hello world')).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooBig(10))
-    )
+
+    let retzod = schema.safeParse('hi')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [], true),
+    ])
+    // error: expect.objectContaining({
+    // Code: 'invalid_union',
+    // Errors: expect.arrayContaining([
+    //   Expect.objectContaining({
+    //     Code: 'too_small',
+    //     Message: 'Too small: expected string to have >3 characters',
+    //   }),
+    //   Expect.objectContaining({
+    //     Expected: 'array',
+    //     Code: 'invalid_type',
+    //     Path: [],
+    //     Message: 'Invalid input: expected array, received string',
+    //   }),
+    // ]),
+    //   }),
+    //   success: false,
+    // })
+
+    retzod = schema.safeParse('this is a long string')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
+    retzod = schema.safeParse('hello world')
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooBig(10, [], true),
+    ])
+
     expect(schema.safeParse(['hello', 'world'])).toEqual({
       data: ['HELLO', 'WORLD'],
       success: true,
     })
-    expect(schema.safeParse(['hi', 'there'])).toEqual(
-      ZodTestHelper.SuccessFalseSingle(ZodTestHelper.StringTooSmall(3, [0]))
-    )
 
-    const ret = schema.safeParse([
-      'this is a long string',
-      'another long string',
+    retzod = schema.safeParse(['hi', 'there'])
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
+      ZodTestHelper.StringTooSmall(3, [0], true),
     ])
-    expect(ret).toEqual({
+
+    retzod = schema.safeParse(['this is a long string', 'another long string'])
+    expect(retzod).toEqual({
       error: expect.objectContaining({
         issues: expect.arrayContaining([
           expect.objectContaining(ZodTestHelper.StringTooBig(10, [0], true)),
@@ -472,9 +521,9 @@ describe('zToStringArray', () => {
       }),
       success: false,
     })
-    expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(z.ZodError)
-    expect(ret.error?.issues).toEqual([
+    expect(retzod.success).toBe(false)
+    expect(retzod.error).toBeInstanceOf(z.ZodError)
+    expect(retzod.error?.issues).toEqual([
       ZodTestHelper.StringTooBig(10, [0], true),
       ZodTestHelper.StringTooBig(10, [1], true),
     ])

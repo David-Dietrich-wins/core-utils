@@ -245,9 +245,8 @@ describe('CreateFromTicker', () => {
       expect((e as z.ZodError).issues.length).toBe(1)
       expect((e as z.ZodError).stack).toBeDefined()
 
-      expect(e).toMatchObject(
-        ZodTestHelper.Issue(ZodTestHelper.StringTooSmall(1))
-      )
+      const retzod = e as z.ZodError
+      expect(retzod.issues).toEqual([ZodTestHelper.StringTooSmall(1, [], true)])
     }
 
     expect.assertions(4)
