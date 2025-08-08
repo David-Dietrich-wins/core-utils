@@ -6,7 +6,6 @@
     "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "inlineSources": true,
     "isolatedModules": true,
     "lib": ["ESNext"],
     "listEmittedFiles": false,
@@ -22,8 +21,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2022",
-    "traceResolution": false,
-    "types": ["node", "jest"]
+    "traceResolution": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

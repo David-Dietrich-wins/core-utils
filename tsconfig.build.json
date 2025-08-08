@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "sourceMap": false,
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*.mts"],
+  "exclude": [
+    "node_modules",
+    "__tests__",
+    "**/jest.setup.mts",
+    "**/jest.setup.ts",
+    "**/*.test.mts",
+    "**/*.test.ts",
+    "**/*.test.integration.mts",
+    "**/*.test.integration.ts"
+  ]
+}
