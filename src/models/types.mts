@@ -1,11 +1,11 @@
 import { getAsNumber, isNumber } from '../services/number-helper.mjs'
+import { getBoolean, isNullOrUndefined } from '../services/general.mjs'
 import { isString, safestrLowercase } from '../services/string-helper.mjs'
 import { IUserInfo } from './UserInfo.mjs'
 import { IconConfiguration } from '../services/ContextManager.mjs'
 import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
-import { isNullOrUndefined } from '../services/general.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }
@@ -132,7 +132,7 @@ export function SortOrderAsBoolean(order?: SortOrder | null) {
     return getAsNumber(order) >= 0
   }
 
-  return Boolean(order)
+  return getBoolean(order)
 }
 /**
  * Converts a SortOrder to a numeric value for sorting.
