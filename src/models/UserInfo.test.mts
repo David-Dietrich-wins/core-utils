@@ -1,4 +1,4 @@
-import { ConfigManager, UserConfigNames } from '../tplot/ConfigManager.mjs'
+import { ConfigHeaderTickerBars } from '../tplot/ConfigHeaderTickerBars.mjs'
 import { UserInfo } from './UserInfo.mjs'
 
 test('constructor with default', () => {
@@ -8,13 +8,13 @@ test('constructor with default', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [UserConfigNames.charts]: expect.objectContaining({}),
-      [UserConfigNames.dashboards]: expect.objectContaining({}),
-      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
-      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.operations]: expect.objectContaining({}),
-      [UserConfigNames.website]: expect.objectContaining({}),
+      charts: expect.objectContaining({}),
+      dashboards: expect.objectContaining({}),
+      headerTickerBars: expect.objectContaining({}),
+      ideaCryptoTabSelected: expect.objectContaining({}),
+      ideaTabSelected: expect.objectContaining({}),
+      operations: expect.objectContaining({}),
+      website: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -46,13 +46,13 @@ test('CreateUserInfo static method', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [UserConfigNames.charts]: expect.objectContaining({}),
-      [UserConfigNames.dashboards]: expect.objectContaining({}),
-      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
-      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.operations]: expect.objectContaining({}),
-      [UserConfigNames.website]: expect.objectContaining({}),
+      charts: expect.objectContaining({}),
+      dashboards: expect.objectContaining({}),
+      headerTickerBars: expect.objectContaining({}),
+      ideaCryptoTabSelected: expect.objectContaining({}),
+      ideaTabSelected: expect.objectContaining({}),
+      operations: expect.objectContaining({}),
+      website: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -73,13 +73,13 @@ test('CreateIUserInfo static method', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [UserConfigNames.charts]: expect.objectContaining({}),
-      [UserConfigNames.dashboards]: expect.objectContaining({}),
-      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
-      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.operations]: expect.objectContaining({}),
-      [UserConfigNames.website]: expect.objectContaining({}),
+      charts: expect.objectContaining({}),
+      dashboards: expect.objectContaining({}),
+      headerTickerBars: expect.objectContaining({}),
+      ideaCryptoTabSelected: expect.objectContaining({}),
+      ideaTabSelected: expect.objectContaining({}),
+      operations: expect.objectContaining({}),
+      website: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -100,13 +100,13 @@ test('get IUserInfo', () => {
   expect(ui.IUserInfo).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [UserConfigNames.charts]: expect.objectContaining({}),
-      [UserConfigNames.dashboards]: expect.objectContaining({}),
-      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
-      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
-      [UserConfigNames.operations]: expect.objectContaining({}),
-      [UserConfigNames.website]: expect.objectContaining({}),
+      charts: expect.objectContaining({}),
+      dashboards: expect.objectContaining({}),
+      headerTickerBars: expect.objectContaining({}),
+      ideaCryptoTabSelected: expect.objectContaining({}),
+      ideaTabSelected: expect.objectContaining({}),
+      operations: expect.objectContaining({}),
+      website: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -119,57 +119,70 @@ test('get IUserInfo', () => {
 })
 
 test('isHeaderTickerBarsDisabled', () => {
-  const cm = ConfigManager.defaults
-  cm[UserConfigNames.headerTickerBars].disabled = true
-  const ui = new UserInfo({ config: cm })
+  const cm = ConfigHeaderTickerBars.defaults()
+  cm.disabled = true
 
-  expect(ui.isHeaderTickerBarsDisabled).toBe(true)
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(true)
 
-  ui.config.headerTickerBars.disabled = false
-  expect(ui.isHeaderTickerBarsDisabled).toBe(false)
+  cm.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(false)
 })
 
 test('shouldHeaderTickerBarsBeDisabled', () => {
-  const cm = ConfigManager.defaults
-  cm[UserConfigNames.headerTickerBars].disabled = true
-  cm[UserConfigNames.headerTickerBars].asset.disabled = true
-  cm[UserConfigNames.headerTickerBars].crypto.disabled = true
+  const cm = ConfigHeaderTickerBars.defaults()
+  cm.disabled = true
+  cm.asset.disabled = true
+  cm.crypto.disabled = true
 
-  const ui = new UserInfo({ config: cm })
+  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
+    true
+  )
+  cm.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
+    true
+  )
 
-  expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(true)
-  ui.config.headerTickerBars.disabled = false
-  expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(true)
+  cm.asset.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
+    false
+  )
 
-  ui.config.headerTickerBars.asset.disabled = false
-  expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(false)
+  cm.asset.disabled = true
+  cm.crypto.disabled = true
+  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
+    true
+  )
 
-  ui.config.headerTickerBars.asset.disabled = true
-  ui.config.headerTickerBars.crypto.disabled = true
-  expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(true)
-
-  ui.config.headerTickerBars.asset.disabled = true
-  ui.config.headerTickerBars.crypto.disabled = false
-  expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(false)
+  cm.asset.disabled = true
+  cm.crypto.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
+    false
+  )
 })
 
 test('isHeaderTickerBarsAssetsDisabled', () => {
-  const cm = ConfigManager.defaults
-  cm[UserConfigNames.headerTickerBars].asset.disabled = true
-  const ui = new UserInfo({ config: cm })
+  const cm = ConfigHeaderTickerBars.defaults()
+  cm.asset.disabled = true
 
-  expect(ui.isHeaderTickerBarsAssetsDisabled).toBe(true)
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled).toBe(
+    true
+  )
 
-  ui.config.headerTickerBars.asset.disabled = false
-  expect(ui.isHeaderTickerBarsAssetsDisabled).toBe(false)
+  cm.asset.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled).toBe(
+    false
+  )
 })
 test('isHeaderTickerBarsCryptosDisabled', () => {
-  const cm = ConfigManager.defaults
-  cm[UserConfigNames.headerTickerBars].crypto.disabled = true
-  const ui = new UserInfo({ config: cm })
+  const cm = ConfigHeaderTickerBars.defaults()
+  cm.crypto.disabled = true
 
-  expect(ui.isHeaderTickerBarsCryptosDisabled).toBe(true)
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled).toBe(
+    true
+  )
 
-  ui.config.headerTickerBars.crypto.disabled = false
-  expect(ui.isHeaderTickerBarsCryptosDisabled).toBe(false)
+  cm.crypto.disabled = false
+  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled).toBe(
+    false
+  )
 })

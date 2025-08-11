@@ -1,7 +1,7 @@
 import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
 import type { IContext, IContextUI } from '../services/ContextManager.mjs'
 import {
-  arrayMoveFromTo,
+  arrayMoveElement,
   isArray,
   safeArray,
 } from '../services/array-helper.mjs'
@@ -167,7 +167,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateAsset(
       cfg,
       (asset: IContextTickers) => ({
-        tickers: arrayMoveFromTo(asset.tickers, payload.from, payload.to),
+        tickers: arrayMoveElement([...asset.tickers], payload.from, payload.to),
       }),
       updated
     )
@@ -295,7 +295,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateCrypto(
       cfg,
       (crypto: IContextTickers) => ({
-        tickers: arrayMoveFromTo(crypto.tickers, payload.from, payload.to),
+        tickers: arrayMoveElement(crypto.tickers, payload.from, payload.to),
       }),
       updated
     )

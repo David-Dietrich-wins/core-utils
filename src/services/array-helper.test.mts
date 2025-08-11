@@ -28,7 +28,7 @@ import {
   arrayLast,
   arrayLastNonEmpty,
   arrayMoveDown,
-  arrayMoveFromTo,
+  arrayMoveElement,
   arrayMoveUp,
   arrayMustFind,
   arrayMustFindByName,
@@ -741,19 +741,34 @@ test('MapINamesToNames', () => {
 
 test('arrayMoveFromTo', () => {
   const arr = [0, 1, 2, 3, 4, 5, 6]
+  const myArray = [10, 20, 30, 40, 50]
 
-  expect(arrayMoveFromTo([...arr], 1, 1)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
-  expect(arrayMoveFromTo([...arr], 6, 6)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
-  expect(arrayMoveFromTo([...arr], 0, 1)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
-  expect(arrayMoveFromTo([...arr], 1, 0)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
-  expect(arrayMoveFromTo([...arr], 2, 0)).toStrictEqual([2, 1, 0, 3, 4, 5, 6])
+  // Move element at index 0 (10) to index 2
+  expect(arrayMoveElement([...myArray], 0, 2)).toStrictEqual([
+    20, 30, 10, 40, 50,
+  ])
 
-  expect(arrayMoveFromTo([...arr], 5, 2)).toStrictEqual([0, 1, 5, 3, 4, 2, 6])
-  expect(arrayMoveFromTo([...arr], 0, 6)).toStrictEqual([6, 1, 2, 3, 4, 5, 0])
-  expect(arrayMoveFromTo([...arr], 6, 0)).toStrictEqual([6, 1, 2, 3, 4, 5, 0])
+  const anotherArray = ['a', 'b', 'c', 'd']
 
-  expect(() => arrayMoveFromTo([...arr], 7, 0)).toThrow(AppException)
-  expect(() => arrayMoveFromTo([...arr], -1, 0)).toThrow(AppException)
+  // Move element at index 3 ('d') to index 1
+  expect(arrayMoveElement([...anotherArray], 3, 1)).toStrictEqual([
+    'a',
+    'd',
+    'b',
+    'c',
+  ])
+  expect(arrayMoveElement([...arr], 1, 1)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
+  expect(arrayMoveElement([...arr], 6, 6)).toStrictEqual([0, 1, 2, 3, 4, 5, 6])
+  expect(arrayMoveElement([...arr], 0, 1)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
+  expect(arrayMoveElement([...arr], 1, 0)).toStrictEqual([1, 0, 2, 3, 4, 5, 6])
+  expect(arrayMoveElement([...arr], 2, 0)).toStrictEqual([2, 0, 1, 3, 4, 5, 6])
+
+  expect(arrayMoveElement([...arr], 5, 2)).toStrictEqual([0, 1, 5, 2, 3, 4, 6])
+  expect(arrayMoveElement([...arr], 0, 6)).toStrictEqual([1, 2, 3, 4, 5, 6, 0])
+  expect(arrayMoveElement([...arr], 6, 0)).toStrictEqual([6, 0, 1, 2, 3, 4, 5])
+
+  expect(() => arrayMoveElement([...arr], 7, 0)).toThrow(AppException)
+  expect(() => arrayMoveElement([...arr], -1, 0)).toThrow(AppException)
 })
 
 test('arrayFilterMap', () => {

@@ -578,29 +578,35 @@ export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
   return safeArray(arr).map((x) => x.name)
 }
 
-export function arrayMoveFromTo<T>(
+export function arrayMoveElement<T>(
   arr: ArrayOrSingle<T>,
-  from: number,
-  to: number
+  fromIndex: number,
+  toIndex: number
 ) {
   const arrCopy = safeArray(arr),
     len = arrCopy.length
 
-  if (from < 0 || from >= len || to < 0 || to >= len) {
+  if (fromIndex < 0 || fromIndex >= len || toIndex < 0 || toIndex >= len) {
     throw new AppException(
       `Invalid source index of ${safestr(
-        from
-      )} or destination index of ${safestr(to)} when moving array elements.`,
-      arrayMoveFromTo.name,
+        fromIndex
+      )} or destination index of ${safestr(
+        toIndex
+      )} when moving array elements.`,
+      arrayMoveElement.name,
       arrCopy
     )
   }
 
-  if (from !== to) {
-    const temp = arrCopy[to]
-    arrCopy[to] = arrCopy[from]
-    arrCopy[from] = temp
+  if (fromIndex === toIndex) {
+    return arrCopy
   }
+
+  // Remove the element and store it
+  const [element] = arrCopy.splice(fromIndex, 1)
+
+  // Insert the element at the new position
+  arrCopy.splice(toIndex, 0, element)
 
   return arrCopy
 }

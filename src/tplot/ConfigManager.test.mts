@@ -1,8 +1,8 @@
 import {
   ConfigManager,
   CreateConfigTickerInfoTabSettings,
-  UserConfigNames,
 } from './ConfigManager.mjs'
+import { UserConfigDefaults, UserConfigNames } from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
 
@@ -13,7 +13,7 @@ test('CreateConfigTickerInfoTabSettings', () => {
   })
 
   expect(settings).toEqual({
-    ...ConfigManager.defaults[UserConfigNames.tickerInfo],
+    ...UserConfigDefaults().tickerInfo,
     selectedPeopleTab: 'top',
     selectedTab: 'asset',
   })
@@ -62,12 +62,12 @@ test('constructor', () => {
     ideaTabSelected: { id: 0, name: 'most-active' },
     operations: {
       id: expect.any(String),
-      updated: 1764590400000,
-      useMinusEight: {
+      minusEightPlus10: {
         id: expect.any(String),
         updated: 1764590400000,
         value: true,
       },
+      updated: 1764590400000,
     },
     website: {
       hideHelp: {
@@ -155,14 +155,20 @@ test('FindConfig', () => {
     UserConfigNames.charts
   )
   expect(
-    configManager.FindConfig('nonExistentConfig' as UserConfigNames)
+    configManager.FindConfig(
+      'nonExistentConfig' as keyof typeof UserConfigNames
+    )
   ).toBeUndefined()
 })
 
 test('FindBoolean', () => {
   const configManager = new ConfigManager([])
 
-  expect(configManager.FindBoolean(UserConfigNames.charts)).toStrictEqual({
+  expect(
+    configManager.FindBoolean(
+      UserConfigNames.charts as keyof typeof UserConfigNames
+    )
+  ).toStrictEqual({
     down: { color: '#FF0000' },
     id: expect.any(String),
     neutral: { color: '#000000' },
@@ -174,7 +180,11 @@ test('FindBoolean', () => {
 test('FindString', () => {
   const configManager = new ConfigManager([])
 
-  expect(configManager.FindString(UserConfigNames.charts)).toStrictEqual({
+  expect(
+    configManager.FindString(
+      UserConfigNames.charts as keyof typeof UserConfigNames
+    )
+  ).toStrictEqual({
     down: { color: '#FF0000' },
     id: expect.any(String),
     neutral: { color: '#000000' },
@@ -193,6 +203,7 @@ test('dashboards', () => {
   let configManager = new ConfigManager([])
 
   expect(configManager.dashboards).toStrictEqual({
+    id: expect.any(String),
     screens: [
       {
         id: 'default',
@@ -221,6 +232,7 @@ test('dashboards', () => {
         ],
       },
     ],
+    updated: expect.any(Number),
   })
 
   const configDashboards: IConfigShort = {
