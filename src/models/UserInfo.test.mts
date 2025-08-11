@@ -1,4 +1,4 @@
-import { ConfigManager, TpConfigNamesEnum } from '../tplot/ConfigManager.mjs'
+import { ConfigManager, UserConfigNames } from '../tplot/ConfigManager.mjs'
 import { UserInfo } from './UserInfo.mjs'
 
 test('constructor with default', () => {
@@ -8,13 +8,13 @@ test('constructor with default', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [TpConfigNamesEnum.charts]: expect.objectContaining({}),
-      [TpConfigNamesEnum.dashboards]: expect.objectContaining({}),
-      [TpConfigNamesEnum.headerTickerBars]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.operations]: expect.objectContaining({}),
-      [TpConfigNamesEnum.website]: expect.objectContaining({}),
+      [UserConfigNames.charts]: expect.objectContaining({}),
+      [UserConfigNames.dashboards]: expect.objectContaining({}),
+      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
+      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.operations]: expect.objectContaining({}),
+      [UserConfigNames.website]: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -46,13 +46,13 @@ test('CreateUserInfo static method', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [TpConfigNamesEnum.charts]: expect.objectContaining({}),
-      [TpConfigNamesEnum.dashboards]: expect.objectContaining({}),
-      [TpConfigNamesEnum.headerTickerBars]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.operations]: expect.objectContaining({}),
-      [TpConfigNamesEnum.website]: expect.objectContaining({}),
+      [UserConfigNames.charts]: expect.objectContaining({}),
+      [UserConfigNames.dashboards]: expect.objectContaining({}),
+      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
+      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.operations]: expect.objectContaining({}),
+      [UserConfigNames.website]: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -73,13 +73,13 @@ test('CreateIUserInfo static method', () => {
   expect(ui).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [TpConfigNamesEnum.charts]: expect.objectContaining({}),
-      [TpConfigNamesEnum.dashboards]: expect.objectContaining({}),
-      [TpConfigNamesEnum.headerTickerBars]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.operations]: expect.objectContaining({}),
-      [TpConfigNamesEnum.website]: expect.objectContaining({}),
+      [UserConfigNames.charts]: expect.objectContaining({}),
+      [UserConfigNames.dashboards]: expect.objectContaining({}),
+      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
+      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.operations]: expect.objectContaining({}),
+      [UserConfigNames.website]: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -100,13 +100,13 @@ test('get IUserInfo', () => {
   expect(ui.IUserInfo).toMatchObject({
     companies: [],
     config: expect.objectContaining({
-      [TpConfigNamesEnum.charts]: expect.objectContaining({}),
-      [TpConfigNamesEnum.dashboards]: expect.objectContaining({}),
-      [TpConfigNamesEnum.headerTickerBars]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaCryptoTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.ideaTabSelected]: expect.objectContaining({}),
-      [TpConfigNamesEnum.operations]: expect.objectContaining({}),
-      [TpConfigNamesEnum.website]: expect.objectContaining({}),
+      [UserConfigNames.charts]: expect.objectContaining({}),
+      [UserConfigNames.dashboards]: expect.objectContaining({}),
+      [UserConfigNames.headerTickerBars]: expect.objectContaining({}),
+      [UserConfigNames.ideaCryptoTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.ideaTabSelected]: expect.objectContaining({}),
+      [UserConfigNames.operations]: expect.objectContaining({}),
+      [UserConfigNames.website]: expect.objectContaining({}),
     }),
     displayName: '',
     email: '',
@@ -120,7 +120,7 @@ test('get IUserInfo', () => {
 
 test('isHeaderTickerBarsDisabled', () => {
   const cm = ConfigManager.defaults
-  cm[TpConfigNamesEnum.headerTickerBars].disabled = true
+  cm[UserConfigNames.headerTickerBars].disabled = true
   const ui = new UserInfo({ config: cm })
 
   expect(ui.isHeaderTickerBarsDisabled).toBe(true)
@@ -131,9 +131,9 @@ test('isHeaderTickerBarsDisabled', () => {
 
 test('shouldHeaderTickerBarsBeDisabled', () => {
   const cm = ConfigManager.defaults
-  cm[TpConfigNamesEnum.headerTickerBars].disabled = true
-  cm[TpConfigNamesEnum.headerTickerBars].asset.disabled = true
-  cm[TpConfigNamesEnum.headerTickerBars].crypto.disabled = true
+  cm[UserConfigNames.headerTickerBars].disabled = true
+  cm[UserConfigNames.headerTickerBars].asset.disabled = true
+  cm[UserConfigNames.headerTickerBars].crypto.disabled = true
 
   const ui = new UserInfo({ config: cm })
 
@@ -155,7 +155,7 @@ test('shouldHeaderTickerBarsBeDisabled', () => {
 
 test('isHeaderTickerBarsAssetsDisabled', () => {
   const cm = ConfigManager.defaults
-  cm[TpConfigNamesEnum.headerTickerBars].asset.disabled = true
+  cm[UserConfigNames.headerTickerBars].asset.disabled = true
   const ui = new UserInfo({ config: cm })
 
   expect(ui.isHeaderTickerBarsAssetsDisabled).toBe(true)
@@ -165,7 +165,7 @@ test('isHeaderTickerBarsAssetsDisabled', () => {
 })
 test('isHeaderTickerBarsCryptosDisabled', () => {
   const cm = ConfigManager.defaults
-  cm[TpConfigNamesEnum.headerTickerBars].crypto.disabled = true
+  cm[UserConfigNames.headerTickerBars].crypto.disabled = true
   const ui = new UserInfo({ config: cm })
 
   expect(ui.isHeaderTickerBarsCryptosDisabled).toBe(true)

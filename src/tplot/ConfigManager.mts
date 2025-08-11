@@ -1,21 +1,25 @@
 import {
-  IContext,
-  IContextUI,
-  IContextValue,
-} from '../services/ContextManager.mjs'
-import { hasData, newGuid } from '../services/general.mjs'
+  type ConfigTickerInfoTabSettings,
+  TickerInfoTabSettingsDefault,
+  UserConfigDefaults,
+  UserConfigNames,
+  UserConfigTypes,
+} from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
+import type { IConfigCharts } from './ConfigCharts.mjs'
+import type { IConfigHeaderTickerBars } from './ConfigHeaderTickerBars.mjs'
+import type { IConfigOperations } from './ConfigOperations.mjs'
 import { IConfigShort } from '../models/config.mjs'
+import type { IConfigWebsite } from './ConfigWebsite.mjs'
 import { IDashboardSetting } from './DashboardSetting.mjs'
 import { IIdValRequired } from '../models/id-val.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { IdName } from '../models/id-name.mjs'
-import { TileTypeKeys } from './TileConfig.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
+import { hasData } from '../services/general.mjs'
 import { safestrTrim } from '../services/string-helper.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac'
-export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
 export type IdeasTabNames =
   | 'top-gainers'
   | 'most-active'
@@ -23,12 +27,6 @@ export type IdeasTabNames =
   | 'etfs'
   | 'spacs'
   | 'wsb'
-
-export type ConfigTickerInfoTabSettings = {
-  selectedTab: ConfigTickerInfoTabNames
-  selectedPeopleTab: string
-  // SelectedRatioTab: string
-}
 
 export type FuncTabSettingsGet = (
   params: IIdValRequired<string, ConfigTickerInfoTabSettings>
@@ -48,74 +46,10 @@ export type FuncDashboardPeopleTabSave = (
   params: IIdValRequired
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
-export interface IContextTickers extends IContext {
-  backgroundColor?: IContextUI
-  scrollSpeed?: number
-  showPercentChanges?: boolean
-  showPriceChanges?: boolean
-  tickers: string[]
-}
-
-export interface IConfigTickerBars extends IContext {
-  asset: IContextTickers
-  crypto: IContextTickers
-}
-
-export interface IConfigCharts extends IContext {
-  down: IContextUI
-  neutral: IContextUI
-  up: IContextUI
-}
-
-export interface IConfigOperations extends IContext {
-  useMinusEight: IContextValue<boolean>
-}
-
-export interface IConfigWebsite extends IContext {
-  openFirstPlot: IContextValue<boolean>
-  hideHelp: IContextValue<boolean>
-  hideTooltips: IContextValue<boolean>
-}
-
 export type ConfigTickerInfo<
   Tticker extends string,
   U = `tickerInfo-${Tticker}`
 > = IKeyValueShort<ConfigTickerInfoTabSettings, U>
-
-export type TpConfigNamesEnum =
-  | 'charts'
-  | 'dashboards'
-  | 'headerTickerBars'
-  | 'ideaTabSelected'
-  | 'ideaCryptoTabSelected'
-  | 'website'
-  | 'operations'
-  | 'tickerInfo'
-
-export const TpConfigNamesEnum = {
-  charts: 'charts',
-  dashboards: 'dashboards',
-  headerTickerBars: 'headerTickerBars',
-  ideaCryptoTabSelected: 'ideaCryptoTabSelected',
-  ideaTabSelected: 'ideaTabSelected',
-  operations: 'operations',
-  tickerInfo: 'tickerInfo',
-  website: 'website',
-} as const
-
-export type TpUserInfoConfigs = {
-  [TpConfigNamesEnum.charts]: IConfigCharts
-  [TpConfigNamesEnum.dashboards]: IDashboardSetting
-  [TpConfigNamesEnum.headerTickerBars]: IConfigTickerBars
-  [TpConfigNamesEnum.ideaCryptoTabSelected]: IdName<number>
-  [TpConfigNamesEnum.ideaTabSelected]: IdName<number>
-  [TpConfigNamesEnum.operations]: IConfigOperations
-  [TpConfigNamesEnum.website]: IConfigWebsite
-}
-
-export type TpUserInfoAllConfigs = TpUserInfoConfigs & {
-  [TpConfigNamesEnum.tickerInfo]: ConfigTickerInfoTabSettings
-}
 
 export class ConfigManager {
   configs: IConfigShort[] = []
@@ -131,7 +65,9 @@ export class ConfigManager {
 
     const nameStr = safestrTrim(name)
     if (
-      Object.values(TpConfigNamesEnum).includes(nameStr as TpConfigNamesEnum)
+      Object.values(UserConfigNames).includes(
+        nameStr as keyof typeof UserConfigNames
+      )
     ) {
       return nameStr
     }
@@ -149,117 +85,8 @@ export class ConfigManager {
     )
   }
 
-  static get defaults(): TpUserInfoAllConfigs {
-    const cfgCharts: IConfigCharts = {
-        down: { color: '#FF0000' },
-        id: newGuid(),
-        neutral: { color: '#000000' },
-        up: { color: '#00FF00' },
-        updated: Date.now(),
-      },
-      cfgDashboards: IDashboardSetting = {
-        screens: [
-          {
-            id: 'default',
-            name: 'default',
-            tiles: [
-              {
-                color: 'white',
-                cols: 1,
-                id: 'initial-tile-left',
-                index: 0,
-                name: 'Trade Plotter',
-                rows: 2,
-                type: TileTypeKeys.empty,
-                value: {},
-              },
-              {
-                color: 'white',
-                cols: 1,
-                id: 'initial-tile-right',
-                index: 0,
-                name: 'Trade Plotter',
-                rows: 2,
-                type: TileTypeKeys.empty,
-                value: {},
-              },
-            ],
-          },
-          // Example for a chart and a plotlist.
-          // [
-          //   {
-          //     Id: 'AAPL',
-          //     Index: 0,
-          //     Typeid: 3,
-          //     Cols: 1,
-          //     Rows: 2
-          //   },
-          //   {
-          //     Id: 'Trade Plotter',
-          //     Index: 2,
-          //     Typeid: 1,
-          //     Cols: 2,
-          //     Rows: 2
-          //   }
-          // ],
-        ],
-      },
-      cfgHeaderTickerBars: IConfigTickerBars = {
-        asset: {
-          id: newGuid(),
-          tickers: ['AAPL'],
-          updated: Date.now(),
-        },
-        crypto: {
-          id: newGuid(),
-          tickers: ['BTCUSD', 'ETHUSD'],
-          updated: Date.now(),
-        },
-        id: newGuid(),
-        updated: Date.now(),
-      },
-      cfgIdeaCryptoTabSelected: IdName<number> = {
-        id: 0,
-        name: 'crypto',
-      },
-      cfgIdeaTabSelected: IdName<number> = {
-        id: 0,
-        name: 'most-active',
-      },
-      cfgOperations: IConfigOperations = {
-        id: newGuid(),
-        updated: Date.now(),
-        useMinusEight: { id: newGuid(), updated: Date.now(), value: true },
-      },
-      cfgTickerInfo: ConfigTickerInfoTabSettings = {
-        selectedPeopleTab: '',
-        selectedTab: 'asset',
-        // SelectedRatioTab: 'ratio',
-      },
-      cfgWebsite: IConfigWebsite = {
-        hideHelp: { id: newGuid(), updated: Date.now(), value: false },
-        hideTooltips: { id: newGuid(), updated: Date.now(), value: false },
-        id: newGuid(),
-        openFirstPlot: { id: newGuid(), updated: Date.now(), value: true },
-        updated: Date.now(),
-      },
-      items: Readonly<TpUserInfoAllConfigs> = {
-        [TpConfigNamesEnum.charts]: cfgCharts,
-        [TpConfigNamesEnum.dashboards]: cfgDashboards,
-
-        [TpConfigNamesEnum.headerTickerBars]: cfgHeaderTickerBars,
-        [TpConfigNamesEnum.ideaTabSelected]: cfgIdeaTabSelected,
-        [TpConfigNamesEnum.ideaCryptoTabSelected]: cfgIdeaCryptoTabSelected,
-        [TpConfigNamesEnum.operations]: cfgOperations,
-        [TpConfigNamesEnum.website]: cfgWebsite,
-        [TpConfigNamesEnum.tickerInfo]: cfgTickerInfo,
-      }
-
-    return deepCloneJson(items)
-  }
-
   get allTpUserInfoConfigs() {
-    const config: TpUserInfoConfigs = {
+    const config: UserConfigTypes = {
       charts: this.charts,
       dashboards: this.dashboards,
       headerTickerBars: this.headerTickerBars,
@@ -273,38 +100,38 @@ export class ConfigManager {
   }
 
   get charts() {
-    return this.FindConfig<IConfigCharts>(TpConfigNamesEnum.charts)
+    return this.FindConfig<IConfigCharts>(UserConfigNames.charts)
   }
 
   get dashboards() {
     const dashboard = this.FindConfig<IDashboardSetting>(
-      TpConfigNamesEnum.dashboards
+      UserConfigNames.dashboards
     )
 
     return deepCloneJson(dashboard)
   }
 
   get headerTickerBars() {
-    return this.FindConfig<IConfigTickerBars>(
-      TpConfigNamesEnum.headerTickerBars
+    return this.FindConfig<IConfigHeaderTickerBars>(
+      UserConfigNames.headerTickerBars
     )
   }
 
   get ideaTabSelected() {
-    return this.FindConfig<IdName<number>>(TpConfigNamesEnum.ideaTabSelected)
+    return this.FindConfig<IdName<number>>(UserConfigNames.ideaTabSelected)
   }
   get ideaCryptoTabSelected() {
     return this.FindConfig<IdName<number>>(
-      TpConfigNamesEnum.ideaCryptoTabSelected
+      UserConfigNames.ideaCryptoTabSelected
     )
   }
 
   get operations() {
-    return this.FindConfig<IConfigOperations>(TpConfigNamesEnum.operations)
+    return this.FindConfig<IConfigOperations>(UserConfigNames.operations)
   }
 
   get website() {
-    return this.FindConfig<IConfigWebsite>(TpConfigNamesEnum.website)
+    return this.FindConfig<IConfigWebsite>(UserConfigNames.website)
   }
 
   /**
@@ -314,19 +141,19 @@ export class ConfigManager {
    * @returns The config if found, otherwise the default value for that config.
    */
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  FindConfig<T = string>(name: TpConfigNamesEnum) {
+  FindConfig<T = string>(name: string) {
     const found = this.configs.find((config) => name === config.k)
     if (found) {
       return found.v as T
     }
 
-    return ConfigManager.defaults[name] as T
+    return UserConfigDefaults()[name] as T
   }
 
-  FindBoolean(name: TpConfigNamesEnum) {
+  FindBoolean(name: keyof typeof UserConfigNames) {
     return this.FindConfig<boolean>(name)
   }
-  FindString(name: TpConfigNamesEnum) {
+  FindString(name: keyof typeof UserConfigNames) {
     return this.FindConfig(name)
   }
 
@@ -339,7 +166,7 @@ export function CreateConfigTickerInfoTabSettings(
   overrides?: Partial<ConfigTickerInfoTabSettings>
 ) {
   const ret: ConfigTickerInfoTabSettings = {
-    ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
+    ...TickerInfoTabSettingsDefault(),
     ...overrides,
   }
 

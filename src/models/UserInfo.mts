@@ -1,11 +1,79 @@
-import { ConfigManager, TpUserInfoConfigs } from '../tplot/ConfigManager.mjs'
+import { ConfigCharts, IConfigCharts } from '../tplot/ConfigCharts.mjs'
+import {
+  ConfigHeaderTickerBars,
+  type IConfigHeaderTickerBars,
+} from '../tplot/ConfigHeaderTickerBars.mjs'
+import {
+  ConfigOperations,
+  type IConfigOperations,
+} from '../tplot/ConfigOperations.mjs'
+import { ConfigWebsite, type IConfigWebsite } from '../tplot/ConfigWebsite.mjs'
+import {
+  DashboardSetting,
+  type IDashboardSetting,
+} from '../tplot/DashboardSetting.mjs'
+import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
 import { ICompany } from '../politagree/company.mjs'
-import { getBoolean } from '../services/general.mjs'
-import { isArray } from '../services/array-helper.mjs'
+import type { IdName } from './id-name.mjs'
+import { deepCloneJson } from '../services/object-helper.mjs'
+
+export const UserConfigNames: {
+  charts: string
+  dashboards: string
+  headerTickerBars: string
+  ideaCryptoTabSelected: string
+  ideaTabSelected: string
+  operations: string
+  tickerInfo: string
+  website: string
+} = {
+  charts: 'charts',
+  dashboards: 'dashboards',
+  headerTickerBars: 'headerTickerBars',
+  ideaCryptoTabSelected: 'ideaCryptoTabSelected',
+  ideaTabSelected: 'ideaTabSelected',
+  operations: 'operations',
+  tickerInfo: 'tickerInfo',
+  website: 'website',
+} as const
+
+export type ConfigTickerInfoTabNames = 'asset' | 'people' | 'profile' | 'ratios'
+
+export type ConfigTickerInfoTabSettings = {
+  selectedPeopleTab: string
+  selectedTab: ConfigTickerInfoTabNames
+  // SelectedRatioTab: string
+}
+export function TickerInfoTabSettingsDefault(
+  overrides?: Partial<ConfigTickerInfoTabSettings>
+) {
+  const tickerInfo: ConfigTickerInfoTabSettings = {
+    selectedPeopleTab: '',
+    selectedTab: 'asset',
+    // SelectedRatioTab: 'ratio',
+    ...overrides,
+  }
+
+  return tickerInfo
+}
+
+export type UserConfigTypes = {
+  charts: IConfigCharts
+  dashboards: IDashboardSetting
+  headerTickerBars: IConfigHeaderTickerBars
+  ideaCryptoTabSelected: IdName<number>
+  ideaTabSelected: IdName<number>
+  operations: IConfigOperations
+  website: IConfigWebsite
+}
+
+export type UserConfigTypesAll = UserConfigTypes & {
+  tickerInfo: ConfigTickerInfoTabSettings
+}
 
 export interface IUserInfo {
   companies: ICompany[]
-  config: TpUserInfoConfigs
+  config: UserConfigTypes
   displayName: string
   email: string
   firstName: string
@@ -15,9 +83,45 @@ export interface IUserInfo {
   tokenExpireTime: number
 }
 
+export function UserConfigDefaults(
+  updated?: DateTypeAcceptable
+): UserConfigTypesAll {
+  const aDateNow = DateHelper.GetTime(updated),
+    cfgIdeaCryptoTabSelected: IdName<number> = {
+      id: 0,
+      name: 'crypto',
+    },
+    cfgIdeaTabSelected: IdName<number> = {
+      id: 0,
+      name: 'most-active',
+    },
+    items = {
+      [UserConfigNames.charts]: ConfigCharts.defaults(undefined, aDateNow),
+      [UserConfigNames.dashboards]: DashboardSetting.defaults(
+        undefined,
+        aDateNow
+      ),
+
+      [UserConfigNames.headerTickerBars]: ConfigHeaderTickerBars.defaults(
+        undefined,
+        aDateNow
+      ),
+      [UserConfigNames.ideaTabSelected]: cfgIdeaTabSelected,
+      [UserConfigNames.ideaCryptoTabSelected]: cfgIdeaCryptoTabSelected,
+      [UserConfigNames.operations]: ConfigOperations.defaults(
+        undefined,
+        aDateNow
+      ),
+      [UserConfigNames.website]: ConfigWebsite.defaults(undefined, aDateNow),
+      [UserConfigNames.tickerInfo]: TickerInfoTabSettingsDefault(),
+    }
+
+  return deepCloneJson(items) as UserConfigTypesAll
+}
+
 export class UserInfo implements IUserInfo {
   companies = []
-  config = ConfigManager.defaults
+  config = UserConfigDefaults()
   displayName = ''
   email = ''
   firstName = ''
@@ -54,31 +158,5 @@ export class UserInfo implements IUserInfo {
     }
 
     return iUserInfo
-  }
-
-  get isHeaderTickerBarsDisabled() {
-    return getBoolean(this.config.headerTickerBars.disabled)
-  }
-
-  /** Checks if all of the conditions are met to disable the Ticker Bars */
-  get shouldHeaderTickerBarsBeDisabled() {
-    return (
-      this.isHeaderTickerBarsDisabled ||
-      (this.isHeaderTickerBarsCryptosDisabled &&
-        this.isHeaderTickerBarsAssetsDisabled)
-    )
-  }
-
-  get isHeaderTickerBarsAssetsDisabled() {
-    return (
-      getBoolean(this.config.headerTickerBars.asset.disabled) ||
-      !isArray(this.config.headerTickerBars.asset.tickers, 1)
-    )
-  }
-  get isHeaderTickerBarsCryptosDisabled() {
-    return (
-      getBoolean(this.config.headerTickerBars.crypto.disabled) ||
-      !isArray(this.config.headerTickerBars.crypto.tickers, 1)
-    )
   }
 }

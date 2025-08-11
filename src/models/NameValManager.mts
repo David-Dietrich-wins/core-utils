@@ -2,65 +2,76 @@ import { IName, IVal } from './interfaces.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { safeArray } from '../services/array-helper.mjs'
 
-export interface INameVal<Tval = string> extends IName, IVal<Tval> {}
+export interface INameVal<Tval = string, Tname extends string = string>
+  extends IName<Tname>,
+    IVal<Tval> {}
 
-export class NameVal<Tval = string> implements INameVal<Tval> {
-  name: string
+export class NameVal<Tval = string, Tname extends string = string>
+  implements INameVal<Tval, Tname>
+{
+  name: Tname
   val: Tval
 
-  constructor(name: string, val: Tval) {
+  constructor(name: Tname, val: Tval) {
     this.name = name
     this.val = val
   }
 
-  static CreateINameVal<T = unknown>(name: string, val: T): INameVal<T> {
-    const inv: INameVal<T> = { name, val }
+  static CreateINameVal<T = unknown, Tname extends string = string>(
+    name: Tname,
+    val: T
+  ): INameVal<T, Tname> {
+    const inv: INameVal<T, Tname> = { name, val }
 
     return inv
   }
 }
 
-export class NameValType<TValue = string, TType = string>
-  extends NameVal<TValue>
-  implements INameVal<TValue>
+export class NameValType<
+    TValue = string,
+    TType = string,
+    Tname extends string = string
+  >
+  extends NameVal<TValue, Tname>
+  implements INameVal<TValue, Tname>
 {
   type: TType
 
-  constructor(name: string, value: TValue, type: TType) {
+  constructor(name: Tname, value: TValue, type: TType) {
     super(name, value)
     this.type = type
   }
 }
 
-export type NameValAsType<Tvalue = string> = {
-  name: string
+export type NameValAsType<Tvalue = string, Tname extends string = string> = {
+  name: Tname
   value: Tvalue
 }
 
-export class NameValManager<TValue = string> {
-  list: INameVal<TValue>[]
+export class NameValManager<TValue = string, Tname extends string = string> {
+  list: INameVal<TValue, Tname>[]
   stats?: InstrumentationStatistics
 
   constructor(
-    list: INameVal<TValue>[] = [],
+    list: INameVal<TValue, Tname>[] = [],
     stats?: InstrumentationStatistics
   ) {
     this.list = list
     this.stats = stats
   }
 
-  static CreateNameValManager<TValue = string>(
-    arr: INameVal<TValue>[] | null | undefined,
+  static CreateNameValManager<TValue = string, Tname extends string = string>(
+    arr: INameVal<TValue, Tname>[] | null | undefined,
     stats?: InstrumentationStatistics
-  ): NameValManager<TValue> {
+  ): NameValManager<TValue, Tname> {
     return new NameValManager(safeArray(arr), stats)
   }
 
-  static ToINameVal<TValue = string>(
-    name: string,
+  static ToINameVal<TValue = string, Tname extends string = string>(
+    name: Tname,
     val: TValue
-  ): INameVal<TValue> {
-    const item: INameVal<TValue> = {
+  ): INameVal<TValue, Tname> {
+    const item: INameVal<TValue, Tname> = {
       name,
       val,
     }

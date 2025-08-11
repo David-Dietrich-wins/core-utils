@@ -1,7 +1,7 @@
 import {
   ConfigManager,
   CreateConfigTickerInfoTabSettings,
-  TpConfigNamesEnum,
+  UserConfigNames,
 } from './ConfigManager.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IConfigShort } from '../models/config.mjs'
@@ -13,7 +13,7 @@ test('CreateConfigTickerInfoTabSettings', () => {
   })
 
   expect(settings).toEqual({
-    ...ConfigManager.defaults[TpConfigNamesEnum.tickerInfo],
+    ...ConfigManager.defaults[UserConfigNames.tickerInfo],
     selectedPeopleTab: 'top',
     selectedTab: 'asset',
   })
@@ -27,7 +27,7 @@ test('constructor', () => {
       updated: new Date(),
       updatedby: 'test',
       userid: 'chart1',
-      v: TpConfigNamesEnum.charts,
+      v: UserConfigNames.charts,
     },
     configDashboards: IConfigShort = {
       created: new Date(),
@@ -36,7 +36,7 @@ test('constructor', () => {
       updated: new Date(),
       updatedby: 'test',
       userid: 'dashboard1',
-      v: TpConfigNamesEnum.dashboards,
+      v: UserConfigNames.dashboards,
     },
     configIes: IConfigShort[] = [configCharts, configDashboards],
     configManager = new ConfigManager(configIes)
@@ -147,22 +147,22 @@ test('FindConfig', () => {
       updated: new Date(),
       updatedby: 'test',
       userid: 'chart1',
-      v: TpConfigNamesEnum.charts,
+      v: UserConfigNames.charts,
     },
     configManager = new ConfigManager([configCharts])
 
-  expect(configManager.FindConfig(TpConfigNamesEnum.charts)).toBe(
-    TpConfigNamesEnum.charts
+  expect(configManager.FindConfig(UserConfigNames.charts)).toBe(
+    UserConfigNames.charts
   )
   expect(
-    configManager.FindConfig('nonExistentConfig' as TpConfigNamesEnum)
+    configManager.FindConfig('nonExistentConfig' as UserConfigNames)
   ).toBeUndefined()
 })
 
 test('FindBoolean', () => {
   const configManager = new ConfigManager([])
 
-  expect(configManager.FindBoolean(TpConfigNamesEnum.charts)).toStrictEqual({
+  expect(configManager.FindBoolean(UserConfigNames.charts)).toStrictEqual({
     down: { color: '#FF0000' },
     id: expect.any(String),
     neutral: { color: '#000000' },
@@ -174,7 +174,7 @@ test('FindBoolean', () => {
 test('FindString', () => {
   const configManager = new ConfigManager([])
 
-  expect(configManager.FindString(TpConfigNamesEnum.charts)).toStrictEqual({
+  expect(configManager.FindString(UserConfigNames.charts)).toStrictEqual({
     down: { color: '#FF0000' },
     id: expect.any(String),
     neutral: { color: '#000000' },
