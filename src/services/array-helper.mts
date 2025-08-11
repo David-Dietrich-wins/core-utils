@@ -70,6 +70,13 @@ export function safeArray<T>(
   return isArray(arr) ? arr : [arr]
 }
 
+export function safeArrayUnique<T>(
+  arr?: ArrayOrSingle<T> | null,
+  ifEmpty?: ArrayOrSingle<T> | null
+) {
+  return Array.from(new Set(safeArray(arr, ifEmpty)))
+}
+
 export function arrayGetIds<T extends IIdRequired<Tid>, Tid = T['id']>(
   arr?: ArrayOrSingle<T> | null,
   callback?: (item: T) => Tid

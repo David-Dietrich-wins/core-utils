@@ -44,6 +44,7 @@ import {
   arrayUpdateOrAdd,
   isArray,
   safeArray,
+  safeArrayUnique,
   shuffleArray,
 } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -492,6 +493,16 @@ test('safeArray', () => {
   expect(safeArray([1])).toStrictEqual([1])
   expect(safeArray(undefined, [1])).toStrictEqual([1])
 })
+
+test(safeArrayUnique.name, () => {
+  expect(safeArrayUnique()).toStrictEqual([])
+  expect(safeArrayUnique(1)).toStrictEqual([1])
+  expect(safeArrayUnique([1])).toStrictEqual([1])
+  expect(safeArrayUnique(undefined, [1])).toStrictEqual([1])
+
+  expect(safeArrayUnique([1, 2, 3, 1, 2])).toStrictEqual([1, 2, 3])
+})
+
 test('isArray', () => {
   expect(isArray(undefined)).toBe(false)
   expect(isArray(null)).toBe(false)

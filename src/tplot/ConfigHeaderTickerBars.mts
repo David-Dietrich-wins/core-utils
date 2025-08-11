@@ -4,6 +4,7 @@ import {
   arrayMoveElement,
   isArray,
   safeArray,
+  safeArrayUnique,
 } from '../services/array-helper.mjs'
 import { getBoolean, isFunction, newGuid } from '../services/general.mjs'
 import { deepCloneJson } from '../services/object-helper.mjs'
@@ -153,7 +154,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateAsset(
       cfg,
       (asset: IContextTickers) => ({
-        tickers: [...asset.tickers, payload],
+        tickers: safeArrayUnique([...asset.tickers, payload]),
       }),
       updated
     )
@@ -195,7 +196,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateAsset(
       cfg,
       (asset: IContextTickers) => ({
-        tickers: safeArray(asset.tickers).map((ticker, index) =>
+        tickers: safeArrayUnique(asset.tickers).map((ticker, index) =>
           index === payload.index ? payload.ticker : ticker
         ),
       }),
@@ -281,7 +282,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateCrypto(
       cfg,
       (crypto: IContextTickers) => ({
-        tickers: [...crypto.tickers, payload],
+        tickers: safeArrayUnique([...crypto.tickers, payload]),
       }),
       updated
     )
@@ -323,7 +324,7 @@ export class ConfigHeaderTickerBars {
     return ConfigHeaderTickerBars.updateCrypto(
       cfg,
       (crypto: IContextTickers) => ({
-        tickers: safeArray(crypto.tickers).map((ticker, index) =>
+        tickers: safeArrayUnique(crypto.tickers).map((ticker, index) =>
           index === payload.index ? payload.ticker : ticker
         ),
       }),
