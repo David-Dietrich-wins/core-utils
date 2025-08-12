@@ -9,10 +9,16 @@ import {
   pluralize,
   plusMinus,
   prefixIfHasData,
+  safeHtmlAttribute,
   safestr,
   safestrLowercase,
   safestrToJson,
   safestrUppercase,
+  splitIntoArray,
+  splitToArray,
+  splitToArrayOfIntegers,
+  splitToArrayOrStringIfOnlyOne,
+  splitToArrayOrStringIfOnlyOneToUpper,
   stringEquals,
   stringEqualsQuoted,
   stringIf,
@@ -421,95 +427,75 @@ test('StringHelper.safeSuffix', () => {
   expect(StringHelper.safeSuffix(false)).toBe('false ')
 })
 
-describe('StringHelper.SplitToArray', () => {
-  test('StringHelper.SplitToArray', () => {
+describe('splitToArray', () => {
+  test(splitToArray.name, () => {
     let aastrOrArray: StringOrStringArray = 'a,b , c,',
-      arr = StringHelper.SplitToArray(aastrOrArray)
+      arr = splitToArray(aastrOrArray)
     const removeEmpties = true,
       splitter = ',',
       trimStrings = true
 
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter)
+    arr = splitToArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter, removeEmpties)
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(
-      aastrOrArray,
-      splitter,
-      removeEmpties,
-      trimStrings
-    )
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties, trimStrings)
     expect(arr).toEqual(['a', 'b', 'c'])
 
     aastrOrArray = 'a'
-    arr = StringHelper.SplitToArray(aastrOrArray)
+    arr = splitToArray(aastrOrArray)
     expect(arr).toEqual(['a'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter)
+    arr = splitToArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter, removeEmpties)
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties)
     expect(arr).toEqual(['a'])
 
-    arr = StringHelper.SplitToArray(
-      aastrOrArray,
-      splitter,
-      removeEmpties,
-      trimStrings
-    )
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties, trimStrings)
     expect(arr).toEqual(['a'])
 
     // StrOrArray as Array
     aastrOrArray = ['a', 'b ', ' c', '']
-    arr = StringHelper.SplitToArray(aastrOrArray)
+    arr = splitToArray(aastrOrArray)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter)
+    arr = splitToArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(aastrOrArray, splitter, removeEmpties)
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(
-      aastrOrArray,
-      splitter,
-      removeEmpties,
-      trimStrings
-    )
+    arr = splitToArray(aastrOrArray, splitter, removeEmpties, trimStrings)
     expect(arr).toEqual(['a', 'b', 'c'])
 
-    arr = StringHelper.SplitToArray(undefined)
+    arr = splitToArray(undefined)
     expect(arr).toEqual([])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-    expect(StringHelper.SplitToArray(2 as any)).toStrictEqual(['2'])
+    expect(splitToArray(2 as any)).toStrictEqual(['2'])
   })
 
-  describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
+  describe(splitToArrayOrStringIfOnlyOne.name, () => {
     test('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
         trimStrings = true
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -517,7 +503,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -531,21 +517,16 @@ describe('StringHelper.SplitToArray', () => {
         splitter = ',',
         strOrArray = 'a,b   , c,',
         trimStrings = false
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -553,7 +534,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['a', 'b   ', ' c', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -567,21 +548,16 @@ describe('StringHelper.SplitToArray', () => {
         splitter = ',',
         strOrArray = 'a,b   , c',
         trimStrings = false
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -589,7 +565,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['a', 'b   ', ' c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -597,7 +573,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual('a')
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         '',
         splitter,
         removeEmpties,
@@ -607,30 +583,27 @@ describe('StringHelper.SplitToArray', () => {
     })
   })
 
-  describe('StringHelper.SplitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
+  describe(splitToArrayOrStringIfOnlyOneToUpper.name, () => {
     test('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
         trimStrings = true
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -638,7 +611,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         'A',
         splitter,
         removeEmpties,
@@ -653,23 +626,20 @@ describe('StringHelper.SplitToArray', () => {
         strOrArray = 'a,b   , c,',
         trimStrings = false
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -677,7 +647,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['A', 'B   ', ' C', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         'a',
         splitter,
         removeEmpties,
@@ -692,23 +662,20 @@ describe('StringHelper.SplitToArray', () => {
         strOrArray = 'a,b   , c',
         trimStrings = false
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -716,7 +683,7 @@ describe('StringHelper.SplitToArray', () => {
       )
       expect(arr).toEqual(['A', 'B   ', ' C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -726,28 +693,28 @@ describe('StringHelper.SplitToArray', () => {
     })
   })
 
-  test('StringHelper.SplitToArrayOfIntegers', () => {
-    let arr = StringHelper.SplitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
+  test(splitToArrayOfIntegers.name, () => {
+    let arr = splitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers('[1,2,3,4,5,6,7,8,9,10]')
+    arr = splitToArrayOfIntegers('[1,2,3,4,5,6,7,8,9,10]')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '     [   1,2 , 3, 4,    5, 6     ,7,8,9,10    ]  '
     )
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '[        1,2 , 3, 4,    5, 6     ,7,8,9,10      '
     )
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '        1,2 , 3, 4,    5, 6     ,7,8,9,10  ]    '
     )
 
@@ -755,95 +722,76 @@ describe('StringHelper.SplitToArray', () => {
   })
 })
 
-test('safeHtmlAttribute', () => {
-  expect(StringHelper.safeHtmlAttribute('')).toBe('')
-  expect(StringHelper.safeHtmlAttribute(null)).toBe('')
-  expect(StringHelper.safeHtmlAttribute(undefined)).toBe('')
-  expect(StringHelper.safeHtmlAttribute('test')).toBe('test')
-  expect(StringHelper.safeHtmlAttribute(['test'])).toBe('test')
-  expect(StringHelper.safeHtmlAttribute(['test', 'test2'])).toBe('test-test2')
-  expect(StringHelper.safeHtmlAttribute(['tes,t', 'test2'])).toBe('tes-t-test2')
-  expect(StringHelper.safeHtmlAttribute(['tes,t', 'test2'], 'abc')).toBe(
-    'tesabctabctest2'
-  )
+test(safeHtmlAttribute.name, () => {
+  expect(safeHtmlAttribute('')).toBe('')
+  expect(safeHtmlAttribute(null)).toBe('')
+  expect(safeHtmlAttribute(undefined)).toBe('')
+  expect(safeHtmlAttribute('test')).toBe('test')
+  expect(safeHtmlAttribute(['test'])).toBe('test')
+  expect(safeHtmlAttribute(['test', 'test2'])).toBe('test-test2')
+  expect(safeHtmlAttribute(['tes,t', 'test2'])).toBe('tes-t-test2')
+  expect(safeHtmlAttribute(['tes,t', 'test2'], 'abc')).toBe('tesabctabctest2')
 })
 
-describe('StringHelper.SplitIntoArray', () => {
-  test('StringHelper.SplitIntoArray', () => {
+describe(splitIntoArray.name, () => {
+  test('splitIntoArray', () => {
     let aastrOrArray: StringOrStringArray = 'a,b \n, c,',
-      arr = StringHelper.SplitIntoArray(aastrOrArray)
+      arr = splitIntoArray(aastrOrArray)
     const replaceNonprintable = false,
       splitter = ','
 
     expect(arr).toEqual(['a', 'b ', ' c', ''])
 
-    arr = StringHelper.SplitIntoArray(aastrOrArray, splitter)
+    arr = splitIntoArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a', 'b ', ' c', ''])
 
-    arr = StringHelper.SplitIntoArray(
-      aastrOrArray,
-      splitter,
-      replaceNonprintable
-    )
+    arr = splitIntoArray(aastrOrArray, splitter, replaceNonprintable)
     expect(arr).toEqual(['a', 'b \n', ' c', ''])
 
     aastrOrArray = 'a'
-    arr = StringHelper.SplitIntoArray(aastrOrArray)
+    arr = splitIntoArray(aastrOrArray)
     expect(arr).toEqual(['a'])
 
-    arr = StringHelper.SplitIntoArray(aastrOrArray, splitter)
+    arr = splitIntoArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a'])
 
-    arr = StringHelper.SplitIntoArray(
-      aastrOrArray,
-      splitter,
-      replaceNonprintable
-    )
+    arr = splitIntoArray(aastrOrArray, splitter, replaceNonprintable)
     expect(arr).toEqual(['a'])
 
     // StrOrArray as Array
     aastrOrArray = ['a', 'b ', ' c\t\t', '']
-    arr = StringHelper.SplitIntoArray(aastrOrArray)
+    arr = splitIntoArray(aastrOrArray)
     expect(arr).toEqual(['a', 'b ', ' c', ''])
 
-    arr = StringHelper.SplitIntoArray(aastrOrArray, splitter)
+    arr = splitIntoArray(aastrOrArray, splitter)
     expect(arr).toEqual(['a', 'b ', ' c', ''])
 
-    arr = StringHelper.SplitIntoArray(
-      aastrOrArray,
-      splitter,
-      replaceNonprintable
-    )
+    arr = splitIntoArray(aastrOrArray, splitter, replaceNonprintable)
     expect(arr).toEqual(['a', 'b ', ' c\t\t', ''])
 
-    arr = StringHelper.SplitIntoArray(undefined)
+    arr = splitIntoArray(undefined)
     expect(arr).toEqual(['undefined'])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-    expect(StringHelper.SplitIntoArray(2 as any)).toStrictEqual(['2'])
+    expect(splitIntoArray(2 as any)).toStrictEqual(['2'])
   })
 
-  describe('StringHelper.SplitToArrayOrStringIfOnlyOne no remove empties', () => {
+  describe('splitToArrayOrStringIfOnlyOne no remove empties', () => {
     test('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
         trimStrings = true
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -851,7 +799,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -865,21 +813,16 @@ describe('StringHelper.SplitIntoArray', () => {
         splitter = ',',
         strOrArray = 'a,b   , c,',
         trimStrings = false
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -887,7 +830,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['a', 'b   ', ' c', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -901,21 +844,16 @@ describe('StringHelper.SplitIntoArray', () => {
         splitter = ',',
         strOrArray = 'a,b   , c',
         trimStrings = false
-      let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray)
+      let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(strOrArray, splitter)
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
-        strOrArray,
-        splitter,
-        removeEmpties
-      )
+      arr = splitToArrayOrStringIfOnlyOne(strOrArray, splitter, removeEmpties)
       expect(arr).toEqual(['a', 'b', 'c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         strOrArray,
         splitter,
         removeEmpties,
@@ -923,7 +861,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['a', 'b   ', ' c'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -931,7 +869,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual('a')
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         '',
         splitter,
         removeEmpties,
@@ -941,30 +879,27 @@ describe('StringHelper.SplitIntoArray', () => {
     })
   })
 
-  describe('StringHelper.SplitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
+  describe('splitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
     test('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
         trimStrings = true
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -972,7 +907,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         'A',
         splitter,
         removeEmpties,
@@ -987,23 +922,20 @@ describe('StringHelper.SplitIntoArray', () => {
         strOrArray = 'a,b   , c,',
         trimStrings = false
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -1011,7 +943,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['A', 'B   ', ' C', ''])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         'a',
         splitter,
         removeEmpties,
@@ -1026,23 +958,20 @@ describe('StringHelper.SplitIntoArray', () => {
         strOrArray = 'a,b   , c',
         trimStrings = false
       let arr: StringOrStringArray =
-        StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(strOrArray)
+        splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
-        strOrArray,
-        splitter
-      )
+      arr = splitToArrayOrStringIfOnlyOneToUpper(strOrArray, splitter)
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties
       )
       expect(arr).toEqual(['A', 'B', 'C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOneToUpper(
+      arr = splitToArrayOrStringIfOnlyOneToUpper(
         strOrArray,
         splitter,
         removeEmpties,
@@ -1050,7 +979,7 @@ describe('StringHelper.SplitIntoArray', () => {
       )
       expect(arr).toEqual(['A', 'B   ', ' C'])
 
-      arr = StringHelper.SplitToArrayOrStringIfOnlyOne(
+      arr = splitToArrayOrStringIfOnlyOne(
         'a',
         splitter,
         removeEmpties,
@@ -1060,28 +989,28 @@ describe('StringHelper.SplitIntoArray', () => {
     })
   })
 
-  test('StringHelper.SplitToArrayOfIntegers', () => {
-    let arr = StringHelper.SplitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
+  test('splitToArrayOfIntegers', () => {
+    let arr = splitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers('[1,2,3,4,5,6,7,8,9,10]')
+    arr = splitToArrayOfIntegers('[1,2,3,4,5,6,7,8,9,10]')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '     [   1,2 , 3, 4,    5, 6     ,7,8,9,10    ]  '
     )
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '[        1,2 , 3, 4,    5, 6     ,7,8,9,10      '
     )
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    arr = StringHelper.SplitToArrayOfIntegers(
+    arr = splitToArrayOfIntegers(
       '        1,2 , 3, 4,    5, 6     ,7,8,9,10  ]    '
     )
 

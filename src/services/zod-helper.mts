@@ -1,6 +1,6 @@
 import * as z from 'zod'
-import { StringHelper, isString } from './string-helper.mjs'
 import { arrayFirst, isArray } from './array-helper.mjs'
+import { isString, splitToArray } from './string-helper.mjs'
 import { isNumber } from './number-helper.mjs'
 
 type StringSettings = {
@@ -41,7 +41,7 @@ export function zFromStringOrStringArray(
       z.array(zStringMinMax(min, max)),
     ])
     .transform((arg): string | string[] => {
-      let items = StringHelper.SplitToArray(arg, ',', true, extras?.trim)
+      let items = splitToArray(arg, ',', true, extras?.trim)
 
       if (extras?.uppercase) {
         items = items.map((item) => item.toUpperCase())
@@ -61,7 +61,7 @@ export function zToStringArray(min = 0, max = 1000, extras?: StringSettings) {
       z.array(zStringMinMax(min, max)),
     ])
     .transform((arg): string[] => {
-      let items = StringHelper.SplitToArray(arg, ',', true, extras?.trim)
+      let items = splitToArray(arg, ',', true, extras?.trim)
 
       if (extras?.uppercase) {
         items = items.map((item) => item.toUpperCase())
