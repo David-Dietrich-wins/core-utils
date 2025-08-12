@@ -13,6 +13,7 @@ import {
   getNullObject,
   getObjectValue,
   isObject,
+  removeFields,
   renameProperty,
   runOnAllMembers,
   safeJsonToString,
@@ -940,4 +941,136 @@ test('coalesce', () => {
   expect(coalesce(undefined, null, new ArrayBuffer(8))).toBeInstanceOf(
     ArrayBuffer
   )
+})
+
+describe(removeFields.name, () => {
+  test('remove from an object by fields array', () => {
+    const obj = {
+      a: 'a',
+      b: 'b',
+      c: 'c',
+    }
+    const props = {
+      fields: ['b'],
+      recursive: false,
+    }
+
+    removeFields(obj, props)
+
+    expect(obj).toEqual({
+      a: 'a',
+      c: 'c',
+    })
+  })
+
+  test('recursively remove from an object by fields array', () => {
+    const obj = {
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      d: { a: 'a', b: 'b', c: 'c', d: { a: 'a', b: 'b' } },
+      e: { a: 'a' },
+      f: 12,
+      g: { h: 'h' },
+    }
+    const props = {
+      fields: ['b', 'e', 'h'],
+      recursive: true,
+    }
+
+    removeFields(obj, props)
+
+    expect(obj).toEqual({
+      a: 'a',
+      c: 'c',
+      d: { a: 'a', c: 'c', d: { a: 'a' } },
+      f: 12,
+      g: {},
+    })
+  })
+
+  test('recursively remove by fields object', () => {
+    const obj = {
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      d: {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        d: { a: 'a', b: 'b' },
+        e: null,
+        h: undefined,
+      },
+      e: { a: 'a', b: '' },
+      f: 12,
+      g: { b: 'b', e: undefined, h: 'h' },
+      h: { h: null, i: 'i', j: undefined },
+      j: null,
+    }
+    const props = {
+      fields: {
+        b: { deleteIfHasData: true },
+        e: {},
+        h: { deleteIfUndefined: true },
+        j: { deleteIfNull: true },
+      },
+      recursive: true,
+    }
+
+    removeFields(obj, props)
+
+    expect(obj).toEqual({
+      a: 'a',
+      c: 'c',
+      d: { a: 'a', c: 'c', d: { a: 'a' } },
+      f: 12,
+      g: { h: 'h' },
+      h: { h: null, i: 'i', j: undefined },
+    })
+  })
+
+  test('default id props', () => {
+    const obj = {
+      _id: 1,
+      id: null,
+      name: 'Test',
+      x: {
+        _id: 2,
+        id: 3,
+        name: 'Test X',
+      },
+    }
+
+    removeFields(obj)
+
+    expect(obj).toEqual({
+      name: 'Test',
+      x: {
+        id: 3,
+        name: 'Test X',
+      },
+    })
+  })
+
+  test('not an object', () => {
+    const obj = 'not an object'
+    const props = {
+      fields: ['b', 'e', 'h'],
+      recursive: true,
+    }
+
+    removeFields(obj, props)
+
+    expect(obj).toEqual('not an object')
+    expect(removeFields(6, props)).toEqual(6)
+    expect(removeFields([1, 2, 3], props)).toEqual([1, 2, 3])
+    expect(removeFields('string', props)).toEqual('string')
+    expect(removeFields(null, props)).toBeNull()
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    expect(removeFields(undefined, props)).toBeUndefined()
+    expect(removeFields(true, props)).toBe(true)
+    expect(removeFields(false, props)).toBe(false)
+    expect(removeFields(new Date(), props)).toBeInstanceOf(Date)
+  })
 })

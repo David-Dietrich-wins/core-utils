@@ -680,3 +680,65 @@ export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
     }
   }
 }
+
+export type ObjectRemoveFieldOptions = {
+  deleteIfHasData?: boolean
+  deleteIfNull?: boolean
+  deleteIfUndefined?: boolean
+}
+
+export type ObjectRemoveFieldsOptions = {
+  recursive?: boolean
+  fields: string[] | Record<string, ObjectRemoveFieldOptions>
+}
+
+export const ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
+  fields: {
+    _id: { deleteIfHasData: true, deleteIfNull: true, deleteIfUndefined: true },
+    id: { deleteIfHasData: false, deleteIfNull: true, deleteIfUndefined: true },
+  },
+
+  recursive: true,
+}
+
+// eslint-disable-next-line complexity
+export function removeFields<T = unknown>(
+  obj: T,
+  props: ObjectRemoveFieldsOptions = ObjectRemoveIdFieldsOptions
+) {
+  if (isObject(obj)) {
+    const objKeys = Object.entries(obj)
+    // @typescript-eslint/no-for-in-array
+    for (const [key, value] of objKeys) {
+      let removed = false
+
+      const fieldOptions =
+        Array.isArray(props.fields) && props.fields.includes(key)
+          ? {}
+          : isObject(props.fields) && key in props.fields
+          ? (props.fields as Record<string, ObjectRemoveFieldOptions>)[key]
+          : undefined
+
+      if (
+        fieldOptions &&
+        ((!fieldOptions.deleteIfHasData &&
+          !fieldOptions.deleteIfNull &&
+          !fieldOptions.deleteIfUndefined) ||
+          (fieldOptions.deleteIfHasData && !isNullOrUndefined(value)) ||
+          (fieldOptions.deleteIfNull && value === null) ||
+          (fieldOptions.deleteIfUndefined && value === undefined))
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+        delete (obj as any)[key]
+
+        removed = true
+      }
+
+      if (props.recursive && !removed && isObject(value)) {
+        removeFields(value, props)
+      }
+    }
+  }
+
+  return obj
+}
