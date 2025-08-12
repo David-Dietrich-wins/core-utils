@@ -470,7 +470,7 @@ export function splitToArray(
     preTrimString?: boolean
     removeNonPrintable?: boolean
   } = { preTrimString: false, removeNonPrintable: true }
-) {
+): string[] {
   let splitted = safeArray(strOrArray).reduce(
     (acc: string[], cur) =>
       acc.concat(
