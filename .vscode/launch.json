@@ -22,7 +22,7 @@
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     {
-      "name": "Debug Jest Tests",
+      "name": "Jest Tests",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
@@ -39,7 +39,7 @@
       }
     },
     {
-      "name": "Debug Jest Current File",
+      "name": "Jest Current File",
       "type": "node",
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceRoot}",
