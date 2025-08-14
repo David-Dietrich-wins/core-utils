@@ -74,7 +74,7 @@ export class LogManager {
 
     const alogLineFormat = winston.format.printf(({ level, message }) => {
         const msg = (message as unknown[])
-          .map((e: unknown) => ObjectTypesToString(e))
+          .map((e) => ObjectTypesToString(e))
           .join(' ')
 
         return `${DateHelper.FormatDateTimeWithMillis()}: [${
