@@ -53,9 +53,20 @@ export type CreateMutable<Type> = {
   -readonly [Property in keyof Type]: Type[Property]
 }
 
+export type DataOrError<T = unknown> =
+  | {
+      data: T | null | undefined
+      error: undefined
+    }
+  | {
+      data: undefined
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      error: any
+    }
+
 export type DialogReturn<T = unknown> = {
-  ok: boolean
   data: T
+  ok: boolean
 }
 
 export type FromTo<T = number> = {
@@ -67,19 +78,28 @@ export type FromTo<T = number> = {
 // Export type TisIId<T extends object> = T extends IId ? T : never
 
 export type FunctionAppResponse<TBody = unknown> = {
-  stats: InstrumentationStatistics
-  httpStatus: number
   body: TBody
+  httpStatus: number
+  stats: InstrumentationStatistics
 }
 
+export type FunctionKeyNames<T extends object> = Exclude<
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  { [K in keyof T]: T[K] extends Function ? K : never }[keyof T],
+  undefined
+>
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GenericCallback<T = unknown> = (...args: any[]) => T
+export type FunctionReturnsType<T = unknown> = (...args: any[]) => T
+export type FunctionOrType<T = unknown> = T | FunctionReturnsType<T>
 
 export type HeaderNavLinks = IdName & {
-  icon?: IconConfiguration
-  showInAppBar: boolean
-  title?: string
-  disabled?: boolean
+  disabled?: FunctionOrType<boolean>
+  icon?: FunctionOrType<IconConfiguration>
+  showIfLoggedIn?: FunctionOrType<boolean>
+  showIfNotLoggedIn?: FunctionOrType<boolean>
+  showInAppBar: FunctionOrType<boolean>
+  title?: FunctionOrType<string>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,6 +136,16 @@ export type OmitUserId<T extends { userid?: unknown }> = Omit<T, 'userid'>
 
 export type Opaque<K, T = string> = T & { __TYPE__: K }
 
+// From react-hook-form
+export type Primitive =
+  | null
+  | undefined
+  | string
+  | number
+  | boolean
+  | symbol
+  | bigint
+
 export type SortOrderString = 'a' | 'd' | 'asc' | 'desc'
 export type SortOrderNumeric = 1 | -1
 export type SortOrder = SortOrderString | SortOrderNumeric | boolean
@@ -151,8 +181,6 @@ export function SortOrderAsString(order?: SortOrder | null) {
   return SortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
 
-export type StringFunction = () => string
-
 export type StringOrStringArray = ArrayOrSingle<string>
 
 // Function App and/or Express request header types.
@@ -171,15 +199,6 @@ export type UserInfoWithTokens = UserAccessRefreshToken & UserInfoUser
 
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
 
-// From react-hook-form
-export type Primitive =
-  | null
-  | undefined
-  | string
-  | number
-  | boolean
-  | symbol
-  | bigint
 export type EmptyObject = {
   [K in string | number]: never
 }
@@ -189,6 +208,7 @@ export type ExtractObjects<T> = T extends infer U
     ? U
     : never
   : never
+
 /**
  * Checks whether the type is any
  * See {@link https://stackoverflow.com/a/49928360/3406963}
