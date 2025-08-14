@@ -285,7 +285,7 @@ export interface ICompanyProfile extends ISymbolPrice {
   fullTimeEmployees: string
   image: string
   industry: string
-  ipoDate: string
+  ipoDate?: string | null
   isActivelyTrading?: boolean | null
   isAdr?: boolean | null
   isEtf: boolean
