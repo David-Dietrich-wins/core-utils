@@ -1,4 +1,5 @@
 import {
+  TypishValue,
   getBoolean,
   getBooleanUndefined,
   getPercentChange,
@@ -11,6 +12,7 @@ import {
   urlJoin,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
+import type { Typish } from '../models/types.mts'
 import { getBody } from './object-helper.mjs'
 
 describe('URL Join', () => {
@@ -381,4 +383,17 @@ test('getBody', () => {
       body: 'test',
     })
   ).toBe('test')
+})
+
+test(TypishValue.name, () => {
+  expect(TypishValue(5)).toBe(5)
+  expect(TypishValue('test')).toBe('test')
+  expect(TypishValue(true)).toBe(true)
+  expect(TypishValue(null)).toBe(null)
+  expect(TypishValue(undefined)).toBe(undefined)
+
+  let t: Typish<string> = () => 'test-func-string'
+  expect(TypishValue(t)).toBe('test-func-string')
+  t = 'test-string'
+  expect(TypishValue(t)).toBe('test-string')
 })

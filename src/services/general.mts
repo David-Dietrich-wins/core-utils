@@ -1,8 +1,8 @@
 import {
   ArrayOrSingle,
-  type FunctionOrType,
   SortOrder,
   SortOrderAsBoolean,
+  type Typish,
 } from '../models/types.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
 import { isString, safestr, safestrLowercase } from './string-helper.mjs'
@@ -352,8 +352,8 @@ export function urlJoin(
   return url
 }
 
-export function FunctionOrTypeValue<T = unknown>(
-  val: FunctionOrType<T>,
+export function TypishValue<T = unknown>(
+  val: Typish<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]
 ): T {

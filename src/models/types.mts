@@ -90,16 +90,16 @@ export type FunctionKeyNames<T extends object> = Exclude<
 >
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FunctionReturnsType<T = unknown> = (...args: any[]) => T
-export type FunctionOrType<T = unknown> = T | FunctionReturnsType<T>
+export type TypishFunction<T = unknown> = (...args: any[]) => T
+export type Typish<T = unknown> = T | TypishFunction<T>
 
 export type HeaderNavLinks = IdName & {
-  disabled?: FunctionOrType<boolean>
-  icon?: FunctionOrType<IconConfiguration>
-  showIfLoggedIn?: FunctionOrType<boolean>
-  showIfNotLoggedIn?: FunctionOrType<boolean>
-  showInAppBar: FunctionOrType<boolean>
-  title?: FunctionOrType<string>
+  disabled?: Typish<boolean>
+  icon?: Typish<IconConfiguration>
+  showIfLoggedIn?: Typish<boolean>
+  showIfNotLoggedIn?: Typish<boolean>
+  showInAppBar: Typish<boolean>
+  title?: Typish<string>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
