@@ -39,7 +39,7 @@ test('createValueChange good without type and date', () => {
   expect(zpr.name).toBe(name)
   expect(zpr.value).toBe(value)
   expect(zpr.type).toBe('')
-  expect(Date.now() - Number(zpr.date)).toBeLessThan(1000)
+  expect(Date.now() - zpr.date).toBeLessThan(1000)
 })
 
 test('IdNameValue good', () => {

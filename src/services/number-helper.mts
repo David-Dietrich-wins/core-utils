@@ -187,7 +187,7 @@ export abstract class NumberHelper {
       // }
 
       const maxDecimals = maxDecimalPlaces ?? 4,
-        priceOriginal = Number(price)
+        priceOriginal = price
 
       return new Intl.NumberFormat('en', {
         maximumFractionDigits: maxDecimals,
@@ -294,7 +294,7 @@ export abstract class NumberHelper {
             : isString(val)
             ? parseFloat(val)
             : NaN,
-          robjval: any = (objRight as any)[key],
+          robjval = (objRight as Record<string, unknown>)[key],
           rval = isNumber(robjval)
             ? robjval
             : isString(robjval)
@@ -536,6 +536,7 @@ export function elementTopLeftCoords(element: any): {
     top += getAsNumber(safestr(element.offsetTop))
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     left += getAsNumber(safestr(element.offsetLeft))
+    // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-unsafe-member-access
     element = element.offsetParent
   } while (element)
 
