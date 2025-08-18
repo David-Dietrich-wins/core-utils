@@ -10,19 +10,29 @@
     "lib": ["ESNext"],
     "listEmittedFiles": false,
     "listFiles": false,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "outDir": "./dist",
     "pretty": true,
     "resolveJsonModule": true,
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2022",
+    "target": "esnext",
     "traceResolution": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.mts"],
+  "exclude": [
+    "node_modules",
+    "__tests__",
+    "**/jest.setup.mts",
+    "**/jest.setup.ts",
+    "**/*.test.mts",
+    "**/*.test.ts",
+    "**/*.test.integration.mts",
+    "**/*.test.integration.ts"
+  ]
 }
