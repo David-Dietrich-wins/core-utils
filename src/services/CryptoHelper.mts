@@ -3,8 +3,7 @@ import crypto, {
   privateDecrypt,
   publicEncrypt,
 } from 'crypto'
-import { isString, safestr, safestrToJson } from './string-helper.mjs'
-import { safeJsonToString } from './object-helper.mjs'
+import { safestr, safestrToJson } from './string-helper.mjs'
 
 export const CONST_RegexRsaPrivateKeyPem =
   /-----BEGIN (?<temp6>RSA|ENCRYPTED) PRIVATE KEY-----(?<temp5>\n|\r|\r\n)(?<temp4>[0-9a-zA-Z+/=]{64}(?<temp3>\n|\r|\r\n))*(?<temp2>[0-9a-zA-Z+/=]{1,63}(?<temp1>\n|\r|\r\n))?-----END (?<temp0>RSA|ENCRYPTED) PRIVATE KEY-----/u
