@@ -352,7 +352,7 @@ export function urlJoin(
   return url
 }
 
-export function TypishValue<T = unknown>(
+export function typishValue<T = unknown>(
   val: Typish<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]

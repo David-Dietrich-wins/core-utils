@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import {
-  TypishValue,
   getBoolean,
   getBooleanUndefined,
   getPercentChange,
@@ -10,6 +9,7 @@ import {
   newGuid,
   sortFunction,
   toHex,
+  typishValue,
   urlJoin,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -386,15 +386,15 @@ test('getBody', () => {
   ).toBe('test')
 })
 
-test(TypishValue.name, () => {
-  expect(TypishValue(5)).toBe(5)
-  expect(TypishValue('test')).toBe('test')
-  expect(TypishValue(true)).toBe(true)
-  expect(TypishValue(null)).toBe(null)
-  expect(TypishValue(undefined)).toBe(undefined)
+test(typishValue.name, () => {
+  expect(typishValue(5)).toBe(5)
+  expect(typishValue('test')).toBe('test')
+  expect(typishValue(true)).toBe(true)
+  expect(typishValue(null)).toBe(null)
+  expect(typishValue(undefined)).toBe(undefined)
 
   let t: Typish<string> = () => 'test-func-string'
-  expect(TypishValue(t)).toBe('test-func-string')
+  expect(typishValue(t)).toBe('test-func-string')
   t = 'test-string'
-  expect(TypishValue(t)).toBe('test-string')
+  expect(typishValue(t)).toBe('test-string')
 })
