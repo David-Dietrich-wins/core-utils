@@ -27,7 +27,7 @@ export interface ICryptoSettings {
 export function rsaDecrypt(
   rsaPrivateKey: string,
   rsaPassPhrase: string,
-  encryptedString: string
+  cipher: string
 ) {
   const buf = privateDecrypt(
     {
@@ -39,26 +39,21 @@ export function rsaDecrypt(
       padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
       passphrase: rsaPassPhrase,
     },
-    Buffer.from(safestr(encryptedString), 'base64')
+    Buffer.from(safestr(cipher), 'base64')
   )
 
   return buf.toString('utf8')
 }
 
-export function rsaEncrypt(
-  rsaPublicKey: string,
-  // rsaPassPhrase: string,
-  decryptedString: string
-) {
+export function rsaEncrypt(rsaPublicKey: string, whatToEncrypt: unknown) {
   const encryptedData = publicEncrypt(
       {
         key: rsaPublicKey,
         oaepHash: 'sha256',
         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        // passphrase: rsaPassPhrase,
       },
       // We convert the data string to a buffer using `Buffer.from`
-      Buffer.from(safestr(decryptedString), 'utf8')
+      Buffer.from(safestr(whatToEncrypt), 'utf8')
     ),
     // The encrypted data is in the form of bytes, so we print it in base64 format
     // So that it's displayed in a more readable form
@@ -71,29 +66,11 @@ export function rsaEncrypt(
 export function rsaDecryptObject<T = object>(
   rsaPrivateKey: string,
   rsaPassphrase: string,
-  cipher: object | string
+  cipher: string
 ) {
-  const decrypted = rsaDecrypt(
-    rsaPrivateKey,
-    rsaPassphrase,
-    isString(cipher) ? cipher : JSON.stringify(cipher)
-  )
+  const decrypted = rsaDecrypt(rsaPrivateKey, rsaPassphrase, cipher)
 
   return safestrToJson<T>(decrypted)
-}
-
-export function rsaEncryptObject(
-  rsaPublicKey: string,
-  // rsaPassPhrase: string,
-  decryptedObject: object | string
-) {
-  return rsaEncrypt(
-    rsaPublicKey,
-    // rsaPassPhrase,
-    isString(decryptedObject)
-      ? decryptedObject
-      : safeJsonToString(decryptedObject)
-  )
 }
 
 export function rsaKeyPairGenerate(passphrase: string) {
