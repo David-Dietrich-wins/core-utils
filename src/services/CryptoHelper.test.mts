@@ -1,10 +1,14 @@
 import {
   CONST_RegexRsaPrivateKeyPem,
   CONST_RegexRsaPublicKeyPem,
-  CryptoHelper,
-  ICryptoSettings,
+  rsaDecrypt,
+  rsaDecryptObject,
+  rsaEncrypt,
+  rsaEncryptObject,
+  rsaKeyPairGenerate,
 } from './CryptoHelper.mjs'
 import { TEST_Settings } from '../jest.setup.mjs'
+import { randomStringGenerate } from './string-helper.mts'
 
 /**
  * Generate a 2048-bit RSA key pair
@@ -17,24 +21,32 @@ import { TEST_Settings } from '../jest.setup.mjs'
 
 const StringToEncrypt = '1233'
 
-test('Constructor', () => {
-  const aSettings: ICryptoSettings = {
-      rsaPassPhrase: '',
-      rsaPrivateKey: TEST_Settings.rsaPrivateKey,
-      rsaPublicKey: TEST_Settings.rsaPublicKey,
-    },
-    ch = new CryptoHelper(aSettings),
-    encrypted = ch.rsaEncrypt(StringToEncrypt),
-    zdecrypted = ch.rsaDecrypt(encrypted)
-
-  expect(zdecrypted).toBe(StringToEncrypt)
-})
-
 test('RSA generate key pair', () => {
-  const { rsaPublicKey, rsaPrivateKey } = CryptoHelper.GenerateRsaKeyPair()
+  const { rsaPublicKey, rsaPrivateKey } = rsaKeyPairGenerate(
+    TEST_Settings.rsaPassPhrase
+  )
 
   expect(rsaPublicKey).toMatch(CONST_RegexRsaPublicKeyPem)
   expect(rsaPrivateKey).toMatch(CONST_RegexRsaPrivateKeyPem)
+
+  const lengthForRandomString = 4,
+    randomString = StringToEncrypt
+
+  expect(randomString).toHaveLength(lengthForRandomString)
+  const cipherText = rsaEncrypt(
+    rsaPublicKey,
+    // TEST_Settings.rsaPassPhrase,
+    randomString
+  )
+  expect(cipherText).not.toBeNull()
+  const decrypted = rsaDecrypt(
+    rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase,
+    cipherText
+  )
+  expect(decrypted).not.toBeNull()
+
+  expect(decrypted).toEqual(randomString)
 })
 
 test('RSA encrypt and decrypt', () => {
@@ -42,16 +54,16 @@ test('RSA encrypt and decrypt', () => {
     randomString = StringToEncrypt
 
   expect(randomString).toHaveLength(lengthForRandomString)
-  const cipherText = CryptoHelper.rsaEncryptStatic(
-    randomString,
-    TEST_Settings.rsaPublicKey
+  const cipherText = rsaEncrypt(
+    TEST_Settings.rsaPublicKey,
+    // TEST_Settings.rsaPassPhrase,
+    randomString
   )
   expect(cipherText).not.toBeNull()
-  const decrypted = CryptoHelper.rsaDecryptStatic(
-    cipherText,
+  const decrypted = rsaDecrypt(
     TEST_Settings.rsaPrivateKey,
-    //TEST_Settings.rsaPassPhrase
-    ''
+    TEST_Settings.rsaPassPhrase,
+    cipherText
   )
   expect(decrypted).not.toBeNull()
 
@@ -61,15 +73,15 @@ test('RSA encrypt and decrypt', () => {
 // Describe('Generate random PIN', () => {
 //   Test('length for random PIN', () => {
 //     Const lengthForRandomString = 4
-//     Const ranstr = CryptoHelper.GenerateRandomPin(lengthForRandomString)
+//     Const ranstr = GenerateRandomPin(lengthForRandomString)
 
 //     Expect(ranstr).toHaveLength(lengthForRandomString)
 //   })
 //   Test('using chars and numbers', () => {
 //     Const lengthForRandomString = 4
-//     Const ranstr = CryptoHelper.GenerateRandomPin(
+//     Const ranstr = GenerateRandomPin(
 //       LengthForRandomString,
-//       CryptoHelper.CONST_CharsNumbers
+//       CONST_CharsNumbers
 //     )
 
 //     Expect(ranstr).toHaveLength(lengthForRandomString)
@@ -96,9 +108,9 @@ test('RSA encrypt and decrypt', () => {
 
 //     Const lengthForRandomString = 4
 //     Expect(() =>
-//       CryptoHelper.GenerateRandomPin(
+//       GenerateRandomPin(
 //         LengthForRandomString,
-//         CryptoHelper.CONST_CharsNumbers
+//         CONST_CharsNumbers
 //       )
 //     ).toThrow()
 
@@ -107,45 +119,21 @@ test('RSA encrypt and decrypt', () => {
 //   })
 // })
 
-describe('Generate random string', () => {
-  test('no params', () => {
-    const lengthForRandomString = 4,
-      ranstr = CryptoHelper.GenerateRandomString()
-
-    expect(ranstr).toHaveLength(lengthForRandomString)
-  })
-  test('proper length', () => {
-    const lengthForRandomString = 4,
-      ranstr = CryptoHelper.GenerateRandomString(lengthForRandomString)
-
-    expect(ranstr).toHaveLength(lengthForRandomString)
-  })
-  test('using chars and numbers', () => {
-    const lengthForRandomString = 4,
-      ranstr = CryptoHelper.GenerateRandomString(
-        lengthForRandomString,
-        CryptoHelper.CONST_CharsNumbers
-      )
-
-    expect(ranstr).toHaveLength(lengthForRandomString)
-  })
-})
-
 test('rsaDecryptStaticObject with JSON', () => {
   const lengthForRandomString = 4,
-    randomString = CryptoHelper.GenerateRandomString(lengthForRandomString),
+    randomString = randomStringGenerate(lengthForRandomString),
     randomStringObject = { data: randomString },
-    zcipherText = CryptoHelper.rsaEncryptStaticObject(
-      randomStringObject,
-      TEST_Settings.rsaPublicKey
+    zcipherText = rsaEncryptObject(
+      TEST_Settings.rsaPublicKey,
+      // TEST_Settings.rsaPassPhrase,
+      randomStringObject
     )
 
   expect(zcipherText).not.toBeNull()
-  const decrypted = CryptoHelper.rsaDecryptStaticObject(
-    zcipherText,
+  const decrypted = rsaDecryptObject(
     TEST_Settings.rsaPrivateKey,
-    ''
-    //TEST_Settings.rsaPassPhrase
+    TEST_Settings.rsaPassPhrase,
+    zcipherText
   )
   expect(decrypted).not.toBeNull()
   expect(decrypted).toEqual(randomStringObject)

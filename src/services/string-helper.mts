@@ -8,6 +8,12 @@ import { AppException } from '../models/AppException.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 
+export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
+  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  CONST_CharsNumbers = '0123456789',
+  CONST_CharsToUseForRandomString =
+    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
+
 export function capitalizeFirstLetter(str?: string | null) {
   return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''
 }
@@ -568,4 +574,13 @@ export function safeHtmlAttribute(
   return splitToArray(items, ',', true, true, {
     removeNonPrintable: true,
   }).join(separator)
+}
+
+export function randomStringGenerate(
+  exactLength = 4,
+  charsToUse = CONST_CharsToUseForRandomString
+) {
+  return [...Array(exactLength)]
+    .map(() => charsToUse[Math.floor(Math.random() * charsToUse.length)])
+    .join('')
 }

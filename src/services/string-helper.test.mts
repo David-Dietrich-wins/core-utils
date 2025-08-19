@@ -1,4 +1,5 @@
 import {
+  CONST_CharsNumbers,
   FirstCharCapitalFormatter,
   StringHelper,
   capitalizeFirstLetter,
@@ -9,6 +10,7 @@ import {
   pluralize,
   plusMinus,
   prefixIfHasData,
+  randomStringGenerate,
   safeHtmlAttribute,
   safestr,
   safestrLowercase,
@@ -1041,4 +1043,27 @@ test(StringHelper.RemoveLeadingNumbersAndWhitespace.name, () => {
   )
   expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
   expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
+})
+
+describe(randomStringGenerate.name, () => {
+  test('no params', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate()
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+
+  test('proper length', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString)
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+
+  test('using chars and numbers', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString, CONST_CharsNumbers)
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
 })
