@@ -479,3 +479,54 @@ test(NumberHelper.FirstNumberInString.name, () => {
   expect(NumberHelper.FirstNumberInString(' 123')).toBe(123)
   expect(NumberHelper.FirstNumberInString(' -123.45')).toBe(-123.45)
 })
+
+test(NumberHelper.AddNumbers.name, () => {
+  const io1 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
+    io1ret = NumberHelper.AddNumbers(io1, {
+      a: 3,
+      b: 4,
+      c: '5',
+      d: '6',
+      e: 'c',
+      f: 'd',
+    }),
+    io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
+    io2ret = NumberHelper.AddNumbers(io2, {
+      a: 3,
+      b: 4,
+      c: '5',
+      d: '6',
+      e: 'c',
+      f: { a: 2 },
+    }),
+    io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
+    io3ret = NumberHelper.AddNumbers(io3, {
+      a: [3],
+      b: 4,
+      c: '5',
+      d: '6',
+      e: 'c',
+      f: { a: 2 },
+    }),
+    io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } },
+    io4ret = NumberHelper.AddNumbers(io4, {
+      a: [3],
+      b: 4,
+      c: [9],
+      d: '6',
+      e: ['c'],
+      f: { a: 2 },
+    } as unknown as object)
+
+  expect(io1ret).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: 'b' })
+  expect(io2ret).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
+  expect(io3ret).toEqual({ a: [2], b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
+  expect(io4ret).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
+})
+
+test(NumberHelper.DivideByNumbers.name, () => {
+  const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
+    objRet = NumberHelper.DivideByNumbers(io, 2)
+
+  expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
+})
