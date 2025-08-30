@@ -2,7 +2,7 @@
 import {
   CONST_JwtErrorDecode,
   CONST_JwtErrorRetrieveUserId,
-  JwtTokenWithUserId,
+  JwtTokenWithEmail,
 } from './jwt.mjs'
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import {
@@ -69,8 +69,8 @@ test('jwtToken', () => {
 
 describe('userIdFromJwt', () => {
   test('raw header for JWT', () => {
-    const aaval = JwtTokenWithUserId(
-        TEST_Settings.userIdGood.toString(),
+    const aaval = JwtTokenWithEmail(
+        TEST_Settings.userIdGoodEmail,
         TEST_Settings.rsaPrivateKey,
         TEST_Settings.rsaPassPhrase
       ),
@@ -80,7 +80,7 @@ describe('userIdFromJwt', () => {
       hm = new HttpHeaderManagerBase(ainit),
       userid = hm.userId
 
-    expect(userid).toBe(TEST_Settings.userIdGood.toString())
+    expect(userid).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('userId is 0', () => {

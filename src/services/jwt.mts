@@ -19,7 +19,8 @@ import { safeArray } from './primitives/array-helper.mjs'
 export const CONST_JwtErrorDecode =
     'Invalid security token when attempting to decode the JWT.',
   CONST_JwtErrorRetrieveUserId =
-    'Invalid security token when attempting to retrieve the user id.'
+    'Invalid security token when attempting to retrieve the user id.',
+  CONST_JwtErrorUserIdRequired = 'User ID is required.'
 
 export const WebRoleKeys = {
   ADMIN: 'admin',
@@ -147,7 +148,7 @@ export const zJwtSchema = z.object({
   // sub (Subject): Identifies the principal that is the subject of the JWT.
   sub: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
   uid: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
-  userId: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  // userId: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
   ver: z.number().optional(),
 })
 
@@ -163,10 +164,13 @@ export function JwtDecodeComplete(token: string): jsonWebToken.Jwt {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-class JwtBusinessRules {
-  static apply(jwtdata: IJwt, enforceUserId: boolean) {
-    if (enforceUserId && !jwtdata.userId) {
-      throw new Error('User ID is required')
+export class JwtBusinessRules {
+  static apply(jwtdata: IJwt, enforceUserId = true) {
+    if (enforceUserId && !z.email().safeParse(jwtdata.email).success) {
+      throw new AppException(
+        CONST_JwtErrorUserIdRequired,
+        JwtBusinessRules.apply.name
+      )
     }
 
     return jwtdata
@@ -254,7 +258,6 @@ export interface IJwtBase {
   scope: string
   // UUID: The FusionAuth Tenant unique Id.
   tid: string
-  userId?: string
 }
 
 export interface IJwtWithSubject extends IJwtBase {
@@ -311,9 +314,9 @@ export interface IJwtFusionAuthIdToken extends IJwtAccessToken {
 // }
 
 export function JwtRetrieveUserId(token: string) {
-  const jwtret = JwtDecode<IJwtBase>(token)
+  const jwtret = JwtDecode<IJwtAccessToken>(token)
 
-  return safestr(jwtret.userId)
+  return safestr(jwtret.email)
 }
 
 export function jwtHeader(kid = newGuid()) {
@@ -371,20 +374,6 @@ export function GenerateJwt(
   )
 
   return jwtToken
-}
-
-export function JwtTokenWithUserId(
-  userId: string,
-  secretOrPrivateKey: string,
-  rsaPassPhrase: string,
-  overrides?: JwtPayload
-) {
-  const payload: JwtPayload = {
-    userId,
-    ...overrides,
-  }
-
-  return GenerateJwt(secretOrPrivateKey, rsaPassPhrase, payload)
 }
 
 export function JwtTokenWithEmail(
@@ -465,7 +454,6 @@ export class JwtBase implements IJwtBase {
   roles: string[]
   scope: string
   tid: string
-  userId?: string
 
   constructor(token: IJwtBase) {
     this.aud = safestr(token.aud)

@@ -1,26 +1,36 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-spread */
 import {
   CONST_JwtErrorDecode,
   CONST_JwtErrorRetrieveUserId,
+  CONST_JwtErrorUserIdRequired,
   FromBearerToken,
   FromHeaders,
-  type IJwtBase,
+  type IJwt,
+  type IJwtAccessToken,
   IJwtFusionAuthIdToken,
   JwtAccessToken,
   JwtBase,
+  JwtBusinessRules,
   JwtDecode,
+  JwtDecodeComplete,
   JwtFusionAuthClientCredentials,
   JwtFusionAuthIdToken,
   JwtRetrieveUserId,
   JwtSign,
-  JwtTokenWithUserId,
+  JwtTokenWithEmail,
   JwtWithSubject,
   jwtDecodeDigi,
   jwtHeader,
   jwtVerify,
 } from './jwt.mjs'
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
-import { JwtPayload, Secret } from 'jsonwebtoken'
+import {
+  JwtPayload,
+  Secret,
+  type JwtHeader,
+  type SignOptions,
+} from 'jsonwebtoken'
 import { AppException } from '../models/AppException.mjs'
 import { CONST_AppNameTradePlotter } from './HttpHeaderManager.mjs'
 
@@ -29,16 +39,16 @@ describe('JwtDecode', () => {
 
   beforeEach(() => {
     jwt = JwtSign(
-      { userId: TEST_Settings.userIdGood },
+      { email: TEST_Settings.userIdGoodEmail },
       TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase
     )
   })
 
   test('good', () => {
-    const jwtdata = JwtDecode<IJwtBase>(jwt)
+    const jwtdata = JwtDecode<IJwtAccessToken>(jwt)
 
-    expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
+    expect(jwtdata.email).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('bad', () => {
@@ -61,19 +71,19 @@ describe('JwtDecode', () => {
   test('JwtRetrieveUserId', () => {
     const jwtdata = JwtRetrieveUserId(jwt)
 
-    expect(jwtdata).toBe(TEST_Settings.userIdGood.toString())
+    expect(jwtdata).toBe(TEST_Settings.userIdGoodEmail)
   })
 
   test('JwtDecode', () => {
     const jwtdata: string | JwtPayload | null = JwtDecode(jwt)
 
-    expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
+    expect(jwtdata.email).toBe(TEST_Settings.userIdGoodEmail)
   })
 })
 
 test('JwtSign', () => {
   const payload = {
-      userId: TEST_Settings.userIdGood,
+      email: TEST_Settings.userIdGoodEmail,
     },
     zjwtToken = JwtSign(
       payload,
@@ -83,9 +93,9 @@ test('JwtSign', () => {
     )
   expect(zjwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode<IJwtBase>(zjwtToken)
+  const jwtdata = JwtDecode<IJwtAccessToken>(zjwtToken)
 
-  expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
+  expect(jwtdata.email).toBe(TEST_Settings.userIdGoodEmail)
 })
 
 test('JwtVerify bad', () => {
@@ -96,7 +106,7 @@ test('JwtVerify bad', () => {
 
 test('JwtVerify good', () => {
   const payload = {
-      userId: TEST_Settings.userIdGood,
+      email: TEST_Settings.userIdGoodEmail,
     },
     zjwtToken = JwtSign(
       payload,
@@ -107,9 +117,9 @@ test('JwtVerify good', () => {
 
   expect(zjwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode<IJwtBase>(zjwtToken)
+  const jwtdata = JwtDecode<IJwtAccessToken>(zjwtToken)
 
-  expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
+  expect(jwtdata.email).toBe(TEST_Settings.userIdGoodEmail)
 
   const secretOrPublicKey: Secret = TEST_Settings.rsaPublicKey,
     verified = jwtVerify(
@@ -117,7 +127,9 @@ test('JwtVerify good', () => {
       secretOrPublicKey,
       TEST_Settings.rsaPassPhrase
     )
-  expect((verified as IJwtBase).userId).toBe(TEST_Settings.userIdGood)
+  expect((verified as IJwtAccessToken).email).toBe(
+    TEST_Settings.userIdGoodEmail
+  )
 })
 
 describe('JwtAccessClient', () => {
@@ -502,7 +514,7 @@ test('JwtFusionAuthIdToken with roles', () => {
   expect(zjwt.isPolitagreeUser).toBeFalsy()
 })
 
-test('JwtTokenWithUserId', () => {
+test(JwtTokenWithEmail.name, () => {
   const jwtPayload = {
       aud: 'audience',
       exp: 123,
@@ -513,15 +525,15 @@ test('JwtTokenWithUserId', () => {
       scope: 'scope',
       tid: 'tenant',
     },
-    jwtToken = JwtTokenWithUserId(
-      TEST_Settings.userIdGood.toString(),
+    jwtToken = JwtTokenWithEmail(
+      TEST_Settings.userIdGoodEmail,
       TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase,
       jwtPayload
     ),
-    zjwt = JwtBase.Create(jwtToken)
+    zjwt = JwtAccessToken.Create(jwtToken)
 
-  expect(zjwt.userId).toBe(TEST_Settings.userIdGood.toString())
+  expect(zjwt.email).toBe(TEST_Settings.userIdGoodEmail)
 })
 
 describe(jwtDecodeDigi.name, () => {
@@ -536,8 +548,8 @@ describe(jwtDecodeDigi.name, () => {
         scope: 'scope',
         tid: 'tenant',
       },
-      jwtToken = JwtTokenWithUserId(
-        'myuserId',
+      jwtToken = JwtTokenWithEmail(
+        TEST_Settings.userIdGoodEmail,
         TEST_Settings.rsaPrivateKey,
         TEST_Settings.rsaPassPhrase,
         jwtPayload
@@ -554,4 +566,177 @@ describe(jwtDecodeDigi.name, () => {
       new AppException(CONST_JwtErrorRetrieveUserId, 'fname')
     )
   })
+})
+
+test(JwtDecodeComplete.name, () => {
+  const jwt = JwtTokenWithEmail(
+    TEST_Settings.userIdGoodEmail,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
+
+  const { payload, signature } = JwtDecodeComplete(jwt) as JwtPayload
+  expect(signature.length).toBeGreaterThan(10)
+
+  expect(payload.email).toBe(TEST_Settings.userIdGoodEmail)
+
+  expect(() => JwtDecodeComplete(`1${jwt}`)).toThrow()
+})
+
+describe(JwtBusinessRules.name, () => {
+  const jwtDefault: IJwt = {
+    aud: 'https://api.resorts.com',
+    email: 'test@test.com',
+    exp: 1719551935,
+    iat: 1719551775,
+    iss: 'https://identity.resorts.com/oauth2/auzj02gi5cZ8h8NP1t7',
+    jti: 'AT.EkfRHvtFRJm0Ycs_hqpsV62KdafbRn6TSojSvjrd0Zw',
+    sub: '123456789',
+  } as const
+
+  test(JwtBusinessRules.apply.name, () => {
+    expect(() =>
+      JwtBusinessRules.apply({ ...jwtDefault, email: undefined })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email: null as unknown as string,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() => JwtBusinessRules.apply({ ...jwtDefault, email: '0' })).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() => JwtBusinessRules.apply({ ...jwtDefault, email: '' })).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email: 0 as unknown as string,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email: {} as unknown as string,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email: { a: 'a' } as unknown as string,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email: new Date() as unknown as string,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+  })
+
+  test.each([
+    '-ab',
+    'abcdef',
+    '-123454..',
+    // { description: 'null patron id', patronId: null },
+  ])('Improper string: %s', (email) => {
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+  })
+
+  test.each([
+    '-1',
+    '-12.0',
+    '-123454.',
+    '-123454.56',
+    // { description: 'null patron id', patronId: null },
+  ])('Not positive: %s', (email) => {
+    expect(() =>
+      JwtBusinessRules.apply({
+        ...jwtDefault,
+        email,
+      })
+    ).toThrow(
+      new AppException(CONST_JwtErrorUserIdRequired, 'JwtBusinessRules.apply')
+    )
+  })
+
+  test('not expecting email', () => {
+    const jwt = JwtBusinessRules.apply(jwtDefault, false)
+    expect(jwt.email).toBe(jwtDefault.email)
+  })
+
+  test('no email and not expecting an email number', () => {
+    const jwt = JwtBusinessRules.apply(
+      { ...jwtDefault, email: undefined },
+      false
+    )
+
+    expect(jwt.email).toBeUndefined()
+    expect(
+      JwtBusinessRules.apply(
+        { ...jwtDefault, email: null as unknown as string },
+        false
+      ).email
+    ).toBeNull()
+    expect(
+      () => JwtBusinessRules.apply({ ...jwtDefault, email: '' }, true).email
+    ).toThrow(
+      new AppException(
+        CONST_JwtErrorUserIdRequired,
+        `${JwtBusinessRules.name}.${JwtBusinessRules.apply.name}`
+      )
+    )
+  })
+})
+
+test(JwtSign.name, () => {
+  const header: JwtHeader = {
+    alg: 'HS256',
+    // expiresIn,
+    typ: 'JWT',
+  }
+
+  const signOptions: SignOptions = {
+    header,
+  }
+
+  const jwtToken = JwtSign(
+    { email: TEST_Settings.userIdGoodEmail },
+    TEST_Settings.rsaPrivateKey,
+    '',
+    signOptions
+  )
+  expect(jwtToken.length).toBeGreaterThan(10)
+
+  const jwtdata = JwtDecode(jwtToken)
+
+  expect((jwtdata as IJwtAccessToken).email).toBe(TEST_Settings.userIdGoodEmail)
 })

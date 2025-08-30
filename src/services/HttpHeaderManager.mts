@@ -116,7 +116,7 @@ export class HttpHeaderManagerBase {
 
   get userId() {
     const jwt = this.jwtTokenMustExistAndBeValid,
-      userid = jwt.userId
+      userid = jwt.email
     if (!userid) {
       throw new AppException(CONST_JwtErrorRetrieveUserId, 'userIdFromJwt')
     }
