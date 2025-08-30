@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import {
   getPercentChange,
   getPercentChangeString,
@@ -7,11 +6,9 @@ import {
   newGuid,
   sortFunction,
   toHex,
-  typishValue,
   urlJoin,
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
-import type { Typish } from '../models/types.mts'
 
 describe('URL Join', () => {
   const baseUrl = 'https://localhost:3000'
@@ -332,17 +329,4 @@ test('getPercentChange', () => {
   expect(getPercentChange(50, 0)).toBe(-5000)
   expect(getPercentChange(100, 200)).toBe(100)
   expect(getPercentChange(200, 100)).toBe(-50)
-})
-
-test(typishValue.name, () => {
-  expect(typishValue(5)).toBe(5)
-  expect(typishValue('test')).toBe('test')
-  expect(typishValue(true)).toBe(true)
-  expect(typishValue(null)).toBe(null)
-  expect(typishValue(undefined)).toBe(undefined)
-
-  let t: Typish<string> = () => 'test-func-string'
-  expect(typishValue(t)).toBe('test-func-string')
-  t = 'test-string'
-  expect(typishValue(t)).toBe('test-string')
 })
