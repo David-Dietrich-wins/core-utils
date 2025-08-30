@@ -9,7 +9,6 @@ import { ChartSettings } from '../../tplot/ChartSettings.mjs'
 import { DateHelper } from '../primitives/date-helper.mjs'
 import type { ISymbol } from '../../models/ticker-info.mjs'
 import { TradingClientBase } from './TradingClientBase.mjs'
-import { isArray } from '../primitives/array-helper.mjs'
 import { safestr } from '../primitives/string-helper.mjs'
 
 const MIN_CHART_INTERVALS = 1000
@@ -24,22 +23,26 @@ export class FinancialModelingPrep extends TradingClientBase {
   static FmpIndicatorParamsSetDateBoundary(fmp: FmpIndicatorQueryParams) {
     const { from, timeframe } = fmp,
       fmpNew = { ...fmp },
-      regex = /(?<temp2>\d+)|(?<temp1>[A-Z]+)/giu,
-      regexMatches = safestr(timeframe).match(regex)
+      regex = /(?<units>\d+)(?<unit>[A-Za-z]+)/giu,
+      regexMatches = regex.exec(safestr(timeframe))
 
-    if (isArray(regexMatches?.entries(), 2) && regexMatches[0] !== timeframe) {
-      const [units, unit] = regexMatches
+    if (regexMatches?.groups?.units && regexMatches.groups.unit) {
       if (from) {
-        fmpNew.from = Number(
-          DateHelper.NextBoundaryUp(from, unit, Number(units))
-        )
+        fmpNew.from = from
+        //   fmpNew.from = Number(
+        //     DateHelper.NextBoundaryUp(
+        //       from,
+        //       regexMatches.groups.unit,
+        //       Number(regexMatches.groups.units)
+        //     )
+        //   )
       }
 
       fmpNew.to = Number(
         DateHelper.NextBoundaryUp(
           fmpNew.to ? fmpNew.to : Date.now(),
-          unit,
-          Number(units)
+          regexMatches.groups.unit,
+          Number(regexMatches.groups.units)
         )
       )
     }
