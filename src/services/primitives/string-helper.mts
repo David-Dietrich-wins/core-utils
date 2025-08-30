@@ -157,15 +157,15 @@ export function exceedsMaxNumberOfCharacters(
   return safestr(str).length > maxNumberOfCharacters
 }
 
-export function hasConsecutiveNumbers(pin: string) {
-  if ('7890' === pin || '0987' === pin) {
+export function hasConsecutiveNumbers(strToSearch: string) {
+  if ('7890' === strToSearch || '0987' === strToSearch) {
     return true
   }
 
   const plusOneCheck = (arrNumbers: number[]) =>
     arrNumbers.slice(1).map((n: number, i: number) => n - arrNumbers[i])
 
-  const arr = safestr(pin)
+  const arr = safestr(strToSearch)
     .split('')
     .map((x) => getAsNumber(x))
 
@@ -179,11 +179,11 @@ export function hasConsecutiveNumbers(pin: string) {
 }
 
 export function maxNumberOfAnyOneCharacter(
-  pin: string,
+  strToSearch: string,
   maxNumberOfCharacters: number
 ) {
   // eslint-disable-next-line @typescript-eslint/no-misused-spread
-  const arrCharsWithCounts = [...safestr(pin)].reduce(
+  const arrCharsWithCounts = [...safestr(strToSearch)].reduce(
     (a: Record<string, number>, e) => {
       a[e] = (a[e] || 0) + 1
 

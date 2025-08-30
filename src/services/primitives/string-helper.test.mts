@@ -6,11 +6,13 @@ import {
   capitalizeWords,
   exceedsMaxNumberOfCharacters,
   getCommaUpperList,
+  hasConsecutiveNumbers,
   hasNumbersOnly,
   isEmptyString,
   isStringish,
   matchesRegex,
   maxNumberOfAnyOneCharacter,
+  maxRepeatedCharCount,
   pluralSuffix,
   pluralize,
   plusMinus,
@@ -532,4 +534,21 @@ test(getCommaUpperList.name, () => {
   expect(getCommaUpperList('a,b,c')).toBe('A,B,C')
   expect(getCommaUpperList(['a', 'b', 'c'])).toBe('A,B,C')
   expect(getCommaUpperList('a ,   b,c   ')).toBe('A ,   B,C')
+})
+
+test(hasConsecutiveNumbers.name, () => {
+  expect(hasConsecutiveNumbers('123')).toBe(true)
+  expect(hasConsecutiveNumbers('abc')).toBe(false)
+  expect(hasConsecutiveNumbers('1a2b3c')).toBe(false)
+  expect(hasConsecutiveNumbers('7890')).toBe(true)
+  expect(hasConsecutiveNumbers('0987')).toBe(true)
+})
+
+test(maxRepeatedCharCount.name, () => {
+  expect(maxRepeatedCharCount('')).toBe(0)
+  expect(maxRepeatedCharCount('a')).toBe(1)
+  expect(maxRepeatedCharCount('aa')).toBe(2)
+  expect(maxRepeatedCharCount('ab')).toBe(1)
+  expect(maxRepeatedCharCount('aabb')).toBe(2)
+  expect(maxRepeatedCharCount('aaabbb')).toBe(3)
 })
