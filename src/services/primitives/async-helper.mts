@@ -1,20 +1,21 @@
 // Function to generate an array of promises
-export function generateAsyncElements<T>(
-  n: number,
-  generateFn: (index: number) => Promise<T>
-): Promise<T>[] {
-  return Array.from({ length: n }, (_, i) => generateFn(i))
-}
+// export function generateAsyncElements<T>(
+//   n: number,
+//   generateFn: (index: number) => Promise<T>
+// ): Promise<T>[] {
+//   return Array.from({ length: n }, (_, i) => generateFn(i))
+// }
 
-export async function* createAsyncIterableFromPromises<T>(
-  promises: Promise<T>[]
-): AsyncIterable<T> {
-  for (const promise of promises) {
-    // Wait for each promise to resolve before yielding its value
-    // eslint-disable-next-line no-await-in-loop
-    yield await promise
-  }
-}
+// export async function* createAsyncIterableFromPromises<T>(
+//   promises: Promise<T>[]
+// ): AsyncIterable<T> {
+//   for (const promise of promises) {
+//     // Wait for each promise to resolve before yielding its value
+//     // eslint-disable-next-line no-await-in-loop
+//     yield await promise
+//   }
+// }
+
 /**
  * All this for await in a loop that can bail early...
  *

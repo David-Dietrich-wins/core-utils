@@ -26,9 +26,9 @@ import {
 } from './jwt.mjs'
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import {
+  type JwtHeader,
   JwtPayload,
   Secret,
-  type JwtHeader,
   type SignOptions,
 } from 'jsonwebtoken'
 import { AppException } from '../models/AppException.mjs'
