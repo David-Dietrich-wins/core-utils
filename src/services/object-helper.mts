@@ -146,12 +146,8 @@ export function ObjectTypesToString(e: unknown): string {
  * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
  * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
  */
-export function safeObject(obj?: object, ifEmpty?: object) {
-  if (obj && isObject(obj)) {
-    return obj
-  }
-
-  return isObject(ifEmpty) ? ifEmpty : {}
+export function safeObject<T extends object = object>(obj?: T, ifEmpty?: T): T {
+  return (obj ?? ifEmpty ?? {}) as T
 }
 /**
  * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
@@ -167,7 +163,7 @@ export function safeJsonToString<T extends object | Array<T>>(
 ) {
   try {
     return JSON.stringify(
-      isArray(json) ? safeArray(json) : safeObject(json),
+      isObject(json) ? safeObject(json) : safeArray(json),
       replacer,
       space
     )

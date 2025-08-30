@@ -18,14 +18,14 @@ import {
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
 import { CONST_AppNameTradePlotter } from './HttpHeaderManager.mjs'
-import { safestr } from './string-helper.mjs'
 
 describe('JwtDecode', () => {
   let jwt = ''
   beforeAll(() => {
     jwt = JwtSign(
       { userId: TEST_Settings.userIdGood },
-      safestr(TEST_Settings.rsaPassPhrase)
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase
     )
   })
 
@@ -80,7 +80,8 @@ test('JwtSign', () => {
     },
     zjwtToken = JwtSign(
       payload,
-      safestr(TEST_Settings.rsaPassPhrase),
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase,
       signOptions
     )
   expect(zjwtToken.length).toBeGreaterThan(10)
@@ -109,7 +110,8 @@ test('JwtVerify good', () => {
     },
     zjwtToken = JwtSign(
       payload,
-      safestr(TEST_Settings.rsaPassPhrase),
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase,
       signOptions
     )
 
@@ -119,7 +121,7 @@ test('JwtVerify good', () => {
 
   expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
 
-  const secretOrPublicKey: Secret = safestr(TEST_Settings.rsaPassPhrase),
+  const secretOrPublicKey: Secret = TEST_Settings.rsaPassPhrase,
     verified = JwtVerify(zjwtToken, secretOrPublicKey)
   expect((verified as IJwtWithUserId).userId).toBe(TEST_Settings.userIdGood)
 })
@@ -273,7 +275,11 @@ test('JwtBase create', () => {
     tid: 'tenant',
   }
 
-  let ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+  let ajwt = JwtSign(
+      jwtPayload,
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase
+    ),
     jhelper = JwtBase.Create(ajwt)
 
   expect(jhelper.audience).toBe('audience')
@@ -289,7 +295,11 @@ test('JwtBase create', () => {
   expect(jhelper.isUser).toBeTruthy()
 
   jwtPayload.iss = 'tradeplotter.com'
-  ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
+  ajwt = JwtSign(
+    jwtPayload,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
   jhelper = JwtBase.Create(ajwt)
 
   expect(jhelper.isAdmin).toBeFalsy()
@@ -302,7 +312,11 @@ test('JwtBase create', () => {
   expect(jhelper.isPolitagreeUser).toBeFalsy()
 
   jwtPayload.roles = ['admin']
-  ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
+  ajwt = JwtSign(
+    jwtPayload,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
   jhelper = JwtBase.Create(ajwt)
 
   expect(jhelper.isAdmin).toBeTruthy()
@@ -316,7 +330,11 @@ test('JwtBase create', () => {
 
   jwtPayload.iss = 'politagree.com'
   jwtPayload.roles = ['user']
-  ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
+  ajwt = JwtSign(
+    jwtPayload,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
   jhelper = JwtBase.Create(ajwt)
 
   expect(jhelper.isAdmin).toBeFalsy()
@@ -329,7 +347,11 @@ test('JwtBase create', () => {
   expect(jhelper.isPolitagreeUser).toBeTruthy()
 
   jwtPayload.roles = ['admin']
-  ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
+  ajwt = JwtSign(
+    jwtPayload,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
   jhelper = JwtBase.Create(ajwt)
 
   expect(jhelper.isAdmin).toBeTruthy()
@@ -355,12 +377,20 @@ test('JwtWithSubject', () => {
     tid: 'tenant',
   }
 
-  let ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+  let ajwt = JwtSign(
+      jwtPayload,
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase
+    ),
     jhelper = JwtWithSubject.Create(ajwt)
   expect(jhelper.sub).toBe('subject')
 
   jwtPayload.sub = 'new subject'
-  ajwt = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase))
+  ajwt = JwtSign(
+    jwtPayload,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase
+  )
   jhelper = JwtWithSubject.Create(ajwt)
 
   expect(jhelper.sub).toBe('new subject')
@@ -379,7 +409,11 @@ test('JwtFusionAuthClientCredentials', () => {
       sub: 'subject',
       tid: 'tenant',
     },
-    jwtsign = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jwtsign = JwtSign(
+      jwtPayload,
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase
+    ),
     zjwt = JwtFusionAuthClientCredentials.Create(jwtsign)
 
   expect(zjwt.permissions).toStrictEqual(['user'])
@@ -433,7 +467,11 @@ test('JwtFusionAuthIdToken with roles', () => {
       sub: 'subject',
       tid: 'tenant',
     },
-    jwtsign = JwtSign(jwtPayload, safestr(TEST_Settings.rsaPassPhrase)),
+    jwtsign = JwtSign(
+      jwtPayload,
+      TEST_Settings.rsaPrivateKey,
+      TEST_Settings.rsaPassPhrase
+    ),
     zjwt = JwtFusionAuthIdToken.Create(jwtsign)
   expect(zjwt.applicationId).toBe('application')
   expect(zjwt.auth_time).toBe(123)
@@ -487,6 +525,7 @@ test('JwtTokenWithUserId', () => {
     },
     jwtToken = JwtTokenWithUserId(
       'myuserId',
+      TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase,
       jwtPayload
     ),

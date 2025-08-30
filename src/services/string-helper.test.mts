@@ -6,9 +6,6 @@ import {
   capitalizeWords,
   getCommaUpperList,
   isEmptyString,
-  pluralSuffix,
-  pluralize,
-  plusMinus,
   prefixIfHasData,
   randomStringGenerate,
   safeHtmlAttribute,
@@ -241,34 +238,6 @@ test('safestrUppercase', () => {
   expect(safestrUppercase('hello World')).toBe('HELLO WORLD')
   expect(safestrUppercase(' hello World ')).toBe('HELLO WORLD')
   expect(safestrUppercase(' hello World ', false)).toBe(' HELLO WORLD ')
-})
-
-test('pluralize', () => {
-  expect(pluralize(1)).toBe('')
-  expect(pluralize(2)).toBe('s')
-  expect(pluralize(0)).toBe('s')
-  expect(pluralize(-1)).toBe('s')
-  expect(pluralize(1, 'item', 'items')).toBe('item')
-  expect(pluralize(2, 'item', 'items')).toBe('items')
-  expect(pluralize(0, 'item', 'items')).toBe('items')
-  expect(pluralize(-1, 'item', 'items')).toBe('items')
-})
-
-test('pluralSuffix', () => {
-  expect(pluralSuffix(1)).toBe('')
-  expect(pluralSuffix(2)).toBe('s')
-  expect(pluralSuffix(0)).toBe('s')
-  expect(pluralSuffix(-1)).toBe('s')
-  expect(pluralSuffix(1, 'item')).toBe('')
-  expect(pluralSuffix(2, 'items')).toBe('items')
-  expect(pluralSuffix(0, 'items')).toBe('items')
-  expect(pluralSuffix(-1, 'items')).toBe('items')
-})
-
-test('plusMinus', () => {
-  expect(plusMinus(0)).toBe('')
-  expect(plusMinus(1)).toBe('+')
-  expect(plusMinus(-1)).toBe('-')
 })
 
 test('prefixIfHasData', () => {

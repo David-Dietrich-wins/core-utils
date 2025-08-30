@@ -34,6 +34,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
@@ -55,6 +56,8 @@ export default tseslint.config(
       'no-ternary': 'off',
       'no-undefined': 'off',
       'one-var': 'off',
+      'prefer-destructuring': 'off',
+      'yoda': 'off',
     },
   }
 )

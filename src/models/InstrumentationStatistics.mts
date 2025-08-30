@@ -11,7 +11,7 @@ import {
   pluralize,
   prefixIfHasData,
   safestr,
-} from '../services/string-helper.mjs'
+} from '../services/primitives/string-helper.mjs'
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/DateHelper.mjs'
 import { NumberHelper } from '../services/number-helper.mjs'

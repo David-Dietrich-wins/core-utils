@@ -5,7 +5,6 @@ import {
 import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import { isArray, safeArray } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { isNumber } from './number-helper.mjs'
 import { isObject } from './object-helper.mjs'
 
 export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
@@ -144,43 +143,6 @@ export function safestrToJson<T>(
   } catch (ex) {
     console.log(fname ? fname : 'safestrToJson', ex)
   }
-}
-
-/**
- * Returns an s if the number passed in should be pluralized.
- * @param num A number that is used to determine if the plural suffix is added.
- * @param suffix The suffix to add if the number should be pluralized.
- * @returns The suffix string if the number is not 1.
- */
-export function pluralize(num: number, textIfSingle = '', textIfPlural = 's') {
-  if (isNumber(num) && num === 1) {
-    return safestr(textIfSingle)
-  }
-
-  return safestr(textIfPlural)
-}
-
-/**
- * Returns an s if the number passed in should be pluralized.
- * @param isPlural A number that is used to determine if the plural suffix is added.
- * @param suffix The suffix to add if the number should be pluralized.
- * @returns The suffix string if the number is not 1.
- */
-export function pluralSuffix(num: number, suffix = 's') {
-  return pluralize(num, '', suffix)
-}
-
-/**
- * Returns the prefix for a number if it positive + or negative -.
- * @param num The number to check for negative or positive.
- * @returns Empty string is num is 0, + if positive, or - if negative.
- */
-export function plusMinus(num: number) {
-  if (!num) {
-    return ''
-  }
-
-  return num > 0 ? '+' : '-'
 }
 
 /**

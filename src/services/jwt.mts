@@ -1,5 +1,6 @@
+import * as z from 'zod/v4'
 import { isString, safestr } from './string-helper.mjs'
-import jwt, {
+import jsonWebToken, {
   DecodeOptions,
   JwtHeader,
   JwtPayload,
@@ -11,7 +12,7 @@ import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'
-import { isFunction } from './general.mjs'
+import { isFunction, newGuid } from './general.mjs'
 import { safeArray } from './array-helper.mjs'
 
 export const WebRoleKeys = {
@@ -21,6 +22,166 @@ export const WebRoleKeys = {
 } as const
 export type WebRoles = (typeof WebRoleKeys)[keyof typeof WebRoleKeys]
 
+export const JWT_AcrDigi = 'urn:digi:acr:1.0'
+export const JWT_AcrIdMe = 'urn:digi:loa:1fa:idver'
+
+// export interface IJwt {
+//   /**
+//    * Authentication Context Class Reference:
+//    *  String specifying an authentication context class reference value that identifies the
+//    *  authentication context class that was satisfied by the user-authentication event performed.
+//    */
+//   acr?: string // myACR
+//   /** Time (in seconds) the resource server (backend service) allows since the last auth_time */
+//   /** A space-separated string listing the authentication context class reference values in order of preference.
+//    *  The protected resource requires one of these values for the authentication event associated with the access token.
+//    */
+//   acr_values?: string
+//   // aud(Audience): Identifies the recipients that the JWT is intended for.
+//   aud: string
+//   /** The time the user last authenticated (login, complete an IdP flow, etc) */
+//   auth_time: number
+//   birthdate: string
+//   cid: string
+//   'com.digi.emailVerified'?: boolean
+//   'com.digi.gse.id'?: string
+//   'com.digi.id'?: string
+//   'com.digi.identity.verified'?: boolean
+//   'com.digi.loyalty.freeplay_available'?: boolean
+//   'com.digi.loyalty.perpetual_eligible'?: boolean
+//   'com.digi.loyalty.perpetual_eligible_properties'?: string[]
+//   'com.digi.mlife_number': string
+//   email: string
+//   // exp (Expiration Time): Defines the time on or after which the JWT must not be accepted for processing.
+//   exp: number
+//   family_name: string
+//   given_name: string
+//   groups: string[]
+//   // iat (Issued At): Indicates the time at which the JWT was issued.
+//   iat: number
+//   // iss(Issuer): Identifies the principal that issued the JWT.
+//   iss: string
+//   // (JWT ID): Provides a unique identifier for the JWT.
+//   jti: string
+//   max_age?: number
+//   digi_role: string
+//   name: string
+//   // nbf(Not Before): Specifies the time before which the JWT must not be accepted for processing.
+//   nbf?: number
+//   phone_number: string
+//   scp: string[]
+//   // sub (Subject): Identifies the principal that is the subject of the JWT.
+//   sub: string
+//   uid: string
+//   userId: string
+//   ver: number
+// }
+
+const CONST_ARRAY_MAX_LENGTH = 100
+const CONST_STRING_MAX_LENGTH = 100
+
+export const zJwtHeader = z.jwt({ alg: 'RS256' })
+
+export const zJwtSchema = z.object({
+  /**
+   * Authentication Context Class Reference:
+   *  String specifying an authentication context class reference value that identifies the
+   *  authentication context class that was satisfied by the user-authentication event performed.
+   */
+  acr: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  /** Time (in seconds) the resource server (backend service) allows since the last auth_time */
+  /** A space-separated string listing the authentication context class reference values in order of preference.
+   *  The protected resource requires one of these values for the authentication event associated with the access token.
+   */
+  acr_values: z
+    .string()
+    .max(CONST_STRING_MAX_LENGTH)
+    .or(
+      z
+        .array(z.string().max(CONST_STRING_MAX_LENGTH))
+        .max(CONST_ARRAY_MAX_LENGTH)
+    )
+    .optional(),
+  // Audience
+  aud: z
+    .string()
+    .max(CONST_STRING_MAX_LENGTH)
+    .or(
+      z
+        .array(z.string().max(CONST_STRING_MAX_LENGTH))
+        .max(CONST_ARRAY_MAX_LENGTH)
+    ),
+  /** The time the user last authenticated (login, complete an IdP flow, etc) */
+  auth_time: z.number().int().optional(),
+  birthdate: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  cid: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+
+  email: z.email().max(255).optional(),
+  // exp (Expiration Time): Defines the time on or after which the JWT must not be accepted for processing.
+  exp: z.number().int().optional(),
+  family_name: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  given_name: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  groups: z
+    .array(z.string().max(CONST_STRING_MAX_LENGTH))
+    .max(CONST_ARRAY_MAX_LENGTH)
+    .optional(),
+  // iat (Issued At): Indicates the time at which the JWT was issued.
+  iat: z.number().int().optional(),
+  // iss(Issuer): Identifies the principal that issued the JWT.
+  iss: z.string().max(CONST_STRING_MAX_LENGTH),
+  // (JWT ID): Provides a unique identifier for the JWT.
+  jti: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  max_age: z.number().min(0).optional(),
+  name: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  // nbf(Not Before): Specifies the time before which the JWT must not be accepted for processing.
+  nbf: z.number().optional(),
+  phone_number: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  role: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  scp: z.array(z.string()).max(CONST_ARRAY_MAX_LENGTH).optional(),
+  // sub (Subject): Identifies the principal that is the subject of the JWT.
+  sub: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  uid: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  userId: z.string().max(CONST_STRING_MAX_LENGTH).optional(),
+  ver: z.number().optional(),
+})
+
+export type IJwt = z.infer<typeof zJwtSchema>
+
+export function JwtDecodeComplete(token: string): jsonWebToken.Jwt {
+  const decoded = jsonWebToken.decode(token, { complete: true, json: true })
+  if (!decoded) {
+    throw new Error(
+      'Invalid security token when attempting to retrieve the user id.'
+    )
+  }
+
+  return decoded
+}
+
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+class JwtBusinessRules {
+  static apply(jwtdata: IJwt, enforceUserId: boolean) {
+    if (enforceUserId && !jwtdata.userId) {
+      throw new Error('User ID is required')
+    }
+
+    return jwtdata
+  }
+}
+
+export function JwtDecodeDigi(token: string, enforceUserId = true) {
+  const decoded = jsonWebToken.decode(token)
+  if (!decoded || isString(decoded)) {
+    throw new Error(
+      'Invalid security token when attempting to retrieve the user id.'
+    )
+  }
+
+  const jwtdata = decoded as IJwt
+
+  return JwtBusinessRules.apply(jwtdata, enforceUserId)
+}
+
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
@@ -28,7 +189,7 @@ export function JwtDecode<T extends IJwtBase>(
   token?: string,
   options?: DecodeOptions
 ) {
-  const decoded = jwt.decode(
+  const decoded = jsonWebToken.decode(
     HttpHeaderManagerBase.BearerTokenParse(token),
     options
   )
@@ -167,51 +328,74 @@ export function JwtRetrieveUserId(token: string) {
 export function JwtSign(
   payload: string | object | Buffer,
   secretOrPrivateKey: string,
+  rsaPassPhrase: string,
   options?: SignOptions
 ) {
-  const token = jwt.sign(payload, secretOrPrivateKey, options)
+  const token = jsonWebToken.sign(
+    payload,
+    rsaPassPhrase
+      ? { key: secretOrPrivateKey, passphrase: rsaPassPhrase }
+      : secretOrPrivateKey,
+    options
+  )
 
   return token
+}
+
+export function GenerateJwt(
+  secretOrPrivateKey: string,
+  rsaPassPhrase: string,
+  overrides: JwtPayload
+) {
+  const header: JwtHeader = {
+    alg: 'RS256',
+    // expiresIn: '1h',
+    kid: newGuid(),
+    // typ: 'JWT',
+  }
+
+  const signOptions: SignOptions = {
+    header,
+  }
+
+  const payload: JwtPayload = overrides
+
+  const jwtToken = JwtSign(
+    payload,
+    secretOrPrivateKey,
+    rsaPassPhrase,
+    signOptions
+  )
+
+  return jwtToken
 }
 
 export function JwtTokenWithUserId(
   userId: string,
   secretOrPrivateKey: string,
-  overrides?: Partial<JwtPayload>
+  rsaPassPhrase: string,
+  overrides?: JwtPayload
 ) {
-  const header: JwtHeader = {
-      alg: 'HS256',
-      typ: 'JWT',
-    },
-    payload: JwtPayload = {
-      sub: userId,
-      ...overrides,
-    },
-    signOptions: SignOptions = {
-      header,
-    }
+  const payload: JwtPayload = {
+    sub: userId,
+    ...overrides,
+  }
 
-  return JwtSign(payload, secretOrPrivateKey, signOptions)
+  return GenerateJwt(secretOrPrivateKey, rsaPassPhrase, payload)
 }
 
 export function JwtTokenWithEmail(
   email: string,
   secretOrPrivateKey: string,
+  rsaPassPhrase: string,
   overrides?: Partial<JwtPayload>
 ) {
-  const header: JwtHeader = {
-      alg: 'HS256',
-      typ: 'JWT',
-    },
-    payload: JwtPayload = {
-      email,
-      ...overrides,
-    },
-    signOptions: SignOptions = {
-      header,
-    }
+  const payload: JwtPayload = {
+    email,
+    ...overrides,
+  }
 
-  return JwtSign(payload, secretOrPrivateKey, signOptions)
+  return GenerateJwt(secretOrPrivateKey, rsaPassPhrase, payload)
 }
 
 /**
@@ -224,9 +408,15 @@ export function JwtTokenWithEmail(
 export function JwtVerify(
   token: string,
   secretOrPublicKey: Secret,
+  rsaPassPhrase?: string,
   options?: VerifyOptions
 ) {
-  const jwtret = jwt.verify(token, secretOrPublicKey, options)
+  const secretOrKey: Secret =
+    rsaPassPhrase && isString(secretOrPublicKey)
+      ? { key: secretOrPublicKey, passphrase: rsaPassPhrase }
+      : secretOrPublicKey
+
+  const jwtret = jsonWebToken.verify(token, secretOrKey, options)
 
   return jwtret
 }

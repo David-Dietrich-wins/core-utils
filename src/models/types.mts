@@ -7,6 +7,17 @@ import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
 
+export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
+  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  CONST_CharsNumbers = '0123456789',
+  CONST_CharsToUseForRandomStrings =
+    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers,
+  CONST_NOT_IMPLEMENTED = 'Not implemented',
+  REGEX_ElapsedTime = /^(?<temp1>\d+ seconds|1 second|\d+m?s)/u,
+  REGEX_GamingVersion = /\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{6}-\d{6})?/u,
+  REGEX_StringOfSecondsOrMilliseconds = '(\\d+ seconds|1 second|\\d+ms)',
+  REGEX_UptimeMatcher = /^\d+m*s$/u
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +30,12 @@ type CookieSettings = {
   path?: string
   sameSite?: 'strict' | 'lax' | 'none'
   secure?: boolean
+}
+
+export type BasicResponse<T = unknown> = {
+  data?: T
+  message: string
+  success: boolean
 }
 
 export type ApiPropsCookieAuthNames = {
@@ -243,8 +260,7 @@ export type IsNever<T> = [T] extends [never] ? true : false
  * ```
  */
 export type IsEqual<T1, T2> = T1 extends T2
-  ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-    (<G>() => G extends T1 ? 1 : 2) extends <G>() => G extends T2 ? 1 : 2
+  ? (<G>() => G extends T1 ? 1 : 2) extends <G>() => G extends T2 ? 1 : 2
     ? true
     : false
   : false

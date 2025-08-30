@@ -7,7 +7,7 @@ import {
   rsaKeyPairGenerate,
 } from './CryptoHelper.mjs'
 import { TEST_Settings } from '../jest.setup.mjs'
-import { randomStringGenerate } from './string-helper.mts'
+import { randomStringGenerate } from './string-helper.mjs'
 
 /**
  * Generate an RSA key pair
@@ -24,18 +24,18 @@ import { randomStringGenerate } from './string-helper.mts'
 test.each(['Anything we want to encrypt.', 542, 45.55, true, Symbol('test')])(
   `${rsaKeyPairGenerate.name}: %s`,
   (val) => {
-    const { rsaPublicKey, rsaPrivateKey } = rsaKeyPairGenerate(
+    const { publicKey, privateKey } = rsaKeyPairGenerate(
       TEST_Settings.rsaPassPhrase
     )
 
-    expect(rsaPublicKey).toMatch(CONST_RegexRsaPublicKeyPem)
-    expect(rsaPrivateKey).toMatch(CONST_RegexRsaPrivateKeyPem)
+    expect(publicKey).toMatch(CONST_RegexRsaPublicKeyPem)
+    expect(privateKey).toMatch(CONST_RegexRsaPrivateKeyPem)
 
-    const cipherText = rsaEncrypt(rsaPublicKey, val)
+    const cipherText = rsaEncrypt(publicKey, val)
     expect(cipherText).not.toBeNull()
 
     const decrypted = rsaDecrypt(
-      rsaPrivateKey,
+      privateKey,
       TEST_Settings.rsaPassPhrase,
       cipherText
     )

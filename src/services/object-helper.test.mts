@@ -182,30 +182,6 @@ describe('ObjectTypesToString', () => {
     expect(ret).toBe('')
   })
 
-  // Test('http fetch get good', async () => {
-  //   Const url = `${CONST_AceRestBaseUrl}/Patrons/`
-
-  //   Const retjson = {
-  //     Testing: 'testing',
-  //   }
-
-  //   MockServer.use(
-  //     Http.get(url, () => {
-  //       // const anyIdNumber = req.url.searchParams.get('AnyIdNumber')
-  //       // const siteId = req.url.searchParams.get('SiteId')
-
-  //       Return HttpResponse.json(retjson)
-  //     })
-  //   )
-
-  //   Const abc = await fetch(url)
-
-  //   Const ret = ObjectTypesToString(abc)
-  //   Expect(ret).toBe('[object Response]')
-  //   Const body = await abc.json()
-  //   Expect(body).toEqual(retjson)
-  // })
-
   test('JS Error response', () => {
     const e = new Error('test error'),
       ret = ObjectTypesToString(e)
@@ -429,11 +405,11 @@ test('safeObject', () => {
 test('safeJsonToString', () => {
   expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect(safeJsonToString(4 as any)).toBe('{}')
+  expect(safeJsonToString(4 as any)).toBe('[4]')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect(safeJsonToString(undefined as any)).toBe('{}')
+  expect(safeJsonToString(undefined as any)).toBe('[]')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect(safeJsonToString(null as any)).toBe('{}')
+  expect(safeJsonToString(null as any)).toBe('[]')
 
   // Circular reference so JSON.stringify will fail
   const obj: Record<string, unknown> = {}
@@ -503,7 +479,7 @@ test('deepCloneJson', () => {
   expect(deepCloneJson({})).toStrictEqual({})
   expect(deepCloneJson([])).toStrictEqual([])
 
-  expect(deepCloneJson(undefined as unknown as object)).toStrictEqual({})
+  expect(deepCloneJson(undefined as unknown as object)).toStrictEqual([])
 })
 
 test('addObjectToList', () => {

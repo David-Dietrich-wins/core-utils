@@ -204,7 +204,12 @@ export function GenerateSignedJwtToken(
   email: string = TEST_Settings.userIdGoodEmail,
   overrides?: Partial<JwtPayload>
 ) {
-  return JwtTokenWithEmail(email, TEST_Settings.rsaPassPhrase, overrides)
+  return JwtTokenWithEmail(
+    email,
+    TEST_Settings.rsaPrivateKey,
+    TEST_Settings.rsaPassPhrase,
+    overrides
+  )
 }
 
 beforeAll(() => {

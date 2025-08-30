@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import { LogManagerOptions } from './LogManager.mjs'
-jest.unstable_unmockModule('./services/LogManager.mjs')
+jest.unstable_unmockModule('./LogManager.mjs')
 // eslint-disable-next-line sort-imports
 import { DateHelper } from './DateHelper.mjs'
 import { ObjectTypesToString } from './object-helper.mjs'

@@ -68,6 +68,7 @@ describe('userIdFromJwt', () => {
   test('raw header for JWT', () => {
     const aaval = JwtTokenWithUserId(
         TEST_Settings.userIdGood.toString(),
+        TEST_Settings.rsaPrivateKey,
         TEST_Settings.rsaPassPhrase
       ),
       ainit: StringOrStringArrayObject = {

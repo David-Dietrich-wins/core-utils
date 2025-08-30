@@ -2,31 +2,31 @@ import crypto, {
   generateKeyPairSync,
   privateDecrypt,
   publicEncrypt,
-} from 'crypto'
-import { safestr, safestrToJson } from './string-helper.mjs'
+} from 'node:crypto'
+import { safestr, safestrToJson } from './string-helpers'
 
-export const CONST_RegexRsaPrivateKeyPem =
-  /-----BEGIN (?<temp6>RSA|ENCRYPTED) PRIVATE KEY-----(?<temp5>\n|\r|\r\n)(?<temp4>[0-9a-zA-Z+/=]{64}(?<temp3>\n|\r|\r\n))*(?<temp2>[0-9a-zA-Z+/=]{1,63}(?<temp1>\n|\r|\r\n))?-----END (?<temp0>RSA|ENCRYPTED) PRIVATE KEY-----/u
+export const REGEX_RsaPrivateKeyPem =
+  /-----BEGIN (?:RSA|ENCRYPTED) PRIVATE KEY-----(?:\n|\r|\r\n)(?:[0-9a-zA-Z+/=]{64}(?:\n|\r|\r\n))*(?:[0-9a-zA-Z+/=]{1,63}(?:\n|\r|\r\n))?-----END (?:RSA|ENCRYPTED) PRIVATE KEY-----/u
 
-export const CONST_RegexRsaPublicKeyPem =
-  /-----BEGIN(?<temp7> RSA)? PUBLIC KEY-----(?<temp6>\n|\r|\r\n)(?<temp5>[0-9a-zA-Z+/=]{64}(?<temp4>\n|\r|\r\n))*(?<temp3>[0-9a-zA-Z+/=]{1,63}(?<temp2>\n|\r|\r\n))?-----END(?<temp1> RSA)? PUBLIC KEY-----/u
+export const REGEX_RsaPublicKeyPem =
+  /-----BEGIN(?: RSA)? PUBLIC KEY-----(?:\n|\r|\r\n)(?:[0-9a-zA-Z+/=]{64}(?:\n|\r|\r\n))*(?:[0-9a-zA-Z+/=]{1,63}(?:\n|\r|\r\n))?-----END(?: RSA)? PUBLIC KEY-----/u
 
-export const CONST_RegexRsaPrivateKey =
-  /-----BEGIN RSA PRIVATE KEY-----(?<temp1>[^-!]+)-----END RSA PRIVATE KEY-----/u
+export const REGEX_RsaPrivateKey =
+  /-----BEGIN(?: RSA)? PRIVATE KEY-----(?:[^-!]+)-----END(?: RSA)? PRIVATE KEY-----/u
 
-export const CONST_RegexRsaPublicKey =
-  /-----BEGIN RSA PUBLIC KEY-----(?<temp1>[^-!]+)-----END RSA PUBLIC KEY-----/u
+export const REGEX_RsaPublicKey =
+  /-----BEGIN(?: RSA)? PUBLIC KEY-----(?:[^-!]+)-----END(?: RSA)? PUBLIC KEY-----/u
 
 export interface ICryptoSettings {
-  rsaPassPhrase: string
+  rsaPassphrase: string
   rsaPrivateKey: string
   rsaPublicKey: string
 }
 
 export function rsaDecrypt(
   rsaPrivateKey: string,
-  rsaPassPhrase: string,
-  cipher: string
+  rsaPassphrase: string,
+  cipherText: string
 ) {
   const buf = privateDecrypt(
     {
@@ -36,9 +36,9 @@ export function rsaDecrypt(
       // Encrypt the data in the previous step
       oaepHash: 'sha256',
       padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      passphrase: rsaPassPhrase,
+      passphrase: rsaPassphrase,
     },
-    Buffer.from(safestr(cipher), 'base64')
+    Buffer.from(safestr(cipherText), 'base64')
   )
 
   return buf.toString('utf8')
@@ -61,7 +61,6 @@ export function rsaEncrypt(rsaPublicKey: string, whatToEncrypt: unknown) {
   return encryptedString
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function rsaDecryptObject<T = object>(
   rsaPrivateKey: string,
   rsaPassphrase: string,
@@ -72,8 +71,8 @@ export function rsaDecryptObject<T = object>(
   return safestrToJson<T>(decrypted)
 }
 
-export function rsaKeyPairGenerate(passphrase: string) {
-  const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+export function rsaKeyGen(passphrase: string) {
+  return generateKeyPairSync('rsa', {
     modulusLength: 4096,
     privateKeyEncoding: {
       cipher: 'aes-256-cbc',
@@ -86,9 +85,17 @@ export function rsaKeyPairGenerate(passphrase: string) {
       type: 'spki',
     },
   })
-
-  return {
-    rsaPrivateKey: privateKey,
-    rsaPublicKey: publicKey,
-  }
 }
+
+// export function formatPrivateKey(key: string) {
+//   const cleansedKey = safeArray(
+//     key
+//       .replace(/\\n/gu, '\n')
+//       .replace(/-----BEGIN ENCRYPTED PRIVATE KEY-----/u, '')
+//       .replace(/-----END ENCRYPTED PRIVATE KEY-----/u, '')
+//       .replace(/\s+/gu, '')
+//       .match(/.{1,64}/gu)
+//   ).join('\n')
+//   const mykey = `-----BEGIN ENCRYPTED PRIVATE KEY-----\n${cleansedKey}\n-----END ENCRYPTED PRIVATE KEY-----`
+//   return mykey
+// }
