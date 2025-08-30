@@ -86,7 +86,10 @@ export function isEmptyString(s: any, allowFunction = true) {
  * @param s A string to set to lowercase. If null or undefined, empty string is returned.
  * @returns A guaranteed string to be nonnull and trimmed.
  */
-export function safestrTrim(s?: string | null, ifEmpty = '') {
+export function safestrTrim(
+  s?: string | null,
+  ifEmpty: string | null | undefined = ''
+) {
   return safestr(s, ifEmpty).trim()
 }
 

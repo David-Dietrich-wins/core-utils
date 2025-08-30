@@ -294,16 +294,3 @@ export function urlJoin(
 
   return url
 }
-
-export function typishValue<T = unknown>(
-  val: Typish<T>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...args: any[]
-): T {
-  if (isFunction(val)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return val(...args)
-  }
-
-  return val
-}

@@ -50,6 +50,11 @@ export function getBoolean(b: unknown) {
   return false
 }
 
+export function getBooleanUndefined(b: unknown) {
+  const bret = getBoolean(b)
+
+  return bret ? true : undefined
+}
 export function getBooleanAsNumber(b: unknown) {
   return getBoolean(b) ? 1 : 0
 }

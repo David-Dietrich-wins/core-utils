@@ -25,7 +25,7 @@ import { isNumber } from './number-helper.mjs'
  * @returns True if arr is an array and meets any minimum requirements.
  */
 export function isArray<T = unknown>(
-  arr: T | T[],
+  arr: ArrayOrSingle<T> | null | undefined,
   minLengthOrIncludes?: T | number
 ): arr is Array<T> {
   if (!arr || !Array.isArray(arr)) {
@@ -423,7 +423,10 @@ export function arrayElementNonEmpty<T>(
  * @param defaultIfNone An optional default value if the array is empty.
  * @returns The first item in the array, or undefined or defaultIfNone if the array has no values.
  */
-export function arrayFirst<T>(tArray?: T[], defaultIfNone?: T) {
+export function arrayFirst<T>(
+  tArray?: ArrayOrSingle<T> | null,
+  defaultIfNone?: T
+) {
   if (isArray(tArray, 1)) {
     return tArray[0]
   }
@@ -815,4 +818,23 @@ export function arrayFilterMap<T, R>(
   }
 
   return myarr.map(mapFunc)
+}
+
+/**
+ * Return the object with the given id from the array.
+ * @param arrItems The array to search for the ids.
+ * @param id id to search for in the arrItems list.
+ * @returns The object with the given name. If not found, undefined is returned.
+ */
+export function arrayFindIndexOf<T extends IId<Tid>, Tid = T['id']>(
+  arrItems?: ArrayOrSingle<T> | null,
+  id?: Tid
+) {
+  if (id) {
+    const index = safeArray(arrItems)
+      .map((x) => x.id)
+      .indexOf(id)
+
+    return index === -1 ? undefined : index
+  }
 }

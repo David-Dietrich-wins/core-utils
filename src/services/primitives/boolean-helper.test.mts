@@ -1,4 +1,8 @@
-import { getBoolean, getBooleanAsNumber } from './boolean-helper.mjs'
+import {
+  getBoolean,
+  getBooleanAsNumber,
+  getBooleanUndefined,
+} from './boolean-helper.mjs'
 
 test(getBoolean.name, () => {
   expect(getBoolean(undefined)).toBe(false)
@@ -38,4 +42,24 @@ test(getBooleanAsNumber.name, () => {
   expect(getBooleanAsNumber('1')).toBe(1)
   expect(getBooleanAsNumber('true')).toBe(1)
   expect(getBooleanAsNumber('hello')).toBe(1)
+})
+
+test(getBooleanUndefined.name, () => {
+  expect(getBooleanUndefined(undefined)).toBe(undefined)
+  expect(getBooleanUndefined(null)).toBe(undefined)
+  expect(getBooleanUndefined(false)).toBe(undefined)
+  expect(getBooleanUndefined(0)).toBe(undefined)
+  expect(getBooleanUndefined('')).toBe(undefined)
+  expect(getBooleanUndefined([])).toBe(undefined)
+
+  expect(getBooleanUndefined('FALSE')).toBe(undefined)
+  expect(getBooleanUndefined('f')).toBe(undefined)
+  expect(getBooleanUndefined('no')).toBe(undefined)
+  expect(getBooleanUndefined('0')).toBe(undefined)
+
+  expect(getBooleanUndefined(true)).toBe(true)
+  expect(getBooleanUndefined(1)).toBe(true)
+  expect(getBooleanUndefined('1')).toBe(true)
+  expect(getBooleanUndefined('true')).toBe(true)
+  expect(getBooleanUndefined('hello')).toBe(true)
 })

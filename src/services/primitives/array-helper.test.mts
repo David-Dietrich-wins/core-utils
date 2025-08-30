@@ -24,6 +24,7 @@ import {
   arrayFindByIds,
   arrayFindByName,
   arrayFindByNotIds,
+  arrayFindIndexOf,
   arrayFindNameById,
   arrayFirst,
   arrayFirstNonEmpty,
@@ -1405,4 +1406,16 @@ describe(splitIntoArray.name, () => {
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
+})
+
+test(arrayFindIndexOf.name, () => {
+  const arr = [
+    { id: 1, name: 'name1' },
+    { id: 2, name: 'name2' },
+    { id: 3, name: 'name3' },
+  ]
+
+  expect(arrayFindIndexOf(arr, 2)).toStrictEqual(1)
+  expect(arrayFindIndexOf(arr, 4)).toBeUndefined()
+  expect(arrayFindIndexOf(arr)).toBeUndefined()
 })
