@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import {
+  CONST_JwtErrorDecode,
+  CONST_JwtErrorRetrieveUserId,
+  JwtTokenWithUserId,
+} from './jwt.mjs'
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
 import {
   HttpHeaderManager,
   HttpHeaderManagerBase,
   HttpHeaderNamesAllowedKeys,
 } from './HttpHeaderManager.mjs'
+import { AppException } from '../models/AppException.mts'
 import { IncomingHttpHeaders } from 'node:http'
-import { JwtTokenWithUserId } from './jwt.mjs'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 
 test('getHeaderString', () => {
@@ -47,9 +52,7 @@ test('jwtTokenMustExistAndBeValid', () => {
     },
     hm = new HttpHeaderManagerBase(ainit)
 
-  expect(() => hm.jwtTokenMustExistAndBeValid).toThrow(
-    'Invalid security token when attempting to decode the JWT.'
-  )
+  expect(() => hm.jwtTokenMustExistAndBeValid).toThrow(CONST_JwtErrorDecode)
 })
 
 test('jwtToken', () => {
@@ -84,10 +87,11 @@ describe('userIdFromJwt', () => {
     const ajwt = GenerateSignedJwtToken(''),
       binit: StringOrStringArrayObject = {
         [HttpHeaderNamesAllowedKeys.Authorization]: `Bearer ${ajwt}`,
-      },
-      hm = new HttpHeaderManagerBase(binit)
+      }
 
-    expect(() => hm.userId).toThrow()
+    expect(() => new HttpHeaderManagerBase(binit).userId).toThrow(
+      new AppException(CONST_JwtErrorRetrieveUserId, 'userIdFromJwt')
+    )
   })
 })
 

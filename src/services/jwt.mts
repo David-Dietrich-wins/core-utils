@@ -8,11 +8,18 @@ import jsonWebToken, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
+import { AppException } from '../index.mjs'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { isFunction } from './primitives/function-helper.mjs'
+import { newGuid } from './general.mjs'
 import { safeArray } from './primitives/array-helper.mjs'
+
+export const CONST_JwtErrorDecode =
+    'Invalid security token when attempting to decode the JWT.',
+  CONST_JwtErrorRetrieveUserId =
+    'Invalid security token when attempting to retrieve the user id.'
 
 export const WebRoleKeys = {
   ADMIN: 'admin',
@@ -149,9 +156,7 @@ export type IJwt = z.infer<typeof zJwtSchema>
 export function JwtDecodeComplete(token: string): jsonWebToken.Jwt {
   const decoded = jsonWebToken.decode(token, { complete: true, json: true })
   if (!decoded) {
-    throw new Error(
-      'Invalid security token when attempting to retrieve the user id.'
-    )
+    throw new AppException(CONST_JwtErrorRetrieveUserId, JwtDecodeComplete.name)
   }
 
   return decoded
@@ -168,12 +173,10 @@ class JwtBusinessRules {
   }
 }
 
-export function JwtDecodeDigi(token: string, enforceUserId = true) {
+export function jwtDecodeDigi(token: string, enforceUserId = true) {
   const decoded = jsonWebToken.decode(token)
   if (!decoded || isString(decoded)) {
-    throw new Error(
-      'Invalid security token when attempting to retrieve the user id.'
-    )
+    throw new AppException(CONST_JwtErrorRetrieveUserId, jwtDecodeDigi.name)
   }
 
   const jwtdata = decoded as IJwt
@@ -195,6 +198,9 @@ export function JwtDecode<TInterface extends IJwtBase>(
   options?: DecodeOptions
 ) {
   const jwtToken = jsonWebToken.decode(token, options)
+  if (!jwtToken) {
+    throw new AppException(CONST_JwtErrorDecode, JwtDecode.name)
+  }
 
   return jwtToken as TInterface
 }
@@ -248,10 +254,7 @@ export interface IJwtBase {
   scope: string
   // UUID: The FusionAuth Tenant unique Id.
   tid: string
-}
-
-export interface IJwtWithUserId extends IJwtBase {
-  userId: string
+  userId?: string
 }
 
 export interface IJwtWithSubject extends IJwtBase {
@@ -308,9 +311,25 @@ export interface IJwtFusionAuthIdToken extends IJwtAccessToken {
 // }
 
 export function JwtRetrieveUserId(token: string) {
-  const jwtret = JwtDecode<IJwtWithUserId>(token)
+  const jwtret = JwtDecode<IJwtBase>(token)
 
-  return jwtret.userId
+  return safestr(jwtret.userId)
+}
+
+export function jwtHeader(kid = newGuid()) {
+  //, expiresIn = '1h', typ = 'JWT') {
+  const header: JwtHeader = {
+    alg: 'RS256',
+    // expiresIn,
+    kid,
+    // typ,
+  }
+
+  const signOptions: SignOptions = {
+    header,
+  }
+
+  return signOptions
 }
 
 /**
@@ -331,7 +350,7 @@ export function JwtSign(
     rsaPassPhrase
       ? { key: secretOrPrivateKey, passphrase: rsaPassPhrase }
       : secretOrPrivateKey,
-    options
+    options || jwtHeader()
   )
 
   return token
@@ -342,24 +361,13 @@ export function GenerateJwt(
   rsaPassPhrase: string,
   overrides: JwtPayload
 ) {
-  const header: JwtHeader = {
-    alg: 'RS256',
-    // expiresIn: '1h',
-    kid: 'key-1',
-    // typ: 'JWT',
-  }
-
-  const signOptions: SignOptions = {
-    header,
-  }
-
   const payload: JwtPayload = overrides
 
   const jwtToken = JwtSign(
     payload,
     secretOrPrivateKey,
     rsaPassPhrase,
-    signOptions
+    jwtHeader()
   )
 
   return jwtToken
@@ -372,7 +380,7 @@ export function JwtTokenWithUserId(
   overrides?: JwtPayload
 ) {
   const payload: JwtPayload = {
-    sub: userId,
+    userId,
     ...overrides,
   }
 
@@ -400,7 +408,7 @@ export function JwtTokenWithEmail(
  * [options] - Options for the verification
  * returns - The decoded token.
  */
-export function JwtVerify(
+export function jwtVerify(
   token: string,
   secretOrPublicKey: Secret,
   rsaPassPhrase?: string,
@@ -457,9 +465,10 @@ export class JwtBase implements IJwtBase {
   roles: string[]
   scope: string
   tid: string
+  userId?: string
 
   constructor(token: IJwtBase) {
-    this.aud = token.aud
+    this.aud = safestr(token.aud)
     this.exp = token.exp
     this.iat = token.iat
     this.iss = token.iss
@@ -467,6 +476,7 @@ export class JwtBase implements IJwtBase {
     this.roles = safeArray(token.roles)
     this.scope = token.scope
     this.tid = token.tid
+
     Object.assign(this, JwtBase.DefaultJwt(token))
   }
 
@@ -568,7 +578,9 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
 
   constructor(token: IJwtWithSubject) {
     super(token)
+
     this.sub = token.sub
+
     JwtWithSubject.DefaultJwt(token)
   }
 
@@ -586,10 +598,6 @@ export class JwtWithSubject extends JwtBase implements IJwtWithSubject {
     }
 
     return ajwt
-  }
-
-  get FusionAuthUserId() {
-    return this.sub
   }
 }
 
@@ -682,7 +690,7 @@ export function FromBearerToken<TNew extends JwtBase>(
   type: IConstructor<TNew>,
   token: string
 ) {
-  return JwtCreate(type, token)
+  return JwtCreate(type, HttpHeaderManagerBase.BearerTokenParse(token))
 }
 
 export function FromHeaders<TNew extends JwtBase>(

@@ -1,5 +1,6 @@
 import * as z from 'zod/v4'
-import { IId, IdManager } from './IdManager.mjs'
+import { CONST_ListMustBeAnArray, IId, IdManager } from './IdManager.mjs'
+import { AppException } from './AppException.mts'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
@@ -24,15 +25,53 @@ test('good', () => {
   expect(idm.stats?.delete).toBe(1)
 })
 
-test('default constructor', () => {
-  const idm = new IdManager()
+describe(IdManager.name, () => {
+  test('default constructor', () => {
+    const idm = new IdManager()
 
-  expect(idm.list).toMatchObject([])
-  expect(idm.stats?.totalProcessed).toBeUndefined()
+    expect(idm.list).toMatchObject([])
+    expect(idm.stats?.totalProcessed).toBeUndefined()
 
-  idm.add({ id: '4' })
-  expect(idm.list.length).toBe(1)
-  expect(idm.list).toMatchObject([{ id: '4' }])
+    idm.add({ id: '4' })
+    expect(idm.list.length).toBe(1)
+    expect(idm.list).toMatchObject([{ id: '4' }])
+  })
+
+  test('with list and stats', () => {
+    const idm = new IdManager([{ id: '1' }], new InstrumentationStatistics())
+
+    expect(idm.list).toMatchObject([{ id: '1' }])
+    expect(idm.stats?.totalProcessed).toBe(0)
+
+    idm.add({ id: '4' })
+    expect(idm.list.length).toBe(2)
+    expect(idm.list).toMatchObject([{ id: '1' }, { id: '4' }])
+
+    expect(idm.stats).toStrictEqual(
+      expect.objectContaining({
+        add: 0,
+        delete: 0,
+        failures: 0,
+        finishTime: undefined,
+        msg: [],
+        skipped: 0,
+        startTime: new Date(),
+        successes: 1,
+        suffixWhenPlural: 's',
+        suffixWhenSingle: '',
+        totalProcessed: 1,
+        update: 0,
+        upsert: 0,
+      })
+    )
+  })
+
+  test('exception', () => {
+    const testItem: IId = { idwhat: '1' } as IId
+    expect(() => new IdManager([testItem])).toThrow(
+      new AppException(CONST_ListMustBeAnArray, 'IdManager.constructor')
+    )
+  })
 })
 
 test('IdManager.Create', () => {

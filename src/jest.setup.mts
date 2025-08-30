@@ -186,8 +186,33 @@ export function getGlobalLogger() {
 
 // Export const mockServer = setupServer(...httpHandlers)
 
-export const TEST_Settings = {
+export const TEST_Settings: {
+  apiBaseUrl: string
+  beforeEach: () => void
+  currentDate: Date
+  currentDateInMilliseconds: number
+  currentDateString: string
+  jwt: string
+  rsaPassPhrase: string
+  rsaPrivateKey: string
+  rsaPublicKey: string
+  userIdBad: number
+  userIdGood: number
+  userIdGoodEmail: string
+} = {
   apiBaseUrl: 'http://localhost:3000',
+  beforeEach: () => {
+    TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
+    TEST_Settings.currentDateInMilliseconds =
+      TEST_Settings.currentDate.getTime()
+
+    TEST_Settings.rsaPassPhrase = safestr(process.env.rsaPassPhrase)
+    TEST_Settings.rsaPrivateKey = safestr(process.env.rsaPrivateKey)
+    TEST_Settings.rsaPublicKey = safestr(process.env.rsaPublicKey)
+
+    // eslint-disable-next-line no-use-before-define
+    TEST_Settings.jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
+  },
   currentDate: new Date('2025-12-01T12:00:00.000Z'),
   currentDateInMilliseconds: 0,
   currentDateString: '2025-12-01T12:00:00.000Z',
@@ -275,8 +300,7 @@ beforeEach(() => {
   mockLoggerSilly.mockClear()
   mockLoggerWarn.mockClear()
 
-  TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
-  TEST_Settings.currentDateInMilliseconds = TEST_Settings.currentDate.getTime()
+  TEST_Settings.beforeEach()
 })
 
 afterEach(() => {

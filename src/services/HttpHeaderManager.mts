@@ -1,4 +1,8 @@
-import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
+import {
+  CONST_JwtErrorRetrieveUserId,
+  FromBearerToken,
+  JwtAccessToken,
+} from './jwt.mjs'
 import { arrayFirst, safeArray } from './primitives/array-helper.mjs'
 import { safestr, safestrLowercase } from './primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -112,12 +116,9 @@ export class HttpHeaderManagerBase {
 
   get userId() {
     const jwt = this.jwtTokenMustExistAndBeValid,
-      userid = jwt.FusionAuthUserId
+      userid = jwt.userId
     if (!userid) {
-      throw new AppException(
-        'Error retrieving user information from JWT security token.',
-        'userIdFromJwt'
-      )
+      throw new AppException(CONST_JwtErrorRetrieveUserId, 'userIdFromJwt')
     }
 
     return userid

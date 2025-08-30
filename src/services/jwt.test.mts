@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
 import {
+  CONST_JwtErrorDecode,
+  CONST_JwtErrorRetrieveUserId,
   FromBearerToken,
   FromHeaders,
+  type IJwtBase,
   IJwtFusionAuthIdToken,
-  IJwtWithUserId,
   JwtAccessToken,
   JwtBase,
   JwtDecode,
@@ -12,16 +14,20 @@ import {
   JwtRetrieveUserId,
   JwtSign,
   JwtTokenWithUserId,
-  JwtVerify,
   JwtWithSubject,
+  jwtDecodeDigi,
+  jwtHeader,
+  jwtVerify,
 } from './jwt.mjs'
 import { GenerateSignedJwtToken, TEST_Settings } from '../jest.setup.mjs'
-import { JwtHeader, JwtPayload, Secret, SignOptions } from 'jsonwebtoken'
+import { JwtPayload, Secret } from 'jsonwebtoken'
+import { AppException } from '../models/AppException.mjs'
 import { CONST_AppNameTradePlotter } from './HttpHeaderManager.mjs'
 
 describe('JwtDecode', () => {
   let jwt = ''
-  beforeAll(() => {
+
+  beforeEach(() => {
     jwt = JwtSign(
       { userId: TEST_Settings.userIdGood },
       TEST_Settings.rsaPrivateKey,
@@ -30,7 +36,7 @@ describe('JwtDecode', () => {
   })
 
   test('good', () => {
-    const jwtdata = JwtDecode<IJwtWithUserId>(jwt)
+    const jwtdata = JwtDecode<IJwtBase>(jwt)
 
     expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
   })
@@ -42,11 +48,9 @@ describe('JwtDecode', () => {
     } catch (e: any) {
       expect(e).toBeInstanceOf(Error)
       if (e instanceof Error) {
-        expect(e.message).toBe(
-          'Invalid security token when attempting to decode the JWT.'
-        )
+        expect(e.message).toBe(CONST_JwtErrorDecode)
         expect(e.stack).toMatch(
-          /^Error: Invalid security token when attempting to decode the JWT./u
+          new RegExp(`^Error: ${CONST_JwtErrorDecode}`, 'u')
         )
       }
     }
@@ -57,7 +61,7 @@ describe('JwtDecode', () => {
   test('JwtRetrieveUserId', () => {
     const jwtdata = JwtRetrieveUserId(jwt)
 
-    expect(jwtdata).toBe(TEST_Settings.userIdGood)
+    expect(jwtdata).toBe(TEST_Settings.userIdGood.toString())
   })
 
   test('JwtDecode', () => {
@@ -68,25 +72,18 @@ describe('JwtDecode', () => {
 })
 
 test('JwtSign', () => {
-  const header: JwtHeader = {
-      alg: 'HS256',
-      typ: 'JWT',
-    },
-    payload = {
+  const payload = {
       userId: TEST_Settings.userIdGood,
-    },
-    signOptions: SignOptions = {
-      header,
     },
     zjwtToken = JwtSign(
       payload,
       TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase,
-      signOptions
+      jwtHeader()
     )
   expect(zjwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode<IJwtWithUserId>(zjwtToken)
+  const jwtdata = JwtDecode<IJwtBase>(zjwtToken)
 
   expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
 })
@@ -94,36 +91,33 @@ test('JwtSign', () => {
 test('JwtVerify bad', () => {
   const secretOrPublicKey: Secret = 'anything'
 
-  expect(() => JwtVerify(TEST_Settings.jwt, secretOrPublicKey)).toThrow()
+  expect(() => jwtVerify(TEST_Settings.jwt, secretOrPublicKey)).toThrow()
 })
 
 test('JwtVerify good', () => {
-  const header: JwtHeader = {
-      alg: 'RS256',
-      typ: 'JWT',
-    },
-    payload = {
+  const payload = {
       userId: TEST_Settings.userIdGood,
-    },
-    signOptions: SignOptions = {
-      header,
     },
     zjwtToken = JwtSign(
       payload,
       TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase,
-      signOptions
+      jwtHeader()
     )
 
   expect(zjwtToken.length).toBeGreaterThan(10)
 
-  const jwtdata = JwtDecode<IJwtWithUserId>(zjwtToken)
+  const jwtdata = JwtDecode<IJwtBase>(zjwtToken)
 
   expect(jwtdata.userId).toBe(TEST_Settings.userIdGood)
 
-  const secretOrPublicKey: Secret = TEST_Settings.rsaPassPhrase,
-    verified = JwtVerify(zjwtToken, secretOrPublicKey)
-  expect((verified as IJwtWithUserId).userId).toBe(TEST_Settings.userIdGood)
+  const secretOrPublicKey: Secret = TEST_Settings.rsaPublicKey,
+    verified = jwtVerify(
+      zjwtToken,
+      secretOrPublicKey,
+      TEST_Settings.rsaPassPhrase
+    )
+  expect((verified as IJwtBase).userId).toBe(TEST_Settings.userIdGood)
 })
 
 describe('JwtAccessClient', () => {
@@ -138,9 +132,7 @@ describe('JwtAccessClient', () => {
     expect(jwt.email).toBe(TEST_Settings.userIdGoodEmail)
   })
   test('Constructor from null', () => {
-    expect(() => JwtAccessToken.Create('')).toThrow(
-      'Invalid security token when attempting to decode the JWT.'
-    )
+    expect(() => JwtAccessToken.Create('')).toThrow(CONST_JwtErrorDecode)
   })
 
   test('FromHeaders', () => {
@@ -171,14 +163,12 @@ describe('JwtAccessClient', () => {
     } as unknown as Headers
 
     expect(() => FromHeaders(JwtAccessToken, headers)).toThrow(
-      'Invalid security token when attempting to decode the JWT.'
+      CONST_JwtErrorDecode
     )
   })
 
   test('FromHeaders no data', () => {
-    expect(() => FromHeaders(JwtAccessToken)).toThrow(
-      'Invalid security token when attempting to decode the JWT.'
-    )
+    expect(() => FromHeaders(JwtAccessToken)).toThrow(CONST_JwtErrorDecode)
   })
 
   test('FromString', () => {
@@ -256,7 +246,7 @@ describe('JwtAccessClient', () => {
     expect(jhelper.audience).toBe('anything')
     expect(jhelper.authenticationTime).toBe(123)
     expect(jhelper.email).toBe(TEST_Settings.userIdGoodEmail)
-    expect(jhelper.FusionAuthUserId).toBe('my FusionAuthUserId')
+    expect(jhelper.sub).toBe('my FusionAuthUserId')
     expect(jhelper.issuedTime).toBe(2048)
     expect(jhelper.refreshToken).toBe('refresh')
     expect(jhelper.tenantId).toBe('tenant')
@@ -524,12 +514,44 @@ test('JwtTokenWithUserId', () => {
       tid: 'tenant',
     },
     jwtToken = JwtTokenWithUserId(
-      'myuserId',
+      TEST_Settings.userIdGood.toString(),
       TEST_Settings.rsaPrivateKey,
       TEST_Settings.rsaPassPhrase,
       jwtPayload
     ),
-    zjwt = JwtWithSubject.Create(jwtToken)
+    zjwt = JwtBase.Create(jwtToken)
 
-  expect(zjwt.FusionAuthUserId).toBe('myuserId')
+  expect(zjwt.userId).toBe(TEST_Settings.userIdGood.toString())
+})
+
+describe(jwtDecodeDigi.name, () => {
+  test('good', () => {
+    const jwtPayload = {
+        aud: 'audience',
+        exp: 123,
+        iat: 456,
+        iss: 'tradeplotter.com',
+        jti: 'jti',
+        roles: ['user'],
+        scope: 'scope',
+        tid: 'tenant',
+      },
+      jwtToken = JwtTokenWithUserId(
+        'myuserId',
+        TEST_Settings.rsaPrivateKey,
+        TEST_Settings.rsaPassPhrase,
+        jwtPayload
+      )
+    // , zjwt = JwtWithSubject.Create(jwtToken)
+
+    const result = jwtDecodeDigi(jwtToken)
+    expect(result).toBeDefined()
+  })
+
+  test('bad', () => {
+    const token = 'your.jwt.token.here'
+    expect(() => jwtDecodeDigi(token)).toThrow(
+      new AppException(CONST_JwtErrorRetrieveUserId, 'fname')
+    )
+  })
 })
