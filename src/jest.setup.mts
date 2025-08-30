@@ -1,11 +1,11 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
-import { NumberHelper } from './services/number-helper.mjs'
-import { safestr } from './services/string-helper.mjs'
+import { NumberHelper } from './services/primitives/number-helper.mjs'
+import { safestr } from './services/primitives/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'
 // Import { setupServer } from 'msw/node'

@@ -1,13 +1,18 @@
-import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from '../services/primitives/date-helper.mjs'
 import type { IContext, IContextUI } from '../services/ContextManager.mjs'
 import {
   arrayMoveElement,
   isArray,
   safeArray,
   safeArrayUnique,
-} from '../services/array-helper.mjs'
-import { getBoolean, isFunction, newGuid } from '../services/general.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
+} from '../services/primitives/array-helper.mjs'
+import { deepCloneJson } from '../services/primitives/object-helper.mjs'
+import { getBoolean } from '../services/primitives/boolean-helper.mjs'
+import { isFunction } from '../services/primitives/function-helper.mjs'
+import { newGuid } from '../services/general.mjs'
 
 type FuncContextTickers<T> = T | ((asset: IContextTickers) => T)
 

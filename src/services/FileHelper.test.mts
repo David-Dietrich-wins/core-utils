@@ -3,7 +3,7 @@ import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
 import { FileHelper } from './FileHelper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import { safeJsonToString } from './object-helper.mjs'
+import { safeJsonToString } from './primitives/object-helper.mjs'
 import tmp from 'tmp'
 
 describe('DeleteFileIfExists', () => {

@@ -1,13 +1,16 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,
 } from './ChartSettings.mjs'
-import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
+import {
+  arrayMustFind,
+  safeArray,
+} from '../services/primitives/array-helper.mjs'
+import { DateHelper } from '../services/primitives/date-helper.mjs'
 import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../services/primitives/object-helper.mjs'
 import { newGuid } from '../services/general.mjs'
 import { zDateTime } from '../services/zod-helper.mjs'
 

@@ -1,5 +1,8 @@
 import { IIdNameValueType, IdNameValueType } from '../models/id-name.mjs'
-import { safestr, safestrLowercase } from '../services/string-helper.mjs'
+import {
+  safestr,
+  safestrLowercase,
+} from '../services/primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IChartSettings } from './ChartSettings.mjs'
 import { newGuid } from '../services/general.mjs'

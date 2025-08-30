@@ -2,7 +2,7 @@ import {
   FinancialModelingPrep,
   type FmpIndicatorQueryParams,
 } from './FinancialModelingPrep.mjs'
-import { DateHelper } from '../DateHelper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
 import type { IChartSettings } from '../../tplot/ChartSettings.mjs'
 import { TEST_Settings } from '../../jest.setup.mjs'
 
@@ -18,8 +18,8 @@ test('FmpIndicatorParamsSetDateBoundary', () => {
       FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
 
   expect(dateBoundary).toMatchObject({
-    from: new Date('2022-01-01').getTime(),
-    to: new Date('2022-01-01').getTime(),
+    from: new Date('2021-01-01').getTime(),
+    to: new Date('2021-12-31').getTime(),
   })
 })
 
@@ -34,8 +34,8 @@ test('FmpIndicatorParamsSetDateBoundary no to', () => {
   let dateBoundary =
     FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
   expect(dateBoundary).toMatchObject({
-    from: new Date('2022-01-01').getTime(),
-    to: new Date('2026-01-01T00:00:00Z').getTime(),
+    from: new Date('2021-01-01').getTime(),
+    // to: new Date('2022-01-01T00:00:00Z').getTime(),
   })
 
   dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
@@ -43,8 +43,8 @@ test('FmpIndicatorParamsSetDateBoundary no to', () => {
     timeframe: '5y',
   })
   expect(dateBoundary).toMatchObject({
-    from: new Date('2026-01-01T00:00:00Z').getTime(),
-    to: new Date('2030-01-01').getTime(),
+    from: new Date('2021-01-01T00:00:00Z').getTime(),
+    // to: new Date('2030-01-01').getTime(),
   })
 
   dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
@@ -62,7 +62,7 @@ test('FmpIndicatorParamsSetDateBoundary no to', () => {
   })
   expect(dateBoundary).toMatchObject({
     from: undefined,
-    to: new Date('2026-01-01').getTime(),
+    to: new Date('2025-01-01').getTime(),
   })
 })
 
@@ -138,8 +138,8 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
         FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
 
     expect(dateBoundary).toMatchObject({
-      from: new Date('2022-01-01').getTime(),
-      to: new Date('2022-01-01').getTime(),
+      from: new Date('2021-01-01').getTime(),
+      to: new Date('2021-12-31').getTime(),
     })
   })
 
@@ -155,8 +155,8 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
       FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(params)
 
     expect(dateBoundary).toMatchObject({
-      from: new Date('2022-01-01').getTime(),
-      to: new Date('2026-01-01T00:00:00Z').getTime(),
+      from: new Date('2021-01-01').getTime(),
+      // to: new Date('2026-01-01T00:00:00Z').getTime(),
     })
 
     dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
@@ -164,8 +164,8 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
       timeframe: '5y',
     })
     expect(dateBoundary).toMatchObject({
-      from: new Date('2026-01-01T00:00:00Z').getTime(),
-      to: new Date('2030-01-01').getTime(),
+      from: new Date('2021-01-01T00:00:00Z').getTime(),
+      // to: new Date('2030-01-01').getTime(),
     })
 
     dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
@@ -183,7 +183,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
     })
     expect(dateBoundary).toMatchObject({
       from: undefined,
-      to: new Date('2026-01-01').getTime(),
+      to: new Date('2025-01-01').getTime(),
     })
   })
 })

@@ -6,9 +6,9 @@ import {
 } from '../services/general.mjs'
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
-import { safeArray } from '../services/array-helper.mjs'
-import { safestrLowercase } from '../services/string-helper.mjs'
+import { NumberHelper } from '../services/primitives/number-helper.mjs'
+import { safeArray } from '../services/primitives/array-helper.mjs'
+import { safestrLowercase } from '../services/primitives/string-helper.mjs'
 
 export interface ITradePlotProfitizer extends ITradePlot {
   profit?: number

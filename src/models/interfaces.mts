@@ -1,4 +1,4 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { ICreatedBy } from './id-created-updated.mjs'
 import { IId } from './IdManager.mjs'
 import { ITicker } from './ticker-info.mjs'

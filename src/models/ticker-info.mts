@@ -1,6 +1,9 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
-import { isString, safestrUppercase } from '../services/string-helper.mjs'
+import {
+  isString,
+  safestrUppercase,
+} from '../services/primitives/string-helper.mjs'
 import {
   zFromStringOrStringArray,
   zStringMinMax,
@@ -10,9 +13,9 @@ import { AppException } from './AppException.mjs'
 import { IHasPolitiscales } from '../politagree/politiscale.mjs'
 import { IId } from './IdManager.mjs'
 import { IdName } from '../models/id-name.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../services/primitives/object-helper.mjs'
 import moment from 'moment'
-import { safeArray } from '../services/array-helper.mjs'
+import { safeArray } from '../services/primitives/array-helper.mjs'
 
 const CONST_TickerMaxLength = 20
 
@@ -882,7 +885,7 @@ export function IAssetQuotesWithScore(
       scorePercentage = 0
     if (isObject(dictsym) && totalScore) {
       scorePercentage = dictsym.score ? dictsym.score / totalScore : 0
-      // eslint-disable-next-line prefer-destructuring
+
       matches = dictsym.matches
     }
 

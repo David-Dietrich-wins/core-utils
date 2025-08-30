@@ -1,4 +1,4 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import {
   IAssetQuoteResponse,
   IQuoteBarEma,
@@ -7,7 +7,10 @@ import {
 } from '../models/ticker-info.mjs'
 import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
-import { NumberHelper, getAsNumber } from '../services/number-helper.mjs'
+import {
+  NumberHelper,
+  getAsNumber,
+} from '../services/primitives/number-helper.mjs'
 import {
   getPercentChangeString,
   isNullOrUndefined,
@@ -17,7 +20,7 @@ import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
-import { safeArray } from '../services/array-helper.mjs'
+import { safeArray } from '../services/primitives/array-helper.mjs'
 
 export interface ITradePlot
   extends IIdRequired,

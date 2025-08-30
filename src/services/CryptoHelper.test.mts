@@ -1,13 +1,14 @@
+import * as fs from 'fs'
 import {
-  CONST_RegexRsaPrivateKeyPem,
-  CONST_RegexRsaPublicKeyPem,
+  REGEX_RsaPrivateKeyPem,
+  REGEX_RsaPublicKeyPem,
   rsaDecrypt,
   rsaDecryptObject,
   rsaEncrypt,
-  rsaKeyPairGenerate,
+  rsaKeyGen,
 } from './CryptoHelper.mjs'
 import { TEST_Settings } from '../jest.setup.mjs'
-import { randomStringGenerate } from './string-helper.mjs'
+import { randomStringGenerate } from './primitives/string-helper.mjs'
 
 /**
  * Generate an RSA key pair
@@ -22,14 +23,15 @@ import { randomStringGenerate } from './string-helper.mjs'
  */
 
 test.each(['Anything we want to encrypt.', 542, 45.55, true, Symbol('test')])(
-  `${rsaKeyPairGenerate.name}: %s`,
+  `${rsaKeyGen.name}: %s`,
   (val) => {
-    const { publicKey, privateKey } = rsaKeyPairGenerate(
-      TEST_Settings.rsaPassPhrase
-    )
+    const { publicKey, privateKey } = rsaKeyGen(TEST_Settings.rsaPassPhrase)
 
-    expect(publicKey).toMatch(CONST_RegexRsaPublicKeyPem)
-    expect(privateKey).toMatch(CONST_RegexRsaPrivateKeyPem)
+    fs.writeFileSync('logs/rsaKey.pub', publicKey)
+    fs.writeFileSync('logs/rsaKey.pem', privateKey)
+
+    expect(publicKey).toMatch(REGEX_RsaPublicKeyPem)
+    expect(privateKey).toMatch(REGEX_RsaPrivateKeyPem)
 
     const cipherText = rsaEncrypt(publicKey, val)
     expect(cipherText).not.toBeNull()

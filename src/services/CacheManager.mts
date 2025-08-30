@@ -1,4 +1,4 @@
-import { arrayFirst, safeArray } from './array-helper.mjs'
+import { arrayFirst, safeArray } from './primitives/array-helper.mjs'
 import { ArrayOrSingle } from '../models/types.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { isNullOrUndefined } from './general.mjs'

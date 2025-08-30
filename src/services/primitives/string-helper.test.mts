@@ -1,5 +1,11 @@
 import {
+  CONST_CharsNumbers,
+  FirstCharCapitalFormatter,
+  StringHelper,
+  capitalizeFirstLetter,
+  capitalizeWords,
   exceedsMaxNumberOfCharacters,
+  getCommaUpperList,
   hasNumbersOnly,
   isEmptyString,
   isStringish,
@@ -9,17 +15,48 @@ import {
   pluralize,
   plusMinus,
   randomStringGenerate,
+  safeHtmlAttribute,
   safestrLowercase,
   safestrToJson,
   safestrUppercase,
   strTrimIfNotNullish,
   stringEquals,
   stringEqualsQuoted,
+  stringIf,
   stringWrapDoubleQuote,
   stringWrapParen,
   stringWrapSingleQuote,
 } from './string-helper.mjs'
-import { CONST_CharsNumbers } from '../../models/types.mjs'
+import { AppException } from '../../models/AppException.mjs'
+import { jest } from '@jest/globals'
+
+test('capitalizeFirstLetter', () => {
+  expect(capitalizeFirstLetter('hello')).toBe('Hello')
+  expect(capitalizeFirstLetter('')).toBe('')
+  expect(capitalizeFirstLetter(null)).toBe('')
+  expect(capitalizeFirstLetter(undefined)).toBe('')
+  expect(capitalizeFirstLetter('123')).toBe('123')
+  expect(capitalizeFirstLetter('hello world')).toBe('Hello world')
+  expect(capitalizeFirstLetter('hello world!')).toBe('Hello world!')
+})
+
+test('capitalizeWords', () => {
+  expect(capitalizeWords('hello world')).toBe('Hello World')
+  expect(capitalizeWords('')).toBe('')
+  expect(capitalizeWords(null)).toBe('')
+  expect(capitalizeWords(undefined)).toBe('')
+  expect(capitalizeWords('123')).toBe('123')
+  expect(capitalizeWords('hello world!')).toBe('Hello World!')
+  expect(capitalizeWords('hello world! how are you?')).toBe(
+    'Hello World! How Are You?'
+  )
+  expect(capitalizeWords('hello world! how are you?')).toBe(
+    'Hello World! How Are You?'
+  )
+  expect(capitalizeWords('hello world! how are you?')).toBe(
+    'Hello World! How Are You?'
+  )
+})
 
 test(stringWrapSingleQuote.name, () => {
   const str = stringWrapSingleQuote('test')
@@ -108,6 +145,17 @@ test(safestrToJson.name, () => {
   expect(console.log).toHaveBeenCalledTimes(1)
   expect(safestrToJson('{a:1', 'functionName:')).toBeUndefined()
   expect(console.log).toHaveBeenCalledTimes(2)
+})
+
+test('stringIf', () => {
+  const stringIfFalse = 'string if false',
+    stringIfTrue = 'string if true'
+
+  expect(stringIf(true, stringIfTrue)).toBe(stringIfTrue)
+  expect(stringIf(false, stringIfTrue)).toBe('')
+  expect(stringIf(false, stringIfFalse)).toBe('')
+  expect(stringIf(true, stringIfTrue, stringIfFalse)).toBe(stringIfTrue)
+  expect(stringIf(false, stringIfTrue, stringIfFalse)).toBe(stringIfFalse)
 })
 
 test(isEmptyString.name, () => {
@@ -275,4 +323,213 @@ test(hasNumbersOnly.name, () => {
   expect(hasNumbersOnly('123')).toBe(true)
   expect(hasNumbersOnly('a1b2c3')).toBe(false)
   expect(hasNumbersOnly('abc123')).toBe(false)
+})
+
+test('FirstCharCapitalFormatter', () => {
+  const str = 'hello world',
+    str2 = 'Hello world',
+    str3 = 'HELLO WORLD',
+    str4 = 'hELLO WORLD',
+    str5 = 'hELLO wORLD'
+
+  expect(FirstCharCapitalFormatter(str)).toBe('Hello world')
+  expect(FirstCharCapitalFormatter(str2)).toBe('Hello world')
+  expect(FirstCharCapitalFormatter(str3)).toBe('HELLO WORLD')
+  expect(FirstCharCapitalFormatter(str4)).toBe('HELLO WORLD')
+  expect(FirstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
+})
+
+describe('StringHelper', () => {
+  test('safestr', () => {
+    expect(StringHelper.safestr(null)).toBe('')
+    expect(StringHelper.safestr(undefined)).toBe('')
+    expect(StringHelper.safestr('')).toBe('')
+    expect(StringHelper.safestr('null')).toBe('null')
+
+    expect(StringHelper.safestr('', { ifEmpty: 'test' })).toBe('test')
+    expect(
+      StringHelper.safestr('', {
+        ifEmpty: 'test',
+        prefix: 'prefix-',
+        suffix: '-suffix',
+      })
+    ).toBe('test')
+    expect(
+      StringHelper.safestr('ab', {
+        ifEmpty: 'test',
+        prefix: 'prefix-',
+        suffix: '-suffix',
+      })
+    ).toBe('prefix-ab-suffix')
+
+    expect(StringHelper.safestr('', { prefix: 'test-' })).toBe('')
+    expect(StringHelper.safestr('ab', { prefix: 'test-' })).toBe('test-ab')
+
+    expect(StringHelper.safestr('', { suffix: '-test' })).toBe('')
+    expect(StringHelper.safestr('ab', { suffix: '-test' })).toBe('ab-test')
+
+    expect(
+      StringHelper.safestr(' ab ', { suffix: '-test', trimEnd: true })
+    ).toBe(' ab-test')
+    expect(
+      StringHelper.safestr(' ab ', { suffix: '-test', trimStart: true })
+    ).toBe('ab -test')
+
+    expect(StringHelper.safestr('', '')).toBe('')
+    expect(StringHelper.safestr('', undefined)).toBe('')
+    expect(StringHelper.safestr('', null)).toBe('')
+  })
+
+  expect(
+    StringHelper.safestr(' ab ', {
+      suffix: '-test',
+      trimStart: true,
+      uppercase: true,
+    })
+  ).toBe('AB -test')
+  expect(
+    StringHelper.safestr(' Ab ', {
+      lowercase: true,
+      suffix: '-test',
+      trimStart: true,
+    })
+  ).toBe('ab -test')
+  expect(() =>
+    StringHelper.safestr(' Ab ', {
+      lowercase: true,
+      suffix: '-test',
+      trimStart: true,
+      uppercase: true,
+    })
+  ).toThrow(AppException)
+})
+
+test('ReplaceTwoOrMoreSpacesWithSingleSpace', () => {
+  const expected = 'This is a test string'
+
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is   a    test   string'
+    )
+  ).toBe(expected)
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is \t\r \n  a    test   string'
+    )
+  ).toBe(expected)
+  expect(
+    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+      'This  is \n  a  \t  test \r  string'
+    )
+  ).toBe(expected)
+
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(
+    ' '
+  )
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
+  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
+})
+
+test('StringHelper.safePrefix', () => {
+  const prefix = 'prefix-',
+    str = 'test'
+
+  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
+  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
+  expect(StringHelper.safePrefix('', prefix)).toBe('')
+  expect(StringHelper.safePrefix(null, prefix)).toBe('')
+  expect(StringHelper.safePrefix(undefined, prefix)).toBe('')
+  expect(StringHelper.safePrefix(0)).toBe(' 0')
+  expect(StringHelper.safePrefix(0, prefix)).toBe('prefix-0')
+  expect(StringHelper.safePrefix(-1, prefix)).toBe('prefix--1')
+  expect(StringHelper.safePrefix(5, prefix)).toBe('prefix-5')
+  expect(StringHelper.safePrefix(true, prefix)).toBe('prefix-true')
+  expect(StringHelper.safePrefix(false, prefix)).toBe('prefix-false')
+  expect(StringHelper.safePrefix(false)).toBe(' false')
+})
+
+test('StringHelper.safeSuffix', () => {
+  const str = 'test',
+    suffix = '-suffix'
+
+  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(StringHelper.safeSuffix('', suffix)).toBe('')
+  expect(StringHelper.safeSuffix(null, suffix)).toBe('')
+  expect(StringHelper.safeSuffix(undefined, suffix)).toBe('')
+  expect(StringHelper.safeSuffix(0, suffix)).toBe('0-suffix')
+  expect(StringHelper.safeSuffix(0)).toBe('0 ')
+  expect(StringHelper.safeSuffix(-1, suffix)).toBe('-1-suffix')
+  expect(StringHelper.safeSuffix(5, suffix)).toBe('5-suffix')
+  expect(StringHelper.safeSuffix(true, suffix)).toBe('true-suffix')
+  expect(StringHelper.safeSuffix(false, suffix)).toBe('false-suffix')
+  expect(StringHelper.safeSuffix(false)).toBe('false ')
+})
+
+test(safeHtmlAttribute.name, () => {
+  expect(safeHtmlAttribute('')).toBe('')
+  expect(safeHtmlAttribute(null)).toBe('')
+  expect(safeHtmlAttribute(undefined)).toBe('')
+  expect(safeHtmlAttribute('test')).toBe('test')
+  expect(safeHtmlAttribute(['test'])).toBe('test')
+  expect(safeHtmlAttribute(['test', 'test2'])).toBe('test-test2')
+  expect(safeHtmlAttribute(['tes,t', 'test2'])).toBe('tes-t-test2')
+  expect(safeHtmlAttribute(['tes,t', 'test2'], 'abc')).toBe('tesabctabctest2')
+})
+
+test(StringHelper.GenerateRandomString.name, () => {
+  const length = 10,
+    randomString = StringHelper.GenerateRandomString(length),
+    randomString2 = StringHelper.GenerateRandomString(length, 'abcde')
+
+  expect(randomString).toHaveLength(length)
+  expect(randomString).toMatch(/^[a-zA-Z0-9]{1,10}$/u)
+
+  expect(randomString2).toHaveLength(length)
+  expect(randomString2).toMatch(/^[abcde]{1,10}$/u)
+})
+
+test(StringHelper.RemoveLeadingNumbersAndWhitespace.name, () => {
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   123abc')).toBe(
+    'abc'
+  )
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   abc')).toBe(
+    'abc'
+  )
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
+  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
+})
+
+describe(randomStringGenerate.name, () => {
+  test('no params', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate()
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+
+  test('proper length', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString)
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+
+  test('using chars and numbers', () => {
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString, CONST_CharsNumbers)
+
+    expect(ranstr).toHaveLength(lengthForRandomString)
+  })
+})
+test(getCommaUpperList.name, () => {
+  expect(getCommaUpperList('')).toBe('')
+  expect(getCommaUpperList('a,b,c')).toBe('A,B,C')
+  expect(getCommaUpperList(['a', 'b', 'c'])).toBe('A,B,C')
+  expect(getCommaUpperList('a ,   b,c   ')).toBe('A ,   B,C')
 })

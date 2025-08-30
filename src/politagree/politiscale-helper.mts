@@ -7,8 +7,11 @@ import {
 } from './politiscale.mjs'
 import type { ISymbolDetail, ITickerSearch } from '../models/ticker-info.mjs'
 import type { IdNameValue, ValueChangeHandler } from '../models/id-name.mjs'
-import { isArray, safeArray } from '../services/array-helper.mjs'
-import { safestr, safestrLowercase } from '../services/string-helper.mjs'
+import { isArray, safeArray } from '../services/primitives/array-helper.mjs'
+import {
+  safestr,
+  safestrLowercase,
+} from '../services/primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IValue } from '../models/interfaces.mjs'
 import { isNullOrUndefined } from '../services/general.mjs'

@@ -5,7 +5,7 @@ import {
 import { IKeyValueShort } from './key-val.mjs'
 import { INameVal } from './NameValManager.mjs'
 import { hasData } from '../services/general.mjs'
-import { safestr } from '../services/string-helper.mjs'
+import { safestr } from '../services/primitives/string-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IUserConfig<T = any>

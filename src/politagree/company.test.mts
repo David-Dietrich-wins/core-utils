@@ -1,6 +1,6 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { Company } from './company.mjs'
-import { StringHelper } from '../services/string-helper.mjs'
+import { StringHelper } from '../services/primitives/string-helper.mjs'
 import { getCurrentDate } from '../jest.setup.mjs'
 
 test('constructor', () => {

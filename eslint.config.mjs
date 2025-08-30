@@ -36,6 +36,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
       'consistent-return': 'off',

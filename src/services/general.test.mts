@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import {
-  getBoolean,
-  getBooleanUndefined,
   getPercentChange,
   getPercentChangeString,
   hasData,
@@ -14,7 +12,6 @@ import {
 } from './general.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { Typish } from '../models/types.mts'
-import { getBody } from './object-helper.mjs'
 
 describe('URL Join', () => {
   const baseUrl = 'https://localhost:3000'
@@ -335,55 +332,6 @@ test('getPercentChange', () => {
   expect(getPercentChange(50, 0)).toBe(-5000)
   expect(getPercentChange(100, 200)).toBe(100)
   expect(getPercentChange(200, 100)).toBe(-50)
-})
-
-test('getBoolean', () => {
-  expect(getBoolean(undefined)).toBe(false)
-  expect(getBoolean(null)).toBe(false)
-  expect(getBoolean(false)).toBe(false)
-  expect(getBoolean(0)).toBe(false)
-  expect(getBoolean('')).toBe(false)
-  expect(getBoolean([])).toBe(false)
-
-  expect(getBoolean('FALSE')).toBe(false)
-  expect(getBoolean('f')).toBe(false)
-  expect(getBoolean('no')).toBe(false)
-  expect(getBoolean('0')).toBe(false)
-
-  expect(getBoolean(true)).toBe(true)
-  expect(getBoolean(1)).toBe(true)
-  expect(getBoolean('1')).toBe(true)
-  expect(getBoolean('true')).toBe(true)
-  expect(getBoolean('hello')).toBe(true)
-})
-
-test('getBooleanUndefined', () => {
-  expect(getBooleanUndefined(undefined)).toBe(undefined)
-  expect(getBooleanUndefined(null)).toBe(undefined)
-  expect(getBooleanUndefined(false)).toBe(undefined)
-  expect(getBooleanUndefined(0)).toBe(undefined)
-  expect(getBooleanUndefined('')).toBe(undefined)
-  expect(getBooleanUndefined([])).toBe(undefined)
-
-  expect(getBooleanUndefined('FALSE')).toBe(undefined)
-  expect(getBooleanUndefined('f')).toBe(undefined)
-  expect(getBooleanUndefined('no')).toBe(undefined)
-  expect(getBooleanUndefined('0')).toBe(undefined)
-
-  expect(getBooleanUndefined(true)).toBe(true)
-  expect(getBooleanUndefined(1)).toBe(true)
-  expect(getBooleanUndefined('1')).toBe(true)
-  expect(getBooleanUndefined('true')).toBe(true)
-  expect(getBooleanUndefined('hello')).toBe(true)
-})
-
-test('getBody', () => {
-  expect(() => getBody('')).toThrow('Object body not found')
-  expect(
-    getBody({
-      body: 'test',
-    })
-  ).toBe('test')
 })
 
 test(typishValue.name, () => {

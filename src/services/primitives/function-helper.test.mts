@@ -3,7 +3,7 @@ import {
   copyArrayToTypishFunction,
   copyToTypishFunction,
   typishValue,
-} from './function-helpers.mjs'
+} from './function-helper.mjs'
 import { Typish } from '../../models/types.mjs'
 
 test(typishValue.name, () => {

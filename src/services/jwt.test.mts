@@ -99,7 +99,7 @@ test('JwtVerify bad', () => {
 
 test('JwtVerify good', () => {
   const header: JwtHeader = {
-      alg: 'HS256',
+      alg: 'RS256',
       typ: 'JWT',
     },
     payload = {

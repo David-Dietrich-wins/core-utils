@@ -1,10 +1,13 @@
-import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from '../services/primitives/date-helper.mjs'
 import {
   type IContext,
   type IContextValue,
   updateContextValueToggleBoolean,
 } from '../services/ContextManager.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
+import { deepCloneJson } from '../services/primitives/object-helper.mjs'
 import { newGuid } from '../services/general.mjs'
 
 export interface IConfigWebsite extends IContext {

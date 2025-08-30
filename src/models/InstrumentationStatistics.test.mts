@@ -1,7 +1,7 @@
 import { AppException } from './AppException.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
+import { DateHelper } from '../services/primitives/date-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
+import { NumberHelper } from '../services/primitives/number-helper.mjs'
 
 const CONST_DefaultSecondsMs = /^(?<temp1>\d+ seconds?|\d+m?s)$/u
 

@@ -1,8 +1,11 @@
 import { INameTypeValue, INameValue } from './interfaces.mjs'
 import { isNullOrUndefined, sortFunction } from '../services/general.mjs'
-import { safestr, safestrLowercase } from '../services/string-helper.mjs'
+import {
+  safestr,
+  safestrLowercase,
+} from '../services/primitives/string-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { safeArray } from '../services/array-helper.mjs'
+import { safeArray } from '../services/primitives/array-helper.mjs'
 
 export class NameValue<Tvalue = string> implements INameValue<Tvalue> {
   name: string

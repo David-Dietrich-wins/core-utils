@@ -1,18 +1,17 @@
-import { getAsNumber, isNumber } from '../services/number-helper.mjs'
-import { getBoolean, isNullOrUndefined } from '../services/general.mjs'
-import { isString, safestrLowercase } from '../services/string-helper.mjs'
+import { getAsNumber, isNumber } from '../services/primitives/number-helper.mjs'
+import {
+  isString,
+  safestrLowercase,
+} from '../services/primitives/string-helper.mjs'
 import { IUserInfo } from './UserInfo.mjs'
 import { IconConfiguration } from '../services/ContextManager.mjs'
 import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
+import { getBoolean } from '../services/primitives/boolean-helper.mjs'
+import { isNullOrUndefined } from '../services/general.mjs'
 
-export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
-  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  CONST_CharsNumbers = '0123456789',
-  CONST_CharsToUseForRandomStrings =
-    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers,
-  CONST_NOT_IMPLEMENTED = 'Not implemented',
+export const CONST_NOT_IMPLEMENTED = 'Not implemented',
   REGEX_ElapsedTime = /^(?<temp1>\d+ seconds|1 second|\d+m?s)/u,
   REGEX_GamingVersion = /\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{6}-\d{6})?/u,
   REGEX_StringOfSecondsOrMilliseconds = '(\\d+ seconds|1 second|\\d+ms)',
@@ -109,6 +108,16 @@ export type FunctionKeyNames<T extends object> = Exclude<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TypishFunction<T = unknown> = (...args: any[]) => T
 export type Typish<T = unknown> = T | TypishFunction<T>
+export type TypishReturnType<T> = T extends TypishFunction<infer R>
+  ? R
+  : T extends Typish<infer R>
+  ? R
+  : never
+export type TypishReturnPromiseType<T> = T extends Awaited<infer R> ? R : never
+
+export type Booleanish = Typish<boolean>
+export type Numberish = Typish<number>
+export type Stringish = Typish<string>
 
 export type HeaderNavLinks = IdName & {
   disabled?: Typish<boolean>
@@ -130,6 +139,11 @@ export function CreateClass<T>(type: IConstructor<T>, ...args: any[]) {
 
 export type IDataWithStats<T = unknown> = {
   data: T
+  stats: InstrumentationStatistics
+}
+
+export type IResultWithStats<T> = {
+  result?: T
   stats: InstrumentationStatistics
 }
 

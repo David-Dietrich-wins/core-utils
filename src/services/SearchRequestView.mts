@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import {
   AnyObject,
   AnyRecord,
@@ -12,11 +12,11 @@ import {
   safestr,
   safestrLowercase,
   safestrTrim,
-} from './string-helper.mjs'
-import { hasData, sortFunction } from './general.mjs'
-import { isArray, safeArray } from './array-helper.mjs'
-import { getAsNumber } from './number-helper.mjs'
-import { isObject } from './object-helper.mjs'
+} from './primitives/string-helper.mjs'
+import { hasData, isNullOrUndefined, sortFunction } from './general.mjs'
+import { isArray, safeArray } from './primitives/array-helper.mjs'
+import { getAsNumber } from './primitives/number-helper.mjs'
+import { isObject } from './primitives/object-helper.mjs'
 
 export type ISearchRequestView = z.infer<
   typeof SearchRequestView.zSearchRequestView
@@ -78,7 +78,11 @@ export class SearchRequestView implements ISearchRequestView {
       // Do this to ensure no extra properties are passed in.
       Object.assign(this, SearchRequestView.zSearchRequestView.parse(term))
     } else {
-      this.term = isArray(term) ? safeArray(term) : safestr(term)
+      const myterm =
+        isNullOrUndefined(term) || isString(term)
+          ? safestr(term)
+          : safeArray(term)
+      this.term = myterm
       this.sortColumn = sortColumn
       this.sortDirection = sortDirection
       this.limit = limit

@@ -1,8 +1,8 @@
 import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
-import { ToSafeArray2d, isArray } from './array-helper.mjs'
+import { ToSafeArray2d, isArray } from './primitives/array-helper.mjs'
 import { HttpHeaderNamesAllowedKeys } from './HttpHeaderManager.mjs'
 import { hasData } from './general.mjs'
-import { safestr } from './string-helper.mjs'
+import { safestr } from './primitives/string-helper.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 

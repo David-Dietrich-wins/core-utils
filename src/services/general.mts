@@ -4,30 +4,17 @@ import {
   SortOrderAsBoolean,
   type Typish,
 } from '../models/types.mjs'
-import { isArray, safeArray } from './array-helper.mjs'
-import { isString, safestr, safestrLowercase } from './string-helper.mjs'
+import { isArray, safeArray } from './primitives/array-helper.mjs'
+import {
+  isString,
+  safestr,
+  safestrLowercase,
+} from './primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { DateHelper } from './DateHelper.mjs'
-import { isNumber } from './number-helper.mjs'
-import { isObject } from './object-helper.mjs'
-
-/**
- * Tests an object to determine if it is a type boolean.
- * @param obj Any object to test if it is a boolean value.
- * @returns True if the object is a boolean.
- */
-export function isBoolean(obj: unknown): obj is boolean {
-  return typeof obj === 'boolean'
-}
-
-/**
- * Tests an object to determine if it is a function.
- * @param obj Any object to test if it is a function.
- * @returns True if the object is a function.
- */
-export function isFunction(obj: unknown) {
-  return typeof obj === 'function'
-}
+import { isDateObject } from './primitives/date-helper.mjs'
+import { isFunction } from './primitives/function-helper.mjs'
+import { isNumber } from './primitives/number-helper.mjs'
+import { isObject } from './primitives/object-helper.mjs'
 
 /**
  * Tests if a variable is null or undefined.
@@ -40,51 +27,6 @@ export function isNullOrUndefined(obj: unknown): obj is undefined | null {
 
 export function isSymbol(value: unknown): value is symbol {
   return typeof value === 'symbol'
-}
-
-/**
- * When getting form data from a UI, the textbox data is always a string.
- * Use this method to convert any string, number or boolean to its boolean value;
- * @param b Any object to test if it can be converted to a boolean.
- */
-export function getBoolean(b: unknown) {
-  if (!b) {
-    return false
-  }
-
-  if (isBoolean(b)) {
-    return b
-  }
-
-  if (isString(b)) {
-    const s = safestrLowercase(b).trim()
-    switch (s) {
-      case 'false':
-      case 'f':
-      case 'n':
-      case 'no':
-      case '0':
-      case '':
-        return false
-      // Case 'true':
-      // Case 't':
-      // Case 'y':
-      // Case 'yes':
-      default:
-        return true
-    }
-  }
-
-  if (isNumber(b)) {
-    return b !== 0
-  }
-
-  return false
-}
-export function getBooleanUndefined(b: unknown) {
-  const bret = getBoolean(b)
-
-  return bret ? true : undefined
 }
 
 /**
@@ -196,7 +138,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
       return Boolean(o)
     }
 
-    if (DateHelper.isDateObject(o)) {
+    if (isDateObject(o)) {
       return o.getTime() >= minlength
     }
 
@@ -262,6 +204,7 @@ export function sortFunction(
     return 0
   } else if (compareStringsLowercase && isString(a) && isString(b)) {
     // A little recursive, but we will not come back here a second time.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
   }
   // Otherwise, if we're ascending, lowest sorts first

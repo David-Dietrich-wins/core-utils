@@ -1,12 +1,24 @@
 import {
-  CONST_CharsToUseForRandomStrings,
+  type ArrayOrSingleBasicTypes,
+  type StringOrStringArray,
   Typish,
 } from '../../models/types.mjs'
 import { getAsNumber, isNumber } from './number-helper.mjs'
 import { hasData, isNullOrUndefined } from '../general.mjs'
+import { isArray, splitToArray } from './array-helper.mjs'
 import { isFunction, typishValue } from './function-helper.mjs'
-import { isArray } from './array-helper.mjs'
+import { AppException } from '../../models/AppException.mjs'
 import { isObject } from './object-helper.mjs'
+
+export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
+  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  CONST_CharsNumbers = '0123456789',
+  CONST_CharsToUseForRandomString =
+    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
+
+export function capitalizeFirstLetter(str?: string | null) {
+  return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''
+}
 
 /**
  * Tests an object to determine if it is a string.
@@ -48,6 +60,10 @@ export function safestr(...args: unknown[]): string {
   }
 
   return ''
+}
+
+export function capitalizeWords(str?: string | null) {
+  return safestr(str).split(' ').map(capitalizeFirstLetter).join(' ')
 }
 
 /**
@@ -346,7 +362,7 @@ export function stringEqualsQuoted(
 
 export function randomStringGenerate(
   exactLength = 4,
-  charsToUse = CONST_CharsToUseForRandomStrings
+  charsToUse = CONST_CharsToUseForRandomString
 ) {
   let result = ''
   const lenCharsToUse = charsToUse.length
@@ -356,4 +372,192 @@ export function randomStringGenerate(
   }
 
   return result
+}
+
+export function stringIf(
+  ifTrue: boolean | null | undefined,
+  strTrue: string | null | undefined,
+  strFalse?: string | null
+) {
+  return ifTrue ? safestr(strTrue) : safestr(strFalse)
+}
+export function FirstCharCapitalFormatter(s: string) {
+  return capitalizeFirstLetter(s)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class StringHelper {
+  // eslint-disable-next-line complexity
+  static safestr(
+    str?: string | number | boolean | null,
+    ifEmpty?:
+      | string
+      | {
+          ifEmpty?: string
+          prefix?: string
+          suffix?: string
+          trim?: boolean
+          trimStart?: boolean
+          trimEnd?: boolean
+          lowercase?: boolean
+          uppercase?: boolean
+        }
+      | null
+  ): string {
+    let s = str
+    if (isNullOrUndefined(s)) {
+      s = ''
+    } else if (!isString(s)) {
+      s = String(s)
+    }
+
+    if (
+      !hasData(s) &&
+      (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
+    ) {
+      return (ifEmpty as string) || ''
+    }
+
+    if (isObject(ifEmpty)) {
+      const {
+        ifEmpty: ifEmptyValue,
+        prefix,
+        suffix,
+        trim,
+        trimStart,
+        trimEnd,
+        lowercase,
+        uppercase,
+      } = ifEmpty
+
+      if (!hasData(s) && ifEmptyValue) {
+        return ifEmptyValue
+      }
+
+      if (trim) {
+        s = s.trim()
+      }
+      if (trimStart) {
+        s = s.trimStart()
+      }
+      if (trimEnd) {
+        s = s.trimEnd()
+      }
+
+      if (lowercase && uppercase) {
+        throw new AppException(
+          'Cannot set both lowercase and uppercase to true.'
+        )
+      }
+      if (lowercase) {
+        s = s.toLowerCase()
+      }
+      if (uppercase) {
+        s = s.toUpperCase()
+      }
+
+      if (!hasData(s)) {
+        return ''
+      }
+
+      return (prefix ?? '') + s + (suffix ?? '')
+    }
+
+    return s
+  }
+
+  static ReplaceAll(str: string, regex: RegExp, replaceWith = ''): string {
+    return safestr(str).replaceAll(regex, replaceWith)
+  }
+  static RemoveLeadingNumbersAndWhitespace(str: string) {
+    return StringHelper.ReplaceAll(str, /^\s*\d*\s*/gu)
+  }
+
+  static GenerateRandomString(length: number, charactersToAllow?: string) {
+    let result = ''
+    const characters =
+        safestr(charactersToAllow) ||
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+      charactersLength = characters.length
+
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+
+    return result
+  }
+
+  static ReplaceNonPrintable(str: string | null | undefined) {
+    return safestr(str).replaceAll(/[^\x20-\x7E]/gu, '')
+  }
+
+  static ReplaceTwoOrMoreSpacesWithSingleSpace(str: string | null | undefined) {
+    return safestr(str).replaceAll(/[ \t\r\n]{2,}/gu, ' ')
+  }
+
+  /**
+   * Returns a string with a prepended prefix if the string has data.
+   * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
+   * @param prefix The prefix to prepend if the string has data.
+   * @returns Empty string if the string is empty, otherwise the prefix is prepended with the string.
+   */
+  static safePrefix(s?: string | number | boolean | null, prefix = ' ') {
+    return StringHelper.safestr(s, {
+      prefix,
+      trim: true,
+    })
+  }
+
+  /**
+   * Returns a string with a suffix if the string has data.
+   * @param s The string to check for data, and if there is data, trim and add the suffix.
+   * @param suffix The suffix to add if the string has data.
+   * @returns Empty string if the string is empty, otherwise the string with the suffix.
+   */
+  static safeSuffix(s?: string | number | boolean | null, suffix = ' ') {
+    return StringHelper.safestr(s, {
+      suffix,
+      trim: true,
+    })
+  }
+
+  static IncludesAnyFromArray(
+    mainString: string,
+    substrings: string[]
+  ): boolean {
+    return substrings.some((substring) => mainString.includes(substring))
+  }
+}
+
+export function safeHtmlAttribute(
+  items: ArrayOrSingleBasicTypes,
+  separator = '-'
+) {
+  return splitToArray(items, ',', true, true, {
+    removeNonPrintable: true,
+  }).join(separator)
+}
+
+/**
+ * Gets a comma separated list of unique items.
+ * @param stringOrArray The {@link StringOrStringArray} to flatten then separate by commas.
+ * @returns The flattened, comma-separated string.
+ */
+
+export function getCommaSeparatedList(stringOrArray: StringOrStringArray) {
+  if (isString(stringOrArray)) {
+    return stringOrArray
+  }
+
+  const myset = new Set(stringOrArray)
+  return [...myset].join(',')
+}
+
+/**
+ * Gets a comma separated list of unique items in uppercase.
+ * @param stringOrArray The {@link StringOrStringArray} to uppercase and separate by commas.
+ * @returns The flattened, comma-separated string in uppercase.
+ */
+export function getCommaUpperList(stringOrArray: StringOrStringArray) {
+  return safestrUppercase(getCommaSeparatedList(stringOrArray))
 }

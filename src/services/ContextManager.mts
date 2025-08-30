@@ -1,10 +1,13 @@
-import * as z from 'zod'
-import { DateHelper, type DateTypeAcceptable } from './DateHelper.mjs'
+import * as z from 'zod/v4'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from './primitives/date-helper.mjs'
 import { IIdRequired, IdManager } from '../models/IdManager.mjs'
 import { IName, IValue } from '../models/interfaces.mjs'
 import { IUpdated } from '../models/id-created-updated.mjs'
 import { newGuid } from './general.mjs'
-import { safeObject } from './object-helper.mjs'
+import { safeObject } from './primitives/object-helper.mjs'
 
 export const zIconConfiguration = z.object({
   alt: z.string().min(1).max(100),

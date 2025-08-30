@@ -1,12 +1,12 @@
 import { FromBearerToken, JwtAccessToken } from './jwt.mjs'
-import { safestr, safestrLowercase } from './string-helper.mjs'
+import { arrayFirst, safeArray } from './primitives/array-helper.mjs'
+import { safestr, safestrLowercase } from './primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IdType } from '../models/id-name.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
-import { arrayFirst } from './array-helper.mjs'
-import { getBoolean } from './general.mjs'
-import { isObject } from './object-helper.mjs'
+import { getBoolean } from './primitives/boolean-helper.mjs'
+import { isObject } from './primitives/object-helper.mjs'
 
 const REGEX_Bearer = /^[Bb][Ee][Aa][Rr][Ee][Rr] /u
 
@@ -65,9 +65,11 @@ export class HttpHeaderManagerBase {
     return this.headers[name]
   }
   getHeaderString(name: string) {
-    return arrayFirst(
+    const item = safeArray(
       this.getHeader(name) || this.getHeader(safestrLowercase(name))
     )
+
+    return arrayFirst(item)
   }
   getHeaderStringSafe(name: string) {
     return safestr(this.getHeaderString(name))

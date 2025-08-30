@@ -1,17 +1,20 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { ArrayOrSingle, StringOrStringArray } from '../../models/types.mjs'
 import {
+  ArrayOrSingle,
+  ArrayOrSingleBasicTypes,
+  StringOrStringArray,
+} from '../../models/types.mjs'
+import {
+  StringHelper,
   isString,
   safestr,
   safestrTrim,
   safestrUppercase,
 } from './string-helper.mjs'
+import { hasData, isNullOrUndefined } from '../general.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import type { IId } from '../../models/IdManager.mjs'
 import { IIdName } from '../../models/id-name.mjs'
 import { IName } from '../../models/interfaces.mjs'
-import { getBoolean } from './boolean-helper.mjs'
-import { isNullOrUndefined } from '../general.mjs'
 import { isNumber } from './number-helper.mjs'
 
 /**
@@ -47,12 +50,22 @@ export function isArray<T = unknown>(
  * @param ifEmpty If the array is null or undefined, return this value. Defaults to [].
  * @returns A guaranteed array to be nonNull. Returns ifEmpty when the array does not have data. Or [] if ifEmpty is not declared.
  */
-export function safeArray<T>(arr?: T | T[] | null, ifEmpty?: T[]) {
+export function safeArray<T>(
+  arr?: T | T[] | null,
+  ifEmpty?: ArrayOrSingle<T> | null
+) {
   if (isNullOrUndefined(arr)) {
     return ifEmpty && isArray(ifEmpty) ? ifEmpty : []
   }
 
   return isArray(arr) ? arr : [arr]
+}
+
+export function safeArrayUnique<T>(
+  arr?: ArrayOrSingle<T> | null,
+  ifEmpty?: ArrayOrSingle<T> | null
+) {
+  return Array.from(new Set(safeArray(arr, ifEmpty)))
 }
 
 export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
@@ -324,7 +337,10 @@ export function getObject<T>(arr: T | T[], index = 0) {
  * @param obj Array of items to add to listObjects.
  * @returns listObjects. If null, was passed, it is a new array.
  */
-export function addObjectToList<T>(listObjects: T[], obj: T[]) {
+export function addObjectToList<T>(
+  listObjects: ArrayOrSingle<T>,
+  obj: ArrayOrSingle<T>
+) {
   if (isNullOrUndefined(obj)) {
     return []
   }
@@ -345,13 +361,50 @@ export function addObjectToList<T>(listObjects: T[], obj: T[]) {
   return listObjects
 }
 
+export function arrayAdd<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[],
+  item: T,
+  index?: number
+) {
+  const len = arrItems.length
+  if (isNullOrUndefined(index) || index < 0 || !len || index >= len) {
+    arrItems.push(item)
+  } else {
+    arrItems.splice(index, 0, item)
+  }
+
+  return arrItems
+}
+
+/**
+ * Gets an object from an array at the given index.
+ * Or if it is not an array, just returns the object.
+ * Protects from empty objects and indexes that are out of bounds.
+ * @param arr An object array to get the index item of.
+ * @param index The index of the object array to return. Use negative numbers to start from the end of the array. -1 returns the last item.
+ * @returns The given object at arr[index], or undefined if it does not exist.
+ */
+export function arrayElement<T>(arr?: ArrayOrSingle<T> | null, index = 0) {
+  const safearr = safeArray(arr)
+  if (safearr.length) {
+    // eslint-disable-next-line no-param-reassign
+    index ||= 0
+
+    if (index >= 0 && safearr.length > index) {
+      return safearr[index]
+    } else if (index < 0 && safearr.length >= Math.abs(index)) {
+      return safearr[safearr.length - Math.abs(index)]
+    }
+  }
+}
+
 export function arrayElementNonEmpty<T>(
-  arr?: T[],
+  arr?: ArrayOrSingle<T> | null,
   index = 0,
   functionSourceName?: string,
   customMessage?: string
 ) {
-  const item = getObject(arr, index)
+  const item = arrayElement(arr, index)
   if (item) {
     return item
   }
@@ -425,6 +478,50 @@ export function arrayForEachReturns<T>(
   safeArray(arr).forEach((cur) => {
     funcArrayResults(cur)
   })
+}
+
+export function arrayRemoveById<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[] | null | undefined,
+  id: T['id']
+) {
+  return safeArray(arrItems).filter((x) => x.id !== id)
+}
+export function arrayRemove<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[] | null | undefined,
+  item: T
+) {
+  return arrayRemoveById(arrItems, item.id)
+}
+
+export function arrayUnique<T>(arrItems: T[] | null | undefined) {
+  return [...new Set(safeArray(arrItems))]
+}
+
+export function arrayUpdateOrAdd<T extends IId<Tid>, Tid = T['id']>(
+  arrItems: T[],
+  item: T,
+  insertAtFront = false
+) {
+  const foundIndex = arrItems.findIndex((x) => item.id === x.id)
+
+  // If the index is out of bounds, just push the item to the end of the array.
+  if (insertAtFront) {
+    if (foundIndex >= 0) {
+      // Remove the existing item from the array if it exists.
+      // eslint-disable-next-line no-param-reassign
+      arrItems = arrayRemoveById(arrItems, item.id)
+    }
+
+    // Remove the existing item from the array if it exists.
+    arrItems.splice(0, 0, item)
+  } else if (arrItems.length === 0 || foundIndex === -1) {
+    arrItems.push(item)
+  } else {
+    // Remove the existing item from the array if it exists.
+    arrItems.splice(foundIndex, 1, item)
+  }
+
+  return arrItems
 }
 
 export function arraySwapItems<T>(
@@ -507,6 +604,32 @@ export function shuffleArray<T>(array: T[], maxItems?: number) {
     : shuffledArray.slice(0, maxItems)
 }
 
+export function splitIntoArray(
+  strToSplit: ArrayOrSingleBasicTypes,
+  splitter = ',',
+  replaceNonPrintable = true,
+  preTrimString = false
+) {
+  let str = isString(strToSplit)
+    ? preTrimString
+      ? safestrTrim(strToSplit)
+      : safestr(strToSplit)
+    : String(strToSplit)
+
+  if (replaceNonPrintable) {
+    str = StringHelper.ReplaceNonPrintable(str)
+  }
+
+  if (str.startsWith('[')) {
+    str = safestrTrim(str.substring(1))
+  }
+  if (str.endsWith(']')) {
+    str = safestrTrim(str.substring(0, str.length - 1))
+  }
+
+  return str.split(splitter)
+}
+
 /**
  * Takes a string or array of strings, iterates over each string and splits them according to the splitter provided.
  * Each split string is then added to an array and the array of split strings is returned.
@@ -517,44 +640,34 @@ export function shuffleArray<T>(array: T[], maxItems?: number) {
  * @returns An array of every string split by splitter.
  */
 export function splitToArray(
-  strOrArray?: StringOrStringArray,
+  strOrArray?: ArrayOrSingleBasicTypes,
   splitter = ',',
   removeEmpties = true,
   trimStrings = true,
-  preTrimStringForArrayCheck = false
-) {
-  let splitted: string[] = []
-  if (isNullOrUndefined(strOrArray)) {
-    return splitted
-  }
+  extras: {
+    preTrimString?: boolean
+    removeNonPrintable?: boolean
+  } = { preTrimString: false, removeNonPrintable: true }
+): string[] {
+  let splitted = safeArray(strOrArray).reduce(
+    (acc: string[], cur) =>
+      acc.concat(
+        splitIntoArray(
+          cur,
+          splitter,
+          extras.removeNonPrintable,
+          extras.preTrimString
+        )
+      ),
+    []
+  )
 
-  if (isString(strOrArray)) {
-    let str = preTrimStringForArrayCheck
-      ? safestrTrim(strOrArray)
-      : safestr(strOrArray)
-    if (str.startsWith('[')) {
-      str = safestrTrim(str.substring(1))
-    }
-    if (str.endsWith(']')) {
-      str = safestrTrim(str.substring(0, str.length - 1))
-    }
-
-    splitted = str.split(splitter)
-  } else if (isArray(strOrArray)) {
-    strOrArray.map((x) => (splitted = splitted.concat(x.split(splitter))))
-  } else {
-    throw new AppException(
-      'Invalid type passed to splitToArray',
-      splitToArray.name
-    )
+  if (removeEmpties) {
+    splitted = splitted.filter((e) => hasData(e.trim()))
   }
 
   if (trimStrings) {
     splitted = splitted.map((x) => safestrTrim(x))
-  }
-
-  if (removeEmpties) {
-    return splitted.filter((e) => getBoolean(e))
   }
 
   return splitted
@@ -618,13 +731,88 @@ export function splitToArrayOrStringIfOnlyOneToUpper(
 }
 
 export function splitToArrayOfIntegers(commaDelimitedString?: string) {
-  const trimmed = splitToArray(commaDelimitedString, ',', true, true, true)
+  const trimmed = splitToArray(commaDelimitedString, ',', true, true, {
+    preTrimString: true,
+    removeNonPrintable: true,
+  })
 
   return trimmed.map((item) => parseInt(item, 10))
 }
 
 export function splitToArrayOfNumbers(commaDelimitedString?: string) {
-  const trimmed = splitToArray(commaDelimitedString, ',', true, true, true)
+  const trimmed = splitToArray(commaDelimitedString, ',', true, true, {
+    preTrimString: true,
+    removeNonPrintable: true,
+  })
 
   return trimmed.map((item) => parseFloat(item))
+}
+
+export function ToIIdNameArray<T extends IIdName>(
+  arr: Readonly<T | string>[] | null | undefined
+) {
+  return safeArray(arr).map((x) => {
+    let inv: IIdName
+    if (isString(x)) {
+      inv = {
+        id: x,
+        name: x,
+      }
+    } else {
+      inv = x
+    }
+
+    return inv
+  })
+}
+
+export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
+  return safeArray(arr).map((x) => x.name)
+}
+
+export function arrayMoveElement<T>(
+  arr: ArrayOrSingle<T>,
+  fromIndex: number,
+  toIndex: number
+) {
+  const arrCopy = safeArray(arr),
+    len = arrCopy.length
+
+  if (fromIndex < 0 || fromIndex >= len || toIndex < 0 || toIndex >= len) {
+    throw new AppException(
+      `Invalid source index of ${safestr(
+        fromIndex
+      )} or destination index of ${safestr(
+        toIndex
+      )} when moving array elements.`,
+      arrayMoveElement.name,
+      arrCopy
+    )
+  }
+
+  if (fromIndex === toIndex) {
+    return arrCopy
+  }
+
+  // Remove the element and store it
+  const [element] = arrCopy.splice(fromIndex, 1)
+
+  // Insert the element at the new position
+  arrCopy.splice(toIndex, 0, element)
+
+  return arrCopy
+}
+
+export function arrayFilterMap<T, R>(
+  arr: ArrayOrSingle<T> | null | undefined,
+  mapFunc: (item: T) => R,
+  filterFunc?: (item: T) => boolean
+): R[] {
+  let myarr = safeArray(arr)
+
+  if (filterFunc) {
+    myarr = myarr.filter(filterFunc)
+  }
+
+  return myarr.map(mapFunc)
 }

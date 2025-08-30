@@ -4,7 +4,7 @@ import {
   dictionaryUpsert,
   dictionaryUpsertAll,
   processEnvUpsert,
-} from './map-helpers.mjs'
+} from './map-helper.mjs'
 
 test(dictionaryUpsert.name, () => {
   const dict = new Map<string, number>()

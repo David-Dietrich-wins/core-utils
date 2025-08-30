@@ -1,5 +1,5 @@
-import { NumberHelper } from './number-helper.mjs'
-import { safeArray } from './array-helper.mjs'
+import { NumberHelper } from './primitives/number-helper.mjs'
+import { safeArray } from './primitives/array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
 

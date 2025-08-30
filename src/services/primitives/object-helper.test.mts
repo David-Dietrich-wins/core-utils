@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   BuildLogFriendlyMessage,
-  GetErrorMessage,
   ObjectFindKeyAndReturnValue,
   ObjectMustHaveKeyAndReturnValue,
   ObjectPrepareForJson,
@@ -14,7 +13,7 @@ import {
   runOnAllMembers,
   searchObjectForArray,
 } from './object-helper.mjs'
-import { safestr } from '../string-helper.mts'
+import { safestr } from './string-helper.mjs'
 
 // type PostExceptionAxiosResponseData = {
 //   response: {
@@ -183,7 +182,12 @@ describe(ObjectTypesToString.name, () => {
 
   // Mock HTTP objects
   class File {
-    constructor(public readonly data: string, public readonly name: string) {}
+    data: string
+    name: string
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
+    }
 
     toArray() {
       return [this.data, this.name]
@@ -195,10 +199,11 @@ describe(ObjectTypesToString.name, () => {
   }
 
   class FileList {
-    constructor(public readonly data: string, public readonly name: string) {}
-
-    toArray() {
-      return [this.data, this.name]
+    data: string
+    name: string
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
     }
 
     toObject() {
@@ -271,7 +276,13 @@ describe(BuildLogFriendlyMessage.name, () => {
 
   // Mock HTTP objects
   class File {
-    constructor(public readonly data: string, public readonly name: string) {}
+    data: string
+    name: string
+
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
+    }
 
     toArray() {
       return [this.data, this.name]
@@ -283,7 +294,13 @@ describe(BuildLogFriendlyMessage.name, () => {
   }
 
   class FileList {
-    constructor(public readonly data: string, public readonly name: string) {}
+    readonly data: string
+    readonly name: string
+
+    constructor(data: string, name: string) {
+      this.data = data
+      this.name = name
+    }
 
     toArray() {
       return [this.data, this.name]
@@ -313,48 +330,6 @@ describe(BuildLogFriendlyMessage.name, () => {
 
     const ret = ObjectTypesToString(e)
     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
-  })
-})
-
-describe('GetErrorMessage', () => {
-  test('Objects', () => {
-    const e = new Error()
-
-    e.message = undefined as unknown as string
-
-    const ret = GetErrorMessage(e)
-    expect(ret).toBe('Unknown error')
-
-    expect(GetErrorMessage(new Error('test error'))).toBe('test error')
-    expect(GetErrorMessage({})).toBe('Unknown error')
-    expect(GetErrorMessage({ a: 'a' })).toBe('Unknown error')
-    expect(GetErrorMessage({ message: 'test object error' })).toBe(
-      'test object error'
-    )
-  })
-
-  test('Strings', () => {
-    expect(GetErrorMessage('')).toBe('Unknown error')
-    expect(GetErrorMessage('test string error')).toBe('test string error')
-  })
-
-  test('boolean', () => {
-    expect(GetErrorMessage(true)).toBe('true')
-    expect(GetErrorMessage(false)).toBe('false')
-  })
-
-  test('unknown', () => {
-    expect(GetErrorMessage(undefined)).toBe('Unknown error')
-    expect(GetErrorMessage(null)).toBe('Unknown error')
-    expect(GetErrorMessage(new Date())).toBe('Unknown error')
-    // This is the default case for unknown types
-    expect(GetErrorMessage(BigInt(5))).toBe('Unknown error')
-  })
-
-  test('number', () => {
-    expect(GetErrorMessage(0)).toBe('0')
-    expect(GetErrorMessage(-1000.246)).toBe('-1000.246')
-    expect(GetErrorMessage(42)).toBe('42')
   })
 })
 

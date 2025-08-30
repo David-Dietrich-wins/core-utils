@@ -15,9 +15,9 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { IIdValRequired } from '../models/id-val.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { IdName } from '../models/id-name.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
+import { deepCloneJson } from '../services/primitives/object-helper.mjs'
 import { hasData } from '../services/general.mjs'
-import { safestrTrim } from '../services/string-helper.mjs'
+import { safestrTrim } from '../services/primitives/string-helper.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac'
 export type IdeasTabNames =

@@ -10,7 +10,7 @@ import {
   mockLoggerSilly,
   mockLoggerWarn,
 } from '../jest.setup.mjs'
-import { safestr } from './string-helper.mjs'
+import { safestr } from './primitives/string-helper.mjs'
 import { writeFileSync } from 'node:fs'
 
 const sflp = await import('./SingleLineFileProcessor.mjs'),

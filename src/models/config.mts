@@ -6,7 +6,7 @@ import { IIdVal } from '../models/id-val.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 import { IName } from './interfaces.mjs'
 import { INameVal } from './NameValManager.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../services/primitives/object-helper.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>
   extends IIdVal<Tid, Tval>,

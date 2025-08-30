@@ -3,8 +3,8 @@ import { jest } from '@jest/globals'
 import { LogManagerOptions } from './LogManager.mjs'
 jest.unstable_unmockModule('./LogManager.mjs')
 // eslint-disable-next-line sort-imports
-import { DateHelper } from './DateHelper.mjs'
-import { ObjectTypesToString } from './object-helper.mjs'
+import { DateHelper } from './primitives/date-helper.mjs'
+import { ObjectTypesToString } from './primitives/object-helper.mjs'
 import winston from 'winston'
 const { LogManager } = await import('./LogManager.mjs')
 

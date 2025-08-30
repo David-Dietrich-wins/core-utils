@@ -1,4 +1,4 @@
-import { safestr, safestrTrim, stringIf } from './string-helper.mjs'
+import { safestr, safestrTrim, stringIf } from './primitives/string-helper.mjs'
 import { hasData } from './general.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class

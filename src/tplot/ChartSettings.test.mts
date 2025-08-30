@@ -3,7 +3,7 @@ import {
   ChartSettings,
   IChartSettings,
 } from './ChartSettings.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
+import { DateHelper } from '../services/primitives/date-helper.mjs'
 
 test('ChartPlotReturn', () => {
   const result = new ChartPlotReturn()

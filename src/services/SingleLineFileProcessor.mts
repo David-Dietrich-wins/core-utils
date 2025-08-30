@@ -3,7 +3,7 @@ import { LogManager } from './LogManager.mjs'
 import { existsSync } from 'node:fs'
 import { hasData } from './general.mjs'
 import { open } from 'node:fs/promises'
-import { safestrTrim } from './string-helper.mjs'
+import { safestrTrim } from './primitives/string-helper.mjs'
 
 export type SingleLineFileProcessorConfig<T = unknown> = {
   fileName: string

@@ -1,10 +1,10 @@
 import * as fs from 'node:fs'
 import { FileHandle, open } from 'node:fs/promises'
-import { isArray, safeArray } from './array-helper.mjs'
+import { isArray, safeArray } from './primitives/array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
-import { isObject } from './object-helper.mjs'
-import { safestr } from './string-helper.mjs'
+import { isObject } from './primitives/object-helper.mjs'
+import { safestr } from './primitives/string-helper.mjs'
 
 export class FileHelper {
   filename: string = ''

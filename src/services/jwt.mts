@@ -1,5 +1,5 @@
 import * as z from 'zod/v4'
-import { isString, safestr } from './string-helper.mjs'
+import { isString, safestr } from './primitives/string-helper.mjs'
 import jsonWebToken, {
   DecodeOptions,
   JwtHeader,
@@ -8,12 +8,11 @@ import jsonWebToken, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'
-import { isFunction, newGuid } from './general.mjs'
-import { safeArray } from './array-helper.mjs'
+import { isFunction } from './primitives/function-helper.mjs'
+import { safeArray } from './primitives/array-helper.mjs'
 
 export const WebRoleKeys = {
   ADMIN: 'admin',
@@ -184,26 +183,22 @@ export function JwtDecodeDigi(token: string, enforceUserId = true) {
 
 // Info source: https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/tokens
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export function JwtDecode<T extends IJwtBase>(
-  token?: string,
+/**
+ * Synchronously sign the given payload into a JSON Web Token string
+ * payload - Payload to sign, could be an literal, buffer or string
+ * secretOrPrivateKey - Either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA.
+ * [options] - Options for the signature
+ * returns - The JSON Web Token string
+ */
+export function JwtDecode<TInterface extends IJwtBase>(
+  token: string,
   options?: DecodeOptions
 ) {
-  const decoded = jsonWebToken.decode(
-    HttpHeaderManagerBase.BearerTokenParse(token),
-    options
-  )
-  if (!decoded || isString(decoded)) {
-    throw new AppException(
-      'Invalid security token when attempting to decode the JWT.',
-      'JwtDecode'
-    )
-  }
+  const jwtToken = jsonWebToken.decode(token, options)
 
-  return decoded as T
+  return jwtToken as TInterface
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function JwtCreate<TInterface extends IJwtBase, T extends JwtBase>(
   type: IConstructor<T>,
   token: string | TInterface,
@@ -350,7 +345,7 @@ export function GenerateJwt(
   const header: JwtHeader = {
     alg: 'RS256',
     // expiresIn: '1h',
-    kid: newGuid(),
+    kid: 'key-1',
     // typ: 'JWT',
   }
 

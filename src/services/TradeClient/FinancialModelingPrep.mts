@@ -3,14 +3,14 @@ import {
   NumberHelper,
   getAsNumber,
   getAsNumberOrUndefined,
-} from '../number-helper.mjs'
+} from '../primitives/number-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import { ChartSettings } from '../../tplot/ChartSettings.mjs'
-import { DateHelper } from '../DateHelper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
 import type { ISymbol } from '../../models/ticker-info.mjs'
 import { TradingClientBase } from './TradingClientBase.mjs'
-import { isArray } from '../array-helper.mjs'
-import { safestr } from '../string-helper.mjs'
+import { isArray } from '../primitives/array-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
 const MIN_CHART_INTERVALS = 1000
 
@@ -26,7 +26,8 @@ export class FinancialModelingPrep extends TradingClientBase {
       fmpNew = { ...fmp },
       regex = /(?<temp2>\d+)|(?<temp1>[A-Z]+)/giu,
       regexMatches = safestr(timeframe).match(regex)
-    if (isArray(regexMatches, 2) && regexMatches[0] !== timeframe) {
+
+    if (isArray(regexMatches?.entries(), 2) && regexMatches[0] !== timeframe) {
       const [units, unit] = regexMatches
       if (from) {
         fmpNew.from = Number(
