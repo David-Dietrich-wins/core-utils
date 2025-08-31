@@ -1,4 +1,8 @@
-import { ColorHelper, type ColorRange } from '../services/color-helper.mjs'
+import {
+  type ColorRange,
+  colorInterpolateRange,
+  colorInterpolateWeightedRange,
+} from '../services/color-helper.mjs'
 import type { ICity, IdNameSlugWithScales } from './city.mjs'
 import {
   IHasPolitiscales,
@@ -86,11 +90,7 @@ export abstract class PolitiscaleHelper {
     PolitiscaleSetting
   ] = [
     {
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeLeft,
-        90,
-        100
-      ),
+      colorRange: colorInterpolateWeightedRange(ColorRangeLeft, 90, 100),
       heading: 'Climate Rating',
       name: CONST_ScaleNameClimate,
       rating: {
@@ -109,11 +109,7 @@ export abstract class PolitiscaleHelper {
       },
     },
     {
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeRight,
-        40,
-        60
-      ),
+      colorRange: colorInterpolateWeightedRange(ColorRangeRight, 40, 60),
       heading: 'Free Speech',
       name: CONST_ScaleNameFreeSpeech,
       rating: {
@@ -132,11 +128,7 @@ export abstract class PolitiscaleHelper {
       },
     },
     {
-      colorRange: ColorHelper.InterpolateWeightedColorRange(
-        ColorRangeRight,
-        90,
-        100
-      ),
+      colorRange: colorInterpolateWeightedRange(ColorRangeRight, 90, 100),
       heading: 'Religious Freedom',
       name: CONST_ScaleNameReligion,
       rating: {
@@ -368,7 +360,7 @@ export abstract class PolitiscaleHelper {
   }
 
   static PolitiscaleColor(name: PolitiscaleName, rating: number) {
-    return ColorHelper.InterpolateColorRange(
+    return colorInterpolateRange(
       PolitiscaleHelper.PolitiscaleColorRange(name),
       rating
     )
@@ -381,10 +373,7 @@ export abstract class PolitiscaleHelper {
     const status = PolitiscaleHelper.UserRatingOverall(scales, userScales)
 
     if (status.left.active && status.left.value) {
-      return ColorHelper.InterpolateColorRange(
-        ColorRangeLeft,
-        status.left.value
-      )
+      return colorInterpolateRange(ColorRangeLeft, status.left.value)
     }
 
     return colorIfEmpty
