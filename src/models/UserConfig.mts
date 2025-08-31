@@ -4,7 +4,7 @@ import {
 } from './UserCreatedUpdatedTable.mjs'
 import { IKeyValueShort } from './key-val.mjs'
 import { INameVal } from './NameValManager.mjs'
-import { hasData } from '../services/general.mjs'
+import { hasData } from '../services/primitives/object-helper.mjs'
 import { safestr } from '../services/primitives/string-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

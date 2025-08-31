@@ -8,7 +8,7 @@ import {
   updateContextValueToggleBoolean,
 } from '../services/ContextManager.mjs'
 import { deepCloneJson } from '../services/primitives/object-helper.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 
 export interface IConfigWebsite extends IContext {
   openFirstPlot: IContextValue<boolean>

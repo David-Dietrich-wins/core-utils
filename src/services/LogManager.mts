@@ -2,11 +2,10 @@
 import DailyRotateFile, {
   DailyRotateFileTransportOptions,
 } from 'winston-daily-rotate-file'
+import { ObjectTypesToString, hasData } from './primitives/object-helper.mjs'
 import winston, { Logger, format, transport, transports } from 'winston'
 import { AppException } from '../models/AppException.mjs'
 import { DateHelper } from './primitives/date-helper.mjs'
-import { ObjectTypesToString } from './primitives/object-helper.mjs'
-import { hasData } from './general.mjs'
 import { safestrTrim } from './primitives/string-helper.mjs'
 
 const DEFAULT_RotateDatePattern = 'YYYY-MM-DD-HH',

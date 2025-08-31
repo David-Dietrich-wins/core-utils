@@ -1,5 +1,5 @@
 import { safestr, safestrTrim, stringIf } from './primitives/string-helper.mjs'
-import { hasData } from './general.mjs'
+import { hasData } from './primitives/object-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class RedirectHelper {

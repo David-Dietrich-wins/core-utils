@@ -8,7 +8,7 @@ import {
   updateContext,
   updateContextUi,
 } from '../services/ContextManager.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 
 export interface IConfigCharts extends IContext {
   down: IContextUI

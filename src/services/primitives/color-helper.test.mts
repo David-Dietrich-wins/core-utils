@@ -3,6 +3,7 @@ import {
   colorFromValueChange,
   colorInterpolateRange,
   colorInterpolateWeightedRange,
+  toHex,
 } from './color-helper.mjs'
 
 test('GetColorFromChange', () => {
@@ -113,4 +114,31 @@ test('InterpolateWeightedColorRange', () => {
     colorInterpolateRange(colorRange, startWeight),
     colorInterpolateRange(colorRange, endWeight),
   ])
+})
+
+describe(toHex.name, () => {
+  test('0 should be 00', () => {
+    const ret = toHex(0)
+
+    expect(ret).toBe('00')
+  })
+
+  test('10 should a', () => {
+    const ret = toHex(10)
+
+    expect(ret).toBe('0A')
+  })
+
+  test('10 should a', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+    const ret = toHex(10, null as any)
+
+    expect(ret).toBe('0A')
+  })
+
+  test('10 should a 4 chars', () => {
+    const ret = toHex(10, 4)
+
+    expect(ret).toBe('000A')
+  })
 })

@@ -8,7 +8,7 @@ import {
   updateContext,
   updateContextValueToggleBoolean,
 } from '../services/ContextManager.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 
 export interface IConfigOperations extends IContext {
   minusEightPlus10: IContextValue<boolean>

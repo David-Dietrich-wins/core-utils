@@ -1,7 +1,7 @@
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 import { LogManager } from './LogManager.mjs'
 import { existsSync } from 'node:fs'
-import { hasData } from './general.mjs'
+import { hasData } from './primitives/object-helper.mjs'
 import { open } from 'node:fs/promises'
 import { safestrTrim } from './primitives/string-helper.mjs'
 

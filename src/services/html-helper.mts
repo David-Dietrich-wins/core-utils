@@ -1,7 +1,13 @@
 import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
-import { ToSafeArray2d, isArray } from './primitives/array-helper.mjs'
+import {
+  ToSafeArray2d,
+  isArray,
+  safeArray,
+} from './primitives/array-helper.mjs'
+import { hasData, isNullOrUndefined } from './primitives/object-helper.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderNamesAllowedKeys } from './HttpHeaderManager.mjs'
-import { hasData } from './general.mjs'
+import { isNumber } from './primitives/number-helper.mjs'
 import { safestr } from './primitives/string-helper.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
@@ -68,4 +74,66 @@ export abstract class HtmlHelper {
 
     return h
   }
+}
+
+/**
+ * Joins two strings to make a full URL. This method guards against trailing and leading /'s and always well forms the URL.
+ * If a trailing / is desired, urlJoin checks to ensure there is not already trailing / and variables have not already been added to the URL.
+ * @param baseUrl The URL base path to start the joining by /.
+ * @param relativePath The URL's relative path to be joined.
+ * @param addTrailingSlash Set to true to append a trailing / if this is a pure URL without variables.
+ * @returns A safely constructed URL joined with a /.
+ */
+export function urlJoin(
+  baseUrl?: string | null,
+  relativePath?: ArrayOrSingle<string | number | null | undefined> | null,
+  addTrailingSlash = true
+) {
+  let pathname = safeArray(relativePath)
+      .map((x) => {
+        if (isNullOrUndefined(x)) {
+          throw new AppException(
+            'urlJoin() relativePath cannot contain null or undefined values.',
+            'urlJoin',
+            safeArray(relativePath)
+          )
+        }
+
+        return isNumber(x) ? x.toString() : x
+      })
+      .join('/'),
+    url = safestr(baseUrl)
+
+  // Remove any trailing slashes before adding a trailing slash.
+  while (url.endsWith('/')) {
+    url = url.slice(0, -1)
+  }
+
+  // Strip front and end slashes, if any.
+  while (pathname.startsWith('/')) {
+    pathname = pathname.slice(1)
+  }
+  while (pathname.endsWith('/')) {
+    pathname = pathname.slice(0, -1)
+  }
+
+  if (pathname.length) {
+    url += `/${pathname}`
+  }
+
+  let trailingSlash = addTrailingSlash
+  if (
+    url.includes('?') ||
+    url.includes('&') ||
+    url.includes('#') ||
+    url.includes('=')
+  ) {
+    trailingSlash = false
+  }
+
+  if (trailingSlash && !url.endsWith('/')) {
+    url += '/'
+  }
+
+  return url
 }

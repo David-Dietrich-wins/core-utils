@@ -1,6 +1,9 @@
 import * as z from 'zod/v4'
 import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
-import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import {
+  hasData,
+  isNullOrUndefined,
+} from '../services/primitives/object-helper.mjs'
 import { safeArray } from '../services/primitives/array-helper.mjs'
 
 /*Export interface IPagedResponse<T> {

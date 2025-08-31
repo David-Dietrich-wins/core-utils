@@ -11,16 +11,14 @@ import {
   PriceInDollars,
   getAsNumber,
   getNumberFormatted,
-} from '../services/primitives/number-helper.mjs'
-import {
   getPercentChangeString,
-  isNullOrUndefined,
-  newGuid,
-} from '../services/general.mjs'
+} from '../services/primitives/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
+import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 import { safeArray } from '../services/primitives/array-helper.mjs'
 
 export interface ITradePlot

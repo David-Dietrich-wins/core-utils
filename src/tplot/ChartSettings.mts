@@ -11,7 +11,7 @@ import { IFacet } from './Facet.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
 import { arrayFindByIds } from '../services/primitives/array-helper.mjs'
-import { hasData } from '../services/general.mjs'
+import { hasData } from '../services/primitives/object-helper.mjs'
 
 export const ChartTimeFrameOptions: (IIdName & {
   fmpTimeFrame: string

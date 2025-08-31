@@ -5,7 +5,7 @@ import {
 import type { IContext } from '../services/ContextManager.mjs'
 import { IDashboardScreenSetting } from './DashboardScreenSetting.mjs'
 import { TileTypeKeys } from './TileConfig.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 import { safeArray } from '../services/primitives/array-helper.mjs'
 
 export interface IDashboardSetting extends IContext {

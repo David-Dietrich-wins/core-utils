@@ -9,7 +9,7 @@ import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
 import { getBoolean } from '../services/primitives/boolean-helper.mjs'
-import { isNullOrUndefined } from '../services/general.mjs'
+import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
 
 export const CONST_NOT_IMPLEMENTED = 'Not implemented',
   REGEX_ElapsedTime = /^(?<temp1>\d+ seconds|1 second|\d+m?s)/u,

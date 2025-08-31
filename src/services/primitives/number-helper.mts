@@ -1,7 +1,10 @@
 import { StringHelper, isString, safestr, stringIf } from './string-helper.mjs'
-import { hasData, isNullOrUndefined } from '../general.mjs'
+import {
+  hasData,
+  isNullOrUndefined,
+  runOnAllMembers,
+} from './object-helper.mjs'
 import { isArray } from './array-helper.mjs'
-import { runOnAllMembers } from './object-helper.mjs'
 
 /**
  * Tests an object to determine if it is a number.
@@ -553,4 +556,52 @@ export function elementTopLeftCoords(element: any): {
     left,
     top,
   }
+}
+
+/**
+ * Gets the percentage change from two numbers.
+ * Can be negative if there is a drop from the previous to the current number.
+ * @param prev The previous number.
+ * @param cur The new current number.
+ * @returns The percentage number from -100 to 100.
+ */
+export function getPercentChange(prev: number, cur: number) {
+  let percent = 0
+  if (cur) {
+    if (prev) {
+      percent = ((cur - prev) * 100) / prev
+    } else {
+      percent = cur * 100
+    }
+  } else if (prev) {
+    percent = -(prev * 100)
+  }
+
+  return percent
+}
+
+/**
+ * Gets the percentage change from two numbers as a string with the % sign appended if desired.
+ * Can be negative if there is a drop from the previous to the current number.
+ * @param prev The previous number.
+ * @param cur The new current number.
+ * @param showPercent Set to true if you want the % sign appended.
+ * @param decimalPlaces The number of decimal places to show. Defaults to 2.
+ * @returns The percentage number from -100 to 100.
+ */
+export function getPercentChangeString(
+  prev: number,
+  cur: number,
+  showPercent = true,
+  decimalPlaces = 2
+) {
+  const percent = getPercentChange(prev, cur)
+
+  // Return Math.floor(percent)
+  let ret = percent.toFixed(decimalPlaces < 0 ? 0 : decimalPlaces)
+  if (showPercent) {
+    ret += '%'
+  }
+
+  return (percent > 0 ? '+' : '') + ret
 }

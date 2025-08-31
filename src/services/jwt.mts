@@ -13,7 +13,7 @@ import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { isFunction } from './primitives/function-helper.mjs'
-import { newGuid } from './general.mjs'
+import { newGuid } from './primitives/uuid-helper.mjs'
 import { safeArray } from './primitives/array-helper.mjs'
 
 export const CONST_JwtErrorDecode =

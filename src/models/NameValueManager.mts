@@ -1,5 +1,8 @@
 import { INameTypeValue, INameValue } from './interfaces.mjs'
-import { isNullOrUndefined, sortFunction } from '../services/general.mjs'
+import {
+  isNullOrUndefined,
+  sortFunction,
+} from '../services/primitives/object-helper.mjs'
 import {
   safestr,
   safestrLowercase,

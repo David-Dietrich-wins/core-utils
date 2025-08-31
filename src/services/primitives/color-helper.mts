@@ -1,5 +1,6 @@
-import { DownUpOrEqual } from './primitives/number-helper.mjs'
-import { safeArray } from './primitives/array-helper.mjs'
+import { DownUpOrEqual } from './number-helper.mjs'
+import { isNullOrUndefined } from './object-helper.mjs'
+import { safeArray } from './array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
 
@@ -79,4 +80,19 @@ export function colorInterpolateWeightedRange(
   ]
 
   return range
+}
+
+/**
+ * Takes a number and converts to its uppercase hexadecimal string value.
+ * @param decimal The number to convert to hexadecimal.
+ * @param chars Number of chars to pad for leading zeros.
+ * @returns
+ */
+export function toHex(decimal?: number, chars = 2) {
+  if (isNullOrUndefined(chars)) {
+    // eslint-disable-next-line no-param-reassign
+    chars = 2
+  }
+
+  return ((decimal || 0) + 16 ** chars).toString(16).slice(-chars).toUpperCase()
 }

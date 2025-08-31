@@ -20,6 +20,8 @@ import {
   getMantissa,
   getNumberFormatted,
   getNumberString,
+  getPercentChange,
+  getPercentChangeString,
   isNumber,
   isNumeric,
   toFixedPrefixed,
@@ -528,4 +530,21 @@ test(DivideByNumbers.name, () => {
     objRet = DivideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
+})
+
+test(getPercentChange.name, () => {
+  expect(getPercentChange(0, 0)).toBe(0)
+  expect(getPercentChange(0, 50)).toBe(5000)
+  expect(getPercentChange(50, 0)).toBe(-5000)
+  expect(getPercentChange(100, 200)).toBe(100)
+  expect(getPercentChange(200, 100)).toBe(-50)
+})
+
+test(getPercentChangeString.name, () => {
+  expect(getPercentChangeString(0, 0)).toBe('0.00%')
+  expect(getPercentChangeString(100, 200)).toBe('+100.00%')
+  expect(getPercentChangeString(100, 200, false, -1)).toBe('+100')
+  expect(getPercentChangeString(100, 200, false, 0)).toBe('+100')
+  expect(getPercentChangeString(100, 200, true, 0)).toBe('+100%')
+  expect(getPercentChangeString(100, 200, true, 2)).toBe('+100.00%')
 })

@@ -10,7 +10,7 @@ import {
   safestrTrim,
   safestrUppercase,
 } from './string-helper.mjs'
-import { hasData, isNullOrUndefined } from '../general.mjs'
+import { hasData, isNullOrUndefined } from './object-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import type { IId } from '../../models/IdManager.mjs'
 import { IIdName } from '../../models/id-name.mjs'

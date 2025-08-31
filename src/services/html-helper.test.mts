@@ -1,5 +1,5 @@
+import { HtmlHelper, urlJoin } from './html-helper.mjs'
 import type { ArrayOrSingle } from '../models/types.mjs'
-import { HtmlHelper } from './html-helper.mjs'
 
 test('ParamsEncoder', () => {
   expect(HtmlHelper.ParamsEncoder()).toBe('')
@@ -59,4 +59,93 @@ test('GetHttpHeaders', () => {
   expect(headers.get('Content-Type')).toBe('application/json')
   expect(headers.get('Authorization')).toBe('Bearer my-token')
   expect(headers.get('x-test-header')).toBe(null)
+})
+
+describe(urlJoin.name, () => {
+  const baseUrl = 'https://localhost:3000'
+
+  test('Slash relative path', () => {
+    const path = '/',
+      url = urlJoin(baseUrl, path)
+
+    expect(url).not.toBe(`${baseUrl}//`)
+    expect(url).not.toBe(baseUrl)
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Extra slashes relative path', () => {
+    const path = '/',
+      url = urlJoin(`${baseUrl}/`, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Many slashes relative path', () => {
+    const path = '/',
+      url = urlJoin(`${baseUrl}///`, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Undefined relative path', () => {
+    const path = undefined,
+      url = urlJoin(baseUrl, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('No relative path', () => {
+    const path = undefined,
+      url = urlJoin(baseUrl, path, false)
+
+    expect(url).toBe(baseUrl)
+  })
+
+  test('No trailing slash', () => {
+    expect(urlJoin(baseUrl, '?x=1', true)).toBe(`${baseUrl}/?x=1`)
+    expect(urlJoin(baseUrl, '?x=1&y=2', true)).toBe(`${baseUrl}/?x=1&y=2`)
+    expect(urlJoin(baseUrl, '?x=1&y=2#link', true)).toBe(
+      `${baseUrl}/?x=1&y=2#link`
+    )
+  })
+
+  test('number', () => {
+    expect(urlJoin(baseUrl, 5, true)).toBe(`${baseUrl}/5/`)
+  })
+
+  test('exception', () => {
+    expect(() => urlJoin(baseUrl, [undefined], true)).toThrow()
+  })
+
+  test('add trailing slash', () => {
+    const addTrailingSlash = true,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe(`https://localhost:3000/test/`)
+  })
+
+  test('no trailing slash', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
+
+  test('URL end in /', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
+
+  test('relative path and url end in /', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test/',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
 })

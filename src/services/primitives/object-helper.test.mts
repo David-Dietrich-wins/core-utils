@@ -18,6 +18,7 @@ import {
   deepDiffMapper,
   getBody,
   getObjectValue,
+  hasData,
   isEmptyObject,
   isObject,
   objectCloneAlphabetizingKeys,
@@ -31,6 +32,7 @@ import {
   safeJsonToString,
   safeObject,
   searchObjectForArray,
+  sortFunction,
 } from './object-helper.mjs'
 import { CONST_ListMustBeAnArray, type IId } from '../../models/IdManager.mjs'
 import { AppException } from '../../models/AppException.mjs'
@@ -369,6 +371,75 @@ test(isObject.name, () => {
 test(isEmptyObject.name, () => {
   expect(isEmptyObject({})).toBe(true)
   expect(isEmptyObject({ a: 'a' })).toBe(false)
+})
+
+test('hasData', () => {
+  expect(hasData(undefined)).toBe(false)
+  expect(hasData(null)).toBe(false)
+  expect(hasData('')).toBe(false)
+  expect(hasData('a')).toBe(true)
+  expect(hasData('a', 0)).toBe(false)
+  expect(hasData([])).toBe(false)
+  expect(hasData([], 0)).toBe(false)
+  expect(hasData([], -1)).toBe(false)
+  // Must be greater than 0
+  expect(hasData([1], -1)).toBe(false)
+  expect(hasData({})).toBe(false)
+  expect(hasData({}, undefined)).toBe(false)
+  expect(hasData({}, null as unknown as number)).toBe(false)
+  expect(hasData({ a: -1 }, -1)).toBe(false)
+  expect(hasData({ a: -1 }, 0)).toBe(false)
+  expect(hasData({ a: -1 }, 1)).toBe(true)
+  expect(hasData({ a: -1 }, 2)).toBe(false)
+  expect(hasData(0)).toBe(false)
+  expect(hasData(-1)).toBe(false)
+  expect(hasData(-10, -20)).toBe(true)
+  expect(hasData(1)).toBe(true)
+
+  expect(hasData(['a'], -1)).toBe(false)
+  expect(hasData(['a'], 0)).toBe(false)
+  expect(hasData(['a'], 1)).toBe(true)
+  expect(hasData(['a'], 2)).toBe(false)
+
+  const myfunc = () => ['a'],
+    sym = Symbol('test'),
+    symbol1 = Symbol('description'),
+    // eslint-disable-next-line symbol-description
+    symbolUnique: unique symbol = Symbol()
+
+  expect(hasData(myfunc, 1)).toBe(true)
+  expect(hasData(myfunc, 2)).toBe(false)
+
+  expect(hasData(23456, 23457)).toBe(false)
+  expect(
+    hasData(() => {
+      throw new AppException('test error')
+    }, 1)
+  ).toBe(false)
+
+  expect(hasData(new Date(), 0)).toBe(true)
+  expect(hasData(new Date(), 1)).toBe(true)
+  expect(hasData(new Date(), -1)).toBe(true)
+
+  expect(hasData(sym, 0)).toBe(false)
+  expect(hasData(sym, 1)).toBe(true)
+  expect(hasData(sym, 2)).toBe(false)
+  expect(hasData(symbol1)).toBe(true)
+  // Symbols do not contain values for JSON serialization
+  expect(hasData({ [symbol1]: 'abc' })).toBe(false)
+  expect(hasData({ symbol1: 'abc' })).toBe(true)
+  expect(hasData([symbol1])).toBe(true)
+  // Symbols do not contain values for JSON serialization
+  expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true)
+  // Symbols do not contain values for JSON serialization
+  expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(false)
+
+  expect(hasData(symbolUnique)).toBe(true)
+  expect(hasData([symbolUnique])).toBe(true)
+  expect(hasData(Symbol('test'))).toBe(true)
+  expect(hasData([Symbol('test')])).toBe(true)
+  expect(hasData({ [symbolUnique]: 'abc' })).toBe(false)
+  expect(hasData({ symbolUnique: 'abc' })).toBe(true)
 })
 
 test(searchObjectForArray.name, () => {
@@ -1439,3 +1510,89 @@ test(getBody.name, () => {
 //     expect(removeFields(new Date(), props)).toBeInstanceOf(Date)
 //   })
 // })
+
+describe(sortFunction.name, () => {
+  test('number', () => {
+    const a = 0,
+      b = 1
+
+    expect(sortFunction(a, b)).toEqual(-1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(1)
+
+    expect(sortFunction(a, b, false)).toEqual(1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(-1)
+  })
+
+  test('string', () => {
+    const a = 'a',
+      b = 'b'
+
+    expect(sortFunction(a, b)).toEqual(-1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(1)
+
+    expect(sortFunction(a, b, 'asc')).toEqual(-1)
+    expect(sortFunction(a, a, 'asc')).toEqual(0)
+    expect(sortFunction(b, a, 'asc')).toEqual(1)
+
+    expect(sortFunction(a, b, false)).toEqual(1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(-1)
+
+    expect(sortFunction(a, b, 'desc')).toEqual(1)
+    expect(sortFunction(a, a, 'desc')).toEqual(0)
+    expect(sortFunction(b, a, 'desc')).toEqual(-1)
+  })
+
+  test('empty', () => {
+    let a: string | undefined = 'a',
+      // eslint-disable-next-line prefer-const
+      b: string | undefined
+
+    expect(sortFunction(a, b)).toEqual(-1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(1)
+
+    expect(sortFunction(a, b, false)).toEqual(-1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(1)
+
+    a = undefined
+    b = 'b'
+    expect(sortFunction(a, b)).toEqual(1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(-1)
+
+    expect(sortFunction(a, b, false)).toEqual(1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(-1)
+  })
+
+  test('date', () => {
+    const a = new Date(),
+      b = new Date(a.getTime() + 1000)
+
+    expect(sortFunction(a, b)).toEqual(-1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(1)
+
+    expect(sortFunction(a, b, false)).toEqual(1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(-1)
+  })
+
+  test('array', () => {
+    const a = ['a', 'b'],
+      b = ['a', 'c']
+
+    expect(sortFunction(a, b)).toEqual(-1)
+    expect(sortFunction(a, a)).toEqual(0)
+    expect(sortFunction(b, a)).toEqual(1)
+
+    expect(sortFunction(a, b, false)).toEqual(1)
+    expect(sortFunction(a, a, false)).toEqual(0)
+    expect(sortFunction(b, a, false)).toEqual(-1)
+  })
+})

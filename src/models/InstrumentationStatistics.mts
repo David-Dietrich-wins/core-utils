@@ -8,7 +8,11 @@ import {
   isArray,
   safeArray,
 } from '../services/primitives/array-helper.mjs'
-import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import {
+  hasData,
+  isNullOrUndefined,
+  isObject,
+} from '../services/primitives/object-helper.mjs'
 import {
   isString,
   pluralSuffix,
@@ -19,7 +23,6 @@ import {
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../services/primitives/date-helper.mjs'
 import { NumberToString } from '../services/primitives/number-helper.mjs'
-import { isObject } from '../services/primitives/object-helper.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0

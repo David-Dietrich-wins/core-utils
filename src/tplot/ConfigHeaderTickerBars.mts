@@ -12,7 +12,7 @@ import {
 import { deepCloneJson } from '../services/primitives/object-helper.mjs'
 import { getBoolean } from '../services/primitives/boolean-helper.mjs'
 import { isFunction } from '../services/primitives/function-helper.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 
 type FuncContextTickers<T> = T | ((asset: IContextTickers) => T)
 

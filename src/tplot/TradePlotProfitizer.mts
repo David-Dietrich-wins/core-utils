@@ -2,14 +2,12 @@ import { ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
   NumberWithDecimalPlaces,
   PriceInDollars,
-} from '../services/primitives/number-helper.mjs'
-import {
   getPercentChange,
   getPercentChangeString,
-  isNullOrUndefined,
-} from '../services/general.mjs'
+} from '../services/primitives/number-helper.mjs'
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
+import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
 import { safeArray } from '../services/primitives/array-helper.mjs'
 import { safestrLowercase } from '../services/primitives/string-helper.mjs'
 

@@ -1,10 +1,13 @@
 import { ICreatedBy, IUpdatedBy } from './id-created-updated.mjs'
-import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import {
+  hasData,
+  isNullOrUndefined,
+  isObject,
+} from '../services/primitives/object-helper.mjs'
 import { AnyObject } from './types.mjs'
 import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'
 import { IUserId } from './interfaces.mjs'
-import { isObject } from '../services/primitives/object-helper.mjs'
 
 export interface ICreatedTable<Tid = string> extends IId<Tid>, ICreatedBy {}
 export interface ICreatedUpdatedTable<Tid = string>

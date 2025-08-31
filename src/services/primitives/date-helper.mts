@@ -14,7 +14,7 @@ import {
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
 import { AppException } from '../../models/AppException.mjs'
 import type { FromTo } from '../../models/types.mjs'
-import { isNullOrUndefined } from '../general.mjs'
+import { isNullOrUndefined } from './object-helper.mjs'
 
 export const MILLIS_PER_DAY = 86400000,
   MILLIS_PER_HOUR = 3600000,

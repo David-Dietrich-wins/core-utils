@@ -11,7 +11,7 @@ import { DateHelper } from '../services/primitives/date-helper.mjs'
 import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { isObject } from '../services/primitives/object-helper.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 import { zDateTime } from '../services/zod-helper.mjs'
 
 export interface ISubplot extends IIdRequired {

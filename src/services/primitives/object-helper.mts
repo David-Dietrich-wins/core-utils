@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { DateHelper, isDateObject } from './date-helper.mjs'
-import { type IConstructor, StringOrStringArray } from '../../models/types.mjs'
+import {
+  type IConstructor,
+  type SortOrder,
+  SortOrderAsBoolean,
+  StringOrStringArray,
+} from '../../models/types.mjs'
 import {
   arrayElement,
   arrayFirst,
   isArray,
   safeArray,
 } from './array-helper.mjs'
-import { hasData, isNullOrUndefined } from '../general.mjs'
 import {
   isString,
   safestr,
@@ -18,11 +22,133 @@ import { AppException } from '../../models/AppException.mjs'
 import type { IId } from '../../models/IdManager.mjs'
 import { isFunction } from './function-helper.mjs'
 import { isNumber } from './number-helper.mjs'
+import { isSymbol } from './symbol-helper.mjs'
 import util from 'util'
 
 export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret']
 
 const CONST_JsonDepth = 5
+
+/**
+ * Tests if a variable is null or undefined.
+ * @param obj Any variable to test if it is null or undefined.
+ * @returns True if the object passed in is null or undefined.
+ */
+export function isNullOrUndefined(obj: unknown): obj is undefined | null {
+  return typeof obj === 'undefined' || obj === null
+}
+
+/**
+ * Checks if the variable passed in is a JavaScript object that is not an array.
+ * Optionally can test for a minimum number of member objects, or if a member of the object is a named by the minLengthOrContainsField parameter.
+ * @param obj The object to test if it is indeed a JavaScript object.
+ * @param minLengthOrContainsField The minimum number of items that must be in the object. Or if a string, the object must contain a member named the string provided.
+ * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
+ */
+export function isObject(
+  obj: unknown,
+  minLengthOrContainsField: number | string = 0
+): obj is object {
+  const isok = obj && 'object' === typeof obj && !isArray(obj)
+  if (!isok) {
+    return false
+  }
+
+  if (isNumber(minLengthOrContainsField)) {
+    if (minLengthOrContainsField <= 0) {
+      return true
+    }
+
+    return safeArray(Object.keys(obj)).length >= minLengthOrContainsField
+  }
+
+  if (isString(minLengthOrContainsField)) {
+    return safeArray(Object.keys(obj)).includes(minLengthOrContainsField)
+  }
+
+  return true
+}
+
+/**
+ * Checks any object, string or array if it has any data.
+ * The minlength is for requiring more items to be in the object, string or array.
+ * You can pass in a function that must return an object, string or array to be tested as well.
+ * @param o Any object, string or array. If it is a function, the function will be called to get the object, string or array before testing.
+ * @param minlength The required minimum length to consider to have data. If not supplied, defaults to 1.
+ * @returns True if the object meets the minimum length requirements.
+ */
+export function hasData(o: unknown, minlength = 1): boolean {
+  // Console.log('minlength: ' + minlength + ', o: ' + o)
+  try {
+    if (!o) {
+      return false
+    }
+
+    if (isNullOrUndefined(minlength)) {
+      throw new AppException('Minimum length cannot be null or undefined.')
+    }
+
+    if (isFunction(o)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      return hasData(o(), minlength)
+    }
+
+    if (isString(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for string comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
+      return o.length >= minlength
+    }
+
+    if (isArray(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for array comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
+      return o.length >= minlength
+    }
+
+    // Primitives cannot have more than 1 by definition of not being an array or object.
+    if (!isObject(o)) {
+      if (isSymbol(o)) {
+        return minlength === 1
+      }
+
+      if (isNumber(o)) {
+        return o >= minlength
+      }
+
+      return Boolean(o)
+    }
+
+    if (isDateObject(o)) {
+      return o.getTime() >= minlength
+    }
+
+    if (minlength < 1) {
+      throw new AppException(
+        'Minimum length for object comparisons must be greater than 0.',
+        'hasData',
+        o
+      )
+    }
+
+    return isArray(Object.keys(o), minlength)
+  } catch (ex) {
+    console.error(hasData.name, ex)
+  }
+
+  return false
+}
 
 /**
  * Searches an object's keys for a specific key and returns the value
@@ -120,37 +246,6 @@ export function BuildLogFriendlyMessage({
     .join(' ')
 
   return `${DateHelper.FormatDateTimeWithMillis()}: [${componentName}] [${level}] ${msg}`
-}
-
-/**
- * Checks if the variable passed in is a JavaScript object that is not an array.
- * Optionally can test for a minimum number of member objects, or if a member of the object is a named by the minLengthOrContainsField parameter.
- * @param obj The object to test if it is indeed a JavaScript object.
- * @param minLengthOrContainsField The minimum number of items that must be in the object. Or if a string, the object must contain a member named the string provided.
- * @returns True if the obj variable is a JavaScript object, and meets an optional minimum length or contains a member with the given name.
- */
-export function isObject(
-  obj: unknown,
-  minLengthOrContainsField: number | string = 0
-): obj is object {
-  const isok = obj && 'object' === typeof obj && !isArray(obj)
-  if (!isok) {
-    return false
-  }
-
-  if (isNumber(minLengthOrContainsField)) {
-    if (minLengthOrContainsField <= 0) {
-      return true
-    }
-
-    return safeArray(Object.keys(obj)).length >= minLengthOrContainsField
-  }
-
-  if (isString(minLengthOrContainsField)) {
-    return safeArray(Object.keys(obj)).includes(minLengthOrContainsField)
-  }
-
-  return true
 }
 
 export function isEmptyObject(obj: unknown) {
@@ -746,4 +841,50 @@ export function removeFields<T = unknown>(
   }
 
   return obj
+}
+
+/**
+ * Compares two objects and returns a value for use in the JavaScript sort() method.
+ * @param a The first object to compare with.
+ * @param b The second object to compare with.
+ * @param isAsc True if you want to sort ascending.
+ * @param compareStringsLowercase True if you want to do a lowercase compare on strings.
+ * @returns -1, 0 or 1 depending on the sort direction.
+ */
+export function sortFunction(
+  a: unknown,
+  b: unknown,
+  sortOrder: SortOrder = true,
+  compareStringsLowercase = true
+) {
+  const aEmpty = isNullOrUndefined(a),
+    bEmpty = isNullOrUndefined(b),
+    isAsc = SortOrderAsBoolean(sortOrder)
+
+  if (aEmpty && bEmpty) {
+    return 0
+  }
+  // Null and undefined sort after anything else
+  else if (aEmpty) {
+    return 1
+  } else if (bEmpty) {
+    return -1
+  }
+  // Equal items sort equally
+  else if (a === b) {
+    return 0
+  } else if (compareStringsLowercase && isString(a) && isString(b)) {
+    // A little recursive, but we will not come back here a second time.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
+  }
+  // Otherwise, if we're ascending, lowest sorts first
+  else if (isAsc) {
+    return a < b ? -1 : 1
+  }
+  // If descending, highest sorts first
+
+  return a < b ? 1 : -1
+
+  // Return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
 }

@@ -5,7 +5,7 @@ import {
 } from '../services/primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { IChartSettings } from './ChartSettings.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../services/primitives/uuid-helper.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
