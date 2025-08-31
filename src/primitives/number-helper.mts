@@ -1,9 +1,15 @@
-import { StringHelper, isString, safestr, stringIf } from './string-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
   runOnAllMembers,
 } from './object-helper.mjs'
+import {
+  isString,
+  safePrefix,
+  safeSuffix,
+  safestr,
+  stringIf,
+} from './string-helper.mjs'
 import { isArray } from './array-helper.mjs'
 
 /**
@@ -393,9 +399,7 @@ export function toFixedPrefixed(
 ) {
   const s = NumberToString(val, showZeroValues, toFixedLength)
 
-  return !showZeroValues && !hasData(s)
-    ? ''
-    : StringHelper.safePrefix(s, prefix)
+  return !showZeroValues && !hasData(s) ? '' : safePrefix(s, prefix)
 }
 
 export function toFixedSuffixed(
@@ -406,9 +410,7 @@ export function toFixedSuffixed(
 ) {
   const s = NumberToString(val, showZeroValues, toFixedLength)
 
-  return !showZeroValues && !hasData(s)
-    ? ''
-    : StringHelper.safeSuffix(s, suffix)
+  return !showZeroValues && !hasData(s) ? '' : safeSuffix(s, suffix)
 }
 
 export function FirstNumberInString(str: string | null | undefined) {

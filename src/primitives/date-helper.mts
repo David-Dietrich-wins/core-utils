@@ -5,7 +5,7 @@ import {
   isNumber,
 } from './number-helper.mjs'
 import {
-  StringHelper,
+  RemoveLeadingNumbersAndWhitespace,
   isString,
   pluralSuffix,
   prefixIfHasData,
@@ -422,7 +422,7 @@ export abstract class DateHelper {
   }
 
   static PeriodType(period: string) {
-    let speriodString = StringHelper.RemoveLeadingNumbersAndWhitespace(period)
+    let speriodString = RemoveLeadingNumbersAndWhitespace(period)
     if (speriodString.length > 0) {
       if (speriodString.toLowerCase().startsWith('month')) {
         speriodString = 'M'

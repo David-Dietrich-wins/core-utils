@@ -4,7 +4,7 @@ import {
   StringOrStringArray,
 } from '../models/types.mjs'
 import {
-  StringHelper,
+  ReplaceNonPrintable,
   isString,
   safestr,
   safestrTrim,
@@ -620,7 +620,7 @@ export function splitIntoArray(
     : String(strToSplit)
 
   if (replaceNonPrintable) {
-    str = StringHelper.ReplaceNonPrintable(str)
+    str = ReplaceNonPrintable(str)
   }
 
   if (str.startsWith('[')) {

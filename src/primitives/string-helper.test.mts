@@ -1,7 +1,9 @@
 import {
   CONST_CharsNumbers,
   FirstCharCapitalFormatter,
-  StringHelper,
+  GenerateRandomString,
+  RemoveLeadingNumbersAndWhitespace,
+  ReplaceTwoOrMoreSpacesWithSingleSpace,
   capitalizeFirstLetter,
   capitalizeWords,
   exceedsMaxNumberOfCharacters,
@@ -18,7 +20,10 @@ import {
   plusMinus,
   randomStringGenerate,
   safeHtmlAttribute,
+  safePrefix,
+  safeSuffix,
   safestrLowercase,
+  safestrPlus,
   safestrToJson,
   safestrUppercase,
   strTrimIfNotNullish,
@@ -341,63 +346,61 @@ test('FirstCharCapitalFormatter', () => {
   expect(FirstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
 })
 
-describe('StringHelper', () => {
-  test('safestr', () => {
-    expect(StringHelper.safestr(null)).toBe('')
-    expect(StringHelper.safestr(undefined)).toBe('')
-    expect(StringHelper.safestr('')).toBe('')
-    expect(StringHelper.safestr('null')).toBe('null')
+test(safestrPlus.name, () => {
+  expect(safestrPlus(null)).toBe('')
+  expect(safestrPlus(undefined)).toBe('')
+  expect(safestrPlus('')).toBe('')
+  expect(safestrPlus('null')).toBe('null')
 
-    expect(StringHelper.safestr('', { ifEmpty: 'test' })).toBe('test')
-    expect(
-      StringHelper.safestr('', {
-        ifEmpty: 'test',
-        prefix: 'prefix-',
-        suffix: '-suffix',
-      })
-    ).toBe('test')
-    expect(
-      StringHelper.safestr('ab', {
-        ifEmpty: 'test',
-        prefix: 'prefix-',
-        suffix: '-suffix',
-      })
-    ).toBe('prefix-ab-suffix')
+  expect(safestrPlus('', { ifEmpty: 'test' })).toBe('test')
+  expect(
+    safestrPlus('', {
+      ifEmpty: 'test',
+      prefix: 'prefix-',
+      suffix: '-suffix',
+    })
+  ).toBe('test')
+  expect(
+    safestrPlus('ab', {
+      ifEmpty: 'test',
+      prefix: 'prefix-',
+      suffix: '-suffix',
+    })
+  ).toBe('prefix-ab-suffix')
 
-    expect(StringHelper.safestr('', { prefix: 'test-' })).toBe('')
-    expect(StringHelper.safestr('ab', { prefix: 'test-' })).toBe('test-ab')
+  expect(safestrPlus('', { prefix: 'test-' })).toBe('')
+  expect(safestrPlus('ab', { prefix: 'test-' })).toBe('test-ab')
 
-    expect(StringHelper.safestr('', { suffix: '-test' })).toBe('')
-    expect(StringHelper.safestr('ab', { suffix: '-test' })).toBe('ab-test')
+  expect(safestrPlus('', { suffix: '-test' })).toBe('')
+  expect(safestrPlus('ab', { suffix: '-test' })).toBe('ab-test')
 
-    expect(
-      StringHelper.safestr(' ab ', { suffix: '-test', trimEnd: true })
-    ).toBe(' ab-test')
-    expect(
-      StringHelper.safestr(' ab ', { suffix: '-test', trimStart: true })
-    ).toBe('ab -test')
+  expect(safestrPlus(' ab ', { suffix: '-test', trimEnd: true })).toBe(
+    ' ab-test'
+  )
+  expect(safestrPlus(' ab ', { suffix: '-test', trimStart: true })).toBe(
+    'ab -test'
+  )
 
-    expect(StringHelper.safestr('', '')).toBe('')
-    expect(StringHelper.safestr('', undefined)).toBe('')
-    expect(StringHelper.safestr('', null)).toBe('')
-  })
+  expect(safestrPlus('', '')).toBe('')
+  expect(safestrPlus('', undefined)).toBe('')
+  expect(safestrPlus('', null)).toBe('')
 
   expect(
-    StringHelper.safestr(' ab ', {
+    safestrPlus(' ab ', {
       suffix: '-test',
       trimStart: true,
       uppercase: true,
     })
   ).toBe('AB -test')
   expect(
-    StringHelper.safestr(' Ab ', {
+    safestrPlus(' Ab ', {
       lowercase: true,
       suffix: '-test',
       trimStart: true,
     })
   ).toBe('ab -test')
   expect(() =>
-    StringHelper.safestr(' Ab ', {
+    safestrPlus(' Ab ', {
       lowercase: true,
       suffix: '-test',
       trimStart: true,
@@ -406,69 +409,63 @@ describe('StringHelper', () => {
   ).toThrow(AppException)
 })
 
-test('ReplaceTwoOrMoreSpacesWithSingleSpace', () => {
+test(ReplaceTwoOrMoreSpacesWithSingleSpace.name, () => {
   const expected = 'This is a test string'
 
   expect(
-    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
-      'This  is   a    test   string'
-    )
+    ReplaceTwoOrMoreSpacesWithSingleSpace('This  is   a    test   string')
   ).toBe(expected)
   expect(
-    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
+    ReplaceTwoOrMoreSpacesWithSingleSpace(
       'This  is \t\r \n  a    test   string'
     )
   ).toBe(expected)
   expect(
-    StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(
-      'This  is \n  a  \t  test \r  string'
-    )
+    ReplaceTwoOrMoreSpacesWithSingleSpace('This  is \n  a  \t  test \r  string')
   ).toBe(expected)
 
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(
-    ' '
-  )
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
-  expect(StringHelper.ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(' ')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
+  expect(ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
 })
 
-test('StringHelper.safePrefix', () => {
+test(safePrefix.name, () => {
   const prefix = 'prefix-',
     str = 'test'
 
-  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
-  expect(StringHelper.safePrefix(str, prefix)).toBe('prefix-test')
-  expect(StringHelper.safePrefix('', prefix)).toBe('')
-  expect(StringHelper.safePrefix(null, prefix)).toBe('')
-  expect(StringHelper.safePrefix(undefined, prefix)).toBe('')
-  expect(StringHelper.safePrefix(0)).toBe(' 0')
-  expect(StringHelper.safePrefix(0, prefix)).toBe('prefix-0')
-  expect(StringHelper.safePrefix(-1, prefix)).toBe('prefix--1')
-  expect(StringHelper.safePrefix(5, prefix)).toBe('prefix-5')
-  expect(StringHelper.safePrefix(true, prefix)).toBe('prefix-true')
-  expect(StringHelper.safePrefix(false, prefix)).toBe('prefix-false')
-  expect(StringHelper.safePrefix(false)).toBe(' false')
+  expect(safePrefix(str, prefix)).toBe('prefix-test')
+  expect(safePrefix(str, prefix)).toBe('prefix-test')
+  expect(safePrefix('', prefix)).toBe('')
+  expect(safePrefix(null, prefix)).toBe('')
+  expect(safePrefix(undefined, prefix)).toBe('')
+  expect(safePrefix(0)).toBe(' 0')
+  expect(safePrefix(0, prefix)).toBe('prefix-0')
+  expect(safePrefix(-1, prefix)).toBe('prefix--1')
+  expect(safePrefix(5, prefix)).toBe('prefix-5')
+  expect(safePrefix(true, prefix)).toBe('prefix-true')
+  expect(safePrefix(false, prefix)).toBe('prefix-false')
+  expect(safePrefix(false)).toBe(' false')
 })
 
-test('StringHelper.safeSuffix', () => {
+test(safeSuffix.name, () => {
   const str = 'test',
     suffix = '-suffix'
 
-  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
-  expect(StringHelper.safeSuffix(str, suffix)).toBe('test-suffix')
-  expect(StringHelper.safeSuffix('', suffix)).toBe('')
-  expect(StringHelper.safeSuffix(null, suffix)).toBe('')
-  expect(StringHelper.safeSuffix(undefined, suffix)).toBe('')
-  expect(StringHelper.safeSuffix(0, suffix)).toBe('0-suffix')
-  expect(StringHelper.safeSuffix(0)).toBe('0 ')
-  expect(StringHelper.safeSuffix(-1, suffix)).toBe('-1-suffix')
-  expect(StringHelper.safeSuffix(5, suffix)).toBe('5-suffix')
-  expect(StringHelper.safeSuffix(true, suffix)).toBe('true-suffix')
-  expect(StringHelper.safeSuffix(false, suffix)).toBe('false-suffix')
-  expect(StringHelper.safeSuffix(false)).toBe('false ')
+  expect(safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(safeSuffix(str, suffix)).toBe('test-suffix')
+  expect(safeSuffix('', suffix)).toBe('')
+  expect(safeSuffix(null, suffix)).toBe('')
+  expect(safeSuffix(undefined, suffix)).toBe('')
+  expect(safeSuffix(0, suffix)).toBe('0-suffix')
+  expect(safeSuffix(0)).toBe('0 ')
+  expect(safeSuffix(-1, suffix)).toBe('-1-suffix')
+  expect(safeSuffix(5, suffix)).toBe('5-suffix')
+  expect(safeSuffix(true, suffix)).toBe('true-suffix')
+  expect(safeSuffix(false, suffix)).toBe('false-suffix')
+  expect(safeSuffix(false)).toBe('false ')
 })
 
 test(safeHtmlAttribute.name, () => {
@@ -482,10 +479,10 @@ test(safeHtmlAttribute.name, () => {
   expect(safeHtmlAttribute(['tes,t', 'test2'], 'abc')).toBe('tesabctabctest2')
 })
 
-test(StringHelper.GenerateRandomString.name, () => {
+test(GenerateRandomString.name, () => {
   const length = 10,
-    randomString = StringHelper.GenerateRandomString(length),
-    randomString2 = StringHelper.GenerateRandomString(length, 'abcde')
+    randomString = GenerateRandomString(length),
+    randomString2 = GenerateRandomString(length, 'abcde')
 
   expect(randomString).toHaveLength(length)
   expect(randomString).toMatch(/^[a-zA-Z0-9]{1,10}$/u)
@@ -494,17 +491,13 @@ test(StringHelper.GenerateRandomString.name, () => {
   expect(randomString2).toMatch(/^[abcde]{1,10}$/u)
 })
 
-test(StringHelper.RemoveLeadingNumbersAndWhitespace.name, () => {
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   123abc')).toBe(
-    'abc'
-  )
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   abc')).toBe(
-    'abc'
-  )
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
-  expect(StringHelper.RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
+test(RemoveLeadingNumbersAndWhitespace.name, () => {
+  expect(RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
+  expect(RemoveLeadingNumbersAndWhitespace('   123abc')).toBe('abc')
+  expect(RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
+  expect(RemoveLeadingNumbersAndWhitespace('123   abc')).toBe('abc')
+  expect(RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
+  expect(RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
 })
 
 describe(randomStringGenerate.name, () => {

@@ -387,148 +387,153 @@ export function FirstCharCapitalFormatter(s: string) {
   return capitalizeFirstLetter(s)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class StringHelper {
-  // eslint-disable-next-line complexity
-  static safestr(
-    str?: string | number | boolean | null,
-    ifEmpty?:
-      | string
-      | {
-          ifEmpty?: string
-          prefix?: string
-          suffix?: string
-          trim?: boolean
-          trimStart?: boolean
-          trimEnd?: boolean
-          lowercase?: boolean
-          uppercase?: boolean
-        }
-      | null
-  ): string {
-    let s = str
-    if (isNullOrUndefined(s)) {
-      s = ''
-    } else if (!isString(s)) {
-      s = String(s)
-    }
-
-    if (
-      !hasData(s) &&
-      (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
-    ) {
-      return (ifEmpty as string) || ''
-    }
-
-    if (isObject(ifEmpty)) {
-      const {
-        ifEmpty: ifEmptyValue,
-        prefix,
-        suffix,
-        trim,
-        trimStart,
-        trimEnd,
-        lowercase,
-        uppercase,
-      } = ifEmpty
-
-      if (!hasData(s) && ifEmptyValue) {
-        return ifEmptyValue
+// eslint-disable-next-line complexity
+export function safestrPlus(
+  str?: string | number | boolean | null,
+  ifEmpty?:
+    | string
+    | {
+        ifEmpty?: string
+        prefix?: string
+        suffix?: string
+        trim?: boolean
+        trimStart?: boolean
+        trimEnd?: boolean
+        lowercase?: boolean
+        uppercase?: boolean
       }
-
-      if (trim) {
-        s = s.trim()
-      }
-      if (trimStart) {
-        s = s.trimStart()
-      }
-      if (trimEnd) {
-        s = s.trimEnd()
-      }
-
-      if (lowercase && uppercase) {
-        throw new AppException(
-          'Cannot set both lowercase and uppercase to true.'
-        )
-      }
-      if (lowercase) {
-        s = s.toLowerCase()
-      }
-      if (uppercase) {
-        s = s.toUpperCase()
-      }
-
-      if (!hasData(s)) {
-        return ''
-      }
-
-      return (prefix ?? '') + s + (suffix ?? '')
-    }
-
-    return s
+    | null
+): string {
+  let s = str
+  if (isNullOrUndefined(s)) {
+    s = ''
+  } else if (!isString(s)) {
+    s = String(s)
   }
 
-  static ReplaceAll(str: string, regex: RegExp, replaceWith = ''): string {
-    return safestr(str).replaceAll(regex, replaceWith)
-  }
-  static RemoveLeadingNumbersAndWhitespace(str: string) {
-    return StringHelper.ReplaceAll(str, /^\s*\d*\s*/gu)
-  }
-
-  static GenerateRandomString(length: number, charactersToAllow?: string) {
-    let result = ''
-    const characters =
-        safestr(charactersToAllow) ||
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-      charactersLength = characters.length
-
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-
-    return result
+  if (
+    !hasData(s) &&
+    (!ifEmpty || !hasData(ifEmpty) || (hasData(ifEmpty) && isString(ifEmpty)))
+  ) {
+    return (ifEmpty as string) || ''
   }
 
-  static ReplaceNonPrintable(str: string | null | undefined) {
-    return safestr(str).replaceAll(/[^\x20-\x7E]/gu, '')
-  }
-
-  static ReplaceTwoOrMoreSpacesWithSingleSpace(str: string | null | undefined) {
-    return safestr(str).replaceAll(/[ \t\r\n]{2,}/gu, ' ')
-  }
-
-  /**
-   * Returns a string with a prepended prefix if the string has data.
-   * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
-   * @param prefix The prefix to prepend if the string has data.
-   * @returns Empty string if the string is empty, otherwise the prefix is prepended with the string.
-   */
-  static safePrefix(s?: string | number | boolean | null, prefix = ' ') {
-    return StringHelper.safestr(s, {
+  if (isObject(ifEmpty)) {
+    const {
+      ifEmpty: ifEmptyValue,
       prefix,
-      trim: true,
-    })
-  }
-
-  /**
-   * Returns a string with a suffix if the string has data.
-   * @param s The string to check for data, and if there is data, trim and add the suffix.
-   * @param suffix The suffix to add if the string has data.
-   * @returns Empty string if the string is empty, otherwise the string with the suffix.
-   */
-  static safeSuffix(s?: string | number | boolean | null, suffix = ' ') {
-    return StringHelper.safestr(s, {
       suffix,
-      trim: true,
-    })
+      trim,
+      trimStart,
+      trimEnd,
+      lowercase,
+      uppercase,
+    } = ifEmpty
+
+    if (!hasData(s) && ifEmptyValue) {
+      return ifEmptyValue
+    }
+
+    if (trim) {
+      s = s.trim()
+    }
+    if (trimStart) {
+      s = s.trimStart()
+    }
+    if (trimEnd) {
+      s = s.trimEnd()
+    }
+
+    if (lowercase && uppercase) {
+      throw new AppException('Cannot set both lowercase and uppercase to true.')
+    }
+    if (lowercase) {
+      s = s.toLowerCase()
+    }
+    if (uppercase) {
+      s = s.toUpperCase()
+    }
+
+    if (!hasData(s)) {
+      return ''
+    }
+
+    return (prefix ?? '') + s + (suffix ?? '')
   }
 
-  static IncludesAnyFromArray(
-    mainString: string,
-    substrings: string[]
-  ): boolean {
-    return substrings.some((substring) => mainString.includes(substring))
+  return s
+}
+
+export function ReplaceAll(
+  str: string,
+  regex: RegExp,
+  replaceWith = ''
+): string {
+  return safestr(str).replaceAll(regex, replaceWith)
+}
+
+export function RemoveLeadingNumbersAndWhitespace(str: string) {
+  return ReplaceAll(str, /^\s*\d*\s*/gu)
+}
+
+export function GenerateRandomString(
+  length: number,
+  charactersToAllow?: string
+) {
+  let result = ''
+  const characters =
+      safestr(charactersToAllow) ||
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+    charactersLength = characters.length
+
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
+
+  return result
+}
+
+export function ReplaceNonPrintable(str: string | null | undefined) {
+  return safestr(str).replaceAll(/[^\x20-\x7E]/gu, '')
+}
+
+export function ReplaceTwoOrMoreSpacesWithSingleSpace(
+  str: string | null | undefined
+) {
+  return safestr(str).replaceAll(/[ \t\r\n]{2,}/gu, ' ')
+}
+
+/**
+ * Returns a string with a prepended prefix if the string has data.
+ * @param s The string to check for data, and if there is data, trim and prefix the string with prefix.
+ * @param prefix The prefix to prepend if the string has data.
+ * @returns Empty string if the string is empty, otherwise the prefix is prepended with the string.
+ */
+export function safePrefix(s?: string | number | boolean | null, prefix = ' ') {
+  return safestrPlus(s, {
+    prefix,
+    trim: true,
+  })
+}
+
+/**
+ * Returns a string with a suffix if the string has data.
+ * @param s The string to check for data, and if there is data, trim and add the suffix.
+ * @param suffix The suffix to add if the string has data.
+ * @returns Empty string if the string is empty, otherwise the string with the suffix.
+ */
+export function safeSuffix(s?: string | number | boolean | null, suffix = ' ') {
+  return safestrPlus(s, {
+    suffix,
+    trim: true,
+  })
+}
+
+export function IncludesAnyFromArray(
+  mainString: string,
+  substrings: string[]
+): boolean {
+  return substrings.some((substring) => mainString.includes(substring))
 }
 
 export function safeHtmlAttribute(

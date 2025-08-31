@@ -7,7 +7,7 @@ import {
   SortOrderAsBoolean,
 } from '../models/types.mjs'
 import {
-  StringHelper,
+  IncludesAnyFromArray,
   isString,
   safestr,
   safestrLowercase,
@@ -168,7 +168,7 @@ export class SearchRequestView implements ISearchRequestView {
             found =
               this.exactMatch || !isString(s)
                 ? lterm === s
-                : StringHelper.IncludesAnyFromArray(s, safeArray(lterm))
+                : IncludesAnyFromArray(s, safeArray(lterm))
           }
         })
 
