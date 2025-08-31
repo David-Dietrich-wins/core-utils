@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   BuildLogFriendlyMessage,
+  DeepCloneJsonWithUndefined,
   FindObjectWithField,
   ObjectFindKeyAndReturnValue,
   ObjectHelper,
@@ -14,9 +17,14 @@ import {
   deepCloneJson,
   deepDiffMapper,
   getBody,
-  getNullObject,
   getObjectValue,
+  isEmptyObject,
   isObject,
+  objectCloneAlphabetizingKeys,
+  objectDecodeFromBase64,
+  objectEncodeToBase64,
+  objectGetFirstNewWithException,
+  objectGetNew,
   removeFields,
   renameProperty,
   runOnAllMembers,
@@ -26,7 +34,6 @@ import {
 } from './object-helper.mjs'
 import { CONST_ListMustBeAnArray, type IId } from '../../models/IdManager.mjs'
 import { AppException } from '../../models/AppException.mjs'
-import type { IConstructor } from '../../models/types.mjs'
 import { IdValueManager } from '../../models/IdValueManager.mjs'
 import { jest } from '@jest/globals'
 import { safestr } from './string-helper.mjs'
@@ -356,8 +363,12 @@ test(isObject.name, () => {
   expect(isObject({ a: 'a' }, 1)).toBe(true)
   expect(isObject({ a: 'a' }, 'a')).toBe(true)
   expect(isObject({ a: 'a' }, 'b')).toBe(false)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
+})
+
+test(isEmptyObject.name, () => {
+  expect(isEmptyObject({})).toBe(true)
+  expect(isEmptyObject({ a: 'a' })).toBe(false)
 })
 
 test(searchObjectForArray.name, () => {
@@ -385,14 +396,12 @@ test(searchObjectForArray.name, () => {
 
 test(runOnAllMembers.name, () => {
   expect(() =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     runOnAllMembers(1 as any, (key: string, value: unknown) => key + value)
   ).toThrow('runOnAllMembers() received an empty object.')
 
-  expect(() =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    runOnAllMembers({ a: 'a' }, null as any)
-  ).toThrow('runOnAllMembers() received an empty function operator.')
+  expect(() => runOnAllMembers({ a: 'a' }, null as any)).toThrow(
+    'runOnAllMembers() received an empty function operator.'
+  )
 
   const funcToRunOnAllMembers = (key: string, value: unknown) => key + value
 
@@ -431,9 +440,7 @@ test(runOnAllMembers.name, () => {
 test(renameProperty.name, () => {
   let obj = { a: 'a', b: 'b', c: 'c' }
   let retobj = { b: 'b', c: 'c', d: 'a' }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let oldKey: any = 'a'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let newKey: any = 'd'
 
   renameProperty(obj, oldKey, newKey)
@@ -508,11 +515,8 @@ test(safeObject.name, () => {
 
 test(safeJsonToString.name, () => {
   expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect(safeJsonToString(4 as any)).toBe('[4]')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect(safeJsonToString(undefined as any)).toBe('[]')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect(safeJsonToString(null as any)).toBe('[]')
 
   // Circular reference so JSON.stringify will fail
@@ -526,7 +530,6 @@ test(safeJsonToString.name, () => {
   expect(console.log).toHaveBeenCalledTimes(1)
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDeepObject(depth: number, value: any) {
   return {
     // eslint-disable-next-line no-param-reassign, no-useless-assignment
@@ -700,293 +703,6 @@ describe(removeFields.name, () => {
   })
 })
 
-// /* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
-// import {
-//   FindObjectWithField,
-//   ObjectFindKeyAndReturnValue,
-//   ObjectHelper,
-//   ObjectMustHaveKeyAndReturnValue,
-//   ObjectTypesToString,
-//   UpdateFieldValue,
-//   addObjectToList,
-//   coalesce,
-//   deepCloneJson,
-//   deepDiffMapper,
-//   getNullObject,
-//   getObjectValue,
-//   isObject,
-//   removeFields,
-//   renameProperty,
-//   runOnAllMembers,
-//   safeJsonToString,
-//   safeObject,
-//   searchObjectForArray,
-// } from './object-helper.mjs'
-// import { pluralize, plusMinus, safestr } from './string-helper.mjs'
-// import { AppException } from '../models/AppException.mjs'
-// import { IConstructor } from '../models/types.mjs'
-// import { IId } from '../models/IdManager.mjs'
-// import { IdValueManager } from '../models/IdValueManager.mjs'
-// import { jest } from '@jest/globals'
-
-// describe('ObjectFindKeyAndReturnValue', () => {
-//   test('default', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'key1',
-//       result = ObjectFindKeyAndReturnValue(aobj, keyToFind)
-
-//     expect(result).toBe('value1')
-//   })
-
-//   test('match lower and trim key', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'key1',
-//       matchLowercaseAndTrimKey = true,
-//       result = ObjectFindKeyAndReturnValue(
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-
-//     expect(result).toBe('value1')
-//   })
-
-//   test('no keyToFind', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = '',
-//       matchLowercaseAndTrimKey = false,
-//       result = ObjectFindKeyAndReturnValue(
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-
-//     expect(result).toBeUndefined()
-//   })
-
-//   test('match key case fail', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'kEy1',
-//       matchLowercaseAndTrimKey = false,
-//       result = ObjectFindKeyAndReturnValue(
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-
-//     expect(result).toBeUndefined()
-//   })
-
-//   test('match key in object case fail', () => {
-//     const aobj = {
-//         kEy1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'key1',
-//       matchLowercaseAndTrimKey = false,
-//       result = ObjectFindKeyAndReturnValue(
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-
-//     expect(result).toBeUndefined()
-//   })
-
-//   test('do not match key case', () => {
-//     const aobj = {
-//         kEY1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'KEy1',
-//       matchLowercaseAndTrimKey = true,
-//       result = ObjectFindKeyAndReturnValue(
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-
-//     expect(result).toBe('value1')
-//   })
-// })
-
-// describe('ObjectMustHaveKeyAndReturnValue', () => {
-//   test('default', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'key1',
-//       result = ObjectMustHaveKeyAndReturnValue('test', aobj, keyToFind)
-//     expect(result).toBe('value1')
-
-//     expect(() =>
-//       ObjectMustHaveKeyAndReturnValue('test', aobj, 'key4')
-//     ).toThrow()
-//   })
-
-//   test('match lower key', () => {
-//     const aobj = {
-//         key1: 'value1',
-//         key2: 'value2',
-//         key3: 'value3',
-//       },
-//       keyToFind = 'key1',
-//       matchLowercaseAndTrimKey = true,
-//       result = ObjectMustHaveKeyAndReturnValue(
-//         'test',
-//         aobj,
-//         keyToFind,
-//         matchLowercaseAndTrimKey
-//       )
-//     expect(result).toBe('value1')
-
-//     expect(() =>
-//       ObjectMustHaveKeyAndReturnValue(
-//         'test',
-//         aobj,
-//         'key4',
-//         matchLowercaseAndTrimKey
-//       )
-//     ).toThrow()
-//   })
-// })
-
-// describe('ObjectTypesToString', () => {
-//   test('return string from array', () => {
-//     const ret = ObjectTypesToString(['hello', 'world'])
-
-//     expect(ret).toBe("[ 'hello', 'world', [length]: 2 ]")
-//   })
-
-//   test('null', () => {
-//     const ret = ObjectTypesToString(null)
-
-//     expect(ret).toBe('')
-//   })
-
-//   // Test('http fetch get good', async () => {
-//   //   Const url = `${CONST_AceRestBaseUrl}/Patrons/`
-
-//   //   Const retjson = {
-//   //     Testing: 'testing',
-//   //   }
-
-//   //   MockServer.use(
-//   //     Http.get(url, () => {
-//   //       // const anyIdNumber = req.url.searchParams.get('AnyIdNumber')
-//   //       // const siteId = req.url.searchParams.get('SiteId')
-
-//   //       Return HttpResponse.json(retjson)
-//   //     })
-//   //   )
-
-//   //   Const abc = await fetch(url)
-
-//   //   Const ret = ObjectTypesToString(abc)
-//   //   Expect(ret).toBe('[object Response]')
-//   //   Const body = await abc.json()
-//   //   Expect(body).toEqual(retjson)
-//   // })
-
-//   test('JS Error response', () => {
-//     const e = new Error('test error'),
-//       ret = ObjectTypesToString(e)
-//     expect(ret).toContain('Error')
-//     expect(ret).toContain("message: 'test error'")
-//   })
-
-//   // Mock HTTP objects
-//   class File {
-//     data: string
-//     name: string
-
-//     constructor(data: string, name: string) {
-//       this.data = data
-//       this.name = name
-//     }
-
-//     toArray() {
-//       return [this.data, this.name]
-//     }
-
-//     toObject() {
-//       return { data: this.data, name: this.name }
-//     }
-//   }
-
-//   class FileList {
-//     data: string
-//     name: string
-
-//     constructor(data: string, name: string) {
-//       this.data = data
-//       this.name = name
-//     }
-
-//     toArray() {
-//       return [this.data, this.name]
-//     }
-
-//     toObject() {
-//       return { data: this.data, name: this.name }
-//     }
-//   }
-
-//   test('File object', () => {
-//     const e = new File('', 'test.txt'),
-//       ret = ObjectTypesToString(e)
-//     expect(ret).toEqual("File { data: '', name: 'test.txt' }")
-//   })
-
-//   test('FileList object', () => {
-//     const e = new FileList('', 'test.txt'),
-//       ret = ObjectTypesToString(e)
-//     expect(ret).toEqual("FileList { data: '', name: 'test.txt' }")
-//   })
-
-//   test('Object generic', () => {
-//     const e = { data: '', name: 'test.txt' },
-//       ret = ObjectTypesToString(e)
-//     expect(ret).toEqual("{ data: '', name: 'test.txt' }")
-//   })
-
-//   test('Object with toString', () => {
-//     const e = {
-//       data: '',
-//       name: 'test.txt',
-//       toString: () => 'Custom toString',
-//     }
-//     const ret = ObjectTypesToString(e)
-//     expect(ret).toEqual(
-//       `{
-//   data: '',
-//   name: 'test.txt',
-//   toString: [Function: toString] { [length]: 0, [name]: 'toString' }
-// }`
-//     )
-//   })
-// })
-
 test(UpdateFieldValue.name, () => {
   const obj: IId & { field: string } = {
     field: 'value',
@@ -1148,10 +864,6 @@ test(UpdateFieldValue.name, () => {
 //   expect(console.log).toHaveBeenCalledTimes(1)
 // })
 
-// test('getNullObject', () => {
-//   expect(getNullObject({})).toBeNull()
-//   expect(getNullObject({ a: 'a' })).toStrictEqual({ a: 'a' })
-// })
 // test('isObject', () => {
 //   expect(isObject({})).toBe(true)
 //   expect(isObject([])).toBe(false)
@@ -1414,55 +1126,39 @@ describe(deepDiffMapper.name, () => {
 })
 
 test('getFirstNewWithException', () => {
+  expect(() => objectGetFirstNewWithException(IdValueManager, [])).not.toThrow()
   expect(() =>
-    ObjectHelper.getFirstNewWithException(IdValueManager, [])
-  ).not.toThrow()
-  expect(() =>
-    ObjectHelper.getFirstNewWithException(IdValueManager, [234, 20])
+    objectGetFirstNewWithException(IdValueManager, [234, 20])
   ).toThrow(new Error(CONST_ListMustBeAnArray))
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  let fnOrig = ObjectHelper.getInstance
-  ObjectHelper.getInstance = <T, Tid>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _theClass: IConstructor<T>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    ..._args: any[]
-  ) => undefined as Tid as unknown as T
+  const fnOrig = ObjectHelper.objectGetInstance
+  ObjectHelper.objectGetInstance = () => undefined as any
 
   expect(() =>
-    ObjectHelper.getFirstNewWithException(
+    objectGetFirstNewWithException(
       IdValueManager,
       undefined as unknown as string[]
     )
   ).toThrow(new Error('Error getting first new object'))
-  ObjectHelper.getInstance = fnOrig
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  fnOrig = ObjectHelper.getInstance
-  ObjectHelper.getInstance = <T, Tid>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _theClass: IConstructor<T>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    ..._args: any[]
-  ) => undefined as Tid as unknown as T
   expect(() =>
-    ObjectHelper.getFirstNewWithException(
+    objectGetFirstNewWithException(
       IdValueManager,
       undefined as unknown as string[],
       'generic exception text'
     )
   ).toThrow(new Error('generic exception text'))
-  ObjectHelper.getInstance = fnOrig
+
+  ObjectHelper.objectGetInstance = fnOrig
 
   expect(() =>
-    ObjectHelper.getFirstNewWithException(IdValueManager, [
+    objectGetFirstNewWithException(IdValueManager, [
       [{ id: 234, value: '234' }],
       [{ id: 20, value: '20' }],
     ])
   ).not.toThrow()
   expect(() =>
-    ObjectHelper.getFirstNewWithException(IdValueManager, [
+    objectGetFirstNewWithException(IdValueManager, [
       { id: 234, value: '234' },
       { id: 20, value: '20' },
     ])
@@ -1470,10 +1166,10 @@ test('getFirstNewWithException', () => {
 })
 
 test('getNewObject', () => {
-  expect(() => ObjectHelper.getNewObject(IdValueManager, [])).not.toThrow()
-  expect(() => ObjectHelper.getNewObject(IdValueManager, [234, 20])).toThrow()
+  expect(() => objectGetNew(IdValueManager, [])).not.toThrow()
+  expect(() => objectGetNew(IdValueManager, [234, 20])).toThrow()
   expect(() =>
-    ObjectHelper.getNewObject(
+    objectGetNew(
       IdValueManager,
       [
         { id: 234, value: '234' },
@@ -1483,7 +1179,7 @@ test('getNewObject', () => {
     )
   ).not.toThrow()
   expect(() =>
-    ObjectHelper.getNewObject(IdValueManager, [
+    objectGetNew(IdValueManager, [
       { id: 234, value: '234' },
       { id: 20, value: '20' },
     ])
@@ -1491,7 +1187,7 @@ test('getNewObject', () => {
 })
 
 test('getInstance', () => {
-  const idvm = ObjectHelper.getInstance(IdValueManager, [
+  const idvm = ObjectHelper.objectGetInstance(IdValueManager, [
     { id: 'a', value: 'a' },
   ])
 
@@ -1506,21 +1202,21 @@ describe('ObjectHelper', () => {
         b: 'b',
         c: 'c',
       },
-      clonedObj = ObjectHelper.CloneObjectAlphabetizingKeys(aobj)
+      clonedObj = objectCloneAlphabetizingKeys(aobj)
 
     expect(clonedObj).toEqual({ a: 'a', b: 'b', c: 'c' })
   })
 
   test('DecodeBase64ToObject', () => {
     const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' })),
-      decodedObj = ObjectHelper.DecodeBase64ToObject(base64String)
+      decodedObj = objectDecodeFromBase64(base64String)
 
     expect(decodedObj).toEqual({ a: 'a', b: 'b' })
   })
 
   test('EncodeObjectToBase64', () => {
     const aobj = { a: 'a', b: 'b' },
-      encodedString = ObjectHelper.EncodeObjectToBase64(aobj)
+      encodedString = objectEncodeToBase64(aobj)
 
     expect(encodedString).toBe(btoa(JSON.stringify(aobj)))
   })
@@ -1534,7 +1230,7 @@ describe('ObjectHelper', () => {
           e: undefined,
         },
       },
-      clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(aobj)
+      clonedObj = DeepCloneJsonWithUndefined(aobj)
 
     expect(clonedObj).toEqual({
       a: 'a',
@@ -1554,7 +1250,7 @@ describe('ObjectHelper', () => {
           e: undefined,
         },
       },
-      clonedObj = ObjectHelper.DeepCloneJsonWithUndefined(aobj)
+      clonedObj = DeepCloneJsonWithUndefined(aobj)
 
     expect(clonedObj).toEqual({
       a: 'a',
@@ -1743,8 +1439,3 @@ test(getBody.name, () => {
 //     expect(removeFields(new Date(), props)).toBeInstanceOf(Date)
 //   })
 // })
-
-test(getNullObject.name, () => {
-  expect(getNullObject({})).toBeNull()
-  expect(getNullObject({ a: 'a' })).toStrictEqual({ a: 'a' })
-})

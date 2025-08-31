@@ -8,7 +8,7 @@ import jsonWebToken, {
   SignOptions,
   VerifyOptions,
 } from 'jsonwebtoken'
-import { AppException } from '../index.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'

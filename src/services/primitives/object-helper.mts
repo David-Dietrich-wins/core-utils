@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import { DateHelper, isDateObject } from './date-helper.mjs'
 import { type IConstructor, StringOrStringArray } from '../../models/types.mjs'
 import {
@@ -372,81 +371,83 @@ export function FindObjectWithField(
   return found
 }
 
+export function objectCloneAlphabetizingKeys<T>(obj: Readonly<T>): T {
+  const sortedObj = Object.fromEntries(
+    Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+  )
+
+  return sortedObj as T
+}
+
+export function objectDecodeFromBase64<T = object>(base64String: string) {
+  const decodedString = Buffer.from(base64String, 'base64')
+
+  return safestrToJson<T>(decodedString.toString())
+}
+
+export function objectEncodeToBase64(obj: object) {
+  const jsonString = JSON.stringify(objectCloneAlphabetizingKeys(obj)),
+    zencodedString = Buffer.from(jsonString)
+
+  return zencodedString.toString('base64')
+}
+
+/**
+ * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
+ * Suppresses any exceptions, but still writes to the console.log.
+ * @param obj The object to copy.
+ * @param fname The function name of the caller. Not required.
+ * @returns A JSON stringify and parsed copy of the obj.
+ */
+export function DeepCloneJsonWithUndefined<T extends object | Array<T>>(
+  obj: T,
+  fname?: string
+) {
+  const funcname = safestr(fname, 'deepCloneJsonWithUndefined')
+
+  return safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ObjectHelper {
-  static CloneObjectAlphabetizingKeys<T>(obj: Readonly<T>): T {
-    const sortedObj = Object.fromEntries(
-      Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-    )
-
-    return sortedObj as T
-  }
-
-  static DecodeBase64ToObject<T = object>(base64String: string) {
-    const decodedString = Buffer.from(base64String, 'base64')
-
-    return safestrToJson<T>(decodedString.toString())
-  }
-  static EncodeObjectToBase64(obj: object) {
-    const jsonString = JSON.stringify(
-        ObjectHelper.CloneObjectAlphabetizingKeys(obj)
-      ),
-      zencodedString = Buffer.from(jsonString)
-
-    return zencodedString.toString('base64')
-  }
-
-  /**
-   * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
-   * Suppresses any exceptions, but still writes to the console.log.
-   * @param obj The object to copy.
-   * @param fname The function name of the caller. Not required.
-   * @returns A JSON stringify and parsed copy of the obj.
-   */
-  static DeepCloneJsonWithUndefined<T extends object | Array<T>>(
-    obj: T,
-    fname?: string
-  ) {
-    const funcname = safestr(fname, 'deepCloneJsonWithUndefined')
-
-    return safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
-  }
-
-  static getFirstNewWithException<T>(
+  static objectGetInstance<T>(
     theClass: IConstructor<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    obj: any[],
-    exceptionTextIfEmpty = ''
+    ...args: any[]
   ) {
-    const first = ObjectHelper.getInstance(theClass, arrayFirst(obj))
-    if (!first) {
-      throw new AppException(
-        safestr(exceptionTextIfEmpty, 'Error getting first new object'),
-        ObjectHelper.getFirstNewWithException.name
-      )
-    }
-
-    return first
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new theClass(...args)
   }
+}
 
-  static getNewObject<T>(
-    theClass: IConstructor<T>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructorArgs: any[],
-    index = 0
-  ): T {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (
-      ObjectHelper.getInstance(theClass, constructorArgs),
-      arrayElement(constructorArgs, index)
+export function objectGetNew<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructorArgs: any[],
+  index = 0
+): T {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return (
+    ObjectHelper.objectGetInstance(theClass, constructorArgs),
+    arrayElement(constructorArgs, index)
+  )
+}
+
+export function objectGetFirstNewWithException<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any[],
+  exceptionTextIfEmpty = ''
+) {
+  const first = ObjectHelper.objectGetInstance(theClass, arrayFirst(obj))
+  if (!first) {
+    throw new AppException(
+      safestr(exceptionTextIfEmpty, 'Error getting first new object'),
+      objectGetFirstNewWithException.name
     )
   }
+
+  return first
 }
 
 /**
@@ -636,15 +637,6 @@ export function deepDiffMapper() {
       return diff
     },
   }
-}
-
-/**
- * Tests an object to see if it is empty. If so returns null, otherwise just returns the object.
- * @param obj The object to test if it is empty.
- * @returns Null if the object is empty, otherwise the object is returned.
- */
-export function getNullObject<T>(obj: T) {
-  return isEmptyObject(obj) ? null : obj
 }
 
 export function deepCloneJson<T extends object | Array<T>>(

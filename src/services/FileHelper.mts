@@ -21,7 +21,6 @@ export class FileHelper {
       return await fn(fileHelper)
     } catch (error) {
       throw new AppException(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `FileHelper: Error processing file ${filename}: ${error}`
       )
     } finally {
@@ -61,10 +60,8 @@ export class FileHelper {
 
       return stats
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       stats.addFailure(`Error writing to file ${filename}: ${error}`)
       throw new AppException(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `FileHelper: Error writing to file ${filename}: ${error}`
       )
     } finally {
