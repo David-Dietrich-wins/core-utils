@@ -2,12 +2,12 @@ import {
   type ArrayOrSingleBasicTypes,
   type StringOrStringArray,
   Typish,
-} from '../../models/types.mjs'
+} from '../models/types.mjs'
 import { getAsNumber, isNumber } from './number-helper.mjs'
 import { hasData, isNullOrUndefined, isObject } from './object-helper.mjs'
 import { isArray, splitToArray } from './array-helper.mjs'
 import { isFunction, typishValue } from './function-helper.mjs'
-import { AppException } from '../../models/AppException.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
   CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',

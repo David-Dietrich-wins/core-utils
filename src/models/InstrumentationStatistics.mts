@@ -3,26 +3,22 @@ import {
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import {
-  ToSafeArray,
-  isArray,
-  safeArray,
-} from '../services/primitives/array-helper.mjs'
+import { ToSafeArray, isArray, safeArray } from '../primitives/array-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
   isObject,
-} from '../services/primitives/object-helper.mjs'
+} from '../primitives/object-helper.mjs'
 import {
   isString,
   pluralSuffix,
   pluralize,
   prefixIfHasData,
   safestr,
-} from '../services/primitives/string-helper.mjs'
+} from '../primitives/string-helper.mjs'
 import { AppException } from './AppException.mjs'
-import { DateHelper } from '../services/primitives/date-helper.mjs'
-import { NumberToString } from '../services/primitives/number-helper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
+import { NumberToString } from '../primitives/number-helper.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0

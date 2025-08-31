@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const

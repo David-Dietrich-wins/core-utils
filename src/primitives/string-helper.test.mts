@@ -29,7 +29,7 @@ import {
   stringWrapParen,
   stringWrapSingleQuote,
 } from './string-helper.mjs'
-import { AppException } from '../../models/AppException.mjs'
+import { AppException } from '../models/AppException.mjs'
 import { jest } from '@jest/globals'
 
 test('capitalizeFirstLetter', () => {

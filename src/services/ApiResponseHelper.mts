@@ -1,6 +1,6 @@
 import { ApiResponse } from '../models/ApiResponse.mjs'
-import { isObject } from './primitives/object-helper.mjs'
-import { isString } from './primitives/string-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
+import { isString } from '../primitives/string-helper.mjs'
 
 /**
  * Used to wrap all API return calls in a standard wrapper.

@@ -2,12 +2,8 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { ArrayOrSingle, StringOrStringArray } from '../../models/types.mjs'
-import {
-  type IIdName,
-  type IIdNameValue,
-  IdName,
-} from '../../models/id-name.mjs'
+import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import { type IIdName, type IIdNameValue, IdName } from '../models/id-name.mjs'
 import {
   MapINamesToNames,
   ToIIdNameArray,
@@ -59,7 +55,7 @@ import {
   splitToArrayOrStringIfOnlyOne,
   splitToArrayOrStringIfOnlyOneToUpper,
 } from './array-helper.mjs'
-import { AppException } from '../../models/AppException.mjs'
+import { AppException } from '../models/AppException.mjs'
 
 test(safeArray.name, () => {
   expect(safeArray()).toStrictEqual([])

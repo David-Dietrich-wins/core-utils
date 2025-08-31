@@ -5,10 +5,7 @@ import {
   UserConfigNames,
   UserConfigTypes,
 } from '../models/UserInfo.mjs'
-import {
-  deepCloneJson,
-  hasData,
-} from '../services/primitives/object-helper.mjs'
+import { deepCloneJson, hasData } from '../primitives/object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IConfigCharts } from './ConfigCharts.mjs'
 import type { IConfigHeaderTickerBars } from './ConfigHeaderTickerBars.mjs'
@@ -19,7 +16,7 @@ import { IDashboardSetting } from './DashboardSetting.mjs'
 import { IIdValRequired } from '../models/id-val.mjs'
 import { IKeyValueShort } from '../models/key-val.mjs'
 import { IdName } from '../models/id-name.mjs'
-import { safestrTrim } from '../services/primitives/string-helper.mjs'
+import { safestrTrim } from '../primitives/string-helper.mjs'
 
 export type CryptoIdeasTabNames = 'crypto' | 'nft' | 'spac'
 export type IdeasTabNames =

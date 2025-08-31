@@ -1,5 +1,5 @@
-import { deepCloneJson } from './primitives/object-helper.mjs'
-import { safestr } from './primitives/string-helper.mjs'
+import { deepCloneJson } from '../primitives/object-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
 export type ReduxAsyncStatus<T = unknown> = {
   status: 'idle' | 'pending' | 'fulfilled' | 'rejected'

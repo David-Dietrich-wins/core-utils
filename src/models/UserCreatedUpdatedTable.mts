@@ -3,7 +3,7 @@ import {
   hasData,
   isNullOrUndefined,
   isObject,
-} from '../services/primitives/object-helper.mjs'
+} from '../primitives/object-helper.mjs'
 import { AnyObject } from './types.mjs'
 import { AppException } from './AppException.mjs'
 import { IId } from './IdManager.mjs'

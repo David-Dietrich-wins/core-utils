@@ -1,8 +1,8 @@
 import { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
 import { ITicker } from '../models/ticker-info.mjs'
-import { isObject } from '../services/primitives/object-helper.mjs'
-import { safestr } from '../services/primitives/string-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
 export interface IChartRunLog<T = string> extends IUserId<T>, ITicker {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

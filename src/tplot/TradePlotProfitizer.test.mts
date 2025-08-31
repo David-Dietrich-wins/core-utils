@@ -4,7 +4,7 @@ import {
   TradePlotProfitizer,
 } from './TradePlotProfitizer.mjs'
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
-import { deepCloneJson } from '../services/primitives/object-helper.mjs'
+import { deepCloneJson } from '../primitives/object-helper.mjs'
 
 const itpp: ITradePlotProfitizer = {
     amountToGoal: undefined,

@@ -5,7 +5,7 @@ import {
   type SortOrder,
   SortOrderAsBoolean,
   StringOrStringArray,
-} from '../../models/types.mjs'
+} from '../models/types.mjs'
 import {
   arrayElement,
   arrayFirst,
@@ -18,8 +18,8 @@ import {
   safestrLowercase,
   safestrToJson,
 } from './string-helper.mjs'
-import { AppException } from '../../models/AppException.mjs'
-import type { IId } from '../../models/IdManager.mjs'
+import { AppException } from '../models/AppException.mjs'
+import type { IId } from '../models/IdManager.mjs'
 import { isFunction } from './function-helper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isSymbol } from './symbol-helper.mjs'

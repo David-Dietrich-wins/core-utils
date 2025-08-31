@@ -12,15 +12,15 @@ import {
   safestr,
   safestrLowercase,
   safestrTrim,
-} from './primitives/string-helper.mjs'
+} from '../primitives/string-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
   isObject,
   sortFunction,
-} from './primitives/object-helper.mjs'
-import { isArray, safeArray } from './primitives/array-helper.mjs'
-import { getAsNumber } from './primitives/number-helper.mjs'
+} from '../primitives/object-helper.mjs'
+import { isArray, safeArray } from '../primitives/array-helper.mjs'
+import { getAsNumber } from '../primitives/number-helper.mjs'
 
 export type ISearchRequestView = z.infer<
   typeof SearchRequestView.zSearchRequestView

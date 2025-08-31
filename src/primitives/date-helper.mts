@@ -12,8 +12,8 @@ import {
   safestr,
 } from './string-helper.mjs'
 import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
-import { AppException } from '../../models/AppException.mjs'
-import type { FromTo } from '../../models/types.mjs'
+import { AppException } from '../models/AppException.mjs'
+import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './object-helper.mjs'
 
 export const MILLIS_PER_DAY = 86400000,

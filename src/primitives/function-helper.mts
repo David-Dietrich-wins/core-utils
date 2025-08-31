@@ -1,4 +1,4 @@
-import { Typish, TypishFunction } from '../../models/types.mjs'
+import { Typish, TypishFunction } from '../models/types.mjs'
 import { safeArray } from './array-helper.mjs'
 
 /**

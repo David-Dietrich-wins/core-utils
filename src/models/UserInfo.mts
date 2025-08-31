@@ -15,10 +15,10 @@ import {
 import {
   DateHelper,
   type DateTypeAcceptable,
-} from '../services/primitives/date-helper.mjs'
+} from '../primitives/date-helper.mjs'
 import { ICompany } from '../politagree/company.mjs'
 import type { IdName } from './id-name.mjs'
-import { deepCloneJson } from '../services/primitives/object-helper.mjs'
+import { deepCloneJson } from '../primitives/object-helper.mjs'
 
 export const UserConfigNames: {
   charts: string

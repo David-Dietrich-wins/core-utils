@@ -7,7 +7,7 @@ import {
   NameValueType,
   NameValueWithStyle,
 } from './NameValueManager.mjs'
-import { DollarFormatter } from '../services/primitives/number-helper.mjs'
+import { DollarFormatter } from '../primitives/number-helper.mjs'
 
 test('NameValue good', () => {
   const name = 'name',

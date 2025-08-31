@@ -2,7 +2,7 @@ import {
   ArrayOrSingle,
   ArrayOrSingleBasicTypes,
   StringOrStringArray,
-} from '../../models/types.mjs'
+} from '../models/types.mjs'
 import {
   StringHelper,
   isString,
@@ -11,10 +11,10 @@ import {
   safestrUppercase,
 } from './string-helper.mjs'
 import { hasData, isNullOrUndefined } from './object-helper.mjs'
-import { AppException } from '../../models/AppException.mjs'
-import type { IId } from '../../models/IdManager.mjs'
-import { IIdName } from '../../models/id-name.mjs'
-import { IName } from '../../models/interfaces.mjs'
+import { AppException } from '../models/AppException.mjs'
+import type { IId } from '../models/IdManager.mjs'
+import { IIdName } from '../models/id-name.mjs'
+import { IName } from '../models/interfaces.mjs'
 import { isNumber } from './number-helper.mjs'
 
 /**

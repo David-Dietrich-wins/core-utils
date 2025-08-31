@@ -8,7 +8,7 @@ import {
   rsaKeyGen,
 } from './CryptoHelper.mjs'
 import { TEST_Settings } from '../jest.setup.mjs'
-import { randomStringGenerate } from './primitives/string-helper.mjs'
+import { randomStringGenerate } from '../primitives/string-helper.mjs'
 
 /**
  * Generate an RSA key pair

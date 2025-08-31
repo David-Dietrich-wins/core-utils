@@ -3,8 +3,8 @@ import {
   DateNowIsPastExpiry,
   isDateObject,
 } from './date-helper.mjs'
-import { TEST_Settings, getCurrentDate } from '../../jest.setup.mjs'
-import { AppException } from '../../models/AppException.mjs'
+import { TEST_Settings, getCurrentDate } from '../jest.setup.mjs'
+import { AppException } from '../models/AppException.mjs'
 import moment from 'moment'
 import { safestr } from './string-helper.mjs'
 

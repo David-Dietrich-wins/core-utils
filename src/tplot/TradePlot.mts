@@ -12,14 +12,14 @@ import {
   getAsNumber,
   getNumberFormatted,
   getPercentChangeString,
-} from '../services/primitives/number-helper.mjs'
+} from '../primitives/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { IIdRequired } from '../models/IdManager.mjs'
 import { IIdValue } from '../models/IdValueManager.mjs'
 import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
-import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
-import { newGuid } from '../services/primitives/uuid-helper.mjs'
-import { safeArray } from '../services/primitives/array-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
+import { safeArray } from '../primitives/array-helper.mjs'
 
 export interface ITradePlot
   extends IIdRequired,

@@ -3,9 +3,9 @@ import {
   arrayFirst,
   isArray,
   splitToArray,
-} from './primitives/array-helper.mjs'
-import { isNumber } from './primitives/number-helper.mjs'
-import { isString } from './primitives/string-helper.mjs'
+} from '../primitives/array-helper.mjs'
+import { isNumber } from '../primitives/number-helper.mjs'
+import { isString } from '../primitives/string-helper.mjs'
 
 type StringSettings = {
   arrayStringMax?: number

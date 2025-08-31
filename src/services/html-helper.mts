@@ -3,12 +3,12 @@ import {
   ToSafeArray2d,
   isArray,
   safeArray,
-} from './primitives/array-helper.mjs'
-import { hasData, isNullOrUndefined } from './primitives/object-helper.mjs'
+} from '../primitives/array-helper.mjs'
+import { hasData, isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderNamesAllowedKeys } from './HttpHeaderManager.mjs'
-import { isNumber } from './primitives/number-helper.mjs'
-import { safestr } from './primitives/string-helper.mjs'
+import { isNumber } from '../primitives/number-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
 export type HttpMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
 

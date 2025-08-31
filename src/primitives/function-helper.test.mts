@@ -4,7 +4,7 @@ import {
   copyToTypishFunction,
   typishValue,
 } from './function-helper.mjs'
-import { Typish } from '../../models/types.mjs'
+import { Typish } from '../models/types.mjs'
 
 test(typishValue.name, () => {
   expect(typishValue(undefined)).toBe(undefined)

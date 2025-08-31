@@ -2,7 +2,7 @@ import {
   FinancialModelingPrep,
   type FmpIndicatorQueryParams,
 } from './FinancialModelingPrep.mjs'
-import { DateHelper } from '../primitives/date-helper.mjs'
+import { DateHelper } from '../../primitives/date-helper.mjs'
 import type { IChartSettings } from '../../tplot/ChartSettings.mjs'
 import { TEST_Settings } from '../../jest.setup.mjs'
 

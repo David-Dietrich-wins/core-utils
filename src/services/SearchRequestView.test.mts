@@ -1,8 +1,8 @@
 import * as z from 'zod/v4'
 import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
 import { IIdNameValue } from '../models/id-name.mjs'
-import { NumberToString } from './primitives/number-helper.mjs'
-import { StringHelper } from './primitives/string-helper.mjs'
+import { NumberToString } from '../primitives/number-helper.mjs'
+import { StringHelper } from '../primitives/string-helper.mjs'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(

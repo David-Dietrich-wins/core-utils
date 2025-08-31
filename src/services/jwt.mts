@@ -1,5 +1,5 @@
 import * as z from 'zod/v4'
-import { isString, safestr } from './primitives/string-helper.mjs'
+import { isString, safestr } from '../primitives/string-helper.mjs'
 import jsonWebToken, {
   DecodeOptions,
   JwtHeader,
@@ -12,9 +12,9 @@ import { AppException } from '../models/AppException.mjs'
 import { HttpHeaderManagerBase } from './HttpHeaderManager.mjs'
 import { IConstructor } from '../models/types.mjs'
 import { IncomingHttpHeaders } from 'node:http'
-import { isFunction } from './primitives/function-helper.mjs'
-import { newGuid } from './primitives/uuid-helper.mjs'
-import { safeArray } from './primitives/array-helper.mjs'
+import { isFunction } from '../primitives/function-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
+import { safeArray } from '../primitives/array-helper.mjs'
 
 export const CONST_JwtErrorDecode =
     'Invalid security token when attempting to decode the JWT.',

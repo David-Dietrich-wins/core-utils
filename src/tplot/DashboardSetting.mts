@@ -1,12 +1,12 @@
 import {
   DateHelper,
   type DateTypeAcceptable,
-} from '../services/primitives/date-helper.mjs'
+} from '../primitives/date-helper.mjs'
 import type { IContext } from '../services/ContextManager.mjs'
 import { IDashboardScreenSetting } from './DashboardScreenSetting.mjs'
 import { TileTypeKeys } from './TileConfig.mjs'
-import { newGuid } from '../services/primitives/uuid-helper.mjs'
-import { safeArray } from '../services/primitives/array-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
+import { safeArray } from '../primitives/array-helper.mjs'
 
 export interface IDashboardSetting extends IContext {
   screens: IDashboardScreenSetting[]

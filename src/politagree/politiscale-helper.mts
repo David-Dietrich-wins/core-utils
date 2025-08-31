@@ -2,7 +2,7 @@ import {
   type ColorRange,
   colorInterpolateRange,
   colorInterpolateWeightedRange,
-} from '../services/primitives/color-helper.mjs'
+} from '../primitives/color-helper.mjs'
 import type { ICity, IdNameSlugWithScales } from './city.mjs'
 import {
   IHasPolitiscales,
@@ -11,14 +11,11 @@ import {
 } from './politiscale.mjs'
 import type { ISymbolDetail, ITickerSearch } from '../models/ticker-info.mjs'
 import type { IdNameValue, ValueChangeHandler } from '../models/id-name.mjs'
-import { isArray, safeArray } from '../services/primitives/array-helper.mjs'
-import {
-  safestr,
-  safestrLowercase,
-} from '../services/primitives/string-helper.mjs'
+import { isArray, safeArray } from '../primitives/array-helper.mjs'
+import { safestr, safestrLowercase } from '../primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IValue } from '../models/interfaces.mjs'
-import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
 const CONST_ScaleNameClimate = 'climate',
   CONST_ScaleNameFreeSpeech = 'freeSpeech',

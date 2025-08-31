@@ -4,12 +4,12 @@ import {
   PriceInDollars,
   getPercentChange,
   getPercentChangeString,
-} from '../services/primitives/number-helper.mjs'
+} from '../primitives/number-helper.mjs'
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
-import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
-import { safeArray } from '../services/primitives/array-helper.mjs'
-import { safestrLowercase } from '../services/primitives/string-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
+import { safeArray } from '../primitives/array-helper.mjs'
+import { safestrLowercase } from '../primitives/string-helper.mjs'
 
 export interface ITradePlotProfitizer extends ITradePlot {
   profit?: number

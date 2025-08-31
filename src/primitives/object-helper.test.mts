@@ -34,9 +34,9 @@ import {
   searchObjectForArray,
   sortFunction,
 } from './object-helper.mjs'
-import { CONST_ListMustBeAnArray, type IId } from '../../models/IdManager.mjs'
-import { AppException } from '../../models/AppException.mjs'
-import { IdValueManager } from '../../models/IdValueManager.mjs'
+import { CONST_ListMustBeAnArray, type IId } from '../models/IdManager.mjs'
+import { AppException } from '../models/AppException.mjs'
+import { IdValueManager } from '../models/IdValueManager.mjs'
 import { jest } from '@jest/globals'
 import { safestr } from './string-helper.mjs'
 

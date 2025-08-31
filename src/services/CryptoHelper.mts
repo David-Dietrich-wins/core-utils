@@ -3,7 +3,7 @@ import crypto, {
   privateDecrypt,
   publicEncrypt,
 } from 'node:crypto'
-import { safestr, safestrToJson } from './primitives/string-helper.mjs'
+import { safestr, safestrToJson } from '../primitives/string-helper.mjs'
 
 export const REGEX_RsaPrivateKeyPem =
   /-----BEGIN (?:RSA|ENCRYPTED) PRIVATE KEY-----(?:\n|\r|\r\n)(?:[0-9a-zA-Z+/=]{64}(?:\n|\r|\r\n))*(?:[0-9a-zA-Z+/=]{1,63}(?:\n|\r|\r\n))?-----END (?:RSA|ENCRYPTED) PRIVATE KEY-----/u

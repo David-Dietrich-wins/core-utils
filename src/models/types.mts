@@ -1,15 +1,12 @@
-import { getAsNumber, isNumber } from '../services/primitives/number-helper.mjs'
-import {
-  isString,
-  safestrLowercase,
-} from '../services/primitives/string-helper.mjs'
+import { getAsNumber, isNumber } from '../primitives/number-helper.mjs'
+import { isString, safestrLowercase } from '../primitives/string-helper.mjs'
 import { IUserInfo } from './UserInfo.mjs'
 import { IconConfiguration } from '../services/ContextManager.mjs'
 import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { LogManagerLevel } from '../services/LogManager.mjs'
-import { getBoolean } from '../services/primitives/boolean-helper.mjs'
-import { isNullOrUndefined } from '../services/primitives/object-helper.mjs'
+import { getBoolean } from '../primitives/boolean-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
 export const CONST_NOT_IMPLEMENTED = 'Not implemented',
   REGEX_ElapsedTime = /^(?<temp1>\d+ seconds|1 second|\d+m?s)/u,

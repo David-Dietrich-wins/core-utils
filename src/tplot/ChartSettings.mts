@@ -5,13 +5,13 @@ import {
   safestr,
   safestrLowercase,
   safestrUppercase,
-} from '../services/primitives/string-helper.mjs'
-import { DateHelper } from '../services/primitives/date-helper.mjs'
+} from '../primitives/string-helper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
 import { IFacet } from './Facet.mjs'
 import { IIdName } from '../models/id-name.mjs'
 import { IPrice } from '../models/interfaces.mjs'
-import { arrayFindByIds } from '../services/primitives/array-helper.mjs'
-import { hasData } from '../services/primitives/object-helper.mjs'
+import { arrayFindByIds } from '../primitives/array-helper.mjs'
+import { hasData } from '../primitives/object-helper.mjs'
 
 export const ChartTimeFrameOptions: (IIdName & {
   fmpTimeFrame: string

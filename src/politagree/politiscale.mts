@@ -2,7 +2,7 @@ import { ICity } from './city.mjs'
 import { ICompany } from './company.mjs'
 import type { INameValue } from '../models/interfaces.mjs'
 import { ISearchRequestView } from '../services/SearchRequestView.mjs'
-import { isObject } from '../services/primitives/object-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
 
 export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 
