@@ -24,10 +24,10 @@ import {
   safeObject,
   searchObjectForArray,
 } from './object-helper.mjs'
-import { CONST_ListMustBeAnArray, type IId } from '../../models/IdManager.mts'
-import { AppException } from '../../models/AppException.mts'
-import type { IConstructor } from '../../models/types.mts'
-import { IdValueManager } from '../../models/IdValueManager.mts'
+import { CONST_ListMustBeAnArray, type IId } from '../../models/IdManager.mjs'
+import { AppException } from '../../models/AppException.mjs'
+import type { IConstructor } from '../../models/types.mjs'
+import { IdValueManager } from '../../models/IdValueManager.mjs'
 import { jest } from '@jest/globals'
 import { safestr } from './string-helper.mjs'
 

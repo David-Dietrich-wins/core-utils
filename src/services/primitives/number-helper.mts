@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 import { StringHelper, isString, safestr, stringIf } from './string-helper.mjs'
 import { hasData, isNullOrUndefined } from '../general.mjs'
 import { isArray } from './array-helper.mjs'
@@ -51,10 +50,10 @@ export function getMantissa(num: number) {
     return 0
   }
 
-  const str = num.toString()
-  const arr = str.split('.')
-  if (isArray(arr, 2) && hasData(arr[1])) {
-    return Number(arr[1])
+  const str = num.toString(),
+    strArray = str.split('.')
+  if (isArray(strArray, 2) && hasData(strArray[1])) {
+    return Number(strArray[1])
   }
 
   return 0
@@ -130,6 +129,43 @@ export function getNumberFormatted(
 }
 
 /**
+ * Gets a formatted number based on a specified number of decimal places.
+ * @param num A number or string representing a number.
+ * @param maxDecimalPlaces The maximum number of decimal places to show.
+ * @param minDecimalPlaces The minimum number of required decimal places to show.
+ * @returns A string of the passed in num with the given decimal places.
+ */
+export function NumberToString(
+  num: string | number | null | undefined,
+  showZeroValues = true,
+  maxDecimalPlaces?: number,
+  minDecimalPlaces?: number
+) {
+  if (isNullOrUndefined(num)) {
+    return ''
+  }
+
+  if (isString(num)) {
+    const newnum = num.replace(/,/gu, '')
+
+    // eslint-disable-next-line no-param-reassign
+    num = num.length === 0 ? 0 : Number(newnum)
+  }
+
+  if ((!showZeroValues && num === 0) || isNaN(num)) {
+    return ''
+  }
+
+  const maxDecimals = maxDecimalPlaces || 0,
+    minDecimals = minDecimalPlaces || maxDecimals
+
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: maxDecimals,
+    minimumFractionDigits: minDecimals,
+  }).format(num)
+}
+
+/**
  * Returns a number from a string. A number is allowed too in case you don't know if the value is a number already.
  * If a null or undefined value is passed in, 0 is returned.
  * @param stringOrNumber The string or number to return as a number.
@@ -162,324 +198,223 @@ export function getAsNumberOrUndefined(
     )
   }
 }
-export abstract class NumberHelper {
-  static FormatPrefixSuffixZero(
-    val?: string | number | null,
-    showZeroValues = true,
-    toFixedLength = 2,
-    prefix = '',
-    suffix = ''
-  ) {
-    if (isNullOrUndefined(val)) {
-      return ''
-    }
 
-    const num = isString(val) ? parseFloat(safestr(val, '0')) : val
-
-    if (num || showZeroValues) {
-      const str = NumberHelper.NumberToString(
-        num,
-        showZeroValues,
-        toFixedLength
-      )
-
-      return `${prefix}${str}${suffix}`
-    }
-
+export function FormatPrefixSuffixZero(
+  val?: string | number | null,
+  showZeroValues = true,
+  toFixedLength = 2,
+  prefix = '',
+  suffix = ''
+) {
+  if (isNullOrUndefined(val)) {
     return ''
   }
 
-  /**
-   * Gets a formatted number based on a specified number of decimal places.
-   * @param num A number or string representing a number.
-   * @param maxDecimalPlaces The maximum number of decimal places to show.
-   * @param minDecimalPlaces The minimum number of required decimal places to show.
-   * @returns A number with the given decimal places. Or 0 if num was null or undefined.
-   */
-  static getNumberFormatted(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    numToFormat?: any,
-    showZeroValues = true,
-    maxDecimalPlaces?: number,
-    minDecimalPlaces?: number
-  ) {
-    let num = numToFormat
+  const num = isString(val) ? parseFloat(safestr(val, '0')) : val
 
-    if (isString(num, 1)) {
-      const newnum = num.replace(/,/gu, '')
+  if (num || showZeroValues) {
+    const str = NumberToString(num, showZeroValues, toFixedLength)
 
-      if (isString(newnum, 1)) {
-        num = Number(newnum)
-      }
-    }
-
-    if (
-      !isNullOrUndefined(num) &&
-      isNumber(num) &&
-      (!isNullOrUndefined(maxDecimalPlaces) ||
-        !isNullOrUndefined(minDecimalPlaces))
-    ) {
-      const mystr = NumberHelper.NumberToString(
-        num,
-        showZeroValues,
-        maxDecimalPlaces,
-        minDecimalPlaces
-      )
-      return parseFloat(mystr.replace(/,/gu, ''))
-    }
-
-    return isNumber(num) ? num : 0
+    return `${prefix}${str}${suffix}`
   }
 
-  /**
-   * Gets a formatted number based on a specified number of decimal places.
-   * @param num A number or string representing a number.
-   * @param maxDecimalPlaces The maximum number of decimal places to show.
-   * @param minDecimalPlaces The minimum number of required decimal places to show.
-   * @returns A string of the passed in num with the given decimal places.
-   */
-  static NumberToString(
-    num: string | number | null | undefined,
-    showZeroValues = true,
-    maxDecimalPlaces?: number,
-    minDecimalPlaces?: number
-  ) {
-    if (isNullOrUndefined(num)) {
-      return ''
-    }
+  return ''
+}
 
-    if (isString(num)) {
-      const newnum = num.replace(/,/gu, '')
+/**
+ * Returns a number used for stock prices.
+ * This includes a minimum of 2 decimal places (if there is a mantissa).
+ * Will go 4 digits max on the mantissa.
+ * @param price The price or number to get a formatted stock price for.
+ * @return The formatted stock price.
+ */
+export function NumberWithDecimalPlaces(
+  price: number,
+  maxDecimalPlaces?: number
+) {
+  const defaultReturn = '0'
 
-      // eslint-disable-next-line no-param-reassign
-      num = num.length === 0 ? 0 : Number(newnum)
-    }
+  // Const priceret = ''
 
-    if ((!showZeroValues && num === 0) || isNaN(num)) {
-      return ''
-    }
-
-    const maxDecimals = maxDecimalPlaces || 0,
-      minDecimals = minDecimalPlaces || maxDecimals
-
-    return new Intl.NumberFormat('en-US', {
-      maximumFractionDigits: maxDecimals,
-      minimumFractionDigits: minDecimals,
-    }).format(num)
-  }
-
-  /**
-   * Returns a number used for stock prices.
-   * This includes a minimum of 2 decimal places (if there is a mantissa).
-   * Will go 4 digits max on the mantissa.
-   * @param price The price or number to get a formatted stock price for.
-   * @return The formatted stock price.
-   */
-  static NumberWithDecimalPlaces(price: number, maxDecimalPlaces?: number) {
-    const defaultReturn = '0'
-
-    // Const priceret = ''
-
-    if (!isNaN(price)) {
-      // If (price < 0) {
-      //   Console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
-      // }
-
-      const maxDecimals = maxDecimalPlaces ?? 4,
-        priceOriginal = price
-
-      return new Intl.NumberFormat('en', {
-        maximumFractionDigits: maxDecimals,
-        minimumFractionDigits: maxDecimals > 1 ? 2 : maxDecimals,
-      }).format(priceOriginal)
-      // // Make sure we have something.
-      // Const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
-      // // if (price < 0) {
-      // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
-      // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-      // // }
-      // If (priceOriginalStr && priceOriginalStr.length) {
-      //   // split to get the mantissa.
-      //   Let pricearr = priceOriginalStr.split('.');
-      //   // if (price < 0) {
-      //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-      //   // }
-      //   If (isArray(pricearr, 1)) {
-      //     // if (price < 0) {
-      //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-      //     // }
-      //     Let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
-      //     Let mantissalen = mantissa.length;
-
-      //     // Lop off any unneeded 0s.
-      //     If (mantissalen) {
-      //       // if (price < 0 && price > -1) {
-      //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
-      //       // }
-      //       Let lastchar = mantissa.charAt(mantissa.length - 1);
-      //       While ('0' === lastchar && mantissalen > 2) {
-      //         Mantissa = mantissa.slice(0, -1);
-      //         Mantissalen = mantissa.length;
-      //       }
-
-      //       If (hasData(mantissa) && mantissalen) {
-      //         // if (price < 0 && price > -1) {
-      //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
-      //         // }
-      //         Priceret = priceOriginal.toFixed(mantissalen);
-      //       }
-      //     }
-
-      //     If (!priceret && hasData(pricearr[0])) {
-      //       Priceret = priceOriginalStr;
-      //     }
-      //   }
-      // }
-    }
-
-    // If (priceret) {
-    //   // priceret = numberWithCommas(priceret);
-    //   // Lop off the .00 for now.
-    //   If (priceret.length > 3 && '.00' === priceret.substr(-3)) {
-    //     Return priceret.substr(0, priceret.length - 3)
-    //   }
-
-    //   Return priceret
+  if (!isNaN(price)) {
+    // If (price < 0) {
+    //   Console.log('priceOriginalStr: price:', price, ', plus price:', +price, ', toFixed(4):', (+price).toFixed(4));
     // }
 
-    return defaultReturn
+    const maxDecimals = maxDecimalPlaces ?? 4,
+      priceOriginal = price
+
+    return new Intl.NumberFormat('en', {
+      maximumFractionDigits: maxDecimals,
+      minimumFractionDigits: maxDecimals > 1 ? 2 : maxDecimals,
+    }).format(priceOriginal)
+    // // Make sure we have something.
+    // Const priceOriginalStr = priceOriginal.toFixed(maxDecimalPlaces);
+    // // if (price < 0) {
+    // //   console.log('priceOriginalStr: price:', priceOriginalStr, ',
+    // // original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    // // }
+    // If (priceOriginalStr && priceOriginalStr.length) {
+    //   // split to get the mantissa.
+    //   Let pricearr = priceOriginalStr.split('.');
+    //   // if (price < 0) {
+    //   //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //   // }
+    //   If (isArray(pricearr, 1)) {
+    //     // if (price < 0) {
+    //     //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //     // }
+    //     Let mantissa = isArray(pricearr, 2) && hasData(pricearr[1]) ? pricearr[1] : '';
+    //     Let mantissalen = mantissa.length;
+
+    //     // Lop off any unneeded 0s.
+    //     If (mantissalen) {
+    //       // if (price < 0 && price > -1) {
+    //       //   console.log('pricearr:', pricearr, ', original number price:', priceOriginal, ', toFixed(4):', (+price).toFixed(4));
+    //       // }
+    //       Let lastchar = mantissa.charAt(mantissa.length - 1);
+    //       While ('0' === lastchar && mantissalen > 2) {
+    //         Mantissa = mantissa.slice(0, -1);
+    //         Mantissalen = mantissa.length;
+    //       }
+
+    //       If (hasData(mantissa) && mantissalen) {
+    //         // if (price < 0 && price > -1) {
+    //         //   console.log('priceOriginalStr end:', priceOriginalStr, ', number:', priceOriginal, ', pricearr:', pricearr);
+    //         // }
+    //         Priceret = priceOriginal.toFixed(mantissalen);
+    //       }
+    //     }
+
+    //     If (!priceret && hasData(pricearr[0])) {
+    //       Priceret = priceOriginalStr;
+    //     }
+    //   }
+    // }
   }
 
-  static PriceInDollars(
-    price: number,
-    showDollarSign = true,
-    maxDecimalPlaces = 4
-  ) {
-    const dollar =
-      stringIf(showDollarSign, '$') +
-      NumberHelper.NumberWithDecimalPlaces(price, maxDecimalPlaces)
+  // If (priceret) {
+  //   // priceret = numberWithCommas(priceret);
+  //   // Lop off the .00 for now.
+  //   If (priceret.length > 3 && '.00' === priceret.substr(-3)) {
+  //     Return priceret.substr(0, priceret.length - 3)
+  //   }
 
-    return dollar.replace('$-', '-$')
-  }
+  //   Return priceret
+  // }
 
-  static DownUpOrEqual(
-    startValue: number,
-    endValue: number | null | undefined,
-    isShort = false
-  ) {
-    if (isNullOrUndefined(endValue) || startValue === endValue) {
-      return 0
-    }
+  return defaultReturn
+}
 
-    if (isShort) {
-      return endValue > startValue ? -1 : 1
-    }
+export function PriceInDollars(
+  price: number,
+  showDollarSign = true,
+  maxDecimalPlaces = 4
+) {
+  const dollar =
+    stringIf(showDollarSign, '$') +
+    NumberWithDecimalPlaces(price, maxDecimalPlaces)
 
-    return endValue > startValue ? 1 : -1
-  }
+  return dollar.replace('$-', '-$')
+}
 
-  /**
-   * Individually adds all same member names who are number together.
-   * Returns a new object with every number member added together.
-   * @param objLeft Adds all number members to the right.
-   * @param objRight Adds all number members to the right.
-   */
-  static AddNumbers<T extends object>(objLeft: T, objRight: T) {
-    return runOnAllMembers(
-      objLeft,
-      (key, val) => {
-        const lval = isNumber(val)
-            ? val
-            : isString(val)
-            ? parseFloat(val)
-            : NaN,
-          robjval = (objRight as Record<string, unknown>)[key],
-          rval = isNumber(robjval)
-            ? robjval
-            : isString(robjval)
-            ? parseFloat(robjval)
-            : NaN
-
-        if (isNaN(lval)) {
-          return isNaN(rval) ? val : rval
-        }
-
-        return isNaN(rval) ? lval : lval + rval
-      },
-      false
-    )
-  }
-
-  /**
-   * Takes an object and divides every member by divideBy.
-   * @param obj Object to divide all members.
-   * @param divideBy The number to divide all members by.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static DivideByNumbers<T extends object = any>(obj: T, divideBy: number) {
-    return runOnAllMembers(obj, (_, val) => {
-      let newval = val
-      if (isString(val)) {
-        newval = parseFloat(val)
-      }
-
-      return isNumber(newval) && !isNaN(newval) ? newval / divideBy : val
-    })
-  }
-
-  /**
-   * Returns the mantissa as a whole number.
-   * @param num The decimal number to get the mantissa for.
-   * @returns The whole number value of the mantissa.
-   */
-  static getMantissa(num: number) {
-    if (!num) {
-      return 0
-    }
-
-    const str = `${num}`,
-      strArray = str.split('.')
-    if (isArray(strArray, 2) && hasData(strArray[1])) {
-      return Number(strArray[1])
-    }
-
+export function DownUpOrEqual(
+  startValue: number,
+  endValue: number | null | undefined,
+  isShort = false
+) {
+  if (isNullOrUndefined(endValue) || startValue === endValue) {
     return 0
   }
 
-  static toFixedPrefixed(
-    val: string | number | null | undefined,
-    showZeroValues = true,
-    toFixedLength = 2,
-    prefix = '$'
-  ) {
-    const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
-
-    return !showZeroValues && !hasData(s)
-      ? ''
-      : StringHelper.safePrefix(s, prefix)
+  if (isShort) {
+    return endValue > startValue ? -1 : 1
   }
 
-  static toFixedSuffixed(
-    val: string | number | null | undefined,
-    showZeroValues = true,
-    toFixedLength = 2,
-    suffix = '%'
-  ) {
-    const s = NumberHelper.NumberToString(val, showZeroValues, toFixedLength)
+  return endValue > startValue ? 1 : -1
+}
 
-    return !showZeroValues && !hasData(s)
-      ? ''
-      : StringHelper.safeSuffix(s, suffix)
-  }
+/**
+ * Individually adds all same member names who are number together.
+ * Returns a new object with every number member added together.
+ * @param objLeft Adds all number members to the right.
+ * @param objRight Adds all number members to the right.
+ */
+export function AddNumbers<T extends object>(objLeft: T, objRight: T) {
+  return runOnAllMembers(
+    objLeft,
+    (key, val) => {
+      const lval = isNumber(val) ? val : isString(val) ? parseFloat(val) : NaN,
+        robjval = (objRight as Record<string, unknown>)[key],
+        rval = isNumber(robjval)
+          ? robjval
+          : isString(robjval)
+          ? parseFloat(robjval)
+          : NaN
 
-  static FirstNumberInString(str: string | null | undefined) {
-    if (!str) {
-      return 0
+      if (isNaN(lval)) {
+        return isNaN(rval) ? val : rval
+      }
+
+      return isNaN(rval) ? lval : lval + rval
+    },
+    false
+  )
+}
+
+/**
+ * Takes an object and divides every member by divideBy.
+ * @param obj Object to divide all members.
+ * @param divideBy The number to divide all members by.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function DivideByNumbers<T extends object = any>(
+  obj: T,
+  divideBy: number
+) {
+  return runOnAllMembers(obj, (_, val) => {
+    let newval = val
+    if (isString(val)) {
+      newval = parseFloat(val)
     }
 
-    const match = str.match(/^\s*(?:-?\d+(?:\.\d+)?)/u)
-    return match ? parseFloat(match[0]) : 0
+    return isNumber(newval) && !isNaN(newval) ? newval / divideBy : val
+  })
+}
+
+export function toFixedPrefixed(
+  val: string | number | null | undefined,
+  showZeroValues = true,
+  toFixedLength = 2,
+  prefix = '$'
+) {
+  const s = NumberToString(val, showZeroValues, toFixedLength)
+
+  return !showZeroValues && !hasData(s)
+    ? ''
+    : StringHelper.safePrefix(s, prefix)
+}
+
+export function toFixedSuffixed(
+  val: string | number | null | undefined,
+  showZeroValues = true,
+  toFixedLength = 2,
+  suffix = '%'
+) {
+  const s = NumberToString(val, showZeroValues, toFixedLength)
+
+  return !showZeroValues && !hasData(s)
+    ? ''
+    : StringHelper.safeSuffix(s, suffix)
+}
+
+export function FirstNumberInString(str: string | null | undefined) {
+  if (!str) {
+    return 0
   }
+
+  const match = str.match(/^\s*(?:-?\d+(?:\.\d+)?)/u)
+  return match ? parseFloat(match[0]) : 0
 }
 
 export type NumberFormattingBreakpoints = {
@@ -510,17 +445,13 @@ export function NumberFormatter(
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return NumberHelper.FormatPrefixSuffixZero(
-    val,
-    showZeroValues,
-    numDecimalPlaces
-  )
+  return FormatPrefixSuffixZero(val, showZeroValues, numDecimalPlaces)
 }
 export function NumberFormatterNoDecimal(
   val?: string | number | null,
   showZeroValues = true
 ) {
-  return NumberHelper.FormatPrefixSuffixZero(val, showZeroValues, 0)
+  return FormatPrefixSuffixZero(val, showZeroValues, 0)
 }
 
 export function XFormatter(
@@ -528,12 +459,7 @@ export function XFormatter(
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return NumberHelper.toFixedSuffixed(
-    val,
-    showZeroValues,
-    numDecimalPlaces,
-    'x'
-  )
+  return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, 'x')
 }
 
 export function DollarFormatter(
@@ -541,7 +467,7 @@ export function DollarFormatter(
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return NumberHelper.toFixedPrefixed(val, showZeroValues, numDecimalPlaces)
+  return toFixedPrefixed(val, showZeroValues, numDecimalPlaces)
 }
 
 export function StockPriceFormatter(
@@ -550,7 +476,7 @@ export function StockPriceFormatter(
   numDecimalPlaces?: number
 ) {
   if (price || showZeroValues) {
-    return NumberHelper.toFixedPrefixed(
+    return toFixedPrefixed(
       price ?? 0,
       showZeroValues,
       isNullOrUndefined(numDecimalPlaces)
@@ -567,12 +493,7 @@ export function PercentFormatter(
   showZeroValues = false,
   numDecimalPlaces = 2
 ) {
-  return NumberHelper.toFixedSuffixed(
-    val,
-    showZeroValues,
-    numDecimalPlaces,
-    '%'
-  )
+  return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, '%')
 }
 
 export function PercentTimes100Formatter(

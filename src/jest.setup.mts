@@ -4,7 +4,7 @@ import { jest } from '@jest/globals'
 import { JwtPayload } from 'jsonwebtoken'
 import { JwtTokenWithEmail } from './services/jwt.mjs'
 import { LogManagerOptions } from './services/LogManager.mjs'
-import { NumberHelper } from './services/primitives/number-helper.mjs'
+import { NumberToString } from './services/primitives/number-helper.mjs'
 import { safestr } from './services/primitives/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'
@@ -116,7 +116,7 @@ export class ZodTestHelper {
     const ret: Partial<z.core.$ZodIssueTooSmall & { origin: string }> = {
       code: 'too_small',
       inclusive,
-      message: `Too small: expected string to have >=${NumberHelper.NumberToString(
+      message: `Too small: expected string to have >=${NumberToString(
         minimum
       )} characters`,
       minimum,
@@ -131,7 +131,7 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected array to have <=${NumberHelper.NumberToString(
+      message: `Too big: expected array to have <=${NumberToString(
         maximum
       )} items`,
       origin: 'array',
@@ -141,7 +141,7 @@ export class ZodTestHelper {
   static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected array to have >=${NumberHelper.NumberToString(
+      message: `Too small: expected array to have >=${NumberToString(
         minimum
       )} items`,
       minimum,

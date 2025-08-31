@@ -1,10 +1,17 @@
 import {
+  AddNumbers,
+  DivideByNumbers,
   DollarFormatter,
+  DownUpOrEqual,
+  FirstNumberInString,
+  FormatPrefixSuffixZero,
   NumberFormatter,
   NumberFormatterNoDecimal,
-  NumberHelper,
+  NumberToString,
+  NumberWithDecimalPlaces,
   PercentFormatter,
   PercentTimes100Formatter,
+  PriceInDollars,
   StockPriceFormatter,
   StockVolumeFormatter,
   XFormatter,
@@ -15,6 +22,8 @@ import {
   getNumberString,
   isNumber,
   isNumeric,
+  toFixedPrefixed,
+  toFixedSuffixed,
 } from './number-helper.mjs'
 
 test(getMantissa.name, () => {
@@ -106,99 +115,91 @@ test(getAsNumberOrUndefined.name, () => {
   expect(getAsNumberOrUndefined(0)).toBeUndefined()
   expect(getAsNumberOrUndefined('')).toBeUndefined()
 })
-test(NumberHelper.NumberToString.name, () => {
-  expect(NumberHelper.NumberToString(0)).toBe('0')
-  expect(NumberHelper.NumberToString(0, false)).toBe('')
-  expect(NumberHelper.NumberToString(0.0, false)).toBe('')
-  expect(NumberHelper.NumberToString('', false)).toBe('')
-  expect(NumberHelper.NumberToString('', true)).toBe('0')
-  expect(NumberHelper.NumberToString('', true, 2)).toBe('0.00')
-  expect(NumberHelper.NumberToString('0', false)).toBe('')
-  expect(NumberHelper.NumberToString('0.00', false)).toBe('')
-  expect(NumberHelper.NumberToString('1,249')).toBe('1,249')
+test(NumberToString.name, () => {
+  expect(NumberToString(0)).toBe('0')
+  expect(NumberToString(0, false)).toBe('')
+  expect(NumberToString(0.0, false)).toBe('')
+  expect(NumberToString('', false)).toBe('')
+  expect(NumberToString('', true)).toBe('0')
+  expect(NumberToString('', true, 2)).toBe('0.00')
+  expect(NumberToString('0', false)).toBe('')
+  expect(NumberToString('0.00', false)).toBe('')
+  expect(NumberToString('1,249')).toBe('1,249')
 
-  expect(NumberHelper.NumberToString('1,249', true, 2)).toBe('1,249.00')
-  expect(NumberHelper.NumberToString('1,249.999', true, 2)).toBe('1,250.00')
-  expect(NumberHelper.NumberToString('1,249.9', true, 2)).toBe('1,249.90')
+  expect(NumberToString('1,249', true, 2)).toBe('1,249.00')
+  expect(NumberToString('1,249.999', true, 2)).toBe('1,250.00')
+  expect(NumberToString('1,249.9', true, 2)).toBe('1,249.90')
 
-  expect(NumberHelper.NumberToString('38,459,238,231,249.999', true, 2)).toBe(
+  expect(NumberToString('38,459,238,231,249.999', true, 2)).toBe(
     '38,459,238,231,250.00'
   )
 })
-test(NumberHelper.getNumberFormatted.name, () => {
-  expect(NumberHelper.getNumberFormatted(0)).toBe(0)
+test(getNumberFormatted.name, () => {
+  expect(getNumberFormatted(0)).toBe(0)
 
-  expect(NumberHelper.getNumberFormatted(',', true, 2)).toBe(0)
-  expect(NumberHelper.getNumberFormatted('1,249', true, 2)).toBe(1249)
-  expect(NumberHelper.getNumberFormatted('1,249.999', true, 2)).toBe(1250)
-  expect(NumberHelper.getNumberFormatted('1,249.9', true, 2)).toBe(1249.9)
-  expect(NumberHelper.getNumberFormatted(1249.9, true, 2)).toBe(1249.9)
-  expect(NumberHelper.getNumberFormatted(undefined, true, 2)).toBe(0)
+  expect(getNumberFormatted(',', 2)).toBe(0)
+  expect(getNumberFormatted('1,249', 2)).toBe(1249)
+  expect(getNumberFormatted('1,249.999', 2)).toBe(1250)
+  expect(getNumberFormatted('1,249.9', 2)).toBe(1249.9)
+  expect(getNumberFormatted(1249.9, 2)).toBe(1249.9)
+  expect(getNumberFormatted(undefined, 2)).toBe(0)
 })
 
-test(NumberHelper.getMantissa.name, () => {
-  expect(NumberHelper.getMantissa(0)).toBe(0)
-  expect(NumberHelper.getMantissa(1000)).toBe(0)
-  expect(NumberHelper.getMantissa(0.1)).toBe(1)
-  expect(NumberHelper.getMantissa(-4234.99)).toBe(99)
-  expect(NumberHelper.getMantissa(34.012)).toBe(12)
+test(getMantissa.name, () => {
+  expect(getMantissa(0)).toBe(0)
+  expect(getMantissa(1000)).toBe(0)
+  expect(getMantissa(0.1)).toBe(1)
+  expect(getMantissa(-4234.99)).toBe(99)
+  expect(getMantissa(34.012)).toBe(12)
 
-  expect(NumberHelper.getMantissa(34)).toBe(0)
+  expect(getMantissa(34)).toBe(0)
 })
 
-test(NumberHelper.toFixedPrefixed.name, () => {
-  expect(NumberHelper.toFixedPrefixed('')).toBe('$0.00')
-  expect(NumberHelper.toFixedPrefixed(undefined)).toBe('')
-  expect(NumberHelper.toFixedPrefixed(null)).toBe('')
-  expect(NumberHelper.toFixedPrefixed('', true, 2)).toBe('$0.00')
-  expect(NumberHelper.toFixedPrefixed(2.4, true, 2, '€')).toBe('€2.40')
-  expect(NumberHelper.toFixedPrefixed('', false, 2)).toBe('')
-  expect(NumberHelper.toFixedPrefixed(0, true, 2)).toBe('$0.00')
-  expect(NumberHelper.toFixedPrefixed(1, true, 2)).toBe('$1.00')
-  expect(NumberHelper.toFixedPrefixed(1.1, true, 2)).toBe('$1.10')
-  expect(NumberHelper.toFixedPrefixed(1.11, true, 2)).toBe('$1.11')
-  expect(NumberHelper.toFixedPrefixed(1.111, true, 2)).toBe('$1.11')
+test(toFixedPrefixed.name, () => {
+  expect(toFixedPrefixed('')).toBe('$0.00')
+  expect(toFixedPrefixed(undefined)).toBe('')
+  expect(toFixedPrefixed(null)).toBe('')
+  expect(toFixedPrefixed('', true, 2)).toBe('$0.00')
+  expect(toFixedPrefixed(2.4, true, 2, '€')).toBe('€2.40')
+  expect(toFixedPrefixed('', false, 2)).toBe('')
+  expect(toFixedPrefixed(0, true, 2)).toBe('$0.00')
+  expect(toFixedPrefixed(1, true, 2)).toBe('$1.00')
+  expect(toFixedPrefixed(1.1, true, 2)).toBe('$1.10')
+  expect(toFixedPrefixed(1.11, true, 2)).toBe('$1.11')
+  expect(toFixedPrefixed(1.111, true, 2)).toBe('$1.11')
 })
 
-test(NumberHelper.toFixedSuffixed.name, () => {
-  expect(NumberHelper.toFixedSuffixed('', true, 2)).toBe('0.00%')
-  expect(NumberHelper.toFixedSuffixed('', false, 2)).toBe('')
-  expect(NumberHelper.toFixedSuffixed(undefined)).toBe('')
-  expect(NumberHelper.toFixedSuffixed(null)).toBe('')
-  expect(NumberHelper.toFixedSuffixed('', true, 2)).toBe('0.00%')
-  expect(NumberHelper.toFixedSuffixed(2.4, true, 2, '€')).toBe('2.40€')
-  expect(NumberHelper.toFixedSuffixed(0, true, 2)).toBe('0.00%')
-  expect(NumberHelper.toFixedSuffixed(1, true, 2)).toBe('1.00%')
-  expect(NumberHelper.toFixedSuffixed(1.1, true, 2)).toBe('1.10%')
-  expect(NumberHelper.toFixedSuffixed(1.11, true, 2)).toBe('1.11%')
-  expect(NumberHelper.toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
+test(toFixedSuffixed.name, () => {
+  expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed('', false, 2)).toBe('')
+  expect(toFixedSuffixed(undefined)).toBe('')
+  expect(toFixedSuffixed(null)).toBe('')
+  expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed(2.4, true, 2, '€')).toBe('2.40€')
+  expect(toFixedSuffixed(0, true, 2)).toBe('0.00%')
+  expect(toFixedSuffixed(1, true, 2)).toBe('1.00%')
+  expect(toFixedSuffixed(1.1, true, 2)).toBe('1.10%')
+  expect(toFixedSuffixed(1.11, true, 2)).toBe('1.11%')
+  expect(toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
 })
 
-test(NumberHelper.FormatPrefixSuffixZero.name, () => {
-  expect(NumberHelper.FormatPrefixSuffixZero(null)).toBe('')
-  expect(NumberHelper.FormatPrefixSuffixZero(undefined)).toBe('')
-  expect(NumberHelper.FormatPrefixSuffixZero('')).toBe('0.00')
-  expect(NumberHelper.FormatPrefixSuffixZero('', false)).toBe('')
-  expect(NumberHelper.FormatPrefixSuffixZero(0)).toBe('0.00')
-  expect(NumberHelper.FormatPrefixSuffixZero(0, true, 0)).toBe('0')
-  expect(NumberHelper.FormatPrefixSuffixZero(1)).toBe('1.00')
-  expect(NumberHelper.FormatPrefixSuffixZero(1.1)).toBe('1.10')
-  expect(NumberHelper.FormatPrefixSuffixZero(1.11)).toBe('1.11')
-  expect(NumberHelper.FormatPrefixSuffixZero(1.111)).toBe('1.11')
-  expect(NumberHelper.FormatPrefixSuffixZero(1000)).toBe('1,000.00')
-  expect(NumberHelper.FormatPrefixSuffixZero('1000')).toBe('1,000.00')
-  expect(NumberHelper.FormatPrefixSuffixZero(1000.1)).toBe('1,000.10')
-  expect(NumberHelper.FormatPrefixSuffixZero(1000000.1, false, 3)).toBe(
-    '1,000,000.100'
-  )
+test(FormatPrefixSuffixZero.name, () => {
+  expect(FormatPrefixSuffixZero(null)).toBe('')
+  expect(FormatPrefixSuffixZero(undefined)).toBe('')
+  expect(FormatPrefixSuffixZero('')).toBe('0.00')
+  expect(FormatPrefixSuffixZero('', false)).toBe('')
+  expect(FormatPrefixSuffixZero(0)).toBe('0.00')
+  expect(FormatPrefixSuffixZero(0, true, 0)).toBe('0')
+  expect(FormatPrefixSuffixZero(1)).toBe('1.00')
+  expect(FormatPrefixSuffixZero(1.1)).toBe('1.10')
+  expect(FormatPrefixSuffixZero(1.11)).toBe('1.11')
+  expect(FormatPrefixSuffixZero(1.111)).toBe('1.11')
+  expect(FormatPrefixSuffixZero(1000)).toBe('1,000.00')
+  expect(FormatPrefixSuffixZero('1000')).toBe('1,000.00')
+  expect(FormatPrefixSuffixZero(1000.1)).toBe('1,000.10')
+  expect(FormatPrefixSuffixZero(1000000.1, false, 3)).toBe('1,000,000.100')
   expect(
-    NumberHelper.FormatPrefixSuffixZero(
-      1000000.1,
-      false,
-      3,
-      'prefix-',
-      '-suffix'
-    )
+    FormatPrefixSuffixZero(1000000.1, false, 3, 'prefix-', '-suffix')
   ).toBe('prefix-1,000,000.100-suffix')
 })
 
@@ -386,51 +387,49 @@ test(StockVolumeFormatter.name, () => {
   expect(StockVolumeFormatter(',,', true, 0)).toBe('')
 })
 
-test(NumberHelper.NumberWithDecimalPlaces.name, () => {
-  expect(NumberHelper.NumberWithDecimalPlaces(NaN)).toBe('0')
-  expect(NumberHelper.NumberWithDecimalPlaces(0)).toBe('0.00')
-  expect(NumberHelper.NumberWithDecimalPlaces(1)).toBe('1.00')
-  expect(NumberHelper.NumberWithDecimalPlaces(1.1)).toBe('1.10')
-  expect(NumberHelper.NumberWithDecimalPlaces(1.11)).toBe('1.11')
-  expect(NumberHelper.NumberWithDecimalPlaces(1.111)).toBe('1.111')
-  expect(NumberHelper.NumberWithDecimalPlaces(1000)).toBe('1,000.00')
-  expect(NumberHelper.NumberWithDecimalPlaces(1000, 3)).toBe('1,000.00')
-  expect(NumberHelper.NumberWithDecimalPlaces(1000.1)).toBe('1,000.10')
-  expect(NumberHelper.NumberWithDecimalPlaces(1000000.1, 3)).toBe(
-    '1,000,000.10'
-  )
+test(NumberWithDecimalPlaces.name, () => {
+  expect(NumberWithDecimalPlaces(NaN)).toBe('0')
+  expect(NumberWithDecimalPlaces(0)).toBe('0.00')
+  expect(NumberWithDecimalPlaces(1)).toBe('1.00')
+  expect(NumberWithDecimalPlaces(1.1)).toBe('1.10')
+  expect(NumberWithDecimalPlaces(1.11)).toBe('1.11')
+  expect(NumberWithDecimalPlaces(1.111)).toBe('1.111')
+  expect(NumberWithDecimalPlaces(1000)).toBe('1,000.00')
+  expect(NumberWithDecimalPlaces(1000, 3)).toBe('1,000.00')
+  expect(NumberWithDecimalPlaces(1000.1)).toBe('1,000.10')
+  expect(NumberWithDecimalPlaces(1000000.1, 3)).toBe('1,000,000.10')
 })
 
-test(NumberHelper.PriceInDollars.name, () => {
-  expect(NumberHelper.PriceInDollars(0)).toBe('$0.00')
-  expect(NumberHelper.PriceInDollars(1)).toBe('$1.00')
-  expect(NumberHelper.PriceInDollars(9999999, false, 0)).toBe('9,999,999')
-  expect(NumberHelper.PriceInDollars(1.1)).toBe('$1.10')
-  expect(NumberHelper.PriceInDollars(1.11)).toBe('$1.11')
-  expect(NumberHelper.PriceInDollars(1.111)).toBe('$1.111')
-  expect(NumberHelper.PriceInDollars(1000)).toBe('$1,000.00')
-  expect(NumberHelper.PriceInDollars(1000.1)).toBe('$1,000.10')
-  expect(NumberHelper.PriceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
+test(PriceInDollars.name, () => {
+  expect(PriceInDollars(0)).toBe('$0.00')
+  expect(PriceInDollars(1)).toBe('$1.00')
+  expect(PriceInDollars(9999999, false, 0)).toBe('9,999,999')
+  expect(PriceInDollars(1.1)).toBe('$1.10')
+  expect(PriceInDollars(1.11)).toBe('$1.11')
+  expect(PriceInDollars(1.111)).toBe('$1.111')
+  expect(PriceInDollars(1000)).toBe('$1,000.00')
+  expect(PriceInDollars(1000.1)).toBe('$1,000.10')
+  expect(PriceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
 })
 
-test(NumberHelper.DownUpOrEqual.name, () => {
-  expect(NumberHelper.DownUpOrEqual(-10, undefined)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(0, undefined)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(10, undefined)).toBe(0)
+test(DownUpOrEqual.name, () => {
+  expect(DownUpOrEqual(-10, undefined)).toBe(0)
+  expect(DownUpOrEqual(0, undefined)).toBe(0)
+  expect(DownUpOrEqual(10, undefined)).toBe(0)
 
-  expect(NumberHelper.DownUpOrEqual(0, 0)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(1, 0)).toBe(-1)
-  expect(NumberHelper.DownUpOrEqual(0, 1)).toBe(1)
-  expect(NumberHelper.DownUpOrEqual(1, 1)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(1.1, 1)).toBe(-1)
-  expect(NumberHelper.DownUpOrEqual(1.11, 1)).toBe(-1)
+  expect(DownUpOrEqual(0, 0)).toBe(0)
+  expect(DownUpOrEqual(1, 0)).toBe(-1)
+  expect(DownUpOrEqual(0, 1)).toBe(1)
+  expect(DownUpOrEqual(1, 1)).toBe(0)
+  expect(DownUpOrEqual(1.1, 1)).toBe(-1)
+  expect(DownUpOrEqual(1.11, 1)).toBe(-1)
 
-  expect(NumberHelper.DownUpOrEqual(0, 0, true)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(1, 0, true)).toBe(1)
-  expect(NumberHelper.DownUpOrEqual(0, 1, true)).toBe(-1)
-  expect(NumberHelper.DownUpOrEqual(1, 1, true)).toBe(0)
-  expect(NumberHelper.DownUpOrEqual(1.1, 1, true)).toBe(1)
-  expect(NumberHelper.DownUpOrEqual(1.11, 1, true)).toBe(1)
+  expect(DownUpOrEqual(0, 0, true)).toBe(0)
+  expect(DownUpOrEqual(1, 0, true)).toBe(1)
+  expect(DownUpOrEqual(0, 1, true)).toBe(-1)
+  expect(DownUpOrEqual(1, 1, true)).toBe(0)
+  expect(DownUpOrEqual(1.1, 1, true)).toBe(1)
+  expect(DownUpOrEqual(1.11, 1, true)).toBe(1)
 })
 
 test(elementTopLeftCoords.name, () => {
@@ -469,20 +468,20 @@ test(elementTopLeftCoords.name, () => {
   })
 })
 
-test(NumberHelper.FirstNumberInString.name, () => {
-  expect(NumberHelper.FirstNumberInString('')).toBe(0)
-  expect(NumberHelper.FirstNumberInString(null)).toBe(0)
-  expect(NumberHelper.FirstNumberInString(undefined)).toBe(0)
-  expect(NumberHelper.FirstNumberInString('   ')).toBe(0)
-  expect(NumberHelper.FirstNumberInString('abc 123')).toBe(0)
-  expect(NumberHelper.FirstNumberInString('abc -123.45')).toBe(0)
-  expect(NumberHelper.FirstNumberInString(' 123')).toBe(123)
-  expect(NumberHelper.FirstNumberInString(' -123.45')).toBe(-123.45)
+test(FirstNumberInString.name, () => {
+  expect(FirstNumberInString('')).toBe(0)
+  expect(FirstNumberInString(null)).toBe(0)
+  expect(FirstNumberInString(undefined)).toBe(0)
+  expect(FirstNumberInString('   ')).toBe(0)
+  expect(FirstNumberInString('abc 123')).toBe(0)
+  expect(FirstNumberInString('abc -123.45')).toBe(0)
+  expect(FirstNumberInString(' 123')).toBe(123)
+  expect(FirstNumberInString(' -123.45')).toBe(-123.45)
 })
 
-test(NumberHelper.AddNumbers.name, () => {
+test(AddNumbers.name, () => {
   const io1 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
-    io1ret = NumberHelper.AddNumbers(io1, {
+    io1ret = AddNumbers(io1, {
       a: 3,
       b: 4,
       c: '5',
@@ -491,7 +490,7 @@ test(NumberHelper.AddNumbers.name, () => {
       f: 'd',
     }),
     io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
-    io2ret = NumberHelper.AddNumbers(io2, {
+    io2ret = AddNumbers(io2, {
       a: 3,
       b: 4,
       c: '5',
@@ -500,7 +499,7 @@ test(NumberHelper.AddNumbers.name, () => {
       f: { a: 2 },
     }),
     io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
-    io3ret = NumberHelper.AddNumbers(io3, {
+    io3ret = AddNumbers(io3, {
       a: [3],
       b: 4,
       c: '5',
@@ -509,7 +508,7 @@ test(NumberHelper.AddNumbers.name, () => {
       f: { a: 2 },
     }),
     io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } },
-    io4ret = NumberHelper.AddNumbers(io4, {
+    io4ret = AddNumbers(io4, {
       a: [3],
       b: 4,
       c: [9],
@@ -524,9 +523,9 @@ test(NumberHelper.AddNumbers.name, () => {
   expect(io4ret).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
 })
 
-test(NumberHelper.DivideByNumbers.name, () => {
+test(DivideByNumbers.name, () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
-    objRet = NumberHelper.DivideByNumbers(io, 2)
+    objRet = DivideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })

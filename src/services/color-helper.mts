@@ -1,4 +1,4 @@
-import { NumberHelper } from './primitives/number-helper.mjs'
+import { DownUpOrEqual } from './primitives/number-helper.mjs'
 import { safeArray } from './primitives/array-helper.mjs'
 
 export type ColorRange = readonly [string, string]
@@ -19,7 +19,7 @@ export class ColorHelper {
     colorUp?: string,
     colorNeutral = '#000000'
   ) {
-    const upDown = NumberHelper.DownUpOrEqual(startValue, endValue, isShort)
+    const upDown = DownUpOrEqual(startValue, endValue, isShort)
 
     return upDown === 1 ? colorUp : upDown === -1 ? colorDown : colorNeutral
   }

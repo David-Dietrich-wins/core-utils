@@ -1,6 +1,6 @@
 import * as z from 'zod/v4'
 import { CONST_ListMustBeAnArray, IId, IdManager } from './IdManager.mjs'
-import { AppException } from './AppException.mts'
+import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 

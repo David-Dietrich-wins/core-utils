@@ -1,6 +1,6 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
 import {
-  NumberHelper,
+  NumberToString,
   getAsNumber,
   getAsNumberOrUndefined,
 } from '../primitives/number-helper.mjs'
@@ -56,9 +56,9 @@ export class FinancialModelingPrep extends TradingClientBase {
   ) {
     let qp = `${existingQueryParams}&symbol=${
       params.symbol
-    }&periodLength=${NumberHelper.NumberToString(
-      params.periodLength
-    )}&timeframe=${params.timeframe}`
+    }&periodLength=${NumberToString(params.periodLength)}&timeframe=${
+      params.timeframe
+    }`
     if (params.from) {
       qp += `&from=${params.from.toString()}`
     }

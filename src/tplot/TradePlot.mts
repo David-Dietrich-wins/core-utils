@@ -8,8 +8,9 @@ import {
 import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import { ISubplot, Subplot } from './Subplot.mjs'
 import {
-  NumberHelper,
+  PriceInDollars,
   getAsNumber,
+  getNumberFormatted,
 } from '../services/primitives/number-helper.mjs'
 import {
   getPercentChangeString,
@@ -117,12 +118,12 @@ export class TradePlot implements ITradePlot {
     this.ticker = obj.ticker
     this.description = obj.description
     if (!isNullOrUndefined(obj.goal)) {
-      this.goal = NumberHelper.getNumberFormatted(obj.goal, true, 2, 2)
+      this.goal = getNumberFormatted(obj.goal, 2, 2)
     }
     this.isShort = obj.isShort
 
     if (!isNullOrUndefined(obj.purchase)) {
-      this.purchase = NumberHelper.getNumberFormatted(obj.purchase, true, 2, 2)
+      this.purchase = getNumberFormatted(obj.purchase, 2, 2)
     }
 
     this.shares = obj.shares
@@ -184,7 +185,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return NumberHelper.PriceInDollars(gain, true, maxDecimalPlaces)
+    return PriceInDollars(gain, true, maxDecimalPlaces)
   }
 
   investmentAmountGainPercent(currentPrice: number) {
@@ -214,7 +215,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return NumberHelper.PriceInDollars(this.investmentAmountStart)
+    return PriceInDollars(this.investmentAmountStart)
   }
 
   get startingInvestment() {

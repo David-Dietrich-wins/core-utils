@@ -10,7 +10,7 @@ import {
   HttpHeaderManagerBase,
   HttpHeaderNamesAllowedKeys,
 } from './HttpHeaderManager.mjs'
-import { AppException } from '../models/AppException.mts'
+import { AppException } from '../models/AppException.mjs'
 import { IncomingHttpHeaders } from 'node:http'
 import { StringOrStringArrayObject } from '../models/types.mjs'
 

@@ -1,12 +1,15 @@
 import { ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
+  NumberWithDecimalPlaces,
+  PriceInDollars,
+} from '../services/primitives/number-helper.mjs'
+import {
   getPercentChange,
   getPercentChangeString,
   isNullOrUndefined,
 } from '../services/general.mjs'
 import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { IPlotMsg } from './ChartSettings.mjs'
-import { NumberHelper } from '../services/primitives/number-helper.mjs'
 import { safeArray } from '../services/primitives/array-helper.mjs'
 import { safestrLowercase } from '../services/primitives/string-helper.mjs'
 
@@ -117,9 +120,9 @@ export class TradePlotProfitizer
     } else if (!x.profit) {
       msg = 'Currently break even.'
     } else if (x.profit > 0) {
-      msg = `Currently up ${NumberHelper.PriceInDollars(x.profit)}!`
+      msg = `Currently up ${PriceInDollars(x.profit)}!`
     } else {
-      msg = `Currently down ${NumberHelper.PriceInDollars(x.profit)}.`
+      msg = `Currently down ${PriceInDollars(x.profit)}.`
     }
 
     const pl: IPlotMsg = {
@@ -138,7 +141,7 @@ export class TradePlotProfitizer
   }
 
   get currentPriceDisplay() {
-    return NumberHelper.PriceInDollars(this.currentPrice ?? 0)
+    return PriceInDollars(this.currentPrice ?? 0)
   }
 
   /**
@@ -223,7 +226,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountDisplay() {
-    return NumberHelper.PriceInDollars(this.investmentAmountCurrent)
+    return PriceInDollars(this.investmentAmountCurrent)
   }
 
   get investmentAmountStart() {
@@ -234,7 +237,7 @@ export class TradePlotProfitizer
       return '$0'
     }
 
-    return NumberHelper.PriceInDollars(this.investmentAmountStart)
+    return PriceInDollars(this.investmentAmountStart)
   }
 
   get profitLoss() {
@@ -242,7 +245,7 @@ export class TradePlotProfitizer
     return this.investmentAmountCurrent - this.investmentAmountStart
   }
   get profitLossText() {
-    return NumberHelper.NumberWithDecimalPlaces(this.profitLoss)
+    return NumberWithDecimalPlaces(this.profitLoss)
   }
 
   get subplotCount() {

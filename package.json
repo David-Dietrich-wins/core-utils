@@ -10,7 +10,7 @@
     "build": "rimraf dist && tsc && npm run export:package",
     "build:clean": "npm run clean && npm run build",
     "build:clean:test": "npm run clean && npm run build:test:base && npm run test:coverage",
-    "build:test": "npm run build:test:base && npm run test",
+    "build:test": "npm run build:test:base && npm run test:coverage",
     "build:test:base": "rimraf dist && tsc -p tsconfig.test.json",
     "clean": "npm run clean:files && npm install",
     "clean:files": "rimraf .next _next build dist lib node_modules out package-lock.json pnpm-lock.yaml yarn.lock",
