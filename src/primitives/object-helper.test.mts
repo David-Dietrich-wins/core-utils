@@ -401,6 +401,9 @@ test('hasData', () => {
   expect(hasData(['a'], 1)).toBe(true)
   expect(hasData(['a'], 2)).toBe(false)
 
+  expect(hasData(false)).toBe(false)
+  expect(hasData(true)).toBe(true)
+
   const myfunc = () => ['a'],
     sym = Symbol('test'),
     symbol1 = Symbol('description'),
