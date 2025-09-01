@@ -1,3 +1,7 @@
+import {
+  type IAssetQuoteResponse,
+  type IQuoteBarEma,
+} from '../models/ticker-info.mjs'
 import { type ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
   NumberWithDecimalPlaces,
@@ -5,8 +9,9 @@ import {
   getPercentChange,
   getPercentChangeString,
 } from '../primitives/number-helper.mjs'
-import { type IAssetQuoteResponse } from '../models/ticker-info.mjs'
+import type { IIdValue } from '../models/IdValueManager.mjs'
 import { type IPlotMsg } from './ChartSettings.mjs'
+import { type ISubplot } from './Subplot.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'
 import { safestrLowercase } from '../primitives/string-helper.mjs'
@@ -257,4 +262,11 @@ export class TradePlotProfitizer
   //   // console.log('pf:', pf, ', curtf:', curtf);
   //   Return pf ? pf.value : 'No range selected yet'
   // }
+}
+
+export type ITradePlotProfitizerWithContext = {
+  emas: IIdValue<ISubplot['id'], IQuoteBarEma[]>[]
+  profitizer?: ITradePlotProfitizer
+  quote?: IAssetQuoteResponse
+  tradePlot: ITradePlot
 }
