@@ -32,9 +32,3 @@ export function dictionaryToObject<K extends string | number | symbol, V>(
   }
   return obj
 }
-
-export function processEnvUpsert(dict: NodeJS.Dict<string>): void {
-  for (const [key, value] of Object.entries(dict)) {
-    // process.env[key] = value
-  }
-}

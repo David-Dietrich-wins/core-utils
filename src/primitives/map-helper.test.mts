@@ -3,7 +3,6 @@ import {
   dictionaryToObject,
   dictionaryUpsert,
   dictionaryUpsertAll,
-  processEnvUpsert,
 } from './map-helper.mjs'
 
 test(dictionaryUpsert.name, () => {
@@ -37,12 +36,4 @@ test(dictionaryToObject.name, () => {
   dict.set('key2', 2)
   const obj = dictionaryToObject(dict)
   expect(obj).toEqual({ key1: 1, key2: 2 })
-})
-
-test(processEnvUpsert.name, () => {
-  const dict = { KEY1: 'value1', KEY2: 'value2' }
-
-  processEnvUpsert(dict)
-  expect(process.env.KEY1).toBe('value1')
-  expect(process.env.KEY2).toBe('value2')
 })

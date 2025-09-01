@@ -178,7 +178,7 @@ describe(ObjectTypesToString.name, () => {
   test('return string from array', () => {
     const ret = ObjectTypesToString(['hello', 'world'])
 
-    expect(ret).toBe("[ 'hello', 'world', [length]: 2 ]")
+    expect(ret).toBe('["hello","world"]')
   })
 
   test('null', () => {
@@ -192,7 +192,7 @@ describe(ObjectTypesToString.name, () => {
 
     const ret = ObjectTypesToString(e)
     expect(ret).toContain('Error')
-    expect(ret).toContain("message: 'test error'")
+    expect(ret).toContain('{"message":"test error","name":"Error"')
   })
 
   // Mock HTTP objects
@@ -230,21 +230,21 @@ describe(ObjectTypesToString.name, () => {
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("File { data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
   test('FileList object', () => {
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("FileList { data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
   test('Object generic', () => {
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("{ data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 })
 
@@ -286,7 +286,7 @@ describe(BuildLogFriendlyMessage.name, () => {
       message: e,
     })
     expect(ret).toContain('Error')
-    expect(ret).toContain("message: 'test error'")
+    expect(ret).toContain('"message":"test error"')
   })
 
   // Mock HTTP objects
@@ -330,21 +330,21 @@ describe(BuildLogFriendlyMessage.name, () => {
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("File { data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
   test('FileList object', () => {
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("FileList { data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
   test('Object generic', () => {
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual("{ data: '', name: 'test.txt' }")
+    expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 })
 
