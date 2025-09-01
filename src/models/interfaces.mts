@@ -1,8 +1,8 @@
-import * as z from 'zod'
-import { ICreatedBy } from './id-created-updated.mjs'
-import { IId } from './IdManager.mjs'
-import { ITicker } from './ticker-info.mjs'
-import { IWebState } from './WebState.mjs'
+import * as z from 'zod/v4'
+import { type ICreatedBy } from './id-created-updated.mjs'
+import { type IId } from './IdManager.mjs'
+import { type ITicker } from './ticker-info.mjs'
+import { type IWebState } from './WebState.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 export interface IDate<T = string> {
@@ -16,7 +16,7 @@ export interface IUserId<T = string> {
 export const zName = z.object({
   name: z.string().min(1).max(1000),
 })
-export interface IName<T extends string = string> {
+export interface IName<T = string> {
   name: T
 }
 
@@ -41,10 +41,10 @@ export interface INameValue<Tvalue = string, Tname extends string = string>
   extends IName<Tname>,
     IValue<Tvalue> {}
 
-export const zJwt = z.object({
-  jwt: z.string().min(1).max(5000),
-})
-export type IJwt = z.infer<typeof zJwt>
+// export const zJwt = z.object({
+//   jwt: z.string().min(1).max(5000),
+// })
+// export type IJwt = z.infer<typeof zJwt>
 
 export const zPrice = z.object({
   price: z.number().nonnegative().max(1000),

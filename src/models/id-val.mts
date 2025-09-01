@@ -1,6 +1,6 @@
-import { IId, IIdRequired } from './IdManager.mjs'
-import { INameVal } from './NameValManager.mjs'
-import { IVal } from './interfaces.mjs'
+import type { IId, IIdRequired } from './IdManager.mjs'
+import type { INameVal } from './NameValManager.mjs'
+import type { IVal } from './interfaces.mjs'
 
 export interface IIdVal<Tid = string, Tval = string>
   extends IId<Tid>,

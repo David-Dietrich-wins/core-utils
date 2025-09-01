@@ -1,21 +1,24 @@
-import {
+import type {
   ArrayOrSingle,
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import { ToSafeArray, isArray, safeArray } from '../services/array-helper.mjs'
-import { hasData, isNullOrUndefined } from '../services/general.mjs'
+import { ToSafeArray, isArray, safeArray } from '../primitives/array-helper.mjs'
+import {
+  hasData,
+  isNullOrUndefined,
+  isObject,
+} from '../primitives/object-helper.mjs'
 import {
   isString,
   pluralSuffix,
   pluralize,
   prefixIfHasData,
   safestr,
-} from '../services/string-helper.mjs'
+} from '../primitives/string-helper.mjs'
 import { AppException } from './AppException.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import { NumberHelper } from '../services/number-helper.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
+import { NumberToString } from '../primitives/number-helper.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
@@ -220,7 +223,7 @@ export class InstrumentationStatistics {
     showSkipped = false,
     recordsName = ''
   ) {
-    let msg = `${NumberHelper.NumberToString(this.totalProcessed)} ${safestr(
+    let msg = `${NumberToString(this.totalProcessed)} ${safestr(
       recordsName
     )}${pluralize(
       this.totalProcessed,
@@ -232,21 +235,19 @@ export class InstrumentationStatistics {
       let successFailMsg = ''
 
       if (this.successes || showSuccessFailIf0) {
-        successFailMsg += `Success: ${NumberHelper.NumberToString(
-          this.successes
-        )}`
+        successFailMsg += `Success: ${NumberToString(this.successes)}`
       }
 
       if (this.failures || showSuccessFailIf0) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Fail: ${NumberHelper.NumberToString(this.failures)}`
+        )}Fail: ${NumberToString(this.failures)}`
       }
 
       if (showSkipped && this.skipped) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Skipped: ${NumberHelper.NumberToString(this.skipped)}`
+        )}Skipped: ${NumberToString(this.skipped)}`
       }
 
       msg += ` (${successFailMsg})`
@@ -308,57 +309,45 @@ export class InstrumentationStatistics {
   }
 
   messageString(isOneLine?: boolean) {
-    let s = `Processed ${NumberHelper.NumberToString(
+    let s = `Processed ${NumberToString(
       this.totalProcessed
     )} item${pluralSuffix(this.totalProcessed)} in ${this.processingTimeString(
       true
     )}${isOneLine ? '' : '.'}`
     if (this.add) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Added: ${NumberHelper.NumberToString(this.add)}${isOneLine ? '' : '.'}`
+      s += `${this.lineSeparator(isOneLine)}Added: ${NumberToString(this.add)}${
+        isOneLine ? '' : '.'
+      }`
     }
     if (this.update) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Updated: ${NumberHelper.NumberToString(this.update)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Updated: ${NumberToString(
+        this.update
+      )}${isOneLine ? '' : '.'}`
     }
     if (this.upsert) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Upserted: ${NumberHelper.NumberToString(this.upsert)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Upserted: ${NumberToString(
+        this.upsert
+      )}${isOneLine ? '' : '.'}`
     }
     if (this.delete) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Deleted: ${NumberHelper.NumberToString(this.delete)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Deleted: ${NumberToString(
+        this.delete
+      )}${isOneLine ? '' : '.'}`
     }
     if (this.skipped) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Skipped: ${NumberHelper.NumberToString(this.skipped)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Skipped: ${NumberToString(
+        this.skipped
+      )}${isOneLine ? '' : '.'}`
     }
     if (this.successes) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Successes: ${NumberHelper.NumberToString(this.successes)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Successes: ${NumberToString(
+        this.successes
+      )}${isOneLine ? '' : '.'}`
     }
     if (this.failures) {
-      s += `${this.lineSeparator(
-        isOneLine
-      )}Failures: ${NumberHelper.NumberToString(this.failures)}${
-        isOneLine ? '' : '.'
-      }`
+      s += `${this.lineSeparator(isOneLine)}Failures: ${NumberToString(
+        this.failures
+      )}${isOneLine ? '' : '.'}`
     }
 
     if (isOneLine) {
@@ -385,7 +374,7 @@ export class InstrumentationStatistics {
       : 1
 
     return [
-      NumberHelper.NumberToString(this.totalProcessed),
+      NumberToString(this.totalProcessed),
       recordsPerSecond.toFixed(1),
       DateHelper.timeDifferenceStringFromMillis(this.processingTime, true),
     ]

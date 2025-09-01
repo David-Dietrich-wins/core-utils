@@ -1,17 +1,23 @@
-import type { ArrayOrSingle } from '../models/types.mjs'
-import { HtmlHelper } from './html-helper.mjs'
+import {
+  GetHttpHeaderApplicationName,
+  GetHttpHeaders,
+  ParamsEncoder,
+  getHttpHeaderJson,
+  urlJoin,
+} from './html-helper.mjs'
+import type { ArrayOrSingle } from '../models/types.mts'
 
-test('ParamsEncoder', () => {
-  expect(HtmlHelper.ParamsEncoder()).toBe('')
+test(ParamsEncoder.name, () => {
+  expect(ParamsEncoder()).toBe('')
 
   expect(
-    HtmlHelper.ParamsEncoder({
+    ParamsEncoder({
       baz: 'qux',
       foo: 'bar',
     })
   ).toBe('baz=qux&foo=bar')
   expect(
-    HtmlHelper.ParamsEncoder({
+    ParamsEncoder({
       baz: 'qux',
       foo: 'bar',
       quux: 'corge',
@@ -19,7 +25,7 @@ test('ParamsEncoder', () => {
   ).toBe('baz=qux&foo=bar&quux=corge')
 
   expect(
-    HtmlHelper.ParamsEncoder({
+    ParamsEncoder({
       baz: 'qux',
       grault: 'garply',
       quux: 'corge',
@@ -30,28 +36,28 @@ test('ParamsEncoder', () => {
   )
 })
 
-test('getHttpHeaderJson', () => {
-  const headers = HtmlHelper.getHttpHeaderJson('my-token', [
+test(getHttpHeaderJson.name, () => {
+  const headers = getHttpHeaderJson('my-token', [
     ['X-Custom-Header', 'CustomValue'],
   ])
   expect(headers.get('Content-Type')).toBe('application/json')
   expect(headers.get('Authorization')).toBe('Bearer my-token')
   expect(headers.get('X-Custom-Header')).toBe('CustomValue')
 
-  const headersWithoutToken = HtmlHelper.getHttpHeaderJson(undefined, [
+  const headersWithoutToken = getHttpHeaderJson(undefined, [
     ['X-Custom-Header', 'CustomValue'],
   ])
   expect(headersWithoutToken.get('Authorization')).toBeNull()
 })
 
-test('GetHttpHeaderApplicationName', () => {
-  const headers = HtmlHelper.GetHttpHeaderApplicationName('MyApp')
+test(GetHttpHeaderApplicationName.name, () => {
+  const headers = GetHttpHeaderApplicationName('MyApp')
   expect(headers[0]).toBe('x-application-name')
   expect(headers[1]).toBe('MyApp')
 })
 
-test('GetHttpHeaders', () => {
-  const headers = HtmlHelper.GetHttpHeaders([
+test(GetHttpHeaders.name, () => {
+  const headers = GetHttpHeaders([
     ['Content-Type', 'application/json'],
     ['Authorization', 'Bearer my-token'],
     ['x-test-header'],
@@ -59,4 +65,93 @@ test('GetHttpHeaders', () => {
   expect(headers.get('Content-Type')).toBe('application/json')
   expect(headers.get('Authorization')).toBe('Bearer my-token')
   expect(headers.get('x-test-header')).toBe(null)
+})
+
+describe(urlJoin.name, () => {
+  const baseUrl = 'https://localhost:3000'
+
+  test('Slash relative path', () => {
+    const path = '/',
+      url = urlJoin(baseUrl, path)
+
+    expect(url).not.toBe(`${baseUrl}//`)
+    expect(url).not.toBe(baseUrl)
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Extra slashes relative path', () => {
+    const path = '/',
+      url = urlJoin(`${baseUrl}/`, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Many slashes relative path', () => {
+    const path = '/',
+      url = urlJoin(`${baseUrl}///`, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('Undefined relative path', () => {
+    const path = undefined,
+      url = urlJoin(baseUrl, path)
+
+    expect(url).toBe(`${baseUrl}/`)
+  })
+
+  test('No relative path', () => {
+    const path = undefined,
+      url = urlJoin(baseUrl, path, false)
+
+    expect(url).toBe(baseUrl)
+  })
+
+  test('No trailing slash', () => {
+    expect(urlJoin(baseUrl, '?x=1', true)).toBe(`${baseUrl}/?x=1`)
+    expect(urlJoin(baseUrl, '?x=1&y=2', true)).toBe(`${baseUrl}/?x=1&y=2`)
+    expect(urlJoin(baseUrl, '?x=1&y=2#link', true)).toBe(
+      `${baseUrl}/?x=1&y=2#link`
+    )
+  })
+
+  test('number', () => {
+    expect(urlJoin(baseUrl, 5, true)).toBe(`${baseUrl}/5/`)
+  })
+
+  test('exception', () => {
+    expect(() => urlJoin(baseUrl, [undefined], true)).toThrow()
+  })
+
+  test('add trailing slash', () => {
+    const addTrailingSlash = true,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe(`https://localhost:3000/test/`)
+  })
+
+  test('no trailing slash', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
+
+  test('URL end in /', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
+
+  test('relative path and url end in /', () => {
+    const addTrailingSlash = false,
+      relativePath = '/test/',
+      url = urlJoin(baseUrl, relativePath, addTrailingSlash)
+
+    expect(url).toBe('https://localhost:3000/test')
+  })
 })

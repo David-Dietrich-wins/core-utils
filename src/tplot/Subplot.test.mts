@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { Subplot } from './Subplot.mjs'
 import { ZodTestHelper } from '../jest.setup.mjs'
 

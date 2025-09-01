@@ -1,16 +1,18 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import {
   arrayAdd,
   arrayRemove,
   isArray,
   safeArray,
-} from '../services/array-helper.mjs'
+} from '../primitives/array-helper.mjs'
 import { AppException } from './AppException.mjs'
-import { FindObjectWithField } from '../services/object-helper.mjs'
+import { FindObjectWithField } from '../primitives/object-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 // Export type IId<T> = z.infer<ReturnType<typeof IIdSchema<z.ZodType<T>>>>
+
+export const CONST_ListMustBeAnArray = 'List must be an array'
 
 export interface IId<T = string> {
   id?: T
@@ -25,7 +27,7 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
 
   constructor(list: T[] = [], stats?: InstrumentationStatistics) {
     if (!isArray(list) || !list.every((item) => 'id' in item)) {
-      throw new AppException('list must be an array', 'IdManager.constructor')
+      throw new AppException(CONST_ListMustBeAnArray, 'IdManager.constructor')
     }
 
     this.list = list
@@ -39,7 +41,6 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     return new IdManager(safeArray(arr), stats)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static FindObjectWithId<T extends object = object>(
     obj: T,
     id: string | number

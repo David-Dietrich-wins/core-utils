@@ -1,10 +1,10 @@
 import { AppException, AppExceptionHttp } from './AppException.mjs'
 import { type IPagedResponse, PagedResponse } from './PagedResponse.mjs'
-import { safestr, safestrLowercase } from '../services/string-helper.mjs'
-import { FetchDataTypesAllowed } from '../services/html-helper.mjs'
-import { IDataWithStats } from './types.mjs'
+import { safestr, safestrLowercase } from '../primitives/string-helper.mjs'
+import { type FetchDataTypesAllowed } from '../services/html-helper.mjs'
+import { type IDataWithStats } from './types.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
 
 /**
  * Represents the status of an HTTP response usually used in API responses.

@@ -1,11 +1,8 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
-import { JwtPayload } from 'jsonwebtoken'
-import { JwtTokenWithEmail } from './services/jwt.mjs'
-import { LogManagerOptions } from './services/LogManager.mjs'
-import { NumberHelper } from './services/number-helper.mjs'
-import { safestr } from './services/string-helper.mjs'
+import { NumberToString } from './primitives/number-helper.mjs'
+import { safestr } from './primitives/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'
 // Import { setupServer } from 'msw/node'
@@ -116,7 +113,7 @@ export class ZodTestHelper {
     const ret: Partial<z.core.$ZodIssueTooSmall & { origin: string }> = {
       code: 'too_small',
       inclusive,
-      message: `Too small: expected string to have >=${NumberHelper.NumberToString(
+      message: `Too small: expected string to have >=${NumberToString(
         minimum
       )} characters`,
       minimum,
@@ -131,7 +128,7 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected array to have <=${NumberHelper.NumberToString(
+      message: `Too big: expected array to have <=${NumberToString(
         maximum
       )} items`,
       origin: 'array',
@@ -141,7 +138,7 @@ export class ZodTestHelper {
   static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected array to have >=${NumberHelper.NumberToString(
+      message: `Too small: expected array to have >=${NumberToString(
         minimum
       )} items`,
       minimum,
@@ -151,47 +148,72 @@ export class ZodTestHelper {
   }
 }
 
-const globalLogger = jest.fn().mockImplementation(() => ({
-  debug: mockLoggerDebug,
-  error: mockLoggerError,
-  info: mockLoggerInfo,
-  log: mockLoggerLog,
-  silly: mockLoggerSilly,
-  warn: mockLoggerWarn,
-}))
-jest.unstable_mockModule('./services/LogManager.mjs', () => ({
-  LogManager: globalLogger,
-}))
+// const globalLogger = jest.fn().mockImplementation(() => ({
+//   debug: mockLoggerDebug,
+//   error: mockLoggerError,
+//   info: mockLoggerInfo,
+//   log: mockLoggerLog,
+//   silly: mockLoggerSilly,
+//   warn: mockLoggerWarn,
+// }))
+// jest.unstable_mockModule('./services/LogManager.mjs', () => ({
+//   LogManager: globalLogger,
+// }))
 
-const { LogManager } = await import('./services/LogManager.mjs')
-export function getGlobalLogger() {
-  const loggerOptions: LogManagerOptions = {
-    componentName: 'test',
-    includeHttpRequestDataInTheLog: true,
-    includeHttpResponseDataInTheLog: true,
-    logBaseFileName: 'test',
-    logFileName: 'test.log',
-    logLevel: 'all',
-    maxFiles: 10,
-    maxSize: 1000000,
-    rotateBaseFileName: 'test',
-    showConsole: true,
-    suffixDatePattern: 'YYYY-MM-DD-HH',
-  }
+// const { LogManager } = await import('./services/LogManager.mjs')
+// export function getGlobalLogger() {
+//   const loggerOptions: LogManagerOptions = {
+//     componentName: 'test',
+//     includeHttpRequestDataInTheLog: true,
+//     includeHttpResponseDataInTheLog: true,
+//     logBaseFileName: 'test',
+//     logFileName: 'test.log',
+//     logLevel: 'all',
+//     maxFiles: 10,
+//     maxSize: 1000000,
+//     rotateBaseFileName: 'test',
+//     showConsole: true,
+//     suffixDatePattern: 'YYYY-MM-DD-HH',
+//   }
 
-  return new LogManager(loggerOptions)
-}
+//   return new LogManager(loggerOptions)
+// }
 
 // Const httpHandlers: HttpHandler[] = []
 
 // Export const mockServer = setupServer(...httpHandlers)
 
-export const TEST_Settings = {
+export const TEST_Settings: {
+  apiBaseUrl: string
+  beforeEach: () => void
+  currentDate: Date
+  currentDateInMilliseconds: number
+  currentDateString: string
+  // jwt: string
+  rsaPassPhrase: string
+  rsaPrivateKey: string
+  rsaPublicKey: string
+  userIdBad: number
+  userIdGood: number
+  userIdGoodEmail: string
+} = {
   apiBaseUrl: 'http://localhost:3000',
+  beforeEach: () => {
+    TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
+    TEST_Settings.currentDateInMilliseconds =
+      TEST_Settings.currentDate.getTime()
+
+    TEST_Settings.rsaPassPhrase = safestr(process.env.rsaPassPhrase)
+    TEST_Settings.rsaPrivateKey = safestr(process.env.rsaPrivateKey)
+    TEST_Settings.rsaPublicKey = safestr(process.env.rsaPublicKey)
+
+    // eslint-disable-next-line no-use-before-define
+    // TEST_Settings.jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
+  },
   currentDate: new Date('2025-12-01T12:00:00.000Z'),
   currentDateInMilliseconds: 0,
   currentDateString: '2025-12-01T12:00:00.000Z',
-  jwt: '',
+  // jwt: '',
   rsaPassPhrase: safestr(process.env.rsaPassPhrase),
   rsaPrivateKey: safestr(process.env.rsaPrivateKey),
   rsaPublicKey: safestr(process.env.rsaPublicKey),
@@ -200,18 +222,23 @@ export const TEST_Settings = {
   userIdGoodEmail: 'test@test.com',
 }
 
-export function GenerateSignedJwtToken(
-  email: string = TEST_Settings.userIdGoodEmail,
-  overrides?: Partial<JwtPayload>
-) {
-  return JwtTokenWithEmail(email, TEST_Settings.rsaPassPhrase, overrides)
-}
+// export function GenerateSignedJwtToken(
+//   email: string = TEST_Settings.userIdGoodEmail,
+//   overrides?: Partial<JwtPayload>
+// ) {
+//   return JwtTokenWithEmail(
+//     email,
+//     TEST_Settings.rsaPrivateKey,
+//     TEST_Settings.rsaPassPhrase,
+//     overrides
+//   )
+// }
 
 beforeAll(() => {
   // Process.env.NODE_ENV = 'test'
-  const jwtToken = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
+  // const jwtToken = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
 
-  TEST_Settings.jwt = jwtToken
+  // TEST_Settings.jwt = jwtToken
 
   // MockServer.listen({
   //   // This tells MSW to throw an error whenever it
@@ -270,8 +297,7 @@ beforeEach(() => {
   mockLoggerSilly.mockClear()
   mockLoggerWarn.mockClear()
 
-  TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
-  TEST_Settings.currentDateInMilliseconds = TEST_Settings.currentDate.getTime()
+  TEST_Settings.beforeEach()
 })
 
 afterEach(() => {

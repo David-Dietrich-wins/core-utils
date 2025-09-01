@@ -1,11 +1,14 @@
-import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from '../primitives/date-helper.mjs'
 import {
   type IContext,
   type IContextValue,
   updateContextValueToggleBoolean,
 } from '../services/ContextManager.mjs'
-import { deepCloneJson } from '../services/object-helper.mjs'
-import { newGuid } from '../services/general.mjs'
+import { deepCloneJson } from '../primitives/object-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 
 export interface IConfigWebsite extends IContext {
   openFirstPlot: IContextValue<boolean>

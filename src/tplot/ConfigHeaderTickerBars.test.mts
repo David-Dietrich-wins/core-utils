@@ -2,7 +2,7 @@ import {
   ConfigHeaderTickerBars,
   type IConfigHeaderTickerBars,
 } from './ConfigHeaderTickerBars.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 
 test('constructor with default', () => {
   const cfg: IConfigHeaderTickerBars = ConfigHeaderTickerBars.defaults()

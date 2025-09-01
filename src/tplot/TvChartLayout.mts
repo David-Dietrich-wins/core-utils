@@ -1,9 +1,9 @@
 import {
-  IUserCreatedUpdatedTable,
+  type IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
-import { ISymbolName } from '../models/ticker-info.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { type ISymbolName } from '../models/ticker-info.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
 
 export interface ITvChartLayout extends IUserCreatedUpdatedTable, ISymbolName {
   publish_request_id: string

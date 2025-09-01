@@ -1,4 +1,8 @@
-import { DateHelper, DateNowIsPastExpiry } from './DateHelper.mjs'
+import {
+  DateHelper,
+  DateNowIsPastExpiry,
+  isDateObject,
+} from './date-helper.mjs'
 import { TEST_Settings, getCurrentDate } from '../jest.setup.mjs'
 import { AppException } from '../models/AppException.mjs'
 import moment from 'moment'
@@ -508,22 +512,18 @@ describe(DateHelper.timeDifferenceStringFromMillis.name, () => {
   })
 })
 
-test(DateHelper.isDateObject.name, () => {
-  expect(DateHelper.isDateObject(new Date())).toBe(true)
-  expect(DateHelper.isDateObject(1)).toBe(false)
-  expect(DateHelper.isDateObject(0)).toBe(false)
-  expect(DateHelper.isDateObject('')).toBe(false)
-  expect(DateHelper.isDateObject(new Date('2022'))).toBe(true)
-  expect(DateHelper.isDateObject('2022-10-24')).toBe(false)
-  expect(DateHelper.isDateObject(new Date('2022-10-24'))).toBe(true)
-  expect(DateHelper.isDateObject(new Date('20'))).toBe(false)
-  expect(DateHelper.isDateObject(new Date(20))).toBe(true)
-  expect(DateHelper.isDateObject(moment('2022-10-24T00:00:00.000Z'))).toBe(
-    false
-  )
-  expect(
-    DateHelper.isDateObject(moment('2022-10-24T00:00:00.000Z').toDate())
-  ).toBe(true)
+test(isDateObject.name, () => {
+  expect(isDateObject(new Date())).toBe(true)
+  expect(isDateObject(1)).toBe(false)
+  expect(isDateObject(0)).toBe(false)
+  expect(isDateObject('')).toBe(false)
+  expect(isDateObject(new Date('2022'))).toBe(true)
+  expect(isDateObject('2022-10-24')).toBe(false)
+  expect(isDateObject(new Date('2022-10-24'))).toBe(true)
+  expect(isDateObject(new Date('20'))).toBe(false)
+  expect(isDateObject(new Date(20))).toBe(true)
+  expect(isDateObject(moment('2022-10-24T00:00:00.000Z'))).toBe(false)
+  expect(isDateObject(moment('2022-10-24T00:00:00.000Z').toDate())).toBe(true)
 })
 
 test(DateHelper.IsValidDate.name, () => {

@@ -1,23 +1,18 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
+import type { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
+import { type ISubplot, Subplot } from './Subplot.mjs'
+import { type ITicker, zTicker } from '../models/ticker-info.mjs'
 import {
-  IAssetQuoteResponse,
-  IQuoteBarEma,
-  ITicker,
-  zTicker,
-} from '../models/ticker-info.mjs'
-import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
-import { ISubplot, Subplot } from './Subplot.mjs'
-import { NumberHelper, getAsNumber } from '../services/number-helper.mjs'
-import {
+  PriceInDollars,
+  getAsNumber,
+  getNumberFormatted,
   getPercentChangeString,
-  isNullOrUndefined,
-  newGuid,
-} from '../services/general.mjs'
+} from '../primitives/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
-import { IIdRequired } from '../models/IdManager.mjs'
-import { IIdValue } from '../models/IdValueManager.mjs'
-import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
-import { safeArray } from '../services/array-helper.mjs'
+import { type IIdRequired } from '../models/IdManager.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
+import { safeArray } from '../primitives/array-helper.mjs'
 
 export interface ITradePlot
   extends IIdRequired,
@@ -114,12 +109,12 @@ export class TradePlot implements ITradePlot {
     this.ticker = obj.ticker
     this.description = obj.description
     if (!isNullOrUndefined(obj.goal)) {
-      this.goal = NumberHelper.getNumberFormatted(obj.goal, true, 2, 2)
+      this.goal = getNumberFormatted(obj.goal, 2, 2)
     }
     this.isShort = obj.isShort
 
     if (!isNullOrUndefined(obj.purchase)) {
-      this.purchase = NumberHelper.getNumberFormatted(obj.purchase, true, 2, 2)
+      this.purchase = getNumberFormatted(obj.purchase, 2, 2)
     }
 
     this.shares = obj.shares
@@ -181,7 +176,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return NumberHelper.PriceInDollars(gain, true, maxDecimalPlaces)
+    return PriceInDollars(gain, true, maxDecimalPlaces)
   }
 
   investmentAmountGainPercent(currentPrice: number) {
@@ -211,7 +206,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return NumberHelper.PriceInDollars(this.investmentAmountStart)
+    return PriceInDollars(this.investmentAmountStart)
   }
 
   get startingInvestment() {
@@ -340,11 +335,4 @@ export class TradePlot implements ITradePlot {
       ? (this.getTargetHigh() - price) / price
       : undefined
   }
-}
-
-export type ITradePlotProfitizerWithContext = {
-  emas: IIdValue<ISubplot['id'], IQuoteBarEma[]>[]
-  profitizer?: ITradePlotProfitizer
-  quote?: IAssetQuoteResponse
-  tradePlot: ITradePlot
 }

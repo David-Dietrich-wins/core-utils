@@ -1,10 +1,10 @@
-import * as z from 'zod'
-import { IHasPolitiscales, Politiscale } from './politiscale.mjs'
+import * as z from 'zod/v4'
+import { type IHasPolitiscales, Politiscale } from './politiscale.mjs'
 import {
-  IIdCreatedUpdated,
+  type IIdCreatedUpdated,
   IdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
 
 export interface ICompany extends IIdCreatedUpdated, IHasPolitiscales {
   name: string

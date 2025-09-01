@@ -1,11 +1,14 @@
-import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from '../primitives/date-helper.mjs'
 import {
   type IContext,
   type IContextValue,
   updateContext,
   updateContextValueToggleBoolean,
 } from '../services/ContextManager.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 
 export interface IConfigOperations extends IContext {
   minusEightPlus10: IContextValue<boolean>

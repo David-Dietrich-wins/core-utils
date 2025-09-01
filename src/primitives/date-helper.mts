@@ -1,15 +1,24 @@
-import { NumberHelper, getAsNumber, isNumber } from './number-helper.mjs'
 import {
-  StringHelper,
+  FirstNumberInString,
+  NumberToString,
+  getAsNumber,
+  isNumber,
+} from './number-helper.mjs'
+import {
+  RemoveLeadingNumbersAndWhitespace,
   isString,
   pluralSuffix,
   prefixIfHasData,
   safestr,
 } from './string-helper.mjs'
-import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
+import moment, {
+  type DurationInputArg1,
+  type Moment,
+  type unitOfTime,
+} from 'moment'
 import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
-import { isNullOrUndefined } from './general.mjs'
+import { isNullOrUndefined } from './object-helper.mjs'
 
 export const MILLIS_PER_DAY = 86400000,
   MILLIS_PER_HOUR = 3600000,
@@ -24,6 +33,14 @@ export type DateTypeAcceptable =
   | null
   | undefined
 
+export function isDateObject(obj: unknown): obj is Date {
+  if (obj && Object.prototype.toString.call(obj) === '[object Date]') {
+    return !isNaN((obj as Date).getTime())
+  }
+
+  return false
+}
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class DateHelper {
   static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
@@ -37,14 +54,6 @@ export abstract class DateHelper {
   static readonly FormatForUi2DigitYear = 'M/D/YY'
   static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
   static readonly FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a'
-
-  static isDateObject(obj: unknown): obj is Date {
-    if (obj && Object.prototype.toString.call(obj) === '[object Date]') {
-      return !isNaN((obj as Date).getTime())
-    }
-
-    return false
-  }
 
   /**
    * Checks the date value passed in to see if the variable is a valid Date object.
@@ -71,7 +80,7 @@ export abstract class DateHelper {
       if (setToNowIfEmpty) {
         return new Date()
       }
-    } else if (DateHelper.isDateObject(date)) {
+    } else if (isDateObject(date)) {
       return new Date(date.getTime())
     } else if (moment.isMoment(date)) {
       return date.toDate()
@@ -417,7 +426,7 @@ export abstract class DateHelper {
   }
 
   static PeriodType(period: string) {
-    let speriodString = StringHelper.RemoveLeadingNumbersAndWhitespace(period)
+    let speriodString = RemoveLeadingNumbersAndWhitespace(period)
     if (speriodString.length > 0) {
       if (speriodString.toLowerCase().startsWith('month')) {
         speriodString = 'M'
@@ -472,7 +481,7 @@ export abstract class DateHelper {
   ) {
     const dateClean = DateHelper.ConvertToDateObject(date),
       numPeriods = isNullOrUndefined(numberOfPeriods)
-        ? NumberHelper.FirstNumberInString(periodType)
+        ? FirstNumberInString(periodType)
         : getAsNumber(numberOfPeriods),
       period = DateHelper.PeriodType(periodType)
 
@@ -697,45 +706,40 @@ export abstract class DateHelper {
     let s = ''
     if (numDays > 0) {
       s += longFormat
-        ? `${NumberHelper.NumberToString(numDays)} day${pluralSuffix(numDays)}`
-        : `${NumberHelper.NumberToString(numDays)}d`
+        ? `${NumberToString(numDays)} day${pluralSuffix(numDays)}`
+        : `${NumberToString(numDays)}d`
     }
 
     if (numHours > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
+        ? `${prefixIfHasData(s)}${NumberToString(numHours)} hour${pluralSuffix(
             numHours
-          )} hour${pluralSuffix(numHours)}`
-        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(numHours)}h`
+          )}`
+        : `${prefixIfHasData(s, ' ')}${NumberToString(numHours)}h`
     }
 
     if (numMinutes > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
+        ? `${prefixIfHasData(s)}${NumberToString(
             numMinutes
           )} minute${pluralSuffix(numMinutes)}`
-        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(
-            numMinutes
-          )}m`
+        : `${prefixIfHasData(s, ' ')}${NumberToString(numMinutes)}m`
     }
 
     if (secondsModulo > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberHelper.NumberToString(
+        ? `${prefixIfHasData(s)}${NumberToString(
             secondsModulo
           )} second${pluralSuffix(secondsModulo)}`
-        : `${prefixIfHasData(s, ' ')}${NumberHelper.NumberToString(
-            secondsModulo
-          )}s`
+        : `${prefixIfHasData(s, ' ')}${NumberToString(secondsModulo)}s`
     }
 
     if (showMilliseconds || (showMillisecondsIfUnderASecond && millis < 1000)) {
       const micros = millis % 1000
       if (micros > 0) {
-        s += `${prefixIfHasData(
-          s,
-          longFormat ? ', ' : ' '
-        )}${NumberHelper.NumberToString(micros % 1000)}ms`
+        s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${NumberToString(
+          micros % 1000
+        )}ms`
       }
     }
 

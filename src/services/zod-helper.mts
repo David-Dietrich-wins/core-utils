@@ -1,7 +1,11 @@
-import * as z from 'zod'
-import { arrayFirst, isArray } from './array-helper.mjs'
-import { isString, splitToArray } from './string-helper.mjs'
-import { isNumber } from './number-helper.mjs'
+import * as z from 'zod/v4'
+import {
+  arrayFirst,
+  isArray,
+  splitToArray,
+} from '../primitives/array-helper.mjs'
+import { isNumber } from '../primitives/number-helper.mjs'
+import { isString } from '../primitives/string-helper.mjs'
 
 type StringSettings = {
   arrayStringMax?: number

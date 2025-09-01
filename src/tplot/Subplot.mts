@@ -1,14 +1,14 @@
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import {
   ChartPatternOptions,
   TradeSubplotTimeFrameOptions,
 } from './ChartSettings.mjs'
-import { arrayMustFind, safeArray } from '../services/array-helper.mjs'
-import { DateHelper } from '../services/DateHelper.mjs'
-import { FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
-import { IIdRequired } from '../models/IdManager.mjs'
-import { isObject } from '../services/object-helper.mjs'
-import { newGuid } from '../services/general.mjs'
+import { arrayMustFind, safeArray } from '../primitives/array-helper.mjs'
+import { DateHelper } from '../primitives/date-helper.mjs'
+import { type FmpIndicatorQueryParams } from '../services/TradeClient/FinancialModelingPrep.mjs'
+import { type IIdRequired } from '../models/IdManager.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 import { zDateTime } from '../services/zod-helper.mjs'
 
 export interface ISubplot extends IIdRequired {

@@ -1,4 +1,4 @@
-import { safestr } from '../services/string-helper.mjs'
+import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
 export const HTTP_Ok = 200 as const
 export const HTTP_Created = 201 as const
@@ -23,12 +23,38 @@ export function IsErrorMessage(error: unknown): error is { message: string } {
     typeof (error as { message?: string }).message === 'string'
   )
 }
-export function GetErrorMessage(error: unknown): string {
-  if (IsErrorMessage(error)) {
-    return error.message
+
+export function GetErrorMessage(err: unknown) {
+  if (!isNullOrUndefined(err)) {
+    switch (typeof err) {
+      case 'object':
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (err && 'message' in err) {
+          const message = (err as { message: string }).message
+          if (message) {
+            return message
+          }
+        }
+        break
+
+      case 'string':
+        if (err) {
+          return err
+        }
+        break
+
+      case 'number':
+        return err.toString()
+
+      case 'boolean':
+        return err ? 'true' : 'false'
+
+      default:
+        break
+    }
   }
 
-  return safestr(error, 'Unknown error')
+  return 'Unknown error'
 }
 
 export class AppException<Tobj = string> extends Error {

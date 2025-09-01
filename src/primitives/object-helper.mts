@@ -1,12 +1,17 @@
-import * as util from 'util'
-import { AnyObject, ArrayOrSingle, IConstructor } from '../models/types.mjs'
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { DateHelper, isDateObject } from './date-helper.mjs'
+import {
+  type IConstructor,
+  type SortOrder,
+  SortOrderAsBoolean,
+  type StringOrStringArray,
+} from '../models/types.mjs'
 import {
   arrayElement,
   arrayFirst,
   isArray,
   safeArray,
 } from './array-helper.mjs'
-import { hasData, isFunction, isNullOrUndefined } from './general.mjs'
 import {
   isString,
   safestr,
@@ -14,8 +19,23 @@ import {
   safestrToJson,
 } from './string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IId } from '../models/IdManager.mjs'
+import type { IId } from '../models/IdManager.mjs'
+import { isFunction } from './function-helper.mjs'
 import { isNumber } from './number-helper.mjs'
+import { isSymbol } from './symbol-helper.mjs'
+
+export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret']
+
+// const CONST_JsonDepth = 5
+
+/**
+ * Tests if a variable is null or undefined.
+ * @param obj Any variable to test if it is null or undefined.
+ * @returns True if the object passed in is null or undefined.
+ */
+export function isNullOrUndefined(obj: unknown): obj is undefined | null {
+  return typeof obj === 'undefined' || obj === null
+}
 
 /**
  * Checks if the variable passed in is a JavaScript object that is not an array.
@@ -28,7 +48,7 @@ export function isObject(
   obj: unknown,
   minLengthOrContainsField: number | string = 0
 ): obj is object {
-  const isok = obj && typeof obj === 'object' && !isArray(obj)
+  const isok = obj && 'object' === typeof obj && !isArray(obj)
   if (!isok) {
     return false
   }
@@ -42,29 +62,92 @@ export function isObject(
   }
 
   if (isString(minLengthOrContainsField)) {
-    const keys = Object.keys(obj),
-      zincs = safeArray(keys).includes(minLengthOrContainsField)
-
-    return zincs
+    return safeArray(Object.keys(obj)).includes(minLengthOrContainsField)
   }
 
   return true
 }
 
-export function UpdateFieldValue<T extends IId>(
-  parentObject: Readonly<T>,
-  fieldName: string,
-  fieldValue: unknown
-) {
-  const ret: T = {
-    ...parentObject,
-    [fieldName]: fieldValue,
+/**
+ * Checks any object, string or array if it has any data.
+ * The minlength is for requiring more items to be in the object, string or array.
+ * You can pass in a function that must return an object, string or array to be tested as well.
+ * @param o Any object, string or array. If it is a function, the function will be called to get the object, string or array before testing.
+ * @param minlength The required minimum length to consider to have data. If not supplied, defaults to 1.
+ * @returns True if the object meets the minimum length requirements.
+ */
+export function hasData(o: unknown, minlength = 1): boolean {
+  // Console.log('minlength: ' + minlength + ', o: ' + o)
+  try {
+    if (!o) {
+      return false
+    }
+
+    if (isNullOrUndefined(minlength)) {
+      throw new AppException('Minimum length cannot be null or undefined.')
+    }
+
+    if (isFunction(o)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      return hasData(o(), minlength)
+    }
+
+    if (isString(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for string comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
+      return o.length >= minlength
+    }
+
+    if (isArray(o)) {
+      if (minlength < 1) {
+        throw new AppException(
+          'Minimum length for array comparisons must be greater than 0.',
+          'hasData',
+          o
+        )
+      }
+
+      return o.length >= minlength
+    }
+
+    // Primitives cannot have more than 1 by definition of not being an array or object.
+    if (!isObject(o)) {
+      if (isSymbol(o)) {
+        return minlength === 1
+      }
+
+      if (isNumber(o)) {
+        return o >= minlength
+      }
+
+      return Boolean(o)
+    }
+
+    if (isDateObject(o)) {
+      return o.getTime() >= minlength
+    }
+
+    if (minlength < 1) {
+      throw new AppException(
+        'Minimum length for object comparisons must be greater than 0.',
+        'hasData',
+        o
+      )
+    }
+
+    return isArray(Object.keys(o), minlength)
+  } catch (ex) {
+    console.error(hasData.name, ex)
   }
 
-  return ret
+  return false
 }
-
-const CONST_JsonDepth = 5
 
 /**
  * Searches an object's keys for a specific key and returns the value
@@ -118,27 +201,6 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
   )
 }
 
-export function ObjectTypesToString(e: unknown): string {
-  if (isNullOrUndefined(e)) {
-    return ''
-  } else if (Array.isArray(e)) {
-    return util.inspect(e, true, CONST_JsonDepth)
-  } else if (e instanceof Error) {
-    const jerr = {
-      message: e.message,
-      name: e.name,
-      stack: e.stack,
-      type: 'Exception',
-    }
-
-    return util.inspect(jerr, true, CONST_JsonDepth)
-  } else if (isObject(e)) {
-    return util.inspect(e, true, CONST_JsonDepth)
-  }
-
-  return safestr(e)
-}
-
 /**
  * Tests if the passed in obj is in fact an object that is not undefined or null.
  * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
@@ -146,12 +208,8 @@ export function ObjectTypesToString(e: unknown): string {
  * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
  * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
  */
-export function safeObject(obj?: object, ifEmpty?: object) {
-  if (obj && isObject(obj)) {
-    return obj
-  }
-
-  return isObject(ifEmpty) ? ifEmpty : {}
+export function safeObject<T extends object = object>(obj?: T, ifEmpty?: T): T {
+  return (obj ?? ifEmpty ?? {}) as T
 }
 /**
  * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
@@ -167,7 +225,7 @@ export function safeJsonToString<T extends object | Array<T>>(
 ) {
   try {
     return JSON.stringify(
-      isArray(json) ? safeArray(json) : safeObject(json),
+      isObject(json) ? safeObject(json) : safeArray(json),
       replacer,
       space
     )
@@ -176,6 +234,195 @@ export function safeJsonToString<T extends object | Array<T>>(
   }
 
   return ''
+}
+
+export function ObjectTypesToString(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  e: any
+) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const etoString: string = isNullOrUndefined(e) ? '' : e.toString()
+
+  if (Array.isArray(e)) {
+    return safeJsonToString(e)
+  } else if (e instanceof Error) {
+    const jerr = {
+      message: e.message,
+      name: e.name,
+      stack: e.stack,
+      type: 'Exception',
+    }
+
+    return safeJsonToString(jerr)
+  } else if (etoString === '[object Object]') {
+    return safeJsonToString(e)
+    // } else if (etoString === '[object FileList]') {
+    //   return util.inspect(e.toArray(), true, CONST_JsonDepth)
+    // } else if (etoString === '[object File]') {
+    //   return util.inspect(e.toObject(), true, CONST_JsonDepth)
+  }
+
+  return etoString
+}
+
+export function BuildLogFriendlyMessage({
+  componentName,
+  level,
+  message,
+}: {
+  componentName: string
+  level: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  message: any
+}) {
+  const msg = safeArray(message)
+    .map((e: unknown) => ObjectTypesToString(e))
+    .join(' ')
+
+  return `${DateHelper.FormatDateTimeWithMillis()}: [${componentName}] [${level}] ${msg}`
+}
+
+export function isEmptyObject(obj: unknown) {
+  return (
+    null === obj ||
+    (isObject(obj) &&
+      safeArray(Object.keys(obj)).length === 0 &&
+      obj.constructor === Object)
+  )
+}
+
+/**
+ * Gets from the object the value from the key that matches find string.
+ * @param obj The object to search for the key.
+ * @param keyToFind The property to look for in the object.
+ * @returns The value from the obj[keyToFind]. undefined if not found.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getObjectValue(obj: any, keyToFind: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return obj[keyToFind]
+  }
+
+  return undefined
+}
+
+/**
+ * Renames a property of an object with a new key name.
+ * @param obj The object to rename the key.
+ * @param oldKey The original key to rename.
+ * @param newKey The new name of the key.
+ * @returns The original object with the renamed key.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function renameProperty(obj: any, oldKey: any, newKey: any): object {
+  if (
+    !isObject(obj) ||
+    !isString(oldKey, 1) ||
+    !isString(newKey, 1) ||
+    oldKey === newKey
+  ) {
+    throw new Error('Cannot renameProperty. Invalid settings.')
+  }
+
+  const propdesc = Object.getOwnPropertyDescriptor(obj, oldKey)
+  if (!propdesc) {
+    throw new Error(`Cannot renameProperty. Property: ${oldKey} not found.`)
+  }
+
+  Object.defineProperty(obj, newKey, propdesc)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-dynamic-delete
+  delete (obj as any)[oldKey]
+
+  return obj
+}
+
+/**
+ * Runs a given function on all members of an object.
+ * @param obj The object to run func() on all members.
+ * @param func A function that receives each string property key and its value
+ * @param mustHaveValue If true, the property must have a value in order for func() to be called.
+ * @returns The original object with function having been run on each property.
+ */
+export function runOnAllMembers<T extends object = object>(
+  obj: T,
+  func: (key: string, value: unknown) => unknown,
+  mustHaveValue = true
+) {
+  if (!isObject(obj)) {
+    throw new Error('runOnAllMembers() received an empty object.')
+  }
+  if (!isFunction(func)) {
+    throw new Error('runOnAllMembers() received an empty function operator.')
+  }
+
+  const objAsRecord = obj as Record<string, unknown>
+  Object.entries(obj).forEach(([key, value]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!mustHaveValue || (mustHaveValue && value)) {
+      objAsRecord[key] = func(key, value)
+    }
+    // console.log(`${key}: ${value}`)
+  })
+
+  return obj
+}
+
+/**
+ * Searches the object looking for the first array it finds.
+ * If the object passed in is already an array, it is returned.
+ * @param obj The object to look for the array.
+ * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
+ */
+export function searchObjectForArray<T = unknown>(obj: object) {
+  if (isArray(obj)) {
+    return obj as T[]
+  }
+
+  if (isObject(obj)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const found = Object.values(obj).find((x) => isArray<T>(x))
+    if (found) {
+      return found
+    }
+  }
+
+  return []
+}
+
+export function ObjectPrepareForJson(
+  obj?: object | null,
+  removeKeys: StringOrStringArray = []
+) {
+  const objClean = isNullOrUndefined(obj) || !isObject(obj) ? {} : obj
+
+  const keysToRemove = safeArray(removeKeys).concat(ARRAY_KeysToAlwaysRemove)
+
+  return Object.entries(objClean).reduce((acc, [key, value]) => {
+    if (!keysToRemove.includes(key) && !isFunction(value)) {
+      acc[key] =
+        isObject(value) && !isDateObject(value)
+          ? ObjectPrepareForJson(value, keysToRemove)
+          : value
+    }
+
+    return acc
+    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
+  }, {} as Record<string, unknown>)
+}
+
+export function UpdateFieldValue<T extends IId>(
+  parentObject: Readonly<T>,
+  fieldName: string,
+  fieldValue: unknown
+) {
+  const ret: T = {
+    ...parentObject,
+    [fieldName]: fieldValue,
+  }
+
+  return ret
 }
 
 export function FindObjectWithField(
@@ -218,176 +465,91 @@ export function FindObjectWithField(
   return found
 }
 
+export function objectCloneAlphabetizingKeys<T>(obj: Readonly<T>): T {
+  const sortedObj = Object.fromEntries(
+    Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+  )
+
+  return sortedObj as T
+}
+
+export function objectDecodeFromBase64<T = object>(base64String: string) {
+  const decodedString = Buffer.from(base64String, 'base64')
+
+  return safestrToJson<T>(decodedString.toString())
+}
+
+export function objectEncodeToBase64(obj: object) {
+  const jsonString = JSON.stringify(objectCloneAlphabetizingKeys(obj)),
+    zencodedString = Buffer.from(jsonString)
+
+  return zencodedString.toString('base64')
+}
+
+/**
+ * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
+ * Suppresses any exceptions, but still writes to the console.log.
+ * @param obj The object to copy.
+ * @param fname The function name of the caller. Not required.
+ * @returns A JSON stringify and parsed copy of the obj.
+ */
+export function DeepCloneJsonWithUndefined<T extends object | Array<T>>(
+  obj: T,
+  fname?: string
+) {
+  const funcname = safestr(fname, 'deepCloneJsonWithUndefined')
+
+  return safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ObjectHelper {
-  static CloneObjectAlphabetizingKeys<T>(obj: Readonly<T>): T {
-    const sortedObj = Object.fromEntries(
-      Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-    )
-
-    return sortedObj as T
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  static DecodeBase64ToObject<T = object>(base64String: string) {
-    const decodedString = Buffer.from(base64String, 'base64')
-
-    return safestrToJson<T>(decodedString.toString())
-  }
-  static EncodeObjectToBase64(obj: object) {
-    const jsonString = JSON.stringify(
-        ObjectHelper.CloneObjectAlphabetizingKeys(obj)
-      ),
-      zencodedString = Buffer.from(jsonString)
-
-    return zencodedString.toString('base64')
-  }
-
-  /**
-   * Deep clones an object using the JSON.parse(JSON.stringify(obj)) method.
-   * Suppresses any exceptions, but still writes to the console.log.
-   * @param obj The object to copy.
-   * @param fname The function name of the caller. Not required.
-   * @returns A JSON stringify and parsed copy of the obj.
-   */
-  static DeepCloneJsonWithUndefined<T extends object | Array<T>>(
-    obj: T,
-    fname?: string
-  ) {
-    const funcname = safestr(fname, 'deepCloneJsonWithUndefined')
-
-    return safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
-  }
-
-  static getFirstNewWithException<T>(
+  static objectGetInstance<T>(
     theClass: IConstructor<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    obj: any[],
-    exceptionTextIfEmpty = ''
+    ...args: any[]
   ) {
-    const first = ObjectHelper.getInstance(theClass, arrayFirst(obj))
-    if (!first) {
-      throw new AppException(
-        safestr(exceptionTextIfEmpty, 'Error getting first new object'),
-        ObjectHelper.getFirstNewWithException.name
-      )
-    }
-
-    return first
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static getInstance<T>(theClass: IConstructor<T>, ...args: any[]) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new theClass(...args)
   }
-
-  static getNewObject<T>(
-    theClass: IConstructor<T>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructorArgs: any[],
-    index = 0
-  ): T {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (
-      ObjectHelper.getInstance(theClass, constructorArgs),
-      arrayElement(constructorArgs, index)
-    )
-  }
 }
 
-/**
- * Searches the object looking for the first array it finds.
- * If the object passed in is already an array, it is returned.
- * @param obj The object to look for the array.
- * @returns Returns obj if it is an array, or if obj is an object, the first array found is returned. [] if none found.
- */
-
-export function searchObjectForArray<T = unknown>(obj: object) {
-  if (isArray(obj)) {
-    return obj as T[]
-  }
-
-  if (isObject(obj)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const found = Object.values(obj).find((x) => isArray<T>(x))
-    if (found) {
-      return found
-    }
-  }
-
-  return []
+export function objectGetNew<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructorArgs: any[],
+  index = 0
+): T {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return (
+    ObjectHelper.objectGetInstance(theClass, constructorArgs),
+    arrayElement(constructorArgs, index)
+  )
 }
-/**
- * Runs a given function on all members of an object.
- * @param obj The object to run func() on all members.
- * @param func A function that receives each string property key and its value
- * @param mustHaveValue If true, the property must have a value in order for func() to be called.
- * @returns The original object with function having been run on each property.
- */
 
-export function runOnAllMembers<T extends object = object>(
-  obj: T,
-  func: (key: string, value: unknown) => unknown,
-  mustHaveValue = true
+export function objectGetFirstNewWithException<T>(
+  theClass: IConstructor<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any[],
+  exceptionTextIfEmpty = ''
 ) {
-  if (!isObject(obj)) {
-    throw new AppException('runOnAllMembers() received an empty object.')
-  }
-  if (!isFunction(func)) {
+  const first = ObjectHelper.objectGetInstance(theClass, arrayFirst(obj))
+  if (!first) {
     throw new AppException(
-      'runOnAllMembers() received an empty function operator.'
+      safestr(exceptionTextIfEmpty, 'Error getting first new object'),
+      objectGetFirstNewWithException.name
     )
   }
 
-  const objAsRecord = obj as Record<string, unknown>
-  Object.entries(obj).forEach(([key, value]) => {
-    if (!mustHaveValue || value) {
-      objAsRecord[key] = func(key, value)
-    }
-    // Console.log(`${key}: ${value}`)
-  })
-
-  return obj
+  return first
 }
-/**
- * Renames a property of an object with a new key name.
- * @param obj The object to rename the key.
- * @param oldKey The original key to rename.
- * @param newKey The new name of the key.
- * @returns The original object with the renamed key.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renameProperty(obj: any, oldKey: any, newKey: any): object {
-  if (
-    !isObject(obj) ||
-    !isString(oldKey, 1) ||
-    !isString(newKey, 1) ||
-    oldKey === newKey
-  ) {
-    throw new AppException('Cannot renameProperty. Invalid settings.')
-  }
 
-  const propdesc = Object.getOwnPropertyDescriptor(obj, oldKey)
-  if (!propdesc) {
-    throw new AppException(
-      `Cannot renameProperty. Property: ${oldKey} not found.`
-    )
-  }
-
-  Object.defineProperty(obj, newKey, propdesc)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-  delete (obj as any)[oldKey]
-
-  return obj
-}
 /**
  * Method to wrap deep object comparison. The changes are mapped and returned.
  * Generally used for checking in real-time form data changes.
  * i.e., isDirty = deepDiffMapper().anyChanges(formOriginalValues, formCurrentValues);
  * @returns An object that wraps varying levels of comparison information.
  */
-
 export function deepDiffMapper() {
   return {
     VALUE_CREATED: 'created',
@@ -542,7 +704,6 @@ export function deepDiffMapper() {
 
       let diff: Record<string, unknown> = {}
       for (const key in obj1) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (this.isFunction(obj1[key])) {
           // eslint-disable-next-line no-continue
           continue
@@ -550,88 +711,26 @@ export function deepDiffMapper() {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let value2: any
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (obj2[key] !== undefined) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           value2 = obj2[key]
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         diff = { ...diff, [key]: this.map(obj1[key], value2) }
       }
 
       for (const key in obj2) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (this.isFunction(obj2[key]) || (diff as any)[key] !== undefined) {
           // eslint-disable-next-line no-continue
           continue
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         diff = { ...diff, [key]: this.map(undefined, obj2[key]) }
       }
 
       return diff
     },
   }
-}
-/**
- * Gets from the object the value from the key that matches find string.
- * @param obj The object to search for the key.
- * @param keyToFind The property to look for in the object.
- * @returns The value from the obj[keyToFind]. undefined if not found.
- */
-export function getObjectValue(obj: AnyObject, keyToFind: string) {
-  if (safeArray(Object.keys(obj)).find((x) => x === keyToFind)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return obj[keyToFind]
-  }
-
-  return undefined
-}
-export function isEmptyObject(obj: unknown) {
-  return (
-    obj === null ||
-    (isObject(obj) &&
-      safeArray(Object.keys(obj)).length === 0 &&
-      obj.constructor === Object)
-  )
-}
-
-/**
- * Tests an object to see if it is empty. If so returns null, otherwise just returns the object.
- * @param obj The object to test if it is empty.
- * @returns Null if the object is empty, otherwise the object is returned.
- */
-export function getNullObject<T>(obj: T) {
-  return isEmptyObject(obj) ? null : obj
-}
-
-/**
- * Adds obj to the list of objects, creating the list if it doesn't exist.
- * If obj is an array, loops through the array.
- * @param listObjects An array of objects.
- * @param obj Array of items to add to listObjects.
- * @returns listObjects. If null, was passed, it is a new array.
- */
-
-export function addObjectToList<T>(
-  listObjects: ArrayOrSingle<T>,
-  obj: ArrayOrSingle<T>
-) {
-  const mylistObjects = safeArray(listObjects)
-
-  if (!isNullOrUndefined(obj)) {
-    const len = safeArray(obj).length
-    for (let i = 0; i < len; ++i) {
-      const objCurrent = arrayElement(obj, i)
-      if (!isNullOrUndefined(objCurrent)) {
-        mylistObjects.push(objCurrent)
-      }
-    }
-  }
-
-  return mylistObjects
 }
 
 export function deepCloneJson<T extends object | Array<T>>(
@@ -728,7 +827,7 @@ export function removeFields<T = unknown>(
           (fieldOptions.deleteIfNull && value === null) ||
           (fieldOptions.deleteIfUndefined && value === undefined))
       ) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-dynamic-delete
         delete (obj as any)[key]
 
         removed = true
@@ -741,4 +840,49 @@ export function removeFields<T = unknown>(
   }
 
   return obj
+}
+
+/**
+ * Compares two objects and returns a value for use in the JavaScript sort() method.
+ * @param a The first object to compare with.
+ * @param b The second object to compare with.
+ * @param isAsc True if you want to sort ascending.
+ * @param compareStringsLowercase True if you want to do a lowercase compare on strings.
+ * @returns -1, 0 or 1 depending on the sort direction.
+ */
+export function sortFunction(
+  a: unknown,
+  b: unknown,
+  sortOrder: SortOrder = true,
+  compareStringsLowercase = true
+) {
+  const aEmpty = isNullOrUndefined(a),
+    bEmpty = isNullOrUndefined(b),
+    isAsc = SortOrderAsBoolean(sortOrder)
+
+  if (aEmpty && bEmpty) {
+    return 0
+  }
+  // Null and undefined sort after anything else
+  else if (aEmpty) {
+    return 1
+  } else if (bEmpty) {
+    return -1
+  }
+  // Equal items sort equally
+  else if (a === b) {
+    return 0
+  } else if (compareStringsLowercase && isString(a) && isString(b)) {
+    // A little recursive, but we will not come back here a second time.
+    return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
+  }
+  // Otherwise, if we're ascending, lowest sorts first
+  else if (isAsc) {
+    return a < b ? -1 : 1
+  }
+  // If descending, highest sorts first
+
+  return a < b ? 1 : -1
+
+  // Return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
 }

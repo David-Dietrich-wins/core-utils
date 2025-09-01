@@ -1,16 +1,15 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
 import {
-  NumberHelper,
+  NumberToString,
   getAsNumber,
   getAsNumberOrUndefined,
-} from '../number-helper.mjs'
+} from '../../primitives/number-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import { ChartSettings } from '../../tplot/ChartSettings.mjs'
-import { DateHelper } from '../DateHelper.mjs'
+import { DateHelper } from '../../primitives/date-helper.mjs'
 import type { ISymbol } from '../../models/ticker-info.mjs'
 import { TradingClientBase } from './TradingClientBase.mjs'
-import { isArray } from '../array-helper.mjs'
-import { safestr } from '../string-helper.mjs'
+import { safestr } from '../../primitives/string-helper.mjs'
 
 const MIN_CHART_INTERVALS = 1000
 
@@ -24,21 +23,26 @@ export class FinancialModelingPrep extends TradingClientBase {
   static FmpIndicatorParamsSetDateBoundary(fmp: FmpIndicatorQueryParams) {
     const { from, timeframe } = fmp,
       fmpNew = { ...fmp },
-      regex = /(?<temp2>\d+)|(?<temp1>[A-Z]+)/giu,
-      regexMatches = safestr(timeframe).match(regex)
-    if (isArray(regexMatches, 2) && regexMatches[0] !== timeframe) {
-      const [units, unit] = regexMatches
+      regex = /(?<units>\d+)(?<unit>[A-Za-z]+)/giu,
+      regexMatches = regex.exec(safestr(timeframe))
+
+    if (regexMatches?.groups?.units && regexMatches.groups.unit) {
       if (from) {
-        fmpNew.from = Number(
-          DateHelper.NextBoundaryUp(from, unit, Number(units))
-        )
+        fmpNew.from = from
+        //   fmpNew.from = Number(
+        //     DateHelper.NextBoundaryUp(
+        //       from,
+        //       regexMatches.groups.unit,
+        //       Number(regexMatches.groups.units)
+        //     )
+        //   )
       }
 
       fmpNew.to = Number(
         DateHelper.NextBoundaryUp(
           fmpNew.to ? fmpNew.to : Date.now(),
-          unit,
-          Number(units)
+          regexMatches.groups.unit,
+          Number(regexMatches.groups.units)
         )
       )
     }
@@ -52,9 +56,9 @@ export class FinancialModelingPrep extends TradingClientBase {
   ) {
     let qp = `${existingQueryParams}&symbol=${
       params.symbol
-    }&periodLength=${NumberHelper.NumberToString(
-      params.periodLength
-    )}&timeframe=${params.timeframe}`
+    }&periodLength=${NumberToString(params.periodLength)}&timeframe=${
+      params.timeframe
+    }`
     if (params.from) {
       qp += `&from=${params.from.toString()}`
     }

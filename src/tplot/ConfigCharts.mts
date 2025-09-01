@@ -1,11 +1,14 @@
-import { DateHelper, type DateTypeAcceptable } from '../services/DateHelper.mjs'
+import {
+  DateHelper,
+  type DateTypeAcceptable,
+} from '../primitives/date-helper.mjs'
 import {
   type IContext,
   type IContextUI,
   updateContext,
   updateContextUi,
 } from '../services/ContextManager.mjs'
-import { newGuid } from '../services/general.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 
 export interface IConfigCharts extends IContext {
   down: IContextUI

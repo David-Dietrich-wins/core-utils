@@ -1,9 +1,9 @@
 import {
-  IUserCreatedUpdatedTable,
+  type IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
 import { NameVal } from '../models/NameValManager.mjs'
-import { isObject } from '../services/object-helper.mjs'
+import { isObject } from '../primitives/object-helper.mjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IFacet<T = any> extends IUserCreatedUpdatedTable, NameVal<T> {

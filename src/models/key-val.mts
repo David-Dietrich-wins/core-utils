@@ -1,4 +1,4 @@
-import { IVal } from './interfaces.mjs'
+import { type IVal } from './interfaces.mjs'
 
 export interface IKeyVal<Tval = string, Tkey = string> extends IVal<Tval> {
   key: Tkey

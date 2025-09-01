@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 
 const suffix = Date.now()

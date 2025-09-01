@@ -1,6 +1,5 @@
-import { IServerState, IWebStateResponse } from './interfaces.mjs'
-import { IUserState } from './UserState.mjs'
-import { safestr } from '../services/string-helper.mjs'
+import type { IServerState, IWebStateResponse } from './interfaces.mjs'
+import type { IUserState } from './UserState.mjs'
 
 export interface ICryptoRequest {
   pin: string
@@ -69,7 +68,8 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
   errorMessages: [],
   message: 'Server is up.',
   messages: [],
-  rsaPublicKey: safestr(process.env.RSA_PUBLIC_KEY),
+  // safestr(process.env.RSA_PUBLIC_KEY),
+  rsaPublicKey: 'no',
   server: {
     currentTime: new Date(),
     message: 'Operational',
@@ -87,5 +87,6 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
   },
   totalFailures: 0,
   totalRequests: 31,
-  version: `${safestr(process.env.npm_package_version)}-test`,
+  // `${safestr(process.env.npm_package_version)}-test`,
+  version: '2.2.0',
 }

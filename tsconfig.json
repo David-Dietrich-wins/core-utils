@@ -22,7 +22,8 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "traceResolution": false
+    "traceResolution": false,
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*.mts"],
   "exclude": [

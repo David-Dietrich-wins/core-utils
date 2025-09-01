@@ -43,7 +43,7 @@ test('constructor', () => {
 
   expect(configManager.allTpUserInfoConfigs).toEqual({
     charts: 'charts',
-    dashboards: {},
+    dashboards: ['dashboards'],
     headerTickerBars: {
       asset: {
         id: expect.any(String),
@@ -235,17 +235,50 @@ test('dashboards', () => {
     updated: expect.any(Number),
   })
 
-  const configDashboards: IConfigShort = {
-    created: new Date(),
-    createdby: 'test',
-    k: 'dashboards',
-    updated: new Date(),
-    updatedby: 'test',
-    userid: 'dashboard1',
-    v: null,
-  }
+  // const configDashboards: IConfigShort = {
+  //   created: new Date(),
+  //   createdby: 'test',
+  //   k: 'dashboards',
+  //   updated: new Date(),
+  //   updatedby: 'test',
+  //   userid: 'dashboard1',
+  //   v: null,
+  // }
 
-  configManager = new ConfigManager([configDashboards])
+  configManager = new ConfigManager([])
 
-  expect(configManager.dashboards).toStrictEqual({})
+  expect(configManager.dashboards).toStrictEqual(
+    expect.objectContaining({
+      id: expect.any(String),
+      screens: [
+        {
+          id: 'default',
+          name: 'default',
+          tiles: [
+            {
+              color: 'white',
+              cols: 1,
+              id: 'initial-tile-left',
+              index: 0,
+              name: 'Trade Plotter',
+              rows: 2,
+              type: 'empty',
+              value: {},
+            },
+            {
+              color: 'white',
+              cols: 1,
+              id: 'initial-tile-right',
+              index: 0,
+              name: 'Trade Plotter',
+              rows: 2,
+              type: 'empty',
+              value: {},
+            },
+          ],
+        },
+      ],
+      updated: expect.any(Number),
+    })
+  )
 })

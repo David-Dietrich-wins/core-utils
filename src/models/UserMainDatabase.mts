@@ -1,4 +1,4 @@
-import { IIdRequired } from './IdManager.mjs'
+import { type IIdRequired } from './IdManager.mjs'
 
 export interface IUserMainDatabase extends IIdRequired {
   active?: boolean

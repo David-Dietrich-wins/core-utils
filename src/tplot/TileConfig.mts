@@ -1,8 +1,8 @@
-import { IIdNameValueType, IdNameValueType } from '../models/id-name.mjs'
-import { safestr, safestrLowercase } from '../services/string-helper.mjs'
+import { type IIdNameValueType, IdNameValueType } from '../models/id-name.mjs'
+import { safestr, safestrLowercase } from '../primitives/string-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IChartSettings } from './ChartSettings.mjs'
-import { newGuid } from '../services/general.mjs'
+import { type IChartSettings } from './ChartSettings.mjs'
+import { newGuid } from '../primitives/uuid-helper.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
