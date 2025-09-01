@@ -23,11 +23,10 @@ import type { IId } from '../models/IdManager.mjs'
 import { isFunction } from './function-helper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isSymbol } from './symbol-helper.mjs'
-import util from 'util'
 
 export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret']
 
-const CONST_JsonDepth = 5
+// const CONST_JsonDepth = 5
 
 /**
  * Tests if a variable is null or undefined.
@@ -202,6 +201,41 @@ export function ObjectMustHaveKeyAndReturnValue<T = string>(
   )
 }
 
+/**
+ * Tests if the passed in obj is in fact an object that is not undefined or null.
+ * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
+ * @param obj An object to test for not being null or undefined.
+ * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
+ * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
+ */
+export function safeObject<T extends object = object>(obj?: T, ifEmpty?: T): T {
+  return (obj ?? ifEmpty ?? {}) as T
+}
+/**
+ * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
+ * @param json The JSON object to convert to a string.
+ * @param fname The optional function name that is the source of the operation. Used for exception logging.
+ * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
+ */
+export function safeJsonToString<T extends object | Array<T>>(
+  json: T,
+  fname?: string,
+  replacer?: (number | string)[],
+  space?: string | number
+) {
+  try {
+    return JSON.stringify(
+      isObject(json) ? safeObject(json) : safeArray(json),
+      replacer,
+      space
+    )
+  } catch (ex) {
+    console.log(fname ? fname : 'safeJsonToString', ex)
+  }
+
+  return ''
+}
+
 export function ObjectTypesToString(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   e: any
@@ -210,7 +244,7 @@ export function ObjectTypesToString(
   const etoString: string = isNullOrUndefined(e) ? '' : e.toString()
 
   if (Array.isArray(e)) {
-    return util.inspect(e, true, CONST_JsonDepth)
+    return safeJsonToString(e)
   } else if (e instanceof Error) {
     const jerr = {
       message: e.message,
@@ -219,9 +253,9 @@ export function ObjectTypesToString(
       type: 'Exception',
     }
 
-    return util.inspect(jerr, true, CONST_JsonDepth)
+    return safeJsonToString(jerr)
   } else if (etoString === '[object Object]') {
-    return util.inspect(e, true, CONST_JsonDepth)
+    return safeJsonToString(e)
     // } else if (etoString === '[object FileList]') {
     //   return util.inspect(e.toArray(), true, CONST_JsonDepth)
     // } else if (etoString === '[object File]') {
@@ -389,41 +423,6 @@ export function UpdateFieldValue<T extends IId>(
   }
 
   return ret
-}
-
-/**
- * Tests if the passed in obj is in fact an object that is not undefined or null.
- * If it is, the ifEmpty value is used. If there is no ifEmpty passed in, an empty object with no members is returned.
- * @param obj An object to test for not being null or undefined.
- * @param ifEmpty If the object is null or undefined, return this value. Defaults to {}.
- * @returns A guaranteed object to be nonnull. Returns ifEmpty if the object does not have data.
- */
-export function safeObject<T extends object = object>(obj?: T, ifEmpty?: T): T {
-  return (obj ?? ifEmpty ?? {}) as T
-}
-/**
- * Wraps JSON.stringify in a try/catch so that exceptions are not bubbled up.
- * @param json The JSON object to convert to a string.
- * @param fname The optional function name that is the source of the operation. Used for exception logging.
- * @returns A the JSON.stringify(ed) string or empty string if there was an exception.
- */
-export function safeJsonToString<T extends object | Array<T>>(
-  json: T,
-  fname?: string,
-  replacer?: (number | string)[],
-  space?: string | number
-) {
-  try {
-    return JSON.stringify(
-      isObject(json) ? safeObject(json) : safeArray(json),
-      replacer,
-      space
-    )
-  } catch (ex) {
-    console.log(fname ? fname : 'safeJsonToString', ex)
-  }
-
-  return ''
 }
 
 export function FindObjectWithField(
@@ -875,7 +874,6 @@ export function sortFunction(
     return 0
   } else if (compareStringsLowercase && isString(a) && isString(b)) {
     // A little recursive, but we will not come back here a second time.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
   }
   // Otherwise, if we're ascending, lowest sorts first

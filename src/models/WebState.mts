@@ -69,7 +69,8 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
   errorMessages: [],
   message: 'Server is up.',
   messages: [],
-  rsaPublicKey: safestr(process.env.RSA_PUBLIC_KEY),
+  // safestr(process.env.RSA_PUBLIC_KEY),
+  rsaPublicKey: 'no',
   server: {
     currentTime: new Date(),
     message: 'Operational',
@@ -87,5 +88,6 @@ export const mockWebStateGoodResponse: IWebStateResponse = {
   },
   totalFailures: 0,
   totalRequests: 31,
-  version: `${safestr(process.env.npm_package_version)}-test`,
+  // `${safestr(process.env.npm_package_version)}-test`,
+  version: '2.2.0',
 }

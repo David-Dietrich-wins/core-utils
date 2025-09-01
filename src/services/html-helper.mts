@@ -1,4 +1,8 @@
-import type { ArrayOrSingle, JSONValue } from '../models/types.mjs'
+import {
+  ArrayOrSingle,
+  HttpHeaderNamesAllowedKeys,
+  JSONValue,
+} from '../models/types.mjs'
 import {
   ToSafeArray2d,
   isArray,
@@ -6,7 +10,6 @@ import {
 } from '../primitives/array-helper.mjs'
 import { hasData, isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { HttpHeaderNamesAllowedKeys } from './HttpHeaderManager.mjs'
 import { isNumber } from '../primitives/number-helper.mjs'
 import { safestr } from '../primitives/string-helper.mjs'
 

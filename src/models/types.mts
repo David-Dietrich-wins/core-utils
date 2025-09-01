@@ -1,10 +1,9 @@
+import { IdName, type IdType } from './id-name.mjs'
 import { getAsNumber, isNumber } from '../primitives/number-helper.mjs'
 import { isString, safestrLowercase } from '../primitives/string-helper.mjs'
 import { IUserInfo } from './UserInfo.mjs'
 import { IconConfiguration } from '../services/ContextManager.mjs'
-import { IdName } from './id-name.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { LogManagerLevel } from '../services/LogManager.mjs'
 import { getBoolean } from '../primitives/boolean-helper.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
@@ -38,6 +37,8 @@ export type ApiPropsCookieAuthNames = {
   accessToken: CookieSettings
   refreshToken: CookieSettings
 }
+
+export type LogManagerLevel = 'all' | 'debug' | 'info' | 'warn' | 'error'
 
 export type ApiPropsDigicrew = {
   apiKey?: string
@@ -101,6 +102,23 @@ export type FunctionKeyNames<T extends object> = Exclude<
   { [K in keyof T]: T[K] extends Function ? K : never }[keyof T],
   undefined
 >
+
+export const HttpHeaderNamesAllowedKeys = {
+  ApplicationName: 'x-application-name',
+  Authorization: 'authorization',
+  ShowDebug: 'ShowDebug',
+} as const
+
+export type HttpHeaderNamesAllowed =
+  (typeof HttpHeaderNamesAllowedKeys)[keyof typeof HttpHeaderNamesAllowedKeys]
+
+export const CONST_AppNamePolitagree = 'politagree',
+  CONST_AppNameTradePlotter = 'tradeplotter',
+  HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
+    { id: HttpHeaderNamesAllowedKeys.ApplicationName, type: 'string' },
+    { id: HttpHeaderNamesAllowedKeys.Authorization, type: 'string' },
+    { id: HttpHeaderNamesAllowedKeys.ShowDebug, type: 'boolean' },
+  ] as const
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TypishFunction<T = unknown> = (...args: any[]) => T
