@@ -3,9 +3,9 @@ import {
   DateHelper,
   type DateTypeAcceptable,
 } from '../primitives/date-helper.mjs'
-import { IIdRequired, IdManager } from '../models/IdManager.mjs'
-import { IName, IValue } from '../models/interfaces.mjs'
-import { IUpdated } from '../models/id-created-updated.mjs'
+import { type IIdRequired, IdManager } from '../models/IdManager.mjs'
+import type { IName, IValue } from '../models/interfaces.mjs'
+import { type IUpdated } from '../models/id-created-updated.mjs'
 import { newGuid } from '../primitives/uuid-helper.mjs'
 import { safeObject } from '../primitives/object-helper.mjs'
 

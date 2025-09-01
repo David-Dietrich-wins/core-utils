@@ -1,4 +1,4 @@
-import { ITileConfig } from './TileConfig.mjs'
+import { type ITileConfig } from './TileConfig.mjs'
 
 export interface ITileData<Tdata = unknown> {
   config: ITileConfig

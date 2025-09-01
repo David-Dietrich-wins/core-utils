@@ -1,5 +1,5 @@
-import { ITileConfig, TileConfig } from './TileConfig.mjs'
-import { IIdName } from '../models/id-name.mjs'
+import { type ITileConfig, TileConfig } from './TileConfig.mjs'
+import { type IIdName } from '../models/id-name.mjs'
 import { isArray } from '../primitives/array-helper.mjs'
 
 export interface IDashboardScreenSetting extends IIdName {

@@ -1,7 +1,7 @@
 import {
-  ArrayOrSingle,
+  type ArrayOrSingle,
   HttpHeaderNamesAllowedKeys,
-  JSONValue,
+  type JSONValue,
 } from '../models/types.mjs'
 import {
   ToSafeArray2d,

@@ -1,3 +1,3 @@
-import { ITileData } from './TileData.mjs'
+import { type ITileData } from './TileData.mjs'
 
 export type ScreenData = ITileData[]

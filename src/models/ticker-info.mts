@@ -1,5 +1,11 @@
 import * as z from 'zod/v4'
-import { IDate, IName, IPrice, IType, IVal } from '../models/interfaces.mjs'
+import type {
+  IDate,
+  IName,
+  IPrice,
+  IType,
+  IVal,
+} from '../models/interfaces.mjs'
 import { isString, safestrUppercase } from '../primitives/string-helper.mjs'
 import {
   zFromStringOrStringArray,
@@ -7,8 +13,8 @@ import {
   zToStringArray,
 } from '../services/zod-helper.mjs'
 import { AppException } from './AppException.mjs'
-import { IHasPolitiscales } from '../politagree/politiscale.mjs'
-import { IId } from './IdManager.mjs'
+import { type IHasPolitiscales } from '../politagree/politiscale.mjs'
+import { type IId } from './IdManager.mjs'
 import { IdName } from '../models/id-name.mjs'
 import { isObject } from '../primitives/object-helper.mjs'
 import moment from 'moment'

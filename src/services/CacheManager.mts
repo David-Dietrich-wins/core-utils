@@ -1,6 +1,6 @@
 import { arrayFirst, safeArray } from '../primitives/array-helper.mjs'
-import { ArrayOrSingle } from '../models/types.mjs'
-import { IIdValue } from '../models/IdValueManager.mjs'
+import { type ArrayOrSingle } from '../models/types.mjs'
+import { type IIdValue } from '../models/IdValueManager.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
 type CacheManagerObject<T = object> = { expire: number; obj: T }

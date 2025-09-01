@@ -1,4 +1,4 @@
-import { IName, IVal } from './interfaces.mjs'
+import type { IName, IVal } from './interfaces.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'
 

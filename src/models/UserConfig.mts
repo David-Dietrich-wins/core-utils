@@ -1,9 +1,9 @@
 import {
-  IUserCreatedUpdatedTable,
+  type IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
-import { IKeyValueShort } from './key-val.mjs'
-import { INameVal } from './NameValManager.mjs'
+import { type IKeyValueShort } from './key-val.mjs'
+import { type INameVal } from './NameValManager.mjs'
 import { hasData } from '../primitives/object-helper.mjs'
 import { safestr } from '../primitives/string-helper.mjs'
 

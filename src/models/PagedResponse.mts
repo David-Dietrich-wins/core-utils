@@ -1,5 +1,5 @@
 import * as z from 'zod/v4'
-import { ApiResponse, IApiResponse } from './ApiResponse.mjs'
+import { ApiResponse, type IApiResponse } from './ApiResponse.mjs'
 import { hasData, isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'
 

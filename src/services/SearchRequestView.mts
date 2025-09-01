@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as z from 'zod/v4'
 import {
-  AnyObject,
-  AnyRecord,
-  SortOrder,
+  type AnyObject,
+  type AnyRecord,
+  type SortOrder,
   SortOrderAsBoolean,
 } from '../models/types.mjs'
 import {

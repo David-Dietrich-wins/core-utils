@@ -1,4 +1,4 @@
-import { INameTypeValue, INameValue } from './interfaces.mjs'
+import type { INameTypeValue, INameValue } from './interfaces.mjs'
 import {
   isNullOrUndefined,
   sortFunction,

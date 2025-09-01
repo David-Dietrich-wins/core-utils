@@ -11,7 +11,11 @@ import {
   prefixIfHasData,
   safestr,
 } from './string-helper.mjs'
-import moment, { DurationInputArg1, Moment, unitOfTime } from 'moment'
+import moment, {
+  type DurationInputArg1,
+  type Moment,
+  type unitOfTime,
+} from 'moment'
 import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './object-helper.mjs'

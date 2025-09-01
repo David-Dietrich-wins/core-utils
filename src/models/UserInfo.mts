@@ -1,4 +1,4 @@
-import { ConfigCharts, IConfigCharts } from '../tplot/ConfigCharts.mjs'
+import { ConfigCharts, type IConfigCharts } from '../tplot/ConfigCharts.mjs'
 import {
   ConfigHeaderTickerBars,
   type IConfigHeaderTickerBars,
@@ -16,7 +16,7 @@ import {
   DateHelper,
   type DateTypeAcceptable,
 } from '../primitives/date-helper.mjs'
-import { ICompany } from '../politagree/company.mjs'
+import { type ICompany } from '../politagree/company.mjs'
 import type { IdName } from './id-name.mjs'
 import { deepCloneJson } from '../primitives/object-helper.mjs'
 

@@ -1,8 +1,8 @@
 import * as z from 'zod/v4'
-import { ICreatedBy } from './id-created-updated.mjs'
-import { IId } from './IdManager.mjs'
-import { ITicker } from './ticker-info.mjs'
-import { IWebState } from './WebState.mjs'
+import { type ICreatedBy } from './id-created-updated.mjs'
+import { type IId } from './IdManager.mjs'
+import { type ITicker } from './ticker-info.mjs'
+import { type IWebState } from './WebState.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 export interface IDate<T = string> {

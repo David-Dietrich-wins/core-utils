@@ -1,5 +1,5 @@
-import { IIdRequired, IdManager } from './IdManager.mjs'
-import { IValue } from './interfaces.mjs'
+import { type IIdRequired, IdManager } from './IdManager.mjs'
+import { type IValue } from './interfaces.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'
 

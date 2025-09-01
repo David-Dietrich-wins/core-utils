@@ -1,5 +1,5 @@
 import * as z from 'zod/v4'
-import { IId } from './IdManager.mjs'
+import { type IId } from './IdManager.mjs'
 import { isObject } from '../primitives/object-helper.mjs'
 
 export type ICreated<T extends string | number | Date = Date> = z.infer<

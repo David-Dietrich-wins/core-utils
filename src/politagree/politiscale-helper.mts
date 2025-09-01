@@ -5,7 +5,7 @@ import {
 } from '../primitives/color-helper.mjs'
 import type { ICity, IdNameSlugWithScales } from './city.mjs'
 import {
-  IHasPolitiscales,
+  type IHasPolitiscales,
   type IPolitiscale,
   type PolitiscaleName,
 } from './politiscale.mjs'

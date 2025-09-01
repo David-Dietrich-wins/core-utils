@@ -1,7 +1,7 @@
 import * as z from 'zod/v4'
-import { IHasPolitiscales, Politiscale } from './politiscale.mjs'
+import { type IHasPolitiscales, Politiscale } from './politiscale.mjs'
 import {
-  IIdCreatedUpdated,
+  type IIdCreatedUpdated,
   IdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
 import { isObject } from '../primitives/object-helper.mjs'

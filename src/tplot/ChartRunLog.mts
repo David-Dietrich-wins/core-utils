@@ -1,6 +1,6 @@
-import { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
+import type { IChartRunLogApiReturn, IUserId } from '../models/interfaces.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
-import { ITicker } from '../models/ticker-info.mjs'
+import { type ITicker } from '../models/ticker-info.mjs'
 import { isObject } from '../primitives/object-helper.mjs'
 import { safestr } from '../primitives/string-helper.mjs'
 

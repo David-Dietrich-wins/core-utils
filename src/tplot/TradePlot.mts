@@ -1,12 +1,12 @@
 import * as z from 'zod/v4'
 import {
-  IAssetQuoteResponse,
-  IQuoteBarEma,
-  ITicker,
+  type IAssetQuoteResponse,
+  type IQuoteBarEma,
+  type ITicker,
   zTicker,
 } from '../models/ticker-info.mjs'
-import { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
-import { ISubplot, Subplot } from './Subplot.mjs'
+import type { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
+import { type ISubplot, Subplot } from './Subplot.mjs'
 import {
   PriceInDollars,
   getAsNumber,
@@ -14,9 +14,9 @@ import {
   getPercentChangeString,
 } from '../primitives/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
-import { IIdRequired } from '../models/IdManager.mjs'
-import { IIdValue } from '../models/IdValueManager.mjs'
-import { ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
+import { type IIdRequired } from '../models/IdManager.mjs'
+import { type IIdValue } from '../models/IdValueManager.mjs'
+import { type ITradePlotProfitizer } from './TradePlotProfitizer.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { newGuid } from '../primitives/uuid-helper.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'

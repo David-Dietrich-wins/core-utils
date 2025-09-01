@@ -1,5 +1,5 @@
-import { IDate, IName, IType, IValue } from './interfaces.mjs'
-import { IIdRequired } from './IdManager.mjs'
+import type { IDate, IName, IType, IValue } from './interfaces.mjs'
+import type { IIdRequired } from './IdManager.mjs'
 
 export interface IIdName<Tid = string, Tname = string>
   extends IIdRequired<Tid>,

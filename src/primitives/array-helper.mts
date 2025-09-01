@@ -1,4 +1,4 @@
-import {
+import type {
   ArrayOrSingle,
   ArrayOrSingleBasicTypes,
   StringOrStringArray,
@@ -13,8 +13,8 @@ import {
 import { hasData, isNullOrUndefined } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IId } from '../models/IdManager.mjs'
-import { IIdName } from '../models/id-name.mjs'
-import { IName } from '../models/interfaces.mjs'
+import { type IIdName } from '../models/id-name.mjs'
+import { type IName } from '../models/interfaces.mjs'
 import { isNumber } from './number-helper.mjs'
 
 /**

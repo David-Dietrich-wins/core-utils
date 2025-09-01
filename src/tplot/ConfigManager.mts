@@ -3,18 +3,18 @@ import {
   TickerInfoTabSettingsDefault,
   UserConfigDefaults,
   UserConfigNames,
-  UserConfigTypes,
+  type UserConfigTypes,
 } from '../models/UserInfo.mjs'
 import { deepCloneJson, hasData } from '../primitives/object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IConfigCharts } from './ConfigCharts.mjs'
 import type { IConfigHeaderTickerBars } from './ConfigHeaderTickerBars.mjs'
 import type { IConfigOperations } from './ConfigOperations.mjs'
-import { IConfigShort } from '../models/config.mjs'
+import { type IConfigShort } from '../models/config.mjs'
 import type { IConfigWebsite } from './ConfigWebsite.mjs'
-import { IDashboardSetting } from './DashboardSetting.mjs'
-import { IIdValRequired } from '../models/id-val.mjs'
-import { IKeyValueShort } from '../models/key-val.mjs'
+import { type IDashboardSetting } from './DashboardSetting.mjs'
+import { type IIdValRequired } from '../models/id-val.mjs'
+import { type IKeyValueShort } from '../models/key-val.mjs'
 import { IdName } from '../models/id-name.mjs'
 import { safestrTrim } from '../primitives/string-helper.mjs'
 
@@ -139,7 +139,6 @@ export class ConfigManager {
    * @param name - The name of the config to find.
    * @returns The config if found, otherwise the default value for that config.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   FindConfig<T = string>(name: string) {
     const found = this.configs.find((config) => name === config.k)
     if (found) {

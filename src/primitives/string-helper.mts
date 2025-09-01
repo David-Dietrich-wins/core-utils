@@ -1,7 +1,7 @@
 import {
   type ArrayOrSingleBasicTypes,
   type StringOrStringArray,
-  Typish,
+  type Typish,
 } from '../models/types.mjs'
 import { getAsNumber, isNumber } from './number-helper.mjs'
 import { hasData, isNullOrUndefined, isObject } from './object-helper.mjs'

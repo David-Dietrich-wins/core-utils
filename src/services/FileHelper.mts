@@ -1,5 +1,5 @@
 import * as fs from 'node:fs'
-import { FileHandle, open } from 'node:fs/promises'
+import { type FileHandle, open } from 'node:fs/promises'
 import { isArray, safeArray } from '../primitives/array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'

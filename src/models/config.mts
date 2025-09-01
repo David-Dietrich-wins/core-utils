@@ -1,11 +1,11 @@
 import {
-  IIdCreatedUpdated,
+  type IIdCreatedUpdated,
   IdCreatedUpdated,
 } from '../models/id-created-updated.mjs'
-import { IIdVal } from '../models/id-val.mjs'
-import { IKeyValueShort } from './key-val.mjs'
-import { IName } from './interfaces.mjs'
-import { INameVal } from './NameValManager.mjs'
+import { type IIdVal } from '../models/id-val.mjs'
+import { type IKeyValueShort } from './key-val.mjs'
+import { type IName } from './interfaces.mjs'
+import { type INameVal } from './NameValManager.mjs'
 import { isObject } from '../primitives/object-helper.mjs'
 
 export interface IConfig<Tid = string, Tval = boolean>

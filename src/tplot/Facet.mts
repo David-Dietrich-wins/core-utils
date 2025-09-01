@@ -1,5 +1,5 @@
 import {
-  IUserCreatedUpdatedTable,
+  type IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from '../models/UserCreatedUpdatedTable.mjs'
 import { NameVal } from '../models/NameValManager.mjs'

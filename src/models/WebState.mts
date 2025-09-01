@@ -1,6 +1,5 @@
-import { IServerState, IWebStateResponse } from './interfaces.mjs'
-import { IUserState } from './UserState.mjs'
-import { safestr } from '../primitives/string-helper.mjs'
+import type { IServerState, IWebStateResponse } from './interfaces.mjs'
+import type { IUserState } from './UserState.mjs'
 
 export interface ICryptoRequest {
   pin: string

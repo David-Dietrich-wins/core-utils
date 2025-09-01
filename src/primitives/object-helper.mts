@@ -4,7 +4,7 @@ import {
   type IConstructor,
   type SortOrder,
   SortOrderAsBoolean,
-  StringOrStringArray,
+  type StringOrStringArray,
 } from '../models/types.mjs'
 import {
   arrayElement,

@@ -1,12 +1,12 @@
-import { ITradePlot, TradePlot } from './TradePlot.mjs'
+import { type ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
   NumberWithDecimalPlaces,
   PriceInDollars,
   getPercentChange,
   getPercentChangeString,
 } from '../primitives/number-helper.mjs'
-import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
-import { IPlotMsg } from './ChartSettings.mjs'
+import { type IAssetQuoteResponse } from '../models/ticker-info.mjs'
+import { type IPlotMsg } from './ChartSettings.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 import { safeArray } from '../primitives/array-helper.mjs'
 import { safestrLowercase } from '../primitives/string-helper.mjs'
