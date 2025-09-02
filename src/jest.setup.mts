@@ -148,37 +148,6 @@ export class ZodTestHelper {
   }
 }
 
-// const globalLogger = jest.fn().mockImplementation(() => ({
-//   debug: mockLoggerDebug,
-//   error: mockLoggerError,
-//   info: mockLoggerInfo,
-//   log: mockLoggerLog,
-//   silly: mockLoggerSilly,
-//   warn: mockLoggerWarn,
-// }))
-// jest.unstable_mockModule('./services/LogManager.mjs', () => ({
-//   LogManager: globalLogger,
-// }))
-
-// const { LogManager } = await import('./services/LogManager.mjs')
-// export function getGlobalLogger() {
-//   const loggerOptions: LogManagerOptions = {
-//     componentName: 'test',
-//     includeHttpRequestDataInTheLog: true,
-//     includeHttpResponseDataInTheLog: true,
-//     logBaseFileName: 'test',
-//     logFileName: 'test.log',
-//     logLevel: 'all',
-//     maxFiles: 10,
-//     maxSize: 1000000,
-//     rotateBaseFileName: 'test',
-//     showConsole: true,
-//     suffixDatePattern: 'YYYY-MM-DD-HH',
-//   }
-
-//   return new LogManager(loggerOptions)
-// }
-
 // Const httpHandlers: HttpHandler[] = []
 
 // Export const mockServer = setupServer(...httpHandlers)
@@ -206,14 +175,10 @@ export const TEST_Settings: {
     TEST_Settings.rsaPassPhrase = safestr(process.env.rsaPassPhrase)
     TEST_Settings.rsaPrivateKey = safestr(process.env.rsaPrivateKey)
     TEST_Settings.rsaPublicKey = safestr(process.env.rsaPublicKey)
-
-    // eslint-disable-next-line no-use-before-define
-    // TEST_Settings.jwt = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
   },
   currentDate: new Date('2025-12-01T12:00:00.000Z'),
   currentDateInMilliseconds: 0,
   currentDateString: '2025-12-01T12:00:00.000Z',
-  // jwt: '',
   rsaPassPhrase: safestr(process.env.rsaPassPhrase),
   rsaPrivateKey: safestr(process.env.rsaPrivateKey),
   rsaPublicKey: safestr(process.env.rsaPublicKey),
@@ -222,24 +187,7 @@ export const TEST_Settings: {
   userIdGoodEmail: 'test@test.com',
 }
 
-// export function GenerateSignedJwtToken(
-//   email: string = TEST_Settings.userIdGoodEmail,
-//   overrides?: Partial<JwtPayload>
-// ) {
-//   return JwtTokenWithEmail(
-//     email,
-//     TEST_Settings.rsaPrivateKey,
-//     TEST_Settings.rsaPassPhrase,
-//     overrides
-//   )
-// }
-
 beforeAll(() => {
-  // Process.env.NODE_ENV = 'test'
-  // const jwtToken = GenerateSignedJwtToken(TEST_Settings.userIdGoodEmail)
-
-  // TEST_Settings.jwt = jwtToken
-
   // MockServer.listen({
   //   // This tells MSW to throw an error whenever it
   //   // encounters a request that doesn't have a

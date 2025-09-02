@@ -5,8 +5,12 @@
   },
   "include": ["src/**/*.mts"],
   "exclude": [
-    "node_modules",
     "__tests__",
+    "coverage",
+    "node_modules",
+    "storybook-static",
+    "eslint.config.mjs",
+    "**/jest.config.ts",
     "**/jest.setup.mts",
     "**/jest.setup.ts",
     "**/*.test.mts",

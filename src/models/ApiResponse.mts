@@ -244,7 +244,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return this.isGood && ApiResponse.isSuccess(this)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   setError<TError = unknown>(errobj?: TError) {
     this.result = 'Error'
     this.responseCode = -1
@@ -286,7 +285,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static responseCodeIsGood<TResponse extends { responseCode: number }>(
     ret?: TResponse
   ) {
@@ -297,7 +295,6 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return false
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   static isSuccess<TResponse extends { result: string }>(ret?: TResponse) {
     if (ret && isObject(ret, 'result')) {
       return safestrLowercase(ret.result) === 'success'

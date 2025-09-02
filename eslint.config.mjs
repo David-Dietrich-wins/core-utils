@@ -11,19 +11,30 @@ export default tseslint.config(
       'build/**',
       'coverage/**',
       'dist/**',
+      'eslint.config.mjs',
       'node_modules/**',
       'out/**',
+      'storybook-static/**',
     ],
   },
   {
-    files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.mjs', 'src/**/*.mts'],
+    files: [
+      '**/*.ts',
+      '**/*.mts',
+      '**/*.cts',
+      '**/*.tsx',
+      '**/*.js',
+      '**/*.mjs',
+      '**/*.cjs',
+    ],
   },
   eslint.configs.all,
   tseslint.configs.strictTypeChecked,
   {
     languageOptions: {
       parserOptions: {
-        projectServices: true,
+        allowDefaultProject: true,
+        project: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },

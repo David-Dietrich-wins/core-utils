@@ -124,7 +124,6 @@ export class TileConfig<Tvalue = any>
 
       default:
         throw new AppException(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `TileConfig.CreateFromString: Unknown tile type '${type}'`,
           'TileConfig.CreateFromString'
         )
@@ -148,7 +147,6 @@ export class TileConfig<Tvalue = any>
       case TileTypeKeys.empty:
         return 'Empty:'
       default:
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `Unknown: ${tile.value} - ${safestr(
           (tile.value as TileConfigContent).content
         )}`

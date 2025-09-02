@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as z from 'zod/v4'
 import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 
