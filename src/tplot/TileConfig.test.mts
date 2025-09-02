@@ -1,5 +1,5 @@
 import {
-  ITileConfig,
+  type ITileConfig,
   TileConfig,
   type TileType,
   TileTypeKeys,

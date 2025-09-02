@@ -1,10 +1,10 @@
-import { ApiResponse, IApiResponse, type IStatus } from './ApiResponse.mjs'
+import { ApiResponse, type IApiResponse, type IStatus } from './ApiResponse.mjs'
 import {
   AppException,
   AppExceptionHttp,
   AppExceptionHttpNotFound,
 } from './AppException.mjs'
-import { IPagedResponse, PagedResponse } from './PagedResponse.mjs'
+import { type IPagedResponse, PagedResponse } from './PagedResponse.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { jest } from '@jest/globals'
 

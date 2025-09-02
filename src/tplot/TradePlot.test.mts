@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-spread */
 import * as z from 'zod/v4'
-import { ISubplot, Subplot } from './Subplot.mjs'
+import { type ISubplot, Subplot } from './Subplot.mjs'
 import { TradePlot } from './TradePlot.mjs'
 import { ZodTestHelper } from '../jest.setup.mjs'
 import { deepCloneJson } from '../primitives/object-helper.mjs'

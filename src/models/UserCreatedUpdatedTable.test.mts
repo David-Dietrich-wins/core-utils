@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { type AnyObject, type AnyRecord } from './types.mjs'
 import {
   CreatedTable,
   CreatedUpdatedTable,
-  ICreatedTable,
-  ICreatedUpdatedTable,
-  IUserCreatedUpdatedTable,
+  type ICreatedTable,
+  type ICreatedUpdatedTable,
+  type IUserCreatedUpdatedTable,
   UserCreatedUpdatedTable,
 } from './UserCreatedUpdatedTable.mjs'
-import { AnyObject } from './types.mjs'
-import { AnyRecord } from 'dns'
 
 describe('CreatedTable', () => {
   test('constructor string', () => {

@@ -1,6 +1,6 @@
 import {
   CreatePolitiscaleSearchParams,
-  IPolitiscale,
+  type IPolitiscale,
   Politiscale,
   PolitiscalesCreateAll,
 } from './politiscale.mjs'

@@ -1,4 +1,4 @@
-import { IIdVal, IdVal } from './id-val.mjs'
+import { type IIdVal, IdVal } from './id-val.mjs'
 
 test('IdVal good', () => {
   const id = 'id',

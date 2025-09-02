@@ -1,4 +1,4 @@
-import { Facet, IFacet } from './Facet.mjs'
+import { Facet, type IFacet } from './Facet.mjs'
 
 test('constructor', () => {
   const facet = new Facet('TestFacet', 'symbol', 'resolution', 42)

@@ -1,4 +1,4 @@
-import { ITvChartLayout, TvChartLayout } from './TvChartLayout.mjs'
+import { type ITvChartLayout, TvChartLayout } from './TvChartLayout.mjs'
 
 const itv: ITvChartLayout = {
   content: '',

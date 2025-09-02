@@ -1,4 +1,4 @@
-import { ReduxAsyncStatus, ReduxHelper } from './redux-helper.mjs'
+import { type ReduxAsyncStatus, ReduxHelper } from './redux-helper.mjs'
 
 test('getStatus', () => {
   const state: ReduxAsyncStatus<string> = {

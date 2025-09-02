@@ -1,4 +1,4 @@
-import { ChartRunLog, IChartRunLog } from './ChartRunLog.mjs'
+import { ChartRunLog, type IChartRunLog } from './ChartRunLog.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
 
 test('ChartRunLog constructor', () => {

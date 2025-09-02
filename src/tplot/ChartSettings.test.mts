@@ -1,7 +1,7 @@
 import {
   ChartPlotReturn,
   ChartSettings,
-  IChartSettings,
+  type IChartSettings,
 } from './ChartSettings.mjs'
 import { DateHelper } from '../primitives/date-helper.mjs'
 

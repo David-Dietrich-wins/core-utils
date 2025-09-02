@@ -2,7 +2,10 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { ArrayOrSingle, StringOrStringArray } from '../models/types.mjs'
+import {
+  type ArrayOrSingle,
+  type StringOrStringArray,
+} from '../models/types.mjs'
 import { type IIdName, type IIdNameValue, IdName } from '../models/id-name.mjs'
 import {
   MapINamesToNames,

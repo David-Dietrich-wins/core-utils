@@ -1,4 +1,4 @@
-import { ArrayOrSingle } from '../models/types.mjs'
+import { type ArrayOrSingle } from '../models/types.mjs'
 import { CacheManager } from './CacheManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
 

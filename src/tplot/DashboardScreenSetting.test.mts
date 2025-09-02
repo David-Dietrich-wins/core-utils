@@ -1,7 +1,7 @@
 import {
-  ITileConfig,
-  TileConfigChart,
-  TileConfigTicker,
+  type ITileConfig,
+  type TileConfigChart,
+  type TileConfigTicker,
   TileTypeKeys,
 } from './TileConfig.mjs'
 import { DashboardScreenSetting } from './DashboardScreenSetting.mjs'

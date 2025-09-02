@@ -1,6 +1,6 @@
 import {
   CreateClass,
-  SortOrder,
+  type SortOrder,
   SortOrderAsBoolean,
   SortOrderAsNumeric,
   SortOrderAsString,

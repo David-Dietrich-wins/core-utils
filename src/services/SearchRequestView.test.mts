@@ -1,7 +1,10 @@
 import * as z from 'zod/v4'
-import { ISearchRequestView, SearchRequestView } from './SearchRequestView.mjs'
+import {
+  type ISearchRequestView,
+  SearchRequestView,
+} from './SearchRequestView.mjs'
 import { GenerateRandomString } from '../primitives/string-helper.mjs'
-import { IIdNameValue } from '../models/id-name.mjs'
+import { type IIdNameValue } from '../models/id-name.mjs'
 import { NumberToString } from '../primitives/number-helper.mjs'
 
 test('constructor string', () => {

@@ -1,4 +1,9 @@
-import { Config, ConfigShort, IConfig, IConfigShort } from './config.mjs'
+import {
+  Config,
+  ConfigShort,
+  type IConfig,
+  type IConfigShort,
+} from './config.mjs'
 
 test('constructor', () => {
   const config = new Config(1, 1, 'name', true)

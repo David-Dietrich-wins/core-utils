@@ -4,7 +4,7 @@ import {
 } from './ConfigManager.mjs'
 import { UserConfigDefaults, UserConfigNames } from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
-import { IConfigShort } from '../models/config.mjs'
+import { type IConfigShort } from '../models/config.mjs'
 
 test('CreateConfigTickerInfoTabSettings', () => {
   const settings = CreateConfigTickerInfoTabSettings({

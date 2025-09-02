@@ -1,9 +1,9 @@
-import { ISubplot, Subplot } from './Subplot.mjs'
+import { type ISubplot, Subplot } from './Subplot.mjs'
 import {
-  ITradePlotProfitizer,
+  type ITradePlotProfitizer,
   TradePlotProfitizer,
 } from './TradePlotProfitizer.mjs'
-import { IAssetQuoteResponse } from '../models/ticker-info.mjs'
+import { type IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { deepCloneJson } from '../primitives/object-helper.mjs'
 
 const itpp: ITradePlotProfitizer = {

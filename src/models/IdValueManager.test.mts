@@ -1,4 +1,4 @@
-import { IIdValue, IdValue, IdValueManager } from './IdValueManager.mjs'
+import { type IIdValue, IdValue, IdValueManager } from './IdValueManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
 test('IdValue good', () => {
