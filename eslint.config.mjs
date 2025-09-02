@@ -4,21 +4,15 @@ import tseslint from 'typescript-eslint'
 export default tseslint.config(
   {
     ignores: [
-      'dist/**/*.ts',
-      'dist/**',
+      '.github/**',
       '.next/**',
-      'node_modules/**',
-      'coverage/**',
+      '_next/**',
+      '.vscode/**',
       'build/**',
-      '**/*.mjs',
-      'next.config.ts',
-      'jest.config.ts',
-      'jest.setup.mts',
-      'jest.setup.ts',
-      'jsdom-extended.mts',
-      'jsdom-extended.ts',
-      'eslint.config.mjs',
-      '**/*.js',
+      'coverage/**',
+      'dist/**',
+      'node_modules/**',
+      'out/**',
     ],
   },
   {
@@ -29,7 +23,7 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        project: './tsconfig.test.json',
+        projectServices: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },

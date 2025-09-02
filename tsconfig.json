@@ -14,26 +14,15 @@
     "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "outDir": "./dist",
+    "outDir": "dist",
     "pretty": true,
     "resolveJsonModule": true,
-    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
     "traceResolution": false,
+    "types": ["node", "jest"],
     "verbatimModuleSyntax": true
-  },
-  "include": ["src/**/*.mts"],
-  "exclude": [
-    "node_modules",
-    "__tests__",
-    "**/jest.setup.mts",
-    "**/jest.setup.ts",
-    "**/*.test.mts",
-    "**/*.test.ts",
-    "**/*.test.integration.mts",
-    "**/*.test.integration.ts"
-  ]
+  }
 }
