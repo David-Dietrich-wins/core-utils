@@ -1,6 +1,6 @@
 import {
-  AddNumbers,
-  DivideByNumbers,
+  addNumbers,
+  divideByNumbers,
   DollarFormatter,
   DownUpOrEqual,
   FirstNumberInString,
@@ -11,7 +11,7 @@ import {
   NumberWithDecimalPlaces,
   PercentFormatter,
   PercentTimes100Formatter,
-  PriceInDollars,
+  priceInDollars,
   StockPriceFormatter,
   StockVolumeFormatter,
   XFormatter,
@@ -402,16 +402,16 @@ test(NumberWithDecimalPlaces.name, () => {
   expect(NumberWithDecimalPlaces(1000000.1, 3)).toBe('1,000,000.10')
 })
 
-test(PriceInDollars.name, () => {
-  expect(PriceInDollars(0)).toBe('$0.00')
-  expect(PriceInDollars(1)).toBe('$1.00')
-  expect(PriceInDollars(9999999, false, 0)).toBe('9,999,999')
-  expect(PriceInDollars(1.1)).toBe('$1.10')
-  expect(PriceInDollars(1.11)).toBe('$1.11')
-  expect(PriceInDollars(1.111)).toBe('$1.111')
-  expect(PriceInDollars(1000)).toBe('$1,000.00')
-  expect(PriceInDollars(1000.1)).toBe('$1,000.10')
-  expect(PriceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
+test(priceInDollars.name, () => {
+  expect(priceInDollars(0)).toBe('$0.00')
+  expect(priceInDollars(1)).toBe('$1.00')
+  expect(priceInDollars(9999999, false, 0)).toBe('9,999,999')
+  expect(priceInDollars(1.1)).toBe('$1.10')
+  expect(priceInDollars(1.11)).toBe('$1.11')
+  expect(priceInDollars(1.111)).toBe('$1.111')
+  expect(priceInDollars(1000)).toBe('$1,000.00')
+  expect(priceInDollars(1000.1)).toBe('$1,000.10')
+  expect(priceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
 })
 
 test(DownUpOrEqual.name, () => {
@@ -481,9 +481,9 @@ test(FirstNumberInString.name, () => {
   expect(FirstNumberInString(' -123.45')).toBe(-123.45)
 })
 
-test(AddNumbers.name, () => {
+test(addNumbers.name, () => {
   const io1 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
-    io1ret = AddNumbers(io1, {
+    io1ret = addNumbers(io1, {
       a: 3,
       b: 4,
       c: '5',
@@ -492,7 +492,7 @@ test(AddNumbers.name, () => {
       f: 'd',
     }),
     io2 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
-    io2ret = AddNumbers(io2, {
+    io2ret = addNumbers(io2, {
       a: 3,
       b: 4,
       c: '5',
@@ -501,7 +501,7 @@ test(AddNumbers.name, () => {
       f: { a: 2 },
     }),
     io3 = { a: [2], b: 3, c: '4', d: '5', e: 'a', f: { a: 2 } },
-    io3ret = AddNumbers(io3, {
+    io3ret = addNumbers(io3, {
       a: [3],
       b: 4,
       c: '5',
@@ -510,7 +510,7 @@ test(AddNumbers.name, () => {
       f: { a: 2 },
     }),
     io4 = { a: 2, b: 3, c: '4', d: ['5'], e: ['e'], f: { a: 2 } },
-    io4ret = AddNumbers(io4, {
+    io4ret = addNumbers(io4, {
       a: [3],
       b: 4,
       c: [9],
@@ -525,9 +525,9 @@ test(AddNumbers.name, () => {
   expect(io4ret).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
 })
 
-test(DivideByNumbers.name, () => {
+test(divideByNumbers.name, () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
-    objRet = DivideByNumbers(io, 2)
+    objRet = divideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })

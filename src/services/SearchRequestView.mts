@@ -99,7 +99,7 @@ export class SearchRequestView implements ISearchRequestView {
     }
   }
 
-  static Create(overrides?: Partial<ISearchRequestView>): ISearchRequestView {
+  static create(overrides?: Partial<ISearchRequestView>): ISearchRequestView {
     const iSearchRequestView: ISearchRequestView = {
       exactMatch: false,
       limit: 0,
@@ -186,8 +186,8 @@ export class SearchRequestView implements ISearchRequestView {
       )
     }
 
-    const offset = this.CalculatedOffset,
-      pageSize = this.CalculatedPageSize
+    const offset = this.calculatedOffset,
+      pageSize = this.calculatedPageSize
     if (pageSize > 0) {
       ret = ret.slice(offset, offset + pageSize)
     } else if (offset > 0) {
@@ -197,14 +197,14 @@ export class SearchRequestView implements ISearchRequestView {
     return [ret, numFound]
   }
 
-  get CalculatedPageSize() {
+  get calculatedPageSize() {
     const pageSize = getAsNumber(this.pageSize)
 
     return pageSize ? pageSize : getAsNumber(this.limit)
   }
 
-  get CalculatedOffset() {
-    const offset = this.CalculatedPageSize * getAsNumber(this.pageIndex)
+  get calculatedOffset() {
+    const offset = this.calculatedPageSize * getAsNumber(this.pageIndex)
     if (offset > 0) {
       return offset
     }
@@ -212,7 +212,7 @@ export class SearchRequestView implements ISearchRequestView {
     return getAsNumber(this.offset)
   }
 
-  CapLimit(maxlimit: number) {
+  capLimit(maxlimit: number) {
     if (this.limit < 1 || this.limit > maxlimit) {
       this.limit = maxlimit
     }

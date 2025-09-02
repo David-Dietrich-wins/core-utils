@@ -567,18 +567,18 @@ test('ErrorHandler', () => {
   })
 })
 
-test('VerifySuccess', () => {
-  const fname = 'test-VerifySuccess',
+test('verifySuccess', () => {
+  const fname = 'test-verifySuccess',
     ret = new ApiResponse('data', CONST_success, 'message', 200),
-    zdata = ApiResponse.VerifySuccess(fname, ret)
+    zdata = ApiResponse.verifySuccess(fname, ret)
   expect(zdata).toBe('data')
 
   expect(() => {
-    ApiResponse.VerifySuccess(fname, new ApiResponse('', 'error', '', 500))
+    ApiResponse.verifySuccess(fname, new ApiResponse('', 'error', '', 500))
   }).toThrow(new Error('Bad result from API call: error.'))
 
   expect(() => {
-    ApiResponse.VerifySuccess(
+    ApiResponse.verifySuccess(
       fname,
       new ApiResponse('', CONST_success, '', 200),
       true
@@ -586,7 +586,7 @@ test('VerifySuccess', () => {
   }).not.toThrow()
 
   expect(() => {
-    ApiResponse.VerifySuccess(
+    ApiResponse.verifySuccess(
       fname,
       new ApiResponse('', 'success', '', 200),
       false
@@ -594,22 +594,22 @@ test('VerifySuccess', () => {
   }).toThrow(new AppException('No data returned', fname))
 })
 
-test('VerifySuccessPagedResponse', () => {
-  const fname = 'test-VerifySuccessPagedResponse',
+test('verifySuccessPagedResponse', () => {
+  const fname = 'test-verifySuccessPagedResponse',
     ret = new ApiResponse<IPagedResponse<string>>(
       { dataPage: [], totalCount: 0 },
       CONST_success,
       'message',
       200
     ),
-    zdata = ApiResponse.VerifySuccessPagedResponse(fname, ret)
+    zdata = ApiResponse.verifySuccessPagedResponse(fname, ret)
 
   expect(zdata).toBeInstanceOf(PagedResponse)
   expect(zdata.dataPage).toEqual([])
   expect(zdata.totalCount).toBe(0)
 
   expect(() => {
-    ApiResponse.VerifySuccessPagedResponse(
+    ApiResponse.verifySuccessPagedResponse(
       fname,
       new ApiResponse<IPagedResponse<string>>(
         {
@@ -624,7 +624,7 @@ test('VerifySuccessPagedResponse', () => {
   }).toThrow(new Error('Bad result from API call: error.'))
 
   expect(() => {
-    ApiResponse.VerifySuccessPagedResponse(
+    ApiResponse.verifySuccessPagedResponse(
       fname,
       new ApiResponse<IPagedResponse<string>>(
         undefined as unknown as IPagedResponse<string>,
@@ -636,7 +636,7 @@ test('VerifySuccessPagedResponse', () => {
   }).toThrow(new Error('Bad result from API call: error.'))
 
   expect(() => {
-    ApiResponse.VerifySuccessPagedResponse(
+    ApiResponse.verifySuccessPagedResponse(
       fname,
       new ApiResponse<IPagedResponse<string>>(
         undefined as unknown as IPagedResponse<string>,

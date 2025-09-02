@@ -1,6 +1,6 @@
 import {
-  FirstNumberInString,
-  NumberToString,
+  firstNumberInString,
+  numberToString,
   getAsNumber,
   isNumber,
 } from './number-helper.mjs'
@@ -259,12 +259,12 @@ export abstract class DateHelper {
       }
     }
   }
-  static MidnightSafe(date: Date | string | null | undefined) {
+  static midnightSafe(date: Date | string | null | undefined) {
     const d = DateHelper.Midnight(date)
     if (!d) {
       throw new AppException(
         'Invalid date passed in',
-        'DateHelper.getMidnightSafe'
+        'DateHelper.getmidnightSafe'
       )
     }
 
@@ -334,7 +334,7 @@ export abstract class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForApiCalls(
+  static dateFormatForApiCalls(
     date?: Moment | Date | number | string,
     isUtc = false
   ) {
@@ -347,7 +347,7 @@ export abstract class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForUi(
+  static dateFormatForUi(
     date?: Moment | Date | number | string,
     showFullYear = false,
     isUtc = false
@@ -365,7 +365,7 @@ export abstract class DateHelper {
    * @param date Any format of date that can be converted to a Date object.
    * @returns A string formatted to example - '230906_145201'
    */
-  static DateFormatForUiWithTime(
+  static dateFormatForUiWithTime(
     date?: Moment | Date | number | string,
     showFullYear = false,
     showSeconds = false,
@@ -481,7 +481,7 @@ export abstract class DateHelper {
   ) {
     const dateClean = DateHelper.ConvertToDateObject(date),
       numPeriods = isNullOrUndefined(numberOfPeriods)
-        ? FirstNumberInString(periodType)
+        ? firstNumberInString(periodType)
         : getAsNumber(numberOfPeriods),
       period = DateHelper.PeriodType(periodType)
 
@@ -706,38 +706,38 @@ export abstract class DateHelper {
     let s = ''
     if (numDays > 0) {
       s += longFormat
-        ? `${NumberToString(numDays)} day${pluralSuffix(numDays)}`
-        : `${NumberToString(numDays)}d`
+        ? `${numberToString(numDays)} day${pluralSuffix(numDays)}`
+        : `${numberToString(numDays)}d`
     }
 
     if (numHours > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberToString(numHours)} hour${pluralSuffix(
+        ? `${prefixIfHasData(s)}${numberToString(numHours)} hour${pluralSuffix(
             numHours
           )}`
-        : `${prefixIfHasData(s, ' ')}${NumberToString(numHours)}h`
+        : `${prefixIfHasData(s, ' ')}${numberToString(numHours)}h`
     }
 
     if (numMinutes > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberToString(
+        ? `${prefixIfHasData(s)}${numberToString(
             numMinutes
           )} minute${pluralSuffix(numMinutes)}`
-        : `${prefixIfHasData(s, ' ')}${NumberToString(numMinutes)}m`
+        : `${prefixIfHasData(s, ' ')}${numberToString(numMinutes)}m`
     }
 
     if (secondsModulo > 0) {
       s += longFormat
-        ? `${prefixIfHasData(s)}${NumberToString(
+        ? `${prefixIfHasData(s)}${numberToString(
             secondsModulo
           )} second${pluralSuffix(secondsModulo)}`
-        : `${prefixIfHasData(s, ' ')}${NumberToString(secondsModulo)}s`
+        : `${prefixIfHasData(s, ' ')}${numberToString(secondsModulo)}s`
     }
 
     if (showMilliseconds || (showMillisecondsIfUnderASecond && millis < 1000)) {
       const micros = millis % 1000
       if (micros > 0) {
-        s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${NumberToString(
+        s += `${prefixIfHasData(s, longFormat ? ', ' : ' ')}${numberToString(
           micros % 1000
         )}ms`
       }

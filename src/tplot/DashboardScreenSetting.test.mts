@@ -32,8 +32,8 @@ test('Create', () => {
   expect(dss.name).toBe('Test')
   expect(dss.tiles).toEqual([])
 })
-test('CreateISetting', () => {
-  const dss = DashboardScreenSetting.CreateISetting({
+test('createISetting', () => {
+  const dss = DashboardScreenSetting.createISetting({
     name: 'Test',
     tiles: [],
   })

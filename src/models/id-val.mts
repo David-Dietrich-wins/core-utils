@@ -21,20 +21,20 @@ export class IdVal<Tid = string, Tval = string>
     this.val = val
   }
 
-  static ToIIdVal<Tid = string, Tval = string>(
+  static toIIdVal<Tid = string, Tval = string>(
     id: Tid,
     val: Tval
   ): IIdValRequired<Tid, Tval> {
     return { id, val }
   }
 
-  static FromNameAndVal<Tid = string, Tval = string>(id: Tid, val: Tval) {
-    return IdVal.ToIIdVal<Tid, Tval>(id, val)
+  static fromNameAndVal<Tid = string, Tval = string>(id: Tid, val: Tval) {
+    return IdVal.toIIdVal<Tid, Tval>(id, val)
   }
 
-  static FromNameVal<Tval = string>(
+  static fromNameVal<Tval = string>(
     nameVal: INameVal<Tval>
   ): IIdValRequired<string, Tval> {
-    return IdVal.ToIIdVal<string, Tval>(nameVal.name, nameVal.val)
+    return IdVal.toIIdVal<string, Tval>(nameVal.name, nameVal.val)
   }
 }

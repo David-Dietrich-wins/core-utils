@@ -1,7 +1,7 @@
 import * as z from 'zod/v4'
 import { jest } from '@jest/globals'
 // eslint-disable-next-line sort-imports
-import { NumberToString } from './primitives/number-helper.mjs'
+import { numberToString } from './primitives/number-helper.mjs'
 import { safestr } from './primitives/string-helper.mjs'
 
 // Import { HttpHandler } from 'msw'
@@ -113,7 +113,7 @@ export class ZodTestHelper {
     const ret: Partial<z.core.$ZodIssueTooSmall & { origin: string }> = {
       code: 'too_small',
       inclusive,
-      message: `Too small: expected string to have >=${NumberToString(
+      message: `Too small: expected string to have >=${numberToString(
         minimum
       )} characters`,
       minimum,
@@ -128,7 +128,7 @@ export class ZodTestHelper {
     return {
       code: 'too_big',
       maximum,
-      message: `Too big: expected array to have <=${NumberToString(
+      message: `Too big: expected array to have <=${numberToString(
         maximum
       )} items`,
       origin: 'array',
@@ -138,7 +138,7 @@ export class ZodTestHelper {
   static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
-      message: `Too small: expected array to have >=${NumberToString(
+      message: `Too small: expected array to have >=${numberToString(
         minimum
       )} items`,
       minimum,

@@ -29,35 +29,35 @@ test(ConfigWebsite.name, () => {
     updated: expect.any(Number),
   })
 
-  const updated = ConfigWebsite.HideTooltips(cfg)
+  const updated = ConfigWebsite.hideTooltips(cfg)
 
   expect(updated).toBeDefined()
   expect(updated.hideHelp.value).toBe(false)
   expect(updated.updated).toBeDefined()
 })
 
-test(ConfigWebsite.HideHelp.name, () => {
+test(ConfigWebsite.hideHelp.name, () => {
   const cfg = ConfigWebsite.defaults()
 
   expect(cfg).toBeDefined()
   expect(cfg.hideHelp).toBeDefined()
   expect(cfg.hideHelp.value).toBe(false)
 
-  const updated = ConfigWebsite.HideHelp(cfg)
+  const updated = ConfigWebsite.hideHelp(cfg)
 
   expect(updated).toBeDefined()
   expect(updated.hideHelp.value).toBe(true)
   expect(updated.updated).toBeDefined()
 })
 
-test(ConfigWebsite.HideTooltips.name, () => {
+test(ConfigWebsite.hideTooltips.name, () => {
   const cfg = ConfigWebsite.defaults()
 
   expect(cfg).toBeDefined()
   expect(cfg.hideTooltips).toBeDefined()
   expect(cfg.hideTooltips.value).toBe(false)
 
-  const updated = ConfigWebsite.HideTooltips(cfg)
+  const updated = ConfigWebsite.hideTooltips(cfg)
 
   expect(updated).toBeDefined()
   expect(updated.hideTooltips.value).toBe(true)

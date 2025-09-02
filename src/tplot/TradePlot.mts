@@ -3,7 +3,7 @@ import type { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import { type ISubplot, Subplot } from './Subplot.mjs'
 import { type ITicker, zTicker } from '../models/ticker-info.mjs'
 import {
-  PriceInDollars,
+  priceInDollars,
   getAsNumber,
   getNumberFormatted,
   getPercentChangeString,
@@ -176,7 +176,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return PriceInDollars(gain, true, maxDecimalPlaces)
+    return priceInDollars(gain, true, maxDecimalPlaces)
   }
 
   investmentAmountGainPercent(currentPrice: number) {
@@ -206,7 +206,7 @@ export class TradePlot implements ITradePlot {
       return '$0'
     }
 
-    return PriceInDollars(this.investmentAmountStart)
+    return priceInDollars(this.investmentAmountStart)
   }
 
   get startingInvestment() {

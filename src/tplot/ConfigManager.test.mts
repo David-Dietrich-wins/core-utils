@@ -2,7 +2,7 @@ import {
   ConfigManager,
   CreateConfigTickerInfoTabSettings,
 } from './ConfigManager.mjs'
-import { UserConfigDefaults, UserConfigNames } from '../models/UserInfo.mjs'
+import { userConfigDefaults, UserConfigNames } from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { type IConfigShort } from '../models/config.mjs'
 
@@ -13,7 +13,7 @@ test('CreateConfigTickerInfoTabSettings', () => {
   })
 
   expect(settings).toEqual({
-    ...UserConfigDefaults().tickerInfo,
+    ...userConfigDefaults().tickerInfo,
     selectedPeopleTab: 'top',
     selectedTab: 'asset',
   })

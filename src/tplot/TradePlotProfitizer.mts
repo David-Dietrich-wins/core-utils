@@ -4,8 +4,8 @@ import {
 } from '../models/ticker-info.mjs'
 import { type ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
-  NumberWithDecimalPlaces,
-  PriceInDollars,
+  numberWithDecimalPlaces,
+  priceInDollars,
   getPercentChange,
   getPercentChangeString,
 } from '../primitives/number-helper.mjs'
@@ -123,9 +123,9 @@ export class TradePlotProfitizer
     } else if (!x.profit) {
       msg = 'Currently break even.'
     } else if (x.profit > 0) {
-      msg = `Currently up ${PriceInDollars(x.profit)}!`
+      msg = `Currently up ${priceInDollars(x.profit)}!`
     } else {
-      msg = `Currently down ${PriceInDollars(x.profit)}.`
+      msg = `Currently down ${priceInDollars(x.profit)}.`
     }
 
     const pl: IPlotMsg = {
@@ -144,7 +144,7 @@ export class TradePlotProfitizer
   }
 
   get currentPriceDisplay() {
-    return PriceInDollars(this.currentPrice ?? 0)
+    return priceInDollars(this.currentPrice ?? 0)
   }
 
   /**
@@ -229,7 +229,7 @@ export class TradePlotProfitizer
   }
 
   get investmentAmountDisplay() {
-    return PriceInDollars(this.investmentAmountCurrent)
+    return priceInDollars(this.investmentAmountCurrent)
   }
 
   get investmentAmountStart() {
@@ -240,7 +240,7 @@ export class TradePlotProfitizer
       return '$0'
     }
 
-    return PriceInDollars(this.investmentAmountStart)
+    return priceInDollars(this.investmentAmountStart)
   }
 
   get profitLoss() {
@@ -248,7 +248,7 @@ export class TradePlotProfitizer
     return this.investmentAmountCurrent - this.investmentAmountStart
   }
   get profitLossText() {
-    return NumberWithDecimalPlaces(this.profitLoss)
+    return numberWithDecimalPlaces(this.profitLoss)
   }
 
   get subplotCount() {

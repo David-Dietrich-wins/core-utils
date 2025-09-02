@@ -27,7 +27,7 @@ export abstract class RedirectHelper {
     return redirectLocation
   }
 
-  static CleansedRedirect(
+  static cleansedRedirect(
     windowPathname: string,
     searchParamRequestUrl?: string | null,
     redirectAfterLoginIfIllegalRedirectLocation = '/'

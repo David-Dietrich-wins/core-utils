@@ -19,7 +19,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   static Create(overrides?: Partial<IDashboardScreenSetting>) {
     return Object.assign(new DashboardScreenSetting(), overrides)
   }
-  static CreateISetting(overrides?: Partial<IDashboardScreenSetting>) {
+  static createISetting(overrides?: Partial<IDashboardScreenSetting>) {
     const idss: IDashboardScreenSetting = {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...DashboardScreenSetting.CreateNew('New Dashboard'),

@@ -50,7 +50,7 @@ export class ConfigWebsite {
     return cfgUpdate
   }
 
-  static HideHelp(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
+  static hideHelp(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
     const dtUpdated = DateHelper.GetTime(updated)
 
     const hideHelp = updateContextValueToggleBoolean(cfg.hideHelp, dtUpdated)
@@ -60,7 +60,7 @@ export class ConfigWebsite {
     })
   }
 
-  static HideTooltips(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
+  static hideTooltips(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
     const dtUpdated = DateHelper.GetTime(updated)
 
     const hideTooltips = updateContextValueToggleBoolean(
@@ -73,7 +73,7 @@ export class ConfigWebsite {
     })
   }
 
-  static OpenFirstPlot(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
+  static openFirstPlot(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
     const dtUpdated = DateHelper.GetTime(updated)
 
     const openFirstPlot = updateContextValueToggleBoolean(

@@ -263,7 +263,7 @@ export class ChartSettings implements IChartSettings {
 
   static Create(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
-    const csettings = ChartSettings.CreateISettings({
+    const csettings = ChartSettings.createISettings({
       frequency: 1,
       frequencyType: '1d',
       period: 1,
@@ -287,7 +287,7 @@ export class ChartSettings implements IChartSettings {
     )
   }
 
-  static CreateISettings(overrides?: Partial<IChartSettings>) {
+  static createISettings(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
     const ret: IChartSettings = {
       frequency: 1,
@@ -362,8 +362,8 @@ export class ChartSettings implements IChartSettings {
   }
 
   static fromToForFmpStatic(startMoment?: Moment, endMoment?: Moment) {
-    let s = `&from=${DateHelper.DateFormatForApiCalls(startMoment)}`
-    s += `&to=${DateHelper.DateFormatForApiCalls(endMoment)}`
+    let s = `&from=${DateHelper.dateFormatForApiCalls(startMoment)}`
+    s += `&to=${DateHelper.dateFormatForApiCalls(endMoment)}`
 
     return s
   }
@@ -479,10 +479,10 @@ export class ChartSettings implements IChartSettings {
     let s = this.frequencyTypeFriendlyString
 
     const fromDateStr = this.startDate
-        ? DateHelper.DateFormatForApiCalls(this.startMoment)
+        ? DateHelper.dateFormatForApiCalls(this.startMoment)
         : '',
       toDateStr = this.endDate
-        ? DateHelper.DateFormatForApiCalls(this.endMoment)
+        ? DateHelper.dateFormatForApiCalls(this.endMoment)
         : ''
 
     if (fromDateStr && toDateStr) {

@@ -86,7 +86,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
 
     if (ApiResponse.IsApiResponse(obj)) {
       try {
-        ApiResponse.VerifySuccess(
+        ApiResponse.verifySuccess(
           ApiResponse.IsApiResponseError.name,
           obj,
           true
@@ -192,7 +192,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return false
   }
 
-  static VerifySuccess<T = unknown>(
+  static verifySuccess<T = unknown>(
     fname: string,
     ret: IApiResponse<T>,
     allowNoDataReturned = false
@@ -211,7 +211,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return ret.data
   }
 
-  static VerifySuccessPagedResponse<T = unknown>(
+  static verifySuccessPagedResponse<T = unknown>(
     fname: string,
     ret: IApiResponse<IPagedResponse<T>>,
     allowNoDataReturned = false

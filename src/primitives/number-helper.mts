@@ -144,7 +144,7 @@ export function getNumberFormatted(
  * @param minDecimalPlaces The minimum number of required decimal places to show.
  * @returns A string of the passed in num with the given decimal places.
  */
-export function NumberToString(
+export function numberToString(
   num: string | number | null | undefined,
   showZeroValues = true,
   maxDecimalPlaces?: number,
@@ -208,7 +208,7 @@ export function getAsNumberOrUndefined(
   }
 }
 
-export function FormatPrefixSuffixZero(
+export function formatPrefixSuffixZero(
   val?: string | number | null,
   showZeroValues = true,
   toFixedLength = 2,
@@ -222,7 +222,7 @@ export function FormatPrefixSuffixZero(
   const num = isString(val) ? parseFloat(safestr(val, '0')) : val
 
   if (num || showZeroValues) {
-    const str = NumberToString(num, showZeroValues, toFixedLength)
+    const str = numberToString(num, showZeroValues, toFixedLength)
 
     return `${prefix}${str}${suffix}`
   }
@@ -237,7 +237,7 @@ export function FormatPrefixSuffixZero(
  * @param price The price or number to get a formatted stock price for.
  * @return The formatted stock price.
  */
-export function NumberWithDecimalPlaces(
+export function numberWithDecimalPlaces(
   price: number,
   maxDecimalPlaces?: number
 ) {
@@ -315,19 +315,19 @@ export function NumberWithDecimalPlaces(
   return defaultReturn
 }
 
-export function PriceInDollars(
+export function priceInDollars(
   price: number,
   showDollarSign = true,
   maxDecimalPlaces = 4
 ) {
   const dollar =
     stringIf(showDollarSign, '$') +
-    NumberWithDecimalPlaces(price, maxDecimalPlaces)
+    numberWithDecimalPlaces(price, maxDecimalPlaces)
 
   return dollar.replace('$-', '-$')
 }
 
-export function DownUpOrEqual(
+export function downUpOrEqual(
   startValue: number,
   endValue: number | null | undefined,
   isShort = false
@@ -349,7 +349,7 @@ export function DownUpOrEqual(
  * @param objLeft Adds all number members to the right.
  * @param objRight Adds all number members to the right.
  */
-export function AddNumbers<T extends object>(objLeft: T, objRight: T) {
+export function addNumbers<T extends object>(objLeft: T, objRight: T) {
   return runOnAllMembers(
     objLeft,
     (key, val) => {
@@ -377,7 +377,7 @@ export function AddNumbers<T extends object>(objLeft: T, objRight: T) {
  * @param divideBy The number to divide all members by.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function DivideByNumbers<T extends object = any>(
+export function divideByNumbers<T extends object = any>(
   obj: T,
   divideBy: number
 ) {
@@ -397,7 +397,7 @@ export function toFixedPrefixed(
   toFixedLength = 2,
   prefix = '$'
 ) {
-  const s = NumberToString(val, showZeroValues, toFixedLength)
+  const s = numberToString(val, showZeroValues, toFixedLength)
 
   return !showZeroValues && !hasData(s) ? '' : safePrefix(s, prefix)
 }
@@ -408,12 +408,12 @@ export function toFixedSuffixed(
   toFixedLength = 2,
   suffix = '%'
 ) {
-  const s = NumberToString(val, showZeroValues, toFixedLength)
+  const s = numberToString(val, showZeroValues, toFixedLength)
 
   return !showZeroValues && !hasData(s) ? '' : safeSuffix(s, suffix)
 }
 
-export function FirstNumberInString(str: string | null | undefined) {
+export function firstNumberInString(str: string | null | undefined) {
   if (!str) {
     return 0
   }
@@ -445,21 +445,21 @@ export type FormatFunction = (val: unknown) => string
 //   Return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 // }
 
-export function NumberFormatter(
+export function numberFormatter(
   val?: string | number | null,
   showZeroValues = true,
   numDecimalPlaces = 2
 ) {
-  return FormatPrefixSuffixZero(val, showZeroValues, numDecimalPlaces)
+  return formatPrefixSuffixZero(val, showZeroValues, numDecimalPlaces)
 }
-export function NumberFormatterNoDecimal(
+export function numberFormatterNoDecimal(
   val?: string | number | null,
   showZeroValues = true
 ) {
-  return FormatPrefixSuffixZero(val, showZeroValues, 0)
+  return formatPrefixSuffixZero(val, showZeroValues, 0)
 }
 
-export function XFormatter(
+export function xFormatter(
   val: string | number | null | undefined,
   showZeroValues = true,
   numDecimalPlaces = 2
@@ -467,7 +467,7 @@ export function XFormatter(
   return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, 'x')
 }
 
-export function DollarFormatter(
+export function dollarFormatter(
   val: string | number | null | undefined = 0,
   showZeroValues = true,
   numDecimalPlaces = 2
@@ -475,7 +475,7 @@ export function DollarFormatter(
   return toFixedPrefixed(val, showZeroValues, numDecimalPlaces)
 }
 
-export function StockPriceFormatter(
+export function stockPriceFormatter(
   price: string | number | null | undefined,
   showZeroValues = false,
   numDecimalPlaces?: number
@@ -493,7 +493,7 @@ export function StockPriceFormatter(
   }
 }
 
-export function PercentFormatter(
+export function percentFormatter(
   val: string | number | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 2
@@ -501,25 +501,25 @@ export function PercentFormatter(
   return toFixedSuffixed(val, showZeroValues, numDecimalPlaces, '%')
 }
 
-export function PercentTimes100Formatter(
+export function percentTimes100Formatter(
   val: number | string | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 2
 ) {
-  return PercentFormatter(
+  return percentFormatter(
     getAsNumber(val) * 100,
     showZeroValues,
     numDecimalPlaces
   )
 }
 
-export function StockVolumeFormatter(
+export function stockVolumeFormatter(
   volume: string | number | null | undefined,
   showZeroValues = false,
   numDecimalPlaces = 0
 ) {
   if (volume || showZeroValues) {
-    const num = NumberFormatter(
+    const num = numberFormatter(
       volume ?? 0,
       showZeroValues,
       numDecimalPlaces || 0

@@ -18,7 +18,7 @@ import {
 } from '../primitives/string-helper.mjs'
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../primitives/date-helper.mjs'
-import { NumberToString } from '../primitives/number-helper.mjs'
+import { numberToString } from '../primitives/number-helper.mjs'
 
 export class InstrumentationStatistics {
   skipped = 0
@@ -223,7 +223,7 @@ export class InstrumentationStatistics {
     showSkipped = false,
     recordsName = ''
   ) {
-    let msg = `${NumberToString(this.totalProcessed)} ${safestr(
+    let msg = `${numberToString(this.totalProcessed)} ${safestr(
       recordsName
     )}${pluralize(
       this.totalProcessed,
@@ -235,19 +235,19 @@ export class InstrumentationStatistics {
       let successFailMsg = ''
 
       if (this.successes || showSuccessFailIf0) {
-        successFailMsg += `Success: ${NumberToString(this.successes)}`
+        successFailMsg += `Success: ${numberToString(this.successes)}`
       }
 
       if (this.failures || showSuccessFailIf0) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Fail: ${NumberToString(this.failures)}`
+        )}Fail: ${numberToString(this.failures)}`
       }
 
       if (showSkipped && this.skipped) {
         successFailMsg += `${prefixIfHasData(
           successFailMsg
-        )}Skipped: ${NumberToString(this.skipped)}`
+        )}Skipped: ${numberToString(this.skipped)}`
       }
 
       msg += ` (${successFailMsg})`
@@ -309,43 +309,43 @@ export class InstrumentationStatistics {
   }
 
   messageString(isOneLine?: boolean) {
-    let s = `Processed ${NumberToString(
+    let s = `Processed ${numberToString(
       this.totalProcessed
     )} item${pluralSuffix(this.totalProcessed)} in ${this.processingTimeString(
       true
     )}${isOneLine ? '' : '.'}`
     if (this.add) {
-      s += `${this.lineSeparator(isOneLine)}Added: ${NumberToString(this.add)}${
+      s += `${this.lineSeparator(isOneLine)}Added: ${numberToString(this.add)}${
         isOneLine ? '' : '.'
       }`
     }
     if (this.update) {
-      s += `${this.lineSeparator(isOneLine)}Updated: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Updated: ${numberToString(
         this.update
       )}${isOneLine ? '' : '.'}`
     }
     if (this.upsert) {
-      s += `${this.lineSeparator(isOneLine)}Upserted: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Upserted: ${numberToString(
         this.upsert
       )}${isOneLine ? '' : '.'}`
     }
     if (this.delete) {
-      s += `${this.lineSeparator(isOneLine)}Deleted: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Deleted: ${numberToString(
         this.delete
       )}${isOneLine ? '' : '.'}`
     }
     if (this.skipped) {
-      s += `${this.lineSeparator(isOneLine)}Skipped: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Skipped: ${numberToString(
         this.skipped
       )}${isOneLine ? '' : '.'}`
     }
     if (this.successes) {
-      s += `${this.lineSeparator(isOneLine)}Successes: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Successes: ${numberToString(
         this.successes
       )}${isOneLine ? '' : '.'}`
     }
     if (this.failures) {
-      s += `${this.lineSeparator(isOneLine)}Failures: ${NumberToString(
+      s += `${this.lineSeparator(isOneLine)}Failures: ${numberToString(
         this.failures
       )}${isOneLine ? '' : '.'}`
     }
@@ -374,7 +374,7 @@ export class InstrumentationStatistics {
       : 1
 
     return [
-      NumberToString(this.totalProcessed),
+      numberToString(this.totalProcessed),
       recordsPerSecond.toFixed(1),
       DateHelper.timeDifferenceStringFromMillis(this.processingTime, true),
     ]

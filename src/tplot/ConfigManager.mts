@@ -1,7 +1,7 @@
 import {
   type ConfigTickerInfoTabSettings,
   TickerInfoTabSettingsDefault,
-  UserConfigDefaults,
+  userConfigDefaults,
   UserConfigNames,
   type UserConfigTypes,
 } from '../models/UserInfo.mjs'
@@ -145,7 +145,7 @@ export class ConfigManager {
       return found.v as T
     }
 
-    return UserConfigDefaults()[name] as T
+    return userConfigDefaults()[name] as T
   }
 
   FindBoolean(name: keyof typeof UserConfigNames) {

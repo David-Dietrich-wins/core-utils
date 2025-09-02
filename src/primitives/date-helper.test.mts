@@ -352,19 +352,19 @@ test(DateHelper.toLocalStringWithoutTimezone.name, () => {
   expect(ret).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}/u)
 })
 
-describe(DateHelper.DateFormatForUi.name, () => {
+describe(DateHelper.dateFormatForUi.name, () => {
   test('default', () => {
-    const ret = DateHelper.DateFormatForUi()
+    const ret = DateHelper.dateFormatForUi()
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{2}/u)
   })
   test('show full year', () => {
-    const ret = DateHelper.DateFormatForUi(undefined, true)
+    const ret = DateHelper.dateFormatForUi(undefined, true)
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
   test('utc', () => {
-    const ret = DateHelper.DateFormatForUi(Date.now(), true, true)
+    const ret = DateHelper.dateFormatForUi(Date.now(), true, true)
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
@@ -631,23 +631,23 @@ test(DateHelper.UnixTimeFormatForTheDow.name, () => {
   expect(utcDate).toBe('Monday, December 1st 2025, 7:00:00 AM')
 })
 
-test(DateHelper.DateFormatForUiWithTime.name, () => {
-  expect(DateHelper.DateFormatForUiWithTime(new Date().getTime())).toBe(
+test(DateHelper.dateFormatForUiWithTime.name, () => {
+  expect(DateHelper.dateFormatForUiWithTime(new Date().getTime())).toBe(
     '12/1/25 7:00 am'
   )
-  expect(DateHelper.DateFormatForUiWithTime(new Date().getTime(), true)).toBe(
+  expect(DateHelper.dateFormatForUiWithTime(new Date().getTime(), true)).toBe(
     '12/1/2025 7:00 am'
   )
   expect(
-    DateHelper.DateFormatForUiWithTime(new Date().getTime(), false, true)
+    DateHelper.dateFormatForUiWithTime(new Date().getTime(), false, true)
   ).toBe('12/1/25 7:00:00 am')
   expect(
-    DateHelper.DateFormatForUiWithTime(new Date().getTime(), true, true)
+    DateHelper.dateFormatForUiWithTime(new Date().getTime(), true, true)
   ).toBe('12/1/2025 7:00:00 am')
 })
 
-test(DateHelper.DateFormatForApiCalls.name, () => {
-  const utcDate = DateHelper.DateFormatForApiCalls(new Date().getTime())
+test(DateHelper.dateFormatForApiCalls.name, () => {
+  const utcDate = DateHelper.dateFormatForApiCalls(new Date().getTime())
 
   expect(utcDate).toBe('2025-12-01')
 })
@@ -667,12 +667,12 @@ test('Midnight bad date', () => {
   expect(utcDate).toBeUndefined()
 })
 
-test(DateHelper.MidnightSafe.name, () => {
-  const utcDate = DateHelper.MidnightSafe(new Date())
+test(DateHelper.midnightSafe.name, () => {
+  const utcDate = DateHelper.midnightSafe(new Date())
 
   expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
 
-  expect(() => DateHelper.MidnightSafe(undefined)).toThrow()
+  expect(() => DateHelper.midnightSafe(undefined)).toThrow()
 })
 
 test(DateHelper.NextBoundaryUp.name, () => {

@@ -1,6 +1,6 @@
 import {
   CONST_CharsNumbers,
-  FirstCharCapitalFormatter,
+  firstCharCapitalFormatter,
   GenerateRandomString,
   RemoveLeadingNumbersAndWhitespace,
   ReplaceTwoOrMoreSpacesWithSingleSpace,
@@ -332,18 +332,18 @@ test(hasNumbersOnly.name, () => {
   expect(hasNumbersOnly('abc123')).toBe(false)
 })
 
-test('FirstCharCapitalFormatter', () => {
+test('firstCharCapitalFormatter', () => {
   const str = 'hello world',
     str2 = 'Hello world',
     str3 = 'HELLO WORLD',
     str4 = 'hELLO WORLD',
     str5 = 'hELLO wORLD'
 
-  expect(FirstCharCapitalFormatter(str)).toBe('Hello world')
-  expect(FirstCharCapitalFormatter(str2)).toBe('Hello world')
-  expect(FirstCharCapitalFormatter(str3)).toBe('HELLO WORLD')
-  expect(FirstCharCapitalFormatter(str4)).toBe('HELLO WORLD')
-  expect(FirstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
+  expect(firstCharCapitalFormatter(str)).toBe('Hello world')
+  expect(firstCharCapitalFormatter(str2)).toBe('Hello world')
+  expect(firstCharCapitalFormatter(str3)).toBe('HELLO WORLD')
+  expect(firstCharCapitalFormatter(str4)).toBe('HELLO WORLD')
+  expect(firstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
 })
 
 test(safestrPlus.name, () => {

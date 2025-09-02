@@ -1,4 +1,4 @@
-import { DownUpOrEqual } from './number-helper.mjs'
+import { downUpOrEqual } from './number-helper.mjs'
 import { isNullOrUndefined } from './object-helper.mjs'
 import { safeArray } from './array-helper.mjs'
 
@@ -18,7 +18,7 @@ export function colorFromValueChange(
   colorUp?: string,
   colorNeutral = '#000000'
 ) {
-  const upDown = DownUpOrEqual(startValue, endValue, isShort)
+  const upDown = downUpOrEqual(startValue, endValue, isShort)
 
   return upDown === 1 ? colorUp : upDown === -1 ? colorDown : colorNeutral
 }

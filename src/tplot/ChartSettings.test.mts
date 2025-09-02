@@ -121,7 +121,7 @@ test('ChartSettings.Create', () => {
   })
 })
 
-test('CreateISettings', () => {
+test('createISettings', () => {
   const acs: IChartSettings = {
       endDate: undefined,
       extendedHoursTrading: false,
@@ -133,7 +133,7 @@ test('CreateISettings', () => {
       startDate: undefined,
       ticker: 'aapl',
     },
-    chartSettings = ChartSettings.CreateISettings(acs)
+    chartSettings = ChartSettings.createISettings(acs)
 
   expect(chartSettings).toMatchObject({ ...acs, ticker: 'AAPL' })
 })

@@ -86,7 +86,7 @@ export interface IUserInfo {
   tokenExpireTime: number
 }
 
-export function UserConfigDefaults(
+export function userConfigDefaults(
   updated?: DateTypeAcceptable
 ): UserConfigTypesAll {
   const aDateNow = DateHelper.GetTime(updated),
@@ -124,7 +124,7 @@ export function UserConfigDefaults(
 
 export class UserInfo implements IUserInfo {
   companies = []
-  config = UserConfigDefaults()
+  config = userConfigDefaults()
   displayName = ''
   email = ''
   firstName = ''

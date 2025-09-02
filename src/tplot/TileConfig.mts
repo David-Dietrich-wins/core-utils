@@ -80,7 +80,7 @@ export class TileConfig<Tvalue = any>
     this.rows = rows
   }
 
-  static CreateFromTileType(
+  static createFromTileType(
     type: TileType,
     overrides?: Partial<ITileConfig> | null
   ) {
@@ -130,7 +130,7 @@ export class TileConfig<Tvalue = any>
     }
   }
 
-  static TileText(tile: ITileConfig) {
+  static tileText(tile: ITileConfig) {
     switch (tile.type) {
       case TileTypeKeys.plotlist:
         return 'PlotList'
@@ -153,7 +153,7 @@ export class TileConfig<Tvalue = any>
     }
   }
 
-  static TileTypeFromString(type: string) {
+  static tileTypeFromString(type: string) {
     const ltype = safestrLowercase(type)
 
     switch (ltype) {
@@ -187,7 +187,7 @@ export class TileConfig<Tvalue = any>
     )
   }
 
-  static CreateITileConfig(overrides?: Partial<ITileConfig> | null) {
+  static createITileConfig(overrides?: Partial<ITileConfig> | null) {
     const iTileConfig: ITileConfig = {
       cols: 1,
       id: newGuid(),
@@ -205,7 +205,7 @@ export class TileConfig<Tvalue = any>
   static CreateTileConfig<T = unknown>(
     overrides?: Partial<ITileConfig<T>> | null
   ) {
-    const itile = TileConfig.CreateITileConfig(overrides),
+    const itile = TileConfig.createITileConfig(overrides),
       tile = new TileConfig(
         itile.id,
         itile.name,

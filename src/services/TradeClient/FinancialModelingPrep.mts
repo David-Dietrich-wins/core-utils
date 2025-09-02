@@ -1,6 +1,6 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
 import {
-  NumberToString,
+  numberToString,
   getAsNumber,
   getAsNumberOrUndefined,
 } from '../../primitives/number-helper.mjs'
@@ -56,7 +56,7 @@ export class FinancialModelingPrep extends TradingClientBase {
   ) {
     let qp = `${existingQueryParams}&symbol=${
       params.symbol
-    }&periodLength=${NumberToString(params.periodLength)}&timeframe=${
+    }&periodLength=${numberToString(params.periodLength)}&timeframe=${
       params.timeframe
     }`
     if (params.from) {
@@ -90,7 +90,7 @@ export class FinancialModelingPrep extends TradingClientBase {
     return zfmp
   }
 
-  static ChartSettings(
+  static chartSettings(
     ticker: string,
     startDate?: number,
     endDate?: number,
