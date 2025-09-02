@@ -22,7 +22,22 @@
     "strict": true,
     "target": "esnext",
     "traceResolution": false,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "verbatimModuleSyntax": true
-  }
+  },
+  "include": ["src/**/*.mts"],
+  "exclude": [
+    "__tests__",
+    "coverage",
+    "node_modules",
+    "storybook-static",
+    "eslint.config.mjs",
+    "**/jest.config.ts",
+    "**/jest.setup.mts",
+    "**/jest.setup.ts",
+    "**/*.test.mts",
+    "**/*.test.ts",
+    "**/*.test.integration.mts",
+    "**/*.test.integration.ts"
+  ]
 }
