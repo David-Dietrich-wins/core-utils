@@ -72,7 +72,7 @@ test('constructor with ICompany', () => {
 })
 
 test('CreateICompany', () => {
-  const company = Company.CreateICompany()
+  const company = Company.createICompany()
 
   expect(company).toEqual({
     // Id: 'TradePlotter',
@@ -137,7 +137,7 @@ describe('zSchema', () => {
 
   test('valid parse', () => {
     const aschema = Company.zCompany,
-      company = Company.CreateICompany({
+      company = Company.createICompany({
         name: 'name',
       })
 
@@ -146,7 +146,7 @@ describe('zSchema', () => {
 
   test('no name', () => {
     const aschema = Company.zCompany,
-      company = Company.CreateICompany()
+      company = Company.createICompany()
 
     expect(() => aschema.parse(company)).toThrow()
   })
@@ -154,15 +154,15 @@ describe('zSchema', () => {
 
 describe('CompanyNamezSchema', () => {
   test('CompanyNamezSchema', () => {
-    const schema = Company.CompanyNamezSchema
+    const schema = Company.companyNamezSchema
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(z.ZodObject)
   })
 
   test('valid parse', () => {
-    const aschema = Company.CompanyNamezSchema,
-      company = Company.CreateICompany({
+    const aschema = Company.companyNamezSchema,
+      company = Company.createICompany({
         name: 'name',
       })
 
@@ -170,15 +170,15 @@ describe('CompanyNamezSchema', () => {
   })
 
   test('no name', () => {
-    const aschema = Company.CompanyNamezSchema,
-      company = Company.CreateICompany()
+    const aschema = Company.companyNamezSchema,
+      company = Company.createICompany()
 
     expect(() => aschema.parse(company)).toThrow()
   })
 
   test('invalid name', () => {
     expect(() =>
-      Company.CompanyNamezSchema.parse({
+      Company.companyNamezSchema.parse({
         name: GenerateRandomString(126),
       })
     ).toThrow(

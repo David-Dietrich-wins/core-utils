@@ -44,7 +44,7 @@ export class Company extends IdCreatedUpdated implements ICompany {
     }
   }
 
-  static CreateICompany(overrides?: Partial<ICompany>): ICompany {
+  static createICompany(overrides?: Partial<ICompany>): ICompany {
     const company: ICompany = {
       address1: '',
       address2: '',
@@ -68,7 +68,7 @@ export class Company extends IdCreatedUpdated implements ICompany {
     return company
   }
 
-  static get CompanyNamezSchema() {
+  static get companyNamezSchema() {
     const schema = z.object({
       name: z.string().min(1, 'Name is required').max(125),
     })
