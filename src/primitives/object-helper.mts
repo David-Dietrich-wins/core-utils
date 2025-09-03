@@ -347,7 +347,7 @@ export function renameProperty(obj: any, oldKey: any, newKey: any): object {
  */
 export function runOnAllMembers<T extends object = object>(
   obj: T,
-  func: (key: string, value: unknown) => unknown,
+  func: (_key: string, _value: unknown) => unknown,
   mustHaveValue = true
 ) {
   if (!isObject(obj)) {

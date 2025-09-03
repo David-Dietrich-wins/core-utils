@@ -121,7 +121,7 @@ export const CONST_AppNamePolitagree = 'politagree',
   ] as const
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TypishFunction<T = unknown> = (...args: any[]) => T
+export type TypishFunction<T = unknown> = (..._args: any[]) => T
 export type Typish<T = unknown> = T | TypishFunction<T>
 export type TypishReturnType<T> = T extends TypishFunction<infer R>
   ? R
@@ -144,7 +144,7 @@ export type HeaderNavLinks = IdName & {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type IConstructor<T> = new (...args: any[]) => T
+export type IConstructor<T> = new (..._args: any[]) => T
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CreateClass<T>(type: IConstructor<T>, ...args: any[]) {
@@ -246,7 +246,8 @@ export type UserInfoWithTokens = UserAccessRefreshToken & UserInfoUser
 export type WithoutFunctions<T extends object> = Pick<T, NonFunctionKeyNames<T>>
 
 export type EmptyObject = {
-  [K in string | number]: never
+  // eslint-disable-next-line no-unused-vars
+  [key in string | number]: never
 }
 export type NonUndefined<T> = T extends undefined ? never : T
 export type ExtractObjects<T> = T extends infer U

@@ -1,12 +1,12 @@
 import {
   CONST_CharsNumbers,
-  firstCharCapitalFormatter,
   GenerateRandomString,
   RemoveLeadingNumbersAndWhitespace,
   ReplaceTwoOrMoreSpacesWithSingleSpace,
   capitalizeFirstLetter,
   capitalizeWords,
   exceedsMaxNumberOfCharacters,
+  firstCharCapitalFormatter,
   getCommaUpperList,
   hasConsecutiveNumbers,
   hasNumbersOnly,

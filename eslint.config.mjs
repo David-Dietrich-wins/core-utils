@@ -1,38 +1,37 @@
+// @ts-check
+
 import eslint from '@eslint/js'
+import { defineConfig } from 'eslint/config'
+import jestPlugin from 'eslint-plugin-jest'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
-      '.github/**',
-      '.next/**',
-      '_next/**',
-      '.vscode/**',
-      'build/**',
-      'coverage/**',
-      'dist/**',
-      'eslint.config.mjs',
-      'node_modules/**',
-      'out/**',
-      'storybook-static/**',
-    ],
-  },
-  {
-    files: [
-      '**/*.ts',
-      '**/*.mts',
-      '**/*.cts',
-      '**/*.tsx',
-      '**/*.js',
-      '**/*.mjs',
-      '**/*.cjs',
+      '**/.github/**',
+      '**/.next/**',
+      '**/_next/**',
+      '**/.vscode/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/dist/**',
+      '**/eslint.config.mjs',
+      '**/node_modules/**',
+      '**/out/**',
+      '**/storybook-static/**',
     ],
   },
   eslint.configs.all,
-  tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
   {
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      'jest': jestPlugin,
+    },
     languageOptions: {
+      parser: tseslint.parser,
       parserOptions: {
+        // projectService: true,
         project: './tsconfig.test.json',
         tsconfigRootDir: import.meta.dirname,
       },
@@ -40,6 +39,10 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/restrict-template-expressions': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
@@ -55,14 +58,28 @@ export default tseslint.config(
       'new-cap': 'off',
       'no-console': 'off',
       'no-empty-function': 'off',
+      // '@typescript-eslint/no-floating-promises': 'error',
       'no-magic-numbers': 'off',
       'no-nested-ternary': 'off',
       'no-plusplus': 'off',
       'no-ternary': 'off',
+      'no-undef-init': 'off',
       'no-undefined': 'off',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-useless-assignment': 'off',
       'one-var': 'off',
       'prefer-destructuring': 'off',
       'yoda': 'off',
     },
+  },
+  {
+    // disable type-aware linting on JS files
+    files: ['**/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
+    // enable jest rules on test files
+    files: ['test/**'],
+    extends: [jestPlugin.configs['flat/recommended']],
   }
 )

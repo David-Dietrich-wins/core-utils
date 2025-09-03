@@ -355,7 +355,7 @@ export class InstrumentationStatistics {
     } else if (this.msg.length) {
       s += '\n\nMessages:'
 
-      // eslint-disable-next-line no-param-reassign, no-useless-assignment
+      // eslint-disable-next-line no-param-reassign
       s += this.msg.reduce((acc, cur) => (acc += `\n${cur}`), '')
     }
 

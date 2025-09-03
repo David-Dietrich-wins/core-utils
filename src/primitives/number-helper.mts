@@ -439,7 +439,7 @@ export type NumberFormattingOptions = Omit<
   differentForNegative?: boolean
 }
 
-export type FormatFunction = (val: unknown) => string
+export type FormatFunction = (_val: unknown) => string
 
 // Export function numberWithCommas(x) {
 //   Return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");

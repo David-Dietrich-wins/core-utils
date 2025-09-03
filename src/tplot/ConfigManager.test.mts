@@ -2,7 +2,7 @@ import {
   ConfigManager,
   CreateConfigTickerInfoTabSettings,
 } from './ConfigManager.mjs'
-import { userConfigDefaults, UserConfigNames } from '../models/UserInfo.mjs'
+import { UserConfigNames, userConfigDefaults } from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { type IConfigShort } from '../models/config.mjs'
 

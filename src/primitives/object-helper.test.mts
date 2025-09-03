@@ -606,8 +606,7 @@ test(safeJsonToString.name, () => {
 
 function createDeepObject(depth: number, value: any) {
   return {
-    // eslint-disable-next-line no-param-reassign, no-useless-assignment
-    item: depth > 0 ? createDeepObject(--depth, value) : value,
+    item: depth > 0 ? createDeepObject(depth - 1, value) : value,
   }
 }
 

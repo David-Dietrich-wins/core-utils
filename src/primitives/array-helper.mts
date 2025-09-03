@@ -88,7 +88,7 @@ export function ToSafeArray2d<T = unknown>(
 
 export function arrayGetIds<T extends Required<IId<Tid>>, Tid = T['id']>(
   arr?: Readonly<T>[],
-  callback?: (item: T) => Tid
+  callback?: (_item: T) => Tid
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.id))
 }
@@ -96,7 +96,7 @@ export function arrayGetIdNames<
   T extends IIdName<Tid, Tname>,
   Tid = T['id'],
   Tname = T['name']
->(arr?: Readonly<T>[], callback?: (item: T) => IIdName<Tid, Tname>) {
+>(arr?: Readonly<T>[], callback?: (_item: T) => IIdName<Tid, Tname>) {
   return safeArray(arr).map((x) => {
     if (callback) {
       return callback(x)
@@ -109,7 +109,7 @@ export function arrayGetIdNames<
 }
 export function arrayGetNames<T extends IName<Tname>, Tname = T['name']>(
   arr?: Readonly<T>[],
-  callback?: (item: T) => Tname
+  callback?: (_item: T) => Tname
 ) {
   return safeArray(arr).map((x) => (callback ? callback(x) : x.name))
 }
@@ -196,7 +196,7 @@ export function arrayMustFind<T extends IId<Tid>, Tid = T['id']>(
 
 export function arrayFind<T>(
   arrItems: T[] | undefined,
-  findFunc: (item: T) => boolean
+  findFunc: (_item: T) => boolean
 ) {
   return safeArray(arrItems).find(findFunc)
 }
@@ -216,14 +216,14 @@ export function arrayFindByName<T extends IName<Tname>, Tname = T['name']>(
 
 export function arrayFilter<T>(
   arrItems: T[] | undefined,
-  filterFunc: (item: T) => boolean
+  filterFunc: (_item: T) => boolean
 ) {
   return safeArray(arrItems).filter(filterFunc)
 }
 
 export function arrayMustFindFunc<T>(
   arrItems: T[],
-  findFunc: (item: T) => boolean,
+  findFunc: (_item: T) => boolean,
   functionSourceName?: string,
   exceptionSuffix?: () => string
 ) {
@@ -266,8 +266,8 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
 export function arrayReduceArrayReturns<T, TreturnType = T>(
   arr: Readonly<ArrayOrSingle<T>> | undefined,
   funcArrayResults: (
-    item: T,
-    index: number
+    _item: T,
+    _index: number
   ) => ArrayOrSingle<TreturnType> | undefined
 ) {
   return ToSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
@@ -476,7 +476,7 @@ export function arrayLastNonEmpty<T>(
 
 export function arrayForEachReturns<T>(
   arr: T[] | undefined,
-  funcArrayResults: (item: T) => void
+  funcArrayResults: (_item: T) => void
 ) {
   safeArray(arr).forEach((cur) => {
     funcArrayResults(cur)
@@ -808,8 +808,8 @@ export function arrayMoveElement<T>(
 
 export function arrayFilterMap<T, R>(
   arr: ArrayOrSingle<T> | null | undefined,
-  mapFunc: (item: T) => R,
-  filterFunc?: (item: T) => boolean
+  mapFunc: (_item: T) => R,
+  filterFunc?: (_item: T) => boolean
 ): R[] {
   let myarr = safeArray(arr)
 

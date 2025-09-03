@@ -1,16 +1,16 @@
 import {
-  firstNumberInString,
-  numberToString,
-  getAsNumber,
-  isNumber,
-} from './number-helper.mjs'
-import {
   RemoveLeadingNumbersAndWhitespace,
   isString,
   pluralSuffix,
   prefixIfHasData,
   safestr,
 } from './string-helper.mjs'
+import {
+  firstNumberInString,
+  getAsNumber,
+  isNumber,
+  numberToString,
+} from './number-helper.mjs'
 import moment, {
   type DurationInputArg1,
   type Moment,

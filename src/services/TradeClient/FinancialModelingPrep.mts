@@ -1,8 +1,8 @@
 import type { AnyRecord, FromTo } from '../../models/types.mjs'
 import {
-  numberToString,
   getAsNumber,
   getAsNumberOrUndefined,
+  numberToString,
 } from '../../primitives/number-helper.mjs'
 import { AppException } from '../../models/AppException.mjs'
 import { ChartSettings } from '../../tplot/ChartSettings.mjs'

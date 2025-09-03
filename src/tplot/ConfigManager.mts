@@ -1,9 +1,9 @@
 import {
   type ConfigTickerInfoTabSettings,
   TickerInfoTabSettingsDefault,
-  userConfigDefaults,
   UserConfigNames,
   type UserConfigTypes,
+  userConfigDefaults,
 } from '../models/UserInfo.mjs'
 import { deepCloneJson, hasData } from '../primitives/object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
@@ -28,21 +28,21 @@ export type IdeasTabNames =
   | 'wsb'
 
 export type FuncTabSettingsGet = (
-  params: IIdValRequired<string, ConfigTickerInfoTabSettings>
+  _params: IIdValRequired<string, ConfigTickerInfoTabSettings>
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
-export type FuncTabSettingsTickerInfoGetOrSet = (params: {
+export type FuncTabSettingsTickerInfoGetOrSet = (_params: {
   id: string
   settings?: ConfigTickerInfoTabSettings
 }) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 export type FuncTabSettingsTickerInfoUpsert = (
-  params: IIdValRequired<string, Partial<ConfigTickerInfoTabSettings>>
+  _params: IIdValRequired<string, Partial<ConfigTickerInfoTabSettings>>
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
 export type FuncDashboardPeopleTabGet = (
-  params: IIdValRequired
+  _params: IIdValRequired
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 export type FuncDashboardPeopleTabSave = (
-  params: IIdValRequired
+  _params: IIdValRequired
 ) => Promise<IIdValRequired<string, ConfigTickerInfoTabSettings>>
 
 export type ConfigTickerInfo<

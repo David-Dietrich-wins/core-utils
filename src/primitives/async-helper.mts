@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Function to generate an array of promises
 // export function generateAsyncElements<T>(
 //   n: number,
@@ -38,7 +39,7 @@ export async function* asyncGeneratorLoopRunMaxIterations<T>(
       // Exit the loop after yielding the result
       break
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch (_err) {
       // If exception is thrown, continue looping
       count += 1
     }
@@ -64,9 +65,10 @@ export async function* asyncGeneratorLoopStopOnFalsyOrException<T>(
         // Stop if result is falsy, adjust as needed
         break
       }
+
       yield result
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch (_err) {
       // Stop on error, or handle/log as needed
       break
     }

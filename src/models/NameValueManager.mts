@@ -96,9 +96,9 @@ export class NameValueWithStyle {
 }
 
 type StyleFormatter = (
-  val: number | string | null | undefined,
-  showZeroValues: boolean,
-  numDecimalPlaces: number
+  _val: number | string | null | undefined,
+  _showZeroValues: boolean,
+  _numDecimalPlaces: number
 ) => string
 
 export class NameValueLineFormatter<T extends object> {
@@ -108,7 +108,7 @@ export class NameValueLineFormatter<T extends object> {
   formatter?: StyleFormatter
   tooltip?: string
   style?: object
-  formatNumberOrString?: (val: number | string | null | undefined) => string
+  formatNumberOrString?: (_val: number | string | null | undefined) => string
 
   constructor(
     key: keyof T,
@@ -117,7 +117,7 @@ export class NameValueLineFormatter<T extends object> {
     formatter?: StyleFormatter,
     tooltip?: string,
     style?: object,
-    formatNumberOrString?: (val: number | string | null | undefined) => string
+    formatNumberOrString?: (_val: number | string | null | undefined) => string
   ) {
     this.key = key
     this.keyDisplayValue = keyDisplayValue

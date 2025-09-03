@@ -9,6 +9,7 @@ export type PolitiscaleName = 'climate' | 'freeSpeech' | 'religion'
 export type IPolitiscale = INameValue<number, PolitiscaleName>
 
 export type IPolitiscales = {
+  // eslint-disable-next-line no-unused-vars
   [key in PolitiscaleName]: number
 }
 

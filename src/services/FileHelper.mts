@@ -14,7 +14,7 @@ export class FileHelper {
     this.filename = filename
   }
 
-  static async Run<T>(filename: string, fn: (fh: FileHelper) => Promise<T>) {
+  static async Run<T>(filename: string, fn: (_fh: FileHelper) => Promise<T>) {
     const fileHelper = new FileHelper(filename)
 
     try {
@@ -31,7 +31,7 @@ export class FileHelper {
   static async writeArrayToJsonFile<T extends object = object>(
     filename: string,
     arrT: T[],
-    mapFn?: (item: T) => object
+    mapFn?: (_item: T) => object
   ) {
     const stats = new InstrumentationStatistics()
 

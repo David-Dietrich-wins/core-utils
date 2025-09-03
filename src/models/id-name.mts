@@ -81,7 +81,7 @@ export interface IValueChange<Tvalue = string>
  * Used to pass structured data back to a caller. Especially for event handlers.
  */
 export type ValueChangeHandler<Tvalue = string, TReturn = void> = (
-  change: IValueChange<Tvalue>
+  _change: IValueChange<Tvalue>
 ) => TReturn
 
 export function createValueChange<T = string>(

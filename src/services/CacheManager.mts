@@ -25,7 +25,7 @@ export class CacheManager<T = object, Tkey = string> {
 
   async get(
     key: Tkey,
-    fnData: (arrKeys: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
+    fnData: (_arrKeys: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const items = await this.getAll(key, fnData)
 
@@ -34,7 +34,7 @@ export class CacheManager<T = object, Tkey = string> {
 
   async getSingle(
     key: Tkey,
-    fnData: (key: Tkey) => Promise<IIdValue<Tkey, T>>
+    fnData: (_key: Tkey) => Promise<IIdValue<Tkey, T>>
   ) {
     const fnall = async (symbols: ArrayOrSingle<Tkey>) => {
         const items: IIdValue<Tkey, T>[] = []
@@ -55,7 +55,7 @@ export class CacheManager<T = object, Tkey = string> {
 
   async getAll(
     keys: ArrayOrSingle<Tkey>,
-    fnData: (arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
+    fnData: (_arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const arrKeys = safeArray(keys),
       now = Date.now(),

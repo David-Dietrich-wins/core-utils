@@ -3,10 +3,10 @@ import type { ICreatedBy, IUpdatedBy } from '../models/id-created-updated.mjs'
 import { type ISubplot, Subplot } from './Subplot.mjs'
 import { type ITicker, zTicker } from '../models/ticker-info.mjs'
 import {
-  priceInDollars,
   getAsNumber,
   getNumberFormatted,
   getPercentChangeString,
+  priceInDollars,
 } from '../primitives/number-helper.mjs'
 import { zDateTime, zStringMinMax } from '../services/zod-helper.mjs'
 import { type IIdRequired } from '../models/IdManager.mjs'

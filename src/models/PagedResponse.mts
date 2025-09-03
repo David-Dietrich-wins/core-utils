@@ -44,7 +44,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
 
   static createNewFromMap<Tin, Tout>(
     pagesIn: IPagedResponse<Tin>,
-    map: (pageIn: Tin) => Tout
+    map: (_pageIn: Tin) => Tout
   ) {
     return new PagedResponse<Tout>(
       pagesIn.dataPage.map(map),
@@ -84,7 +84,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     }
   }
 
-  createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
+  createNewFromMap<Tout>(mapper: (_pageIn: T) => Tout) {
     return PagedResponse.createNewFromMap<T, Tout>(this, mapper)
   }
 

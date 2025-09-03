@@ -578,7 +578,7 @@ test('arrayReduceArrayReturns', () => {
     { id: 3, name: 'name3' },
   ]
 
-  let funcReturns: (item: IIdName<number>) => ArrayOrSingle<IIdName<number>>
+  let funcReturns: (_item: IIdName<number>) => ArrayOrSingle<IIdName<number>>
   funcReturns = (item: IIdName<number>) => {
     item.id = 4
     return item

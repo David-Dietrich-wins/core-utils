@@ -12,8 +12,7 @@ test('constructor', async () => {
   cacheManager.set('key2', Date.now() + 60000, 'value2')
 
   const akeyvals = [{ id: 'key1', value: 'abc' }],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    fnCache = async (arrKeys: ArrayOrSingle<string>) =>
+    fnCache = async (_arrKeys: ArrayOrSingle<string>) =>
       Promise.resolve(
         akeyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
       )
@@ -52,8 +51,7 @@ test('getAll', async () => {
       { id: 'key1', value: 'abc' },
       { id: 'key2', value: 'def' },
     ],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    kvCache = async (arrKeys: ArrayOrSingle<string>) =>
+    kvCache = async (_arrKeys: ArrayOrSingle<string>) =>
       Promise.resolve(
         keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
       ),

@@ -14,7 +14,7 @@ import { getBoolean } from '../primitives/boolean-helper.mjs'
 import { isFunction } from '../primitives/function-helper.mjs'
 import { newGuid } from '../primitives/uuid-helper.mjs'
 
-type FuncContextTickers<T> = T | ((asset: IContextTickers) => T)
+type FuncContextTickers<T> = T | ((_asset: IContextTickers) => T)
 
 export interface IContextTickers extends IContext {
   backgroundColor?: IContextUI

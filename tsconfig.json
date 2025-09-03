@@ -19,6 +19,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
+    "sourceRoot": "file:///home/ddietrich/src/core-utils/src",
     "strict": true,
     "target": "esnext",
     "traceResolution": false,

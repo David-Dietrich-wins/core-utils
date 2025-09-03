@@ -1,6 +1,5 @@
 import * as z from 'zod/v4'
 import { jest } from '@jest/globals'
-// eslint-disable-next-line sort-imports
 import { numberToString } from './primitives/number-helper.mjs'
 import { safestr } from './primitives/string-helper.mjs'
 

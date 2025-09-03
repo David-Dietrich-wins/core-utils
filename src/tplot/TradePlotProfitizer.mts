@@ -4,10 +4,10 @@ import {
 } from '../models/ticker-info.mjs'
 import { type ITradePlot, TradePlot } from './TradePlot.mjs'
 import {
-  numberWithDecimalPlaces,
-  priceInDollars,
   getPercentChange,
   getPercentChangeString,
+  numberWithDecimalPlaces,
+  priceInDollars,
 } from '../primitives/number-helper.mjs'
 import type { IIdValue } from '../models/IdValueManager.mjs'
 import { type IPlotMsg } from './ChartSettings.mjs'
@@ -115,7 +115,6 @@ export class TradePlotProfitizer
 
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   static MapToPlotMsg(this: void, x: ITradePlotProfitizer) {
-    // eslint-disable-next-line no-useless-assignment
     let msg = ''
 
     if (isNullOrUndefined(x.profit)) {
