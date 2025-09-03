@@ -1,7 +1,7 @@
 // @ts-check
 
-import eslint from '@eslint/js'
 import { defineConfig } from 'eslint/config'
+import eslint from '@eslint/js'
 import jestPlugin from 'eslint-plugin-jest'
 import tseslint from 'typescript-eslint'
 
@@ -15,19 +15,17 @@ export default defineConfig(
       '**/build/**',
       '**/coverage/**',
       '**/dist/**',
-      '**/eslint.config.mjs',
       '**/node_modules/**',
       '**/out/**',
       '**/storybook-static/**',
+      '**/*.d.ts',
+      '**/*.d.cts',
+      '**/*.d.mts',
     ],
   },
   eslint.configs.all,
   ...tseslint.configs.strictTypeChecked,
   {
-    plugins: {
-      '@typescript-eslint': tseslint.plugin,
-      'jest': jestPlugin,
-    },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -36,6 +34,10 @@ export default defineConfig(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      'jest': jestPlugin,
+    },
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -43,6 +45,7 @@ export default defineConfig(
       '@typescript-eslint/restrict-template-expressions': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
+      'class-methods-use-this': 'off',
       'consistent-return': 'off',
       'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
       'id-length': 'off',
@@ -50,7 +53,7 @@ export default defineConfig(
       'max-classes-per-file': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',
-      'max-params': 'off' /*  */,
+      'max-params': 'off',
       'max-statements': 'off',
       'new-cap': 'off',
       'no-console': 'off',
@@ -62,6 +65,7 @@ export default defineConfig(
       'no-ternary': 'off',
       'no-undef-init': 'off',
       'no-undefined': 'off',
+      'no-underscore-dangle': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-useless-assignment': 'off',
       'one-var': 'off',
@@ -71,12 +75,19 @@ export default defineConfig(
   },
   {
     // disable type-aware linting on JS files
-    files: ['**/*.js'],
     extends: [tseslint.configs.disableTypeChecked],
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
   },
   {
     // enable jest rules on test files
-    files: ['test/**'],
-    extends: [jestPlugin.configs['flat/recommended']],
+    extends: [jestPlugin.configs['flat/all']],
+    files: [
+      '__tests__/**',
+      'test/**',
+      '**/*.test.js',
+      '**/*.test.ts',
+      '**/*.spec.js',
+      '**/*.spec.ts',
+    ],
   }
 )

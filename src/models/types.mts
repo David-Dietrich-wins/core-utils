@@ -7,11 +7,11 @@ import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { getBoolean } from '../primitives/boolean-helper.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
-export const CONST_NOT_IMPLEMENTED = 'Not implemented',
-  REGEX_ElapsedTime = /^(?<temp1>\d+ seconds|1 second|\d+m?s)/u,
-  REGEX_GamingVersion = /\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{6}-\d{6})?/u,
-  REGEX_StringOfSecondsOrMilliseconds = '(\\d+ seconds|1 second|\\d+ms)',
-  REGEX_UptimeMatcher = /^\d+m*s$/u
+export const CONST_NOT_IMPLEMENTED = 'Not implemented' as const,
+  REGEX_ElapsedTime = /^(?<numSeconds>\d+ seconds|1 second|\d+m?s)/u,
+  REGEX_ElapsedTimeString = '(\\d+ seconds|1 second|\\d+ms)' as const,
+  REGEX_UptimeMatcher = /^\d+m*s$/u,
+  REGEX_Version = /\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{6}-\d{6})?/u
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }

@@ -1,5 +1,4 @@
 export class AppObject {
-  // eslint-disable-next-line class-methods-use-this
   get className() {
     return AppObject.name
   }

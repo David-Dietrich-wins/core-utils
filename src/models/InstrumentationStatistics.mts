@@ -202,13 +202,12 @@ export class InstrumentationStatistics {
     )
   }
 
-  // eslint-disable-next-line class-methods-use-this
   lineSeparator(isOneLine = false, multilineSeparator?: string) {
     if (isOneLine) {
       return ', '
     }
 
-    return safestr(multilineSeparator || '\n', '\n')
+    return safestr(multilineSeparator, '\n')
   }
 
   /**

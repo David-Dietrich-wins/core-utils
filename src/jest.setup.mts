@@ -1,5 +1,6 @@
-import * as z from 'zod/v4'
 import { jest } from '@jest/globals'
+// eslint-disable-next-line sort-imports
+import * as z from 'zod/v4'
 import { numberToString } from './primitives/number-helper.mjs'
 import { safestr } from './primitives/string-helper.mjs'
 
@@ -8,11 +9,6 @@ import { safestr } from './primitives/string-helper.mjs'
 
 // Set to 60 seconds. We are going over Global VPN.
 // jest.setTimeout(600000)
-
-export const CONST_RegexUptimeMatcher = /^\d+m*s$/u
-export const CONST_RegexForElapsedTime = /^(?:\d+ seconds|1 second|\d+m?s)/u
-export const CONST_RegexStringSecondsOrMilliseconds =
-  '(\\d+ seconds|1 second|\\d+ms)'
 
 export const mockLoggerDebug = jest.fn()
 export const mockLoggerError = jest.fn()
