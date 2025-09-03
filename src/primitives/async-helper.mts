@@ -38,7 +38,6 @@ export async function* asyncGeneratorLoopRunMaxIterations<T>(
 
       // Exit the loop after yielding the result
       break
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_err) {
       // If exception is thrown, continue looping
       count += 1
@@ -67,7 +66,6 @@ export async function* asyncGeneratorLoopStopOnFalsyOrException<T>(
       }
 
       yield result
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_err) {
       // Stop on error, or handle/log as needed
       break

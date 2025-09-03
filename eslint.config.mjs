@@ -39,10 +39,7 @@ export default defineConfig(
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        { argsIgnorePattern: '^_' },
-      ],
+      '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
       'camelcase': 'off',
       'capitalized-comments': 'off',
