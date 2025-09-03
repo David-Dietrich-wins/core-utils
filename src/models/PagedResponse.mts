@@ -25,7 +25,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     this.totalCount = hasData(totalCount) ? totalCount : this.dataPage.length
   }
 
-  static async CreateFromPromise<T>(
+  static async createFromPromise<T>(
     prom: Promise<T[] | undefined>,
     promCounts?: Promise<number>
   ) {
@@ -34,15 +34,15 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     return new PagedResponse<T>(arr, aret[1] || arr.length)
   }
 
-  static CreateFromIPagedResponse<T>(ret: IPagedResponse<T>) {
+  static createFromIPagedResponse<T>(ret: IPagedResponse<T>) {
     return new PagedResponse<T>(ret.dataPage, ret.totalCount)
   }
 
-  static CreateFromApiResponse<T>(ret: IApiResponse<IPagedResponse<T>>) {
+  static createFromApiResponse<T>(ret: IApiResponse<IPagedResponse<T>>) {
     return new PagedResponse<T>(ret.data.dataPage, ret.data.totalCount)
   }
 
-  static CreateNewFromMap<Tin, Tout>(
+  static createNewFromMap<Tin, Tout>(
     pagesIn: IPagedResponse<Tin>,
     map: (pageIn: Tin) => Tout
   ) {
@@ -85,7 +85,7 @@ export class PagedResponse<T> implements IPagedResponse<T> {
   }
 
   createNewFromMap<Tout>(mapper: (pageIn: T) => Tout) {
-    return PagedResponse.CreateNewFromMap<T, Tout>(this, mapper)
+    return PagedResponse.createNewFromMap<T, Tout>(this, mapper)
   }
 
   /**

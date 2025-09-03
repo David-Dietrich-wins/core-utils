@@ -127,7 +127,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     )
   }
 
-  static CreateFromErrorMessage(
+  static createFromErrorMessage(
     message: string,
     data?: unknown,
     stats?: InstrumentationStatistics
@@ -135,7 +135,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return new ApiResponse(data, 'Error', message, 200, stats)
   }
 
-  static CreateFromIApiResponse<T extends FetchDataTypesAllowed>(
+  static createFromIApiResponse<T extends FetchDataTypesAllowed>(
     iApiResponse: IApiResponse<T>
   ) {
     const crret = new ApiResponse<T>(
@@ -228,7 +228,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
       throw new AppException('No data returned', fname)
     }
 
-    return PagedResponse.CreateFromApiResponse(ret)
+    return PagedResponse.createFromApiResponse(ret)
   }
 
   get isGood() {

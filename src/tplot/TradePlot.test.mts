@@ -175,9 +175,9 @@ test('constructor', () => {
   })
 })
 
-describe('CreateFromTicker', () => {
+describe('createFromTicker', () => {
   test('should create TradePlot from ticker', () => {
-    const tradePlot = TradePlot.CreateFromTicker('AAPL', 'test@test.com')
+    const tradePlot = TradePlot.createFromTicker('AAPL', 'test@test.com')
 
     expect(tradePlot.ticker).toBe('AAPL')
     expect(tradePlot.description).toBe('')
@@ -224,7 +224,7 @@ describe('CreateFromTicker', () => {
 
   test('bad email', () => {
     try {
-      TradePlot.CreateFromTicker('AAPL', 'Test Trade Plot')
+      TradePlot.createFromTicker('AAPL', 'Test Trade Plot')
     } catch (e) {
       expect(e).toBeInstanceOf(z.ZodError)
       expect((e as z.ZodError).issues.length).toBe(1)
@@ -238,7 +238,7 @@ describe('CreateFromTicker', () => {
 
   test('bad empty ticker', () => {
     try {
-      TradePlot.CreateFromTicker('', 'test@test.com')
+      TradePlot.createFromTicker('', 'test@test.com')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e).toBeInstanceOf(z.ZodError)
@@ -254,7 +254,7 @@ describe('CreateFromTicker', () => {
 })
 
 test('FixupForSave', () => {
-  const tradePlot = TradePlot.CreateFromTicker('AAPL', 'test@test.com')
+  const tradePlot = TradePlot.createFromTicker('AAPL', 'test@test.com')
   tradePlot.subplots[0].expectedTriggerDate = new Date('2023-10-01')
   expect(tradePlot.subplots[0].expectedTriggerDate).toEqual(expect.any(Date))
 
@@ -268,8 +268,8 @@ test('FixupForSave', () => {
 })
 
 test('copyObject', () => {
-  const original = TradePlot.CreateFromTicker('AAPL', 'test@test.com'),
-    updated = TradePlot.CreateFromTicker('TSLA', 'test-tesla@test.com')
+  const original = TradePlot.createFromTicker('AAPL', 'test@test.com'),
+    updated = TradePlot.createFromTicker('TSLA', 'test-tesla@test.com')
 
   original.copyObject(updated)
 

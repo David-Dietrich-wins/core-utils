@@ -22,17 +22,17 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
   static createISetting(overrides?: Partial<IDashboardScreenSetting>) {
     const idss: IDashboardScreenSetting = {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      ...DashboardScreenSetting.CreateNew('New Dashboard'),
+      ...DashboardScreenSetting.createNew('New Dashboard'),
       ...overrides,
     }
 
     return idss
   }
 
-  static CreateNew(name: string, tiles: ITileConfig[] = []) {
+  static createNew(name: string, tiles: ITileConfig[] = []) {
     return new DashboardScreenSetting(
       name,
-      isArray(tiles, 1) ? tiles : [TileConfig.CreateTicker('AAPL').ITileConfig]
+      isArray(tiles, 1) ? tiles : [TileConfig.createTicker('AAPL').ITileConfig]
     )
   }
 }

@@ -5,7 +5,7 @@ import {
 } from './SearchRequestView.mjs'
 import { GenerateRandomString } from '../primitives/string-helper.mjs'
 import { type IIdNameValue } from '../models/id-name.mjs'
-import { NumberToString } from '../primitives/number-helper.mjs'
+import { numberToString } from '../primitives/number-helper.mjs'
 
 test('constructor string', () => {
   const searchRequestView = new SearchRequestView(
@@ -89,28 +89,28 @@ test('pageIndex and pageSize', () => {
     srv = new SearchRequestView(isrv)
   expect(srv.pageIndex).toBe(2)
   expect(srv.pageSize).toBe(20)
-  expect(srv.CalculatedPageSize).toBe(20)
+  expect(srv.calculatedPageSize).toBe(20)
   srv.pageSize = 0
-  expect(srv.CalculatedPageSize).toBe(12)
-  expect(srv.CalculatedOffset).toBe(24)
+  expect(srv.calculatedPageSize).toBe(12)
+  expect(srv.calculatedOffset).toBe(24)
 
-  expect(srv.CapLimit(10)).toBe(10)
-  expect(srv.CapLimit(20)).toBe(10)
+  expect(srv.capLimit(10)).toBe(10)
+  expect(srv.capLimit(20)).toBe(10)
   srv.limit = 0
-  expect(srv.CapLimit(10)).toBe(10)
-  expect(srv.CapLimit(20)).toBe(10)
+  expect(srv.capLimit(10)).toBe(10)
+  expect(srv.capLimit(20)).toBe(10)
 })
 
 describe('getItems', () => {
   test('limit', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${NumberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
 
       items.push({
         id: i,
         name: i < 50 ? `xxxxX-${randomString}` : randomString,
-        value: `Value ${NumberToString(i)}`,
+        value: `Value ${numberToString(i)}`,
       })
     }
 
@@ -152,8 +152,8 @@ describe('getItems', () => {
     const [result6, count6] = srv.getItems(items, 24, 'name', false)
     expect(result6.length).toBe(10)
     expect(count6).toBe(50)
-    expect(srv.CalculatedOffset).toBe(10)
-    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.calculatedOffset).toBe(10)
+    expect(srv.calculatedPageSize).toBe(10)
     expect(srv.pageIndex).toBe(1)
     expect(srv.pageSize).toBe(10)
     expect(srv.limit).toBe(24)
@@ -164,7 +164,7 @@ describe('getItems', () => {
     expect(srv.term).toBe('xxxxX')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
 
     srv.limit = 13
     srv.offset = 2
@@ -173,8 +173,8 @@ describe('getItems', () => {
     const [result7, count7] = srv.getItems(items, 24, 'name', false)
     expect(result7.length).toBe(13)
     expect(count7).toBe(50)
-    expect(srv.CalculatedOffset).toBe(2)
-    expect(srv.CalculatedPageSize).toBe(13)
+    expect(srv.calculatedOffset).toBe(2)
+    expect(srv.calculatedPageSize).toBe(13)
     expect(srv.pageIndex).toBe(0)
     expect(srv.pageSize).toBe(0)
     expect(srv.limit).toBe(13)
@@ -185,7 +185,7 @@ describe('getItems', () => {
     expect(srv.term).toBe('xxxxX')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
 
     srv.limit = 0
     srv.offset = 2
@@ -194,8 +194,8 @@ describe('getItems', () => {
     const [result8, count8] = srv.getItems(items, 0, 'name', false)
     expect(result8.length).toBe(48)
     expect(count8).toBe(50)
-    expect(srv.CalculatedOffset).toBe(2)
-    expect(srv.CalculatedPageSize).toBe(0)
+    expect(srv.calculatedOffset).toBe(2)
+    expect(srv.calculatedPageSize).toBe(0)
     expect(srv.pageIndex).toBe(0)
     expect(srv.pageSize).toBe(0)
     expect(srv.limit).toBe(0)
@@ -206,7 +206,7 @@ describe('getItems', () => {
     expect(srv.term).toBe('xxxxX')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
 
     // Trying to to test line 148
     items.push(items[0])
@@ -214,8 +214,8 @@ describe('getItems', () => {
     const [result9, count9] = srv.getItems(items, 0, 'name', true)
     expect(result9.length).toBe(10)
     expect(count9).toBe(51)
-    expect(srv.CalculatedOffset).toBe(2)
-    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.calculatedOffset).toBe(2)
+    expect(srv.calculatedPageSize).toBe(10)
     expect(srv.pageIndex).toBe(0)
     expect(srv.pageSize).toBe(0)
     expect(srv.limit).toBe(10)
@@ -226,13 +226,13 @@ describe('getItems', () => {
     expect(srv.term).toBe('xxxxX')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
   })
 
   test('found true', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${NumberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -258,7 +258,7 @@ describe('getItems', () => {
   test('offset of 0 when no page size', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${NumberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -285,7 +285,7 @@ describe('getItems', () => {
   test('empty search column', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${NumberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -310,7 +310,7 @@ describe('getItems', () => {
   test('numbers', () => {
     const items: IIdNameValue<number, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${NumberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
 
       items.push({
         id: i,
@@ -357,8 +357,8 @@ describe('getItems', () => {
     const [result6, count6] = srv.getItems(items, 24, 'name', false)
     expect(result6.length).toBe(0)
     expect(count6).toBe(0)
-    expect(srv.CalculatedOffset).toBe(10)
-    expect(srv.CalculatedPageSize).toBe(10)
+    expect(srv.calculatedOffset).toBe(10)
+    expect(srv.calculatedPageSize).toBe(10)
     expect(srv.pageIndex).toBe(1)
     expect(srv.pageSize).toBe(10)
     expect(srv.limit).toBe(24)
@@ -369,7 +369,7 @@ describe('getItems', () => {
     expect(srv.term).toBe('100')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
 
     srv.limit = 13
     srv.offset = 2
@@ -378,8 +378,8 @@ describe('getItems', () => {
     const [result7, count7] = srv.getItems(items, 24, 'name', false)
     expect(result7.length).toBe(0)
     expect(count7).toBe(0)
-    expect(srv.CalculatedOffset).toBe(2)
-    expect(srv.CalculatedPageSize).toBe(13)
+    expect(srv.calculatedOffset).toBe(2)
+    expect(srv.calculatedPageSize).toBe(13)
     expect(srv.pageIndex).toBe(0)
     expect(srv.pageSize).toBe(0)
     expect(srv.limit).toBe(13)
@@ -390,7 +390,7 @@ describe('getItems', () => {
     expect(srv.term).toBe('100')
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     srv.term = 100 as any
@@ -401,8 +401,8 @@ describe('getItems', () => {
     const [result8, count8] = srv.getItems(items, 0, 'name', false)
     expect(result8.length).toBe(0)
     expect(count8).toBe(1)
-    expect(srv.CalculatedOffset).toBe(2)
-    expect(srv.CalculatedPageSize).toBe(0)
+    expect(srv.calculatedOffset).toBe(2)
+    expect(srv.calculatedPageSize).toBe(0)
     expect(srv.pageIndex).toBe(0)
     expect(srv.pageSize).toBe(0)
     expect(srv.limit).toBe(0)
@@ -413,7 +413,7 @@ describe('getItems', () => {
     expect(srv.term).toBe(100)
     expect(srv.isAscending).toBe(true)
     expect(srv.isDescending).toBe(false)
-    expect(srv.CapLimit(10)).toBe(10)
+    expect(srv.capLimit(10)).toBe(10)
   })
 })
 
@@ -487,8 +487,8 @@ describe('zSchema', () => {
   })
 })
 
-test('Create', () => {
-  expect(SearchRequestView.Create()).toEqual({
+test(SearchRequestView.create.name, () => {
+  expect(SearchRequestView.create()).toEqual({
     exactMatch: false,
     limit: 0,
     offset: 0,
@@ -500,7 +500,7 @@ test('Create', () => {
   })
 
   expect(
-    SearchRequestView.Create({
+    SearchRequestView.create({
       exactMatch: true,
       limit: 1,
       offset: 2,

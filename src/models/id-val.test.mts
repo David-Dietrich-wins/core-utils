@@ -22,32 +22,32 @@ test('IIdVal interface', () => {
 test('CreateIdVal', () => {
   const id = 'id',
     kval = 'val',
-    pr = IdVal.ToIIdVal(id, kval)
+    pr = IdVal.toIIdVal(id, kval)
 
   expect(pr.id).toBe(id)
   expect(pr.val).toBe(kval)
 })
 
-test('FromNameAndVal', () => {
+test('fromNameAndVal', () => {
   const id = 'id',
     ival = 'val',
-    pr = IdVal.FromNameAndVal(id, ival)
+    pr = IdVal.fromNameAndVal(id, ival)
 
   expect(pr.id).toBe(id)
   expect(pr.val).toBe(ival)
 })
 
-test('FromNameVal', () => {
+test('fromNameVal', () => {
   const nameVal = { name: 'name', val: 'val' },
-    pr = IdVal.FromNameVal(nameVal)
+    pr = IdVal.fromNameVal(nameVal)
 
   expect(pr.id).toBe(nameVal.name)
   expect(pr.val).toBe(nameVal.val)
 })
 
-test('FromNameVal with empty name', () => {
+test('fromNameVal with empty name', () => {
   const nameVal = { name: '', val: 'val' },
-    pr = IdVal.FromNameVal(nameVal)
+    pr = IdVal.fromNameVal(nameVal)
 
   expect(pr.id).toBe('')
   expect(pr.val).toBe(nameVal.val)

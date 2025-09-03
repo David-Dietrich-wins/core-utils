@@ -290,7 +290,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
   })
 })
 
-describe(FinancialModelingPrep.ChartSettings.name, () => {
+describe(FinancialModelingPrep.chartSettings.name, () => {
   test('good', () => {
     const acs: IChartSettings = {
         endDate: undefined,
@@ -303,7 +303,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         startDate: undefined,
         ticker: 'AAPL',
       },
-      chartSettings = FinancialModelingPrep.ChartSettings(
+      chartSettings = FinancialModelingPrep.chartSettings(
         acs.ticker,
         acs.startDate,
         acs.endDate,
@@ -326,7 +326,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
     })
 
     expect(
-      FinancialModelingPrep.ChartSettings('AAPL', undefined, undefined, '1d')
+      FinancialModelingPrep.chartSettings('AAPL', undefined, undefined, '1d')
     ).toMatchObject({
       endDate: 1764590400000,
       extendedHoursTrading: true,
@@ -340,7 +340,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
     })
 
     expect(
-      FinancialModelingPrep.ChartSettings(
+      FinancialModelingPrep.chartSettings(
         'AAPL',
         undefined,
         undefined,
@@ -374,7 +374,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         startDate: undefined,
         ticker: 'AAPL',
       },
-      chartSettings = FinancialModelingPrep.ChartSettings(
+      chartSettings = FinancialModelingPrep.chartSettings(
         acs.ticker,
         acs.startDate,
         acs.endDate,
@@ -413,7 +413,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         ).getTime(),
         ticker: 'AAPL',
       },
-      chartSettings = FinancialModelingPrep.ChartSettings(
+      chartSettings = FinancialModelingPrep.chartSettings(
         acs.ticker,
         acs.startDate,
         acs.endDate,
@@ -452,7 +452,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         ).getTime(),
         ticker: 'AAPL',
       },
-      chartSettings = FinancialModelingPrep.ChartSettings(
+      chartSettings = FinancialModelingPrep.chartSettings(
         acs.ticker,
         acs.startDate,
         acs.endDate,
@@ -491,7 +491,7 @@ describe(FinancialModelingPrep.ChartSettings.name, () => {
         ).getTime(),
         ticker: 'AAPL',
       },
-      chartSettings = FinancialModelingPrep.ChartSettings(
+      chartSettings = FinancialModelingPrep.chartSettings(
         acs.ticker,
         acs.startDate,
         acs.endDate,

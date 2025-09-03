@@ -86,46 +86,46 @@ export class TileConfig<Tvalue = any>
   ) {
     switch (type) {
       case TileTypeKeys.chart:
-        return TileConfig.CreateChart(
+        return TileConfig.createChart(
           CONST_DefaultTicker,
           overrides as Partial<ITileConfig<TileConfigChart>>
         )
 
       case TileTypeKeys.content:
-        return TileConfig.CreateContent(
+        return TileConfig.createContent(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
       case TileTypeKeys.empty:
-        return TileConfig.CreateEmpty(
+        return TileConfig.createEmpty(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
       case TileTypeKeys.news:
-        return TileConfig.CreateNews(
+        return TileConfig.createNews(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
       case TileTypeKeys.plotlist:
-        return TileConfig.CreatePlotlist(
+        return TileConfig.createPlotlist(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
       case TileTypeKeys.table:
-        return TileConfig.CreateTable(
+        return TileConfig.createTable(
           overrides as Partial<ITileConfig<TileConfigContent>>
         )
 
       case TileTypeKeys.ticker:
-        return TileConfig.CreateTicker(
+        return TileConfig.createTicker(
           CONST_DefaultTicker,
           overrides as Partial<ITileConfig<TileConfigTicker>>
         )
 
       default:
         throw new AppException(
-          `TileConfig.CreateFromString: Unknown tile type '${type}'`,
-          'TileConfig.CreateFromString'
+          `TileConfig.createFromString: Unknown tile type '${type}'`,
+          'TileConfig.createFromString'
         )
     }
   }
@@ -202,7 +202,7 @@ export class TileConfig<Tvalue = any>
     return iTileConfig
   }
 
-  static CreateTileConfig<T = unknown>(
+  static createTileConfig<T = unknown>(
     overrides?: Partial<ITileConfig<T>> | null
   ) {
     const itile = TileConfig.createITileConfig(overrides),
@@ -232,48 +232,48 @@ export class TileConfig<Tvalue = any>
     return ret
   }
 
-  static CreateChart(
+  static createChart(
     ticker: string,
     overrides?: Partial<ITileConfig<TileConfigChart>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       value: TileConfig.ChartDefault({ ticker }),
       ...overrides,
       type: TileTypeKeys.chart,
     })
   }
 
-  static CreateContent(
+  static createContent(
     overrides?: Partial<ITileConfig<TileConfigContent>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       ...overrides,
       type: TileTypeKeys.content,
     })
   }
 
-  static CreateEmpty(
+  static createEmpty(
     overrides?: Partial<ITileConfig<TileConfigContent>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       ...overrides,
       type: TileTypeKeys.empty,
     })
   }
 
-  static CreateNews(
+  static createNews(
     overrides?: Partial<ITileConfig<TileConfigContent>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       ...overrides,
       type: TileTypeKeys.news,
     })
   }
 
-  static CreatePlotlist(
+  static createPlotlist(
     overrides?: Partial<ITileConfig<TileConfigContent>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       value: {},
       ...overrides,
       cols: 12,
@@ -281,20 +281,20 @@ export class TileConfig<Tvalue = any>
     })
   }
 
-  static CreateTable(
+  static createTable(
     overrides?: Partial<ITileConfig<TileConfigContent>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       ...overrides,
       type: TileTypeKeys.table,
     })
   }
 
-  static CreateTicker(
+  static createTicker(
     ticker: string,
     overrides?: Partial<ITileConfig<TileConfigTicker>> | null
   ) {
-    return TileConfig.CreateTileConfig({
+    return TileConfig.createTileConfig({
       value: { ticker },
       ...overrides,
       type: TileTypeKeys.ticker,

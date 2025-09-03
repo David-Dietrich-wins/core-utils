@@ -1,7 +1,7 @@
 import { AppException } from './AppException.mjs'
 import { DateHelper } from '../primitives/date-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
-import { NumberToString } from '../primitives/number-helper.mjs'
+import { numberToString } from '../primitives/number-helper.mjs'
 
 const CONST_DefaultSecondsMs = /^(?<temp1>\d+ seconds?|\d+m?s)$/u
 
@@ -564,7 +564,7 @@ describe('processedTimesArray', () => {
         (Number(stats.finishTime ?? 0) - stats.startTime.getTime()) / 1000
       )
     )
-    expect(totalRecordsProcessed).toBe(NumberToString(totalProcessed))
+    expect(totalRecordsProcessed).toBe(numberToString(totalProcessed))
     expect(totalAvgRecordsPerSecond).toBe(avgRecordsPerSecond.toFixed(1))
     expect(totalAvgProcessingTimeString).toBe(
       DateHelper.timeDifferenceStringFromMillis(

@@ -479,8 +479,8 @@ describe('isSuccess', () => {
   })
 })
 
-test('CreateFromErrorMessage', () => {
-  const ret = ApiResponse.CreateFromErrorMessage(
+test('createFromErrorMessage', () => {
+  const ret = ApiResponse.createFromErrorMessage(
     'error message',
     { some: 'data' },
     new InstrumentationStatistics()
@@ -499,7 +499,7 @@ test('CreateFromErrorMessage', () => {
   expect(ret.stats.totalProcessed).toBe(0)
 })
 
-test('CreateFromIApiResponse', () => {
+test('createFromIApiResponse', () => {
   const iapi: IApiResponse<{ some: string }> = {
       data: { some: 'data' },
       id: 123,
@@ -509,7 +509,7 @@ test('CreateFromIApiResponse', () => {
       stats: new InstrumentationStatistics(),
       ts: 123456789,
     },
-    ret = ApiResponse.CreateFromIApiResponse<{ some: string }>(iapi)
+    ret = ApiResponse.createFromIApiResponse<{ some: string }>(iapi)
 
   expect(ret).toBeInstanceOf(ApiResponse)
   expect(ret.message).toBe('error message')

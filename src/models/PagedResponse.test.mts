@@ -14,7 +14,7 @@ test('PagedResponse good', () => {
   expect(pr.totalCount).toBe(1)
   expect(pr.dataPage[0].data).toBe('hello')
 
-  pr = PagedResponse.CreateFromIPagedResponse(pr)
+  pr = PagedResponse.createFromIPagedResponse(pr)
   expect(pr.totalCount).toBe(1)
   expect(pr.dataPage[0].data).toBe('hello')
 })
@@ -34,7 +34,7 @@ test('API response', () => {
   let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
   const apiResponse = new ApiResponse(pr, 'result', 'message', 20)
-  pr = PagedResponse.CreateFromApiResponse(apiResponse)
+  pr = PagedResponse.createFromApiResponse(apiResponse)
   expect(pr.totalCount).toBe(1)
   expect(pr.dataPage[0].data).toBe('hello')
 
@@ -59,10 +59,10 @@ test('zPagedResponse', () => {
   expect(zresult.data?.dataPage[0].data).toBe('hello')
 })
 
-test('CreateFromPromise', async () => {
+test('createFromPromise', async () => {
   const mockAPromise = Promise.resolve([{ data: 'hello' }, { data: 'world' }]),
     mockCountPromise = Promise.resolve(2)
-  let pagedResponse = await PagedResponse.CreateFromPromise(
+  let pagedResponse = await PagedResponse.createFromPromise(
     mockAPromise,
     mockCountPromise
   )
@@ -78,7 +78,7 @@ test('CreateFromPromise', async () => {
   expect(pagedResponse.createNewFromMap((item) => item.data).totalCount).toBe(2)
   expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
 
-  pagedResponse = await PagedResponse.CreateFromPromise(mockAPromise)
+  pagedResponse = await PagedResponse.createFromPromise(mockAPromise)
   expect(pagedResponse.dataPage.length).toBe(2)
   expect(pagedResponse.dataPage[0].data).toBe('hello')
   expect(pagedResponse.dataPage[1].data).toBe('world')

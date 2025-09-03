@@ -7,7 +7,7 @@ import {
   NameValueType,
   NameValueWithStyle,
 } from './NameValueManager.mjs'
-import { DollarFormatter } from '../primitives/number-helper.mjs'
+import { dollarFormatter } from '../primitives/number-helper.mjs'
 
 test('NameValue good', () => {
   const name = 'name',
@@ -83,11 +83,11 @@ test('NameValueWithStyle', () => {
   const name = 'name',
     tooltip = 'tooltip',
     value = 'value',
-    zpr = new NameValueWithStyle(name, value, DollarFormatter, tooltip)
+    zpr = new NameValueWithStyle(name, value, dollarFormatter, tooltip)
 
   expect(zpr.name).toBe(name)
   expect(zpr.value).toBe(value)
-  expect(zpr.style).toBe(DollarFormatter)
+  expect(zpr.style).toBe(dollarFormatter)
   expect(zpr.tooltip).toBe(tooltip)
 })
 
@@ -101,7 +101,7 @@ test('NameValueLineFormatter', () => {
 
       return value || ''
     },
-    formatter = DollarFormatter,
+    formatter = dollarFormatter,
     key = 'key',
     keyDisplayValue = 'keyDisplayValue',
     order = 1,
@@ -159,7 +159,7 @@ describe('NameValueLineFormatManager', () => {
 
         return value || ''
       },
-      formatter = DollarFormatter,
+      formatter = dollarFormatter,
       key = 'key',
       keyDisplayValue = 'keyDisplayValue',
       order = 1,
@@ -219,7 +219,7 @@ describe('NameValueLineFormatManager', () => {
       'key',
       'keyDisplayValue',
       2,
-      DollarFormatter,
+      dollarFormatter,
       tooltip,
       style
     )

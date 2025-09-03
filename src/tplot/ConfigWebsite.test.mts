@@ -64,14 +64,14 @@ test(ConfigWebsite.hideTooltips.name, () => {
   expect(updated.updated).toBeDefined()
 })
 
-test(ConfigWebsite.OpenFirstPlot.name, () => {
+test(ConfigWebsite.openFirstPlot.name, () => {
   const cfg = ConfigWebsite.defaults()
 
   expect(cfg).toBeDefined()
   expect(cfg.openFirstPlot).toBeDefined()
   expect(cfg.openFirstPlot.value).toBe(true)
 
-  const updated = ConfigWebsite.OpenFirstPlot(cfg)
+  const updated = ConfigWebsite.openFirstPlot(cfg)
 
   expect(updated).toBeDefined()
   expect(updated.openFirstPlot.value).toBe(false)

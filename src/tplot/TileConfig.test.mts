@@ -7,7 +7,7 @@ import {
 import { AppException } from '../models/AppException.mjs'
 
 test('create TileConfig', () => {
-  const tileConfig = TileConfig.CreateTileConfig({
+  const tileConfig = TileConfig.createTileConfig({
     cols: 6,
     id: 'test-id',
     rows: 4,
@@ -46,9 +46,9 @@ test('ChartDefault', () => {
   })
 })
 
-test('CreateChart', () => {
+test('createChart', () => {
   const aticker = 'AAPL',
-    chartTile = TileConfig.CreateChart(aticker, {
+    chartTile = TileConfig.createChart(aticker, {
       cols: 4,
       rows: 3,
     })
@@ -70,9 +70,9 @@ test('CreateChart', () => {
   })
 })
 
-test('Creates', () => {
+test('creates', () => {
   expect(
-    TileConfig.CreateContent({
+    TileConfig.createContent({
       cols: 3,
       rows: 2,
     })
@@ -86,7 +86,7 @@ test('Creates', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateEmpty()).toEqual({
+  expect(TileConfig.createEmpty()).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -96,7 +96,7 @@ test('Creates', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateNews()).toEqual({
+  expect(TileConfig.createNews()).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -106,7 +106,7 @@ test('Creates', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateTicker('AAPL')).toEqual({
+  expect(TileConfig.createTicker('AAPL')).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -118,7 +118,7 @@ test('Creates', () => {
     },
   })
 
-  expect(TileConfig.CreatePlotlist()).toEqual({
+  expect(TileConfig.createPlotlist()).toEqual({
     cols: 12,
     id: expect.any(String),
     index: 0,
@@ -128,7 +128,7 @@ test('Creates', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateTable()).toEqual({
+  expect(TileConfig.createTable()).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -139,9 +139,9 @@ test('Creates', () => {
   })
 })
 
-test('CreateFromTileType', () => {
+test('createFromTileType', () => {
   expect(
-    TileConfig.CreateFromTileType(TileTypeKeys.content, {
+    TileConfig.createFromTileType(TileTypeKeys.content, {
       cols: 3,
       rows: 2,
     })
@@ -156,7 +156,7 @@ test('CreateFromTileType', () => {
   })
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const chartTile = TileConfig.CreateFromTileType(TileTypeKeys.chart, {
+  const chartTile = TileConfig.createFromTileType(TileTypeKeys.chart, {
     cols: 4,
     rows: 3,
     ticker: 'AAPL',
@@ -178,7 +178,7 @@ test('CreateFromTileType', () => {
     },
   })
   expect(
-    TileConfig.CreateFromTileType(TileTypeKeys.content, {
+    TileConfig.createFromTileType(TileTypeKeys.content, {
       cols: 3,
       rows: 2,
     })
@@ -192,7 +192,7 @@ test('CreateFromTileType', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileTypeKeys.empty)).toEqual({
+  expect(TileConfig.createFromTileType(TileTypeKeys.empty)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -202,7 +202,7 @@ test('CreateFromTileType', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileTypeKeys.news)).toEqual({
+  expect(TileConfig.createFromTileType(TileTypeKeys.news)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -214,7 +214,7 @@ test('CreateFromTileType', () => {
 
   expect(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    TileConfig.CreateFromTileType(TileTypeKeys.ticker, {
+    TileConfig.createFromTileType(TileTypeKeys.ticker, {
       ticker: 'AAPL',
     } as TileConfig['value'])
   ).toEqual({
@@ -229,7 +229,7 @@ test('CreateFromTileType', () => {
     },
   })
 
-  expect(TileConfig.CreateFromTileType(TileTypeKeys.plotlist)).toEqual({
+  expect(TileConfig.createFromTileType(TileTypeKeys.plotlist)).toEqual({
     cols: 12,
     id: expect.any(String),
     index: 0,
@@ -239,7 +239,7 @@ test('CreateFromTileType', () => {
     value: {},
   })
 
-  expect(TileConfig.CreateFromTileType(TileTypeKeys.table)).toEqual({
+  expect(TileConfig.createFromTileType(TileTypeKeys.table)).toEqual({
     cols: 1,
     id: expect.any(String),
     index: 0,
@@ -249,24 +249,24 @@ test('CreateFromTileType', () => {
     value: {},
   })
 
-  expect(() => TileConfig.CreateFromTileType('1' as TileType)).toThrow(
+  expect(() => TileConfig.createFromTileType('1' as TileType)).toThrow(
     AppException
   )
 })
 
 test('TileTypeFromString', () => {
-  expect(TileConfig.TileTypeFromString('chart')).toBe(TileTypeKeys.chart)
-  expect(TileConfig.TileTypeFromString('content')).toBe(TileTypeKeys.content)
-  expect(TileConfig.TileTypeFromString('empty')).toBe(TileTypeKeys.empty)
-  expect(TileConfig.TileTypeFromString('news')).toBe(TileTypeKeys.news)
-  expect(TileConfig.TileTypeFromString('plotlist')).toBe(TileTypeKeys.plotlist)
-  expect(TileConfig.TileTypeFromString('table')).toBe(TileTypeKeys.table)
-  expect(TileConfig.TileTypeFromString('ticker-info')).toBe(TileTypeKeys.ticker)
+  expect(TileConfig.tileTypeFromString('chart')).toBe(TileTypeKeys.chart)
+  expect(TileConfig.tileTypeFromString('content')).toBe(TileTypeKeys.content)
+  expect(TileConfig.tileTypeFromString('empty')).toBe(TileTypeKeys.empty)
+  expect(TileConfig.tileTypeFromString('news')).toBe(TileTypeKeys.news)
+  expect(TileConfig.tileTypeFromString('plotlist')).toBe(TileTypeKeys.plotlist)
+  expect(TileConfig.tileTypeFromString('table')).toBe(TileTypeKeys.table)
+  expect(TileConfig.tileTypeFromString('ticker-info')).toBe(TileTypeKeys.ticker)
 
-  expect(() => TileConfig.TileTypeFromString('unknown')).toThrow(AppException)
+  expect(() => TileConfig.tileTypeFromString('unknown')).toThrow(AppException)
 })
 
-test('TileText', () => {
+test('tileText', () => {
   const tileConfig: ITileConfig = {
     cols: 2,
     id: 'test-id',
@@ -277,40 +277,40 @@ test('TileText', () => {
     value: { content: 'This is a test tile content.' },
   }
 
-  expect(TileConfig.TileText(tileConfig)).toBe(
+  expect(TileConfig.tileText(tileConfig)).toBe(
     'Unknown: [object Object] - This is a test tile content.'
   )
 
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.chart))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.chart))
   ).toBe('Chart: AAPL')
   expect(
-    TileConfig.TileText(
-      TileConfig.CreateFromTileType(TileTypeKeys.content, {
+    TileConfig.tileText(
+      TileConfig.createFromTileType(TileTypeKeys.content, {
         value: { content: 'test content' },
       })
     )
   ).toBe('Content: test content')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.empty))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.empty))
   ).toBe('Empty:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.news))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.news))
   ).toBe('News:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.plotlist))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.plotlist))
   ).toBe('PlotList')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.table))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.table))
   ).toBe('Table:')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.ticker))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.ticker))
   ).toBe('Ticker: AAPL')
   expect(
-    TileConfig.TileText(TileConfig.CreateFromTileType(TileTypeKeys.content))
+    TileConfig.tileText(TileConfig.createFromTileType(TileTypeKeys.content))
   ).toBe('Content: ')
   expect(
-    TileConfig.TileText({
+    TileConfig.tileText({
       ...tileConfig,
       type: '45' as unknown as TileType,
     } as ITileConfig)

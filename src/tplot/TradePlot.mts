@@ -78,7 +78,7 @@ export class TradePlot implements ITradePlot {
     return schema
   }
 
-  static CreateFromTicker(ticker: string, email: string) {
+  static createFromTicker(ticker: string, email: string) {
     const cleanEmail = z.email().parse(email),
       cleanTicker = zStringMinMax(1, 100, { trim: true }).parse(ticker),
       tp = new TradePlot()

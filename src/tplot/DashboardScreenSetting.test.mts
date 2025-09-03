@@ -43,7 +43,7 @@ test('createISetting', () => {
   expect(dss.tiles).toEqual([])
 })
 
-test('CreateNew', () => {
+test('createNew', () => {
   const iTileConfig: ITileConfig<TileConfigTicker> = {
       cols: 1,
       id: expect.any(String),
@@ -55,13 +55,13 @@ test('CreateNew', () => {
         ticker: 'AAPL',
       },
     },
-    mydss = DashboardScreenSetting.CreateNew('Test', [])
+    mydss = DashboardScreenSetting.createNew('Test', [])
 
   expect(mydss.id).toBe('')
   expect(mydss.name).toBe('Test')
   expect(mydss.tiles).toEqual([iTileConfig])
 })
-test('CreateNew with tiles', () => {
+test('createNew with tiles', () => {
   const iTileConfig: ITileConfig<TileConfigTicker> = {
       cols: 1,
       id: '1',
@@ -92,7 +92,7 @@ test('CreateNew with tiles', () => {
         ticker: 'GOOGL',
       },
     },
-    mydss = DashboardScreenSetting.CreateNew('Test', [
+    mydss = DashboardScreenSetting.createNew('Test', [
       iTileConfig,
       iTileConfig2,
     ])
