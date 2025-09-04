@@ -1,25 +1,36 @@
+import { describe, expect, it } from '@jest/globals'
 import { DashboardScreenSetting } from './DashboardScreenSetting.mjs'
 import { DashboardSetting } from './DashboardSetting.mjs'
 
-test('default constructor', () => {
-  const ds = new DashboardSetting()
+describe('constructor', () => {
+  it('default constructor', () => {
+    expect.assertions(1)
 
-  expect(ds.screens).toEqual([])
+    const ds = new DashboardSetting()
+
+    expect(ds.screens).toStrictEqual([])
+  })
+
+  it('constructor', () => {
+    expect.assertions(1)
+
+    const ds = new DashboardSetting([])
+
+    expect(ds.screens).toStrictEqual([])
+  })
 })
 
-test('constructor', () => {
-  const ds = new DashboardSetting([])
+describe('screens', () => {
+  it('get screens and names', () => {
+    expect.assertions(2)
 
-  expect(ds.screens).toEqual([])
-})
+    const ascreens = [
+        new DashboardScreenSetting('screen1'),
+        new DashboardScreenSetting('screen2'),
+      ],
+      ds = new DashboardSetting(ascreens)
 
-test('screens', () => {
-  const ascreens = [
-      new DashboardScreenSetting('screen1'),
-      new DashboardScreenSetting('screen2'),
-    ],
-    ds = new DashboardSetting(ascreens)
-
-  expect(ds.screens).toEqual(ascreens)
-  expect(ds.screenNames).toEqual(['screen1', 'screen2'])
+    expect(ds.screens).toStrictEqual(ascreens)
+    expect(ds.screenNames).toStrictEqual(['screen1', 'screen2'])
+  })
 })
