@@ -5,7 +5,7 @@ import {
   createValueChange,
 } from './id-name.mjs'
 
-test('IdName good', () => {
+it('IdName good', () => {
   const id = 'id',
     name = 'name',
     pr = new IdName(id, name)
@@ -14,7 +14,7 @@ test('IdName good', () => {
   expect(pr.name).toBe(name)
 })
 
-test('createValueChange good', () => {
+it('createValueChange good', () => {
   const date = 123,
     id = 'id',
     name = 'name',
@@ -29,7 +29,7 @@ test('createValueChange good', () => {
   expect(zpr.date).toBe(date)
 })
 
-test('createValueChange good without type and date', () => {
+it('createValueChange good without type and date', () => {
   const id = 'id',
     name = 'name',
     value = { id: 'id', name: 'name' },
@@ -42,7 +42,7 @@ test('createValueChange good without type and date', () => {
   expect(Date.now() - zpr.date).toBeLessThan(1000)
 })
 
-test('IdNameValue good', () => {
+it('IdNameValue good', () => {
   const id = 'id',
     name = 'name',
     value = { id: 'id', name: 'name' },
@@ -53,7 +53,7 @@ test('IdNameValue good', () => {
   expect(zpr.value).toBe(value)
 })
 
-test('IdNameValueType good', () => {
+it('IdNameValueType good', () => {
   const id = 'id',
     name = 'name',
     value = { id: 'id', name: 'name' },
@@ -65,7 +65,7 @@ test('IdNameValueType good', () => {
   expect(zpr.type).toBe('string')
 })
 
-test('ToIIdName', () => {
+it('ToIIdName', () => {
   const id = 'id',
     name = 'name',
     pr = IdName.ToIIdName(id, name)
@@ -74,7 +74,7 @@ test('ToIIdName', () => {
   expect(pr.name).toBe(name)
 })
 
-test('ToIIdNameValueType', () => {
+it('ToIIdNameValueType', () => {
   const id = 'id',
     name = 'name',
     type = 'type',

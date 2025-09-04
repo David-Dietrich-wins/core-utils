@@ -19,7 +19,7 @@ import {
 } from './ticker-info.mjs'
 import moment from 'moment'
 
-test('AssetQuoteShort', () => {
+it('AssetQuoteShort', () => {
   const aqs = new AssetQuoteShort()
 
   expect(aqs.symbol).toBe('')
@@ -27,7 +27,7 @@ test('AssetQuoteShort', () => {
   expect(aqs.volume).toBe(0)
 })
 
-test('AssetQuoteShort assign', () => {
+it('AssetQuoteShort assign', () => {
   const a = new AssetQuoteShort()
   a.symbol = 'AAPL'
   a.price = 123.45
@@ -40,7 +40,7 @@ test('AssetQuoteShort assign', () => {
   expect(aqs.volume).toBe(1000000)
 })
 
-test('CompanyProfile', () => {
+it('CompanyProfile', () => {
   const cp = new CompanyProfile()
 
   expect(cp.symbol).toBe('')
@@ -55,7 +55,7 @@ test('CompanyProfile', () => {
   expect(cp.price).toBe(0)
 })
 
-test('ExchangeInfo', () => {
+it('ExchangeInfo', () => {
   const ei = new ExchangeInfo()
 
   expect(ei.exchange).toBe('')
@@ -66,7 +66,7 @@ test('ExchangeInfo', () => {
   expect(ei.volume).toBe(0)
 })
 
-test('PriceHistoricalResponse', () => {
+it('PriceHistoricalResponse', () => {
   const phr = new PriceHistoricalResponse()
 
   expect(phr.date).toBe('')
@@ -85,7 +85,7 @@ test('PriceHistoricalResponse', () => {
   expect(phr.datetime).toBe(0)
 })
 
-test('PriceHistoricalResponse', () => {
+it('PriceHistoricalResponse', () => {
   const a = new PriceHistoricalResponse()
   a.date = '2021-01-01'
   a.open = 100
@@ -120,7 +120,7 @@ test('PriceHistoricalResponse', () => {
   expect(phr.datetime).toBe(1609459200)
 })
 
-test('CreateISymbolDetail', () => {
+it('CreateISymbolDetail', () => {
   const isd: ISymbolDetail = {
       createdby: '',
       exchange: '',
@@ -142,7 +142,7 @@ test('CreateISymbolDetail', () => {
   expect(isdCreate).toMatchObject(isd)
 })
 
-test('IAssetQuoteResponseToAssetQuote', () => {
+it('IAssetQuoteResponseToAssetQuote', () => {
   const aaqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -176,7 +176,7 @@ test('IAssetQuoteResponseToAssetQuote', () => {
   })
 })
 
-test('IAssetQuoteResponseToAssetQuoteWithChanges', () => {
+it('IAssetQuoteResponseToAssetQuoteWithChanges', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -232,7 +232,7 @@ test('IAssetQuoteResponseToAssetQuoteWithChanges', () => {
   })
 })
 
-test('IAssetQuotesWithChanges', () => {
+it('IAssetQuotesWithChanges', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -342,7 +342,7 @@ test('IAssetQuotesWithChanges', () => {
   ])
 })
 
-test('IAssetQuoteResponseToAssetQuoteWithIpoDate', () => {
+it('IAssetQuoteResponseToAssetQuoteWithIpoDate', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -398,7 +398,7 @@ test('IAssetQuoteResponseToAssetQuoteWithIpoDate', () => {
   })
 })
 
-test('IAssetQuotesWithIpoDate', () => {
+it('IAssetQuotesWithIpoDate', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -517,7 +517,7 @@ test('IAssetQuotesWithIpoDate', () => {
   ])
 })
 
-test('IAssetQuotesWithIpoDate exception', () => {
+it('IAssetQuotesWithIpoDate exception', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -636,7 +636,7 @@ test('IAssetQuotesWithIpoDate exception', () => {
   ])
 })
 
-test('IAssetQuoteResponseToAssetQuoteWithScore', () => {
+it('IAssetQuoteResponseToAssetQuoteWithScore', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -694,7 +694,7 @@ test('IAssetQuoteResponseToAssetQuoteWithScore', () => {
   })
 })
 
-test('IAssetQuotesWithScore', () => {
+it('IAssetQuotesWithScore', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -812,7 +812,7 @@ test('IAssetQuotesWithScore', () => {
 })
 
 describe('ISymbolSearch2ITickerSearch', () => {
-  test('ISymbolSearch2ITickerSearch', () => {
+  it('ISymbolSearch2ITickerSearch', () => {
     const params: ISymbolSearch = {
         currency: 'USD',
         exchangeShortName: 'NASDAQ',
@@ -829,7 +829,7 @@ describe('ISymbolSearch2ITickerSearch', () => {
     })
   })
 
-  test('ISymbolSearch2ITickerSearchArray', () => {
+  it('ISymbolSearch2ITickerSearchArray', () => {
     const aapl: ISymbolSearch = {
         currency: 'USD',
         exchangeShortName: 'NASDAQ',
@@ -862,7 +862,7 @@ describe('ISymbolSearch2ITickerSearch', () => {
   })
 })
 
-test('IAssetQuotesWithIpoDate', () => {
+it('IAssetQuotesWithIpoDate', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,
@@ -915,7 +915,7 @@ test('IAssetQuotesWithIpoDate', () => {
   ])
 })
 
-test('IAssetQuotesWithScore', () => {
+it('IAssetQuotesWithScore', () => {
   const aqr: IAssetQuoteResponse = {
       // Volume: number    // 2006952,
       avgVolume: 9315590,

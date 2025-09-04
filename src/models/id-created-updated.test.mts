@@ -3,7 +3,7 @@ import { IdCreated, IdCreatedUpdated } from './id-created-updated.mjs'
 
 const suffix = Date.now()
 
-test('IdCreated good', () => {
+it('IdCreated good', () => {
   const created = new Date(),
     createdBy = `test-create-${suffix}`,
     id = 'id',
@@ -14,7 +14,7 @@ test('IdCreated good', () => {
   expect(pr.created).toBe(created)
 })
 
-test('IdCreated good with object', () => {
+it('IdCreated good with object', () => {
   const created = new Date(),
     createdBy = `test-create-${suffix}`,
     id = 'id',
@@ -30,7 +30,7 @@ test('IdCreated good with object', () => {
   expect(pr2.created).toBe(created)
 })
 
-test('IdCreated undefined id', () => {
+it('IdCreated undefined id', () => {
   const created = new Date(),
     createdBy = `test-create-${suffix}`,
     id = 0,
@@ -46,7 +46,7 @@ test('IdCreated undefined id', () => {
   expect(pr2.created).toBe(created)
 })
 
-test('IdCreatedUpdated good', () => {
+it('IdCreatedUpdated good', () => {
   const created = new Date(),
     createdby = `test-create-${suffix}`,
     id = 'id',
@@ -61,7 +61,7 @@ test('IdCreatedUpdated good', () => {
   expect(zpr.updatedby).toBe(updatedby)
 })
 
-test('IdCreatedUpdated good with object', () => {
+it('IdCreatedUpdated good with object', () => {
   const created = new Date(),
     createdby = `test-create-${suffix}`,
     id = 'id',
@@ -83,7 +83,7 @@ test('IdCreatedUpdated good with object', () => {
   expect(pr2.updatedby).toBe(updatedby)
 })
 
-test('zCreatedBy', () => {
+it('zCreatedBy', () => {
   const aSchema = IdCreated.zCreatedBy(z.date()),
     data = {
       created: new Date(),
@@ -102,7 +102,7 @@ test('zCreatedBy', () => {
   expect(result.data?.created.getTime()).toBe(data.created.getTime())
 })
 
-test('zCreatedOn', () => {
+it('zCreatedOn', () => {
   const aSchema = IdCreated.zCreated(z.date()),
     data = { created: new Date() },
     result = aSchema.safeParse(data)
@@ -112,7 +112,7 @@ test('zCreatedOn', () => {
   expect(result.data?.created.getTime()).toBe(data.created.getTime())
 })
 
-test('zUpdatedBy', () => {
+it('zUpdatedBy', () => {
   const aSchema = IdCreatedUpdated.zUpdatedBy(z.date()),
     data = {
       updated: new Date(),
@@ -132,7 +132,7 @@ test('zUpdatedBy', () => {
   expect(result.data?.updated.getTime()).toBe(data.updated.getTime())
 })
 
-test('zUpdatedOn', () => {
+it('zUpdatedOn', () => {
   const aSchema = IdCreatedUpdated.zUpdated(z.date()),
     data = { updated: new Date() },
     result = aSchema.safeParse(data)

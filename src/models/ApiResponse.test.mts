@@ -13,7 +13,7 @@ const CONST_DefaultError = 'Error',
   CONST_ErrorNotFound = 'Not Found',
   CONST_success = 'success'
 
-test('Constructor empty', () => {
+it('Constructor empty', () => {
   const apiResponse = new ApiResponse('')
 
   expect(apiResponse.message).toBe('')
@@ -25,7 +25,7 @@ test('Constructor empty', () => {
   expect(apiResponse.data).toBe('')
 })
 
-test('Constructor one param', () => {
+it('Constructor one param', () => {
   const aaresult = CONST_success,
     apiResponse = new ApiResponse('')
   apiResponse.result = `${aaresult}extra`
@@ -39,7 +39,7 @@ test('Constructor one param', () => {
   expect(apiResponse.data).toBe('')
 })
 
-test('message good', () => {
+it('message good', () => {
   const message = CONST_success,
     obj = { message: 'Found' },
     responseCode = 200,
@@ -57,7 +57,7 @@ test('message good', () => {
 })
 
 describe('setError', () => {
-  test('no params', () => {
+  it('no params', () => {
     const message = CONST_success,
       obj = { message: 'Found' },
       responseCode = 200,
@@ -84,7 +84,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toBe(obj)
   })
 
-  test('error object', () => {
+  it('error object', () => {
     const message = CONST_success,
       obj = { message: 'Found' },
       responseCode = 200,
@@ -122,7 +122,7 @@ describe('setError', () => {
     })
   })
 
-  test('exception', () => {
+  it('exception', () => {
     const ge = new AppExceptionHttp('setError exception', 'not found'),
       message = CONST_success,
       obj = { message: 'Found' },
@@ -140,7 +140,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toStrictEqual(obj)
   })
 
-  test('error number', () => {
+  it('error number', () => {
     const message = CONST_success,
       obj = 123,
       responseCode = 200,
@@ -166,7 +166,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toBe(obj)
   })
 
-  test('error string', () => {
+  it('error string', () => {
     const message = CONST_success,
       obj = 'error string',
       responseCode = 200,
@@ -193,7 +193,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toBe(obj)
   })
 
-  test('error object with response code', () => {
+  it('error object with response code', () => {
     const errorObj = new AppExceptionHttp(
         'Not Found',
         'test',
@@ -233,7 +233,7 @@ describe('setError', () => {
     })
   })
 
-  test('error object with AppException', () => {
+  it('error object with AppException', () => {
     const errorObj = new AppExceptionHttpNotFound(
         'setError error object with AppExceptionHttpNotFound',
         'test'
@@ -267,7 +267,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toStrictEqual(obj)
   })
 
-  test('error object with AppException no object', () => {
+  it('error object with AppException no object', () => {
     const errorObj = new AppExceptionHttp(
         CONST_ErrorNotFound,
         'setError error object with AppException'
@@ -297,7 +297,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toBe(obj)
   })
 
-  test('error AppException with response code', () => {
+  it('error AppException with response code', () => {
     const eexceptionObject = {
         message: 'Not Found',
         responseCode: 500,
@@ -336,7 +336,7 @@ describe('setError', () => {
     expect(zapiResponse.data).toBe(eexceptionObject)
   })
 
-  test('error AppException without response code', () => {
+  it('error AppException without response code', () => {
     const eexceptionObject = { message: 'No responseCode' },
       errorObj = new AppExceptionHttpNotFound(
         'setError error object with AppExceptionHttpNotFound',
@@ -372,7 +372,7 @@ describe('setError', () => {
   })
 })
 
-test('setSuccess with object', () => {
+it('setSuccess with object', () => {
   const message = CONST_success,
     obj = { message: 'Found', responseCode: 1 },
     responseCode = 200,
@@ -400,26 +400,26 @@ test('setSuccess with object', () => {
 })
 
 describe('responseCodeIsGood', () => {
-  test('object true', () => {
+  it('object true', () => {
     const ret = ApiResponse.responseCodeIsGood({ responseCode: 200 })
 
     expect(ret).toBe(true)
   })
 
-  test('object false', () => {
+  it('object false', () => {
     const ret = ApiResponse.responseCodeIsGood({ responseCode: 700 })
 
     expect(ret).toBe(false)
   })
 
-  test('bad object', () => {
+  it('bad object', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ret = ApiResponse.responseCodeIsGood({ code: 700 } as any)
 
     expect(ret).toBe(false)
   })
 
-  test('false', () => {
+  it('false', () => {
     const ret = ApiResponse.responseCodeIsGood({ responseCode: 0 })
 
     expect(ret).toBe(false)
@@ -427,32 +427,32 @@ describe('responseCodeIsGood', () => {
 })
 
 describe('isSuccess', () => {
-  test('object true', () => {
+  it('object true', () => {
     const ret = ApiResponse.isSuccess({ result: CONST_success })
 
     expect(ret).toBe(true)
   })
 
-  test('object false', () => {
+  it('object false', () => {
     const ret = ApiResponse.isSuccess({ result: CONST_ErrorNotFound })
 
     expect(ret).toBe(false)
   })
 
-  test('bad object', () => {
+  it('bad object', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ret = ApiResponse.isSuccess({ code: 700 } as any)
 
     expect(ret).toBe(false)
   })
 
-  test('false', () => {
+  it('false', () => {
     const ret = ApiResponse.isSuccess({ result: 'error' })
 
     expect(ret).toBe(false)
   })
 
-  test('isGood', () => {
+  it('isGood', () => {
     const message = CONST_success,
       obj = { message: 'Found', responseCode: 1 },
       responseCode = 200,
@@ -465,7 +465,7 @@ describe('isSuccess', () => {
     expect(zapiResponse.isErrorSignedOut).toBe(false)
   })
 
-  test('isError', () => {
+  it('isError', () => {
     const message = CONST_success,
       obj = { message: 'Found', responseCode: 1 },
       responseCode = 401,
@@ -479,7 +479,7 @@ describe('isSuccess', () => {
   })
 })
 
-test('createFromErrorMessage', () => {
+it('createFromErrorMessage', () => {
   const ret = ApiResponse.createFromErrorMessage(
     'error message',
     { some: 'data' },
@@ -499,7 +499,7 @@ test('createFromErrorMessage', () => {
   expect(ret.stats.totalProcessed).toBe(0)
 })
 
-test('createFromIApiResponse', () => {
+it('createFromIApiResponse', () => {
   const iapi: IApiResponse<{ some: string }> = {
       data: { some: 'data' },
       id: 123,
@@ -524,7 +524,7 @@ test('createFromIApiResponse', () => {
   expect(ret.stats.totalProcessed).toBe(0)
 })
 
-test('ErrorHandler', () => {
+it('ErrorHandler', () => {
   const fname = 'test-ErrorHandler',
     location = {
       href: 'http://localhost',
@@ -567,7 +567,7 @@ test('ErrorHandler', () => {
   })
 })
 
-test('verifySuccess', () => {
+it('verifySuccess', () => {
   const fname = 'test-verifySuccess',
     ret = new ApiResponse('data', CONST_success, 'message', 200),
     zdata = ApiResponse.verifySuccess(fname, ret)
@@ -594,7 +594,7 @@ test('verifySuccess', () => {
   }).toThrow(new AppException('No data returned', fname))
 })
 
-test('verifySuccessPagedResponse', () => {
+it('verifySuccessPagedResponse', () => {
   const fname = 'test-verifySuccessPagedResponse',
     ret = new ApiResponse<IPagedResponse<string>>(
       { dataPage: [], totalCount: 0 },
@@ -649,7 +649,7 @@ test('verifySuccessPagedResponse', () => {
   }).toThrow(new AppException('No data returned', fname))
 })
 
-test('IsStatus', () => {
+it('IsStatus', () => {
   const obj: IStatus = {}
 
   expect(ApiResponse.IsStatus(obj)).toBe(false)
@@ -670,7 +670,7 @@ test('IsStatus', () => {
   expect(ApiResponse.IsStatus(obj)).toBe(true)
 })
 
-test('IsApiResponse', () => {
+it('IsApiResponse', () => {
   expect(ApiResponse.IsApiResponse({})).toBe(false)
   expect(ApiResponse.IsApiResponse(null)).toBe(false)
   expect(ApiResponse.IsApiResponse(undefined)).toBe(false)
@@ -759,7 +759,7 @@ test('IsApiResponse', () => {
   expect(ApiResponse.IsApiResponse(obj)).toBe(true)
 })
 
-test('IsApiResponseError', () => {
+it('IsApiResponseError', () => {
   expect(ApiResponse.IsApiResponseError({})).toBe(true)
   expect(ApiResponse.IsApiResponseError(null)).toBe(false)
   expect(ApiResponse.IsApiResponseError(undefined)).toBe(false)
@@ -818,7 +818,7 @@ test('IsApiResponseError', () => {
   expect(ApiResponse.IsApiResponseError(obj)).toBe(false)
 })
 
-test('HasObj', () => {
+it('HasObj', () => {
   const obj: { obj: unknown } = { obj: {} }
   expect(ApiResponse.HasObj(obj)).toBe(true)
 
@@ -832,7 +832,7 @@ test('HasObj', () => {
   expect(ApiResponse.HasObj(obj)).toBe(false)
 })
 
-test('IsCaptureResponse', () => {
+it('IsCaptureResponse', () => {
   const newobj = { captureResponse: {} },
     noobj = {},
     obj: { captureResponse: IApiResponse } = {
@@ -875,7 +875,7 @@ test('IsCaptureResponse', () => {
   expect(ApiResponse.IsCaptureResponse(noobj)).toBe(false)
 })
 
-test('IsWrappedCaptureResponse', () => {
+it('IsWrappedCaptureResponse', () => {
   const newobj = { obj: { captureResponse: {} } },
     noobj = {},
     obj: { obj: { captureResponse: IApiResponse } } = {
@@ -920,7 +920,7 @@ test('IsWrappedCaptureResponse', () => {
   expect(ApiResponse.IsWrappedCaptureResponse(noobj)).toBe(false)
 })
 
-test('IsWrappedCaptureResponseWithMsg', () => {
+it('IsWrappedCaptureResponseWithMsg', () => {
   const newobj = { obj: { captureResponse: {} } },
     noobj = {},
     obj: { obj: { captureResponse: IApiResponse } } = {

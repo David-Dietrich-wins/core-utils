@@ -6,7 +6,7 @@ import {
   SortOrderAsString,
 } from './types.mjs'
 
-test('SortOrderAsBoolean', () => {
+it('SortOrderAsBoolean', () => {
   const soasc: SortOrder = 'asc',
     sodesc: SortOrder = 'desc'
 
@@ -20,7 +20,7 @@ test('SortOrderAsBoolean', () => {
   expect(SortOrderAsBoolean(-1)).toBe(false)
 })
 
-test('SortOrderAsNumeric', () => {
+it('SortOrderAsNumeric', () => {
   const soasc: SortOrder = 'asc',
     sodesc: SortOrder = 'desc'
 
@@ -34,7 +34,7 @@ test('SortOrderAsNumeric', () => {
   expect(SortOrderAsNumeric(-1)).toBe(-1)
 })
 
-test('SortOrderAsString', () => {
+it('SortOrderAsString', () => {
   const soasc: SortOrder = 'asc',
     sodesc: SortOrder = 'desc'
 
@@ -48,7 +48,7 @@ test('SortOrderAsString', () => {
   expect(SortOrderAsString(-1)).toBe('desc')
 })
 
-test('CreateClass', () => {
+it('CreateClass', () => {
   class TestClass {
     name: string
 

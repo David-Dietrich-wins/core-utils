@@ -1,7 +1,7 @@
 import { ChartRunLog, type IChartRunLog } from './ChartRunLog.mjs'
 import { ChartSettings } from './ChartSettings.mjs'
 
-test('ChartRunLog constructor', () => {
+it('ChartRunLog constructor', () => {
   const browser = 'Chrome',
     ip = '192.168.1.1',
     lang = 'en',
@@ -16,7 +16,7 @@ test('ChartRunLog constructor', () => {
   expect(zchartRunLog.ip).toBe(ip)
 })
 
-test('ChartRunLog default values', () => {
+it('ChartRunLog default values', () => {
   const chartRunLog = new ChartRunLog(
     'user123',
     'AAPL',
@@ -32,7 +32,7 @@ test('ChartRunLog default values', () => {
   expect(chartRunLog.needExtendedHoursTrading).toBe(false)
 })
 
-test('ChartRunLog object properties', () => {
+it('ChartRunLog object properties', () => {
   const acs: ChartSettings = new ChartSettings(
       'AAPL',
       2,

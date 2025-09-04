@@ -1,6 +1,6 @@
 import { NameVal, NameValManager, NameValType } from './NameValManager.mjs'
 
-test('NameVal good', () => {
+it('NameVal good', () => {
   const name = 'name',
     val = 'val',
     zpr = new NameVal(name, val)
@@ -9,7 +9,7 @@ test('NameVal good', () => {
   expect(zpr.val).toBe(val)
 })
 
-test('NameValType good', () => {
+it('NameValType good', () => {
   const name = 'name',
     type = 'type',
     val = 'value',
@@ -21,7 +21,7 @@ test('NameValType good', () => {
 })
 
 describe('NameValManager', () => {
-  test('constructor', () => {
+  it('constructor', () => {
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -32,13 +32,13 @@ describe('NameValManager', () => {
     expect(zmanager.list[0].name).toBe(name)
     expect(zmanager.list[0].val).toBe(value)
   })
-  test('constructor defaults', () => {
+  it('constructor defaults', () => {
     const manager = new NameValManager()
 
     expect(manager.list.length).toBe(0)
   })
 
-  test('CreateNameValManager', () => {
+  it('CreateNameValManager', () => {
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -49,18 +49,18 @@ describe('NameValManager', () => {
     expect(zmanager.list[0].name).toBe(name)
     expect(zmanager.list[0].val).toBe(value)
   })
-  test('CreateNameValManager with null', () => {
+  it('CreateNameValManager with null', () => {
     const manager = NameValManager.CreateNameValManager(null)
 
     expect(manager.list.length).toBe(0)
   })
-  test('CreateNameValManager with undefined', () => {
+  it('CreateNameValManager with undefined', () => {
     const manager = NameValManager.CreateNameValManager(undefined)
 
     expect(manager.list.length).toBe(0)
   })
 
-  test('NameVal.CreateINameVal', () => {
+  it('NameVal.CreateINameVal', () => {
     const name = 'name',
       value = 'value',
       zitem = NameVal.CreateINameVal(name, value)
@@ -76,7 +76,7 @@ describe('NameValManager', () => {
     expect(item2.val).toEqual({ id: 123 })
   })
 
-  test('NameValManager.CreateINameVal', () => {
+  it('NameValManager.CreateINameVal', () => {
     const name = 'name',
       value = 'value',
       zitem = NameValManager.ToINameVal(name, value)

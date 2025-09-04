@@ -5,7 +5,7 @@ import {
   type IConfigShort,
 } from './config.mjs'
 
-test('constructor', () => {
+it('constructor', () => {
   const config = new Config(1, 1, 'name', true)
 
   expect(config.id).toBe(1)
@@ -16,7 +16,7 @@ test('constructor', () => {
   expect(config.updatedby).toBe('Config')
 })
 
-test('constructor with IConfig', () => {
+it('constructor with IConfig', () => {
   const aic: IConfig<number> = {
       created: new Date(),
       createdby: 'test',
@@ -45,7 +45,7 @@ test('constructor with IConfig', () => {
 })
 
 describe('ConfigShort', () => {
-  test('constructor', () => {
+  it('constructor', () => {
     const config = new ConfigShort('1', '1', 'name', true)
 
     expect(config.id).toBe('1')
@@ -56,7 +56,7 @@ describe('ConfigShort', () => {
     expect(config.updatedby).toBe('Config')
   })
 
-  test('constructor with IConfig', () => {
+  it('constructor with IConfig', () => {
     const aic: IConfigShort<number> = {
         created: new Date(),
         createdby: 'test',

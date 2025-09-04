@@ -4,7 +4,7 @@ import {
 } from './async-helper.mjs'
 
 describe(asyncGeneratorLoopRunMaxIterations.name, () => {
-  test('good', async () => {
+  it('good', async () => {
     const generator = asyncGeneratorLoopRunMaxIterations(
       () => Promise.resolve([1, 2, 3]),
       2
@@ -29,7 +29,7 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
     })
   })
 
-  test('default maxIterations', async () => {
+  it('default maxIterations', async () => {
     const generator = asyncGeneratorLoopRunMaxIterations(() =>
       Promise.resolve([1, 2, 3])
     )
@@ -53,7 +53,7 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
     })
   })
 
-  test('throws an exception', async () => {
+  it('throws an exception', async () => {
     const generator = asyncGeneratorLoopRunMaxIterations(
       () => Promise.reject(new Error('Test error')),
       2
@@ -74,7 +74,7 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
 })
 
 describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
-  test('good', async () => {
+  it('good', async () => {
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {
@@ -99,7 +99,7 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
     })
   })
 
-  test('empty result', async () => {
+  it('empty result', async () => {
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {
@@ -125,7 +125,7 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
     })
   })
 
-  test('exception thrown', async () => {
+  it('exception thrown', async () => {
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {

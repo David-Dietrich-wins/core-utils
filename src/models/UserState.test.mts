@@ -1,6 +1,6 @@
 import UserState from './UserState.mjs'
 
-test('default args', () => {
+it('default args', () => {
   const userState = new UserState()
 
   expect(userState.id).toBe('User')
@@ -10,7 +10,7 @@ test('default args', () => {
   expect(userState.obj).toBeUndefined()
 })
 
-test('good', () => {
+it('good', () => {
   const userState = new UserState<{ data: string }>('User', 'success', 1, {
     data: 'hello',
   })
@@ -22,7 +22,7 @@ test('good', () => {
   expect(userState.obj?.data).toBe('hello')
 })
 
-test('constructor default', () => {
+it('constructor default', () => {
   const userState = new UserState('User', 'success')
 
   expect(userState.id).toBe('User')
@@ -32,7 +32,7 @@ test('constructor default', () => {
   expect(userState.obj).toBeUndefined()
 })
 
-test('constructor name', () => {
+it('constructor name', () => {
   const userState = new UserState('User', '')
 
   expect(userState.id).toBe('User')
@@ -42,7 +42,7 @@ test('constructor name', () => {
   expect(userState.obj).toBeUndefined()
 })
 
-test('constructor status code', () => {
+it('constructor status code', () => {
   const userState = new UserState('Test', 'success', 200)
 
   expect(userState.id).toBe('Test')
@@ -52,7 +52,7 @@ test('constructor status code', () => {
   expect(userState.obj).toBeUndefined()
 })
 
-test('constructor test success', () => {
+it('constructor test success', () => {
   const userState = new UserState('Test', 'success', -1)
 
   expect(userState.id).toBe('Test')
@@ -62,7 +62,7 @@ test('constructor test success', () => {
   expect(userState.obj).toBeUndefined()
 })
 
-test('constructor test success', () => {
+it('constructor test success', () => {
   const userState = new UserState<{ message: string }>('Test', 'success', 200, {
     message: 'hello',
   })

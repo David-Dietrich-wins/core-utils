@@ -60,14 +60,14 @@ import {
 } from './array-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 
-test(safeArray.name, () => {
+it(safeArray.name, () => {
   expect(safeArray()).toStrictEqual([])
   expect(safeArray(1)).toStrictEqual([1])
   expect(safeArray([1])).toStrictEqual([1])
   expect(safeArray(undefined, [1])).toStrictEqual([1])
 })
 
-test(safeArrayUnique.name, () => {
+it(safeArrayUnique.name, () => {
   expect(safeArrayUnique()).toStrictEqual([])
   expect(safeArrayUnique(1)).toStrictEqual([1])
   expect(safeArrayUnique([1])).toStrictEqual([1])
@@ -76,7 +76,7 @@ test(safeArrayUnique.name, () => {
   expect(safeArrayUnique([1, 2, 3, 1, 2])).toStrictEqual([1, 2, 3])
 })
 
-test(isArray.name, () => {
+it(isArray.name, () => {
   expect(isArray(undefined)).toBe(false)
   expect(isArray(null)).toBe(false)
   expect(isArray([])).toBe(true)
@@ -89,7 +89,7 @@ test(isArray.name, () => {
   expect(isArray(['a', 'b'], 'b')).toBe(true)
 })
 
-test('arrayGetIds', () => {
+it('arrayGetIds', () => {
   const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetIds(arr)).toStrictEqual([1, 2])
@@ -105,7 +105,7 @@ test('arrayGetIds', () => {
   ).toStrictEqual([3, 2])
 })
 
-test('arrayGetIdNames', () => {
+it('arrayGetIdNames', () => {
   const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetIdNames(arr)).toStrictEqual([
@@ -124,7 +124,7 @@ test('arrayGetIdNames', () => {
   ).toStrictEqual([new IdName(3, 'name1'), new IdName(2, 'name2')])
 })
 
-test('arrayGetNames', () => {
+it('arrayGetNames', () => {
   const arr: IdName<number>[] = [new IdName(1, 'name1'), new IdName(2, 'name2')]
 
   expect(arrayGetNames(arr)).toStrictEqual(['name1', 'name2'])
@@ -140,7 +140,7 @@ test('arrayGetNames', () => {
   ).toStrictEqual(['test-rename', 'name2'])
 })
 
-test('arrayFindById', () => {
+it('arrayFindById', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -154,7 +154,7 @@ test('arrayFindById', () => {
   expect(arrayFindById(arr, 1)).toStrictEqual({ id: 1, name: 'name1' })
 })
 
-test('arrayFindByIds', () => {
+it('arrayFindByIds', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -172,7 +172,7 @@ test('arrayFindByIds', () => {
   ])
 })
 
-test('arrayFindByNotIds', () => {
+it('arrayFindByNotIds', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -192,7 +192,7 @@ test('arrayFindByNotIds', () => {
   ])
 })
 
-test('arrayFindNameById', () => {
+it('arrayFindNameById', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -206,7 +206,7 @@ test('arrayFindNameById', () => {
   expect(arrayFindNameById(arr, 1)).toStrictEqual('name1')
 })
 
-test('arrayMustFind', () => {
+it('arrayMustFind', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -218,7 +218,7 @@ test('arrayMustFind', () => {
   expect(() => arrayMustFind(arr, 4)).toThrow()
 })
 
-test('arrayFindByName', () => {
+it('arrayFindByName', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -232,7 +232,7 @@ test('arrayFindByName', () => {
   expect(arrayFindByName(arr, 'name2')).toStrictEqual(arr[1])
 })
 
-test('arrayMustFindByName', () => {
+it('arrayMustFindByName', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -244,7 +244,7 @@ test('arrayMustFindByName', () => {
   expect(arrayMustFindByName(arr, 'name2')).toStrictEqual(arr[1])
 })
 
-test('arrayFilter', () => {
+it('arrayFilter', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -257,7 +257,7 @@ test('arrayFilter', () => {
   expect(arrayFilter(arr, filterFunc)).toStrictEqual([arr[0]])
 })
 
-test('arrayFind', () => {
+it('arrayFind', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -270,7 +270,7 @@ test('arrayFind', () => {
   expect(arrayFind(arr, filterFunc)).toStrictEqual(arr[0])
 })
 
-test('arrayMustFindFunc', () => {
+it('arrayMustFindFunc', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -284,7 +284,7 @@ test('arrayMustFindFunc', () => {
   expect(arrayMustFindFunc(arr, filterFunc)).toStrictEqual(arr[0])
 })
 
-test('arrayOfIds', () => {
+it('arrayOfIds', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -304,7 +304,7 @@ test('arrayOfIds', () => {
   expect(arrayOfIds(arr)).toStrictEqual([1, 3])
 })
 
-test('arrayOfNames', () => {
+it('arrayOfNames', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -316,7 +316,7 @@ test('arrayOfNames', () => {
   expect(arrayOfNames(arr)).toStrictEqual(['name1', 'name2', 'name3'])
 })
 
-test(arrayElement.name, () => {
+it(arrayElement.name, () => {
   expect(arrayElement(undefined)).toBeUndefined()
   expect(arrayElement(null)).toBeUndefined()
   expect(arrayElement({})).toStrictEqual({})
@@ -328,7 +328,7 @@ test(arrayElement.name, () => {
   expect(arrayElement(['a', 'b'], 2)).toBeUndefined()
 })
 
-test(arrayElementNonEmpty.name, () => {
+it(arrayElementNonEmpty.name, () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -342,7 +342,7 @@ test(arrayElementNonEmpty.name, () => {
   expect(() => arrayElementNonEmpty(arr, 4)).toThrow('Array has no items.')
 })
 
-test('arrayFirst and arrayLast', () => {
+it('arrayFirst and arrayLast', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -356,7 +356,7 @@ test('arrayFirst and arrayLast', () => {
   expect(arrayLast(arr)).toStrictEqual(arr[2])
 })
 
-test(arrayFirstNonEmpty.name, () => {
+it(arrayFirstNonEmpty.name, () => {
   const fname = arrayFirstNonEmpty.name
 
   expect(() => arrayFirstNonEmpty()).toThrow()
@@ -365,7 +365,7 @@ test(arrayFirstNonEmpty.name, () => {
   expect(() => arrayFirstNonEmpty([], fname, 'my custom message')).toThrow()
 })
 
-test(arrayLastNonEmpty.name, () => {
+it(arrayLastNonEmpty.name, () => {
   const fname = arrayLastNonEmpty.name
 
   const arr = [
@@ -383,7 +383,7 @@ test(arrayLastNonEmpty.name, () => {
   expect(arrayLastNonEmpty(arr)).toStrictEqual(arr[2])
 })
 
-test('arrayForEachReturns', () => {
+it('arrayForEachReturns', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -401,20 +401,20 @@ test('arrayForEachReturns', () => {
   ])
 })
 
-test('ToSafeArray', () => {
+it('ToSafeArray', () => {
   expect(ToSafeArray(undefined)).toStrictEqual([])
   expect(ToSafeArray([])).toStrictEqual([])
   expect(ToSafeArray({ x: 1 })).toStrictEqual([{ x: 1 }])
 })
 
-test('ToSafeArray2d', () => {
+it('ToSafeArray2d', () => {
   expect(ToSafeArray2d(undefined)).toStrictEqual([])
   expect(ToSafeArray2d([])).toStrictEqual([])
   expect(ToSafeArray2d({ x: 1 })).toStrictEqual([{ x: 1 }])
   expect(ToSafeArray2d([{ x: 1 }])).toStrictEqual([[{ x: 1 }]])
 })
 
-test('arrayRemoveById', () => {
+it('arrayRemoveById', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -432,7 +432,7 @@ test('arrayRemoveById', () => {
   ])
 })
 
-test('arrayUnique', () => {
+it('arrayUnique', () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -456,7 +456,7 @@ test('arrayUnique', () => {
   ])
 })
 
-test('arrayAdd', () => {
+it('arrayAdd', () => {
   const addItem = { id: 4, name: 'name4' },
     arr = [
       { id: 1, name: 'name1' },
@@ -488,7 +488,7 @@ test('arrayAdd', () => {
   ])
 })
 
-test('arrayRemove', () => {
+it('arrayRemove', () => {
   const arr = [
       { id: 1, name: 'name1' },
       { id: 2, name: 'name2' },
@@ -502,7 +502,7 @@ test('arrayRemove', () => {
   ])
 })
 
-test('arrayUpdateOrAdd', () => {
+it('arrayUpdateOrAdd', () => {
   const addItem = { id: 4, name: 'name4' },
     arr = [
       { id: 1, name: 'name1' },
@@ -540,7 +540,7 @@ test('arrayUpdateOrAdd', () => {
   ])
 })
 
-test('ToIIdNameArray', () => {
+it('ToIIdNameArray', () => {
   const arr: IIdNameValue[] = [
     { id: '1', name: 'name1', value: 'value1' },
     { id: '2', name: 'name2', value: 'value2' },
@@ -559,7 +559,7 @@ test('ToIIdNameArray', () => {
   ])
 })
 
-test('MapINamesToNames', () => {
+it('MapINamesToNames', () => {
   const arr: IIdNameValue[] = [
     { id: '1', name: 'name1', value: 'value1' },
     { id: '2', name: 'name2', value: 'value2' },
@@ -571,7 +571,7 @@ test('MapINamesToNames', () => {
   expect(MapINamesToNames(undefined)).toStrictEqual([])
 })
 
-test('arrayReduceArrayReturns', () => {
+it('arrayReduceArrayReturns', () => {
   const arr: IIdName<number>[] = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -609,7 +609,7 @@ function get3IIdNames(): IIdName<number>[] {
   ]
 }
 
-test('arraySwapItemsById', () => {
+it('arraySwapItemsById', () => {
   let arr = get3IIdNames()
 
   expect(() => arraySwapItemsById(arr, 1, 4)).toThrow()
@@ -637,7 +637,7 @@ test('arraySwapItemsById', () => {
   ])
 })
 
-test('arraySwapItems', () => {
+it('arraySwapItems', () => {
   let arr = get3IIdNames()
 
   expect(() => arraySwapItems(arr, 1, 4)).toThrow()
@@ -677,7 +677,7 @@ test('arraySwapItems', () => {
   ])
 })
 
-test('shuffleArray', () => {
+it('shuffleArray', () => {
   const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   let shuffled = shuffleArray(arr)
@@ -688,7 +688,7 @@ test('shuffleArray', () => {
 })
 
 describe(`${splitToArray.name} types`, () => {
-  test(splitToArray.name, () => {
+  it(splitToArray.name, () => {
     let strOrArray: StringOrStringArray = 'a,b , c,'
     const splitter = ','
     const removeEmpties = true
@@ -739,7 +739,7 @@ describe(`${splitToArray.name} types`, () => {
   })
 
   describe(splitToArrayOrStringIfOnlyOne.name, () => {
-    test('default', () => {
+    it('default', () => {
       const strOrArray = 'a,b , c'
       const splitter = ','
       const removeEmpties = true
@@ -770,7 +770,7 @@ describe(`${splitToArray.name} types`, () => {
       expect(arr).toEqual('a')
     })
 
-    test('no remove empties', () => {
+    it('no remove empties', () => {
       const strOrArray = 'a,b   , c,'
       const splitter = ','
       const removeEmpties = false
@@ -801,7 +801,7 @@ describe(`${splitToArray.name} types`, () => {
       expect(arr).toEqual('a')
     })
 
-    test('no trim strings', () => {
+    it('no trim strings', () => {
       const strOrArray = 'a,b   , c'
       const splitter = ','
       const removeEmpties = true
@@ -842,7 +842,7 @@ describe(`${splitToArray.name} types`, () => {
   })
 
   describe(splitToArrayOrStringIfOnlyOneToUpper.name, () => {
-    test('default', () => {
+    it('default', () => {
       const strOrArray = 'a,b , c'
       const splitter = ','
       const removeEmpties = true
@@ -878,7 +878,7 @@ describe(`${splitToArray.name} types`, () => {
       expect(arr).toEqual('A')
     })
 
-    test('no remove empties', () => {
+    it('no remove empties', () => {
       const strOrArray = 'a,b   , c,'
       const splitter = ','
       const removeEmpties = false
@@ -914,7 +914,7 @@ describe(`${splitToArray.name} types`, () => {
       expect(arr).toEqual('A')
     })
 
-    test('no trim strings', () => {
+    it('no trim strings', () => {
       const strOrArray = 'a,b   , c'
       const splitter = ','
       const removeEmpties = true
@@ -951,7 +951,7 @@ describe(`${splitToArray.name} types`, () => {
     })
   })
 
-  test(splitToArrayOfIntegers.name, () => {
+  it(splitToArrayOfIntegers.name, () => {
     let arr = splitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -979,7 +979,7 @@ describe(`${splitToArray.name} types`, () => {
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
 
-  test(splitToArrayOfNumbers.name, () => {
+  it(splitToArrayOfNumbers.name, () => {
     let arr = splitToArrayOfNumbers('1.1,2,3,4,5,6,7.3487,8,9,10')
 
     expect(arr).toEqual([1.1, 2, 3, 4, 5, 6, 7.3487, 8, 9, 10])
@@ -1008,7 +1008,7 @@ describe(`${splitToArray.name} types`, () => {
   })
 })
 
-test(getObject.name, () => {
+it(getObject.name, () => {
   expect(getObject(undefined)).toBeUndefined()
   expect(getObject(null)).toBeUndefined()
   expect(getObject({})).toStrictEqual({})
@@ -1022,7 +1022,7 @@ test(getObject.name, () => {
   expect(getObject('a', 1)).toBeUndefined()
 })
 
-test(addObjectToList.name, () => {
+it(addObjectToList.name, () => {
   expect(addObjectToList([], [{ a: 'a' }])).toStrictEqual([{ a: 'a' }])
   expect(addObjectToList([], [1, 2])).toStrictEqual([1, 2])
   expect(addObjectToList(null as any, [1, 2])).toStrictEqual([1, 2])
@@ -1033,7 +1033,7 @@ test(addObjectToList.name, () => {
   expect(addObjectToList([], undefined as any)).toStrictEqual([])
 })
 
-// Test('arrayMoveFromTo', () => {
+// it('arrayMoveFromTo', () => {
 //   Const arr: IIdNameValue<string, string>[] = [
 //     { id: '1', name: 'name1', value: 'value1' },
 //     { id: '2', name: 'name2', value: 'value2' },
@@ -1062,7 +1062,7 @@ test(addObjectToList.name, () => {
 //   ])
 // })
 
-test('arrayMoveFromTo', () => {
+it('arrayMoveFromTo', () => {
   const arr = [0, 1, 2, 3, 4, 5, 6]
   const myArray = [10, 20, 30, 40, 50]
 
@@ -1094,7 +1094,7 @@ test('arrayMoveFromTo', () => {
   expect(() => arrayMoveElement([...arr], -1, 0)).toThrow(AppException)
 })
 
-test('arrayFilterMap', () => {
+it('arrayFilterMap', () => {
   const arr: IdName<number>[] = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },
@@ -1124,7 +1124,7 @@ test('arrayFilterMap', () => {
 })
 
 describe(splitIntoArray.name, () => {
-  test('splitIntoArray', () => {
+  it('splitIntoArray', () => {
     let aastrOrArray: StringOrStringArray = 'a,b \n, c,',
       arr = splitIntoArray(aastrOrArray)
     const replaceNonprintable = false,
@@ -1166,7 +1166,7 @@ describe(splitIntoArray.name, () => {
   })
 
   describe('splitToArrayOrStringIfOnlyOne no remove empties', () => {
-    test('default', () => {
+    it('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
@@ -1197,7 +1197,7 @@ describe(splitIntoArray.name, () => {
       expect(arr).toEqual('a')
     })
 
-    test('no remove empties', () => {
+    it('no remove empties', () => {
       const removeEmpties = false,
         splitter = ',',
         strOrArray = 'a,b   , c,',
@@ -1228,7 +1228,7 @@ describe(splitIntoArray.name, () => {
       expect(arr).toEqual('a')
     })
 
-    test('no trim strings', () => {
+    it('no trim strings', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b   , c',
@@ -1269,7 +1269,7 @@ describe(splitIntoArray.name, () => {
   })
 
   describe('splitToArrayOrStringIfOnlyOneToUpper no remove empties', () => {
-    test('default', () => {
+    it('default', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b , c',
@@ -1305,7 +1305,7 @@ describe(splitIntoArray.name, () => {
       expect(arr).toEqual('A')
     })
 
-    test('no remove empties', () => {
+    it('no remove empties', () => {
       const removeEmpties = false,
         splitter = ',',
         strOrArray = 'a,b   , c,',
@@ -1341,7 +1341,7 @@ describe(splitIntoArray.name, () => {
       expect(arr).toEqual('A')
     })
 
-    test('no trim strings', () => {
+    it('no trim strings', () => {
       const removeEmpties = true,
         splitter = ',',
         strOrArray = 'a,b   , c',
@@ -1378,7 +1378,7 @@ describe(splitIntoArray.name, () => {
     })
   })
 
-  test(splitToArrayOfIntegers.name, () => {
+  it(splitToArrayOfIntegers.name, () => {
     let arr = splitToArrayOfIntegers('1,2,3,4,5,6,7,8,9,10')
 
     expect(arr).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -1407,7 +1407,7 @@ describe(splitIntoArray.name, () => {
   })
 })
 
-test(arrayFindIndexOf.name, () => {
+it(arrayFindIndexOf.name, () => {
   const arr = [
     { id: 1, name: 'name1' },
     { id: 2, name: 'name2' },

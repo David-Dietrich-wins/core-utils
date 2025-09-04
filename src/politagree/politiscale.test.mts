@@ -5,7 +5,7 @@ import {
   PolitiscalesCreateAll,
 } from './politiscale.mjs'
 
-test('constructor', () => {
+it('constructor', () => {
   const politiscale = new Politiscale('freeSpeech', 10)
   expect(politiscale).toEqual({
     name: 'freeSpeech',
@@ -13,7 +13,7 @@ test('constructor', () => {
   })
 })
 
-test('constructor with object', () => {
+it('constructor with object', () => {
   const ip: IPolitiscale = { name: 'religion', value: 5 },
     politiscale = new Politiscale(ip, 0)
   expect(politiscale).toEqual({
@@ -22,7 +22,7 @@ test('constructor with object', () => {
   })
 })
 
-test('CreatePolitiscaleSearchParams', () => {
+it('CreatePolitiscaleSearchParams', () => {
   const ret = CreatePolitiscaleSearchParams({
     sortDirection: 'desc',
     term: 'test',
@@ -43,7 +43,7 @@ test('CreatePolitiscaleSearchParams', () => {
   })
 })
 
-test('PolitiscalesCreateAll', () => {
+it('PolitiscalesCreateAll', () => {
   const ret = PolitiscalesCreateAll({
     climate: 5,
     freeSpeech: 10,

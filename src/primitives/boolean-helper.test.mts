@@ -4,7 +4,7 @@ import {
   getBooleanUndefined,
 } from './boolean-helper.mjs'
 
-test(getBoolean.name, () => {
+it(getBoolean.name, () => {
   expect(getBoolean(undefined)).toBe(false)
   expect(getBoolean(null)).toBe(false)
   expect(getBoolean(false)).toBe(false)
@@ -24,7 +24,7 @@ test(getBoolean.name, () => {
   expect(getBoolean('hello')).toBe(true)
 })
 
-test(getBooleanAsNumber.name, () => {
+it(getBooleanAsNumber.name, () => {
   expect(getBooleanAsNumber(undefined)).toBe(0)
   expect(getBooleanAsNumber(null)).toBe(0)
   expect(getBooleanAsNumber(false)).toBe(0)
@@ -44,7 +44,7 @@ test(getBooleanAsNumber.name, () => {
   expect(getBooleanAsNumber('hello')).toBe(1)
 })
 
-test(getBooleanUndefined.name, () => {
+it(getBooleanUndefined.name, () => {
   expect(getBooleanUndefined(undefined)).toBe(undefined)
   expect(getBooleanUndefined(null)).toBe(undefined)
   expect(getBooleanUndefined(false)).toBe(undefined)

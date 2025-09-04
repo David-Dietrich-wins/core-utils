@@ -1,6 +1,6 @@
 import { UserConfig } from './UserConfig.mjs'
 
-test('create an instance', () => {
+it('create an instance', () => {
   const userConfig = new UserConfig('userId', 'key', 'value')
 
   expect(userConfig).toBeInstanceOf(UserConfig)
@@ -13,7 +13,7 @@ test('create an instance', () => {
   expect(userConfig.created).toBeInstanceOf(Date)
 })
 
-test('copyFromDatabase', () => {
+it('copyFromDatabase', () => {
   let userConfig = new UserConfig('userId', 'key', 'value')
   const dbtp = {
     created: new Date('2025-12-01T12:00:00.000Z'),
@@ -56,7 +56,7 @@ test('copyFromDatabase', () => {
   expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
 })
 
-test('fromApi good', () => {
+it('fromApi good', () => {
   const nameVal = { name: 'key', val: 'value' },
     userConfig = UserConfig.fromApi(
       undefined,
@@ -74,7 +74,7 @@ test('fromApi good', () => {
   expect(userConfig.created).toBeInstanceOf(Date)
 })
 
-test('fromNameVal good', () => {
+it('fromNameVal good', () => {
   const nameVal = { name: 'key', val: 'value' },
     userConfig = UserConfig.fromNameVal(nameVal, 'userId', 'email@email.com')
 
@@ -87,7 +87,7 @@ test('fromNameVal good', () => {
   expect(userConfig.created).toBeInstanceOf(Date)
 })
 
-test('api', () => {
+it('api', () => {
   const userConfig = new UserConfig('userId', 'key', 'value'),
     userData = userConfig.api()
 

@@ -10,7 +10,7 @@ import {
 } from './UserCreatedUpdatedTable.mjs'
 
 describe('CreatedTable', () => {
-  test('constructor string', () => {
+  it('constructor string', () => {
     const createTable = new CreatedTable('IdCreatedUpdated')
 
     expect(createTable).toBeInstanceOf(CreatedTable)
@@ -18,7 +18,7 @@ describe('CreatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('constructor all items', () => {
+  it('constructor all items', () => {
     const createTable = new CreatedTable(
       'IdCreatedUpdated',
       new Date('2025-12-01T12:00:00.000Z')
@@ -29,7 +29,7 @@ describe('CreatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('constructor object', () => {
+  it('constructor object', () => {
     const acreatedTable: ICreatedTable = {
         created: new Date('2025-12-01T12:00:00.000Z'),
         createdby: 'IdCreatedUpdated',
@@ -41,7 +41,7 @@ describe('CreatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('copyFromDatabase', () => {
+  it('copyFromDatabase', () => {
     const icreatedTable: ICreatedTable = {
       created: new Date('2025-12-01T12:00:00.000Z'),
       createdby: 'IdCreatedUpdated',
@@ -70,7 +70,7 @@ describe('CreatedTable', () => {
 })
 
 describe('CreatedUpdatedTable', () => {
-  test('constructor string', () => {
+  it('constructor string', () => {
     const createTable = new CreatedUpdatedTable('IdCreatedUpdated')
 
     expect(createTable).toBeInstanceOf(CreatedUpdatedTable)
@@ -78,7 +78,7 @@ describe('CreatedUpdatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('constructor all items', () => {
+  it('constructor all items', () => {
     const createTable = new CreatedUpdatedTable(
       'IdCreatedUpdated',
       new Date('2025-12-01T12:00:00.000Z')
@@ -89,7 +89,7 @@ describe('CreatedUpdatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('constructor object', () => {
+  it('constructor object', () => {
     const acreatedTable: ICreatedUpdatedTable = {
         created: new Date('2025-12-01T12:00:00.000Z'),
         createdby: 'IdCreatedUpdated',
@@ -105,7 +105,7 @@ describe('CreatedUpdatedTable', () => {
     expect(createTable.updated).toBeInstanceOf(Date)
   })
 
-  test('copyFromDatabase', () => {
+  it('copyFromDatabase', () => {
     const icreatedTable: ICreatedUpdatedTable = {
       created: new Date('2025-12-01T12:00:00.000Z'),
       createdby: 'IdCreatedUpdated',
@@ -139,7 +139,7 @@ describe('CreatedUpdatedTable', () => {
 })
 
 describe('UserCreatedUpdatedTable', () => {
-  test('constructor string', () => {
+  it('constructor string', () => {
     const createTable = new UserCreatedUpdatedTable('IdCreatedUpdated')
 
     expect(createTable).toBeInstanceOf(UserCreatedUpdatedTable)
@@ -147,7 +147,7 @@ describe('UserCreatedUpdatedTable', () => {
     expect(createTable.created).toBeInstanceOf(Date)
   })
 
-  test('constructor all items', () => {
+  it('constructor all items', () => {
     const createTable = new UserCreatedUpdatedTable(
       'userId-123',
       'IdCreatedUpdated',
@@ -160,7 +160,7 @@ describe('UserCreatedUpdatedTable', () => {
     expect(createTable.userid).toBe('userId-123')
   })
 
-  test('constructor object', () => {
+  it('constructor object', () => {
     const acreatedTable: IUserCreatedUpdatedTable = {
         created: new Date('2025-12-01T12:00:00.000Z'),
         createdby: 'IdCreatedUpdated',
@@ -178,7 +178,7 @@ describe('UserCreatedUpdatedTable', () => {
     expect(createTable.userid).toBe('userId-123')
   })
 
-  test('copyFromDatabase', () => {
+  it('copyFromDatabase', () => {
     const icreatedTable: IUserCreatedUpdatedTable = {
       created: new Date('2025-12-01T12:00:00.000Z'),
       createdby: 'IdCreatedUpdated',
@@ -214,7 +214,7 @@ describe('UserCreatedUpdatedTable', () => {
   })
 
   describe('fixupForUpsert', () => {
-    test('not an update', () => {
+    it('not an update', () => {
       const icreatedTable: IUserCreatedUpdatedTable = {
           created: new Date('2025-12-01T12:00:00.000Z'),
           createdby: '',
@@ -230,7 +230,7 @@ describe('UserCreatedUpdatedTable', () => {
       expect(icreatedTable.updated).toBeInstanceOf(Date)
     })
 
-    test('empty object', () => {
+    it('empty object', () => {
       // Const icreatedTable: IUserCreatedUpdatedTable = {
       //   Userid: 'userId-123',
       //   Updatedby: '',
@@ -250,7 +250,7 @@ describe('UserCreatedUpdatedTable', () => {
       expect(obj.updated).toBeInstanceOf(Date)
     })
 
-    test('fixupForUpsert with dateToSetTo', () => {
+    it('fixupForUpsert with dateToSetTo', () => {
       const icreatedTable: IUserCreatedUpdatedTable = {
           created: new Date('2025-12-01T12:00:00.000Z'),
           createdby: '',
@@ -270,7 +270,7 @@ describe('UserCreatedUpdatedTable', () => {
       expect(icreatedTable.updated).toBeInstanceOf(Date)
     })
 
-    test('fixupForUpsert empty items', () => {
+    it('fixupForUpsert empty items', () => {
       const obj: AnyObject = {},
         ret = UserCreatedUpdatedTable.fixupForUpsert(obj, 'tester')
       expect(ret).toBe(false)
@@ -279,7 +279,7 @@ describe('UserCreatedUpdatedTable', () => {
       expect(obj.updatedby).toBe('tester')
       expect(obj.updated).toBeInstanceOf(Date)
     })
-    test('fixupForUpsert exception', () => {
+    it('fixupForUpsert exception', () => {
       const createTable = null
       expect(() =>
         UserCreatedUpdatedTable.fixupForUpsert(

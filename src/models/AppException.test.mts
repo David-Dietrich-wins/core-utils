@@ -11,13 +11,13 @@ import {
   IsErrorMessage,
 } from './AppException.mjs'
 
-test('AppException good', () => {
+it('AppException good', () => {
   const ie = new AppException('Test', 'test')
   expect(ie.message).toBe('Test')
   expect(ie.functionNameSource).toBe('test')
 })
 
-test('AppException no function name source', () => {
+it('AppException no function name source', () => {
   const ie = new AppException('Test')
   expect(ie.message).toBe('Test')
   expect(ie.functionNameSource).toBe('AppException')
@@ -27,7 +27,7 @@ test('AppException no function name source', () => {
   )
 })
 
-test('AppExceptionSecurity good', () => {
+it('AppExceptionSecurity good', () => {
   const ie = new AppExceptionSecurity('Test', 'test')
   expect(ie.message).toBe('Test')
   expect(ie.functionNameSource).toBe('test')
@@ -37,14 +37,14 @@ test('AppExceptionSecurity good', () => {
   )
 })
 
-test('AppExceptionHttp good', () => {
+it('AppExceptionHttp good', () => {
   const hex = new AppExceptionHttp('Test', 'AppExceptionHttp good')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttp good')
   expect(hex.httpStatusCode).toBe(500)
 })
 
-test('AppExceptionHttp default', () => {
+it('AppExceptionHttp default', () => {
   const hex = new AppExceptionHttp('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttp')
@@ -55,7 +55,7 @@ test('AppExceptionHttp default', () => {
   )
 })
 
-test('HttpUnauthorized default', () => {
+it('HttpUnauthorized default', () => {
   const hex = new AppExceptionHttpUnauthorized('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttpUnauthorized')
@@ -68,7 +68,7 @@ test('HttpUnauthorized default', () => {
     'AppExceptionHttpUnauthorized'
   )
 })
-test('HttpUnauthorized', () => {
+it('HttpUnauthorized', () => {
   const hex = new AppExceptionHttpUnauthorized('Test', 'myFunction', 'abc')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('myFunction')
@@ -83,7 +83,7 @@ test('HttpUnauthorized', () => {
   )
 })
 
-test('AppExceptionHttpForbidden default', () => {
+it('AppExceptionHttpForbidden default', () => {
   const hex = new AppExceptionHttpForbidden('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttpForbidden')
@@ -96,7 +96,7 @@ test('AppExceptionHttpForbidden default', () => {
     'AppExceptionHttpForbidden'
   )
 })
-test('AppExceptionHttpForbidden', () => {
+it('AppExceptionHttpForbidden', () => {
   const hex = new AppExceptionHttpForbidden('Test', 'myFunction', 'abc')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('myFunction')
@@ -111,7 +111,7 @@ test('AppExceptionHttpForbidden', () => {
   )
 })
 
-test('AppExceptionHttpNotAcceptable default', () => {
+it('AppExceptionHttpNotAcceptable default', () => {
   const hex = new AppExceptionHttpNotAcceptable('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttpNotAcceptable')
@@ -125,7 +125,7 @@ test('AppExceptionHttpNotAcceptable default', () => {
   )
 })
 
-test('AppExceptionHttpNotAllowed default', () => {
+it('AppExceptionHttpNotAllowed default', () => {
   const hex = new AppExceptionHttpNotAllowed('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttpNotAllowed')
@@ -139,7 +139,7 @@ test('AppExceptionHttpNotAllowed default', () => {
   )
 })
 
-test('AppExceptionHttpNotFound default', () => {
+it('AppExceptionHttpNotFound default', () => {
   const hex = new AppExceptionHttpNotFound('Test', '')
   expect(hex.message).toBe('Test')
   expect(hex.functionNameSource).toBe('AppExceptionHttpNotFound')
@@ -153,7 +153,7 @@ test('AppExceptionHttpNotFound default', () => {
   )
 })
 
-test('IsErrorMessage', () => {
+it('IsErrorMessage', () => {
   expect(IsErrorMessage('Test')).toBe(false)
   expect(IsErrorMessage(new Error('Test'))).toBe(true)
   expect(IsErrorMessage(new AppException('Test'))).toBe(true)
@@ -162,7 +162,7 @@ test('IsErrorMessage', () => {
   expect(IsErrorMessage(undefined)).toBe(false)
 })
 
-test('GetErrorMessage', () => {
+it('GetErrorMessage', () => {
   expect(GetErrorMessage('Test')).toBe('Test')
   expect(GetErrorMessage(new Error('Test'))).toBe('Test')
   expect(GetErrorMessage(new AppException('Test'))).toBe('Test')
@@ -172,7 +172,7 @@ test('GetErrorMessage', () => {
 })
 
 describe(GetErrorMessage.name, () => {
-  test('Objects', () => {
+  it('Objects', () => {
     const e = new Error()
 
     e.message = undefined as unknown as string
@@ -188,17 +188,17 @@ describe(GetErrorMessage.name, () => {
     )
   })
 
-  test('Strings', () => {
+  it('Strings', () => {
     expect(GetErrorMessage('')).toBe('Unknown error')
     expect(GetErrorMessage('test string error')).toBe('test string error')
   })
 
-  test('boolean', () => {
+  it('boolean', () => {
     expect(GetErrorMessage(true)).toBe('true')
     expect(GetErrorMessage(false)).toBe('false')
   })
 
-  test('unknown', () => {
+  it('unknown', () => {
     expect(GetErrorMessage(undefined)).toBe('Unknown error')
     expect(GetErrorMessage(null)).toBe('Unknown error')
     expect(GetErrorMessage(new Date())).toBe('Unknown error')
@@ -206,7 +206,7 @@ describe(GetErrorMessage.name, () => {
     expect(GetErrorMessage(BigInt(5))).toBe('Unknown error')
   })
 
-  test('number', () => {
+  it('number', () => {
     expect(GetErrorMessage(0)).toBe('0')
     expect(GetErrorMessage(-1000.246)).toBe('-1000.246')
     expect(GetErrorMessage(42)).toBe('42')

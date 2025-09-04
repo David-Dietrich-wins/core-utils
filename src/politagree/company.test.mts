@@ -3,7 +3,7 @@ import { Company } from './company.mjs'
 import { GenerateRandomString } from '../primitives/string-helper.mjs'
 import { getCurrentDate } from '../jest.setup.mjs'
 
-test('constructor', () => {
+it('constructor', () => {
   const company = new Company()
   expect(company).toEqual({
     address1: '',
@@ -27,7 +27,7 @@ test('constructor', () => {
   })
 })
 
-test('constructor with ICompany', () => {
+it('constructor with ICompany', () => {
   const aic = {
       address1: 'address1',
       address2: 'address2',
@@ -71,7 +71,7 @@ test('constructor with ICompany', () => {
   })
 })
 
-test('CreateICompany', () => {
+it('CreateICompany', () => {
   const company = Company.createICompany()
 
   expect(company).toEqual({
@@ -97,7 +97,7 @@ test('CreateICompany', () => {
 })
 
 describe('zSchema', () => {
-  test('zSchema', () => {
+  it('zSchema', () => {
     const schema = Company.zCompany
 
     expect(schema).toBeDefined()
@@ -135,7 +135,7 @@ describe('zSchema', () => {
     expect.assertions(7)
   })
 
-  test('valid parse', () => {
+  it('valid parse', () => {
     const aschema = Company.zCompany,
       company = Company.createICompany({
         name: 'name',
@@ -144,7 +144,7 @@ describe('zSchema', () => {
     expect(() => aschema.parse(company)).not.toThrow()
   })
 
-  test('no name', () => {
+  it('no name', () => {
     const aschema = Company.zCompany,
       company = Company.createICompany()
 
@@ -153,14 +153,14 @@ describe('zSchema', () => {
 })
 
 describe('CompanyNamezSchema', () => {
-  test('CompanyNamezSchema', () => {
+  it('CompanyNamezSchema', () => {
     const schema = Company.companyNamezSchema
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(z.ZodObject)
   })
 
-  test('valid parse', () => {
+  it('valid parse', () => {
     const aschema = Company.companyNamezSchema,
       company = Company.createICompany({
         name: 'name',
@@ -169,14 +169,14 @@ describe('CompanyNamezSchema', () => {
     expect(() => aschema.parse(company)).not.toThrow()
   })
 
-  test('no name', () => {
+  it('no name', () => {
     const aschema = Company.companyNamezSchema,
       company = Company.createICompany()
 
     expect(() => aschema.parse(company)).toThrow()
   })
 
-  test('invalid name', () => {
+  it('invalid name', () => {
     expect(() =>
       Company.companyNamezSchema.parse({
         name: GenerateRandomString(126),

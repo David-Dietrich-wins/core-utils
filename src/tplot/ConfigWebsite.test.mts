@@ -1,79 +1,96 @@
+import { describe, expect, it } from '@jest/globals'
 import { ConfigWebsite } from './ConfigWebsite.mjs'
 
-test(ConfigWebsite.name, () => {
-  const cfg = ConfigWebsite.defaults()
+describe('config website', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.hideHelp).toBeDefined()
-  expect(cfg.hideHelp.value).toBe(false)
-  expect(cfg.hideTooltips.value).toBe(false)
-  expect(cfg.openFirstPlot.value).toBe(true)
+    const cfg = ConfigWebsite.defaults()
 
-  expect(cfg).toStrictEqual({
-    hideHelp: {
+    expect(cfg).toBeDefined()
+    expect(cfg.hideHelp).toBeDefined()
+    expect(cfg.hideHelp.value).toBe(false)
+    expect(cfg.hideTooltips.value).toBe(false)
+    expect(cfg.openFirstPlot.value).toBe(true)
+
+    expect(cfg).toStrictEqual({
+      hideHelp: {
+        id: expect.any(String),
+        updated: expect.any(Number),
+        value: false,
+      },
+      hideTooltips: {
+        id: expect.any(String),
+        updated: expect.any(Number),
+        value: false,
+      },
       id: expect.any(String),
+      openFirstPlot: {
+        id: expect.any(String),
+        updated: expect.any(Number),
+        value: true,
+      },
       updated: expect.any(Number),
-      value: false,
-    },
-    hideTooltips: {
-      id: expect.any(String),
-      updated: expect.any(Number),
-      value: false,
-    },
-    id: expect.any(String),
-    openFirstPlot: {
-      id: expect.any(String),
-      updated: expect.any(Number),
-      value: true,
-    },
-    updated: expect.any(Number),
+    })
+
+    const updated = ConfigWebsite.hideTooltips(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.hideHelp.value).toBe(false)
+    expect(updated.updated).toBeDefined()
   })
-
-  const updated = ConfigWebsite.hideTooltips(cfg)
-
-  expect(updated).toBeDefined()
-  expect(updated.hideHelp.value).toBe(false)
-  expect(updated.updated).toBeDefined()
 })
 
-test(ConfigWebsite.hideHelp.name, () => {
-  const cfg = ConfigWebsite.defaults()
+describe('hide help', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.hideHelp).toBeDefined()
-  expect(cfg.hideHelp.value).toBe(false)
+    const cfg = ConfigWebsite.defaults()
 
-  const updated = ConfigWebsite.hideHelp(cfg)
+    expect(cfg).toBeDefined()
+    expect(cfg.hideHelp).toBeDefined()
+    expect(cfg.hideHelp.value).toBe(false)
 
-  expect(updated).toBeDefined()
-  expect(updated.hideHelp.value).toBe(true)
-  expect(updated.updated).toBeDefined()
+    const updated = ConfigWebsite.hideHelp(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.hideHelp.value).toBe(true)
+    expect(updated.updated).toBeDefined()
+  })
 })
 
-test(ConfigWebsite.hideTooltips.name, () => {
-  const cfg = ConfigWebsite.defaults()
+describe('hide tooltips', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.hideTooltips).toBeDefined()
-  expect(cfg.hideTooltips.value).toBe(false)
+    const cfg = ConfigWebsite.defaults()
 
-  const updated = ConfigWebsite.hideTooltips(cfg)
+    expect(cfg).toBeDefined()
+    expect(cfg.hideTooltips).toBeDefined()
+    expect(cfg.hideTooltips.value).toBe(false)
 
-  expect(updated).toBeDefined()
-  expect(updated.hideTooltips.value).toBe(true)
-  expect(updated.updated).toBeDefined()
+    const updated = ConfigWebsite.hideTooltips(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.hideTooltips.value).toBe(true)
+    expect(updated.updated).toBeDefined()
+  })
 })
 
-test(ConfigWebsite.openFirstPlot.name, () => {
-  const cfg = ConfigWebsite.defaults()
+describe('open first plot', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.openFirstPlot).toBeDefined()
-  expect(cfg.openFirstPlot.value).toBe(true)
+    const cfg = ConfigWebsite.defaults()
 
-  const updated = ConfigWebsite.openFirstPlot(cfg)
+    expect(cfg).toBeDefined()
+    expect(cfg.openFirstPlot).toBeDefined()
+    expect(cfg.openFirstPlot.value).toBe(true)
 
-  expect(updated).toBeDefined()
-  expect(updated.openFirstPlot.value).toBe(false)
-  expect(updated.updated).toBeDefined()
+    const updated = ConfigWebsite.openFirstPlot(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.openFirstPlot.value).toBe(false)
+    expect(updated.updated).toBeDefined()
+  })
 })

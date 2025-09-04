@@ -1,6 +1,6 @@
 import { AppObject } from './AppObject.mjs'
 
-test('constructor', () => {
+it('constructor', () => {
   const io = new AppObject()
 
   expect(io.className).toBe('AppObject')

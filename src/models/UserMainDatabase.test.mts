@@ -1,6 +1,6 @@
 import { UserMainDatabase } from './UserMainDatabase.mjs'
 
-test('UserMainDatabase', () => {
+it('UserMainDatabase', () => {
   const user = new UserMainDatabase()
 
   expect(user).toBeInstanceOf(UserMainDatabase)

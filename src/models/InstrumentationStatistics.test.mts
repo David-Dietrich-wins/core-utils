@@ -5,7 +5,7 @@ import { numberToString } from '../primitives/number-helper.mjs'
 
 const CONST_DefaultSecondsMs = /^(?<temp1>\d+ seconds?|\d+m?s)$/u
 
-test('String message', () => {
+it('String message', () => {
   const msg = 'string',
     mstats = new InstrumentationStatistics()
   mstats.addProcessed(msg)
@@ -17,7 +17,7 @@ Messages:
   expect(mstats.messageString()).toContain('string')
 })
 
-test('String array message', () => {
+it('String array message', () => {
   const msg = ['string', 'array'],
     mstats = new InstrumentationStatistics()
   mstats.addProcessed(msg)
@@ -31,7 +31,7 @@ Messages:
   expect(mstats.messageString()).toContain('array')
 })
 
-test('Object message', () => {
+it('Object message', () => {
   const msg = { id: 'string', ts: 2234443 },
     mstats = new InstrumentationStatistics()
   mstats.addProcessed(msg)
@@ -44,7 +44,7 @@ Messages:
   expect(mstats.messageString()).toContain('"ts":2234443')
 })
 
-test('messageSuccessFail good', () => {
+it('messageSuccessFail good', () => {
   const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4),
     stats2 = new InstrumentationStatistics('Activity', 'Activities', 12, 10, 2),
     stats3 = new InstrumentationStatistics(
@@ -61,7 +61,7 @@ test('messageSuccessFail good', () => {
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
 
-test('messageSuccessFail good without prefix', () => {
+it('messageSuccessFail good without prefix', () => {
   const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4),
     stats2 = new InstrumentationStatistics('Activity', 'Activities', 12, 10, 2),
     stats3 = new InstrumentationStatistics(
@@ -81,7 +81,7 @@ test('messageSuccessFail good without prefix', () => {
   expect(truncatedMsg).toEqual(stringResultShouldStartWith)
 })
 
-test('setSuffix good', () => {
+it('setSuffix good', () => {
   const arrMessages = ['string', 'array'],
     istats = new InstrumentationStatistics()
   istats.addProcessed(arrMessages)
@@ -108,7 +108,7 @@ Messages:
 })
 
 describe('messageString', () => {
-  test('one line good', () => {
+  it('one line good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addProcessed(arrMessages)
@@ -118,7 +118,7 @@ describe('messageString', () => {
     expect(msg).toContain('Processed 1')
   })
 
-  test('failure good', () => {
+  it('failure good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addFailure(arrMessages)
@@ -133,7 +133,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Failures: 1')
   })
 
-  test('success good', () => {
+  it('success good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSuccess(arrMessages)
@@ -148,7 +148,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Successes: 1')
   })
 
-  test('skipped good', () => {
+  it('skipped good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -163,7 +163,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Skipped: 1')
   })
 
-  test('delete good', () => {
+  it('delete good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.deleted(arrMessages)
@@ -178,7 +178,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Deleted: 1')
   })
 
-  test('upsert good', () => {
+  it('upsert good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.upserted(arrMessages)
@@ -193,7 +193,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Upserted: 1')
   })
 
-  test('update good', () => {
+  it('update good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.updated(arrMessages)
@@ -208,7 +208,7 @@ describe('messageString', () => {
     expect(msgOneLine).toContain('Updated: 1')
   })
 
-  test('add good', () => {
+  it('add good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.added(arrMessages)
@@ -225,7 +225,7 @@ describe('messageString', () => {
 })
 
 describe('messageTotalProcessedWithSuccessFail', () => {
-  test('with skipped good', () => {
+  it('with skipped good', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -235,7 +235,7 @@ describe('messageTotalProcessedWithSuccessFail', () => {
     expect(msg).toContain('Skipped: 1')
   })
 
-  test('with false SuccessFailIf0', () => {
+  it('with false SuccessFailIf0', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -244,7 +244,7 @@ describe('messageTotalProcessedWithSuccessFail', () => {
     expect(msg).toBe('1 ')
   })
 
-  test('with true SuccessFailIf0', () => {
+  it('with true SuccessFailIf0', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     let msg = istats.messageTotalProcessedWithSuccessFail(false)
@@ -281,7 +281,7 @@ describe('messageTotalProcessedWithSuccessFail', () => {
 })
 
 describe('lineSeparator', () => {
-  test('default', () => {
+  it('default', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -290,7 +290,7 @@ describe('lineSeparator', () => {
     expect(msg).toBe('\n')
   })
 
-  test('one line', () => {
+  it('one line', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -299,7 +299,7 @@ describe('lineSeparator', () => {
     expect(msg).toBe(', ')
   })
 
-  test('multiline', () => {
+  it('multiline', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -308,7 +308,7 @@ describe('lineSeparator', () => {
     expect(msg).toBe('\n')
   })
 
-  test('oneLine and multilineSeparator', () => {
+  it('oneLine and multilineSeparator', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -317,7 +317,7 @@ describe('lineSeparator', () => {
     expect(msg).toBe(', ')
   })
 
-  test('multilineSeparator', () => {
+  it('multilineSeparator', () => {
     const arrMessages = ['string', 'array'],
       istats = new InstrumentationStatistics()
     istats.addSkipped(arrMessages)
@@ -327,7 +327,7 @@ describe('lineSeparator', () => {
   })
 })
 
-test('processingTimeInSeconds good', () => {
+it('processingTimeInSeconds good', () => {
   const arrMessages = ['string', 'array'],
     istats = new InstrumentationStatistics()
   istats.addSkipped(arrMessages)
@@ -336,7 +336,7 @@ test('processingTimeInSeconds good', () => {
   expect(msg).toBe(0)
 })
 
-test('finish time good', () => {
+it('finish time good', () => {
   const arrMessages = ['string', 'array'],
     istats = new InstrumentationStatistics()
   istats.addSkipped(arrMessages)
@@ -346,7 +346,7 @@ test('finish time good', () => {
   expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
-test('clear good', () => {
+it('clear good', () => {
   const arrMessages = ['string', 'array'],
     istats = new InstrumentationStatistics()
   istats.addSkipped(arrMessages)
@@ -376,7 +376,7 @@ test('clear good', () => {
   expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
-test('clear times also', () => {
+it('clear times also', () => {
   const arrMessages = ['string', 'array'],
     istats = new InstrumentationStatistics()
   istats.addSkipped(arrMessages)
@@ -406,7 +406,7 @@ test('clear times also', () => {
   expect(Date.now() - Number(finishTime)).toBeLessThan(1000)
 })
 
-test('addMessage bad', () => {
+it('addMessage bad', () => {
   const arrMessages = 1,
     istats = new InstrumentationStatistics()
 
@@ -426,7 +426,7 @@ test('addMessage bad', () => {
 })
 
 describe('addStats', () => {
-  test('empty', () => {
+  it('empty', () => {
     const istats = new InstrumentationStatistics('record', 'records', 24, 20, 4)
 
     istats.addStats()
@@ -437,7 +437,7 @@ describe('addStats', () => {
     expect(truncatedMsg).toEqual(stringResultShouldStartWith)
   })
 
-  test('good', () => {
+  it('good', () => {
     const istats = new InstrumentationStatistics(
         'record',
         'records',
@@ -470,7 +470,7 @@ describe('addStats', () => {
     expect(truncatedMsg).toEqual(stringResultShouldStartWith)
   })
 
-  test('concat msg false', () => {
+  it('concat msg false', () => {
     const istats = new InstrumentationStatistics(
         'record',
         'records',
@@ -505,7 +505,7 @@ describe('addStats', () => {
 })
 
 describe('processedTimesArray', () => {
-  test('good', () => {
+  it('good', () => {
     const stats = new InstrumentationStatistics(),
       [
         totalRecordsProcessed,

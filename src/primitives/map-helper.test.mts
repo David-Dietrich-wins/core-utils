@@ -5,7 +5,7 @@ import {
   dictionaryUpsertAll,
 } from './map-helper.mjs'
 
-test(dictionaryUpsert.name, () => {
+it(dictionaryUpsert.name, () => {
   const dict = new Map<string, number>()
   dictionaryUpsert(dict, 'key1', 1)
   expect(dict.get('key1')).toBe(1)
@@ -13,7 +13,7 @@ test(dictionaryUpsert.name, () => {
   expect(dict.get('key1')).toBe(2)
 })
 
-test(dictionaryUpsertAll.name, () => {
+it(dictionaryUpsertAll.name, () => {
   const dict = new Map<string, number>()
   dictionaryUpsertAll(dict, { key1: 1, key2: 2 })
   expect(dict.get('key1')).toBe(1)
@@ -23,14 +23,14 @@ test(dictionaryUpsertAll.name, () => {
   expect(dict.get('key2')).toBe(4)
 })
 
-test(dictionaryFromObject.name, () => {
+it(dictionaryFromObject.name, () => {
   const obj = { key1: 1, key2: 2 }
   const dict = dictionaryFromObject(obj)
   expect(dict.get('key1')).toBe(1)
   expect(dict.get('key2')).toBe(2)
 })
 
-test(dictionaryToObject.name, () => {
+it(dictionaryToObject.name, () => {
   const dict = new Map<string, number>()
   dict.set('key1', 1)
   dict.set('key2', 2)

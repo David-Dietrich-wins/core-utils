@@ -4,7 +4,7 @@ import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
-test('good', () => {
+it('good', () => {
   const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
     idm = new IdManager(ads, new InstrumentationStatistics())
 
@@ -26,7 +26,7 @@ test('good', () => {
 })
 
 describe(IdManager.name, () => {
-  test('default constructor', () => {
+  it('default constructor', () => {
     const idm = new IdManager()
 
     expect(idm.list).toMatchObject([])
@@ -37,7 +37,7 @@ describe(IdManager.name, () => {
     expect(idm.list).toMatchObject([{ id: '4' }])
   })
 
-  test('with list and stats', () => {
+  it('with list and stats', () => {
     const idm = new IdManager([{ id: '1' }], new InstrumentationStatistics())
 
     expect(idm.list).toMatchObject([{ id: '1' }])
@@ -66,7 +66,7 @@ describe(IdManager.name, () => {
     )
   })
 
-  test('exception', () => {
+  it('exception', () => {
     const testItem: IId = { idwhat: '1' } as IId
     expect(() => new IdManager([testItem])).toThrow(
       new AppException(CONST_ListMustBeAnArray, 'IdManager.constructor')
@@ -74,7 +74,7 @@ describe(IdManager.name, () => {
   })
 })
 
-test('IdManager.Create', () => {
+it('IdManager.Create', () => {
   const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
     idm = IdManager.CreateIdManager(ads, new InstrumentationStatistics())
 
@@ -82,7 +82,7 @@ test('IdManager.Create', () => {
   expect(idm.stats?.totalProcessed).toBe(0)
 })
 
-test('IdManager.FindWithObjectId', () => {
+it('IdManager.FindWithObjectId', () => {
   const ads: object[] = [
       {
         b: '11',
@@ -105,7 +105,7 @@ test('IdManager.FindWithObjectId', () => {
   })
 })
 
-test('zIId', () => {
+it('zIId', () => {
   const zId = IdManager.zIId(zStringMinMax(1, 50))
   // Const ret = zId.safeParse({ id: 'test' })
   expect(zId.safeParse({ id: 'test' }).success).toBe(true)

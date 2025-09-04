@@ -1,29 +1,38 @@
+import { describe, expect, it } from '@jest/globals'
 import { ConfigOperations } from './ConfigOperations.mjs'
 
-test(ConfigOperations.name, () => {
-  const cfg = ConfigOperations.defaults()
+describe('config operations', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.minusEightPlus10).toBeDefined()
-  expect(cfg.minusEightPlus10.value).toBe(true)
+    const cfg = ConfigOperations.defaults()
 
-  const updated = ConfigOperations.minusEightPlus10(cfg)
+    expect(cfg).toBeDefined()
+    expect(cfg.minusEightPlus10).toBeDefined()
+    expect(cfg.minusEightPlus10.value).toBe(true)
 
-  expect(updated).toBeDefined()
-  expect(updated.minusEightPlus10.value).toBe(false)
-  expect(updated.updated).toBeDefined()
+    const updated = ConfigOperations.minusEightPlus10(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.minusEightPlus10.value).toBe(false)
+    expect(updated.updated).toBeDefined()
+  })
 })
 
-test(ConfigOperations.minusEightPlus10.name, () => {
-  const cfg = ConfigOperations.defaults()
+describe('minus eight plus 10', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(cfg).toBeDefined()
-  expect(cfg.minusEightPlus10).toBeDefined()
-  expect(cfg.minusEightPlus10.value).toBe(true)
+    const cfg = ConfigOperations.defaults()
 
-  const updated = ConfigOperations.minusEightPlus10(cfg)
+    expect(cfg).toBeDefined()
+    expect(cfg.minusEightPlus10).toBeDefined()
+    expect(cfg.minusEightPlus10.value).toBe(true)
 
-  expect(updated).toBeDefined()
-  expect(updated.minusEightPlus10.value).toBe(false)
-  expect(updated.updated).toBeDefined()
+    const updated = ConfigOperations.minusEightPlus10(cfg)
+
+    expect(updated).toBeDefined()
+    expect(updated.minusEightPlus10.value).toBe(false)
+    expect(updated.updated).toBeDefined()
+  })
 })

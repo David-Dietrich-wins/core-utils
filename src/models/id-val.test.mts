@@ -1,6 +1,6 @@
 import { type IIdVal, IdVal } from './id-val.mjs'
 
-test('IdVal good', () => {
+it('IdVal good', () => {
   const id = 'id',
     ival = 'val',
     pr = new IdVal(id, ival)
@@ -9,7 +9,7 @@ test('IdVal good', () => {
   expect(pr.val).toBe(ival)
 })
 
-test('IIdVal interface', () => {
+it('IIdVal interface', () => {
   const pr: IIdVal = {
     id: 'id',
     val: 'val',
@@ -19,7 +19,7 @@ test('IIdVal interface', () => {
   expect(pr.val).toBe('val')
 })
 
-test('CreateIdVal', () => {
+it('CreateIdVal', () => {
   const id = 'id',
     kval = 'val',
     pr = IdVal.toIIdVal(id, kval)
@@ -28,7 +28,7 @@ test('CreateIdVal', () => {
   expect(pr.val).toBe(kval)
 })
 
-test('fromNameAndVal', () => {
+it('fromNameAndVal', () => {
   const id = 'id',
     ival = 'val',
     pr = IdVal.fromNameAndVal(id, ival)
@@ -37,7 +37,7 @@ test('fromNameAndVal', () => {
   expect(pr.val).toBe(ival)
 })
 
-test('fromNameVal', () => {
+it('fromNameVal', () => {
   const nameVal = { name: 'name', val: 'val' },
     pr = IdVal.fromNameVal(nameVal)
 
@@ -45,7 +45,7 @@ test('fromNameVal', () => {
   expect(pr.val).toBe(nameVal.val)
 })
 
-test('fromNameVal with empty name', () => {
+it('fromNameVal with empty name', () => {
   const nameVal = { name: '', val: 'val' },
     pr = IdVal.fromNameVal(nameVal)
 

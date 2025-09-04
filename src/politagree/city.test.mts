@@ -1,6 +1,6 @@
 import { City, type ICity } from './city.mjs'
 
-test('constructor', () => {
+it('constructor', () => {
   const city = new City()
   expect(city).toEqual({
     city: '',
@@ -13,7 +13,7 @@ test('constructor', () => {
   })
 })
 
-test('constructor with ICity', () => {
+it('constructor with ICity', () => {
   const aic: ICity = {
       city: 'city',
       city_img: 'city_img',
@@ -35,7 +35,7 @@ test('constructor with ICity', () => {
   })
 })
 
-test('CreateICity', () => {
+it('CreateICity', () => {
   const aic: ICity = {
       city: 'city',
       city_img: 'city_img',

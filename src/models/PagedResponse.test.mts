@@ -2,7 +2,7 @@ import { ApiResponse } from './ApiResponse.mjs'
 import { PagedResponse } from './PagedResponse.mjs'
 import z from 'zod'
 
-test('PagedResponse good', () => {
+it('PagedResponse good', () => {
   expect(new PagedResponse().dataPage).toEqual([])
 
   let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
@@ -19,7 +19,7 @@ test('PagedResponse good', () => {
   expect(pr.dataPage[0].data).toBe('hello')
 })
 
-test('auto total count', () => {
+it('auto total count', () => {
   const pr = new PagedResponse<{ data: string }>([
     { data: 'hello' },
     { data: 'world' },
@@ -30,7 +30,7 @@ test('auto total count', () => {
   expect(pr.totalCount).toBe(2)
 })
 
-test('API response', () => {
+it('API response', () => {
   let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
   const apiResponse = new ApiResponse(pr, 'result', 'message', 20)
@@ -43,7 +43,7 @@ test('API response', () => {
   expect(mydata[0].data).toBe('hello')
 })
 
-test('zPagedResponse', () => {
+it('zPagedResponse', () => {
   const aPagedResponse = PagedResponse.zPagedResponse(
       z.object({ data: z.string() })
     ),
@@ -59,7 +59,7 @@ test('zPagedResponse', () => {
   expect(zresult.data?.dataPage[0].data).toBe('hello')
 })
 
-test('createFromPromise', async () => {
+it('createFromPromise', async () => {
   const mockAPromise = Promise.resolve([{ data: 'hello' }, { data: 'world' }]),
     mockCountPromise = Promise.resolve(2)
   let pagedResponse = await PagedResponse.createFromPromise(
@@ -96,7 +96,7 @@ test('createFromPromise', async () => {
   ])
 })
 
-test('toIPagedResponse', () => {
+it('toIPagedResponse', () => {
   const apr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1),
     ipr = apr.toIPagedResponse()
 
@@ -105,7 +105,7 @@ test('toIPagedResponse', () => {
   expect(ipr.rowCount).toBe(1)
 })
 
-test('ToIPagedResponse', () => {
+it('ToIPagedResponse', () => {
   const pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
   expect(PagedResponse.ToIPagedResponse(pr).dataPage[0].data).toBe('hello')

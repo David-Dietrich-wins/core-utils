@@ -9,7 +9,7 @@ import {
 } from './NameValueManager.mjs'
 import { dollarFormatter } from '../primitives/number-helper.mjs'
 
-test('NameValue good', () => {
+it('NameValue good', () => {
   const name = 'name',
     value = 'value',
     zpr = new NameValue(name, value)
@@ -18,7 +18,7 @@ test('NameValue good', () => {
   expect(zpr.value).toBe(value)
 })
 
-test('NameValueType good', () => {
+it('NameValueType good', () => {
   const name = 'name',
     type = 'type',
     value = 'value',
@@ -30,7 +30,7 @@ test('NameValueType good', () => {
 })
 
 describe('NameValueManager', () => {
-  test('constructor', () => {
+  it('constructor', () => {
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -41,13 +41,13 @@ describe('NameValueManager', () => {
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
-  test('constructor defaults', () => {
+  it('constructor defaults', () => {
     const manager = new NameValueManager()
 
     expect(manager.list.length).toBe(0)
   })
 
-  test('CreateNameValueManager', () => {
+  it('CreateNameValueManager', () => {
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -58,18 +58,18 @@ describe('NameValueManager', () => {
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
-  test('CreateNameValueManager with null', () => {
+  it('CreateNameValueManager with null', () => {
     const manager = NameValueManager.CreateNameValueManager(null)
 
     expect(manager.list.length).toBe(0)
   })
-  test('CreateNameValueManager with undefined', () => {
+  it('CreateNameValueManager with undefined', () => {
     const manager = NameValueManager.CreateNameValueManager(undefined)
 
     expect(manager.list.length).toBe(0)
   })
 
-  test('CreateINameValue', () => {
+  it('CreateINameValue', () => {
     const name = 'name',
       value = 'value',
       zitem = NameValueManager.CreateINameValue(name, value)
@@ -79,7 +79,7 @@ describe('NameValueManager', () => {
   })
 })
 
-test('NameValueWithStyle', () => {
+it('NameValueWithStyle', () => {
   const name = 'name',
     tooltip = 'tooltip',
     value = 'value',
@@ -91,7 +91,7 @@ test('NameValueWithStyle', () => {
   expect(zpr.tooltip).toBe(tooltip)
 })
 
-test('NameValueLineFormatter', () => {
+it('NameValueLineFormatter', () => {
   const formatNumberOrString = (
       value: number | string | null | undefined
     ): string => {
@@ -149,7 +149,7 @@ test('NameValueLineFormatter', () => {
 })
 
 describe('NameValueLineFormatManager', () => {
-  test('with constructor arguments', () => {
+  it('with constructor arguments', () => {
     const formatNumberOrString = (
         value: number | string | null | undefined
       ): string => {
@@ -283,7 +283,7 @@ describe('NameValueLineFormatManager', () => {
     expect(ret2.length).toBe(0)
   })
 
-  test('without constructor arguments', () => {
+  it('without constructor arguments', () => {
     const mgr = new NameValueLineFormatManager()
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist.length).toBe(0)
@@ -294,7 +294,7 @@ describe('NameValueLineFormatManager', () => {
     expect(arrnvf.length).toBe(0)
   })
 
-  test('no style found', () => {
+  it('no style found', () => {
     const key = 'key',
       keyDisplayValue = 'keyDisplayValue',
       pr = new NameValueLineFormatter(key, keyDisplayValue),

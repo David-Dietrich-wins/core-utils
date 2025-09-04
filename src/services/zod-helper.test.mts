@@ -8,7 +8,7 @@ import {
 import { ZodTestHelper } from '../jest.setup.mjs'
 
 describe('zStringMinMax', () => {
-  test('default max', () => {
+  it('default max', () => {
     const schema = zStringMinMax(3),
       str1000 = 'a'.repeat(1000),
       str1001 = 'a'.repeat(1001)
@@ -43,7 +43,7 @@ describe('zStringMinMax', () => {
     })
   })
 
-  test('default min', () => {
+  it('default min', () => {
     const schema = zStringMinMax()
     expect(schema.safeParse('  hello  ')).toEqual({
       data: '  hello  ',
@@ -55,7 +55,7 @@ describe('zStringMinMax', () => {
     })
   })
 
-  test('trim lowercase', () => {
+  it('trim lowercase', () => {
     const schema = zStringMinMax(3, 10, {
       lowercase: true,
       trim: true,
@@ -92,7 +92,7 @@ describe('zStringMinMax', () => {
     })
   })
 
-  test('trim uppercase', () => {
+  it('trim uppercase', () => {
     const schema = zStringMinMax(3, 10, { trim: true, uppercase: true })
     expect(schema.safeParse('  hello  ')).toEqual({
       data: 'HELLO',
@@ -122,7 +122,7 @@ describe('zStringMinMax', () => {
 })
 
 describe('zFromStringOrStringArray', () => {
-  test('commas', () => {
+  it('commas', () => {
     const schema = zFromStringOrStringArray(3, 100)
     expect(schema.safeParse('  hello, world  ')).toEqual({
       data: ['hello', 'world'],
@@ -142,7 +142,7 @@ describe('zFromStringOrStringArray', () => {
     })
   })
 
-  test('default max', () => {
+  it('default max', () => {
     const schema = zFromStringOrStringArray(3),
       str1000 = 'a'.repeat(1000),
       str1001 = 'a'.repeat(1001)
@@ -182,7 +182,7 @@ describe('zFromStringOrStringArray', () => {
     })
   })
 
-  test('default min', () => {
+  it('default min', () => {
     const schema = zFromStringOrStringArray()
     expect(schema.safeParse('  hello  ')).toEqual({
       data: 'hello',
@@ -198,7 +198,7 @@ describe('zFromStringOrStringArray', () => {
     })
   })
 
-  test('lowercase', () => {
+  it('lowercase', () => {
     const schema = zFromStringOrStringArray(3, 10, {
       lowercase: true,
       trim: true,
@@ -266,7 +266,7 @@ describe('zFromStringOrStringArray', () => {
     })
   })
 
-  test('uppercase', () => {
+  it('uppercase', () => {
     const schema = zFromStringOrStringArray(3, 10, {
       trim: true,
       uppercase: true,
@@ -323,7 +323,7 @@ describe('zFromStringOrStringArray', () => {
 })
 
 describe('zToStringArray', () => {
-  test('commas', () => {
+  it('commas', () => {
     const schema = zToStringArray(3, 100)
     expect(schema.safeParse('  hello, world  ')).toEqual({
       data: ['hello', 'world'],
@@ -343,7 +343,7 @@ describe('zToStringArray', () => {
     })
   })
 
-  test('default max', () => {
+  it('default max', () => {
     const schema = zToStringArray(3),
       str1000 = 'a'.repeat(1000),
       str1001 = 'a'.repeat(1001)
@@ -382,7 +382,7 @@ describe('zToStringArray', () => {
     })
   })
 
-  test('default min', () => {
+  it('default min', () => {
     const schema = zToStringArray()
     expect(schema.safeParse('  hello  ')).toEqual({
       data: ['hello'],
@@ -398,7 +398,7 @@ describe('zToStringArray', () => {
     })
   })
 
-  test('lowercase', () => {
+  it('lowercase', () => {
     const schema = zToStringArray(3, 10, {
       lowercase: true,
       trim: true,
@@ -454,7 +454,7 @@ describe('zToStringArray', () => {
     ])
   })
 
-  test('uppercase', () => {
+  it('uppercase', () => {
     const schema = zToStringArray(3, 10, { trim: true, uppercase: true })
     expect(schema.safeParse('  hello  ')).toEqual({
       data: ['HELLO'],
@@ -538,7 +538,7 @@ describe('zToStringArray', () => {
 //   )
 // })
 
-test('zDateTime', () => {
+it('zDateTime', () => {
   const schema = zDateTime()
   expect(schema.safeParse(new Date('2023-01-01'))).toEqual({
     data: new Date('2023-01-01'),

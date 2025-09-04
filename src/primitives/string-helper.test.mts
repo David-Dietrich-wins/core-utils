@@ -37,7 +37,7 @@ import {
 import { AppException } from '../models/AppException.mjs'
 import { jest } from '@jest/globals'
 
-test('capitalizeFirstLetter', () => {
+it('capitalizeFirstLetter', () => {
   expect(capitalizeFirstLetter('hello')).toBe('Hello')
   expect(capitalizeFirstLetter('')).toBe('')
   expect(capitalizeFirstLetter(null)).toBe('')
@@ -47,7 +47,7 @@ test('capitalizeFirstLetter', () => {
   expect(capitalizeFirstLetter('hello world!')).toBe('Hello world!')
 })
 
-test('capitalizeWords', () => {
+it('capitalizeWords', () => {
   expect(capitalizeWords('hello world')).toBe('Hello World')
   expect(capitalizeWords('')).toBe('')
   expect(capitalizeWords(null)).toBe('')
@@ -65,38 +65,38 @@ test('capitalizeWords', () => {
   )
 })
 
-test(stringWrapSingleQuote.name, () => {
+it(stringWrapSingleQuote.name, () => {
   const str = stringWrapSingleQuote('test')
 
   expect(str).toBe("'test'")
 })
 
-test(stringWrapParen.name, () => {
+it(stringWrapParen.name, () => {
   const str = stringWrapParen('test')
 
   expect(str).toBe('(test)')
 })
 
-test(stringWrapDoubleQuote.name, () => {
+it(stringWrapDoubleQuote.name, () => {
   const str = stringWrapDoubleQuote('test')
 
   expect(str).toBe('"test"')
 })
 
 describe(stringEquals.name, () => {
-  test('nothing', () => {
+  it('nothing', () => {
     const str = stringEquals('', '')
 
     expect(str).toBe('')
   })
 
-  test('not wrapped', () => {
+  it('not wrapped', () => {
     const str = stringEquals('name', 'value')
 
     expect(str).toBe('name=value')
   })
 
-  test('wrapped', () => {
+  it('wrapped', () => {
     const str = stringEquals('name', 'value', 'ab')
 
     expect(str).toBe('name=abvalueab')
@@ -104,13 +104,13 @@ describe(stringEquals.name, () => {
 })
 
 describe(stringEqualsQuoted.name, () => {
-  test('nothing', () => {
+  it('nothing', () => {
     expect(stringEqualsQuoted('', '', true)).toBe('')
 
     expect(stringEqualsQuoted('', '', false)).toBe('')
   })
 
-  test('name/value', () => {
+  it('name/value', () => {
     expect(stringEqualsQuoted('name', '', false)).toBe('name=""')
     expect(stringEqualsQuoted('name', 'value', false)).toBe('name="value"')
 
@@ -121,25 +121,25 @@ describe(stringEqualsQuoted.name, () => {
     expect(stringEqualsQuoted('name', 'value', true)).toBe("name='value'")
   })
 
-  test('single quoted', () => {
+  it('single quoted', () => {
     const str = stringEqualsQuoted('name', 'value', true)
 
     expect(str).toBe("name='value'")
   })
 
-  test('double quoted', () => {
+  it('double quoted', () => {
     const str = stringEqualsQuoted('name', 'value', false)
 
     expect(str).toBe('name="value"')
   })
 })
 
-test(exceedsMaxNumberOfCharacters.name, () => {
+it(exceedsMaxNumberOfCharacters.name, () => {
   expect(exceedsMaxNumberOfCharacters('123456', 5)).toBe(true)
   expect(exceedsMaxNumberOfCharacters('12345', 5)).toBe(false)
 })
 
-test(safestrToJson.name, () => {
+it(safestrToJson.name, () => {
   expect(safestrToJson()).toBeUndefined()
   expect(safestrToJson(undefined)).toBeUndefined()
   expect(safestrToJson(null)).toBeUndefined()
@@ -154,7 +154,7 @@ test(safestrToJson.name, () => {
   expect(console.log).toHaveBeenCalledTimes(2)
 })
 
-test('stringIf', () => {
+it('stringIf', () => {
   const stringIfFalse = 'string if false',
     stringIfTrue = 'string if true'
 
@@ -165,7 +165,7 @@ test('stringIf', () => {
   expect(stringIf(false, stringIfTrue, stringIfFalse)).toBe(stringIfFalse)
 })
 
-test(isEmptyString.name, () => {
+it(isEmptyString.name, () => {
   expect(isEmptyString(undefined)).toBe(true)
   expect(isEmptyString(null)).toBe(true)
   expect(isEmptyString('')).toBe(true)
@@ -179,7 +179,7 @@ test(isEmptyString.name, () => {
   expect(isEmptyString(() => '1')).toBe(false)
 })
 
-test('pluralize', () => {
+it('pluralize', () => {
   expect(pluralize(1)).toBe('')
   expect(pluralize(2)).toBe('s')
   expect(pluralize(0)).toBe('s')
@@ -190,7 +190,7 @@ test('pluralize', () => {
   expect(pluralize(-1, 'item', 'items')).toBe('items')
 })
 
-test('pluralSuffix', () => {
+it('pluralSuffix', () => {
   expect(pluralSuffix(1)).toBe('')
   expect(pluralSuffix(2)).toBe('s')
   expect(pluralSuffix(0)).toBe('s')
@@ -201,13 +201,13 @@ test('pluralSuffix', () => {
   expect(pluralSuffix(-1, 'items')).toBe('items')
 })
 
-test('plusMinus', () => {
+it('plusMinus', () => {
   expect(plusMinus(0)).toBe('')
   expect(plusMinus(1)).toBe('+')
   expect(plusMinus(-1)).toBe('-')
 })
 
-test(strTrimIfNotNullish.name, () => {
+it(strTrimIfNotNullish.name, () => {
   expect(strTrimIfNotNullish(undefined)).toBeUndefined()
   expect(strTrimIfNotNullish(null)).toBeUndefined()
   expect(strTrimIfNotNullish('')).toBe('')
@@ -216,32 +216,32 @@ test(strTrimIfNotNullish.name, () => {
   expect(strTrimIfNotNullish(' a b ')).toBe('a b')
 })
 
-test(safestrLowercase.name, () => {
+it(safestrLowercase.name, () => {
   expect(safestrLowercase('A')).toBe('a')
   expect(safestrLowercase('A ')).toBe('a')
   expect(safestrLowercase(' A ', false)).toBe(' a ')
 })
 
-test(safestrUppercase.name, () => {
+it(safestrUppercase.name, () => {
   expect(safestrUppercase('a')).toBe('A')
   expect(safestrUppercase('a ')).toBe('A')
   expect(safestrUppercase(' a ', false)).toBe(' A ')
 })
 
 describe(randomStringGenerate.name, () => {
-  test('no params', () => {
+  it('no params', () => {
     const lengthForRandomString = 4
     const ranstr = randomStringGenerate()
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
-  test('proper length', () => {
+  it('proper length', () => {
     const lengthForRandomString = 4
     const ranstr = randomStringGenerate(lengthForRandomString)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
-  test('using chars and numbers', () => {
+  it('using chars and numbers', () => {
     const lengthForRandomString = 4
     const ranstr = randomStringGenerate(
       lengthForRandomString,
@@ -282,7 +282,7 @@ describe(isStringish.name, () => {
   })
 })
 
-test(maxNumberOfAnyOneCharacter.name, () => {
+it(maxNumberOfAnyOneCharacter.name, () => {
   expect(maxNumberOfAnyOneCharacter('', -1)).toBe(false)
   expect(maxNumberOfAnyOneCharacter('', 0)).toBe(false)
   expect(maxNumberOfAnyOneCharacter('a', -1)).toBe(true)
@@ -311,7 +311,7 @@ test(maxNumberOfAnyOneCharacter.name, () => {
   expect(maxNumberOfAnyOneCharacter('aaabbbccc', 1000)).toBe(false)
 })
 
-test(matchesRegex.name, () => {
+it(matchesRegex.name, () => {
   expect(matchesRegex('', /^[a-z]+$/u)).toBe(true)
   expect(matchesRegex('', /^[a-z]+$/u, false)).toBe(false)
 
@@ -322,7 +322,7 @@ test(matchesRegex.name, () => {
   expect(matchesRegex('abc', /^[a-z]+$/u)).toBe(true)
 })
 
-test(hasNumbersOnly.name, () => {
+it(hasNumbersOnly.name, () => {
   expect(hasNumbersOnly('')).toBe(true)
   expect(hasNumbersOnly('', true)).toBe(true)
   expect(hasNumbersOnly('', false)).toBe(false)
@@ -332,7 +332,7 @@ test(hasNumbersOnly.name, () => {
   expect(hasNumbersOnly('abc123')).toBe(false)
 })
 
-test('firstCharCapitalFormatter', () => {
+it('firstCharCapitalFormatter', () => {
   const str = 'hello world',
     str2 = 'Hello world',
     str3 = 'HELLO WORLD',
@@ -346,7 +346,7 @@ test('firstCharCapitalFormatter', () => {
   expect(firstCharCapitalFormatter(str5)).toBe('HELLO wORLD')
 })
 
-test(safestrPlus.name, () => {
+it(safestrPlus.name, () => {
   expect(safestrPlus(null)).toBe('')
   expect(safestrPlus(undefined)).toBe('')
   expect(safestrPlus('')).toBe('')
@@ -409,7 +409,7 @@ test(safestrPlus.name, () => {
   ).toThrow(AppException)
 })
 
-test(ReplaceTwoOrMoreSpacesWithSingleSpace.name, () => {
+it(ReplaceTwoOrMoreSpacesWithSingleSpace.name, () => {
   const expected = 'This is a test string'
 
   expect(
@@ -432,7 +432,7 @@ test(ReplaceTwoOrMoreSpacesWithSingleSpace.name, () => {
   expect(ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
 })
 
-test(safePrefix.name, () => {
+it(safePrefix.name, () => {
   const prefix = 'prefix-',
     str = 'test'
 
@@ -450,7 +450,7 @@ test(safePrefix.name, () => {
   expect(safePrefix(false)).toBe(' false')
 })
 
-test(safeSuffix.name, () => {
+it(safeSuffix.name, () => {
   const str = 'test',
     suffix = '-suffix'
 
@@ -468,7 +468,7 @@ test(safeSuffix.name, () => {
   expect(safeSuffix(false)).toBe('false ')
 })
 
-test(safeHtmlAttribute.name, () => {
+it(safeHtmlAttribute.name, () => {
   expect(safeHtmlAttribute('')).toBe('')
   expect(safeHtmlAttribute(null)).toBe('')
   expect(safeHtmlAttribute(undefined)).toBe('')
@@ -479,7 +479,7 @@ test(safeHtmlAttribute.name, () => {
   expect(safeHtmlAttribute(['tes,t', 'test2'], 'abc')).toBe('tesabctabctest2')
 })
 
-test(GenerateRandomString.name, () => {
+it(GenerateRandomString.name, () => {
   const length = 10,
     randomString = GenerateRandomString(length),
     randomString2 = GenerateRandomString(length, 'abcde')
@@ -491,7 +491,7 @@ test(GenerateRandomString.name, () => {
   expect(randomString2).toMatch(/^[abcde]{1,10}$/u)
 })
 
-test(RemoveLeadingNumbersAndWhitespace.name, () => {
+it(RemoveLeadingNumbersAndWhitespace.name, () => {
   expect(RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
   expect(RemoveLeadingNumbersAndWhitespace('   123abc')).toBe('abc')
   expect(RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
@@ -501,35 +501,35 @@ test(RemoveLeadingNumbersAndWhitespace.name, () => {
 })
 
 describe(randomStringGenerate.name, () => {
-  test('no params', () => {
+  it('no params', () => {
     const lengthForRandomString = 4,
       ranstr = randomStringGenerate()
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
 
-  test('proper length', () => {
+  it('proper length', () => {
     const lengthForRandomString = 4,
       ranstr = randomStringGenerate(lengthForRandomString)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
 
-  test('using chars and numbers', () => {
+  it('using chars and numbers', () => {
     const lengthForRandomString = 4,
       ranstr = randomStringGenerate(lengthForRandomString, CONST_CharsNumbers)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
 })
-test(getCommaUpperList.name, () => {
+it(getCommaUpperList.name, () => {
   expect(getCommaUpperList('')).toBe('')
   expect(getCommaUpperList('a,b,c')).toBe('A,B,C')
   expect(getCommaUpperList(['a', 'b', 'c'])).toBe('A,B,C')
   expect(getCommaUpperList('a ,   b,c   ')).toBe('A ,   B,C')
 })
 
-test(hasConsecutiveNumbers.name, () => {
+it(hasConsecutiveNumbers.name, () => {
   expect(hasConsecutiveNumbers('123')).toBe(true)
   expect(hasConsecutiveNumbers('abc')).toBe(false)
   expect(hasConsecutiveNumbers('1a2b3c')).toBe(false)
@@ -537,7 +537,7 @@ test(hasConsecutiveNumbers.name, () => {
   expect(hasConsecutiveNumbers('0987')).toBe(true)
 })
 
-test(maxRepeatedCharCount.name, () => {
+it(maxRepeatedCharCount.name, () => {
   expect(maxRepeatedCharCount('')).toBe(0)
   expect(maxRepeatedCharCount('a')).toBe(1)
   expect(maxRepeatedCharCount('aa')).toBe(2)

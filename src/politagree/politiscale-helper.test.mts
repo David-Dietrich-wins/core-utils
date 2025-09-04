@@ -16,7 +16,7 @@ import {
   PolitiscaleHelper,
 } from './politiscale-helper.mjs'
 
-test('UserColorFromScales', () => {
+it('UserColorFromScales', () => {
   const scales: IPolitiscale[] = [
       { name: 'climate', value: 0 },
       { name: 'freeSpeech', value: 0 },
@@ -47,7 +47,7 @@ test('UserColorFromScales', () => {
   )
 })
 
-test('Politiscale', () => {
+it('Politiscale', () => {
   const ps = new Politiscale('climate', 50)
   expect(ps.name).toBe('climate')
   expect(ps.value).toBe(50)
@@ -61,7 +61,7 @@ test('Politiscale', () => {
   expect(ps3.value).toBe(100)
 })
 
-test('PolitiscaleColor', () => {
+it('PolitiscaleColor', () => {
   expect(PolitiscaleHelper.PolitiscaleColor('climate', 0)).toBe('#1900e6')
   expect(PolitiscaleHelper.PolitiscaleColor('climate', 20)).toBe('#1400eb')
   expect(PolitiscaleHelper.PolitiscaleColor('climate', 50)).toBe('#0d00f3')
@@ -81,7 +81,7 @@ test('PolitiscaleColor', () => {
   expect(PolitiscaleHelper.PolitiscaleColor('religion', 100)).toBe('#ff0000')
 })
 
-test('PolitiscaleHeadings', () => {
+it('PolitiscaleHeadings', () => {
   expect(PolitiscaleHelper.PolitiscaleHeadings()).toStrictEqual([
     { heading: 'Climate Rating', name: 'climate' },
     { heading: 'Free Speech', name: 'freeSpeech' },
@@ -89,7 +89,7 @@ test('PolitiscaleHeadings', () => {
   ])
 })
 
-test('PolitiscaleRating', () => {
+it('PolitiscaleRating', () => {
   expect(PolitiscaleHelper.PolitiscaleRating()).toStrictEqual({
     left: { active: true, isPrimary: true, value: 0, weight: 0 },
     right: { active: true, isPrimary: false, value: 0, weight: 0 },
@@ -294,7 +294,7 @@ test('PolitiscaleRating', () => {
   })
 })
 
-test('CreatePolitiscaleSearchParams', () => {
+it('CreatePolitiscaleSearchParams', () => {
   const params = CreatePolitiscaleSearchParams({
     climate: 50,
     freeSpeech: 80,
@@ -308,7 +308,7 @@ test('CreatePolitiscaleSearchParams', () => {
   expect(params.religion).toBe(100)
 })
 
-test('PolitiscaleValue', () => {
+it('PolitiscaleValue', () => {
   expect(
     PolitiscaleHelper.PolitiscaleValue(
       'climate',
@@ -340,7 +340,7 @@ test('PolitiscaleValue', () => {
   ).toBe(50)
 })
 
-test('PolitiscaleValueClimate', () => {
+it('PolitiscaleValueClimate', () => {
   expect(
     PolitiscaleHelper.PolitiscaleValueClimate([{ name: 'climate', value: 0 }])
   ).toBe(0)
@@ -358,7 +358,7 @@ test('PolitiscaleValueClimate', () => {
   ).toBe(100)
 })
 
-test('PolitiscaleValueFreeSpeech', () => {
+it('PolitiscaleValueFreeSpeech', () => {
   expect(
     PolitiscaleHelper.PolitiscaleValueFreeSpeech([
       { name: 'freeSpeech', value: 0 },
@@ -386,7 +386,7 @@ test('PolitiscaleValueFreeSpeech', () => {
   ).toBe(100)
 })
 
-test('PolitiscaleValueReligion', () => {
+it('PolitiscaleValueReligion', () => {
   expect(
     PolitiscaleHelper.PolitiscaleValueReligion([{ name: 'religion', value: 0 }])
   ).toBe(0)
@@ -412,7 +412,7 @@ test('PolitiscaleValueReligion', () => {
   ).toBe(100)
 })
 
-test('setPolitiscaleValue', () => {
+it('setPolitiscaleValue', () => {
   expect(
     PolitiscaleHelper.setPolitiscaleValue({ name: 'climate', value: 25 }, 0)
   ).toStrictEqual({
@@ -433,7 +433,7 @@ test('setPolitiscaleValue', () => {
   })
 })
 
-test('getNewPolitiscales', () => {
+it('getNewPolitiscales', () => {
   let arrscales: Politiscale[] = [
       { name: 'climate', value: 0 },
       { name: 'freeSpeech', value: 0 },
@@ -471,7 +471,7 @@ test('getNewPolitiscales', () => {
   ])
 })
 
-test('PrimaryRating', () => {
+it('PrimaryRating', () => {
   expect(PolitiscaleHelper.PrimaryRating('climate')).toBe(0)
   expect(PolitiscaleHelper.PrimaryRating('climate', 20)).toBe(20)
   expect(PolitiscaleHelper.PrimaryRating('freeSpeech')).toBe(0)
@@ -480,7 +480,7 @@ test('PrimaryRating', () => {
   expect(PolitiscaleHelper.PrimaryRating('religion', 80)).toBe(80)
 })
 
-test('ColorRangeOfParty', () => {
+it('ColorRangeOfParty', () => {
   expect(PolitiscaleHelper.ColorRangeOfParty(true)).toStrictEqual([
     '#FF0000',
     '#0000FF',
@@ -491,7 +491,7 @@ test('ColorRangeOfParty', () => {
   ])
 })
 
-test('CombineRatings', () => {
+it('CombineRatings', () => {
   const applied: PolitiRatingLeftRight = {
       left: { active: false, isPrimary: true, value: 0, weight: 0 },
       right: { active: false, isPrimary: false, value: 0, weight: 0 },
@@ -626,7 +626,7 @@ test('CombineRatings', () => {
   })
 })
 
-test('UserRatingOverall', () => {
+it('UserRatingOverall', () => {
   const scales: IPolitiscale[] = [
       { name: 'climate', value: 20 },
       { name: 'freeSpeech', value: 50 },
@@ -659,7 +659,7 @@ test('UserRatingOverall', () => {
   })
 })
 
-test('ratingForScaleRaw', () => {
+it('ratingForScaleRaw', () => {
   const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
@@ -688,7 +688,7 @@ test('ratingForScaleRaw', () => {
   expect(PolitiscaleHelper.ratingForScaleRaw('religion', undefined)).toBe(0)
 })
 
-test('ratingForScale', () => {
+it('ratingForScale', () => {
   const scales: IPolitiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
@@ -703,7 +703,7 @@ test('ratingForScale', () => {
   expect(PolitiscaleHelper.ratingForScale('religion', 50)).toBe(50)
 })
 
-test('ratingClimate', () => {
+it('ratingClimate', () => {
   expect(PolitiscaleHelper.ratingClimate(0)).toBe(0)
   expect(PolitiscaleHelper.ratingClimate(20)).toBe(20)
   expect(PolitiscaleHelper.ratingClimate(50)).toBe(50)
@@ -718,7 +718,7 @@ test('ratingClimate', () => {
   expect(PolitiscaleHelper.ratingClimate(scales)).toBe(20)
 })
 
-test('ratingFreeSpeech', () => {
+it('ratingFreeSpeech', () => {
   expect(PolitiscaleHelper.ratingFreeSpeech(0)).toBe(0)
   expect(PolitiscaleHelper.ratingFreeSpeech(20)).toBe(10)
   expect(PolitiscaleHelper.ratingFreeSpeech(50)).toBe(25)
@@ -733,7 +733,7 @@ test('ratingFreeSpeech', () => {
   expect(PolitiscaleHelper.ratingFreeSpeech(scales)).toBe(25)
 })
 
-test('ratingReligion', () => {
+it('ratingReligion', () => {
   expect(PolitiscaleHelper.ratingReligion(0)).toBe(0)
   expect(PolitiscaleHelper.ratingReligion(20)).toBe(20)
   expect(PolitiscaleHelper.ratingReligion(50)).toBe(50)
@@ -748,7 +748,7 @@ test('ratingReligion', () => {
   expect(PolitiscaleHelper.ratingReligion(scales)).toBe(80)
 })
 
-test('getScales', () => {
+it('getScales', () => {
   const scales: Politiscale[] = [
       { name: 'climate', value: 20 },
       { name: 'freeSpeech', value: 50 },
@@ -771,7 +771,7 @@ test('getScales', () => {
   expect(PolitiscaleHelper.getScales([])).toStrictEqual([])
 })
 
-test('getRating', () => {
+it('getRating', () => {
   const scales: Politiscale[] = [
     { name: 'climate', value: 20 },
     { name: 'freeSpeech', value: 50 },
@@ -790,7 +790,7 @@ test('getRating', () => {
   ).toBe(0)
 })
 
-test('findSetting', () => {
+it('findSetting', () => {
   expect(PolitiscaleHelper.FindSetting('climate')).toStrictEqual({
     colorRange: ['#1900e6', '#0000ff'],
     heading: 'Climate Rating',
@@ -823,7 +823,7 @@ test('findSetting', () => {
   ).toThrow('Attempt to find setting for invalid name unknown.')
 })
 
-test('IsLeftLeaning', () => {
+it('IsLeftLeaning', () => {
   expect(PolitiscaleHelper.IsLeftLeaning(undefined)).toBe(true)
   expect(PolitiscaleHelper.IsLeftLeaning(0)).toBe(true)
   expect(PolitiscaleHelper.IsLeftLeaning(20)).toBe(true)
@@ -831,7 +831,7 @@ test('IsLeftLeaning', () => {
   expect(PolitiscaleHelper.IsLeftLeaning(80)).toBe(false)
   expect(PolitiscaleHelper.IsLeftLeaning(100)).toBe(false)
 })
-test('IsRightLeaning', () => {
+it('IsRightLeaning', () => {
   expect(PolitiscaleHelper.IsRightLeaning(undefined)).toBe(false)
   expect(PolitiscaleHelper.IsRightLeaning(0)).toBe(false)
   expect(PolitiscaleHelper.IsRightLeaning(20)).toBe(false)
@@ -840,7 +840,7 @@ test('IsRightLeaning', () => {
   expect(PolitiscaleHelper.IsRightLeaning(100)).toBe(true)
 })
 
-test('CoreRatingValueTuple', () => {
+it('CoreRatingValueTuple', () => {
   expect(PolitiscaleHelper.CoreRatingValueTuple('climate')).toStrictEqual([
     0, 0,
   ])
@@ -858,7 +858,7 @@ test('CoreRatingValueTuple', () => {
   ])
 })
 
-test('CoreRating', () => {
+it('CoreRating', () => {
   expect(PolitiscaleHelper.CoreRating('climate')).toStrictEqual({
     left: { active: true, isPrimary: true, value: 0, weight: 1 },
     right: { active: true, isPrimary: false, value: 0, weight: 0.1 },
@@ -869,7 +869,7 @@ test('CoreRating', () => {
   })
 })
 
-test('MapSlugWithScalesToIdNameValue', () => {
+it('MapSlugWithScalesToIdNameValue', () => {
   const scales: IdNameSlugWithScales[] = [
     {
       id: 'climate',
@@ -916,7 +916,7 @@ test('MapSlugWithScalesToIdNameValue', () => {
   })
 })
 
-test('MapTickerSearchToIdNameValue', () => {
+it('MapTickerSearchToIdNameValue', () => {
   const its: ITickerSearch = {
     description: 'Apple Inc.',
     exchange: 'NASDAQ',
@@ -936,7 +936,7 @@ test('MapTickerSearchToIdNameValue', () => {
   })
 })
 
-test('MapSymbolDetailToPolitiscaleCardProps', () => {
+it('MapSymbolDetailToPolitiscaleCardProps', () => {
   const symbolDetail: ISymbolDetail = {
     createdby: 'user123',
     description: 'Apple Inc.',
@@ -974,7 +974,7 @@ test('MapSymbolDetailToPolitiscaleCardProps', () => {
   })
 })
 
-test('MapCityToPolitiscaleCardProps', () => {
+it('MapCityToPolitiscaleCardProps', () => {
   const city: ICity = {
     city: 'New York',
     city_img: '',

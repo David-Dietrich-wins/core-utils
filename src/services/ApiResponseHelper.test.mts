@@ -1,7 +1,7 @@
 import { ApiResponse } from '../models/ApiResponse.mjs'
 import { ApiResponseHelper } from './ApiResponseHelper.mjs'
 
-test('ApiResponseSuccess', () => {
+it('ApiResponseSuccess', () => {
   const resapi = ApiResponseHelper.Success('test')
 
   expect(resapi.id).toBeGreaterThan(0)
@@ -32,7 +32,7 @@ test('ApiResponseSuccess', () => {
   expect(resApiResponse.data).toBe('')
 })
 
-test('ApiResponseResponseError', () => {
+it('ApiResponseResponseError', () => {
   const resapi = ApiResponseHelper.Error('test')
 
   expect(resapi.id).toBeGreaterThan(0)
@@ -53,7 +53,7 @@ test('ApiResponseResponseError', () => {
   expect(resApiResponse.data).toBe('Error')
 })
 
-// Test('respondWithSuccess', () => {
+// it('respondWithSuccess', () => {
 //   Const mockResponse = {
 //     Json: jest.fn(),
 //     Status: jest.fn(() => mockResponse),
@@ -64,7 +64,7 @@ test('ApiResponseResponseError', () => {
 //   Expect(mockResponse.json).toHaveBeenCalledTimes(1)
 // })
 
-// Test('respondWithError', () => {
+// it('respondWithError', () => {
 //   Const mockResponse = {
 //     Json: jest.fn(),
 //     Status: jest.fn(() => mockResponse),

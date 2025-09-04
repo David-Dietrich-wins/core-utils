@@ -1,6 +1,6 @@
 import { RedirectHelper } from './redirect-helper.mjs'
 
-test('Redirect Helper Tests', () => {
+it('Redirect Helper Tests', () => {
   expect(RedirectHelper.ProtectedPaths).toContain('admin')
   expect(RedirectHelper.ProtectedPaths).toContain('dashboard')
 
@@ -9,7 +9,7 @@ test('Redirect Helper Tests', () => {
 })
 
 describe('getRedirectAfterLogin', () => {
-  test('returns default redirect for illegal paths', () => {
+  it('returns default redirect for illegal paths', () => {
     const result = RedirectHelper.cleansedRedirect('/login', '/dashboard')
     expect(result).toBe('/dashboard')
 
@@ -21,7 +21,7 @@ describe('getRedirectAfterLogin', () => {
     )
   })
 
-  test('handles illegal redirect paths', () => {
+  it('handles illegal redirect paths', () => {
     const result = RedirectHelper.cleansedRedirect('/login', '/')
     expect(result).toBe('/')
 

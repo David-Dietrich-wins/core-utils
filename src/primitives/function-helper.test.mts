@@ -6,7 +6,7 @@ import {
 } from './function-helper.mjs'
 import { type Typish } from '../models/types.mjs'
 
-test(typishValue.name, () => {
+it(typishValue.name, () => {
   expect(typishValue(undefined)).toBe(undefined)
   expect(typishValue(null)).toBe(null)
   expect(typishValue('')).toBe('')
@@ -20,7 +20,7 @@ test(typishValue.name, () => {
   expect(typishValue(t)).toBe('test-string')
 })
 
-test(copyToTypishFunction.name, () => {
+it(copyToTypishFunction.name, () => {
   expect(copyToTypishFunction(undefined)).toBeInstanceOf(Function)
   expect(copyToTypishFunction(null)).toBeInstanceOf(Function)
   expect(copyToTypishFunction('')).toBeInstanceOf(Function)
@@ -34,7 +34,7 @@ test(copyToTypishFunction.name, () => {
   expect(copyToTypishFunction(t)()).toBe('test-string')
 })
 
-test(copyArrayToTypishFunction.name, () => {
+it(copyArrayToTypishFunction.name, () => {
   expect(copyArrayToTypishFunction([])).toStrictEqual([])
   expect(copyArrayToTypishFunction([null]).map((x) => x())).toStrictEqual([
     null,

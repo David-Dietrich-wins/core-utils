@@ -6,7 +6,7 @@ import { DateHelper } from '../../primitives/date-helper.mjs'
 import type { IChartSettings } from '../../tplot/ChartSettings.mjs'
 import { TEST_Settings } from '../../jest.setup.mjs'
 
-test(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
+it(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
   const aparams: FmpIndicatorQueryParams = {
       from: new Date('2021-01-01').getTime(),
       periodLength: 1,
@@ -23,7 +23,7 @@ test(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
   })
 })
 
-test('from', () => {
+it('from', () => {
   const aparams: FmpIndicatorQueryParams = {
     from: new Date('2021-01-01').getTime(),
     periodLength: 1,
@@ -66,7 +66,7 @@ test('from', () => {
   })
 })
 
-test('no to field', () => {
+it('no to field', () => {
   const aparams: FmpIndicatorQueryParams = {
     from: new Date('2021-01-01').getTime(),
     periodLength: 1,
@@ -109,7 +109,7 @@ test('no to field', () => {
   })
 })
 
-test('FmpIndicatorQueryParamsToPath', () => {
+it('FmpIndicatorQueryParamsToPath', () => {
   const aparams: FmpIndicatorQueryParams = {
     from: new Date('2021-01-01').getTime(),
     periodLength: 1,
@@ -139,7 +139,7 @@ test('FmpIndicatorQueryParamsToPath', () => {
 })
 
 describe('FmpIndicatorParamsFromObject', () => {
-  test('good', () => {
+  it('good', () => {
     const params = {
         periodLength: 1,
         symbol: 'AAPL',
@@ -155,7 +155,7 @@ describe('FmpIndicatorParamsFromObject', () => {
     })
   })
 
-  test(' exception', () => {
+  it(' exception', () => {
     const params = {
       periodLength: 1,
       symbol: '',
@@ -169,7 +169,7 @@ describe('FmpIndicatorParamsFromObject', () => {
 })
 
 describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
-  test('good', () => {
+  it('good', () => {
     const aparams: FmpIndicatorQueryParams = {
         from: new Date('2021-01-01').getTime(),
         periodLength: 1,
@@ -186,7 +186,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
     })
   })
 
-  test('no to', () => {
+  it('no to', () => {
     const params: FmpIndicatorQueryParams = {
       from: new Date('2021-01-01').getTime(),
       periodLength: 1,
@@ -231,7 +231,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
   })
 })
 
-test('FmpIndicatorQueryParamsToPath', () => {
+it('FmpIndicatorQueryParamsToPath', () => {
   const params: FmpIndicatorQueryParams = {
     from: new Date('2021-01-01').getTime(),
     periodLength: 1,
@@ -261,7 +261,7 @@ test('FmpIndicatorQueryParamsToPath', () => {
 })
 
 describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
-  test('good', () => {
+  it('good', () => {
     const params = {
         periodLength: 1,
         symbol: 'AAPL',
@@ -277,7 +277,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
     })
   })
 
-  test('exception', () => {
+  it('exception', () => {
     const params = {
       periodLength: 1,
       symbol: '',
@@ -291,7 +291,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
 })
 
 describe(FinancialModelingPrep.chartSettings.name, () => {
-  test('good', () => {
+  it('good', () => {
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -362,7 +362,7 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  test('not first data request', () => {
+  it('not first data request', () => {
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -397,7 +397,7 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  test('start date is < num intervals', () => {
+  it('start date is < num intervals', () => {
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -436,7 +436,7 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  test('start date is > num intervals', () => {
+  it('start date is > num intervals', () => {
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -475,7 +475,7 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  test('num intervals > 1000', () => {
+  it('num intervals > 1000', () => {
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,

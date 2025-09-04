@@ -1,6 +1,6 @@
 import { isSymbol } from './symbol-helper.mjs'
 
-test(isSymbol.name, () => {
+it(isSymbol.name, () => {
   expect(isSymbol(Symbol('test'))).toBe(true)
   expect(isSymbol('test')).toBe(false)
   expect(isSymbol(123)).toBe(false)

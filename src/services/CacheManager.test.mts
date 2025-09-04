@@ -2,7 +2,7 @@ import { type ArrayOrSingle } from '../models/types.mjs'
 import { CacheManager } from './CacheManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
 
-test('constructor', async () => {
+it('constructor', async () => {
   const cacheManager = new CacheManager<string, string>('testCache', 60)
 
   expect(cacheManager).toBeInstanceOf(CacheManager)
@@ -21,7 +21,7 @@ test('constructor', async () => {
   expect(await cacheManager.get('key2', fnCache)).toBe('value2')
 })
 
-test('getSingle', async () => {
+it('getSingle', async () => {
   const akeyvals = [{ id: 'key1', value: 'abc' }],
     cacheManager = new CacheManager<string, string>('testCache', 60),
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -45,7 +45,7 @@ test('getSingle', async () => {
   expect(cacheManager.keys.length).toBe(0)
 })
 
-test('getAll', async () => {
+it('getAll', async () => {
   const cacheManager = new CacheManager<string, string>('testCache', 60),
     keyvals = [
       { id: 'key1', value: 'abc' },

@@ -1,7 +1,7 @@
 import { type IIdValue, IdValue, IdValueManager } from './IdValueManager.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 
-test('IdValue good', () => {
+it('IdValue good', () => {
   const id = 'id',
     value = 'value',
     zpr = new IdValue(id, value)
@@ -10,7 +10,7 @@ test('IdValue good', () => {
   expect(zpr.value).toBe(value)
 })
 
-test('good', () => {
+it('good', () => {
   const aids: IIdValue[] = [
       { id: '1', value: '10' },
       { id: '2', value: '20' },
@@ -35,7 +35,7 @@ test('good', () => {
   expect(idm.stats?.delete).toBe(1)
 })
 
-test('default constructor', () => {
+it('default constructor', () => {
   const idm = new IdValueManager()
 
   expect(idm.list).toMatchObject([])
@@ -46,7 +46,7 @@ test('default constructor', () => {
   expect(idm.list).toMatchObject([{ id: '4', value: '40' }])
 })
 
-test('CreateIdValueManager', () => {
+it('CreateIdValueManager', () => {
   const aids: IIdValue[] = [
       { id: '1', value: '10' },
       { id: '2', value: '20' },
@@ -74,7 +74,7 @@ test('CreateIdValueManager', () => {
   expect(idm.stats?.delete).toBe(1)
 })
 
-test('CreateIIdValue', () => {
+it('CreateIIdValue', () => {
   const id = 'id',
     value = 'value',
     zpr = IdValueManager.CreateIIdValue(id, value)
@@ -82,7 +82,7 @@ test('CreateIIdValue', () => {
   expect(zpr.id).toBe(id)
   expect(zpr.value).toBe(value)
 })
-test('CreateIIdValue with default values', () => {
+it('CreateIIdValue with default values', () => {
   const id = 'id',
     value = 'value',
     zpr = IdValueManager.CreateIIdValue(id, value)

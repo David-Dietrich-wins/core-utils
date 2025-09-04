@@ -7,7 +7,7 @@ import { GenerateRandomString } from '../primitives/string-helper.mjs'
 import { type IIdNameValue } from '../models/id-name.mjs'
 import { numberToString } from '../primitives/number-helper.mjs'
 
-test('constructor string', () => {
+it('constructor string', () => {
   const searchRequestView = new SearchRequestView(
     'test',
     'column',
@@ -24,7 +24,7 @@ test('constructor string', () => {
   expect(searchRequestView.exactMatch).toBe(true)
 })
 
-test('constructor term array', () => {
+it('constructor term array', () => {
   const searchRequestView = new SearchRequestView(
     ['test', 'abc'],
     'column',
@@ -41,7 +41,7 @@ test('constructor term array', () => {
   expect(searchRequestView.exactMatch).toBe(true)
 })
 
-test('constructor object', () => {
+it('constructor object', () => {
   const isrv: ISearchRequestView = {
       exactMatch: true,
       limit: 10,
@@ -75,7 +75,7 @@ test('constructor object', () => {
   expect(srv.isDescending).toBe(false)
 })
 
-test('pageIndex and pageSize', () => {
+it('pageIndex and pageSize', () => {
   const isrv: ISearchRequestView = {
       exactMatch: true,
       limit: 12,
@@ -102,7 +102,7 @@ test('pageIndex and pageSize', () => {
 })
 
 describe('getItems', () => {
-  test('limit', () => {
+  it('limit', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 100; i++) {
       const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
@@ -229,7 +229,7 @@ describe('getItems', () => {
     expect(srv.capLimit(10)).toBe(10)
   })
 
-  test('found true', () => {
+  it('found true', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
       const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
@@ -255,7 +255,7 @@ describe('getItems', () => {
     expect(count).toBe(1)
   })
 
-  test('offset of 0 when no page size', () => {
+  it('offset of 0 when no page size', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
       const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
@@ -282,7 +282,7 @@ describe('getItems', () => {
     expect(count).toBe(1)
   })
 
-  test('empty search column', () => {
+  it('empty search column', () => {
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
       const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
@@ -307,7 +307,7 @@ describe('getItems', () => {
     expect(count).toBe(11)
   })
 
-  test('numbers', () => {
+  it('numbers', () => {
     const items: IIdNameValue<number, number>[] = []
     for (let i = 0; i < 100; i++) {
       const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
@@ -418,14 +418,14 @@ describe('getItems', () => {
 })
 
 describe('zSchema', () => {
-  test('zSchema', () => {
+  it('zSchema', () => {
     const schema = SearchRequestView.zSearchRequestView
 
     expect(schema).toBeDefined()
     expect(schema).toBeInstanceOf(z.ZodType)
   })
 
-  test('valid parse', () => {
+  it('valid parse', () => {
     const schema = SearchRequestView.zSearchRequestView,
       srv: ISearchRequestView = {
         exactMatch: true,
@@ -441,7 +441,7 @@ describe('zSchema', () => {
     expect(() => schema.parse(srv)).not.toThrow()
   })
 
-  test('term array', () => {
+  it('term array', () => {
     const schema = SearchRequestView.zSearchRequestView,
       srv: ISearchRequestView = {
         exactMatch: true,
@@ -457,7 +457,7 @@ describe('zSchema', () => {
     expect(() => schema.parse(srv)).not.toThrow()
   })
 
-  test('bad limit', () => {
+  it('bad limit', () => {
     const company: ISearchRequestView = {
         exactMatch: true,
         limit: 1011111111111,
@@ -487,7 +487,7 @@ describe('zSchema', () => {
   })
 })
 
-test(SearchRequestView.create.name, () => {
+it(SearchRequestView.create.name, () => {
   expect(SearchRequestView.create()).toEqual({
     exactMatch: false,
     limit: 0,

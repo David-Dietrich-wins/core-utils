@@ -28,7 +28,7 @@ import {
   xFormatter,
 } from './number-helper.mjs'
 
-test(getMantissa.name, () => {
+it(getMantissa.name, () => {
   expect(getMantissa(0)).toBe(0)
   expect(getMantissa(1000)).toBe(0)
   expect(getMantissa(0.1)).toBe(1)
@@ -38,7 +38,7 @@ test(getMantissa.name, () => {
   expect(getMantissa(34)).toBe(0)
 })
 
-test(isNumeric.name, () => {
+it(isNumeric.name, () => {
   expect(isNumeric()).toBe(false)
   expect(isNumeric(1)).toBe(true)
   expect(isNumeric('1')).toBe(true)
@@ -48,7 +48,7 @@ test(isNumeric.name, () => {
   expect(isNumeric('a2q')).toBe(false)
 })
 
-test(isNumber.name, () => {
+it(isNumber.name, () => {
   expect(isNumber(undefined)).toBe(false)
   expect(isNumber(null)).toBe(false)
   expect(isNumber(-1)).toBe(true)
@@ -79,7 +79,7 @@ test(isNumber.name, () => {
   expect(isNumber(1002, 1001, 999)).toBe(false)
 })
 
-test(getNumberString.name, () => {
+it(getNumberString.name, () => {
   expect(getNumberString(0)).toBe('0')
   expect(getNumberString('1,249')).toBe('1,249')
 
@@ -92,7 +92,7 @@ test(getNumberString.name, () => {
   )
 })
 
-test(getNumberFormatted.name, () => {
+it(getNumberFormatted.name, () => {
   expect(getNumberFormatted(0)).toBe(0)
 
   expect(getNumberFormatted('1,249', 2)).toBe(1249)
@@ -103,13 +103,13 @@ test(getNumberFormatted.name, () => {
   expect(getNumberFormatted(',,', 2)).toBe(0)
 })
 
-test(getNumberString.name, () => {
+it(getNumberString.name, () => {
   expect(getNumberString(123456789)).toBe('123,456,789')
   expect(getNumberString('123,456,789')).toBe('123,456,789')
   expect(getNumberString(',,')).toBe('NaN')
 })
 
-test(getAsNumberOrUndefined.name, () => {
+it(getAsNumberOrUndefined.name, () => {
   expect(getAsNumberOrUndefined('123,456,789')).toBe(123456789)
   expect(getAsNumberOrUndefined(123456789)).toBe(123456789)
   expect(getAsNumberOrUndefined(null)).toBeUndefined()
@@ -117,7 +117,7 @@ test(getAsNumberOrUndefined.name, () => {
   expect(getAsNumberOrUndefined(0)).toBeUndefined()
   expect(getAsNumberOrUndefined('')).toBeUndefined()
 })
-test(numberToString.name, () => {
+it(numberToString.name, () => {
   expect(numberToString(0)).toBe('0')
   expect(numberToString(0, false)).toBe('')
   expect(numberToString(0.0, false)).toBe('')
@@ -136,7 +136,7 @@ test(numberToString.name, () => {
     '38,459,238,231,250.00'
   )
 })
-test(getNumberFormatted.name, () => {
+it(getNumberFormatted.name, () => {
   expect(getNumberFormatted(0)).toBe(0)
 
   expect(getNumberFormatted(',', 2)).toBe(0)
@@ -147,7 +147,7 @@ test(getNumberFormatted.name, () => {
   expect(getNumberFormatted(undefined, 2)).toBe(0)
 })
 
-test(getMantissa.name, () => {
+it(getMantissa.name, () => {
   expect(getMantissa(0)).toBe(0)
   expect(getMantissa(1000)).toBe(0)
   expect(getMantissa(0.1)).toBe(1)
@@ -157,7 +157,7 @@ test(getMantissa.name, () => {
   expect(getMantissa(34)).toBe(0)
 })
 
-test(toFixedPrefixed.name, () => {
+it(toFixedPrefixed.name, () => {
   expect(toFixedPrefixed('')).toBe('$0.00')
   expect(toFixedPrefixed(undefined)).toBe('')
   expect(toFixedPrefixed(null)).toBe('')
@@ -171,7 +171,7 @@ test(toFixedPrefixed.name, () => {
   expect(toFixedPrefixed(1.111, true, 2)).toBe('$1.11')
 })
 
-test(toFixedSuffixed.name, () => {
+it(toFixedSuffixed.name, () => {
   expect(toFixedSuffixed('', true, 2)).toBe('0.00%')
   expect(toFixedSuffixed('', false, 2)).toBe('')
   expect(toFixedSuffixed(undefined)).toBe('')
@@ -185,7 +185,7 @@ test(toFixedSuffixed.name, () => {
   expect(toFixedSuffixed(1.111, true, 2)).toBe('1.11%')
 })
 
-test(formatPrefixSuffixZero.name, () => {
+it(formatPrefixSuffixZero.name, () => {
   expect(formatPrefixSuffixZero(null)).toBe('')
   expect(formatPrefixSuffixZero(undefined)).toBe('')
   expect(formatPrefixSuffixZero('')).toBe('0.00')
@@ -205,7 +205,7 @@ test(formatPrefixSuffixZero.name, () => {
   ).toBe('prefix-1,000,000.100-suffix')
 })
 
-test(numberFormatter.name, () => {
+it(numberFormatter.name, () => {
   expect(numberFormatter(null)).toBe('')
   expect(numberFormatter(undefined)).toBe('')
   expect(numberFormatter('')).toBe('0.00')
@@ -231,7 +231,7 @@ test(numberFormatter.name, () => {
   expect(numberFormatter(1000000.1, false, 3)).toBe('1,000,000.100')
 })
 
-test(numberFormatterNoDecimal.name, () => {
+it(numberFormatterNoDecimal.name, () => {
   expect(numberFormatterNoDecimal(null)).toBe('')
   expect(numberFormatterNoDecimal(undefined)).toBe('')
   expect(numberFormatterNoDecimal('')).toBe('0')
@@ -249,7 +249,7 @@ test(numberFormatterNoDecimal.name, () => {
   expect(numberFormatterNoDecimal(1000000.5, false)).toBe('1,000,001')
 })
 
-test(xFormatter.name, () => {
+it(xFormatter.name, () => {
   expect(xFormatter(null)).toBe('')
   expect(xFormatter(undefined)).toBe('')
   expect(xFormatter('')).toBe('0.00x')
@@ -266,7 +266,7 @@ test(xFormatter.name, () => {
   expect(xFormatter(1000000.1, false, 3)).toBe('1,000,000.100x')
 })
 
-test(dollarFormatter.name, () => {
+it(dollarFormatter.name, () => {
   expect(dollarFormatter(null)).toBe('')
   expect(dollarFormatter(undefined)).toBe('$0.00')
   expect(dollarFormatter('')).toBe('$0.00')
@@ -285,7 +285,7 @@ test(dollarFormatter.name, () => {
   expect(dollarFormatter(1000000.1, false, 3)).toBe('$1,000,000.100')
 })
 
-test(stockPriceFormatter.name, () => {
+it(stockPriceFormatter.name, () => {
   expect(stockPriceFormatter(null)).toBeUndefined()
   expect(stockPriceFormatter(undefined)).toBeUndefined()
   expect(stockPriceFormatter(null, true)).toBe('$0.0000')
@@ -307,7 +307,7 @@ test(stockPriceFormatter.name, () => {
   expect(stockPriceFormatter(1000000.1, false, 3)).toBe('$1,000,000.100')
 })
 
-test(percentFormatter.name, () => {
+it(percentFormatter.name, () => {
   expect(percentFormatter(null)).toBe('')
   expect(percentFormatter(undefined)).toBe('')
   expect(percentFormatter('')).toBe('')
@@ -325,7 +325,7 @@ test(percentFormatter.name, () => {
   expect(percentFormatter(1000000.1, false, 3)).toBe('1,000,000.100%')
 })
 
-test(percentTimes100Formatter.name, () => {
+it(percentTimes100Formatter.name, () => {
   expect(percentTimes100Formatter(null)).toBe('')
   expect(percentTimes100Formatter(undefined)).toBe('')
   expect(percentTimes100Formatter('')).toBe('')
@@ -344,7 +344,7 @@ test(percentTimes100Formatter.name, () => {
   expect(percentTimes100Formatter(1000000.1, false, 3)).toBe('100,000,010.000%')
 })
 
-test(stockVolumeFormatter.name, () => {
+it(stockVolumeFormatter.name, () => {
   expect(stockVolumeFormatter(null)).toBeUndefined()
   expect(stockVolumeFormatter(undefined)).toBeUndefined()
   expect(stockVolumeFormatter(null, true)).toBe('0')
@@ -389,7 +389,7 @@ test(stockVolumeFormatter.name, () => {
   expect(stockVolumeFormatter(',,', true, 0)).toBe('')
 })
 
-test(numberWithDecimalPlaces.name, () => {
+it(numberWithDecimalPlaces.name, () => {
   expect(numberWithDecimalPlaces(NaN)).toBe('0')
   expect(numberWithDecimalPlaces(0)).toBe('0.00')
   expect(numberWithDecimalPlaces(1)).toBe('1.00')
@@ -402,7 +402,7 @@ test(numberWithDecimalPlaces.name, () => {
   expect(numberWithDecimalPlaces(1000000.1, 3)).toBe('1,000,000.10')
 })
 
-test(priceInDollars.name, () => {
+it(priceInDollars.name, () => {
   expect(priceInDollars(0)).toBe('$0.00')
   expect(priceInDollars(1)).toBe('$1.00')
   expect(priceInDollars(9999999, false, 0)).toBe('9,999,999')
@@ -414,7 +414,7 @@ test(priceInDollars.name, () => {
   expect(priceInDollars(1000000.1, false, 3)).toBe('1,000,000.10')
 })
 
-test(downUpOrEqual.name, () => {
+it(downUpOrEqual.name, () => {
   expect(downUpOrEqual(-10, undefined)).toBe(0)
   expect(downUpOrEqual(0, undefined)).toBe(0)
   expect(downUpOrEqual(10, undefined)).toBe(0)
@@ -434,7 +434,7 @@ test(downUpOrEqual.name, () => {
   expect(downUpOrEqual(1.11, 1, true)).toBe(1)
 })
 
-test(elementTopLeftCoords.name, () => {
+it(elementTopLeftCoords.name, () => {
   const coords = {
       offsetLeft: 20,
       offsetTop: 10,
@@ -470,7 +470,7 @@ test(elementTopLeftCoords.name, () => {
   })
 })
 
-test(firstNumberInString.name, () => {
+it(firstNumberInString.name, () => {
   expect(firstNumberInString('')).toBe(0)
   expect(firstNumberInString(null)).toBe(0)
   expect(firstNumberInString(undefined)).toBe(0)
@@ -481,7 +481,7 @@ test(firstNumberInString.name, () => {
   expect(firstNumberInString(' -123.45')).toBe(-123.45)
 })
 
-test(addNumbers.name, () => {
+it(addNumbers.name, () => {
   const io1 = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
     io1ret = addNumbers(io1, {
       a: 3,
@@ -525,14 +525,14 @@ test(addNumbers.name, () => {
   expect(io4ret).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
 })
 
-test(divideByNumbers.name, () => {
+it(divideByNumbers.name, () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
     objRet = divideByNumbers(io, 2)
 
   expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })
 
-test(getPercentChange.name, () => {
+it(getPercentChange.name, () => {
   expect(getPercentChange(0, 0)).toBe(0)
   expect(getPercentChange(0, 50)).toBe(5000)
   expect(getPercentChange(50, 0)).toBe(-5000)
@@ -540,7 +540,7 @@ test(getPercentChange.name, () => {
   expect(getPercentChange(200, 100)).toBe(-50)
 })
 
-test(getPercentChangeString.name, () => {
+it(getPercentChangeString.name, () => {
   expect(getPercentChangeString(0, 0)).toBe('0.00%')
   expect(getPercentChangeString(100, 200)).toBe('+100.00%')
   expect(getPercentChangeString(100, 200, false, -1)).toBe('+100')

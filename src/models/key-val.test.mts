@@ -1,6 +1,6 @@
 import { KeyVal, KeyValueShort } from './key-val.mjs'
 
-test('KeyVal good', () => {
+it('KeyVal good', () => {
   const key = 'key',
     kval = 'val',
     pr = new KeyVal(key, kval)
@@ -9,7 +9,7 @@ test('KeyVal good', () => {
   expect(pr.val).toBe(kval)
 })
 
-test('KeyValueShort good', () => {
+it('KeyValueShort good', () => {
   const key = 'key',
     kval = 'value',
     pr = new KeyValueShort(key, kval)

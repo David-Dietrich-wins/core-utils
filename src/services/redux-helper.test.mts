@@ -1,6 +1,6 @@
 import { type ReduxAsyncStatus, ReduxHelper } from './redux-helper.mjs'
 
-test('getStatus', () => {
+it('getStatus', () => {
   const state: ReduxAsyncStatus<string> = {
     data: 'test data',
     error: undefined,
@@ -20,7 +20,7 @@ test('getStatus', () => {
   expect(ReduxHelper.getStatus(state, 'default')).toBe('default')
 })
 
-test('InitialState', () => {
+it('InitialState', () => {
   const initialData = { key: 'value' },
     state = ReduxHelper.InitialState(initialData)
 
@@ -30,7 +30,7 @@ test('InitialState', () => {
   expect(state.lastUpdate).toBeLessThanOrEqual(Date.now())
 })
 
-test('Fulfilled', () => {
+it('Fulfilled', () => {
   const message = 'Update successful',
     update = { key: 'new value' },
     ustate = ReduxHelper.Fulfilled(update, message)
@@ -42,7 +42,7 @@ test('Fulfilled', () => {
   expect(ustate.message).toBe(message)
 })
 
-test('FulfilledOnly', () => {
+it('FulfilledOnly', () => {
   const message = 'Update successful',
     state: ReduxAsyncStatus<string> = {
       data: 'test data',
@@ -73,7 +73,7 @@ test('FulfilledOnly', () => {
   expect(state.lastUpdate).toBeLessThanOrEqual(Date.now())
 })
 
-test('RejectAndResetState', () => {
+it('RejectAndResetState', () => {
   const error = 'An error occurred',
     state: ReduxAsyncStatus<string> = {
       data: 'test data',
@@ -95,7 +95,7 @@ test('RejectAndResetState', () => {
   expect(state.lastUpdate).toBeLessThanOrEqual(Date.now())
 })
 
-test('RejectAndResetState with message', () => {
+it('RejectAndResetState with message', () => {
   const error = 'An error occurred',
     message = 'Operation failed',
     state: ReduxAsyncStatus<string> = {
@@ -117,7 +117,7 @@ test('RejectAndResetState with message', () => {
   })
   expect(state.lastUpdate).toBeLessThanOrEqual(Date.now())
 })
-test('RejectAndResetState with empty error', () => {
+it('RejectAndResetState with empty error', () => {
   const state: ReduxAsyncStatus<string> = {
       data: 'test data',
       error: undefined,
@@ -138,7 +138,7 @@ test('RejectAndResetState with empty error', () => {
   expect(state.lastUpdate).toBeLessThanOrEqual(Date.now())
 })
 
-test('RejectOnly', () => {
+it('RejectOnly', () => {
   const error = 'An error occurred',
     message = 'Operation failed',
     state: ReduxAsyncStatus<string> = {

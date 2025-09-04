@@ -41,7 +41,7 @@ import { jest } from '@jest/globals'
 import { safestr } from './string-helper.mjs'
 
 describe('ObjectFindKeyAndReturnValue', () => {
-  test('default', () => {
+  it('default', () => {
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -56,7 +56,7 @@ describe('ObjectFindKeyAndReturnValue', () => {
     expect(result).toBeUndefined()
   })
 
-  test('match lower and trim key', () => {
+  it('match lower and trim key', () => {
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -74,7 +74,7 @@ describe('ObjectFindKeyAndReturnValue', () => {
     expect(result).toBe('value1')
   })
 
-  test('match key case fail', () => {
+  it('match key case fail', () => {
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -92,7 +92,7 @@ describe('ObjectFindKeyAndReturnValue', () => {
     expect(result).toBeUndefined()
   })
 
-  test('match key in object case fail', () => {
+  it('match key in object case fail', () => {
     const obj = {
       kEy1: 'value1',
       key2: 'value2',
@@ -110,7 +110,7 @@ describe('ObjectFindKeyAndReturnValue', () => {
     expect(result).toBeUndefined()
   })
 
-  test('do not match key case', () => {
+  it('do not match key case', () => {
     const obj = {
       kEY1: 'value1',
       key2: 'value2',
@@ -130,7 +130,7 @@ describe('ObjectFindKeyAndReturnValue', () => {
 })
 
 describe('ObjectMustHaveKeyAndReturnValue', () => {
-  test('default', () => {
+  it('default', () => {
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -145,7 +145,7 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
     expect(() => ObjectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow()
   })
 
-  test('match lower key', () => {
+  it('match lower key', () => {
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -175,19 +175,19 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
 })
 
 describe(ObjectTypesToString.name, () => {
-  test('return string from array', () => {
+  it('return string from array', () => {
     const ret = ObjectTypesToString(['hello', 'world'])
 
     expect(ret).toBe('["hello","world"]')
   })
 
-  test('null', () => {
+  it('null', () => {
     const ret = ObjectTypesToString(null)
 
     expect(ret).toBe('')
   })
 
-  test('JS Error response', () => {
+  it('JS Error response', () => {
     const e = new Error('test error')
 
     const ret = ObjectTypesToString(e)
@@ -226,21 +226,21 @@ describe(ObjectTypesToString.name, () => {
     }
   }
 
-  test('File object', () => {
+  it('File object', () => {
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
     expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
-  test('FileList object', () => {
+  it('FileList object', () => {
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
     expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
-  test('Object generic', () => {
+  it('Object generic', () => {
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
@@ -257,7 +257,7 @@ describe(BuildLogFriendlyMessage.name, () => {
       'u'
     )
 
-  test('return string from array', () => {
+  it('return string from array', () => {
     const ret = BuildLogFriendlyMessage({
       componentName,
       level,
@@ -277,7 +277,7 @@ describe(BuildLogFriendlyMessage.name, () => {
     expect(ret).toMatch(regex(''))
   })
 
-  test('JS Error response', () => {
+  it('JS Error response', () => {
     const e = new Error('test error')
 
     const ret = BuildLogFriendlyMessage({
@@ -326,21 +326,21 @@ describe(BuildLogFriendlyMessage.name, () => {
     }
   }
 
-  test('File object', () => {
+  it('File object', () => {
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
     expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
-  test('FileList object', () => {
+  it('FileList object', () => {
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
     expect(ret).toEqual('{"data":"","name":"test.txt"}')
   })
 
-  test('Object generic', () => {
+  it('Object generic', () => {
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
@@ -348,12 +348,12 @@ describe(BuildLogFriendlyMessage.name, () => {
   })
 })
 
-test(getObjectValue.name, () => {
+it(getObjectValue.name, () => {
   expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
   expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
 })
 
-test(isObject.name, () => {
+it(isObject.name, () => {
   expect(isObject({})).toBe(true)
   expect(isObject([])).toBe(false)
   expect(isObject(1)).toBe(false)
@@ -368,12 +368,12 @@ test(isObject.name, () => {
   expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
 })
 
-test(isEmptyObject.name, () => {
+it(isEmptyObject.name, () => {
   expect(isEmptyObject({})).toBe(true)
   expect(isEmptyObject({ a: 'a' })).toBe(false)
 })
 
-test('hasData', () => {
+it('hasData', () => {
   expect(hasData(undefined)).toBe(false)
   expect(hasData(null)).toBe(false)
   expect(hasData('')).toBe(false)
@@ -445,7 +445,7 @@ test('hasData', () => {
   expect(hasData({ symbolUnique: 'abc' })).toBe(true)
 })
 
-test(searchObjectForArray.name, () => {
+it(searchObjectForArray.name, () => {
   const obj: Record<string, unknown> = {
     a: 'a',
     b: 'b',
@@ -468,7 +468,7 @@ test(searchObjectForArray.name, () => {
   expect(searchObjectForArray(3 as unknown as object)).toEqual([])
 })
 
-test(runOnAllMembers.name, () => {
+it(runOnAllMembers.name, () => {
   expect(() =>
     runOnAllMembers(1 as any, (key: string, value: unknown) => key + value)
   ).toThrow('runOnAllMembers() received an empty object.')
@@ -511,7 +511,7 @@ test(runOnAllMembers.name, () => {
   })
 })
 
-test(renameProperty.name, () => {
+it(renameProperty.name, () => {
   let obj = { a: 'a', b: 'b', c: 'c' }
   let retobj = { b: 'b', c: 'c', d: 'a' }
   let oldKey: any = 'a'
@@ -544,7 +544,7 @@ test(renameProperty.name, () => {
   expect(renameProperty(obj, oldKey, newKey)).toStrictEqual(retobj)
 })
 
-test(ObjectPrepareForJson.name, () => {
+it(ObjectPrepareForJson.name, () => {
   const obj = {
     createdAt: new Date(),
     id: 1,
@@ -581,13 +581,13 @@ test(ObjectPrepareForJson.name, () => {
   expect(ObjectPrepareForJson({})).toStrictEqual({})
 })
 
-test(safeObject.name, () => {
+it(safeObject.name, () => {
   expect(safeObject()).toStrictEqual({})
   expect(safeObject({ a: 1 })).toStrictEqual({ a: 1 })
   expect(safeObject(undefined, { a: 1 })).toStrictEqual({ a: 1 })
 })
 
-test(safeJsonToString.name, () => {
+it(safeJsonToString.name, () => {
   expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
   expect(safeJsonToString(4 as any)).toBe('[4]')
   expect(safeJsonToString(undefined as any)).toBe('[]')
@@ -610,7 +610,7 @@ function createDeepObject(depth: number, value: any) {
   }
 }
 
-test(FindObjectWithField.name, () => {
+it(FindObjectWithField.name, () => {
   const obj = {
     a: 'a',
     b: 'b',
@@ -645,7 +645,7 @@ test(FindObjectWithField.name, () => {
 })
 
 describe(removeFields.name, () => {
-  test('remove from an object by fields array', () => {
+  it('remove from an object by fields array', () => {
     const obj = {
       a: 'a',
       b: 'b',
@@ -664,7 +664,7 @@ describe(removeFields.name, () => {
     })
   })
 
-  test('recursively remove from an object by fields array', () => {
+  it('recursively remove from an object by fields array', () => {
     const obj = {
       a: 'a',
       b: 'b',
@@ -690,7 +690,7 @@ describe(removeFields.name, () => {
     })
   })
 
-  test('recursively remove by fields object', () => {
+  it('recursively remove by fields object', () => {
     const obj = {
       a: 'a',
       b: 'b',
@@ -731,7 +731,7 @@ describe(removeFields.name, () => {
     })
   })
 
-  test('default id props', () => {
+  it('default id props', () => {
     const obj = {
       _id: 1,
       id: null,
@@ -754,7 +754,7 @@ describe(removeFields.name, () => {
     })
   })
 
-  test('not an object', () => {
+  it('not an object', () => {
     const obj = 'not an object'
     const props = {
       fields: ['b', 'e', 'h'],
@@ -776,7 +776,7 @@ describe(removeFields.name, () => {
   })
 })
 
-test(UpdateFieldValue.name, () => {
+it(UpdateFieldValue.name, () => {
   const obj: IId & { field: string } = {
     field: 'value',
     id: 'abc1',
@@ -788,7 +788,7 @@ test(UpdateFieldValue.name, () => {
   })
 })
 
-// test('searchObjectForArray', () => {
+// it('searchObjectForArray', () => {
 //   const obj: Record<string, unknown> = {
 //     a: 'a',
 //     b: 'b',
@@ -810,7 +810,7 @@ test(UpdateFieldValue.name, () => {
 
 //   expect(searchObjectForArray('c' as unknown as object)).toEqual([])
 // })
-// test('runOnAllMembers', () => {
+// it('runOnAllMembers', () => {
 //   expect(() =>
 //     runOnAllMembers(
 //       1 as unknown as object,
@@ -858,7 +858,7 @@ test(UpdateFieldValue.name, () => {
 //     c: 'cundefined',
 //   })
 // })
-// test('renameProperty', () => {
+// it('renameProperty', () => {
 //   let // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //     newKey: any = 'd',
 //     obj = { a: 'a', b: 'b', c: 'c' },
@@ -892,7 +892,7 @@ test(UpdateFieldValue.name, () => {
 //   retobj = { b: 'b', c: 'c', d: 'a' }
 //   expect(renameProperty(obj, oldKey, newKey)).toStrictEqual(retobj)
 // })
-// test('pluralize', () => {
+// it('pluralize', () => {
 //   expect(pluralize(0)).toBe('s')
 //   expect(pluralize(1)).toBe('')
 //   expect(pluralize(2)).toBe('s')
@@ -905,19 +905,19 @@ test(UpdateFieldValue.name, () => {
 //   expect(pluralize(1, 'activity', 'activities')).toBe('activity')
 //   expect(pluralize(2, 'activity', 'activities')).toBe('activities')
 // })
-// test('plusMinus', () => {
+// it('plusMinus', () => {
 //   expect(plusMinus(0)).toBe('')
 //   expect(plusMinus(1)).toBe('+')
 //   expect(plusMinus(-1)).toBe('-')
 // })
 
-// test('safeObject', () => {
+// it('safeObject', () => {
 //   expect(safeObject()).toStrictEqual({})
 //   expect(safeObject({ a: 1 })).toStrictEqual({ a: 1 })
 //   expect(safeObject(undefined, { a: 1 })).toStrictEqual({ a: 1 })
 // })
 
-// test('safeJsonToString', () => {
+// it('safeJsonToString', () => {
 //   expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
 //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //   expect(safeJsonToString(4 as any)).toBe('{}')
@@ -937,7 +937,7 @@ test(UpdateFieldValue.name, () => {
 //   expect(console.log).toHaveBeenCalledTimes(1)
 // })
 
-// test('isObject', () => {
+// it('isObject', () => {
 //   expect(isObject({})).toBe(true)
 //   expect(isObject([])).toBe(false)
 //   expect(isObject(1)).toBe(false)
@@ -952,7 +952,7 @@ test(UpdateFieldValue.name, () => {
 //   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
 //   expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
 // })
-// test('getObjectValue', () => {
+// it('getObjectValue', () => {
 //   expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
 //   expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
 // })
@@ -969,7 +969,7 @@ describe('deepCloneJson empty JSON.parse', () => {
     JSON.parse = originalParse
   })
 
-  test('deepCloneJson', () => {
+  it('deepCloneJson', () => {
     JSON.parse = jest.fn(() => null)
     // console.log('deepCloneJson', safestrToJson('{"a": "a"}'))
     expect(() => deepCloneJson({ a: 'a' })).toThrow(AppException)
@@ -984,7 +984,7 @@ describe('deepCloneJson empty JSON.parse', () => {
   })
 })
 
-test(deepCloneJson.name, () => {
+it(deepCloneJson.name, () => {
   expect(deepCloneJson({ a: 'a' })).toStrictEqual({ a: 'a' })
 
   expect(deepCloneJson({})).toStrictEqual({})
@@ -993,7 +993,7 @@ test(deepCloneJson.name, () => {
   expect(deepCloneJson(undefined as unknown as object)).toStrictEqual([])
 })
 
-// test('addObjectToList', () => {
+// it('addObjectToList', () => {
 //   expect(addObjectToList([], [{ a: 'a' }])).toStrictEqual([{ a: 'a' }])
 //   expect(addObjectToList([], [1, 2])).toStrictEqual([1, 2])
 //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1009,7 +1009,7 @@ test(deepCloneJson.name, () => {
 // })
 
 describe(deepDiffMapper.name, () => {
-  test('compareValues', () => {
+  it('compareValues', () => {
     const aDate = new Date(),
       anum = 1,
       astr = 'a',
@@ -1049,7 +1049,7 @@ describe(deepDiffMapper.name, () => {
     expect(deepDiffMapper().compareValues(a, b)).toStrictEqual('updated')
   })
 
-  test('arrays', () => {
+  it('arrays', () => {
     const a = [
         { name: 'climate', value: 90 },
         { name: 'freeSpeech', value: 80 },
@@ -1079,7 +1079,7 @@ describe(deepDiffMapper.name, () => {
     expect(deepDiffMapper().anyChanges(c, d)).toBe(true)
   })
 
-  test('findTypeData', () => {
+  it('findTypeData', () => {
     let b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().findTypeData(['a', 'a'])).toBe(false)
@@ -1112,7 +1112,7 @@ describe(deepDiffMapper.name, () => {
     ).toStrictEqual(true)
   })
 
-  test('getChanges', () => {
+  it('getChanges', () => {
     const a: Record<string, unknown> = { a: 'a' },
       aDate = new Date(),
       anum = 1,
@@ -1139,7 +1139,7 @@ describe(deepDiffMapper.name, () => {
     ])
   })
 
-  test('various tests', () => {
+  it('various tests', () => {
     let a: Record<string, unknown> = { a: 'a' },
       b: Record<string, unknown> = { b: 'b' }
 
@@ -1198,7 +1198,7 @@ describe(deepDiffMapper.name, () => {
   })
 })
 
-test('getFirstNewWithException', () => {
+it('getFirstNewWithException', () => {
   expect(() => objectGetFirstNewWithException(IdValueManager, [])).not.toThrow()
   expect(() =>
     objectGetFirstNewWithException(IdValueManager, [234, 20])
@@ -1238,7 +1238,7 @@ test('getFirstNewWithException', () => {
   ).toThrow()
 })
 
-test('getNewObject', () => {
+it('getNewObject', () => {
   expect(() => objectGetNew(IdValueManager, [])).not.toThrow()
   expect(() => objectGetNew(IdValueManager, [234, 20])).toThrow()
   expect(() =>
@@ -1259,7 +1259,7 @@ test('getNewObject', () => {
   ).not.toThrow()
 })
 
-test('getInstance', () => {
+it('getInstance', () => {
   const idvm = ObjectHelper.objectGetInstance(IdValueManager, [
     { id: 'a', value: 'a' },
   ])
@@ -1269,7 +1269,7 @@ test('getInstance', () => {
 })
 
 describe('ObjectHelper', () => {
-  test('CloneObjectAlphabetizingKeys', () => {
+  it('CloneObjectAlphabetizingKeys', () => {
     const aobj = {
         a: 'a',
         b: 'b',
@@ -1280,21 +1280,21 @@ describe('ObjectHelper', () => {
     expect(clonedObj).toEqual({ a: 'a', b: 'b', c: 'c' })
   })
 
-  test('DecodeBase64ToObject', () => {
+  it('DecodeBase64ToObject', () => {
     const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' })),
       decodedObj = objectDecodeFromBase64(base64String)
 
     expect(decodedObj).toEqual({ a: 'a', b: 'b' })
   })
 
-  test('EncodeObjectToBase64', () => {
+  it('EncodeObjectToBase64', () => {
     const aobj = { a: 'a', b: 'b' },
       encodedString = objectEncodeToBase64(aobj)
 
     expect(encodedString).toBe(btoa(JSON.stringify(aobj)))
   })
 
-  test('DeepCloneJsonWithUndefined', () => {
+  it('DeepCloneJsonWithUndefined', () => {
     const aobj = {
         a: 'a',
         b: undefined,
@@ -1314,7 +1314,7 @@ describe('ObjectHelper', () => {
       },
     })
   })
-  test('DeepCloneJsonWithUndefined exception', () => {
+  it('DeepCloneJsonWithUndefined exception', () => {
     const aobj = {
         a: 'a',
         b: undefined,
@@ -1336,7 +1336,7 @@ describe('ObjectHelper', () => {
   })
 })
 
-test('coalesce', () => {
+it('coalesce', () => {
   expect(coalesce(undefined, null, 'value')).toBe('value')
   expect(coalesce(undefined, null, () => 'value')).toBe('value')
   expect(
@@ -1372,7 +1372,7 @@ test('coalesce', () => {
   )
 })
 
-test(getBody.name, () => {
+it(getBody.name, () => {
   expect(() => getBody('')).toThrow('Object body not found')
   expect(
     getBody({
@@ -1382,7 +1382,7 @@ test(getBody.name, () => {
 })
 
 // describe(removeFields.name, () => {
-//   test('remove from an object by fields array', () => {
+//   it('remove from an object by fields array', () => {
 //     const obj = {
 //       a: 'a',
 //       b: 'b',
@@ -1401,7 +1401,7 @@ test(getBody.name, () => {
 //     })
 //   })
 
-//   test('recursively remove from an object by fields array', () => {
+//   it('recursively remove from an object by fields array', () => {
 //     const obj = {
 //       a: 'a',
 //       b: 'b',
@@ -1427,7 +1427,7 @@ test(getBody.name, () => {
 //     })
 //   })
 
-//   test('recursively remove by fields object', () => {
+//   it('recursively remove by fields object', () => {
 //     const obj = {
 //       a: 'a',
 //       b: 'b',
@@ -1468,7 +1468,7 @@ test(getBody.name, () => {
 //     })
 //   })
 
-//   test('default id props', () => {
+//   it('default id props', () => {
 //     const obj = {
 //       _id: 1,
 //       id: null,
@@ -1491,7 +1491,7 @@ test(getBody.name, () => {
 //     })
 //   })
 
-//   test('not an object', () => {
+//   it('not an object', () => {
 //     const obj = 'not an object'
 //     const props = {
 //       fields: ['b', 'e', 'h'],
@@ -1514,7 +1514,7 @@ test(getBody.name, () => {
 // })
 
 describe(sortFunction.name, () => {
-  test('number', () => {
+  it('number', () => {
     const a = 0,
       b = 1
 
@@ -1527,7 +1527,7 @@ describe(sortFunction.name, () => {
     expect(sortFunction(b, a, false)).toEqual(-1)
   })
 
-  test('string', () => {
+  it('string', () => {
     const a = 'a',
       b = 'b'
 
@@ -1548,7 +1548,7 @@ describe(sortFunction.name, () => {
     expect(sortFunction(b, a, 'desc')).toEqual(-1)
   })
 
-  test('empty', () => {
+  it('empty', () => {
     let a: string | undefined = 'a',
       // eslint-disable-next-line prefer-const
       b: string | undefined
@@ -1572,7 +1572,7 @@ describe(sortFunction.name, () => {
     expect(sortFunction(b, a, false)).toEqual(-1)
   })
 
-  test('date', () => {
+  it('date', () => {
     const a = new Date(),
       b = new Date(a.getTime() + 1000)
 
@@ -1585,7 +1585,7 @@ describe(sortFunction.name, () => {
     expect(sortFunction(b, a, false)).toEqual(-1)
   })
 
-  test('array', () => {
+  it('array', () => {
     const a = ['a', 'b'],
       b = ['a', 'c']
 

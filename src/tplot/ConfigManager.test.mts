@@ -6,7 +6,7 @@ import { UserConfigNames, userConfigDefaults } from '../models/UserInfo.mjs'
 import { AppException } from '../models/AppException.mjs'
 import { type IConfigShort } from '../models/config.mjs'
 
-test('CreateConfigTickerInfoTabSettings', () => {
+it('CreateConfigTickerInfoTabSettings', () => {
   const settings = CreateConfigTickerInfoTabSettings({
     selectedPeopleTab: 'top',
     selectedTab: 'asset',
@@ -19,7 +19,7 @@ test('CreateConfigTickerInfoTabSettings', () => {
   })
 })
 
-test('constructor', () => {
+it('constructor', () => {
   const configCharts: IConfigShort = {
       created: new Date(),
       createdby: 'test',
@@ -91,7 +91,7 @@ test('constructor', () => {
   })
 })
 
-test('ValidateConfigName', () => {
+it('ValidateConfigName', () => {
   expect(() => ConfigManager.ValidateConfigName('charts')).not.toThrow()
   expect(() => ConfigManager.ValidateConfigName('dashboards')).not.toThrow()
   expect(() =>
@@ -139,7 +139,7 @@ test('ValidateConfigName', () => {
   )
 })
 
-test('FindConfig', () => {
+it('FindConfig', () => {
   const configCharts: IConfigShort = {
       created: new Date(),
       createdby: 'test',
@@ -161,7 +161,7 @@ test('FindConfig', () => {
   ).toBeUndefined()
 })
 
-test('FindBoolean', () => {
+it('FindBoolean', () => {
   const configManager = new ConfigManager([])
 
   expect(
@@ -177,7 +177,7 @@ test('FindBoolean', () => {
   })
 })
 
-test('FindString', () => {
+it('FindString', () => {
   const configManager = new ConfigManager([])
 
   expect(
@@ -193,13 +193,13 @@ test('FindString', () => {
   })
 })
 
-test('findScreen', () => {
+it('findScreen', () => {
   const configManager = new ConfigManager([])
 
   expect(configManager.findScreen('nonExistentScreen')).toBeUndefined()
 })
 
-test('dashboards', () => {
+it('dashboards', () => {
   let configManager = new ConfigManager([])
 
   expect(configManager.dashboards).toStrictEqual({

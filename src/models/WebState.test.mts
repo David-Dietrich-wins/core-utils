@@ -22,7 +22,7 @@ const startTime = new Date(),
     },
   }
 
-test('WebState good', () => {
+it('WebState good', () => {
   const serverState = testConfig.getTestServerState(),
     userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
       data: 'hello',
@@ -34,7 +34,7 @@ test('WebState good', () => {
   expect(webState.message).toBe('success')
 })
 
-test('WebState default constructor', () => {
+it('WebState default constructor', () => {
   const webState = new WebState()
 
   expect(webState.totalFailures).toBe(0)
@@ -42,7 +42,7 @@ test('WebState default constructor', () => {
   expect(webState.message).toBe('success')
 })
 
-test('WebState constructor good', () => {
+it('WebState constructor good', () => {
   const serverState = testConfig.getTestServerState(),
     userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
       data: 'hello',

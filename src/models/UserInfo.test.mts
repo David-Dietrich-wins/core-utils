@@ -1,7 +1,7 @@
 import { ConfigHeaderTickerBars } from '../tplot/ConfigHeaderTickerBars.mjs'
 import { UserInfo } from './UserInfo.mjs'
 
-test('constructor with default', () => {
+it('constructor with default', () => {
   const ui = new UserInfo()
 
   expect(ui).toBeInstanceOf(UserInfo)
@@ -26,7 +26,7 @@ test('constructor with default', () => {
   })
 })
 
-test('constructor with partial IUserInfo', () => {
+it('constructor with partial IUserInfo', () => {
   const ui = new UserInfo({
     displayName: 'John Doe',
     email: 'john.doe@example.com',
@@ -36,7 +36,7 @@ test('constructor with partial IUserInfo', () => {
   expect(ui.email).toBe('john.doe@example.com')
 })
 
-test('CreateUserInfo static method', () => {
+it('CreateUserInfo static method', () => {
   const ui = UserInfo.CreateUserInfo({
     firstName: 'Jane',
     lastName: 'Doe',
@@ -64,7 +64,7 @@ test('CreateUserInfo static method', () => {
   })
 })
 
-test('CreateIUserInfo static method', () => {
+it('CreateIUserInfo static method', () => {
   const ui = UserInfo.CreateIUserInfo({
     firstName: 'Jane',
     lastName: 'Doe',
@@ -91,7 +91,7 @@ test('CreateIUserInfo static method', () => {
   })
 })
 
-test('get IUserInfo', () => {
+it('get IUserInfo', () => {
   const ui = UserInfo.CreateUserInfo({
     firstName: 'Jane',
     lastName: 'Doe',
@@ -118,7 +118,7 @@ test('get IUserInfo', () => {
   })
 })
 
-test('isHeaderTickerBarsDisabled', () => {
+it('isHeaderTickerBarsDisabled', () => {
   const cm = ConfigHeaderTickerBars.defaults()
   cm.disabled = true
 
@@ -128,7 +128,7 @@ test('isHeaderTickerBarsDisabled', () => {
   expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(false)
 })
 
-test('shouldHeaderTickerBarsBeDisabled', () => {
+it('shouldHeaderTickerBarsBeDisabled', () => {
   const cm = ConfigHeaderTickerBars.defaults()
   cm.disabled = true
   cm.asset.disabled = true
@@ -160,7 +160,7 @@ test('shouldHeaderTickerBarsBeDisabled', () => {
   )
 })
 
-test('isHeaderTickerBarsAssetsDisabled', () => {
+it('isHeaderTickerBarsAssetsDisabled', () => {
   const cm = ConfigHeaderTickerBars.defaults()
   cm.asset.disabled = true
 
@@ -173,7 +173,7 @@ test('isHeaderTickerBarsAssetsDisabled', () => {
     false
   )
 })
-test('isHeaderTickerBarsCryptosDisabled', () => {
+it('isHeaderTickerBarsCryptosDisabled', () => {
   const cm = ConfigHeaderTickerBars.defaults()
   cm.crypto.disabled = true
 

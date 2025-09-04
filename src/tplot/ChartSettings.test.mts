@@ -5,7 +5,7 @@ import {
 } from './ChartSettings.mjs'
 import { DateHelper } from '../primitives/date-helper.mjs'
 
-test('ChartPlotReturn', () => {
+it('ChartPlotReturn', () => {
   const result = new ChartPlotReturn()
   expect(result).toEqual({
     drawings: {},
@@ -15,7 +15,7 @@ test('ChartPlotReturn', () => {
   })
 })
 
-test('constructor', () => {
+it('constructor', () => {
   const cs = new ChartSettings('AAPL')
 
   expect(cs).toMatchObject({
@@ -55,7 +55,7 @@ test('constructor', () => {
   })
 })
 
-test('ChartSettings with settings', () => {
+it('ChartSettings with settings', () => {
   const iChartSettings: IChartSettings = {
       endDate: undefined,
       extendedHoursTrading: false,
@@ -82,7 +82,7 @@ test('ChartSettings with settings', () => {
   expect(myChartSettings).toMatchObject(iChartSettings)
 })
 
-test('ChartSettings.Create', () => {
+it('ChartSettings.Create', () => {
   const acs: IChartSettings = {
       endDate: undefined,
       extendedHoursTrading: false,
@@ -121,7 +121,7 @@ test('ChartSettings.Create', () => {
   })
 })
 
-test('createISettings', () => {
+it('createISettings', () => {
   const acs: IChartSettings = {
       endDate: undefined,
       extendedHoursTrading: false,
@@ -138,7 +138,7 @@ test('createISettings', () => {
   expect(chartSettings).toMatchObject({ ...acs, ticker: 'AAPL' })
 })
 
-test('CreateForTradingView', () => {
+it('CreateForTradingView', () => {
   const acs: IChartSettings = {
       endDate: undefined,
       extendedHoursTrading: false,
@@ -206,7 +206,7 @@ test('CreateForTradingView', () => {
   })
 })
 
-test('chartTimeForFmp', () => {
+it('chartTimeForFmp', () => {
   const cs = new ChartSettings('AAPL', 1, 'd', 1, 'minute', '1')
 
   expect(cs.chartTimeForFmp).toBe('1min')
@@ -225,7 +225,7 @@ test('chartTimeForFmp', () => {
   expect(cs.chartTimeForFmp).toBe('')
 })
 
-test('frequencyTypeString', () => {
+it('frequencyTypeString', () => {
   expect(ChartSettings.frequencyTypeString('1', '1')).toBe('1 minute')
   expect(ChartSettings.frequencyTypeString('5', '5')).toBe('5 minute')
   expect(ChartSettings.frequencyTypeString('15', '15')).toBe('15 minute')
@@ -250,13 +250,13 @@ test('frequencyTypeString', () => {
   expect(ChartSettings.frequencyTypeString('anything', '')).toBe('anything')
 })
 
-test('frequencyTypeFriendlyString', () => {
+it('frequencyTypeFriendlyString', () => {
   const cs = new ChartSettings('AAPL', 1, 'd', 1, 'd', '1')
 
   expect(cs.frequencyTypeFriendlyString).toBe('Daily')
 })
 
-test('zChartSettings', () => {
+it('zChartSettings', () => {
   const ics: IChartSettings = {
     endDate: undefined,
     extendedHoursTrading: false,
@@ -282,7 +282,7 @@ test('zChartSettings', () => {
   })
 })
 
-test('debugMessage', () => {
+it('debugMessage', () => {
   const cs = new ChartSettings('AAPL', 1, 'd', 1, 'd', '1')
 
   expect(cs.debugMessage).toBe('Daily')
@@ -293,7 +293,7 @@ test('debugMessage', () => {
   expect(cs.debugMessage).toBe('Daily from 2025-01-01 to 2026-01-01')
 })
 
-test('oneMinute', () => {
+it('oneMinute', () => {
   const cs = ChartSettings.oneMinute('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -308,7 +308,7 @@ test('oneMinute', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('fiveMinute', () => {
+it('fiveMinute', () => {
   const cs = ChartSettings.fiveMinute('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -323,7 +323,7 @@ test('fiveMinute', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('tenMinute', () => {
+it('tenMinute', () => {
   const cs = ChartSettings.tenMinute('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -338,7 +338,7 @@ test('tenMinute', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('fifteenMinute', () => {
+it('fifteenMinute', () => {
   const cs = ChartSettings.fifteenMinute('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -353,7 +353,7 @@ test('fifteenMinute', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('thirtyMinute', () => {
+it('thirtyMinute', () => {
   const cs = ChartSettings.thirtyMinute('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -368,7 +368,7 @@ test('thirtyMinute', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('oneDay', () => {
+it('oneDay', () => {
   const cs = ChartSettings.oneDay('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -383,7 +383,7 @@ test('oneDay', () => {
   expect(cs.extendedHoursTrading).toBe(true)
 })
 
-test('oneWeek', () => {
+it('oneWeek', () => {
   const cs = ChartSettings.oneWeek('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -398,7 +398,7 @@ test('oneWeek', () => {
   expect(cs.extendedHoursTrading).toBe(false)
 })
 
-test('oneMonth', () => {
+it('oneMonth', () => {
   const cs = ChartSettings.oneMonth('AAPL')
 
   expect(cs).toBeInstanceOf(ChartSettings)
@@ -413,7 +413,7 @@ test('oneMonth', () => {
   expect(cs.extendedHoursTrading).toBe(false)
 })
 
-test('has and ends', () => {
+it('has and ends', () => {
   const cs = ChartSettings.fifteenMinute('AAPL')
 
   expect(cs.endIsToday).toBe(false)
@@ -430,7 +430,7 @@ test('has and ends', () => {
   expect(cs.endMoment).toBeUndefined()
 })
 
-test('isToday', () => {
+it('isToday', () => {
   expect(ChartSettings.isToday(new Date())).toBe(true)
   expect(ChartSettings.isToday(new Date('2025-01-01'))).toBe(false)
 
@@ -442,13 +442,13 @@ test('isToday', () => {
   )
 })
 
-test('fromToForFmpForThePastYear', () => {
+it('fromToForFmpForThePastYear', () => {
   const cs = ChartSettings.fromToForFmpForThePastYear()
 
   expect(cs).toBe('&from=2024-12-01&to=2025-12-01')
 })
 
-test('periodWithTypeString', () => {
+it('periodWithTypeString', () => {
   expect(ChartSettings.periodWithTypeString(1, 'day')).toBe('1 day')
   expect(ChartSettings.periodWithTypeString(1, 'month')).toBe('1 month')
   expect(ChartSettings.periodWithTypeString(1, 'year')).toBe('1 year')

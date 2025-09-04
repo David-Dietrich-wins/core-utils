@@ -10,7 +10,7 @@ import {
   updateContextValueValue,
 } from './ContextManager.mjs'
 
-test('ContextManager', () => {
+it('ContextManager', () => {
   const cm = ContextManager.getInstance()
   expect(cm).toMatchObject({
     id: expect.any(String),
@@ -21,7 +21,7 @@ test('ContextManager', () => {
   expect(cm2.id).toBe(cm.id)
 })
 
-test(updateContextUi.name, () => {
+it(updateContextUi.name, () => {
   const ctxui: IContextUI = {
     color: 'blue',
     cols: 3,
@@ -47,7 +47,7 @@ test(updateContextUi.name, () => {
 })
 
 describe(updateContext.name, () => {
-  test('default id', () => {
+  it('default id', () => {
     const ctx = {
       disabled: true,
       updated: Date.now(),
@@ -62,7 +62,7 @@ describe(updateContext.name, () => {
     })
   })
 
-  test('existing id', () => {
+  it('existing id', () => {
     const ctx: IContext = {
       disabled: true,
       id: 'test-id',
@@ -78,7 +78,7 @@ describe(updateContext.name, () => {
   })
 })
 
-test(updateContextKeyValue.name, () => {
+it(updateContextKeyValue.name, () => {
   const ctx: IContext = {
     disabled: true,
     id: 'test-id',
@@ -95,7 +95,7 @@ test(updateContextKeyValue.name, () => {
   })
 })
 
-test(updateContextValueValue.name, () => {
+it(updateContextValueValue.name, () => {
   const ctx: IContextValue<{ a: string; b: string }> = {
     disabled: true,
     id: 'test-id',
@@ -113,7 +113,7 @@ test(updateContextValueValue.name, () => {
   })
 })
 
-test(updateContextValueToggleBoolean.name, () => {
+it(updateContextValueToggleBoolean.name, () => {
   const ctx: IContextValue<boolean> = {
     disabled: true,
     id: 'test-id',
