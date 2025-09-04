@@ -160,7 +160,7 @@ export class ConfigManager {
   }
 }
 
-export function CreateConfigTickerInfoTabSettings(
+export function createConfigTickerInfoTabSettings(
   overrides?: Partial<ConfigTickerInfoTabSettings>
 ) {
   const ret: ConfigTickerInfoTabSettings = {
