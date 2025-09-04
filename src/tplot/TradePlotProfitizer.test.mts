@@ -3,6 +3,7 @@ import {
   type ITradePlotProfitizer,
   TradePlotProfitizer,
 } from './TradePlotProfitizer.mjs'
+import { describe, expect, it } from '@jest/globals'
 import { type IAssetQuoteResponse } from '../models/ticker-info.mjs'
 import { deepCloneJson } from '../primitives/object-helper.mjs'
 
@@ -119,348 +120,445 @@ const itpp: ITradePlotProfitizer = {
     },
   ]
 
-test('constructor', () => {
-  const profitizer = new TradePlotProfitizer()
-  expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
+describe('constructor', () => {
+  it('good', () => {
+    expect.hasAssertions()
 
-  expect(profitizer).toMatchObject({
-    amountToGoal: undefined,
-    amountToTargetHigh: undefined,
-    amountToTargetLow: undefined,
-    created: expect.any(Date),
-    createdby: 'TradePlot',
-    currentPrice: undefined,
-    description: '',
-    goal: undefined,
-    id: expect.any(String),
-    isShort: false,
-    maxExpectedTriggerDate: undefined,
-    minExpectedTriggerDate: undefined,
-    nextExpectedTriggerDate: undefined,
-    nextOrderNumber: undefined,
-    numSubplots: 0,
-    openPrice: undefined,
-    patternCount: 0,
-    percentToGoal: undefined,
-    percentToTargetHigh: undefined,
-    percentToTargetLow: undefined,
-    prevExpectedTriggerDate: undefined,
-    previousClose: undefined,
-    profit: undefined,
-    purchase: undefined,
-    quoteTimeInLong: undefined,
-    shares: 0,
-    subplots: [],
-    targetHigh: undefined,
-    targetLow: undefined,
-    ticker: '',
-    updated: expect.any(Date),
-    updatedby: 'TradePlot',
-  })
+    const profitizer = new TradePlotProfitizer()
 
-  expect(new TradePlotProfitizer(itpp)).toMatchObject({
-    ...itpp,
-    created: expect.any(Date),
-    updated: expect.any(Date),
-  })
-})
+    expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
 
-test('copyObject', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.copyObject(itpp)
+    expect(profitizer).toMatchObject({
+      amountToGoal: undefined,
+      amountToTargetHigh: undefined,
+      amountToTargetLow: undefined,
+      created: expect.any(Date),
+      createdby: 'TradePlot',
+      currentPrice: undefined,
+      description: '',
+      goal: undefined,
+      id: expect.any(String),
+      isShort: false,
+      maxExpectedTriggerDate: undefined,
+      minExpectedTriggerDate: undefined,
+      nextExpectedTriggerDate: undefined,
+      nextOrderNumber: undefined,
+      numSubplots: 0,
+      openPrice: undefined,
+      patternCount: 0,
+      percentToGoal: undefined,
+      percentToTargetHigh: undefined,
+      percentToTargetLow: undefined,
+      prevExpectedTriggerDate: undefined,
+      previousClose: undefined,
+      profit: undefined,
+      purchase: undefined,
+      quoteTimeInLong: undefined,
+      shares: 0,
+      subplots: [],
+      targetHigh: undefined,
+      targetLow: undefined,
+      ticker: '',
+      updated: expect.any(Date),
+      updatedby: 'TradePlot',
+    })
 
-  expect(profitizer).toMatchObject({
-    ...itpp,
-    created: expect.any(Date),
-    id: expect.any(String),
-    updated: expect.any(Date),
+    expect(new TradePlotProfitizer(itpp)).toMatchObject({
+      ...itpp,
+      created: expect.any(Date),
+      updated: expect.any(Date),
+    })
   })
 })
 
-test('Create', () => {
-  let profitizer = TradePlotProfitizer.Create(itpp)
+describe('copyObject', () => {
+  it('is good', () => {
+    expect.hasAssertions()
 
-  expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
-  expect(profitizer).toMatchObject({
-    ...itpp,
-    created: expect.any(Date),
-    id: expect.any(String),
-    targetHigh: Infinity,
-    targetLow: Infinity,
-    updated: expect.any(Date),
-  })
+    const profitizer = new TradePlotProfitizer()
+    profitizer.copyObject(itpp)
 
-  profitizer = TradePlotProfitizer.Create(itpp, assetQuote)
-  expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
-  expect(profitizer).toMatchObject({
-    ...itpp,
-    amountToTargetHigh: undefined,
-    amountToTargetLow: undefined,
-    created: expect.any(Date),
-    currentPrice: 18.97,
-    id: expect.any(String),
-    openPrice: 16.838,
-    percentToTargetHigh: Infinity,
-    percentToTargetLow: -Infinity,
-    previousClose: null,
-    quoteTimeInLong: 1706804186,
-    targetHigh: Infinity,
-    targetLow: Infinity,
-    updated: expect.any(Date),
+    expect(profitizer).toMatchObject({
+      ...itpp,
+      created: expect.any(Date),
+      id: expect.any(String),
+      updated: expect.any(Date),
+    })
   })
 })
 
-test('GetProfitForRowItems', () => {
-  const profitizer = TradePlotProfitizer.GetProfitForRowItems(
+describe('create', () => {
+  it('is good', () => {
+    expect.hasAssertions()
+
+    let profitizer = TradePlotProfitizer.create(itpp)
+
+    expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
+    expect(profitizer).toMatchObject({
+      ...itpp,
+      created: expect.any(Date),
+      id: expect.any(String),
+      targetHigh: Infinity,
+      targetLow: Infinity,
+      updated: expect.any(Date),
+    })
+
+    profitizer = TradePlotProfitizer.create(itpp, assetQuote)
+
+    expect(profitizer).toBeInstanceOf(TradePlotProfitizer)
+    expect(profitizer).toMatchObject({
+      ...itpp,
+      amountToTargetHigh: undefined,
+      amountToTargetLow: undefined,
+      created: expect.any(Date),
+      currentPrice: 18.97,
+      id: expect.any(String),
+      openPrice: 16.838,
+      percentToTargetHigh: Infinity,
+      percentToTargetLow: -Infinity,
+      previousClose: null,
+      quoteTimeInLong: 1706804186,
+      targetHigh: Infinity,
+      targetLow: Infinity,
+      updated: expect.any(Date),
+    })
+  })
+})
+
+describe('profitForRowItems', () => {
+  it('is good', () => {
+    expect.hasAssertions()
+
+    const profitizer = TradePlotProfitizer.profitForRowItems(
+        arrITradePlotProfitizer
+      ),
+      tpp = deepCloneJson(arrITradePlotProfitizer[0])
+
+    expect(profitizer).toBe(100)
+
+    tpp.profit = undefined
+
+    expect(TradePlotProfitizer.profitForRowItems([tpp])).toBe(0)
+  })
+})
+
+describe('mapToPlotMsg', () => {
+  it('is good', () => {
+    expect.hasAssertions()
+
+    const itp: ITradePlotProfitizer = deepCloneJson(arrITradePlotProfitizer[0]),
+      itpNoProfit: ITradePlotProfitizer = deepCloneJson(itp),
+      profitizer = TradePlotProfitizer.MapToPlotMsg(itpp)
+
+    expect(profitizer).toMatchObject({
+      lineColor: '#00ff00',
+      msgText: 'Please setup targets in your trade plot.',
+      price: undefined,
+      quantity: 0,
+      symbol: '',
+    })
+
+    expect(TradePlotProfitizer.MapToPlotMsg(itp)).toMatchObject({
+      lineColor: '#00ff00',
+      msgText: 'Currently up $100.00!',
+      price: undefined,
+      quantity: 100,
+      symbol: 'AAPL',
+    })
+
+    itpNoProfit.profit = 0
+
+    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+      lineColor: '#00ff00',
+      msgText: 'Currently break even.',
+      price: undefined,
+      quantity: 100,
+      symbol: 'AAPL',
+    })
+
+    itpNoProfit.profit = -100
+
+    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+      lineColor: '#00ff00',
+      msgText: 'Currently down -$100.00.',
+      price: undefined,
+      quantity: 100,
+      symbol: 'AAPL',
+    })
+
+    itpNoProfit.isShort = true
+
+    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+      lineColor: '#f2c200',
+      msgText: 'Currently down -$100.00.',
+      price: undefined,
+      quantity: 100,
+      symbol: 'AAPL',
+    })
+  })
+})
+
+describe('mapToPlotMsgs', () => {
+  it('is good', () => {
+    expect.hasAssertions()
+
+    const profitizers = TradePlotProfitizer.mapToPlotMsgs(
       arrITradePlotProfitizer
-    ),
-    tpp = deepCloneJson(arrITradePlotProfitizer[0])
+    )
 
-  expect(profitizer).toBe(100)
-
-  tpp.profit = undefined
-  expect(TradePlotProfitizer.GetProfitForRowItems([tpp])).toBe(0)
-})
-
-test('MapToPlotMsg', () => {
-  const itp: ITradePlotProfitizer = deepCloneJson(arrITradePlotProfitizer[0]),
-    itpNoProfit: ITradePlotProfitizer = deepCloneJson(itp),
-    profitizer = TradePlotProfitizer.MapToPlotMsg(itpp)
-
-  expect(profitizer).toMatchObject({
-    lineColor: '#00ff00',
-    msgText: 'Please setup targets in your trade plot.',
-    price: undefined,
-    quantity: 0,
-    symbol: '',
-  })
-
-  expect(TradePlotProfitizer.MapToPlotMsg(itp)).toMatchObject({
-    lineColor: '#00ff00',
-    msgText: 'Currently up $100.00!',
-    price: undefined,
-    quantity: 100,
-    symbol: 'AAPL',
-  })
-
-  itpNoProfit.profit = 0
-  expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
-    lineColor: '#00ff00',
-    msgText: 'Currently break even.',
-    price: undefined,
-    quantity: 100,
-    symbol: 'AAPL',
-  })
-
-  itpNoProfit.profit = -100
-  expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
-    lineColor: '#00ff00',
-    msgText: 'Currently down -$100.00.',
-    price: undefined,
-    quantity: 100,
-    symbol: 'AAPL',
-  })
-
-  itpNoProfit.isShort = true
-  expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
-    lineColor: '#f2c200',
-    msgText: 'Currently down -$100.00.',
-    price: undefined,
-    quantity: 100,
-    symbol: 'AAPL',
+    expect(profitizers).toHaveLength(1)
+    expect(profitizers[0]).toMatchObject({
+      lineColor: '#00ff00',
+      msgText: 'Currently up $100.00!',
+      price: undefined,
+      quantity: 100,
+      symbol: 'AAPL',
+    })
   })
 })
 
-test('MapToPlotMsgs', () => {
-  const profitizers = TradePlotProfitizer.MapToPlotMsgs(arrITradePlotProfitizer)
+describe('get currentPriceDisplay', () => {
+  it('should return the current price formatted as a currency string', () => {
+    expect.hasAssertions()
 
-  expect(profitizers).toHaveLength(1)
-  expect(profitizers[0]).toMatchObject({
-    lineColor: '#00ff00',
-    msgText: 'Currently up $100.00!',
-    price: undefined,
-    quantity: 100,
-    symbol: 'AAPL',
+    const profitizer = new TradePlotProfitizer()
+    profitizer.currentPrice = 123.456
+
+    expect(profitizer.currentPriceDisplay).toBe('$123.456')
+
+    profitizer.currentPrice = undefined
+
+    expect(profitizer.currentPriceDisplay).toBe('$0.00')
   })
 })
 
-test('get currentPriceDisplay', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.currentPrice = 123.456
+describe('getCommentFromPattern', () => {
+  it('should return the comment for a known pattern', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.currentPriceDisplay).toBe('$123.456')
+    const comment = TradePlotProfitizer.commentFromPattern('TestPattern')
 
-  profitizer.currentPrice = undefined
-  expect(profitizer.currentPriceDisplay).toBe('$0.00')
+    expect(comment).toBe('')
+  })
+
+  it('getCommentFromPattern with unknown pattern', () => {
+    expect.hasAssertions()
+
+    const comment = TradePlotProfitizer.commentFromPattern('UnknownPattern')
+
+    expect(comment).toBe('')
+  })
+
+  it('should return the correct comment for a given pattern', () => {
+    expect.hasAssertions()
+
+    expect(TradePlotProfitizer.commentFromPattern('TestPattern')).toBe('')
+    expect(TradePlotProfitizer.commentFromPattern('b28')).toBe(
+      'This is a back to the 8. It is one of the most common fundamentals in moving averages.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('ra200')).toBe(
+      'When you have resistance at the 200-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('ra50')).toBe(
+      'When you have resistance at the 50-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('spt200')).toBe(
+      'When you have support at the 200-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('spt50')).toBe(
+      'When you have support at the 50-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('x8x21')).toBe(
+      'When the 8- and 21-day moving averages cross each other. Follow the 8.'
+    )
+    expect(TradePlotProfitizer.commentFromPattern('unknownPattern')).toBe('')
+  })
 })
 
-test('getCommentFromPattern', () => {
-  const comment = TradePlotProfitizer.GetCommentFromPattern('TestPattern')
+describe('get goalStart', () => {
+  it('should return the goal start value', () => {
+    expect.hasAssertions()
 
-  expect(comment).toBe('')
+    const profitizer = new TradePlotProfitizer()
+    profitizer.goal = 1000
+
+    expect(profitizer.goalStart).toBe(0)
+
+    profitizer.goal = undefined
+
+    expect(profitizer.goalStart).toBe(0)
+  })
 })
 
-test('getCommentFromPattern with unknown pattern', () => {
-  const comment = TradePlotProfitizer.GetCommentFromPattern('UnknownPattern')
+describe('get goalStatusText', () => {
+  it('should return the goal status text', () => {
+    expect.hasAssertions()
 
-  expect(comment).toBe('')
-})
-test('get goalStart', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.goal = 1000
+    const profitizer = new TradePlotProfitizer()
+    profitizer.goal = 1000
+    profitizer.shares = 10
 
-  expect(profitizer.goalStart).toBe(0)
+    expect(profitizer.goalStatusText).toBe(
+      'Please provide a purchase price that you paid per share.'
+    )
 
-  profitizer.goal = undefined
-  expect(profitizer.goalStart).toBe(0)
-})
+    profitizer.purchase = 100
 
-test('get goalStatusText', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.goal = 1000
-  profitizer.shares = 10
+    expect(profitizer.goalStatusText).toBe(
+      '1000000.00% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
+    )
 
-  expect(profitizer.goalStatusText).toBe(
-    'Please provide a purchase price that you paid per share.'
-  )
+    profitizer.purchase = 0
 
-  profitizer.purchase = 100
-  expect(profitizer.goalStatusText).toBe(
-    '1000000.00% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
-  )
+    expect(profitizer.goalStatusText).toBe(
+      'Please provide a purchase price that you paid per share.'
+    )
 
-  profitizer.purchase = 0
-  expect(profitizer.goalStatusText).toBe(
-    'Please provide a purchase price that you paid per share.'
-  )
+    profitizer.goal = 0
 
-  profitizer.goal = 0
-  expect(profitizer.goalStatusText).toBe('Please provide a goal.')
+    expect(profitizer.goalStatusText).toBe('Please provide a goal.')
 
-  profitizer.shares = 0
-  expect(profitizer.goalStatusText).toBe('Please provide Number of Shares.')
+    profitizer.shares = 0
 
-  profitizer.shares = 10
-  profitizer.purchase = 100
-  profitizer.currentPrice = 120
-  profitizer.goal = 1200
-  expect(profitizer.goalStatusText).toBe(
-    '90.00% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
-  )
+    expect(profitizer.goalStatusText).toBe('Please provide Number of Shares.')
 
-  profitizer.goal = 20
-  expect(profitizer.goalStatusText).toBe(
-    '+500.00% above goal. You are above 15% of goal. Recommendation: Exit your position to lock in profits.'
-  )
+    profitizer.shares = 10
+    profitizer.purchase = 100
+    profitizer.currentPrice = 120
+    profitizer.goal = 1200
 
-  profitizer.goal = 140
-  expect(profitizer.goalStatusText).toBe('14.29% to go.')
+    expect(profitizer.goalStatusText).toBe(
+      '90.00% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
+    )
 
-  profitizer.currentPrice = 100
-  expect(profitizer.goalStatusText).toBe(
-    '28.57% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
-  )
+    profitizer.goal = 20
 
-  profitizer.currentPrice = 140
-  expect(profitizer.goalStatusText).toBe('0.00%')
+    expect(profitizer.goalStatusText).toBe(
+      '+500.00% above goal. You are above 15% of goal. Recommendation: Exit your position to lock in profits.'
+    )
 
-  profitizer.currentPrice = 145
-  expect(profitizer.goalStatusText).toBe('+3.57% above goal.')
-})
+    profitizer.goal = 140
 
-test('get investmentAmountCurrent', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.currentPrice = 50
-  profitizer.shares = 10
+    expect(profitizer.goalStatusText).toBe('14.29% to go.')
 
-  expect(profitizer.investmentAmountCurrent).toBe(500)
+    profitizer.currentPrice = 100
+
+    expect(profitizer.goalStatusText).toBe(
+      '28.57% to go. You are below 15% of goal. Recommendation: Exit your position to minimize loss.'
+    )
+
+    profitizer.currentPrice = 140
+
+    expect(profitizer.goalStatusText).toBe('0.00%')
+
+    profitizer.currentPrice = 145
+
+    expect(profitizer.goalStatusText).toBe('+3.57% above goal.')
+  })
 })
 
-test('get investmentAmountDisplay', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.currentPrice = 50
-  profitizer.shares = 10
+describe('get investmentAmountCurrent', () => {
+  it('should return the current investment amount', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.investmentAmountDisplay).toBe('$500.00')
+    const profitizer = new TradePlotProfitizer()
+    profitizer.currentPrice = 50
+    profitizer.shares = 10
 
-  profitizer.currentPrice = 0
-  profitizer.shares = 0
-  profitizer.purchase = 0
-  expect(profitizer.investmentAmountDisplay).toBe('$0.00')
-
-  profitizer.currentPrice = undefined
-  profitizer.shares = 0
-  profitizer.purchase = undefined
-  expect(profitizer.investmentAmountDisplay).toBe('$0.00')
+    expect(profitizer.investmentAmountCurrent).toBe(500)
+  })
 })
 
-test('get investmentAmountStart', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.purchase = 50
-  profitizer.shares = 10
+describe('get investmentAmountDisplay', () => {
+  it('should return the current investment amount display', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.investmentAmountStart).toBe(500)
+    const profitizer = new TradePlotProfitizer()
+    profitizer.currentPrice = 50
+    profitizer.shares = 10
 
-  profitizer.purchase = 0
-  expect(profitizer.investmentAmountStart).toBe(0)
+    expect(profitizer.investmentAmountDisplay).toBe('$500.00')
+
+    profitizer.currentPrice = 0
+    profitizer.shares = 0
+    profitizer.purchase = 0
+
+    expect(profitizer.investmentAmountDisplay).toBe('$0.00')
+
+    profitizer.currentPrice = undefined
+    profitizer.shares = 0
+    profitizer.purchase = undefined
+
+    expect(profitizer.investmentAmountDisplay).toBe('$0.00')
+  })
 })
 
-test('get investmentAmountStartDisplay', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.purchase = 50
-  profitizer.shares = 10
+describe('get investmentAmountStart', () => {
+  it('should return the starting investment amount', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.investmentAmountStartDisplay).toBe('$500.00')
+    const profitizer = new TradePlotProfitizer()
+    profitizer.purchase = 50
+    profitizer.shares = 10
 
-  profitizer.purchase = undefined
-  profitizer.shares = 0
-  expect(profitizer.investmentAmountStartDisplay).toBe('$0')
+    expect(profitizer.investmentAmountStart).toBe(500)
+
+    profitizer.purchase = 0
+
+    expect(profitizer.investmentAmountStart).toBe(0)
+  })
 })
 
-test('get profitLoss', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.currentPrice = 60
-  profitizer.purchase = 50
-  profitizer.shares = 10
+describe('get investmentAmountStartDisplay', () => {
+  it('should return the starting investment amount display', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.profitLoss).toBe(100)
+    const profitizer = new TradePlotProfitizer()
+    profitizer.purchase = 50
+    profitizer.shares = 10
+
+    expect(profitizer.investmentAmountStartDisplay).toBe('$500.00')
+
+    profitizer.purchase = undefined
+    profitizer.shares = 0
+
+    expect(profitizer.investmentAmountStartDisplay).toBe('$0')
+  })
 })
 
-test('get profitLossText', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.currentPrice = 60
-  profitizer.purchase = 50
-  profitizer.shares = 10
+describe('get profitLoss', () => {
+  it('should return the correct profit/loss amount', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.profitLossText).toBe('100.00')
+    const profitizer = new TradePlotProfitizer()
+    profitizer.currentPrice = 60
+    profitizer.purchase = 50
+    profitizer.shares = 10
+
+    expect(profitizer.profitLoss).toBe(100)
+  })
 })
 
-test('get subplotCount', () => {
-  const profitizer = new TradePlotProfitizer()
-  profitizer.subplots = [new Subplot(iSubplot), new Subplot(iSubplot)]
+describe('get profitLossText', () => {
+  it('should return the correct profit/loss text', () => {
+    expect.hasAssertions()
 
-  expect(profitizer.subplotCount).toBe(2)
+    const profitizer = new TradePlotProfitizer()
+    profitizer.currentPrice = 60
+    profitizer.purchase = 50
+    profitizer.shares = 10
+
+    expect(profitizer.profitLossText).toBe('100.00')
+  })
 })
 
-test('getCommentFromPattern', () => {
-  expect(TradePlotProfitizer.GetCommentFromPattern('TestPattern')).toBe('')
-  expect(TradePlotProfitizer.GetCommentFromPattern('b28')).toBe(
-    'This is a back to the 8. It is one of the most common fundamentals in moving averages.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('ra200')).toBe(
-    'When you have resistance at the 200-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('ra50')).toBe(
-    'When you have resistance at the 50-day moving average on the daily chart. Acts as a ceiling, and typically some type of bounce is expected.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('spt200')).toBe(
-    'When you have support at the 200-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('spt50')).toBe(
-    'When you have support at the 50-day moving average on the daily chart. Acts as a floor, and typically some type of bounce is expected.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('x8x21')).toBe(
-    'When the 8- and 21-day moving averages cross each other. Follow the 8.'
-  )
-  expect(TradePlotProfitizer.GetCommentFromPattern('unknownPattern')).toBe('')
+describe('get subplotCount', () => {
+  it('should return the correct subplot count', () => {
+    expect.hasAssertions()
+
+    const profitizer = new TradePlotProfitizer()
+    profitizer.subplots = [new Subplot(iSubplot), new Subplot(iSubplot)]
+
+    expect(profitizer.subplotCount).toBe(2)
+  })
 })

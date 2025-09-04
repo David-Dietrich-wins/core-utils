@@ -75,7 +75,7 @@ export class TradePlotProfitizer
     }
   }
 
-  static Create(obj: ITradePlot, tprice?: IAssetQuoteResponse) {
+  static create(obj: ITradePlot, tprice?: IAssetQuoteResponse) {
     const dateNow = new Date().getTime(),
       price = tprice?.price,
       tplot = new TradePlotProfitizer()
@@ -109,7 +109,7 @@ export class TradePlotProfitizer
     return tplot
   }
 
-  static GetProfitForRowItems(rows: ITradePlotProfitizer[]) {
+  static profitForRowItems(rows: ITradePlotProfitizer[]) {
     return safeArray(rows).reduce((acc, tprow) => acc + (tprow.profit || 0), 0)
   }
 
@@ -138,7 +138,7 @@ export class TradePlotProfitizer
     return pl
   }
 
-  static MapToPlotMsgs(x: ITradePlotProfitizer[]) {
+  static mapToPlotMsgs(x: ITradePlotProfitizer[]) {
     return safeArray(x).map(TradePlotProfitizer.MapToPlotMsg)
   }
 
@@ -151,7 +151,7 @@ export class TradePlotProfitizer
    * @param pattern Pattern key to get the comment for.
    * @return string Comment text.
    */
-  static GetCommentFromPattern(pattern: string) {
+  static commentFromPattern(pattern: string) {
     switch (safestrLowercase(pattern)) {
       case 'b28':
         return 'This is a back to the 8. It is one of the most common fundamentals in moving averages.'

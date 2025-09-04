@@ -91,7 +91,7 @@ export class TradePlot implements ITradePlot {
     return tp
   }
 
-  static FixupForSave(obj: ITradePlot) {
+  static fixupForSave(obj: ITradePlot) {
     for (const subplot of obj.subplots) {
       if ('expectedTriggerDate' in subplot) {
         delete subplot.expectedTriggerDate

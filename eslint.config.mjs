@@ -84,10 +84,19 @@ export default defineConfig(
     files: [
       '__tests__/**',
       'test/**',
+      '**/*.test.cjs',
+      '**/*.test.cts',
       '**/*.test.js',
+      '**/*.test.jsx',
       '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/*.test.mts',
       '**/*.spec.js',
       '**/*.spec.ts',
     ],
+    rules: {
+      ...jestPlugin.configs.all.rules,
+      'jest/max-expects': 'off',
+    },
   }
 )
