@@ -3,7 +3,7 @@ import type {
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import { ToSafeArray, isArray, safeArray } from '../primitives/array-helper.mjs'
+import { toSafeArray, isArray, safeArray } from '../primitives/array-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
@@ -57,7 +57,7 @@ export class InstrumentationStatistics {
     statsToAdd?: Readonly<ArrayOrSingle<InstrumentationStatistics>>,
     concatMsg = true
   ) {
-    for (const stats of ToSafeArray(statsToAdd)) {
+    for (const stats of toSafeArray(statsToAdd)) {
       this.successes += stats.successes
       this.failures += stats.failures
       this.totalProcessed += stats.totalProcessed
@@ -279,7 +279,7 @@ export class InstrumentationStatistics {
   }) {
     let msg = hasData(prefix) ? `${prefix} ` : ''
 
-    const allStats = ToSafeArray(this).concat(...ToSafeArray(individualStats)),
+    const allStats = toSafeArray(this).concat(...toSafeArray(individualStats)),
       allStatsCount = allStats.length
     msg += allStats.reduce((prev, cur, index) => {
       if (index > 0 && index < allStatsCount - 1) {

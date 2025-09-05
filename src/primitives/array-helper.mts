@@ -68,14 +68,14 @@ export function safeArrayUnique<T>(
   return Array.from(new Set(safeArray(arr, ifEmpty)))
 }
 
-export function ToSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
+export function toSafeArray<T = unknown>(arrOrT?: Readonly<ArrayOrSingle<T>>) {
   if (arrOrT) {
     return Array.isArray(arrOrT) ? (arrOrT as T[]) : [arrOrT as T]
   }
 
   return []
 }
-export function ToSafeArray2d<T = unknown>(
+export function toSafeArray2d<T = unknown>(
   arrOrT?: Readonly<ArrayOrSingle<T>>
 ) {
   if (arrOrT) {
@@ -259,7 +259,7 @@ export function arrayMustFindByName<T extends IName<Tname>, Tname = T['name']>(
  * Helper function to reduce an array of objects or arrays.
  * Takes care of handling undefined, objects and/or arrays and returns a guaranteed flattened array of type TreturnType.
  * Keep in mind, this is only for when you want to return an array of IId<T> type derived objects.
- * @param arr The array or single item to iterate over. ToSafeArray is called.
+ * @param arr The array or single item to iterate over. toSafeArray is called.
  * @param funcArrayResults Callback that returns undefined or an object or array of TreturnType.
  * @returns The reduced array of all objects and arrays returned funcArrayResults. Will be [] if all returns were undefined or the calling array is undefined.
  */
@@ -270,7 +270,7 @@ export function arrayReduceArrayReturns<T, TreturnType = T>(
     _index: number
   ) => ArrayOrSingle<TreturnType> | undefined
 ) {
-  return ToSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
+  return toSafeArray(arr).reduce((acc: TreturnType[], cur, index) => {
     const res = funcArrayResults(cur, index)
     if (res) {
       if (Array.isArray(res)) {
@@ -751,7 +751,7 @@ export function splitToArrayOfNumbers(commaDelimitedString?: string) {
   return trimmed.map((item) => parseFloat(item))
 }
 
-export function ToIIdNameArray<T extends IIdName>(
+export function toIIdNameArray<T extends IIdName>(
   arr: Readonly<T | string>[] | null | undefined
 ) {
   return safeArray(arr).map((x) => {
@@ -769,7 +769,7 @@ export function ToIIdNameArray<T extends IIdName>(
   })
 }
 
-export function MapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
+export function mapINamesToNames(arr: Readonly<IName>[] | null | undefined) {
   return safeArray(arr).map((x) => x.name)
 }
 

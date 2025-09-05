@@ -4,7 +4,7 @@ import {
   type JSONValue,
 } from '../models/types.mjs'
 import {
-  ToSafeArray2d,
+  toSafeArray2d,
   isArray,
   safeArray,
 } from '../primitives/array-helper.mjs'
@@ -44,7 +44,7 @@ export function GetHttpHeaders(
 ) {
   const h = new Headers()
 
-  ToSafeArray2d<Readonly<[string, string]>>(headers).forEach((header) => {
+  toSafeArray2d<Readonly<[string, string]>>(headers).forEach((header) => {
     if (isArray(header, 2)) {
       h.append(header[0], header[1])
     }
@@ -64,7 +64,7 @@ export function getHttpHeaderJson(
 ) {
   const headers: Array<Readonly<[string, string]>> = [
     ['Content-Type', 'application/json'],
-    ...ToSafeArray2d<Readonly<[string, string]>>(addHeaders),
+    ...toSafeArray2d<Readonly<[string, string]>>(addHeaders),
   ]
 
   if (hasData(bearerToken)) {

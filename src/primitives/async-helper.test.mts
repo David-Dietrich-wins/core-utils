@@ -2,27 +2,33 @@ import {
   asyncGeneratorLoopRunMaxIterations,
   asyncGeneratorLoopStopOnFalsyOrException,
 } from './async-helper.mjs'
+import { describe, expect, it } from '@jest/globals'
 
-describe(asyncGeneratorLoopRunMaxIterations.name, () => {
+describe('asyncGeneratorLoopRunMaxIterations', () => {
   it('good', async () => {
+    expect.assertions(3)
+
     const generator = asyncGeneratorLoopRunMaxIterations(
       () => Promise.resolve([1, 2, 3]),
       2
     )
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [1, 2, 3],
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
@@ -30,23 +36,28 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
   })
 
   it('default maxIterations', async () => {
+    expect.assertions(3)
+
     const generator = asyncGeneratorLoopRunMaxIterations(() =>
       Promise.resolve([1, 2, 3])
     )
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [1, 2, 3],
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
@@ -54,18 +65,22 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
   })
 
   it('throws an exception', async () => {
+    expect.assertions(2)
+
     const generator = asyncGeneratorLoopRunMaxIterations(
       () => Promise.reject(new Error('Test error')),
       2
     )
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
@@ -73,13 +88,16 @@ describe(asyncGeneratorLoopRunMaxIterations.name, () => {
   })
 })
 
-describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
+describe('asyncGeneratorLoopStopOnFalsyOrException', () => {
   it('good', async () => {
+    expect.assertions(2)
+
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {
       runCount += 1
 
+      // eslint-disable-next-line jest/no-conditional-in-test
       if (runCount === 1) {
         return Promise.resolve([1, 2, 3])
       }
@@ -87,12 +105,14 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
     })
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [1, 2, 3],
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [],
@@ -100,11 +120,14 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
   })
 
   it('empty result', async () => {
+    expect.assertions(2)
+
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {
       runCount += 1
 
+      // eslint-disable-next-line jest/no-conditional-in-test
       if (runCount === 1) {
         return Promise.resolve([1, 2, 3])
       }
@@ -113,12 +136,14 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
     })
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [1, 2, 3],
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
@@ -126,11 +151,14 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
   })
 
   it('exception thrown', async () => {
+    expect.assertions(2)
+
     let runCount = 0
 
     const generator = asyncGeneratorLoopStopOnFalsyOrException(() => {
       runCount += 1
 
+      // eslint-disable-next-line jest/no-conditional-in-test
       if (runCount === 1) {
         return Promise.resolve([1, 2, 3])
       }
@@ -139,12 +167,14 @@ describe(asyncGeneratorLoopStopOnFalsyOrException.name, () => {
     })
 
     let result = await generator.next()
+
     expect(result).toStrictEqual({
       done: false,
       value: [1, 2, 3],
     })
 
     result = await generator.next()
+
     expect(result).toStrictEqual({
       done: true,
       value: undefined,
