@@ -22,13 +22,13 @@ it('good', () => {
   expect(idm.stats?.totalProcessed).toBe(0)
 
   idm.add({ id: '4', value: '40' })
-  expect(idm.list.length).toBe(4)
+  expect(idm.list).toHaveLength(4)
   expect(idm.stats?.totalProcessed).toBe(1)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
 
   idm.remove(aids[1])
-  expect(idm.list.length).toBe(3)
+  expect(idm.list).toHaveLength(3)
   expect(idm.stats?.totalProcessed).toBe(2)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
@@ -42,7 +42,7 @@ it('default constructor', () => {
   expect(idm.stats?.totalProcessed).toBeUndefined()
 
   idm.add({ id: '4', value: '40' })
-  expect(idm.list.length).toBe(1)
+  expect(idm.list).toHaveLength(1)
   expect(idm.list).toMatchObject([{ id: '4', value: '40' }])
 })
 
@@ -61,13 +61,13 @@ it('CreateIdValueManager', () => {
   expect(idm.stats?.totalProcessed).toBe(0)
 
   idm.add({ id: '4', value: '40' })
-  expect(idm.list.length).toBe(4)
+  expect(idm.list).toHaveLength(4)
   expect(idm.stats?.totalProcessed).toBe(1)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
 
   idm.remove(aids[1])
-  expect(idm.list.length).toBe(3)
+  expect(idm.list).toHaveLength(3)
   expect(idm.stats?.totalProcessed).toBe(2)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)

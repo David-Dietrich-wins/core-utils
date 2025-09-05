@@ -684,7 +684,7 @@ it('shuffleArray', () => {
   expect(shuffled).not.toStrictEqual(arr)
 
   shuffled = shuffleArray(arr, 2)
-  expect(shuffled.length).toBe(2)
+  expect(shuffled).toHaveLength(2)
 })
 
 describe(`${splitToArray.name} types`, () => {

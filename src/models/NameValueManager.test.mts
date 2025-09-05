@@ -37,14 +37,14 @@ describe('NameValueManager', () => {
       zpr = new NameValueType(name, value, type),
       zzmanager = new NameValueManager([zpr])
 
-    expect(zzmanager.list.length).toBe(1)
+    expect(zzmanager.list).toHaveLength(1)
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
   it('constructor defaults', () => {
     const manager = new NameValueManager()
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
 
   it('CreateNameValueManager', () => {
@@ -54,19 +54,19 @@ describe('NameValueManager', () => {
       zpr = new NameValueType(name, value, type),
       zzmanager = NameValueManager.CreateNameValueManager([zpr])
 
-    expect(zzmanager.list.length).toBe(1)
+    expect(zzmanager.list).toHaveLength(1)
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
   it('CreateNameValueManager with null', () => {
     const manager = NameValueManager.CreateNameValueManager(null)
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
   it('CreateNameValueManager with undefined', () => {
     const manager = NameValueManager.CreateNameValueManager(undefined)
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
 
   it('CreateINameValue', () => {
@@ -176,7 +176,7 @@ describe('NameValueLineFormatManager', () => {
       ),
       zzmgr = new NameValueLineFormatManager([zpr])
     expect(zzmgr).toBeInstanceOf(NameValueLineFormatManager)
-    expect(zzmgr.nvlist.length).toBe(1)
+    expect(zzmgr.nvlist).toHaveLength(1)
     expect(zzmgr.nvlist[0].key).toBe(key)
     expect(zzmgr.nvlist[0].keyDisplayValue).toBe(keyDisplayValue)
     expect(zzmgr.nvlist[0].order).toBe(order)
@@ -188,12 +188,12 @@ describe('NameValueLineFormatManager', () => {
     const anv = new NameValue('testName', '100'),
       arrnvf = zzmgr.FormatWithStyle([anv], 'name', true)
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvf.length).toBe(0)
+    expect(arrnvf).toHaveLength(0)
 
     const anvkey = new NameValue('key', '100'),
       arrnvfName = zzmgr.FormatWithStyle([anvkey], 'name', false)
     expect(arrnvfName).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvfName.length).toBe(1)
+    expect(arrnvfName).toHaveLength(1)
     expect(arrnvfName[0]).toBeInstanceOf(NameValueWithStyle)
     expect(arrnvfName[0].name).toBe(keyDisplayValue)
     expect(arrnvfName[0].value).toBe('$100.00')
@@ -202,12 +202,12 @@ describe('NameValueLineFormatManager', () => {
 
     const arrnvfValue = zzmgr.FormatWithStyle([anv], 'value', false)
     expect(arrnvfValue).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvfValue.length).toBe(0)
+    expect(arrnvfValue).toHaveLength(0)
 
     zpr.order = undefined
     const arrnvf2 = zzmgr.FormatWithStyle([anvkey], 'name', false)
     expect(arrnvf2).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvf2.length).toBe(1)
+    expect(arrnvf2).toHaveLength(1)
     expect(arrnvf2[0]).toBeInstanceOf(NameValueWithStyle)
     expect(arrnvf2[0].name).toBe(keyDisplayValue)
     expect(arrnvf2[0].value).toBe('$100.00')
@@ -229,7 +229,7 @@ describe('NameValueLineFormatManager', () => {
       'name'
     )
     expect(arrnvf3).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvf3.length).toBe(2)
+    expect(arrnvf3).toHaveLength(2)
     expect(arrnvf3[0]).toBeInstanceOf(NameValueWithStyle)
     expect(arrnvf3[0].name).toBe(keyDisplayValue)
     expect(arrnvf3[0].value).toBe('$100.00')
@@ -249,7 +249,7 @@ describe('NameValueLineFormatManager', () => {
       'value'
     )
     expect(arrnvfSortValue).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvfSortValue.length).toBe(2)
+    expect(arrnvfSortValue).toHaveLength(2)
     expect(arrnvfSortValue[0]).toBeInstanceOf(NameValueWithStyle)
     expect(arrnvfSortValue[0].name).toBe(keyDisplayValue)
     expect(arrnvfSortValue[0].value).toBe('$0.00')
@@ -264,7 +264,7 @@ describe('NameValueLineFormatManager', () => {
 
     const ret = zzmgr.FromObject({ key: 'value', key2: 'value2' }, 'key')
     expect(ret).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(ret.length).toBe(1)
+    expect(ret).toHaveLength(1)
     expect(ret[0].name).toBe(keyDisplayValue)
     expect(ret[0].value).toBe('')
     expect(ret[0].style).toBe(style)
@@ -280,18 +280,18 @@ describe('NameValueLineFormatManager', () => {
 
     const ret2 = zzmgr.FromObject()
     expect(ret2).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(ret2.length).toBe(0)
+    expect(ret2).toHaveLength(0)
   })
 
   it('without constructor arguments', () => {
     const mgr = new NameValueLineFormatManager()
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
-    expect(mgr.nvlist.length).toBe(0)
+    expect(mgr.nvlist).toHaveLength(0)
 
     const anv = new NameValue('testName', '100'),
       arrnvf = mgr.FormatWithStyle([anv], 'name', true)
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(arrnvf.length).toBe(0)
+    expect(arrnvf).toHaveLength(0)
   })
 
   it('no style found', () => {
@@ -304,12 +304,12 @@ describe('NameValueLineFormatManager', () => {
 
     const mgr = new NameValueLineFormatManager([pr, pr2])
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
-    expect(mgr.nvlist.length).toBe(2)
+    expect(mgr.nvlist).toHaveLength(2)
 
     const nv = new NameValue(key, '100'),
       nvNotFound = new NameValue(key, '200'),
       zarrnvf = mgr.FormatWithStyle([nv, nvNotFound], 'name', true)
     expect(zarrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
-    expect(zarrnvf.length).toBe(2)
+    expect(zarrnvf).toHaveLength(2)
   })
 })

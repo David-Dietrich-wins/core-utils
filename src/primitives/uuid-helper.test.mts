@@ -1,7 +1,12 @@
+import { describe, expect, it } from '@jest/globals'
 import { newGuid } from './uuid-helper.mjs'
 
-it('newGuid', () => {
-  const newg = newGuid()
+describe('uuid-helper', () => {
+  it('newGuid', () => {
+    expect.assertions(1)
 
-  expect(newg.length).toBe(36)
+    const newg = newGuid()
+
+    expect(newg).toHaveLength(36)
+  })
 })

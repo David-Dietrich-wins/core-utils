@@ -28,14 +28,14 @@ describe('NameValManager', () => {
       vpr = new NameValType(name, value, type),
       zmanager = new NameValManager([vpr])
 
-    expect(zmanager.list.length).toBe(1)
+    expect(zmanager.list).toHaveLength(1)
     expect(zmanager.list[0].name).toBe(name)
     expect(zmanager.list[0].val).toBe(value)
   })
   it('constructor defaults', () => {
     const manager = new NameValManager()
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
 
   it('CreateNameValManager', () => {
@@ -45,19 +45,19 @@ describe('NameValManager', () => {
       vpr = new NameValType(name, value, type),
       zmanager = NameValManager.CreateNameValManager([vpr])
 
-    expect(zmanager.list.length).toBe(1)
+    expect(zmanager.list).toHaveLength(1)
     expect(zmanager.list[0].name).toBe(name)
     expect(zmanager.list[0].val).toBe(value)
   })
   it('CreateNameValManager with null', () => {
     const manager = NameValManager.CreateNameValManager(null)
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
   it('CreateNameValManager with undefined', () => {
     const manager = NameValManager.CreateNameValManager(undefined)
 
-    expect(manager.list.length).toBe(0)
+    expect(manager.list).toHaveLength(0)
   })
 
   it('NameVal.CreateINameVal', () => {

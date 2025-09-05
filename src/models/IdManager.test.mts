@@ -12,13 +12,13 @@ it('good', () => {
   expect(idm.stats?.totalProcessed).toBe(0)
 
   idm.add({ id: '4' })
-  expect(idm.list.length).toBe(4)
+  expect(idm.list).toHaveLength(4)
   expect(idm.stats?.totalProcessed).toBe(1)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
 
   idm.remove(ads[1])
-  expect(idm.list.length).toBe(3)
+  expect(idm.list).toHaveLength(3)
   expect(idm.stats?.totalProcessed).toBe(2)
   expect(idm.stats?.add).toBe(0)
   expect(idm.stats?.successes).toBe(1)
@@ -33,7 +33,7 @@ describe(IdManager.name, () => {
     expect(idm.stats?.totalProcessed).toBeUndefined()
 
     idm.add({ id: '4' })
-    expect(idm.list.length).toBe(1)
+    expect(idm.list).toHaveLength(1)
     expect(idm.list).toMatchObject([{ id: '4' }])
   })
 
@@ -44,7 +44,7 @@ describe(IdManager.name, () => {
     expect(idm.stats?.totalProcessed).toBe(0)
 
     idm.add({ id: '4' })
-    expect(idm.list.length).toBe(2)
+    expect(idm.list).toHaveLength(2)
     expect(idm.list).toMatchObject([{ id: '1' }, { id: '4' }])
 
     expect(idm.stats).toStrictEqual(

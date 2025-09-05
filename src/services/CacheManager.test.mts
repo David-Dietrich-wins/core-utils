@@ -1,63 +1,76 @@
+import { describe, expect, it } from '@jest/globals'
 import { type ArrayOrSingle } from '../models/types.mjs'
 import { CacheManager } from './CacheManager.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
-it('constructor', async () => {
-  const cacheManager = new CacheManager<string, string>('testCache', 60)
+describe('constructor', () => {
+  it('should create an instance of CacheManager', async () => {
+    expect.assertions(4)
 
-  expect(cacheManager).toBeInstanceOf(CacheManager)
-  expect(cacheManager.cacheTimeInSeconds).toBe(60)
+    const cacheManager = new CacheManager<string, string>('testCache', 60)
 
-  cacheManager.set('key1', Date.now() + 60000, 'value1')
-  cacheManager.set('key2', Date.now() + 60000, 'value2')
+    expect(cacheManager).toBeInstanceOf(CacheManager)
+    expect(cacheManager.cacheTimeInSeconds).toBe(60)
 
-  const akeyvals = [{ id: 'key1', value: 'abc' }],
-    fnCache = async (_arrKeys: ArrayOrSingle<string>) =>
-      Promise.resolve(
-        akeyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
-      )
+    cacheManager.set('key1', Date.now() + 60000, 'value1')
+    cacheManager.set('key2', Date.now() + 60000, 'value2')
 
-  expect(await cacheManager.get('key1', fnCache)).toBe('abc')
-  expect(await cacheManager.get('key2', fnCache)).toBe('value2')
+    const akeyvals = [{ id: 'key1', value: 'abc' }],
+      fnCache = async (_arrKeys: ArrayOrSingle<string>) =>
+        Promise.resolve(
+          akeyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+        )
+
+    await expect(cacheManager.get('key1', fnCache)).resolves.toBe('abc')
+    await expect(cacheManager.get('key2', fnCache)).resolves.toBe('value2')
+  })
 })
 
-it('getSingle', async () => {
-  const akeyvals = [{ id: 'key1', value: 'abc' }],
-    cacheManager = new CacheManager<string, string>('testCache', 60),
-    // eslint-disable-next-line @typescript-eslint/require-await
-    fnCache = async (key: string) =>
-      IdValueManager.CreateIIdValue(
-        key,
-        akeyvals.find((x) => x.id === key)?.value || ''
-      )
+describe('getters', () => {
+  it('should get a single value from the cache', async () => {
+    expect.assertions(9)
 
-  expect(cacheManager.has('key1')).toBe(false)
-  expect(await cacheManager.getSingle('key1', fnCache)).toBe('abc')
-  expect(cacheManager.has('key1')).toBe(true)
-  expect(cacheManager.delete('key1')).toBe(true)
-  expect(cacheManager.delete('key1')).toBe(false)
+    const akeyvals = [{ id: 'key1', value: 'abc' }],
+      cacheManager = new CacheManager<string, string>('testCache', 60),
+      // eslint-disable-next-line @typescript-eslint/require-await
+      fnCache = async (key: string) =>
+        IdValueManager.CreateIIdValue(
+          key,
+          safestr(akeyvals.find((x) => x.id === key)?.value)
+        )
 
-  expect(await cacheManager.getSingle('key2', fnCache)).toBe('')
-  expect(cacheManager.keys).toStrictEqual(['key2'])
+    expect(cacheManager.has('key1')).toBe(false)
+    await expect(cacheManager.getSingle('key1', fnCache)).resolves.toBe('abc')
+    expect(cacheManager.has('key1')).toBe(true)
+    expect(cacheManager.delete('key1')).toBe(true)
+    expect(cacheManager.delete('key1')).toBe(false)
 
-  cacheManager.clear()
-  expect(cacheManager.size).toBe(0)
-  expect(cacheManager.keys.length).toBe(0)
-})
+    await expect(cacheManager.getSingle('key2', fnCache)).resolves.toBe('')
+    expect(cacheManager.keys).toStrictEqual(['key2'])
 
-it('getAll', async () => {
-  const cacheManager = new CacheManager<string, string>('testCache', 60),
-    keyvals = [
-      { id: 'key1', value: 'abc' },
-      { id: 'key2', value: 'def' },
-    ],
-    kvCache = async (_arrKeys: ArrayOrSingle<string>) =>
-      Promise.resolve(
-        keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
-      ),
-    result = await cacheManager.getAll(['key1', 'key2'], kvCache)
+    cacheManager.clear()
 
-  expect(result.length).toBe(2)
-  expect(result[0].valueOf()).toBe('abc')
-  expect(result[1].valueOf()).toBe('def')
+    expect(cacheManager.size).toBe(0)
+    expect(cacheManager.keys).toHaveLength(0)
+  })
+
+  it('getAll', async () => {
+    expect.assertions(3)
+
+    const cacheManager = new CacheManager<string, string>('testCache', 60),
+      keyvals = [
+        { id: 'key1', value: 'abc' },
+        { id: 'key2', value: 'def' },
+      ],
+      kvCache = async (_arrKeys: ArrayOrSingle<string>) =>
+        Promise.resolve(
+          keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+        ),
+      result = await cacheManager.getAll(['key1', 'key2'], kvCache)
+
+    expect(result).toHaveLength(2)
+    expect(result[0].valueOf()).toBe('abc')
+    expect(result[1].valueOf()).toBe('def')
+  })
 })

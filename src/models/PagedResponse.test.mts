@@ -39,7 +39,7 @@ it('API response', () => {
   expect(pr.dataPage[0].data).toBe('hello')
 
   const mydata = PagedResponse.GetDataFromApiResponse(apiResponse)
-  expect(mydata.length).toBe(1)
+  expect(mydata).toHaveLength(1)
   expect(mydata[0].data).toBe('hello')
 })
 
@@ -66,7 +66,7 @@ it('createFromPromise', async () => {
     mockAPromise,
     mockCountPromise
   )
-  expect(pagedResponse.dataPage.length).toBe(2)
+  expect(pagedResponse.dataPage).toHaveLength(2)
   expect(pagedResponse.dataPage[0].data).toBe('hello')
   expect(pagedResponse.dataPage[1].data).toBe('world')
   expect(pagedResponse.totalCount).toBe(2)
@@ -78,7 +78,7 @@ it('createFromPromise', async () => {
   expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
 
   pagedResponse = await PagedResponse.createFromPromise(mockAPromise)
-  expect(pagedResponse.dataPage.length).toBe(2)
+  expect(pagedResponse.dataPage).toHaveLength(2)
   expect(pagedResponse.dataPage[0].data).toBe('hello')
   expect(pagedResponse.dataPage[1].data).toBe('world')
   expect(pagedResponse.totalCount).toBe(2)
