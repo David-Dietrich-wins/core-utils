@@ -46,7 +46,7 @@ import {
 } from '@jest/globals'
 import { AppException } from '../models/AppException.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
-import { mockConsoleLog } from '../jest.setup.mts'
+import { mockConsoleLog } from '../jest.setup.mjs'
 import { safestr } from './string-helper.mjs'
 
 describe('objectFindKeyAndReturnValue', () => {
