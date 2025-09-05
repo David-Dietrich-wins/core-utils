@@ -4,52 +4,70 @@ import {
   copyToTypishFunction,
   typishValue,
 } from './function-helper.mjs'
+import { describe, expect, it } from '@jest/globals'
 import { type Typish } from '../models/types.mjs'
 
-it(typishValue.name, () => {
-  expect(typishValue(undefined)).toBe(undefined)
-  expect(typishValue(null)).toBe(null)
-  expect(typishValue('')).toBe('')
-  expect(typishValue('test')).toBe('test')
-  expect(typishValue(123)).toBe(123)
-  expect(typishValue(() => 123)).toBe(123)
+describe('typish', () => {
+  it('typishValue', () => {
+    expect.assertions(8)
 
-  let t: Typish<string> = () => 'test-func-string'
-  expect(typishValue(t)).toBe('test-func-string')
-  t = 'test-string'
-  expect(typishValue(t)).toBe('test-string')
-})
+    expect(typishValue(undefined)).toBeUndefined()
+    expect(typishValue(null)).toBeNull()
+    expect(typishValue('')).toBe('')
+    expect(typishValue('test')).toBe('test')
+    expect(typishValue(123)).toBe(123)
+    expect(typishValue(() => 123)).toBe(123)
 
-it(copyToTypishFunction.name, () => {
-  expect(copyToTypishFunction(undefined)).toBeInstanceOf(Function)
-  expect(copyToTypishFunction(null)).toBeInstanceOf(Function)
-  expect(copyToTypishFunction('')).toBeInstanceOf(Function)
-  expect(copyToTypishFunction('test')).toBeInstanceOf(Function)
-  expect(copyToTypishFunction(123)).toBeInstanceOf(Function)
-  expect(copyToTypishFunction(() => 123)).toBeInstanceOf(Function)
+    let t: Typish<string> = () => 'test-func-string'
 
-  let t: Typish<string> = () => 'test-func-string'
-  expect(copyToTypishFunction(t)()).toBe('test-func-string')
-  t = 'test-string'
-  expect(copyToTypishFunction(t)()).toBe('test-string')
-})
+    expect(typishValue(t)).toBe('test-func-string')
 
-it(copyArrayToTypishFunction.name, () => {
-  expect(copyArrayToTypishFunction([])).toStrictEqual([])
-  expect(copyArrayToTypishFunction([null]).map((x) => x())).toStrictEqual([
-    null,
-  ])
-  expect(copyArrayToTypishFunction(['']).map((x) => x())).toStrictEqual([''])
-  expect(copyArrayToTypishFunction(['test']).map((x) => x())).toStrictEqual([
-    'test',
-  ])
-  expect(copyArrayToTypishFunction([123]).map((x) => x())).toStrictEqual([123])
-  expect(
-    copyArrayToTypishFunction([123, 'abc', 5n, new Date()]).map((x) => x())
-  ).toStrictEqual([123, 'abc', 5n, expect.any(Date)])
+    t = 'test-string'
 
-  const t = ['test-string']
-  expect(copyArrayToTypishFunction(t).map((x) => x())).toStrictEqual([
-    'test-string',
-  ])
+    expect(typishValue(t)).toBe('test-string')
+  })
+
+  it('copyToTypishFunction', () => {
+    expect.assertions(8)
+
+    expect(copyToTypishFunction(undefined)).toBeInstanceOf(Function)
+    expect(copyToTypishFunction(null)).toBeInstanceOf(Function)
+    expect(copyToTypishFunction('')).toBeInstanceOf(Function)
+    expect(copyToTypishFunction('test')).toBeInstanceOf(Function)
+    expect(copyToTypishFunction(123)).toBeInstanceOf(Function)
+    expect(copyToTypishFunction(() => 123)).toBeInstanceOf(Function)
+
+    let t: Typish<string> = () => 'test-func-string'
+
+    expect(copyToTypishFunction(t)()).toBe('test-func-string')
+
+    t = 'test-string'
+
+    expect(copyToTypishFunction(t)()).toBe('test-string')
+  })
+
+  it('copyArrayToTypishFunction', () => {
+    expect.assertions(7)
+
+    expect(copyArrayToTypishFunction([])).toStrictEqual([])
+    expect(copyArrayToTypishFunction([null]).map((x) => x())).toStrictEqual([
+      null,
+    ])
+    expect(copyArrayToTypishFunction(['']).map((x) => x())).toStrictEqual([''])
+    expect(copyArrayToTypishFunction(['test']).map((x) => x())).toStrictEqual([
+      'test',
+    ])
+    expect(copyArrayToTypishFunction([123]).map((x) => x())).toStrictEqual([
+      123,
+    ])
+    expect(
+      copyArrayToTypishFunction([123, 'abc', 5n, new Date()]).map((x) => x())
+    ).toStrictEqual([123, 'abc', 5n, expect.any(Date)])
+
+    const t = ['test-string']
+
+    expect(copyArrayToTypishFunction(t).map((x) => x())).toStrictEqual([
+      'test-string',
+    ])
+  })
 })
