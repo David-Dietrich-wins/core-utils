@@ -3,7 +3,7 @@ import { PagedResponse } from './PagedResponse.mjs'
 import z from 'zod'
 
 it('PagedResponse good', () => {
-  expect(new PagedResponse().dataPage).toEqual([])
+  expect(new PagedResponse().dataPage).toStrictEqual([])
 
   let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
@@ -71,10 +71,9 @@ it('createFromPromise', async () => {
   expect(pagedResponse.dataPage[1].data).toBe('world')
   expect(pagedResponse.totalCount).toBe(2)
   expect(pagedResponse.rowCount).toBe(2)
-  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
-    'hello',
-    'world',
-  ])
+  expect(
+    pagedResponse.createNewFromMap((item) => item.data).dataPage
+  ).toStrictEqual(['hello', 'world'])
   expect(pagedResponse.createNewFromMap((item) => item.data).totalCount).toBe(2)
   expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
 
@@ -84,16 +83,14 @@ it('createFromPromise', async () => {
   expect(pagedResponse.dataPage[1].data).toBe('world')
   expect(pagedResponse.totalCount).toBe(2)
   expect(pagedResponse.rowCount).toBe(2)
-  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
-    'hello',
-    'world',
-  ])
+  expect(
+    pagedResponse.createNewFromMap((item) => item.data).dataPage
+  ).toStrictEqual(['hello', 'world'])
   expect(pagedResponse.createNewFromMap((item) => item.data).totalCount).toBe(2)
   expect(pagedResponse.createNewFromMap((item) => item.data).rowCount).toBe(2)
-  expect(pagedResponse.createNewFromMap((item) => item.data).dataPage).toEqual([
-    'hello',
-    'world',
-  ])
+  expect(
+    pagedResponse.createNewFromMap((item) => item.data).dataPage
+  ).toStrictEqual(['hello', 'world'])
 })
 
 it('toIPagedResponse', () => {
@@ -133,39 +130,39 @@ it('ToIPagedResponse', () => {
     PagedResponse.ToIPagedResponse(pr, undefined, undefined).totalCount
   ).toBe(1)
 
-  expect(PagedResponse.ToIPagedResponse(null)).toEqual({
+  expect(PagedResponse.ToIPagedResponse(null)).toStrictEqual({
     dataPage: [],
     rowCount: 0,
     totalCount: 0,
   })
-  expect(PagedResponse.ToIPagedResponse(undefined)).toEqual({
+  expect(PagedResponse.ToIPagedResponse(undefined)).toStrictEqual({
     dataPage: [],
     rowCount: 0,
     totalCount: 0,
   })
-  expect(PagedResponse.ToIPagedResponse([])).toEqual({
+  expect(PagedResponse.ToIPagedResponse([])).toStrictEqual({
     dataPage: [],
     rowCount: 0,
     totalCount: 0,
   })
-  expect(PagedResponse.ToIPagedResponse(null, 10, 5)).toEqual({
+  expect(PagedResponse.ToIPagedResponse(null, 10, 5)).toStrictEqual({
     dataPage: [],
     rowCount: 0,
     totalCount: 0,
   })
-  expect(PagedResponse.ToIPagedResponse(undefined, 10, 5)).toEqual({
+  expect(PagedResponse.ToIPagedResponse(undefined, 10, 5)).toStrictEqual({
     dataPage: [],
     rowCount: 0,
     totalCount: 0,
   })
-  expect(PagedResponse.ToIPagedResponse([], 10, 5)).toEqual({
+  expect(PagedResponse.ToIPagedResponse([], 10, 5)).toStrictEqual({
     dataPage: [],
     rowCount: 5,
     totalCount: 10,
   })
   expect(
     PagedResponse.ToIPagedResponse(['a', 'b', 'c', 'd', 'e', 'f'], undefined, 5)
-  ).toEqual({
+  ).toStrictEqual({
     dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
     rowCount: 5,
     totalCount: 6,
@@ -176,14 +173,14 @@ it('ToIPagedResponse', () => {
       10,
       undefined
     )
-  ).toEqual({
+  ).toStrictEqual({
     dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
     rowCount: 6,
     totalCount: 10,
   })
   expect(
     PagedResponse.ToIPagedResponse(['a', 'b', 'c', 'd', 'e', 'f'], 10, 5)
-  ).toEqual({
+  ).toStrictEqual({
     dataPage: ['a', 'b', 'c', 'd', 'e', 'f'],
     rowCount: 5,
     totalCount: 10,

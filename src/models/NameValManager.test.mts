@@ -67,13 +67,13 @@ describe('NameValManager', () => {
 
     expect(zitem.name).toBe(name)
     expect(zitem.val).toBe(value)
-    expect(zitem).toEqual({ name, val: value })
+    expect(zitem).toStrictEqual({ name, val: value })
 
     const item2 = NameVal.CreateINameVal<{ id: number }>(name, {
       id: 123,
     })
     expect(item2.name).toBe(name)
-    expect(item2.val).toEqual({ id: 123 })
+    expect(item2.val).toStrictEqual({ id: 123 })
   })
 
   it('NameValManager.CreateINameVal', () => {
@@ -83,12 +83,12 @@ describe('NameValManager', () => {
 
     expect(zitem.name).toBe(name)
     expect(zitem.val).toBe(value)
-    expect(zitem).toEqual({ name, val: value })
+    expect(zitem).toStrictEqual({ name, val: value })
 
     const item2 = NameValManager.ToINameVal<{ id: number }>(name, {
       id: 123,
     })
     expect(item2.name).toBe(name)
-    expect(item2.val).toEqual({ id: 123 })
+    expect(item2.val).toStrictEqual({ id: 123 })
   })
 })

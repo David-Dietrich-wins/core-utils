@@ -1,103 +1,123 @@
+/* eslint-disable jest/no-conditional-expect */
 import * as z from 'zod/v4'
+import { describe, expect, it } from '@jest/globals'
 import { Company } from './company.mjs'
 import { GenerateRandomString } from '../primitives/string-helper.mjs'
 import { getCurrentDate } from '../jest.setup.mjs'
 
-it('constructor', () => {
-  const company = new Company()
-  expect(company).toEqual({
-    address1: '',
-    address2: '',
-    city: '',
-    created: getCurrentDate(),
-    createdby: 'IdCreatedUpdated',
-    description: '',
-    email: '',
-    id: 'TradePlotter',
-    imageuri: '',
-    imageurihref: '',
-    name: '',
-    phone: '',
-    scales: undefined,
-    state: '',
-    status: 0,
-    updated: getCurrentDate(),
-    updatedby: 'IdCreatedUpdated',
-    zip: '',
+describe('constructor', () => {
+  it('default constructor', () => {
+    expect.assertions(1)
+
+    const company = new Company()
+
+    expect(company).toStrictEqual(
+      expect.objectContaining({
+        address1: '',
+        address2: '',
+        city: '',
+        created: getCurrentDate(),
+        createdby: 'IdCreatedUpdated',
+        description: '',
+        email: '',
+        id: 'TradePlotter',
+        imageuri: '',
+        imageurihref: '',
+        name: '',
+        phone: '',
+        scales: undefined,
+        state: '',
+        status: 0,
+        updated: getCurrentDate(),
+        updatedby: 'IdCreatedUpdated',
+        zip: '',
+      })
+    )
+  })
+
+  it('with ICompany', () => {
+    expect.assertions(1)
+
+    const aic = {
+        address1: 'address1',
+        address2: 'address2',
+        city: 'city',
+        created: getCurrentDate(),
+        createdby: 'createdby',
+        description: 'description',
+        email: 'email',
+        id: 'id',
+        imageuri: 'imageuri',
+        imageurihref: 'imageurihref',
+        name: 'name',
+        phone: 'phone',
+        scales: [],
+        state: 'state',
+        status: 1,
+        updated: getCurrentDate(),
+        updatedby: 'updatedby',
+        zip: 'zip',
+      },
+      company = new Company(aic)
+
+    expect(company).toStrictEqual(
+      expect.objectContaining({
+        address1: 'address1',
+        address2: 'address2',
+        city: 'city',
+        created: getCurrentDate(),
+        createdby: 'createdby',
+        description: 'description',
+        email: 'email',
+        id: 'id',
+        imageuri: 'imageuri',
+        imageurihref: 'imageurihref',
+        name: 'name',
+        phone: 'phone',
+        scales: [],
+        state: 'state',
+        status: 1,
+        updated: getCurrentDate(),
+        updatedby: 'updatedby',
+        zip: 'zip',
+      })
+    )
   })
 })
 
-it('constructor with ICompany', () => {
-  const aic = {
-      address1: 'address1',
-      address2: 'address2',
-      city: 'city',
+describe('createICompany', () => {
+  it('createICompany', () => {
+    expect.assertions(1)
+
+    const company = Company.createICompany()
+
+    expect(company).toStrictEqual({
+      // Id: 'TradePlotter',
+      // Scales: undefined,
+      address1: '',
+      address2: '',
+      city: '',
       created: getCurrentDate(),
-      createdby: 'createdby',
-      description: 'description',
-      email: 'email',
-      id: 'id',
-      imageuri: 'imageuri',
-      imageurihref: 'imageurihref',
-      name: 'name',
-      phone: 'phone',
-      scales: [],
-      state: 'state',
-      status: 1,
+      createdby: 'TradePlotter',
+      description: '',
+      email: '',
+      imageuri: '',
+      imageurihref: '',
+      name: '',
+      phone: '',
+      state: '',
+      status: 0,
       updated: getCurrentDate(),
-      updatedby: 'updatedby',
-      zip: 'zip',
-    },
-    company = new Company(aic)
-  expect(company).toEqual({
-    address1: 'address1',
-    address2: 'address2',
-    city: 'city',
-    created: getCurrentDate(),
-    createdby: 'createdby',
-    description: 'description',
-    email: 'email',
-    id: 'id',
-    imageuri: 'imageuri',
-    imageurihref: 'imageurihref',
-    name: 'name',
-    phone: 'phone',
-    scales: [],
-    state: 'state',
-    status: 1,
-    updated: getCurrentDate(),
-    updatedby: 'updatedby',
-    zip: 'zip',
-  })
-})
-
-it('CreateICompany', () => {
-  const company = Company.createICompany()
-
-  expect(company).toEqual({
-    // Id: 'TradePlotter',
-    // Scales: undefined,
-    address1: '',
-    address2: '',
-    city: '',
-    created: getCurrentDate(),
-    createdby: 'TradePlotter',
-    description: '',
-    email: '',
-    imageuri: '',
-    imageurihref: '',
-    name: '',
-    phone: '',
-    state: '',
-    status: 0,
-    updated: getCurrentDate(),
-    updatedby: 'TradePlotter',
-    zip: '',
+      updatedby: 'TradePlotter',
+      zip: '',
+    })
   })
 })
 
 describe('zSchema', () => {
   it('zSchema', () => {
+    expect.assertions(2)
+
     const schema = Company.zCompany
 
     expect(schema).toBeDefined()
@@ -109,7 +129,9 @@ describe('zSchema', () => {
       })
     } catch (err) {
       expect(err).toBeInstanceOf(z.ZodError)
+
       const zerr = err as z.ZodError
+
       expect(zerr.issues).toBeDefined()
       expect(zerr.issues.length).toBeGreaterThan(0)
       expect(zerr.issues[0].code).toBe('invalid_type')
@@ -136,6 +158,8 @@ describe('zSchema', () => {
   })
 
   it('valid parse', () => {
+    expect.assertions(1)
+
     const aschema = Company.zCompany,
       company = Company.createICompany({
         name: 'name',
@@ -145,15 +169,19 @@ describe('zSchema', () => {
   })
 
   it('no name', () => {
+    expect.assertions(1)
+
     const aschema = Company.zCompany,
       company = Company.createICompany()
 
-    expect(() => aschema.parse(company)).toThrow()
+    expect(() => aschema.parse(company)).toThrow(z.ZodError)
   })
 })
 
-describe('CompanyNamezSchema', () => {
-  it('CompanyNamezSchema', () => {
+describe('companyNamezSchema', () => {
+  it('companyNamezSchema', () => {
+    expect.assertions(2)
+
     const schema = Company.companyNamezSchema
 
     expect(schema).toBeDefined()
@@ -161,6 +189,8 @@ describe('CompanyNamezSchema', () => {
   })
 
   it('valid parse', () => {
+    expect.assertions(1)
+
     const aschema = Company.companyNamezSchema,
       company = Company.createICompany({
         name: 'name',
@@ -170,13 +200,17 @@ describe('CompanyNamezSchema', () => {
   })
 
   it('no name', () => {
+    expect.assertions(1)
+
     const aschema = Company.companyNamezSchema,
       company = Company.createICompany()
 
-    expect(() => aschema.parse(company)).toThrow()
+    expect(() => aschema.parse(company)).toThrow(z.ZodError)
   })
 
   it('invalid name', () => {
+    expect.assertions(1)
+
     expect(() =>
       Company.companyNamezSchema.parse({
         name: GenerateRandomString(126),

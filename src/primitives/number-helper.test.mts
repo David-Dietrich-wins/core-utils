@@ -454,17 +454,17 @@ it(elementTopLeftCoords.name, () => {
       },
     }
 
-  expect(elementTopLeftCoords(coords)).toEqual({
+  expect(elementTopLeftCoords(coords)).toStrictEqual({
     left: 20,
     top: 10,
   })
 
-  expect(elementTopLeftCoords(coordsWithParent)).toEqual({
+  expect(elementTopLeftCoords(coordsWithParent)).toStrictEqual({
     left: 25,
     top: 15,
   })
 
-  expect(elementTopLeftCoords(coordsWithoutValues)).toEqual({
+  expect(elementTopLeftCoords(coordsWithoutValues)).toStrictEqual({
     left: 7,
     top: 5,
   })
@@ -519,17 +519,31 @@ it(addNumbers.name, () => {
       f: { a: 2 },
     } as unknown as object)
 
-  expect(io1ret).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: 'b' })
-  expect(io2ret).toEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
-  expect(io3ret).toEqual({ a: [2], b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
-  expect(io4ret).toEqual({ a: 2, b: 7, c: 4, d: 6, e: ['e'], f: { a: 2 } })
+  expect(io1ret).toStrictEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: 'b' })
+  expect(io2ret).toStrictEqual({ a: 5, b: 7, c: 9, d: 11, e: 'a', f: { a: 2 } })
+  expect(io3ret).toStrictEqual({
+    a: [2],
+    b: 7,
+    c: 9,
+    d: 11,
+    e: 'a',
+    f: { a: 2 },
+  })
+  expect(io4ret).toStrictEqual({
+    a: 2,
+    b: 7,
+    c: 4,
+    d: 6,
+    e: ['e'],
+    f: { a: 2 },
+  })
 })
 
 it(divideByNumbers.name, () => {
   const io = { a: 2, b: 3, c: '4', d: '5', e: 'a', f: 'b' },
     objRet = divideByNumbers(io, 2)
 
-  expect(objRet).toEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
+  expect(objRet).toStrictEqual({ a: 1, b: 1.5, c: 2, d: 2.5, e: 'a', f: 'b' })
 })
 
 it(getPercentChange.name, () => {

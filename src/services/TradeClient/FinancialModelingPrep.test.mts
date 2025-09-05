@@ -2,174 +2,136 @@ import {
   FinancialModelingPrep,
   type FmpIndicatorQueryParams,
 } from './FinancialModelingPrep.mjs'
+import { describe, expect, it } from '@jest/globals'
 import { DateHelper } from '../../primitives/date-helper.mjs'
 import type { IChartSettings } from '../../tplot/ChartSettings.mjs'
 import { TEST_Settings } from '../../jest.setup.mjs'
 
-it(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
-  const aparams: FmpIndicatorQueryParams = {
+describe('from', () => {
+  it('should throw an error if from is invalid', () => {
+    expect.assertions(4)
+
+    const aparams: FmpIndicatorQueryParams = {
+      from: new Date('2021-01-01').getTime(),
+      periodLength: 1,
+      symbol: 'AAPL',
+      timeframe: '1Y',
+    }
+
+    let dateBoundary =
+      FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01').getTime(),
+      // to: new Date('2022-01-01T00:00:00Z').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      timeframe: '5y',
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01T00:00:00Z').getTime(),
+      // to: new Date('2030-01-01').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      timeframe: '',
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01T00:00:00Z').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      from: undefined,
+      to: new Date('2025-01-01').getTime(),
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: undefined,
+      to: new Date('2026-01-01').getTime(),
+    })
+  })
+})
+
+describe('to', () => {
+  it('no to field', () => {
+    expect.assertions(4)
+
+    const aparams: FmpIndicatorQueryParams = {
       from: new Date('2021-01-01').getTime(),
       periodLength: 1,
       symbol: 'AAPL',
       timeframe: '1y',
-      to: new Date('2021-12-31').getTime(),
-    },
-    dateBoundary =
+    }
+
+    let dateBoundary =
       FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
 
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01').getTime(),
-    to: new Date('2022-01-01').getTime(),
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01').getTime(),
+      to: new Date('2026-01-01T00:00:00Z').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      timeframe: '5y',
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01T00:00:00Z').getTime(),
+      // to: new Date('2030-01-01').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      timeframe: '',
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01T00:00:00Z').getTime(),
+    })
+
+    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+      ...aparams,
+      from: undefined,
+      to: new Date('2025-01-01').getTime(),
+    })
+
+    expect(dateBoundary).toMatchObject({
+      from: undefined,
+      to: new Date('2026-01-01').getTime(),
+    })
   })
 })
 
-it('from', () => {
-  const aparams: FmpIndicatorQueryParams = {
-    from: new Date('2021-01-01').getTime(),
-    periodLength: 1,
-    symbol: 'AAPL',
-    timeframe: '1Y',
-  }
+describe('fmpIndicatorParamsSetDateBoundary', () => {
+  it('should set the date boundary correctly', () => {
+    expect.assertions(1)
 
-  let dateBoundary =
-    FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01').getTime(),
-    // to: new Date('2022-01-01T00:00:00Z').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    timeframe: '5y',
-  })
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01T00:00:00Z').getTime(),
-    // to: new Date('2030-01-01').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    timeframe: '',
-  })
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01T00:00:00Z').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    from: undefined,
-    to: new Date('2025-01-01').getTime(),
-  })
-  expect(dateBoundary).toMatchObject({
-    from: undefined,
-    to: new Date('2026-01-01').getTime(),
-  })
-})
-
-it('no to field', () => {
-  const aparams: FmpIndicatorQueryParams = {
-    from: new Date('2021-01-01').getTime(),
-    periodLength: 1,
-    symbol: 'AAPL',
-    timeframe: '1y',
-  }
-
-  let dateBoundary =
-    FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01').getTime(),
-    to: new Date('2026-01-01T00:00:00Z').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    timeframe: '5y',
-  })
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01T00:00:00Z').getTime(),
-    // to: new Date('2030-01-01').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    timeframe: '',
-  })
-  expect(dateBoundary).toMatchObject({
-    from: new Date('2021-01-01T00:00:00Z').getTime(),
-  })
-
-  dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
-    ...aparams,
-    from: undefined,
-    to: new Date('2025-01-01').getTime(),
-  })
-  expect(dateBoundary).toMatchObject({
-    from: undefined,
-    to: new Date('2026-01-01').getTime(),
-  })
-})
-
-it('FmpIndicatorQueryParamsToPath', () => {
-  const aparams: FmpIndicatorQueryParams = {
-    from: new Date('2021-01-01').getTime(),
-    periodLength: 1,
-    symbol: 'AAPL',
-    timeframe: '1y',
-    to: new Date('2021-12-31').getTime(),
-  }
-
-  let path = FinancialModelingPrep.FmpIndicatorParamsToPath(aparams)
-  expect(path).toBe(
-    '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
-  )
-
-  path = FinancialModelingPrep.FmpIndicatorParamsToPath({
-    ...aparams,
-    from: undefined,
-  })
-  expect(path).toBe('&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000')
-
-  path = FinancialModelingPrep.FmpIndicatorParamsToPath({
-    ...aparams,
-    to: undefined,
-  })
-  expect(path).toBe(
-    '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000'
-  )
-})
-
-describe('FmpIndicatorParamsFromObject', () => {
-  it('good', () => {
-    const params = {
+    const aparams: FmpIndicatorQueryParams = {
+        from: new Date('2021-01-01').getTime(),
         periodLength: 1,
         symbol: 'AAPL',
         timeframe: '1y',
+        to: new Date('2021-12-31').getTime(),
       },
-      path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
-    expect(path).toMatchObject({
-      from: undefined,
-      periodLength: 1,
-      symbol: 'AAPL',
-      timeframe: '1y',
-      to: undefined,
+      dateBoundary =
+        FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+
+    expect(dateBoundary).toMatchObject({
+      from: new Date('2021-01-01').getTime(),
+      to: new Date('2022-01-01').getTime(),
     })
   })
 
-  it(' exception', () => {
-    const params = {
-      periodLength: 1,
-      symbol: '',
-      timeframe: '1y',
-    }
+  it('should set date boundaries correctly', () => {
+    expect.assertions(1)
 
-    expect(() =>
-      FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
-    ).toThrow('No ticker')
-  })
-})
-
-describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
-  it('good', () => {
     const aparams: FmpIndicatorQueryParams = {
         from: new Date('2021-01-01').getTime(),
         periodLength: 1,
@@ -187,6 +149,8 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
   })
 
   it('no to', () => {
+    expect.assertions(4)
+
     const params: FmpIndicatorQueryParams = {
       from: new Date('2021-01-01').getTime(),
       periodLength: 1,
@@ -206,6 +170,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
       ...params,
       timeframe: '5y',
     })
+
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01T00:00:00Z').getTime(),
       // to: new Date('2030-01-01').getTime(),
@@ -215,6 +180,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
       ...params,
       timeframe: '',
     })
+
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01T00:00:00Z').getTime(),
     })
@@ -224,6 +190,7 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
       from: undefined,
       to: new Date('2025-01-01').getTime(),
     })
+
     expect(dateBoundary).toMatchObject({
       from: undefined,
       to: new Date('2026-01-01').getTime(),
@@ -231,43 +198,91 @@ describe(FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary.name, () => {
   })
 })
 
-it('FmpIndicatorQueryParamsToPath', () => {
-  const params: FmpIndicatorQueryParams = {
-    from: new Date('2021-01-01').getTime(),
-    periodLength: 1,
-    symbol: 'AAPL',
-    timeframe: '1y',
-    to: new Date('2021-12-31').getTime(),
-  }
+describe('fmpIndicatorQueryParamsToPath', () => {
+  it('should convert FmpIndicatorQueryParams to path', () => {
+    expect.assertions(3)
 
-  let path = FinancialModelingPrep.FmpIndicatorParamsToPath(params)
-  expect(path).toBe(
-    '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
-  )
+    const aparams: FmpIndicatorQueryParams = {
+      from: new Date('2021-01-01').getTime(),
+      periodLength: 1,
+      symbol: 'AAPL',
+      timeframe: '1y',
+      to: new Date('2021-12-31').getTime(),
+    }
 
-  path = FinancialModelingPrep.FmpIndicatorParamsToPath({
-    ...params,
-    from: undefined,
+    let path = FinancialModelingPrep.FmpIndicatorParamsToPath(aparams)
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
+    )
+
+    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+      ...aparams,
+      from: undefined,
+    })
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000'
+    )
+
+    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+      ...aparams,
+      to: undefined,
+    })
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000'
+    )
   })
-  expect(path).toBe('&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000')
 
-  path = FinancialModelingPrep.FmpIndicatorParamsToPath({
-    ...params,
-    to: undefined,
+  it('should convert FmpIndicatorQueryParams to query string', () => {
+    expect.assertions(3)
+
+    const params: FmpIndicatorQueryParams = {
+      from: new Date('2021-01-01').getTime(),
+      periodLength: 1,
+      symbol: 'AAPL',
+      timeframe: '1y',
+      to: new Date('2021-12-31').getTime(),
+    }
+
+    let path = FinancialModelingPrep.FmpIndicatorParamsToPath(params)
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
+    )
+
+    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+      ...params,
+      from: undefined,
+    })
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000'
+    )
+
+    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+      ...params,
+      to: undefined,
+    })
+
+    expect(path).toBe(
+      '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000'
+    )
   })
-  expect(path).toBe(
-    '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000'
-  )
 })
 
-describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
-  it('good', () => {
+describe('fmpIndicatorParamsFromObject', () => {
+  it('should convert object to FmpIndicatorQueryParams', () => {
+    expect.assertions(1)
+
     const params = {
         periodLength: 1,
         symbol: 'AAPL',
         timeframe: '1y',
       },
       path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+
     expect(path).toMatchObject({
       from: undefined,
       periodLength: 1,
@@ -277,7 +292,23 @@ describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
     })
   })
 
-  it('exception', () => {
+  it('should throw an exception for invalid params', () => {
+    expect.assertions(1)
+
+    const params = {
+      periodLength: 1,
+      symbol: '',
+      timeframe: '1y',
+    }
+
+    expect(() =>
+      FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+    ).toThrow('No ticker')
+  })
+
+  it('should throw error for missing symbol', () => {
+    expect.assertions(1)
+
     const params = {
       periodLength: 1,
       symbol: '',
@@ -290,8 +321,10 @@ describe(FinancialModelingPrep.FmpIndicatorParamsFromObject.name, () => {
   })
 })
 
-describe(FinancialModelingPrep.chartSettings.name, () => {
-  it('good', () => {
+describe('chartSettings', () => {
+  it('should return chart settings', () => {
+    expect.assertions(3)
+
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -362,7 +395,9 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  it('not first data request', () => {
+  it('should handle not first data request', () => {
+    expect.assertions(1)
+
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -397,7 +432,9 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  it('start date is < num intervals', () => {
+  it('should handle start date is < num intervals', () => {
+    expect.assertions(1)
+
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -436,7 +473,9 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  it('start date is > num intervals', () => {
+  it('should handle start date is > num intervals', () => {
+    expect.assertions(1)
+
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,
@@ -475,7 +514,9 @@ describe(FinancialModelingPrep.chartSettings.name, () => {
     })
   })
 
-  it('num intervals > 1000', () => {
+  it('should handle num intervals > 1000', () => {
+    expect.assertions(1)
+
     const acs: IChartSettings = {
         endDate: undefined,
         extendedHoursTrading: false,

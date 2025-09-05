@@ -31,9 +31,9 @@ it('copyFromDatabase', () => {
   expect(userConfig.v).toBe('newValue')
   expect(userConfig.userid).toBe('newUserId')
   expect(userConfig.updatedby).toBe('newUpdatedBy')
-  expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.updated).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
   expect(userConfig.createdby).toBe('newCreatedBy')
-  expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.created).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
 
   userConfig = new UserConfig('userId', '', '')
   userConfig.copyFromDatabase({ ...dbtp, k: '' })
@@ -41,9 +41,9 @@ it('copyFromDatabase', () => {
   expect(userConfig.v).toBe('newValue')
   expect(userConfig.userid).toBe('newUserId')
   expect(userConfig.updatedby).toBe('newUpdatedBy')
-  expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.updated).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
   expect(userConfig.createdby).toBe('newCreatedBy')
-  expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.created).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
 
   userConfig = new UserConfig('userId', '', '')
   userConfig.copyFromDatabase({ ...dbtp, v: '' })
@@ -51,9 +51,9 @@ it('copyFromDatabase', () => {
   expect(userConfig.v).toBe('')
   expect(userConfig.userid).toBe('newUserId')
   expect(userConfig.updatedby).toBe('newUpdatedBy')
-  expect(userConfig.updated).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.updated).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
   expect(userConfig.createdby).toBe('newCreatedBy')
-  expect(userConfig.created).toEqual(new Date('2025-12-01T12:00:00.000Z'))
+  expect(userConfig.created).toStrictEqual(new Date('2025-12-01T12:00:00.000Z'))
 })
 
 it('fromApi good', () => {
@@ -91,7 +91,7 @@ it('api', () => {
   const userConfig = new UserConfig('userId', 'key', 'value'),
     userData = userConfig.api()
 
-  expect(userData).toEqual({ name: 'key', val: 'value' })
+  expect(userData).toStrictEqual({ name: 'key', val: 'value' })
   expect(userData.name).toBe('key')
   expect(userData.val).toBe('value')
   expect(userConfig.k).toBe('key')

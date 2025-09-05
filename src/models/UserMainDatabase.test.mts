@@ -15,6 +15,6 @@ it('UserMainDatabase', () => {
   expect(user.mobilePhone).toBe('999-999-9999')
   expect(user.phone1).toBe('')
   expect(user.verified).toBe(false)
-  expect(user.roles).toEqual(['user'])
+  expect(user.roles).toStrictEqual(['user'])
   expect(user.id).toBe('')
 })

@@ -1,12 +1,19 @@
 import * as MyLib from './index.mjs'
+import { describe, expect, it } from '@jest/globals'
 
-describe('MyLib', () => {
+describe('index', () => {
   it('should have exports', () => {
-    expect(MyLib).toEqual(expect.any(Object))
+    expect.assertions(1)
+
+    expect(MyLib).toStrictEqual(expect.any(Object))
   })
 
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it('should not have undefined exports', () => {
-    for (const k of Object.keys(MyLib))
-      {expect(MyLib).not.toHaveProperty(k, undefined)}
+    expect.assertions(97)
+
+    for (const k of Object.keys(MyLib)) {
+      expect(MyLib).not.toHaveProperty(k, undefined)
+    }
   })
 })

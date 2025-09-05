@@ -97,7 +97,7 @@ it('zCreatedBy', () => {
       createdby: expect.any(String),
     }),
   })
-  expect(result.data).toEqual(data)
+  expect(result.data).toStrictEqual(data)
   expect(result.data?.created).toBeInstanceOf(Date)
   expect(result.data?.created.getTime()).toBe(data.created.getTime())
 })
@@ -107,7 +107,7 @@ it('zCreatedOn', () => {
     data = { created: new Date() },
     result = aSchema.safeParse(data)
   expect(result.success).toBe(true)
-  expect(result.data).toEqual(data)
+  expect(result.data).toStrictEqual(data)
   expect(result.data?.created).toBeInstanceOf(Date)
   expect(result.data?.created.getTime()).toBe(data.created.getTime())
 })
@@ -127,7 +127,7 @@ it('zUpdatedBy', () => {
       updatedby: expect.any(String),
     }),
   })
-  expect(result.data).toEqual(data)
+  expect(result.data).toStrictEqual(data)
   expect(result.data?.updated).toBeInstanceOf(Date)
   expect(result.data?.updated.getTime()).toBe(data.updated.getTime())
 })
@@ -137,7 +137,7 @@ it('zUpdatedOn', () => {
     data = { updated: new Date() },
     result = aSchema.safeParse(data)
   expect(result.success).toBe(true)
-  expect(result.data).toEqual(data)
+  expect(result.data).toStrictEqual(data)
   expect(result.data?.updated).toBeInstanceOf(Date)
   expect(result.data?.updated.getTime()).toBe(data.updated.getTime())
 })

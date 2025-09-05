@@ -605,7 +605,7 @@ it('verifySuccessPagedResponse', () => {
     zdata = ApiResponse.verifySuccessPagedResponse(fname, ret)
 
   expect(zdata).toBeInstanceOf(PagedResponse)
-  expect(zdata.dataPage).toEqual([])
+  expect(zdata.dataPage).toStrictEqual([])
   expect(zdata.totalCount).toBe(0)
 
   expect(() => {

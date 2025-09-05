@@ -1,13 +1,16 @@
+/* eslint-disable jest/no-conditional-expect */
+/* eslint-disable jest/no-conditional-in-test */
 import * as fs from 'node:fs'
-import { jest } from '@jest/globals'
-// eslint-disable-next-line sort-imports
+import { describe, expect, it, jest } from '@jest/globals'
 import { FileHelper } from './FileHelper.mjs'
 import { InstrumentationStatistics } from '../models/InstrumentationStatistics.mjs'
 import { safeJsonToString } from '../primitives/object-helper.mjs'
 import tmp from 'tmp'
 
-describe('DeleteFileIfExists', () => {
+describe('deleteFileIfExists', () => {
   it('good', async () => {
+    expect.assertions(3)
+
     const atmpFile = tmp.fileSync().name,
       stats = await FileHelper.writeArrayToJsonFile(atmpFile, [])
     fs.writeFileSync(atmpFile, '1\n2\n3\n4\n5\n\n# comment\n')
@@ -20,6 +23,8 @@ describe('DeleteFileIfExists', () => {
   })
 
   it('does not exist', () => {
+    expect.assertions(1)
+
     const filename = 'adsfasdfafpioupiupiuadfsiuapiudf.txt',
       ret = FileHelper.DeleteFileIfExists(filename)
 
@@ -29,6 +34,8 @@ describe('DeleteFileIfExists', () => {
 
 describe('addCommaIfNotFirst', () => {
   it('first', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = '',
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -42,7 +49,7 @@ describe('addCommaIfNotFirst', () => {
         return bytesWritten
       })
 
-    expect(retRun).toEqual(0)
+    expect(retRun).toBe(0)
 
     const ret = FileHelper.ReadEntireFile(atmpFile)
 
@@ -52,6 +59,8 @@ describe('addCommaIfNotFirst', () => {
   })
 
   it('not first', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = '',
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -77,6 +86,8 @@ describe('addCommaIfNotFirst', () => {
 
 describe('write', () => {
   it('array of numbers', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = [1, 2, 3, 4, 5],
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -95,6 +106,8 @@ describe('write', () => {
   })
 
   it('array of strings', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = ['a', 'bc', 'def', 'ghij', 'klmno'],
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -113,6 +126,8 @@ describe('write', () => {
   })
 
   it('object', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       dateNow = Date.now(),
       fileContents = { a: 1, b: '2', c: 3.14, d: { a: 'b' }, e: dateNow },
@@ -132,6 +147,8 @@ describe('write', () => {
   })
 
   it('string', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = 'hello',
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -150,6 +167,8 @@ describe('write', () => {
   })
 
   it('undefined', async () => {
+    expect.assertions(2)
+
     const atmpFile = tmp.fileSync().name,
       fileContents = undefined,
       retRun = await FileHelper.Run(atmpFile, async (fh) => {
@@ -168,6 +187,8 @@ describe('write', () => {
   })
 
   it('file not opened first', async () => {
+    expect.assertions(2)
+
     const fileContents = 'hello',
       tmpFile = tmp.fileSync().name
 
@@ -187,10 +208,38 @@ describe('write', () => {
 
     expect(ret).toBe('')
   })
+
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
+  it('write exception', async () => {
+    expect.assertions(3)
+
+    const atmpFile = tmp.fileSync().name,
+      fh = new FileHelper(atmpFile),
+      spy = jest.spyOn(fh, 'write').mockRejectedValue(new Error('Mocked error'))
+    await fh.openForWrite()
+    try {
+      const retRun = await fh.write('hello world')
+
+      expect(retRun).toBe(11)
+    } catch (error) {
+      expect(error).toStrictEqual(new Error('Mocked error'))
+      expect(spy).toHaveBeenCalledWith('hello world')
+    } finally {
+      await fh.close()
+
+      FileHelper.DeleteFileIfExists(atmpFile)
+    }
+
+    expect(spy).toHaveBeenCalledTimes(1)
+
+    spy.mockRestore()
+  })
 })
 
 describe('writeArrayToJsonFile', () => {
   it('good', async () => {
+    expect.assertions(7)
+
     const atmpFile = tmp.fileSync().name,
       dateNow = Date.now(),
       testdata = [
@@ -236,6 +285,8 @@ describe('writeArrayToJsonFile', () => {
   })
 
   it('write exception', async () => {
+    expect.assertions(3)
+
     const atmpFile = tmp.fileSync().name,
       dateNow = Date.now(),
       testdata = [
@@ -268,6 +319,7 @@ describe('writeArrayToJsonFile', () => {
       })
     } catch (error) {
       expect(error).toBeInstanceOf(Error)
+
       if (error instanceof Error) {
         expect(error.message).toMatch(/^FileHelper: Error writing to file/iu)
       }
@@ -276,12 +328,15 @@ describe('writeArrayToJsonFile', () => {
     }
 
     expect(zspy).toHaveBeenCalledTimes(1)
+
     zspy.mockRestore()
 
     expect.assertions(3)
   })
 
   it('no mapper', async () => {
+    expect.assertions(7)
+
     const atmpFile = tmp.fileSync().name,
       dateNow = Date.now(),
       testdata = [
@@ -319,6 +374,8 @@ describe('writeArrayToJsonFile', () => {
 
 describe('openForRead', () => {
   it('readLines', async () => {
+    expect.assertions(2)
+
     const tmpFile = tmp.fileSync().name
     fs.writeFileSync(tmpFile, 'hello world')
 
@@ -328,7 +385,7 @@ describe('openForRead', () => {
       return await fh.readLines()
     })
 
-    expect(retRun).toEqual(['hello world'])
+    expect(retRun).toStrictEqual(['hello world'])
 
     const ret = FileHelper.ReadEntireFile(tmpFile)
 
@@ -338,6 +395,8 @@ describe('openForRead', () => {
   })
 
   it('file not open', async () => {
+    expect.assertions(2)
+
     const tmpFile = tmp.fileSync().name
     fs.writeFileSync(tmpFile, 'hello world')
 
@@ -354,26 +413,4 @@ describe('openForRead', () => {
 
     expect(ret).toBe('hello world')
   })
-})
-
-it('write', async () => {
-  const atmpFile = tmp.fileSync().name,
-    fh = new FileHelper(atmpFile),
-    spy = jest.spyOn(fh, 'write').mockRejectedValue(new Error('Mocked error'))
-  await fh.openForWrite()
-  try {
-    const retRun = await fh.write('hello world')
-
-    expect(retRun).toBe(11)
-  } catch (error) {
-    expect(error).toEqual(new Error('Mocked error'))
-    expect(spy).toHaveBeenCalledWith('hello world')
-  } finally {
-    await fh.close()
-
-    FileHelper.DeleteFileIfExists(atmpFile)
-  }
-
-  expect(spy).toHaveBeenCalledTimes(1)
-  spy.mockRestore()
 })

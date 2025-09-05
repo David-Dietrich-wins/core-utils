@@ -41,7 +41,7 @@ it('constructor with IConfig', () => {
   expect(config.updated).toBe(aic.updated)
   expect(config.updatedby).toBe(aic.updatedby)
 
-  expect(config.api()).toEqual({ name: 'name', val: true })
+  expect(config.api()).toStrictEqual({ name: 'name', val: true })
 })
 
 describe('ConfigShort', () => {
@@ -81,6 +81,6 @@ describe('ConfigShort', () => {
     expect(config.updated).toBe(aic.updated)
     expect(config.updatedby).toBe(aic.updatedby)
 
-    expect(config.api()).toEqual({ name: '1', val: 1 })
+    expect(config.api()).toStrictEqual({ name: '1', val: 1 })
   })
 })

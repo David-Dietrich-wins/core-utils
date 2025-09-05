@@ -253,14 +253,14 @@ describe(randomStringGenerate.name, () => {
 })
 
 describe(isStringish.name, () => {
-  test.each(['', 'abc', () => '123', () => 'a;dlkfja;lkdjfa;slkjf'])(
+  it.each(['', 'abc', () => '123', () => 'a;dlkfja;lkdjfa;slkjf'])(
     'True: %p',
     (input) => {
       expect(isStringish(input)).toBe(true)
     }
   )
 
-  test.each([
+  it.each([
     null,
     undefined,
     true,

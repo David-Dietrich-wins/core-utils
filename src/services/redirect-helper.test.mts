@@ -1,19 +1,32 @@
+import { describe, expect, it } from '@jest/globals'
 import { RedirectHelper } from './redirect-helper.mjs'
 
-it('Redirect Helper Tests', () => {
-  expect(RedirectHelper.ProtectedPaths).toContain('admin')
-  expect(RedirectHelper.ProtectedPaths).toContain('dashboard')
+describe('redirect Helper Tests', () => {
+  it('should have protected paths', () => {
+    expect.assertions(2)
 
-  expect(RedirectHelper.IllegalRedirectPaths).toContain('/')
-  expect(RedirectHelper.IllegalRedirectPaths).toContain('/login')
+    expect(RedirectHelper.ProtectedPaths).toContain('admin')
+    expect(RedirectHelper.ProtectedPaths).toContain('dashboard')
+  })
+
+  it('should have illegal redirect paths', () => {
+    expect.assertions(2)
+
+    expect(RedirectHelper.IllegalRedirectPaths).toContain('/')
+    expect(RedirectHelper.IllegalRedirectPaths).toContain('/login')
+  })
 })
 
 describe('getRedirectAfterLogin', () => {
   it('returns default redirect for illegal paths', () => {
+    expect.assertions(3)
+
     const result = RedirectHelper.cleansedRedirect('/login', '/dashboard')
+
     expect(result).toBe('/dashboard')
 
     const defaultResult = RedirectHelper.cleansedRedirect('/login', null)
+
     expect(defaultResult).toBe('/')
 
     expect(RedirectHelper.cleansedRedirect('/a', null)).toBe(
@@ -22,16 +35,21 @@ describe('getRedirectAfterLogin', () => {
   })
 
   it('handles illegal redirect paths', () => {
+    expect.assertions(8)
+
     const result = RedirectHelper.cleansedRedirect('/login', '/')
+
     expect(result).toBe('/')
 
     const result2 = RedirectHelper.cleansedRedirect('/login', '/dashboard')
+
     expect(result2).toBe('/dashboard')
 
     const myCustomPath = '/test-path',
       nonLoggedInRedirectPath = `/login?redirectUrl=${encodeURIComponent(
         myCustomPath
       )}`
+
     expect(RedirectHelper.cleansedRedirect('/login', myCustomPath)).toBe(
       myCustomPath
     )
@@ -54,36 +72,52 @@ describe('getRedirectAfterLogin', () => {
   })
 })
 
-test.each(['/a', '/admin', '/dashboard', '/zebra'])(
-  'cleansedRedirect at /login goes directly to each of the paths',
-  (path: string) => {
-    const result = RedirectHelper.cleansedRedirect('/login', path)
-    expect(result).toBe(path)
-  }
-)
+describe('cleanse redirect', () => {
+  it.each(['/a', '/admin', '/dashboard', '/zebra'])(
+    'cleansedRedirect at /login goes directly to each of the paths',
+    (path: string) => {
+      expect.assertions(1)
 
-const myTestPath = '/test-path'
+      const result = RedirectHelper.cleansedRedirect('/login', path)
 
-test.each(['/a', '/admin', '/dashboard', '/zebra'])(
-  'cleansedRedirect at /dashboard redirects to /login with the redirectUrl of the path',
-  (path: string) => {
-    const result = RedirectHelper.cleansedRedirect('/dashboard', path)
-    expect(result).toBe(`/login?redirectUrl=${encodeURIComponent(path)}`)
-  }
-)
+      expect(result).toBe(path)
+    }
+  )
 
-test.each(['/a', '/admin', '/dashboard', '/zebra'])(
-  'cleansedRedirect at /login redirects to /login with the redirectUrl of the path',
-  (path: string) => {
-    const result = RedirectHelper.cleansedRedirect(path, myTestPath)
-    expect(result).toBe(`/login?redirectUrl=${encodeURIComponent(myTestPath)}`)
-  }
-)
+  const myTestPath = '/test-path'
 
-test.each([undefined, null, '', '/', '/login'])(
-  'cleansedRedirect redirects to /dashboard for illegal paths',
-  (path: string | null | undefined) => {
-    const result = RedirectHelper.cleansedRedirect('/login', path)
-    expect(result).toBe('/')
-  }
-)
+  it.each(['/a', '/admin', '/dashboard', '/zebra'])(
+    'cleansedRedirect at /dashboard redirects to /login with the redirectUrl of the path',
+    (path: string) => {
+      expect.assertions(1)
+
+      const result = RedirectHelper.cleansedRedirect('/dashboard', path)
+
+      expect(result).toBe(`/login?redirectUrl=${encodeURIComponent(path)}`)
+    }
+  )
+
+  it.each(['/a', '/admin', '/dashboard', '/zebra'])(
+    'cleansedRedirect at /login redirects to /login with the redirectUrl of the path',
+    (path: string) => {
+      expect.assertions(1)
+
+      const result = RedirectHelper.cleansedRedirect(path, myTestPath)
+
+      expect(result).toBe(
+        `/login?redirectUrl=${encodeURIComponent(myTestPath)}`
+      )
+    }
+  )
+
+  it.each([undefined, null, '', '/', '/login'])(
+    'cleansedRedirect redirects to /dashboard for illegal paths',
+    (path: string | null | undefined) => {
+      expect.assertions(1)
+
+      const result = RedirectHelper.cleansedRedirect('/login', path)
+
+      expect(result).toBe('/')
+    }
+  )
+})

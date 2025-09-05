@@ -35,5 +35,5 @@ it(dictionaryToObject.name, () => {
   dict.set('key1', 1)
   dict.set('key2', 2)
   const obj = dictionaryToObject(dict)
-  expect(obj).toEqual({ key1: 1, key2: 2 })
+  expect(obj).toStrictEqual({ key1: 1, key2: 2 })
 })

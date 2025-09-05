@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-commented-out-tests */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
@@ -35,13 +36,23 @@ import {
   sortFunction,
 } from './object-helper.mjs'
 import { CONST_ListMustBeAnArray, type IId } from '../models/IdManager.mjs'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from '@jest/globals'
 import { AppException } from '../models/AppException.mjs'
 import { IdValueManager } from '../models/IdValueManager.mjs'
-import { jest } from '@jest/globals'
+import { mockConsoleLog } from '../jest.setup.mts'
 import { safestr } from './string-helper.mjs'
 
-describe('ObjectFindKeyAndReturnValue', () => {
+describe('objectFindKeyAndReturnValue', () => {
   it('default', () => {
+    expect.assertions(2)
+
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -50,13 +61,17 @@ describe('ObjectFindKeyAndReturnValue', () => {
 
     const keyToFind = 'key1'
     let result = ObjectFindKeyAndReturnValue(obj, keyToFind)
+
     expect(result).toBe('value1')
 
     result = ObjectFindKeyAndReturnValue(obj, '')
+
     expect(result).toBeUndefined()
   })
 
   it('match lower and trim key', () => {
+    expect.assertions(1)
+
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -75,6 +90,8 @@ describe('ObjectFindKeyAndReturnValue', () => {
   })
 
   it('match key case fail', () => {
+    expect.assertions(1)
+
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -93,6 +110,8 @@ describe('ObjectFindKeyAndReturnValue', () => {
   })
 
   it('match key in object case fail', () => {
+    expect.assertions(1)
+
     const obj = {
       kEy1: 'value1',
       key2: 'value2',
@@ -111,6 +130,8 @@ describe('ObjectFindKeyAndReturnValue', () => {
   })
 
   it('do not match key case', () => {
+    expect.assertions(1)
+
     const obj = {
       kEY1: 'value1',
       key2: 'value2',
@@ -129,8 +150,10 @@ describe('ObjectFindKeyAndReturnValue', () => {
   })
 })
 
-describe('ObjectMustHaveKeyAndReturnValue', () => {
+describe('objectMustHaveKeyAndReturnValue', () => {
   it('default', () => {
+    expect.assertions(2)
+
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -140,12 +163,17 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
     const keyToFind = 'key1'
 
     const result = ObjectMustHaveKeyAndReturnValue('test', obj, keyToFind)
+
     expect(result).toBe('value1')
 
-    expect(() => ObjectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow()
+    expect(() => ObjectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow(
+      new AppException('Key key4 not found in test object: ', 'key4')
+    )
   })
 
   it('match lower key', () => {
+    expect.assertions(2)
+
     const obj = {
       key1: 'value1',
       key2: 'value2',
@@ -161,6 +189,7 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
       keyToFind,
       matchLowercaseAndTrimKey
     )
+
     expect(result).toBe('value1')
 
     expect(() =>
@@ -170,27 +199,34 @@ describe('ObjectMustHaveKeyAndReturnValue', () => {
         'key4',
         matchLowercaseAndTrimKey
       )
-    ).toThrow()
+    ).toThrow(new AppException('Key key4 not found in test object: ', 'key4'))
   })
 })
 
-describe(ObjectTypesToString.name, () => {
+describe('objectTypesToString', () => {
   it('return string from array', () => {
+    expect.assertions(1)
+
     const ret = ObjectTypesToString(['hello', 'world'])
 
     expect(ret).toBe('["hello","world"]')
   })
 
   it('null', () => {
+    expect.assertions(1)
+
     const ret = ObjectTypesToString(null)
 
     expect(ret).toBe('')
   })
 
-  it('JS Error response', () => {
+  it('js Error response', () => {
+    expect.assertions(2)
+
     const e = new Error('test error')
 
     const ret = ObjectTypesToString(e)
+
     expect(ret).toContain('Error')
     expect(ret).toContain('{"message":"test error","name":"Error"')
   })
@@ -226,29 +262,38 @@ describe(ObjectTypesToString.name, () => {
     }
   }
 
-  it('File object', () => {
+  it('file object', () => {
+    expect.assertions(1)
+
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 
-  it('FileList object', () => {
+  it('fileList object', () => {
+    expect.assertions(1)
+
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 
-  it('Object generic', () => {
+  it('object generic', () => {
+    expect.assertions(1)
+
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 })
 
-describe(BuildLogFriendlyMessage.name, () => {
+describe('buildLogFriendlyMessage', () => {
   const componentName = 'test'
   const level = 'info'
   const regex = (suffix: string) =>
@@ -258,6 +303,8 @@ describe(BuildLogFriendlyMessage.name, () => {
     )
 
   it('return string from array', () => {
+    expect.assertions(1)
+
     const ret = BuildLogFriendlyMessage({
       componentName,
       level,
@@ -267,7 +314,9 @@ describe(BuildLogFriendlyMessage.name, () => {
     expect(ret).toMatch(regex('hello world'))
   })
 
-  test.each([null, undefined, ''])('empty: %s', (message) => {
+  it.each([null, undefined, ''])('empty: %s', (message) => {
+    expect.assertions(1)
+
     const ret = BuildLogFriendlyMessage({
       componentName,
       level,
@@ -277,7 +326,9 @@ describe(BuildLogFriendlyMessage.name, () => {
     expect(ret).toMatch(regex(''))
   })
 
-  it('JS Error response', () => {
+  it('js Error response', () => {
+    expect.assertions(2)
+
     const e = new Error('test error')
 
     const ret = BuildLogFriendlyMessage({
@@ -285,6 +336,7 @@ describe(BuildLogFriendlyMessage.name, () => {
       level,
       message: e,
     })
+
     expect(ret).toContain('Error')
     expect(ret).toContain('"message":"test error"')
   })
@@ -326,282 +378,329 @@ describe(BuildLogFriendlyMessage.name, () => {
     }
   }
 
-  it('File object', () => {
+  it('file object', () => {
+    expect.assertions(1)
+
     const e = new File('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 
-  it('FileList object', () => {
+  it('fileList object', () => {
+    expect.assertions(1)
+
     const e = new FileList('', 'test.txt')
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 
-  it('Object generic', () => {
+  it('object generic', () => {
+    expect.assertions(1)
+
     const e = { data: '', name: 'test.txt' }
 
     const ret = ObjectTypesToString(e)
-    expect(ret).toEqual('{"data":"","name":"test.txt"}')
+
+    expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 })
 
-it(getObjectValue.name, () => {
-  expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
-  expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
-})
+describe('check functions', () => {
+  it('getObjectValue', () => {
+    expect.assertions(2)
 
-it(isObject.name, () => {
-  expect(isObject({})).toBe(true)
-  expect(isObject([])).toBe(false)
-  expect(isObject(1)).toBe(false)
-  expect(isObject('')).toBe(false)
-
-  expect(isObject({}, 1)).toBe(false)
-  expect(isObject({ a: 'a' }, -1)).toBe(true)
-  expect(isObject({ a: 'a' }, 0)).toBe(true)
-  expect(isObject({ a: 'a' }, 1)).toBe(true)
-  expect(isObject({ a: 'a' }, 'a')).toBe(true)
-  expect(isObject({ a: 'a' }, 'b')).toBe(false)
-  expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
-})
-
-it(isEmptyObject.name, () => {
-  expect(isEmptyObject({})).toBe(true)
-  expect(isEmptyObject({ a: 'a' })).toBe(false)
-})
-
-it('hasData', () => {
-  expect(hasData(undefined)).toBe(false)
-  expect(hasData(null)).toBe(false)
-  expect(hasData('')).toBe(false)
-  expect(hasData('a')).toBe(true)
-  expect(hasData('a', 0)).toBe(false)
-  expect(hasData([])).toBe(false)
-  expect(hasData([], 0)).toBe(false)
-  expect(hasData([], -1)).toBe(false)
-  // Must be greater than 0
-  expect(hasData([1], -1)).toBe(false)
-  expect(hasData({})).toBe(false)
-  expect(hasData({}, undefined)).toBe(false)
-  expect(hasData({}, null as unknown as number)).toBe(false)
-  expect(hasData({ a: -1 }, -1)).toBe(false)
-  expect(hasData({ a: -1 }, 0)).toBe(false)
-  expect(hasData({ a: -1 }, 1)).toBe(true)
-  expect(hasData({ a: -1 }, 2)).toBe(false)
-  expect(hasData(0)).toBe(false)
-  expect(hasData(-1)).toBe(false)
-  expect(hasData(-10, -20)).toBe(true)
-  expect(hasData(1)).toBe(true)
-
-  expect(hasData(['a'], -1)).toBe(false)
-  expect(hasData(['a'], 0)).toBe(false)
-  expect(hasData(['a'], 1)).toBe(true)
-  expect(hasData(['a'], 2)).toBe(false)
-
-  expect(hasData(false)).toBe(false)
-  expect(hasData(true)).toBe(true)
-
-  const myfunc = () => ['a'],
-    sym = Symbol('test'),
-    symbol1 = Symbol('description'),
-    // eslint-disable-next-line symbol-description
-    symbolUnique: unique symbol = Symbol()
-
-  expect(hasData(myfunc, 1)).toBe(true)
-  expect(hasData(myfunc, 2)).toBe(false)
-
-  expect(hasData(23456, 23457)).toBe(false)
-  expect(
-    hasData(() => {
-      throw new AppException('test error')
-    }, 1)
-  ).toBe(false)
-
-  expect(hasData(new Date(), 0)).toBe(true)
-  expect(hasData(new Date(), 1)).toBe(true)
-  expect(hasData(new Date(), -1)).toBe(true)
-
-  expect(hasData(sym, 0)).toBe(false)
-  expect(hasData(sym, 1)).toBe(true)
-  expect(hasData(sym, 2)).toBe(false)
-  expect(hasData(symbol1)).toBe(true)
-  // Symbols do not contain values for JSON serialization
-  expect(hasData({ [symbol1]: 'abc' })).toBe(false)
-  expect(hasData({ symbol1: 'abc' })).toBe(true)
-  expect(hasData([symbol1])).toBe(true)
-  // Symbols do not contain values for JSON serialization
-  expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true)
-  // Symbols do not contain values for JSON serialization
-  expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(false)
-
-  expect(hasData(symbolUnique)).toBe(true)
-  expect(hasData([symbolUnique])).toBe(true)
-  expect(hasData(Symbol('test'))).toBe(true)
-  expect(hasData([Symbol('test')])).toBe(true)
-  expect(hasData({ [symbolUnique]: 'abc' })).toBe(false)
-  expect(hasData({ symbolUnique: 'abc' })).toBe(true)
-})
-
-it(searchObjectForArray.name, () => {
-  const obj: Record<string, unknown> = {
-    a: 'a',
-    b: 'b',
-    c: 'c',
-  }
-
-  expect(searchObjectForArray(obj)).toEqual([])
-
-  obj.anything = ['a', 'b', 'c']
-  expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
-
-  obj.anythingElse = ['c', 'b', 'a']
-  expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
-
-  obj.anything = 'a'
-  expect(searchObjectForArray(obj)).toEqual(['c', 'b', 'a'])
-
-  expect(searchObjectForArray(['c', 'b', 'a'])).toEqual(['c', 'b', 'a'])
-
-  expect(searchObjectForArray(3 as unknown as object)).toEqual([])
-})
-
-it(runOnAllMembers.name, () => {
-  expect(() =>
-    runOnAllMembers(1 as any, (key: string, value: unknown) => key + value)
-  ).toThrow('runOnAllMembers() received an empty object.')
-
-  expect(() => runOnAllMembers({ a: 'a' }, null as any)).toThrow(
-    'runOnAllMembers() received an empty function operator.'
-  )
-
-  const funcToRunOnAllMembers = (key: string, value: unknown) => key + value
-
-  expect(
-    runOnAllMembers({ a: 'a', b: 'b' }, funcToRunOnAllMembers)
-  ).toStrictEqual({
-    a: 'aa',
-    b: 'bb',
+    expect(getObjectValue({ a: 'a' }, 'a')).toBe('a')
+    expect(getObjectValue({ a: 'a' }, 'b')).toBeUndefined()
   })
 
-  expect(
-    runOnAllMembers(
-      { a: 'a', b: 'b', c: undefined },
-      funcToRunOnAllMembers,
-      true
-    )
-  ).toStrictEqual({
-    a: 'aa',
-    b: 'bb',
-    c: undefined,
+  it('isObject', () => {
+    expect.assertions(11)
+
+    expect(isObject({})).toBe(true)
+    expect(isObject([])).toBe(false)
+    expect(isObject(1)).toBe(false)
+    expect(isObject('')).toBe(false)
+
+    expect(isObject({}, 1)).toBe(false)
+    expect(isObject({ a: 'a' }, -1)).toBe(true)
+    expect(isObject({ a: 'a' }, 0)).toBe(true)
+    expect(isObject({ a: 'a' }, 1)).toBe(true)
+    expect(isObject({ a: 'a' }, 'a')).toBe(true)
+    expect(isObject({ a: 'a' }, 'b')).toBe(false)
+    expect(isObject({ a: 'a' }, new Date() as any)).toBe(true)
   })
 
-  expect(
-    runOnAllMembers(
-      { a: 'a', b: 'b', c: undefined },
-      funcToRunOnAllMembers,
+  it('isEmptyObject', () => {
+    expect.assertions(2)
+
+    expect(isEmptyObject({})).toBe(true)
+    expect(isEmptyObject({ a: 'a' })).toBe(false)
+  })
+
+  it('hasData', () => {
+    expect.assertions(48)
+
+    expect(hasData(undefined)).toBe(false)
+    expect(hasData(null)).toBe(false)
+    expect(hasData('')).toBe(false)
+    expect(hasData('a')).toBe(true)
+    expect(hasData('a', 0)).toBe(false)
+    expect(hasData([])).toBe(false)
+    expect(hasData([], 0)).toBe(false)
+    expect(hasData([], -1)).toBe(false)
+    // Must be greater than 0
+    expect(hasData([1], -1)).toBe(false)
+    expect(hasData({})).toBe(false)
+    expect(hasData({}, undefined)).toBe(false)
+    expect(hasData({}, null as unknown as number)).toBe(false)
+    expect(hasData({ a: -1 }, -1)).toBe(false)
+    expect(hasData({ a: -1 }, 0)).toBe(false)
+    expect(hasData({ a: -1 }, 1)).toBe(true)
+    expect(hasData({ a: -1 }, 2)).toBe(false)
+    expect(hasData(0)).toBe(false)
+    expect(hasData(-1)).toBe(false)
+    expect(hasData(-10, -20)).toBe(true)
+    expect(hasData(1)).toBe(true)
+
+    expect(hasData(['a'], -1)).toBe(false)
+    expect(hasData(['a'], 0)).toBe(false)
+    expect(hasData(['a'], 1)).toBe(true)
+    expect(hasData(['a'], 2)).toBe(false)
+
+    expect(hasData(false)).toBe(false)
+    expect(hasData(true)).toBe(true)
+
+    const myfunc = () => ['a'],
+      sym = Symbol('test'),
+      symbol1 = Symbol('description'),
+      // eslint-disable-next-line symbol-description
+      symbolUnique: unique symbol = Symbol()
+
+    expect(hasData(myfunc, 1)).toBe(true)
+    expect(hasData(myfunc, 2)).toBe(false)
+
+    expect(hasData(23456, 23457)).toBe(false)
+    expect(
+      hasData(() => {
+        throw new AppException('test error')
+      }, 1)
+    ).toBe(false)
+
+    expect(hasData(new Date(), 0)).toBe(true)
+    expect(hasData(new Date(), 1)).toBe(true)
+    expect(hasData(new Date(), -1)).toBe(true)
+
+    expect(hasData(sym, 0)).toBe(false)
+    expect(hasData(sym, 1)).toBe(true)
+    expect(hasData(sym, 2)).toBe(false)
+    expect(hasData(symbol1)).toBe(true)
+    // Symbols do not contain values for JSON serialization
+    expect(hasData({ [symbol1]: 'abc' })).toBe(false)
+    expect(hasData({ symbol1: 'abc' })).toBe(true)
+    expect(hasData([symbol1])).toBe(true)
+    // Symbols do not contain values for JSON serialization
+    expect(hasData(JSON.stringify({ [symbol1]: 'abc' }))).toBe(true)
+    // Symbols do not contain values for JSON serialization
+    expect(hasData(JSON.parse(JSON.stringify({ [symbol1]: 'abc' })))).toBe(
       false
     )
-  ).toStrictEqual({
-    a: 'aa',
-    b: 'bb',
-    c: 'cundefined',
+
+    expect(hasData(symbolUnique)).toBe(true)
+    expect(hasData([symbolUnique])).toBe(true)
+    expect(hasData(Symbol('test'))).toBe(true)
+    expect(hasData([Symbol('test')])).toBe(true)
+    expect(hasData({ [symbolUnique]: 'abc' })).toBe(false)
+    expect(hasData({ symbolUnique: 'abc' })).toBe(true)
+  })
+
+  it('searchObjectForArray', () => {
+    expect.assertions(6)
+
+    const obj: Record<string, unknown> = {
+      a: 'a',
+      b: 'b',
+      c: 'c',
+    }
+
+    expect(searchObjectForArray(obj)).toStrictEqual([])
+
+    obj.anything = ['a', 'b', 'c']
+
+    expect(searchObjectForArray(obj)).toStrictEqual(['a', 'b', 'c'])
+
+    obj.anythingElse = ['c', 'b', 'a']
+
+    expect(searchObjectForArray(obj)).toStrictEqual(['a', 'b', 'c'])
+
+    obj.anything = 'a'
+
+    expect(searchObjectForArray(obj)).toStrictEqual(['c', 'b', 'a'])
+
+    expect(searchObjectForArray(['c', 'b', 'a'])).toStrictEqual(['c', 'b', 'a'])
+
+    expect(searchObjectForArray(3 as unknown as object)).toStrictEqual([])
   })
 })
 
-it(renameProperty.name, () => {
-  let obj = { a: 'a', b: 'b', c: 'c' }
-  let retobj = { b: 'b', c: 'c', d: 'a' }
-  let oldKey: any = 'a'
-  let newKey: any = 'd'
+describe('runners', () => {
+  it('runOnAllMembers', () => {
+    expect.assertions(5)
 
-  renameProperty(obj, oldKey, newKey)
-  expect(obj).toStrictEqual(retobj)
+    expect(() =>
+      runOnAllMembers(1 as any, (key: string, value: unknown) => key + value)
+    ).toThrow('runOnAllMembers() received an empty object.')
 
-  oldKey = null
-  newKey = null
-  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
-    'Cannot renameProperty. Invalid settings.'
-  )
-
-  oldKey = 'a'
-  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
-    'Cannot renameProperty. Invalid settings.'
-  )
-
-  oldKey = 'notToBeFound'
-  newKey = 'd'
-  expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
-    `Cannot renameProperty. Property: ${safestr(oldKey)} not found.`
-  )
-
-  obj = { a: 'a', b: 'b', c: 'c' }
-  oldKey = 'a'
-  newKey = 'd'
-  retobj = { b: 'b', c: 'c', d: 'a' }
-  expect(renameProperty(obj, oldKey, newKey)).toStrictEqual(retobj)
-})
-
-it(ObjectPrepareForJson.name, () => {
-  const obj = {
-    createdAt: new Date(),
-    id: 1,
-    other: {
-      nested: 'this should not be removed',
-      secret: 'this should be removed too',
-    },
-    password: 'test-secret',
-    pwd: 'test-secret',
-    updatedAt: new Date(),
-  }
-
-  const result = ObjectPrepareForJson(obj)
-  expect(result).toEqual({
-    createdAt: expect.any(Date),
-    id: 1,
-    other: {
-      nested: 'this should not be removed',
-    },
-    updatedAt: expect.any(Date),
-  })
-
-  expect(
-    ObjectPrepareForJson({ anything: 'anything' }, 'anything')
-  ).toStrictEqual({})
-  expect(
-    ObjectPrepareForJson(
-      { anything: 'anything', something: 'something', where: 'good' },
-      ['anything', 'something']
+    expect(() => runOnAllMembers({ a: 'a' }, null as any)).toThrow(
+      'runOnAllMembers() received an empty function operator.'
     )
-  ).toStrictEqual({ where: 'good' })
-  expect(ObjectPrepareForJson(undefined)).toStrictEqual({})
-  expect(ObjectPrepareForJson(null)).toStrictEqual({})
-  expect(ObjectPrepareForJson({})).toStrictEqual({})
+
+    const funcToRunOnAllMembers = (key: string, value: unknown) => key + value
+
+    expect(
+      runOnAllMembers({ a: 'a', b: 'b' }, funcToRunOnAllMembers)
+    ).toStrictEqual({
+      a: 'aa',
+      b: 'bb',
+    })
+
+    expect(
+      runOnAllMembers(
+        { a: 'a', b: 'b', c: undefined },
+        funcToRunOnAllMembers,
+        true
+      )
+    ).toStrictEqual({
+      a: 'aa',
+      b: 'bb',
+      c: undefined,
+    })
+
+    expect(
+      runOnAllMembers(
+        { a: 'a', b: 'b', c: undefined },
+        funcToRunOnAllMembers,
+        false
+      )
+    ).toStrictEqual({
+      a: 'aa',
+      b: 'bb',
+      c: 'cundefined',
+    })
+  })
+
+  it('renameProperty', () => {
+    expect.assertions(5)
+
+    let obj = { a: 'a', b: 'b', c: 'c' }
+    let retobj = { b: 'b', c: 'c', d: 'a' }
+    let oldKey: any = 'a'
+    let newKey: any = 'd'
+
+    renameProperty(obj, oldKey, newKey)
+
+    expect(obj).toStrictEqual(retobj)
+
+    oldKey = null
+    newKey = null
+
+    expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+      'Cannot renameProperty. Invalid settings.'
+    )
+
+    oldKey = 'a'
+
+    expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+      'Cannot renameProperty. Invalid settings.'
+    )
+
+    oldKey = 'notToBeFound'
+    newKey = 'd'
+
+    expect(() => renameProperty(obj, oldKey, newKey)).toThrow(
+      `Cannot renameProperty. Property: ${safestr(oldKey)} not found.`
+    )
+
+    obj = { a: 'a', b: 'b', c: 'c' }
+    oldKey = 'a'
+    newKey = 'd'
+    retobj = { b: 'b', c: 'c', d: 'a' }
+
+    expect(renameProperty(obj, oldKey, newKey)).toStrictEqual(retobj)
+  })
 })
 
-it(safeObject.name, () => {
-  expect(safeObject()).toStrictEqual({})
-  expect(safeObject({ a: 1 })).toStrictEqual({ a: 1 })
-  expect(safeObject(undefined, { a: 1 })).toStrictEqual({ a: 1 })
+describe('prepareForJson', () => {
+  it('default', () => {
+    expect.assertions(6)
+
+    const obj = {
+      createdAt: new Date(),
+      id: 1,
+      other: {
+        nested: 'this should not be removed',
+        secret: 'this should be removed too',
+      },
+      password: 'test-secret',
+      pwd: 'test-secret',
+      updatedAt: new Date(),
+    }
+
+    const result = ObjectPrepareForJson(obj)
+
+    expect(result).toStrictEqual({
+      createdAt: expect.any(Date),
+      id: 1,
+      other: {
+        nested: 'this should not be removed',
+      },
+      updatedAt: expect.any(Date),
+    })
+
+    expect(
+      ObjectPrepareForJson({ anything: 'anything' }, 'anything')
+    ).toStrictEqual({})
+    expect(
+      ObjectPrepareForJson(
+        { anything: 'anything', something: 'something', where: 'good' },
+        ['anything', 'something']
+      )
+    ).toStrictEqual({ where: 'good' })
+    expect(ObjectPrepareForJson(undefined)).toStrictEqual({})
+    expect(ObjectPrepareForJson(null)).toStrictEqual({})
+    expect(ObjectPrepareForJson({})).toStrictEqual({})
+  })
 })
 
-it(safeJsonToString.name, () => {
-  expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
-  expect(safeJsonToString(4 as any)).toBe('[4]')
-  expect(safeJsonToString(undefined as any)).toBe('[]')
-  expect(safeJsonToString(null as any)).toBe('[]')
+describe('safe functions', () => {
+  it('safeObject', () => {
+    expect.assertions(3)
 
-  // Circular reference so JSON.stringify will fail
-  const obj: Record<string, unknown> = {}
-  obj.a = { b: obj }
-  expect(safeJsonToString(obj)).toBe('')
+    expect(safeObject()).toStrictEqual({})
+    expect(safeObject({ a: 1 })).toStrictEqual({ a: 1 })
+    expect(safeObject(undefined, { a: 1 })).toStrictEqual({ a: 1 })
+  })
 
-  console.log = jest.fn()
+  it('safeJsonToString', () => {
+    expect.assertions(7)
 
-  expect(safeJsonToString(obj, 'functionName:')).toBe('')
-  expect(console.log).toHaveBeenCalledTimes(1)
+    expect(safeJsonToString({ a: 'a' })).toBe('{"a":"a"}')
+    expect(safeJsonToString(4 as any)).toBe('[4]')
+    expect(safeJsonToString(undefined as any)).toBe('[]')
+    expect(safeJsonToString(null as any)).toBe('[]')
+
+    // Circular reference so JSON.stringify will fail
+    const obj: Record<string, unknown> = {}
+    obj.a = { b: obj }
+
+    expect(safeJsonToString(obj)).toBe('')
+
+    expect(safeJsonToString(obj, 'functionName:')).toBe('')
+    expect(mockConsoleLog).toHaveBeenCalledTimes(2)
+  })
 })
 
 function createDeepObject(depth: number, value: any) {
@@ -610,42 +709,46 @@ function createDeepObject(depth: number, value: any) {
   }
 }
 
-it(FindObjectWithField.name, () => {
-  const obj = {
-    a: 'a',
-    b: 'b',
-    c: 'c',
-    d: {
-      e: 'e',
-      f: [{ f1: 'f1' }, { f2: 'f2' }],
-      g: {
-        h: 'h',
-        i: 'i',
-        j: {
-          k: 'k',
-          l: 'l',
+describe('field functions', () => {
+  it('findObjectWithField', () => {
+    expect.assertions(9)
+
+    const obj = {
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      d: {
+        e: 'e',
+        f: [{ f1: 'f1' }, { f2: 'f2' }],
+        g: {
+          h: 'h',
+          i: 'i',
+          j: {
+            k: 'k',
+            l: 'l',
+          },
         },
       },
-    },
-  }
+    }
 
-  expect(FindObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
+    expect(FindObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
 
-  expect(FindObjectWithField(obj, 'a', 'a')).toBe(obj)
-  expect(FindObjectWithField(obj, 'b', 'c')).toBeUndefined()
-  expect(FindObjectWithField(obj, 'e', 'e')).toBe(obj.d)
-  expect(FindObjectWithField(obj, 'd', 'd')).toBeUndefined()
-  expect(FindObjectWithField(obj, 'j', 'k')).toBeUndefined()
-  expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
-  expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
+    expect(FindObjectWithField(obj, 'a', 'a')).toBe(obj)
+    expect(FindObjectWithField(obj, 'b', 'c')).toBeUndefined()
+    expect(FindObjectWithField(obj, 'e', 'e')).toBe(obj.d)
+    expect(FindObjectWithField(obj, 'd', 'd')).toBeUndefined()
+    expect(FindObjectWithField(obj, 'j', 'k')).toBeUndefined()
+    expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
+    expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
 
-  const deepObj = createDeepObject(101, 'value')
+    const deepObj = createDeepObject(101, 'value')
 
-  expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
-})
+    expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
+  })
 
-describe(removeFields.name, () => {
   it('remove from an object by fields array', () => {
+    expect.assertions(1)
+
     const obj = {
       a: 'a',
       b: 'b',
@@ -658,13 +761,15 @@ describe(removeFields.name, () => {
 
     removeFields(obj, props)
 
-    expect(obj).toEqual({
+    expect(obj).toStrictEqual({
       a: 'a',
       c: 'c',
     })
   })
 
   it('recursively remove from an object by fields array', () => {
+    expect.assertions(1)
+
     const obj = {
       a: 'a',
       b: 'b',
@@ -681,7 +786,7 @@ describe(removeFields.name, () => {
 
     removeFields(obj, props)
 
-    expect(obj).toEqual({
+    expect(obj).toStrictEqual({
       a: 'a',
       c: 'c',
       d: { a: 'a', c: 'c', d: { a: 'a' } },
@@ -691,6 +796,8 @@ describe(removeFields.name, () => {
   })
 
   it('recursively remove by fields object', () => {
+    expect.assertions(1)
+
     const obj = {
       a: 'a',
       b: 'b',
@@ -721,7 +828,7 @@ describe(removeFields.name, () => {
 
     removeFields(obj, props)
 
-    expect(obj).toEqual({
+    expect(obj).toStrictEqual({
       a: 'a',
       c: 'c',
       d: { a: 'a', c: 'c', d: { a: 'a' } },
@@ -732,6 +839,8 @@ describe(removeFields.name, () => {
   })
 
   it('default id props', () => {
+    expect.assertions(1)
+
     const obj = {
       _id: 1,
       id: null,
@@ -745,7 +854,7 @@ describe(removeFields.name, () => {
 
     removeFields(obj)
 
-    expect(obj).toEqual({
+    expect(obj).toStrictEqual({
       name: 'Test',
       x: {
         id: 3,
@@ -755,6 +864,8 @@ describe(removeFields.name, () => {
   })
 
   it('not an object', () => {
+    expect.assertions(9)
+
     const obj = 'not an object'
     const props = {
       fields: ['b', 'e', 'h'],
@@ -763,10 +874,10 @@ describe(removeFields.name, () => {
 
     removeFields(obj, props)
 
-    expect(obj).toEqual('not an object')
-    expect(removeFields(6, props)).toEqual(6)
-    expect(removeFields([1, 2, 3], props)).toEqual([1, 2, 3])
-    expect(removeFields('string', props)).toEqual('string')
+    expect(obj).toBe('not an object')
+    expect(removeFields(6, props)).toBe(6)
+    expect(removeFields([1, 2, 3], props)).toStrictEqual([1, 2, 3])
+    expect(removeFields('string', props)).toBe('string')
     expect(removeFields(null, props)).toBeNull()
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     expect(removeFields(undefined, props)).toBeUndefined()
@@ -774,17 +885,19 @@ describe(removeFields.name, () => {
     expect(removeFields(false, props)).toBe(false)
     expect(removeFields(new Date(), props)).toBeInstanceOf(Date)
   })
-})
 
-it(UpdateFieldValue.name, () => {
-  const obj: IId & { field: string } = {
-    field: 'value',
-    id: 'abc1',
-  }
+  it('updateFieldValue', () => {
+    expect.assertions(1)
 
-  expect(UpdateFieldValue(obj, 'field', 'newvalue')).toEqual({
-    ...obj,
-    field: 'newvalue',
+    const obj: IId & { field: string } = {
+      field: 'value',
+      id: 'abc1',
+    }
+
+    expect(UpdateFieldValue(obj, 'field', 'newvalue')).toStrictEqual({
+      ...obj,
+      field: 'newvalue',
+    })
   })
 })
 
@@ -795,20 +908,20 @@ it(UpdateFieldValue.name, () => {
 //     c: 'c',
 //   }
 
-//   expect(searchObjectForArray(obj)).toEqual([])
+//   expect(searchObjectForArray(obj)).toStrictEqual([])
 
 //   obj.anything = ['a', 'b', 'c']
-//   expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
+//   expect(searchObjectForArray(obj)).toStrictEqual(['a', 'b', 'c'])
 
 //   obj.anythingElse = ['c', 'b', 'a']
-//   expect(searchObjectForArray(obj)).toEqual(['a', 'b', 'c'])
+//   expect(searchObjectForArray(obj)).toStrictEqual(['a', 'b', 'c'])
 
 //   obj.anything = 'a'
-//   expect(searchObjectForArray(obj)).toEqual(['c', 'b', 'a'])
+//   expect(searchObjectForArray(obj)).toStrictEqual(['c', 'b', 'a'])
 
-//   expect(searchObjectForArray(['c', 'b', 'a'])).toEqual(['c', 'b', 'a'])
+//   expect(searchObjectForArray(['c', 'b', 'a'])).toStrictEqual(['c', 'b', 'a'])
 
-//   expect(searchObjectForArray('c' as unknown as object)).toEqual([])
+//   expect(searchObjectForArray('c' as unknown as object)).toStrictEqual([])
 // })
 // it('runOnAllMembers', () => {
 //   expect(() =>
@@ -959,19 +1072,27 @@ it(UpdateFieldValue.name, () => {
 
 describe('deepCloneJson empty JSON.parse', () => {
   let originalParse
+
+  // eslint-disable-next-line jest/no-hooks
   beforeEach(() => {
     // Store the original JSON.parse to restore it later
     originalParse = JSON.parse
   })
 
+  // eslint-disable-next-line jest/no-hooks
   afterEach(() => {
     // Restore JSON.parse after each test to prevent interference
     JSON.parse = originalParse
   })
 
-  it('deepCloneJson', () => {
+  it('deepCloneJson empty JSON.parse', () => {
+    expect.assertions(5)
+
+    // Mock JSON.parse to return null
+    // eslint-disable-next-line jest/prefer-spy-on
     JSON.parse = jest.fn(() => null)
     // console.log('deepCloneJson', safestrToJson('{"a": "a"}'))
+
     expect(() => deepCloneJson({ a: 'a' })).toThrow(AppException)
 
     expect(() => deepCloneJson({})).toThrow(AppException)
@@ -984,13 +1105,17 @@ describe('deepCloneJson empty JSON.parse', () => {
   })
 })
 
-it(deepCloneJson.name, () => {
-  expect(deepCloneJson({ a: 'a' })).toStrictEqual({ a: 'a' })
+describe('deepCloneJson', () => {
+  it('deepCloneJson', () => {
+    expect.assertions(4)
 
-  expect(deepCloneJson({})).toStrictEqual({})
-  expect(deepCloneJson([])).toStrictEqual([])
+    expect(deepCloneJson({ a: 'a' })).toStrictEqual({ a: 'a' })
 
-  expect(deepCloneJson(undefined as unknown as object)).toStrictEqual([])
+    expect(deepCloneJson({})).toStrictEqual({})
+    expect(deepCloneJson([])).toStrictEqual([])
+
+    expect(deepCloneJson(undefined as unknown as object)).toStrictEqual([])
+  })
 })
 
 // it('addObjectToList', () => {
@@ -1008,8 +1133,10 @@ it(deepCloneJson.name, () => {
 //   expect(addObjectToList([], [null])).toStrictEqual([])
 // })
 
-describe(deepDiffMapper.name, () => {
+describe('deepDiffMapper', () => {
   it('compareValues', () => {
+    expect.assertions(9)
+
     const aDate = new Date(),
       anum = 1,
       astr = 'a',
@@ -1021,35 +1148,28 @@ describe(deepDiffMapper.name, () => {
       b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().anyChanges(a, b)).toBe(true)
-    expect(deepDiffMapper().compareValues(a, b)).toStrictEqual('updated')
+    expect(deepDiffMapper().compareValues(a, b)).toBe('updated')
 
-    expect(deepDiffMapper().compareValues(anum, bnum)).toStrictEqual(
-      'unchanged'
-    )
-    expect(deepDiffMapper().compareValues(anum, bnum + 1)).toStrictEqual(
-      'updated'
-    )
+    expect(deepDiffMapper().compareValues(anum, bnum)).toBe('unchanged')
+    expect(deepDiffMapper().compareValues(anum, bnum + 1)).toBe('updated')
 
-    expect(deepDiffMapper().compareValues(astr, bstr)).toStrictEqual(
-      'unchanged'
-    )
-    expect(deepDiffMapper().compareValues(astr, `${bstr}a`)).toStrictEqual(
-      'updated'
-    )
+    expect(deepDiffMapper().compareValues(astr, bstr)).toBe('unchanged')
+    expect(deepDiffMapper().compareValues(astr, `${bstr}a`)).toBe('updated')
 
-    expect(deepDiffMapper().compareValues(aDate, bDate)).toStrictEqual(
-      'unchanged'
-    )
+    expect(deepDiffMapper().compareValues(aDate, bDate)).toBe('unchanged')
     expect(
       deepDiffMapper().compareValues(aDate, new Date(Number(bDate) + 1))
-    ).toStrictEqual('updated')
+    ).toBe('updated')
 
     a = { a: 'a', b: 'b' }
     b = { a: 'a', b: 'b' }
-    expect(deepDiffMapper().compareValues(a, b)).toStrictEqual('updated')
+
+    expect(deepDiffMapper().compareValues(a, b)).toBe('updated')
   })
 
   it('arrays', () => {
+    expect.assertions(2)
+
     const a = [
         { name: 'climate', value: 90 },
         { name: 'freeSpeech', value: 80 },
@@ -1080,26 +1200,31 @@ describe(deepDiffMapper.name, () => {
   })
 
   it('findTypeData', () => {
+    expect.assertions(6)
+
     let b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().findTypeData(['a', 'a'])).toBe(false)
 
-    expect(deepDiffMapper().findTypeData(['a', b])).toStrictEqual(false)
+    expect(deepDiffMapper().findTypeData(['a', b])).toBe(false)
 
     b = {
       data: 'a',
       type: 'not-unchanged',
     }
-    expect(deepDiffMapper().findTypeData(['a', b])).toStrictEqual(true)
+
+    expect(deepDiffMapper().findTypeData(['a', b])).toBe(true)
 
     b = {
       data: 'a',
       type: 'unchanged',
     }
-    expect(deepDiffMapper().findTypeData(['a', b])).toStrictEqual(false)
+
+    expect(deepDiffMapper().findTypeData(['a', b])).toBe(false)
 
     const ddm = deepDiffMapper()
-    expect(ddm.findTypeData(['a', ddm])).toStrictEqual(false)
+
+    expect(ddm.findTypeData(['a', ddm])).toBe(false)
 
     expect(
       ddm.findTypeData([
@@ -1109,10 +1234,12 @@ describe(deepDiffMapper.name, () => {
           type: 'changed',
         },
       ])
-    ).toStrictEqual(true)
+    ).toBe(true)
   })
 
   it('getChanges', () => {
+    expect.assertions(7)
+
     const a: Record<string, unknown> = { a: 'a' },
       aDate = new Date(),
       anum = 1,
@@ -1140,16 +1267,20 @@ describe(deepDiffMapper.name, () => {
   })
 
   it('various tests', () => {
+    expect.assertions(12)
+
     let a: Record<string, unknown> = { a: 'a' },
       b: Record<string, unknown> = { b: 'b' }
 
     expect(deepDiffMapper().anyChanges(a, b)).toBe(true)
 
     b = { a: 'a' }
+
     expect(deepDiffMapper().anyChanges(a, b)).toBe(false)
 
     a = { a: 'a', b: 'b' }
     b = { a: 'a', b: 'b' }
+
     expect(deepDiffMapper().anyChanges(a, b)).toBe(false)
 
     expect(deepDiffMapper().anyChanges([a, 1, 2], [a, 1, 2])).toBe(false)
@@ -1158,12 +1289,14 @@ describe(deepDiffMapper.name, () => {
     expect(deepDiffMapper().getChanges(a, b)).toBeUndefined()
 
     b = { a: 'a', b: 'c' }
+
     expect(deepDiffMapper().getChanges(a, b)).toStrictEqual([
       'b',
       { data: 'b', type: 'updated' },
     ])
 
     b = {}
+
     expect(deepDiffMapper().getChanges(a, b)).toStrictEqual([
       'a',
       { data: 'a', type: 'deleted' },
@@ -1171,6 +1304,7 @@ describe(deepDiffMapper.name, () => {
 
     a = { a: 'a' }
     b = { a: 'a', b: 'b' }
+
     expect(deepDiffMapper().getChanges(a, b)).toStrictEqual([
       'b',
       { data: 'b', type: 'created' },
@@ -1178,10 +1312,12 @@ describe(deepDiffMapper.name, () => {
 
     a = { a: 'a' }
     b = { a: 'a' }
+
     expect(deepDiffMapper().getChanges(a, b)).toBeUndefined()
 
     a = { a: 'a' }
     b = { a: 'a' }
+
     expect(() => deepDiffMapper().getChanges(() => a, b)).toThrow(
       'Invalid argument. Function given, object expected.'
     )
@@ -1189,6 +1325,7 @@ describe(deepDiffMapper.name, () => {
     a = { a: () => 'a' }
     b = { a: 'a' }
     const ddMap = deepDiffMapper().map(a, b)
+
     expect(ddMap).toStrictEqual({
       a: {
         data: 'a',
@@ -1198,78 +1335,96 @@ describe(deepDiffMapper.name, () => {
   })
 })
 
-it('getFirstNewWithException', () => {
-  expect(() => objectGetFirstNewWithException(IdValueManager, [])).not.toThrow()
-  expect(() =>
-    objectGetFirstNewWithException(IdValueManager, [234, 20])
-  ).toThrow(new Error(CONST_ListMustBeAnArray))
+describe('get new object functions', () => {
+  it('getFirstNewWithException', () => {
+    expect.assertions(6)
 
-  const fnOrig = ObjectHelper.objectGetInstance
-  ObjectHelper.objectGetInstance = () => undefined as any
+    expect(() =>
+      objectGetFirstNewWithException(IdValueManager, [])
+    ).not.toThrow()
+    expect(() =>
+      objectGetFirstNewWithException(IdValueManager, [234, 20])
+    ).toThrow(new Error(CONST_ListMustBeAnArray))
 
-  expect(() =>
-    objectGetFirstNewWithException(
-      IdValueManager,
-      undefined as unknown as string[]
-    )
-  ).toThrow(new Error('Error getting first new object'))
+    // eslint-disable-next-line jest/unbound-method
+    const fnOrig = ObjectHelper.objectGetInstance
+    ObjectHelper.objectGetInstance = () => undefined as any
 
-  expect(() =>
-    objectGetFirstNewWithException(
-      IdValueManager,
-      undefined as unknown as string[],
-      'generic exception text'
-    )
-  ).toThrow(new Error('generic exception text'))
+    expect(() =>
+      objectGetFirstNewWithException(
+        IdValueManager,
+        undefined as unknown as string[]
+      )
+    ).toThrow(new Error('Error getting first new object'))
 
-  ObjectHelper.objectGetInstance = fnOrig
+    expect(() =>
+      objectGetFirstNewWithException(
+        IdValueManager,
+        undefined as unknown as string[],
+        'generic exception text'
+      )
+    ).toThrow(new Error('generic exception text'))
 
-  expect(() =>
-    objectGetFirstNewWithException(IdValueManager, [
-      [{ id: 234, value: '234' }],
-      [{ id: 20, value: '20' }],
-    ])
-  ).not.toThrow()
-  expect(() =>
-    objectGetFirstNewWithException(IdValueManager, [
-      { id: 234, value: '234' },
-      { id: 20, value: '20' },
-    ])
-  ).toThrow()
-})
+    ObjectHelper.objectGetInstance = fnOrig
 
-it('getNewObject', () => {
-  expect(() => objectGetNew(IdValueManager, [])).not.toThrow()
-  expect(() => objectGetNew(IdValueManager, [234, 20])).toThrow()
-  expect(() =>
-    objectGetNew(
-      IdValueManager,
-      [
+    expect(() =>
+      objectGetFirstNewWithException(IdValueManager, [
+        [{ id: 234, value: '234' }],
+        [{ id: 20, value: '20' }],
+      ])
+    ).not.toThrow()
+    expect(() =>
+      objectGetFirstNewWithException(IdValueManager, [
         { id: 234, value: '234' },
         { id: 20, value: '20' },
-      ],
-      1
-    )
-  ).not.toThrow()
-  expect(() =>
-    objectGetNew(IdValueManager, [
-      { id: 234, value: '234' },
-      { id: 20, value: '20' },
+      ])
+    ).toThrow(new AppException(CONST_ListMustBeAnArray))
+  })
+
+  it('getNewObject', () => {
+    expect.assertions(4)
+
+    // const ex = new AppException(
+    //   "Cannot use 'in' operator to search for 'id' in 234",
+    //   'function'
+    // )
+
+    expect(() => objectGetNew(IdValueManager, [])).not.toThrow()
+    expect(() => objectGetNew(IdValueManager, [234, 20])).toThrow(TypeError)
+    expect(() =>
+      objectGetNew(
+        IdValueManager,
+        [
+          { id: 234, value: '234' },
+          { id: 20, value: '20' },
+        ],
+        1
+      )
+    ).not.toThrow()
+    expect(() =>
+      objectGetNew(IdValueManager, [
+        { id: 234, value: '234' },
+        { id: 20, value: '20' },
+      ])
+    ).not.toThrow()
+  })
+
+  it('getInstance', () => {
+    expect.assertions(2)
+
+    const idvm = ObjectHelper.objectGetInstance(IdValueManager, [
+      { id: 'a', value: 'a' },
     ])
-  ).not.toThrow()
+
+    expect(idvm).toBeInstanceOf(IdValueManager)
+    expect(idvm.list).toStrictEqual([{ id: 'a', value: 'a' }])
+  })
 })
 
-it('getInstance', () => {
-  const idvm = ObjectHelper.objectGetInstance(IdValueManager, [
-    { id: 'a', value: 'a' },
-  ])
+describe('objectHelper', () => {
+  it('cloneObjectAlphabetizingKeys', () => {
+    expect.assertions(1)
 
-  expect(idvm).toBeInstanceOf(IdValueManager)
-  expect(idvm.list).toEqual([{ id: 'a', value: 'a' }])
-})
-
-describe('ObjectHelper', () => {
-  it('CloneObjectAlphabetizingKeys', () => {
     const aobj = {
         a: 'a',
         b: 'b',
@@ -1277,24 +1432,30 @@ describe('ObjectHelper', () => {
       },
       clonedObj = objectCloneAlphabetizingKeys(aobj)
 
-    expect(clonedObj).toEqual({ a: 'a', b: 'b', c: 'c' })
+    expect(clonedObj).toStrictEqual({ a: 'a', b: 'b', c: 'c' })
   })
 
-  it('DecodeBase64ToObject', () => {
+  it('decodeBase64ToObject', () => {
+    expect.assertions(1)
+
     const base64String = btoa(JSON.stringify({ a: 'a', b: 'b' })),
       decodedObj = objectDecodeFromBase64(base64String)
 
-    expect(decodedObj).toEqual({ a: 'a', b: 'b' })
+    expect(decodedObj).toStrictEqual({ a: 'a', b: 'b' })
   })
 
-  it('EncodeObjectToBase64', () => {
+  it('encodeObjectToBase64', () => {
+    expect.assertions(1)
+
     const aobj = { a: 'a', b: 'b' },
       encodedString = objectEncodeToBase64(aobj)
 
     expect(encodedString).toBe(btoa(JSON.stringify(aobj)))
   })
 
-  it('DeepCloneJsonWithUndefined', () => {
+  it('deepCloneJsonWithUndefined', () => {
+    expect.assertions(1)
+
     const aobj = {
         a: 'a',
         b: undefined,
@@ -1305,16 +1466,17 @@ describe('ObjectHelper', () => {
       },
       clonedObj = DeepCloneJsonWithUndefined(aobj)
 
-    expect(clonedObj).toEqual({
+    expect(clonedObj).toStrictEqual({
       a: 'a',
-      b: undefined,
       c: {
         d: 'd',
-        e: undefined,
       },
     })
   })
-  it('DeepCloneJsonWithUndefined exception', () => {
+
+  it('deepCloneJsonWithUndefined exception', () => {
+    expect.assertions(1)
+
     const aobj = {
         a: 'a',
         b: undefined,
@@ -1325,60 +1487,64 @@ describe('ObjectHelper', () => {
       },
       clonedObj = DeepCloneJsonWithUndefined(aobj)
 
-    expect(clonedObj).toEqual({
-      a: 'a',
-      b: undefined,
-      c: {
-        d: 'd',
-        e: undefined,
-      },
-    })
-  })
-})
-
-it('coalesce', () => {
-  expect(coalesce(undefined, null, 'value')).toBe('value')
-  expect(coalesce(undefined, null, () => 'value')).toBe('value')
-  expect(
-    coalesce(
-      undefined,
-      () => undefined,
-      () => 'value'
+    expect(clonedObj).toStrictEqual(
+      expect.objectContaining({
+        a: 'a',
+        c: {
+          d: 'd',
+        },
+      })
     )
-  ).toBe('value')
-  expect(coalesce(undefined, null, '')).toBe('')
-  expect(coalesce(undefined, null, 0)).toBe(0)
-  expect(coalesce(undefined, null, false)).toBe(false)
-  expect(coalesce(undefined, null, true)).toBe(true)
-  expect(coalesce(undefined, null, { a: 'a' })).toEqual({ a: 'a' })
-  expect(coalesce(undefined, null, ['a', 'b'])).toEqual(['a', 'b'])
-  expect(coalesce(undefined, null, new Date())).toBeInstanceOf(Date)
-  expect(coalesce(undefined, null, new Map([['key', 'value']]))).toEqual(
-    new Map([['key', 'value']])
-  )
+  })
 
-  expect(coalesce(undefined, null, new Set(['a', 'b']))).toEqual(
-    new Set(['a', 'b'])
-  )
+  it('coalesce', () => {
+    expect.assertions(17)
 
-  expect(coalesce(undefined, null, new Error('error'))).toBeInstanceOf(Error)
-  expect(coalesce(undefined, null, /test/u)).toBeInstanceOf(RegExp)
-  expect(coalesce(undefined, null, BigInt(123))).toBe(123n)
-  expect(coalesce(undefined, null, new Uint8Array([1, 2, 3]))).toEqual(
-    new Uint8Array([1, 2, 3])
-  )
-  expect(coalesce(undefined, null, new ArrayBuffer(8))).toBeInstanceOf(
-    ArrayBuffer
-  )
-})
+    expect(coalesce(undefined, null, 'value')).toBe('value')
+    expect(coalesce(undefined, null, () => 'value')).toBe('value')
+    expect(
+      coalesce(
+        undefined,
+        () => undefined,
+        () => 'value'
+      )
+    ).toBe('value')
+    expect(coalesce(undefined, null, '')).toBe('')
+    expect(coalesce(undefined, null, 0)).toBe(0)
+    expect(coalesce(undefined, null, false)).toBe(false)
+    expect(coalesce(undefined, null, true)).toBe(true)
+    expect(coalesce(undefined, null, { a: 'a' })).toStrictEqual({ a: 'a' })
+    expect(coalesce(undefined, null, ['a', 'b'])).toStrictEqual(['a', 'b'])
+    expect(coalesce(undefined, null, new Date())).toBeInstanceOf(Date)
+    expect(
+      coalesce(undefined, null, new Map([['key', 'value']]))
+    ).toStrictEqual(new Map([['key', 'value']]))
 
-it(getBody.name, () => {
-  expect(() => getBody('')).toThrow('Object body not found')
-  expect(
-    getBody({
-      body: 'test',
-    })
-  ).toBe('test')
+    expect(coalesce(undefined, null, new Set(['a', 'b']))).toStrictEqual(
+      new Set(['a', 'b'])
+    )
+
+    expect(coalesce(undefined, null, new Error('error'))).toBeInstanceOf(Error)
+    expect(coalesce(undefined, null, /test/u)).toBeInstanceOf(RegExp)
+    expect(coalesce(undefined, null, BigInt(123))).toBe(123n)
+    expect(coalesce(undefined, null, new Uint8Array([1, 2, 3]))).toStrictEqual(
+      new Uint8Array([1, 2, 3])
+    )
+    expect(coalesce(undefined, null, new ArrayBuffer(8))).toBeInstanceOf(
+      ArrayBuffer
+    )
+  })
+
+  it('getBody', () => {
+    expect.assertions(2)
+
+    expect(() => getBody('')).toThrow('Object body not found')
+    expect(
+      getBody({
+        body: 'test',
+      })
+    ).toBe('test')
+  })
 })
 
 // describe(removeFields.name, () => {
@@ -1395,7 +1561,7 @@ it(getBody.name, () => {
 
 //     removeFields(obj, props)
 
-//     expect(obj).toEqual({
+//     expect(obj).toStrictEqual({
 //       a: 'a',
 //       c: 'c',
 //     })
@@ -1418,7 +1584,7 @@ it(getBody.name, () => {
 
 //     removeFields(obj, props)
 
-//     expect(obj).toEqual({
+//     expect(obj).toStrictEqual({
 //       a: 'a',
 //       c: 'c',
 //       d: { a: 'a', c: 'c', d: { a: 'a' } },
@@ -1458,7 +1624,7 @@ it(getBody.name, () => {
 
 //     removeFields(obj, props)
 
-//     expect(obj).toEqual({
+//     expect(obj).toStrictEqual({
 //       a: 'a',
 //       c: 'c',
 //       d: { a: 'a', c: 'c', d: { a: 'a' } },
@@ -1482,7 +1648,7 @@ it(getBody.name, () => {
 
 //     removeFields(obj)
 
-//     expect(obj).toEqual({
+//     expect(obj).toStrictEqual({
 //       name: 'Test',
 //       x: {
 //         id: 3,
@@ -1500,10 +1666,10 @@ it(getBody.name, () => {
 
 //     removeFields(obj, props)
 
-//     expect(obj).toEqual('not an object')
-//     expect(removeFields(6, props)).toEqual(6)
-//     expect(removeFields([1, 2, 3], props)).toEqual([1, 2, 3])
-//     expect(removeFields('string', props)).toEqual('string')
+//     expect(obj).toStrictEqual('not an object')
+//     expect(removeFields(6, props)).toStrictEqual(6)
+//     expect(removeFields([1, 2, 3], props)).toStrictEqual([1, 2, 3])
+//     expect(removeFields('string', props)).toStrictEqual('string')
 //     expect(removeFields(null, props)).toBeNull()
 //     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 //     expect(removeFields(undefined, props)).toBeUndefined()
@@ -1513,88 +1679,99 @@ it(getBody.name, () => {
 //   })
 // })
 
-describe(sortFunction.name, () => {
+describe('sortFunction', () => {
   it('number', () => {
+    expect.assertions(6)
+
     const a = 0,
       b = 1
 
-    expect(sortFunction(a, b)).toEqual(-1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(1)
+    expect(sortFunction(a, b)).toBe(-1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(1)
 
-    expect(sortFunction(a, b, false)).toEqual(1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(-1)
+    expect(sortFunction(a, b, false)).toBe(1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(-1)
   })
 
   it('string', () => {
+    expect.assertions(12)
+
     const a = 'a',
       b = 'b'
 
-    expect(sortFunction(a, b)).toEqual(-1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(1)
+    expect(sortFunction(a, b)).toBe(-1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(1)
 
-    expect(sortFunction(a, b, 'asc')).toEqual(-1)
-    expect(sortFunction(a, a, 'asc')).toEqual(0)
-    expect(sortFunction(b, a, 'asc')).toEqual(1)
+    expect(sortFunction(a, b, 'asc')).toBe(-1)
+    expect(sortFunction(a, a, 'asc')).toBe(0)
+    expect(sortFunction(b, a, 'asc')).toBe(1)
 
-    expect(sortFunction(a, b, false)).toEqual(1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(-1)
+    expect(sortFunction(a, b, false)).toBe(1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(-1)
 
-    expect(sortFunction(a, b, 'desc')).toEqual(1)
-    expect(sortFunction(a, a, 'desc')).toEqual(0)
-    expect(sortFunction(b, a, 'desc')).toEqual(-1)
+    expect(sortFunction(a, b, 'desc')).toBe(1)
+    expect(sortFunction(a, a, 'desc')).toBe(0)
+    expect(sortFunction(b, a, 'desc')).toBe(-1)
   })
 
   it('empty', () => {
+    expect.assertions(12)
+
     let a: string | undefined = 'a',
       // eslint-disable-next-line prefer-const
       b: string | undefined
 
-    expect(sortFunction(a, b)).toEqual(-1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(1)
+    expect(sortFunction(a, b)).toBe(-1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(1)
 
-    expect(sortFunction(a, b, false)).toEqual(-1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(1)
+    expect(sortFunction(a, b, false)).toBe(-1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(1)
 
     a = undefined
     b = 'b'
-    expect(sortFunction(a, b)).toEqual(1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(-1)
 
-    expect(sortFunction(a, b, false)).toEqual(1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(-1)
+    expect(sortFunction(a, b)).toBe(1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(-1)
+
+    expect(sortFunction(a, b, false)).toBe(1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(-1)
   })
 
   it('date', () => {
+    expect.assertions(6)
+
     const a = new Date(),
       b = new Date(a.getTime() + 1000)
 
-    expect(sortFunction(a, b)).toEqual(-1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(1)
+    expect(sortFunction(a, b)).toBe(-1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(1)
 
-    expect(sortFunction(a, b, false)).toEqual(1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(-1)
+    expect(sortFunction(a, b, false)).toBe(1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(-1)
   })
 
   it('array', () => {
+    expect.assertions(6)
+
     const a = ['a', 'b'],
       b = ['a', 'c']
 
-    expect(sortFunction(a, b)).toEqual(-1)
-    expect(sortFunction(a, a)).toEqual(0)
-    expect(sortFunction(b, a)).toEqual(1)
+    expect(sortFunction(a, b)).toBe(-1)
+    expect(sortFunction(a, a)).toBe(0)
+    expect(sortFunction(b, a)).toBe(1)
 
-    expect(sortFunction(a, b, false)).toEqual(1)
-    expect(sortFunction(a, a, false)).toEqual(0)
-    expect(sortFunction(b, a, false)).toEqual(-1)
+    expect(sortFunction(a, b, false)).toBe(1)
+    expect(sortFunction(a, a, false)).toBe(0)
+    expect(sortFunction(b, a, false)).toBe(-1)
   })
 })

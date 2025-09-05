@@ -58,7 +58,7 @@ it('messageSuccessFail good', () => {
       'Sent 24 records (Success: 20, Fail: 4), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
     strmsg = istats.messageSuccessFail({ individualStats: [stats2, stats3] }),
     truncatedMsg = strmsg.slice(0, stringResultShouldStartWith.length)
-  expect(truncatedMsg).toEqual(stringResultShouldStartWith)
+  expect(truncatedMsg).toStrictEqual(stringResultShouldStartWith)
 })
 
 it('messageSuccessFail good without prefix', () => {
@@ -78,7 +78,7 @@ it('messageSuccessFail good without prefix', () => {
       prefix: '',
     }),
     truncatedMsg = strmsg.slice(0, stringResultShouldStartWith.length)
-  expect(truncatedMsg).toEqual(stringResultShouldStartWith)
+  expect(truncatedMsg).toStrictEqual(stringResultShouldStartWith)
 })
 
 it('setSuffix good', () => {
@@ -100,11 +100,11 @@ Messages:
     true,
     true
   )
-  expect(msgTotalProcessed).toEqual('1 suffix (Success: 0, Fail: 0)')
+  expect(msgTotalProcessed).toStrictEqual('1 suffix (Success: 0, Fail: 0)')
 
   istats.addProcessed(arrMessages)
   msgTotalProcessed = istats.messageTotalProcessedWithSuccessFail(true, true)
-  expect(msgTotalProcessed).toEqual('2 suffixes (Success: 0, Fail: 0)')
+  expect(msgTotalProcessed).toStrictEqual('2 suffixes (Success: 0, Fail: 0)')
 })
 
 describe('messageString', () => {
@@ -363,7 +363,7 @@ it('clear good', () => {
   expect(istats.delete).toBe(0)
   expect(istats.update).toBe(0)
   expect(istats.upsert).toBe(0)
-  expect(istats.msg).toEqual([])
+  expect(istats.msg).toStrictEqual([])
   expect(istats.startTime).not.toBeNull()
   expect(istats.finishTime).toBeUndefined()
 
@@ -393,7 +393,7 @@ it('clear times also', () => {
   expect(istats.delete).toBe(0)
   expect(istats.update).toBe(0)
   expect(istats.upsert).toBe(0)
-  expect(istats.msg).toEqual([])
+  expect(istats.msg).toStrictEqual([])
   expect(istats.startTime).not.toBeNull()
   expect(istats.finishTime).toBeUndefined()
 
@@ -434,7 +434,7 @@ describe('addStats', () => {
       stringResultShouldStartWith =
         'Sent 24 records (Success: 20, Fail: 4) in ',
       truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
-    expect(truncatedMsg).toEqual(stringResultShouldStartWith)
+    expect(truncatedMsg).toStrictEqual(stringResultShouldStartWith)
   })
 
   it('good', () => {
@@ -467,7 +467,7 @@ describe('addStats', () => {
       stringResultShouldStartWith =
         'Sent 42 records (Success: 31, Fail: 11), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
       truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
-    expect(truncatedMsg).toEqual(stringResultShouldStartWith)
+    expect(truncatedMsg).toStrictEqual(stringResultShouldStartWith)
   })
 
   it('concat msg false', () => {
@@ -500,7 +500,7 @@ describe('addStats', () => {
       stringResultShouldStartWith =
         'Sent 42 records (Success: 31, Fail: 11), 12 Activities (Success: 10, Fail: 2) and 6 Transactions (Success: 1, Fail: 5) in ',
       truncatedMsg = msg.slice(0, stringResultShouldStartWith.length)
-    expect(truncatedMsg).toEqual(stringResultShouldStartWith)
+    expect(truncatedMsg).toStrictEqual(stringResultShouldStartWith)
   })
 })
 
@@ -526,7 +526,7 @@ describe('processedTimesArray', () => {
     expect(totalAvgProcessingTimeString).toMatch(CONST_DefaultSecondsMs)
   })
 
-  test.each([
+  it.each([
     [0, 0],
     [1, 1],
     [2, 0],
@@ -578,7 +578,7 @@ describe('processedTimesArray', () => {
 })
 
 describe('toJson', () => {
-  test.each([5, 10, 20, 100, 1000])('addSuccess: %s', (totalProcessed) => {
+  it.each([5, 10, 20, 100, 1000])('addSuccess: %s', (totalProcessed) => {
     const stats = new InstrumentationStatistics()
 
     for (let i = 0; i < totalProcessed; i++) {
@@ -587,7 +587,7 @@ describe('toJson', () => {
 
     const json = stats.toJson()
 
-    expect(json).toEqual({
+    expect(json).toStrictEqual({
       add: 0,
       delete: 0,
       failures: 0,
@@ -606,7 +606,7 @@ describe('toJson', () => {
     })
   })
 
-  test.each([5, 10, 20, 100, 1000])('addFailure: %s', (totalProcessed) => {
+  it.each([5, 10, 20, 100, 1000])('addFailure: %s', (totalProcessed) => {
     const stats = new InstrumentationStatistics()
 
     for (let i = 0; i < totalProcessed; i++) {
@@ -615,7 +615,7 @@ describe('toJson', () => {
 
     const json = stats.toJson()
 
-    expect(json).toEqual({
+    expect(json).toStrictEqual({
       add: 0,
       delete: 0,
       failures: totalProcessed,

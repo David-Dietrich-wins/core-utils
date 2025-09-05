@@ -15,51 +15,57 @@ const AAPL_IPO = '1980-12-12',
   AAPL_IPO_MOMENT = moment(AAPL_IPO_AND_TIMEZONE)
 
 it(DateHelper.GetTime.name, () => {
-  expect(DateHelper.GetTime(TEST_Settings.currentDateInMilliseconds)).toEqual(
-    TEST_Settings.currentDateInMilliseconds
-  )
+  expect(
+    DateHelper.GetTime(TEST_Settings.currentDateInMilliseconds)
+  ).toStrictEqual(TEST_Settings.currentDateInMilliseconds)
 
-  expect(DateHelper.GetTime(TEST_Settings.currentDateString)).toEqual(
+  expect(DateHelper.GetTime(TEST_Settings.currentDateString)).toStrictEqual(
     TEST_Settings.currentDateInMilliseconds
   )
 })
 
 it(DateHelper.ConvertToDateObject.name, () => {
   let date = DateHelper.ConvertToDateObject(TEST_Settings.currentDateString)
-  expect(date.getTime()).toEqual(TEST_Settings.currentDateInMilliseconds)
+  expect(date.getTime()).toStrictEqual(TEST_Settings.currentDateInMilliseconds)
 
   // Test for epoch 0
-  expect(DateHelper.ConvertToDateObject(0)).toEqual(
+  expect(DateHelper.ConvertToDateObject(0)).toStrictEqual(
     new Date('1970-01-01T00:00:00.000Z')
   )
-  expect(DateHelper.ConvertToDateObject('1970-01-01T00:00:00.000Z')).toEqual(
-    new Date('1970-01-01T00:00:00.000Z')
-  )
+  expect(
+    DateHelper.ConvertToDateObject('1970-01-01T00:00:00.000Z')
+  ).toStrictEqual(new Date('1970-01-01T00:00:00.000Z'))
 
   date = DateHelper.ConvertToDateObject('2025-12-01T00:00:00.000Z')
-  expect(date.getTime()).toEqual(new Date('2025-12-01T00:00:00.000Z').getTime())
+  expect(date.getTime()).toStrictEqual(
+    new Date('2025-12-01T00:00:00.000Z').getTime()
+  )
 
   // AAPL IPO date
   date = DateHelper.ConvertToDateObject(AAPL_IPO_DATE_MILLISECONDS)
-  expect(date.getTime()).toEqual(new Date('1980-12-12T00:00:00.000Z').getTime())
+  expect(date.getTime()).toStrictEqual(
+    new Date('1980-12-12T00:00:00.000Z').getTime()
+  )
 
   date = DateHelper.ConvertToDateObject(AAPL_IPO)
-  expect(date.getTime()).toEqual(new Date(AAPL_IPO_AND_TIMEZONE).getTime())
+  expect(date.getTime()).toStrictEqual(
+    new Date(AAPL_IPO_AND_TIMEZONE).getTime()
+  )
 
-  expect(DateHelper.ConvertToDateObject(AAPL_IPO_MOMENT)).toEqual(
+  expect(DateHelper.ConvertToDateObject(AAPL_IPO_MOMENT)).toStrictEqual(
     new Date(AAPL_IPO_AND_TIMEZONE)
   )
-  expect(DateHelper.ConvertToDateObject(1740481297461)).toEqual(
+  expect(DateHelper.ConvertToDateObject(1740481297461)).toStrictEqual(
     new Date('2025-02-25T11:01:37.461Z')
   )
 
-  expect(DateHelper.ConvertToDateObject(undefined)).toEqual(
+  expect(DateHelper.ConvertToDateObject(undefined)).toStrictEqual(
     TEST_Settings.currentDate
   )
-  expect(DateHelper.ConvertToDateObject(0)).toEqual(
+  expect(DateHelper.ConvertToDateObject(0)).toStrictEqual(
     new Date('1970-01-01T00:00:00.000Z')
   )
-  expect(DateHelper.ConvertToDateObject(null)).toEqual(
+  expect(DateHelper.ConvertToDateObject(null)).toStrictEqual(
     TEST_Settings.currentDate
   )
   expect(() =>
@@ -77,27 +83,27 @@ it(DateHelper.addMillisToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addMillisToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
-    anumToAdd
-  )
+  expect(
+    newDate.getTime() - TEST_Settings.currentDateInMilliseconds
+  ).toStrictEqual(anumToAdd)
 })
 
 it(DateHelper.addSecondsToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addSecondsToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
-    anumToAdd * 1000
-  )
+  expect(
+    newDate.getTime() - TEST_Settings.currentDateInMilliseconds
+  ).toStrictEqual(anumToAdd * 1000)
 })
 
 it(DateHelper.addMinutesToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addMinutesToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
-    anumToAdd * 1000 * 60
-  )
+  expect(
+    newDate.getTime() - TEST_Settings.currentDateInMilliseconds
+  ).toStrictEqual(anumToAdd * 1000 * 60)
 })
 
 it(DateHelper.addMonthsToDate.name, () => {
@@ -107,7 +113,7 @@ it(DateHelper.addMonthsToDate.name, () => {
       new Date(TEST_Settings.currentDateInMilliseconds)
     )
 
-  expect(newDate).toEqual(
+  expect(newDate).toStrictEqual(
     new Date(TEST_Settings.currentDateString.replace(/2025/u, '2027'))
   )
 })
@@ -119,7 +125,7 @@ it(DateHelper.addYearsToDate.name, () => {
       new Date(TEST_Settings.currentDateInMilliseconds)
     )
 
-  expect(newDate).toEqual(
+  expect(newDate).toStrictEqual(
     new Date(TEST_Settings.currentDateString.replace(/2025/u, '2027'))
   )
 })
@@ -128,18 +134,18 @@ it(DateHelper.addHoursToDate.name, () => {
   const anumToAdd = 2456,
     newDate = DateHelper.addHoursToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
-    anumToAdd * 1000 * 60 * 60
-  )
+  expect(
+    newDate.getTime() - TEST_Settings.currentDateInMilliseconds
+  ).toStrictEqual(anumToAdd * 1000 * 60 * 60)
 })
 
 it(DateHelper.addDaysToDate.name, () => {
   const anumToAdd = 26,
     newDate = DateHelper.addDaysToDate(anumToAdd, TEST_Settings.currentDate)
 
-  expect(newDate.getTime() - TEST_Settings.currentDateInMilliseconds).toEqual(
-    anumToAdd * 1000 * 60 * 60 * 24
-  )
+  expect(
+    newDate.getTime() - TEST_Settings.currentDateInMilliseconds
+  ).toStrictEqual(anumToAdd * 1000 * 60 * 60 * 24)
 })
 
 describe(DateHelper.toIsoString.name, () => {
@@ -324,13 +330,13 @@ describe(DateHelper.FormatDateTime.name, () => {
   })
 })
 
-test.each([undefined, null, new Date(), Date.now()])('fileDateTime %s', () => {
+it.each([undefined, null, new Date(), Date.now()])('fileDateTime %s', () => {
   const retDate = DateHelper.fileDateTime()
 
   expect(retDate).toMatch(/\d{6}_\d{6}/iu)
 })
 
-test.each([
+it.each([
   undefined,
   '',
   new Date(),
@@ -548,31 +554,31 @@ it(DateHelper.IsValidDate.name, () => {
 })
 
 describe(DateHelper.PeriodType.name, () => {
-  test.each(['day', '2d', '  DAYS of our lives'])('%s', (timeframe) => {
+  it.each(['day', '2d', '  DAYS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('day')
   })
-  test.each(['hour', '2h', '  HOURS of our lives'])('%s', (timeframe) => {
+  it.each(['hour', '2h', '  HOURS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('hour')
   })
-  test.each(['minute', '2m', '  MINUTES of our lives'])('%s', (timeframe) => {
+  it.each(['minute', '2m', '  MINUTES of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('minute')
   })
-  test.each(['second', '2s', '  SECONDS of our lives'])('%s', (timeframe) => {
+  it.each(['second', '2s', '  SECONDS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('second')
   })
-  test.each(['week', '2w', '  WEEKS of our lives'])('%s', (timeframe) => {
+  it.each(['week', '2w', '  WEEKS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('week')
   })
-  test.each(['month', '2MONTH', '  MONTHS of our lives'])('%s', (timeframe) => {
+  it.each(['month', '2MONTH', '  MONTHS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('month')
   })
-  test.each(['year', '2y', '  YEARS of our lives'])('%s', (timeframe) => {
+  it.each(['year', '2y', '  YEARS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('year')
   })
-  test.each(['quarter', '2q', '  QUARTERS of our lives'])('%s', (timeframe) => {
+  it.each(['quarter', '2q', '  QUARTERS of our lives'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('quarter')
   })
-  test.each(['', '  ', ' 3  y'])('%s', (timeframe) => {
+  it.each(['', '  ', ' 3  y'])('%s', (timeframe) => {
     expect(DateHelper.PeriodType(timeframe)).toBe('year')
   })
 
@@ -735,20 +741,20 @@ it(DateHelper.FormatLocaleDateString.name, () => {
     DateHelper.FormatLocaleDateString(TEST_Settings.currentDate, 'es-ES')
   ).toBe('1 de diciembre de 2025')
 
-  expect(DateHelper.FormatLocaleDateString('1980-12-12')).toEqual(
+  expect(DateHelper.FormatLocaleDateString('1980-12-12')).toStrictEqual(
     'December 11, 1980'
   )
 
-  expect(DateHelper.FormatLocaleDateString(new Date('1980-12-12'))).toEqual(
-    'December 11, 1980'
-  )
+  expect(
+    DateHelper.FormatLocaleDateString(new Date('1980-12-12'))
+  ).toStrictEqual('December 11, 1980')
 
-  expect(DateHelper.FormatLocaleDateString(1740481297461)).toEqual(
+  expect(DateHelper.FormatLocaleDateString(1740481297461)).toStrictEqual(
     'February 25, 2025'
   )
 
   // AAPL IPO date
-  expect(DateHelper.FormatLocaleDateString(345427200000)).toEqual(
+  expect(DateHelper.FormatLocaleDateString(345427200000)).toStrictEqual(
     'December 11, 1980'
   )
 })
