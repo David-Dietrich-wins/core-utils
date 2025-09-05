@@ -7,30 +7,40 @@ import {
   NameValueType,
   NameValueWithStyle,
 } from './NameValueManager.mjs'
+import { describe, expect, it } from '@jest/globals'
 import { dollarFormatter } from '../primitives/number-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
-it('NameValue good', () => {
-  const name = 'name',
-    value = 'value',
-    zpr = new NameValue(name, value)
+describe('name value', () => {
+  it('good', () => {
+    expect.assertions(2)
 
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
+    const name = 'name',
+      value = 'value',
+      zpr = new NameValue(name, value)
+
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+  })
+
+  it('nameValueType good', () => {
+    expect.assertions(3)
+
+    const name = 'name',
+      type = 'type',
+      value = 'value',
+      zpr = new NameValueType(name, value, type)
+
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.type).toBe(type)
+  })
 })
 
-it('NameValueType good', () => {
-  const name = 'name',
-    type = 'type',
-    value = 'value',
-    zpr = new NameValueType(name, value, type)
-
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.type).toBe(type)
-})
-
-describe('NameValueManager', () => {
+describe('nameValueManager', () => {
   it('constructor', () => {
+    expect.assertions(3)
+
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -41,13 +51,18 @@ describe('NameValueManager', () => {
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
+
   it('constructor defaults', () => {
+    expect.assertions(1)
+
     const manager = new NameValueManager()
 
     expect(manager.list).toHaveLength(0)
   })
 
-  it('CreateNameValueManager', () => {
+  it('createNameValueManager', () => {
+    expect.assertions(3)
+
     const name = 'name',
       type = 'type',
       value = 'value',
@@ -58,18 +73,26 @@ describe('NameValueManager', () => {
     expect(zzmanager.list[0].name).toBe(name)
     expect(zzmanager.list[0].value).toBe(value)
   })
-  it('CreateNameValueManager with null', () => {
+
+  it('createNameValueManager with null', () => {
+    expect.assertions(1)
+
     const manager = NameValueManager.CreateNameValueManager(null)
 
     expect(manager.list).toHaveLength(0)
   })
-  it('CreateNameValueManager with undefined', () => {
+
+  it('with undefined', () => {
+    expect.assertions(1)
+
     const manager = NameValueManager.CreateNameValueManager(undefined)
 
     expect(manager.list).toHaveLength(0)
   })
 
-  it('CreateINameValue', () => {
+  it('createINameValue', () => {
+    expect.assertions(2)
+
     const name = 'name',
       value = 'value',
       zitem = NameValueManager.CreateINameValue(name, value)
@@ -77,87 +100,99 @@ describe('NameValueManager', () => {
     expect(zitem.name).toBe(name)
     expect(zitem.value).toBe(value)
   })
-})
 
-it('NameValueWithStyle', () => {
-  const name = 'name',
-    tooltip = 'tooltip',
-    value = 'value',
-    zpr = new NameValueWithStyle(name, value, dollarFormatter, tooltip)
+  it('nameValueWithStyle', () => {
+    expect.assertions(4)
 
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.style).toBe(dollarFormatter)
-  expect(zpr.tooltip).toBe(tooltip)
-})
+    const name = 'name',
+      tooltip = 'tooltip',
+      value = 'value',
+      zpr = new NameValueWithStyle(name, value, dollarFormatter, tooltip)
 
-it('NameValueLineFormatter', () => {
-  const formatNumberOrString = (
-      value: number | string | null | undefined
-    ): string => {
-      if (typeof value === 'number') {
-        return `$${value.toFixed(2)}`
-      }
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.style).toBe(dollarFormatter)
+    expect(zpr.tooltip).toBe(tooltip)
+  })
 
-      return value || ''
-    },
-    formatter = dollarFormatter,
-    key = 'key',
-    keyDisplayValue = 'keyDisplayValue',
-    order = 1,
-    style = { color: 'red' },
-    tooltip = 'tooltip',
-    zpr = new NameValueLineFormatter(
-      key,
-      keyDisplayValue,
-      order,
-      formatter,
-      tooltip,
-      style,
-      formatNumberOrString
-    )
+  it('nameValueLineFormatter', () => {
+    expect.assertions(22)
 
-  expect(zpr.key).toBe(key)
-  expect(zpr.keyDisplayValue).toBe(keyDisplayValue)
-  expect(zpr.order).toBe(order)
-  expect(zpr.formatter).toBe(formatter)
-  expect(zpr.tooltip).toBe(tooltip)
-  expect(zpr.style).toBe(style)
-  expect(zpr.formatNumberOrString).toBe(formatNumberOrString)
-
-  const nvf = zpr.FromStyle('testName', 100, true, 2)
-  expect(nvf).toBeInstanceOf(NameValueWithStyle)
-  expect(nvf.name).toBe(keyDisplayValue)
-  expect(nvf.value).toBe('$100.00')
-  expect(nvf.style).toBe(style)
-  expect(nvf.tooltip).toBe(tooltip)
-
-  const nors = zpr.NumberOrString('testName', 200)
-  expect(nors).toBeInstanceOf(NameValueWithStyle)
-  expect(nors.name).toBe(keyDisplayValue)
-  expect(nors.value).toBe('$200.00')
-  expect(nors.style).toBe(style)
-  expect(nors.tooltip).toBe(tooltip)
-
-  zpr.formatter = undefined
-  const nvfNoFormatter = zpr.FromStyle('testName', 'value', true, 2)
-  expect(nvfNoFormatter).toBeInstanceOf(NameValueWithStyle)
-  expect(nvfNoFormatter.name).toBe(keyDisplayValue)
-  expect(nvfNoFormatter.value).toBe('value')
-  expect(nvfNoFormatter.style).toBe(style)
-  expect(nvfNoFormatter.tooltip).toBe(tooltip)
-})
-
-describe('NameValueLineFormatManager', () => {
-  it('with constructor arguments', () => {
     const formatNumberOrString = (
         value: number | string | null | undefined
       ): string => {
+        // eslint-disable-next-line jest/no-conditional-in-test
         if (typeof value === 'number') {
           return `$${value.toFixed(2)}`
         }
 
-        return value || ''
+        return safestr(value)
+      },
+      formatter = dollarFormatter,
+      key = 'key',
+      keyDisplayValue = 'keyDisplayValue',
+      order = 1,
+      style = { color: 'red' },
+      tooltip = 'tooltip',
+      zpr = new NameValueLineFormatter(
+        key,
+        keyDisplayValue,
+        order,
+        formatter,
+        tooltip,
+        style,
+        formatNumberOrString
+      )
+
+    expect(zpr.key).toBe(key)
+    expect(zpr.keyDisplayValue).toBe(keyDisplayValue)
+    expect(zpr.order).toBe(order)
+    expect(zpr.formatter).toBe(formatter)
+    expect(zpr.tooltip).toBe(tooltip)
+    expect(zpr.style).toBe(style)
+    expect(zpr.formatNumberOrString).toBe(formatNumberOrString)
+
+    const nvf = zpr.FromStyle('testName', 100, true, 2)
+
+    expect(nvf).toBeInstanceOf(NameValueWithStyle)
+    expect(nvf.name).toBe(keyDisplayValue)
+    expect(nvf.value).toBe('$100.00')
+    expect(nvf.style).toBe(style)
+    expect(nvf.tooltip).toBe(tooltip)
+
+    const nors = zpr.NumberOrString('testName', 200)
+
+    expect(nors).toBeInstanceOf(NameValueWithStyle)
+
+    expect(nors.name).toBe(keyDisplayValue)
+    expect(nors.value).toBe('$200.00')
+    expect(nors.style).toBe(style)
+    expect(nors.tooltip).toBe(tooltip)
+
+    zpr.formatter = undefined
+    const nvfNoFormatter = zpr.FromStyle('testName', 'value', true, 2)
+
+    expect(nvfNoFormatter).toBeInstanceOf(NameValueWithStyle)
+    expect(nvfNoFormatter.name).toBe(keyDisplayValue)
+    expect(nvfNoFormatter.value).toBe('value')
+    expect(nvfNoFormatter.style).toBe(style)
+    expect(nvfNoFormatter.tooltip).toBe(tooltip)
+  })
+})
+
+describe('nameValueLineFormatManager', () => {
+  it('with constructor arguments', () => {
+    expect.assertions(64)
+
+    const formatNumberOrString = (
+        value: number | string | null | undefined
+      ): string => {
+        // eslint-disable-next-line jest/no-conditional-in-test
+        if (typeof value === 'number') {
+          return `$${value.toFixed(2)}`
+        }
+
+        return safestr(value)
       },
       formatter = dollarFormatter,
       key = 'key',
@@ -175,6 +210,7 @@ describe('NameValueLineFormatManager', () => {
         formatNumberOrString
       ),
       zzmgr = new NameValueLineFormatManager([zpr])
+
     expect(zzmgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(zzmgr.nvlist).toHaveLength(1)
     expect(zzmgr.nvlist[0].key).toBe(key)
@@ -187,11 +223,13 @@ describe('NameValueLineFormatManager', () => {
 
     const anv = new NameValue('testName', '100'),
       arrnvf = zzmgr.FormatWithStyle([anv], 'name', true)
+
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf).toHaveLength(0)
 
     const anvkey = new NameValue('key', '100'),
       arrnvfName = zzmgr.FormatWithStyle([anvkey], 'name', false)
+
     expect(arrnvfName).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfName).toHaveLength(1)
     expect(arrnvfName[0]).toBeInstanceOf(NameValueWithStyle)
@@ -201,11 +239,13 @@ describe('NameValueLineFormatManager', () => {
     expect(arrnvfName[0].tooltip).toBe(tooltip)
 
     const arrnvfValue = zzmgr.FormatWithStyle([anv], 'value', false)
+
     expect(arrnvfValue).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfValue).toHaveLength(0)
 
     zpr.order = undefined
     const arrnvf2 = zzmgr.FormatWithStyle([anvkey], 'name', false)
+
     expect(arrnvf2).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf2).toHaveLength(1)
     expect(arrnvf2[0]).toBeInstanceOf(NameValueWithStyle)
@@ -228,6 +268,7 @@ describe('NameValueLineFormatManager', () => {
       [anvkey, new NameValue(anvkey.name, '200')],
       'name'
     )
+
     expect(arrnvf3).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf3).toHaveLength(2)
     expect(arrnvf3[0]).toBeInstanceOf(NameValueWithStyle)
@@ -248,6 +289,7 @@ describe('NameValueLineFormatManager', () => {
       [anvkey, new NameValue(anvkey.name, '0')],
       'value'
     )
+
     expect(arrnvfSortValue).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfSortValue).toHaveLength(2)
     expect(arrnvfSortValue[0]).toBeInstanceOf(NameValueWithStyle)
@@ -263,6 +305,7 @@ describe('NameValueLineFormatManager', () => {
     expect(arrnvfSortValue[1].tooltip).toBe(tooltip)
 
     const ret = zzmgr.FromObject({ key: 'value', key2: 'value2' }, 'key')
+
     expect(ret).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(ret).toHaveLength(1)
     expect(ret[0].name).toBe(keyDisplayValue)
@@ -272,6 +315,7 @@ describe('NameValueLineFormatManager', () => {
 
     zpr.formatNumberOrString = undefined
     const nors = zpr.NumberOrString('testName', '200')
+
     expect(nors).toBeInstanceOf(NameValueWithStyle)
     expect(nors.name).toBe(keyDisplayValue)
     expect(nors.value).toBe('200')
@@ -279,22 +323,29 @@ describe('NameValueLineFormatManager', () => {
     expect(nors.tooltip).toBe(tooltip)
 
     const ret2 = zzmgr.FromObject()
+
     expect(ret2).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(ret2).toHaveLength(0)
   })
 
   it('without constructor arguments', () => {
+    expect.assertions(4)
+
     const mgr = new NameValueLineFormatManager()
+
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist).toHaveLength(0)
 
     const anv = new NameValue('testName', '100'),
       arrnvf = mgr.FormatWithStyle([anv], 'name', true)
+
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf).toHaveLength(0)
   })
 
   it('no style found', () => {
+    expect.assertions(4)
+
     const key = 'key',
       keyDisplayValue = 'keyDisplayValue',
       pr = new NameValueLineFormatter(key, keyDisplayValue),
@@ -303,12 +354,14 @@ describe('NameValueLineFormatManager', () => {
     pr2.FromStyle = undefined as any
 
     const mgr = new NameValueLineFormatManager([pr, pr2])
+
     expect(mgr).toBeInstanceOf(NameValueLineFormatManager)
     expect(mgr.nvlist).toHaveLength(2)
 
     const nv = new NameValue(key, '100'),
       nvNotFound = new NameValue(key, '200'),
       zarrnvf = mgr.FormatWithStyle([nv, nvNotFound], 'name', true)
+
     expect(zarrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(zarrnvf).toHaveLength(2)
   })

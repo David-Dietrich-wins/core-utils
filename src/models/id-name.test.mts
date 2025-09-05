@@ -4,85 +4,102 @@ import {
   IdNameValueType,
   createValueChange,
 } from './id-name.mjs'
+import { describe, expect, it } from '@jest/globals'
 
-it('IdName good', () => {
-  const id = 'id',
-    name = 'name',
-    pr = new IdName(id, name)
+describe('id name', () => {
+  it('good', () => {
+    expect.assertions(2)
 
-  expect(pr.id).toBe(id)
-  expect(pr.name).toBe(name)
-})
+    const id = 'id',
+      name = 'name',
+      pr = new IdName(id, name)
 
-it('createValueChange good', () => {
-  const date = 123,
-    id = 'id',
-    name = 'name',
-    type = 'type',
-    value = { id: 'id', name: 'name' },
-    zpr = createValueChange<IdName>(id, name, value, type, date)
+    expect(pr.id).toBe(id)
+    expect(pr.name).toBe(name)
+  })
 
-  expect(zpr.id).toBe(id)
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.type).toBe(type)
-  expect(zpr.date).toBe(date)
-})
+  it('createValueChange good', () => {
+    expect.assertions(5)
 
-it('createValueChange good without type and date', () => {
-  const id = 'id',
-    name = 'name',
-    value = { id: 'id', name: 'name' },
-    zpr = createValueChange<IdName>(id, name, value)
+    const date = 123,
+      id = 'id',
+      name = 'name',
+      type = 'type',
+      value = { id: 'id', name: 'name' },
+      zpr = createValueChange<IdName>(id, name, value, type, date)
 
-  expect(zpr.id).toBe(id)
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.type).toBe('')
-  expect(Date.now() - zpr.date).toBeLessThan(1000)
-})
+    expect(zpr.id).toBe(id)
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.type).toBe(type)
+    expect(zpr.date).toBe(date)
+  })
 
-it('IdNameValue good', () => {
-  const id = 'id',
-    name = 'name',
-    value = { id: 'id', name: 'name' },
-    zpr = new IdNameValue(id, name, value)
+  it('createValueChange good without type and date', () => {
+    expect.assertions(5)
 
-  expect(zpr.id).toBe(id)
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-})
+    const id = 'id',
+      name = 'name',
+      value = { id: 'id', name: 'name' },
+      zpr = createValueChange<IdName>(id, name, value)
 
-it('IdNameValueType good', () => {
-  const id = 'id',
-    name = 'name',
-    value = { id: 'id', name: 'name' },
-    zpr = new IdNameValueType(id, name, value, 'string')
+    expect(zpr.id).toBe(id)
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.type).toBe('')
+    expect(Date.now() - zpr.date).toBeLessThan(1000)
+  })
 
-  expect(zpr.id).toBe(id)
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.type).toBe('string')
-})
+  it('idNameValue good', () => {
+    expect.assertions(3)
 
-it('ToIIdName', () => {
-  const id = 'id',
-    name = 'name',
-    pr = IdName.ToIIdName(id, name)
+    const id = 'id',
+      name = 'name',
+      value = { id: 'id', name: 'name' },
+      zpr = new IdNameValue(id, name, value)
 
-  expect(pr.id).toBe(id)
-  expect(pr.name).toBe(name)
-})
+    expect(zpr.id).toBe(id)
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+  })
 
-it('ToIIdNameValueType', () => {
-  const id = 'id',
-    name = 'name',
-    type = 'type',
-    value = { id: 'id', name: 'name' },
-    zpr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
+  it('idNameValueType good', () => {
+    expect.assertions(4)
 
-  expect(zpr.id).toBe(id)
-  expect(zpr.name).toBe(name)
-  expect(zpr.value).toBe(value)
-  expect(zpr.type).toBe(type)
+    const id = 'id',
+      name = 'name',
+      value = { id: 'id', name: 'name' },
+      zpr = new IdNameValueType(id, name, value, 'string')
+
+    expect(zpr.id).toBe(id)
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.type).toBe('string')
+  })
+
+  it('toIIdName', () => {
+    expect.assertions(2)
+
+    const id = 'id',
+      name = 'name',
+      pr = IdName.ToIIdName(id, name)
+
+    expect(pr.id).toBe(id)
+    expect(pr.name).toBe(name)
+  })
+
+  it('toIIdNameValueType', () => {
+    expect.assertions(4)
+
+    const id = 'id',
+      name = 'name',
+      type = 'type',
+      value = { id: 'id', name: 'name' },
+      zpr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
+
+    expect(zpr.id).toBe(id)
+    expect(zpr.name).toBe(name)
+    expect(zpr.value).toBe(value)
+    expect(zpr.type).toBe(type)
+  })
 })

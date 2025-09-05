@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals'
 import { DateHelper } from '../primitives/date-helper.mjs'
 import { HTTP_Ok } from './AppException.mjs'
 import { type IServerState } from './ApplicationState.mjs'
@@ -22,43 +23,51 @@ const startTime = new Date(),
     },
   }
 
-it('WebState good', () => {
-  const serverState = testConfig.getTestServerState(),
-    userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
-      data: 'hello',
-    }),
-    webState = new WebState(0, 0, 'success', serverState, userState)
+describe('webState', () => {
+  it('good', () => {
+    expect.assertions(3)
 
-  expect(webState.totalFailures).toBe(0)
-  expect(webState.totalRequests).toBe(0)
-  expect(webState.message).toBe('success')
-})
+    const serverState = testConfig.getTestServerState(),
+      userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+        data: 'hello',
+      }),
+      webState = new WebState(0, 0, 'success', serverState, userState)
 
-it('WebState default constructor', () => {
-  const webState = new WebState()
+    expect(webState.totalFailures).toBe(0)
+    expect(webState.totalRequests).toBe(0)
+    expect(webState.message).toBe('success')
+  })
 
-  expect(webState.totalFailures).toBe(0)
-  expect(webState.totalRequests).toBe(0)
-  expect(webState.message).toBe('success')
-})
+  it('default constructor', () => {
+    expect.assertions(3)
 
-it('WebState constructor good', () => {
-  const serverState = testConfig.getTestServerState(),
-    userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
-      data: 'hello',
-    }),
-    webState = new WebState(
-      1,
-      1,
-      'fail',
-      serverState,
-      userState,
-      '1.0.0',
-      ['msg'],
-      ['errMsg']
-    )
+    const webState = new WebState()
 
-  expect(webState.totalFailures).toBe(1)
-  expect(webState.totalRequests).toBe(1)
-  expect(webState.message).toBe('fail')
+    expect(webState.totalFailures).toBe(0)
+    expect(webState.totalRequests).toBe(0)
+    expect(webState.message).toBe('success')
+  })
+
+  it('constructor good', () => {
+    expect.assertions(3)
+
+    const serverState = testConfig.getTestServerState(),
+      userState = new UserState<{ data: 'hello' }>('User', 'success', 1, {
+        data: 'hello',
+      }),
+      webState = new WebState(
+        1,
+        1,
+        'fail',
+        serverState,
+        userState,
+        '1.0.0',
+        ['msg'],
+        ['errMsg']
+      )
+
+    expect(webState.totalFailures).toBe(1)
+    expect(webState.totalRequests).toBe(1)
+    expect(webState.message).toBe('fail')
+  })
 })

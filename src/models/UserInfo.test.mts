@@ -1,188 +1,255 @@
+import { describe, expect, it } from '@jest/globals'
 import { ConfigHeaderTickerBars } from '../tplot/ConfigHeaderTickerBars.mjs'
 import { UserInfo } from './UserInfo.mjs'
 
-it('constructor with default', () => {
-  const ui = new UserInfo()
+describe('constructor', () => {
+  it('with default', () => {
+    expect.assertions(2)
 
-  expect(ui).toBeInstanceOf(UserInfo)
-  expect(ui).toMatchObject({
-    companies: [],
-    config: expect.objectContaining({
-      charts: expect.objectContaining({}),
-      dashboards: expect.objectContaining({}),
-      headerTickerBars: expect.objectContaining({}),
-      ideaCryptoTabSelected: expect.objectContaining({}),
-      ideaTabSelected: expect.objectContaining({}),
-      operations: expect.objectContaining({}),
-      website: expect.objectContaining({}),
-    }),
-    displayName: '',
-    email: '',
-    firstName: '',
-    lastDashboardAccessed: '',
-    lastName: '',
-    quoteEndpoint: '',
-    tokenExpireTime: 0,
+    const ui = new UserInfo()
+
+    expect(ui).toBeInstanceOf(UserInfo)
+    expect(ui).toMatchObject({
+      companies: [],
+      config: expect.objectContaining({
+        charts: expect.objectContaining({}),
+        dashboards: expect.objectContaining({}),
+        headerTickerBars: expect.objectContaining({}),
+        ideaCryptoTabSelected: expect.objectContaining({}),
+        ideaTabSelected: expect.objectContaining({}),
+        operations: expect.objectContaining({}),
+        website: expect.objectContaining({}),
+      }),
+      displayName: '',
+      email: '',
+      firstName: '',
+      lastDashboardAccessed: '',
+      lastName: '',
+      quoteEndpoint: '',
+      tokenExpireTime: 0,
+    })
+  })
+
+  it('with partial IUserInfo', () => {
+    expect.assertions(2)
+
+    const ui = new UserInfo({
+      displayName: 'John Doe',
+      email: 'john.doe@example.com',
+    })
+
+    expect(ui.displayName).toBe('John Doe')
+    expect(ui.email).toBe('john.doe@example.com')
   })
 })
 
-it('constructor with partial IUserInfo', () => {
-  const ui = new UserInfo({
-    displayName: 'John Doe',
-    email: 'john.doe@example.com',
+describe('createUserInfo', () => {
+  it('with default', () => {
+    expect.assertions(2)
+
+    const ui = UserInfo.CreateUserInfo({
+      firstName: 'Jane',
+      lastName: 'Doe',
+    })
+
+    expect(ui).toBeInstanceOf(UserInfo)
+    expect(ui).toMatchObject({
+      companies: [],
+      config: expect.objectContaining({
+        charts: expect.objectContaining({}),
+        dashboards: expect.objectContaining({}),
+        headerTickerBars: expect.objectContaining({}),
+        ideaCryptoTabSelected: expect.objectContaining({}),
+        ideaTabSelected: expect.objectContaining({}),
+        operations: expect.objectContaining({}),
+        website: expect.objectContaining({}),
+      }),
+      displayName: '',
+      email: '',
+      firstName: 'Jane',
+      lastDashboardAccessed: '',
+      lastName: 'Doe',
+      quoteEndpoint: '',
+      tokenExpireTime: 0,
+    })
   })
 
-  expect(ui.displayName).toBe('John Doe')
-  expect(ui.email).toBe('john.doe@example.com')
-})
+  it('iUserInfo', () => {
+    expect.assertions(1)
 
-it('CreateUserInfo static method', () => {
-  const ui = UserInfo.CreateUserInfo({
-    firstName: 'Jane',
-    lastName: 'Doe',
-  })
+    const ui = UserInfo.CreateUserInfo({
+      firstName: 'Jane',
+      lastName: 'Doe',
+    })
 
-  expect(ui).toBeInstanceOf(UserInfo)
-  expect(ui).toMatchObject({
-    companies: [],
-    config: expect.objectContaining({
-      charts: expect.objectContaining({}),
-      dashboards: expect.objectContaining({}),
-      headerTickerBars: expect.objectContaining({}),
-      ideaCryptoTabSelected: expect.objectContaining({}),
-      ideaTabSelected: expect.objectContaining({}),
-      operations: expect.objectContaining({}),
-      website: expect.objectContaining({}),
-    }),
-    displayName: '',
-    email: '',
-    firstName: 'Jane',
-    lastDashboardAccessed: '',
-    lastName: 'Doe',
-    quoteEndpoint: '',
-    tokenExpireTime: 0,
-  })
-})
-
-it('CreateIUserInfo static method', () => {
-  const ui = UserInfo.CreateIUserInfo({
-    firstName: 'Jane',
-    lastName: 'Doe',
-  })
-
-  expect(ui).toMatchObject({
-    companies: [],
-    config: expect.objectContaining({
-      charts: expect.objectContaining({}),
-      dashboards: expect.objectContaining({}),
-      headerTickerBars: expect.objectContaining({}),
-      ideaCryptoTabSelected: expect.objectContaining({}),
-      ideaTabSelected: expect.objectContaining({}),
-      operations: expect.objectContaining({}),
-      website: expect.objectContaining({}),
-    }),
-    displayName: '',
-    email: '',
-    firstName: 'Jane',
-    lastDashboardAccessed: '',
-    lastName: 'Doe',
-    quoteEndpoint: '',
-    tokenExpireTime: 0,
+    expect(ui.IUserInfo).toMatchObject({
+      companies: [],
+      config: expect.objectContaining({
+        charts: expect.objectContaining({}),
+        dashboards: expect.objectContaining({}),
+        headerTickerBars: expect.objectContaining({}),
+        ideaCryptoTabSelected: expect.objectContaining({}),
+        ideaTabSelected: expect.objectContaining({}),
+        operations: expect.objectContaining({}),
+        website: expect.objectContaining({}),
+      }),
+      displayName: '',
+      email: '',
+      firstName: 'Jane',
+      lastDashboardAccessed: '',
+      lastName: 'Doe',
+      quoteEndpoint: '',
+      tokenExpireTime: 0,
+    })
   })
 })
 
-it('get IUserInfo', () => {
-  const ui = UserInfo.CreateUserInfo({
-    firstName: 'Jane',
-    lastName: 'Doe',
+describe('createIUserInfo', () => {
+  it('with default', () => {
+    expect.assertions(1)
+
+    const ui = UserInfo.CreateIUserInfo({
+      firstName: 'Jane',
+      lastName: 'Doe',
+    })
+
+    expect(ui).toMatchObject({
+      companies: [],
+      config: expect.objectContaining({
+        charts: expect.objectContaining({}),
+        dashboards: expect.objectContaining({}),
+        headerTickerBars: expect.objectContaining({}),
+        ideaCryptoTabSelected: expect.objectContaining({}),
+        ideaTabSelected: expect.objectContaining({}),
+        operations: expect.objectContaining({}),
+        website: expect.objectContaining({}),
+      }),
+      displayName: '',
+      email: '',
+      firstName: 'Jane',
+      lastDashboardAccessed: '',
+      lastName: 'Doe',
+      quoteEndpoint: '',
+      tokenExpireTime: 0,
+    })
   })
 
-  expect(ui.IUserInfo).toMatchObject({
-    companies: [],
-    config: expect.objectContaining({
-      charts: expect.objectContaining({}),
-      dashboards: expect.objectContaining({}),
-      headerTickerBars: expect.objectContaining({}),
-      ideaCryptoTabSelected: expect.objectContaining({}),
-      ideaTabSelected: expect.objectContaining({}),
-      operations: expect.objectContaining({}),
-      website: expect.objectContaining({}),
-    }),
-    displayName: '',
-    email: '',
-    firstName: 'Jane',
-    lastDashboardAccessed: '',
-    lastName: 'Doe',
-    quoteEndpoint: '',
-    tokenExpireTime: 0,
+  it('iUserInfo', () => {
+    expect.assertions(1)
+
+    const ui = UserInfo.CreateIUserInfo({
+      firstName: 'Jane',
+      lastName: 'Doe',
+    })
+
+    expect(ui).toMatchObject({
+      companies: [],
+      config: expect.objectContaining({
+        charts: expect.objectContaining({}),
+        dashboards: expect.objectContaining({}),
+        headerTickerBars: expect.objectContaining({}),
+        ideaCryptoTabSelected: expect.objectContaining({}),
+        ideaTabSelected: expect.objectContaining({}),
+        operations: expect.objectContaining({}),
+        website: expect.objectContaining({}),
+      }),
+      displayName: '',
+      email: '',
+      firstName: 'Jane',
+      lastDashboardAccessed: '',
+      lastName: 'Doe',
+      quoteEndpoint: '',
+      tokenExpireTime: 0,
+    })
   })
 })
 
-it('isHeaderTickerBarsDisabled', () => {
-  const cm = ConfigHeaderTickerBars.defaults()
-  cm.disabled = true
+describe('settings', () => {
+  it('isHeaderTickerBarsDisabled', () => {
+    expect.assertions(2)
 
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(true)
+    const cm = ConfigHeaderTickerBars.defaults()
+    cm.disabled = true
 
-  cm.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(false)
-})
+    expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(true)
 
-it('shouldHeaderTickerBarsBeDisabled', () => {
-  const cm = ConfigHeaderTickerBars.defaults()
-  cm.disabled = true
-  cm.asset.disabled = true
-  cm.crypto.disabled = true
+    cm.disabled = false
 
-  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
-    true
-  )
-  cm.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
-    true
-  )
+    expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsDisabled).toBe(
+      false
+    )
+  })
 
-  cm.asset.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
-    false
-  )
+  it('shouldHeaderTickerBarsBeDisabled', () => {
+    expect.assertions(5)
 
-  cm.asset.disabled = true
-  cm.crypto.disabled = true
-  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
-    true
-  )
+    const cm = ConfigHeaderTickerBars.defaults()
+    cm.disabled = true
+    cm.asset.disabled = true
+    cm.crypto.disabled = true
 
-  cm.asset.disabled = true
-  cm.crypto.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled).toBe(
-    false
-  )
-})
+    expect(
+      new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled
+    ).toBe(true)
 
-it('isHeaderTickerBarsAssetsDisabled', () => {
-  const cm = ConfigHeaderTickerBars.defaults()
-  cm.asset.disabled = true
+    cm.disabled = false
 
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled).toBe(
-    true
-  )
+    expect(
+      new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled
+    ).toBe(true)
 
-  cm.asset.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled).toBe(
-    false
-  )
-})
-it('isHeaderTickerBarsCryptosDisabled', () => {
-  const cm = ConfigHeaderTickerBars.defaults()
-  cm.crypto.disabled = true
+    cm.asset.disabled = false
 
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled).toBe(
-    true
-  )
+    expect(
+      new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled
+    ).toBe(false)
 
-  cm.crypto.disabled = false
-  expect(new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled).toBe(
-    false
-  )
+    cm.asset.disabled = true
+    cm.crypto.disabled = true
+
+    expect(
+      new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled
+    ).toBe(true)
+
+    cm.asset.disabled = true
+    cm.crypto.disabled = false
+
+    expect(
+      new ConfigHeaderTickerBars(cm).shouldHeaderTickerBarsBeDisabled
+    ).toBe(false)
+  })
+
+  it('isHeaderTickerBarsAssetsDisabled', () => {
+    expect.assertions(2)
+
+    const cm = ConfigHeaderTickerBars.defaults()
+    cm.asset.disabled = true
+
+    expect(
+      new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled
+    ).toBe(true)
+
+    cm.asset.disabled = false
+
+    expect(
+      new ConfigHeaderTickerBars(cm).isHeaderTickerBarsAssetsDisabled
+    ).toBe(false)
+  })
+
+  it('isHeaderTickerBarsCryptosDisabled', () => {
+    expect.assertions(2)
+
+    const cm = ConfigHeaderTickerBars.defaults()
+    cm.crypto.disabled = true
+
+    expect(
+      new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled
+    ).toBe(true)
+
+    cm.crypto.disabled = false
+
+    expect(
+      new ConfigHeaderTickerBars(cm).isHeaderTickerBarsCryptosDisabled
+    ).toBe(false)
+  })
 })

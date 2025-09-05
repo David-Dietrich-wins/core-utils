@@ -4,48 +4,57 @@ import {
   type IConfig,
   type IConfigShort,
 } from './config.mjs'
+import { describe, expect, it } from '@jest/globals'
 
-it('constructor', () => {
-  const config = new Config(1, 1, 'name', true)
+describe('constructor', () => {
+  it('good', () => {
+    expect.assertions(6)
 
-  expect(config.id).toBe(1)
-  expect(config.userid).toBe(1)
-  expect(config.name).toBe('name')
-  expect(config.val).toBe(true)
-  expect(config.createdby).toBe('Config')
-  expect(config.updatedby).toBe('Config')
+    const config = new Config(1, 1, 'name', true)
+
+    expect(config.id).toBe(1)
+    expect(config.userid).toBe(1)
+    expect(config.name).toBe('name')
+    expect(config.val).toBe(true)
+    expect(config.createdby).toBe('Config')
+    expect(config.updatedby).toBe('Config')
+  })
+
+  it('with IConfig', () => {
+    expect.assertions(11)
+
+    const aic: IConfig<number> = {
+        created: new Date(),
+        createdby: 'test',
+        id: 1,
+        name: 'name',
+        updated: new Date(),
+        updatedby: 'test',
+        userid: 1,
+        val: true,
+      },
+      config = new Config(aic, 0, '', false)
+
+    expect(config.id).toBe(1)
+    expect(config.userid).toBe(1)
+    expect(config.name).toBe('name')
+    expect(config.val).toBe(true)
+    expect(config.createdby).toBe('test')
+    expect(config.updatedby).toBe('test')
+
+    expect(config.created).toBe(aic.created)
+    expect(config.createdby).toBe(aic.createdby)
+    expect(config.updated).toBe(aic.updated)
+    expect(config.updatedby).toBe(aic.updatedby)
+
+    expect(config.api()).toStrictEqual({ name: 'name', val: true })
+  })
 })
 
-it('constructor with IConfig', () => {
-  const aic: IConfig<number> = {
-      created: new Date(),
-      createdby: 'test',
-      id: 1,
-      name: 'name',
-      updated: new Date(),
-      updatedby: 'test',
-      userid: 1,
-      val: true,
-    },
-    config = new Config(aic, 0, '', false)
-
-  expect(config.id).toBe(1)
-  expect(config.userid).toBe(1)
-  expect(config.name).toBe('name')
-  expect(config.val).toBe(true)
-  expect(config.createdby).toBe('test')
-  expect(config.updatedby).toBe('test')
-
-  expect(config.created).toBe(aic.created)
-  expect(config.createdby).toBe(aic.createdby)
-  expect(config.updated).toBe(aic.updated)
-  expect(config.updatedby).toBe(aic.updatedby)
-
-  expect(config.api()).toStrictEqual({ name: 'name', val: true })
-})
-
-describe('ConfigShort', () => {
+describe('config short', () => {
   it('constructor', () => {
+    expect.assertions(6)
+
     const config = new ConfigShort('1', '1', 'name', true)
 
     expect(config.id).toBe('1')
@@ -57,6 +66,8 @@ describe('ConfigShort', () => {
   })
 
   it('constructor with IConfig', () => {
+    expect.assertions(11)
+
     const aic: IConfigShort<number> = {
         created: new Date(),
         createdby: 'test',
