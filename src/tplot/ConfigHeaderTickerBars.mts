@@ -1,6 +1,6 @@
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import type { IContext, IContextUI } from '../services/ContextManager.mjs'
 import {
@@ -39,7 +39,7 @@ export class ConfigHeaderTickerBars {
     overrides?: Partial<IConfigHeaderTickerBars>,
     updated?: DateTypeAcceptable
   ) {
-    const dateNow = DateHelper.GetTime(updated)
+    const dateNow = dateGetTime(updated)
 
     const cfgHeaderTickerBars: IConfigHeaderTickerBars = {
       asset: {
@@ -94,7 +94,7 @@ export class ConfigHeaderTickerBars {
     const cfgHeader: IConfigHeaderTickerBars = {
       ...deepCloneJson(cfg),
       ...overrides,
-      updated: DateHelper.GetTime(updated),
+      updated: dateGetTime(updated),
     }
 
     return ConfigHeaderTickerBars.verifyHeaderBars(cfgHeader)
@@ -106,7 +106,7 @@ export class ConfigHeaderTickerBars {
       {
         disabled: !cfg.disabled,
       },
-      DateHelper.GetTime(updated)
+      dateGetTime(updated)
     )
   }
 
@@ -115,7 +115,7 @@ export class ConfigHeaderTickerBars {
     payload: FuncContextTickers<T>,
     updated?: DateTypeAcceptable
   ) {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
     const updater = isFunction(payload) ? payload(cfg.crypto) : payload
 
     return ConfigHeaderTickerBars.UpdateHeader(
@@ -130,7 +130,7 @@ export class ConfigHeaderTickerBars {
     payload: FuncContextTickers<T>,
     updated?: DateTypeAcceptable
   ) {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
     const updater = isFunction(payload) ? payload(cfg.asset) : payload
 
     return ConfigHeaderTickerBars.UpdateHeader(

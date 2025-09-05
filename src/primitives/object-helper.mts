@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { DateHelper, isDateObject } from './date-helper.mjs'
 import {
   type IConstructor,
   type SortOrder,
@@ -12,6 +11,7 @@ import {
   isArray,
   safeArray,
 } from './array-helper.mjs'
+import { dateTimeFormatWithMillis, isDateObject } from './date-helper.mjs'
 import {
   isString,
   safestr,
@@ -279,7 +279,7 @@ export function BuildLogFriendlyMessage({
     .map((e: unknown) => ObjectTypesToString(e))
     .join(' ')
 
-  return `${DateHelper.FormatDateTimeWithMillis()}: [${componentName}] [${level}] ${msg}`
+  return `${dateTimeFormatWithMillis()}: [${componentName}] [${level}] ${msg}`
 }
 
 export function isEmptyObject(obj: unknown) {

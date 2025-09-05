@@ -1,6 +1,6 @@
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import {
   type IContext,
@@ -31,7 +31,7 @@ export class ConfigCharts {
       id: newGuid(),
       neutral: { color: '#000000' },
       up: { color: '#00FF00' },
-      updated: DateHelper.GetTime(updated),
+      updated: dateGetTime(updated),
       ...overrides,
     }
 

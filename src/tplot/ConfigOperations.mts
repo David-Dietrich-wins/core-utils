@@ -1,6 +1,6 @@
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import {
   type IContext,
@@ -24,10 +24,10 @@ export class ConfigOperations {
       id: newGuid(),
       minusEightPlus10: {
         id: newGuid(),
-        updated: DateHelper.GetTime(updated),
+        updated: dateGetTime(updated),
         value: true,
       },
-      updated: DateHelper.GetTime(updated),
+      updated: dateGetTime(updated),
       ...overrides,
     }
 

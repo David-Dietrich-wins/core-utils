@@ -1,6 +1,6 @@
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import {
   type IContext,
@@ -22,7 +22,7 @@ export class ConfigWebsite {
     overrides?: Partial<IConfigWebsite>,
     updated?: DateTypeAcceptable
   ): IConfigWebsite {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
 
     const cfgWebsite: IConfigWebsite = {
       hideHelp: { id: newGuid(), updated: dtUpdated, value: false },
@@ -44,14 +44,14 @@ export class ConfigWebsite {
     const cfgUpdate: IConfigWebsite = {
       ...deepCloneJson(cfg),
       ...overrides,
-      updated: DateHelper.GetTime(updated),
+      updated: dateGetTime(updated),
     }
 
     return cfgUpdate
   }
 
   static hideHelp(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
 
     const hideHelp = updateContextValueToggleBoolean(cfg.hideHelp, dtUpdated)
 
@@ -61,7 +61,7 @@ export class ConfigWebsite {
   }
 
   static hideTooltips(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
 
     const hideTooltips = updateContextValueToggleBoolean(
       cfg.hideTooltips,
@@ -74,7 +74,7 @@ export class ConfigWebsite {
   }
 
   static openFirstPlot(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = DateHelper.GetTime(updated)
+    const dtUpdated = dateGetTime(updated)
 
     const openFirstPlot = updateContextValueToggleBoolean(
       cfg.openFirstPlot,

@@ -1,7 +1,7 @@
 import * as z from 'zod/v4'
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import { type IIdRequired, IdManager } from '../models/IdManager.mjs'
 import type { IName, IValue } from '../models/interfaces.mjs'
@@ -47,7 +47,7 @@ export function updateContextUi<T extends IContextUI = IContextUI>(
 ): IContextUI {
   const contextUi: T = {
     ...safeObject(ctx),
-    // updated: DateHelper.GetTime(updated),
+    // updated: dateGetTime(updated),
     ...overrides,
   } as unknown as T
 
@@ -103,7 +103,7 @@ export function updateContext<T extends IIdUpdated = IIdUpdated>(
   const context: IContext = {
     ...safeObject(ctx),
     id: ctx.id || newGuid(),
-    updated: DateHelper.GetTime(updated),
+    updated: dateGetTime(updated),
     ...overrides,
   }
 

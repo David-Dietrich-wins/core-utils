@@ -1,6 +1,6 @@
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import type { IContext } from '../services/ContextManager.mjs'
 import { type IDashboardScreenSetting } from './DashboardScreenSetting.mjs'
@@ -26,7 +26,7 @@ export class DashboardSetting implements IDashboardSetting {
     overrides?: Partial<IDashboardSetting>,
     updated?: DateTypeAcceptable
   ): IDashboardSetting {
-    const aDateNow = DateHelper.GetTime(updated)
+    const aDateNow = dateGetTime(updated)
 
     const cfgDashboards: IDashboardSetting = {
       id: newGuid(),

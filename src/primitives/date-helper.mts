@@ -25,6 +25,19 @@ export const MILLIS_PER_DAY = 86400000,
   MILLIS_PER_MINUTE = 60000,
   MILLIS_PER_SECOND = 1000
 
+const FormatForApiCalls = 'YYYY-MM-DD',
+  FormatForFiles = 'YYMMDD_HHmmss',
+  FormatForUi = 'M/D/YYYY',
+  FormatForUi2DigitYear = 'M/D/YY',
+  FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a',
+  FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a',
+  FormatForUiWithYear = 'M/D/YYYY h:mm:ss a',
+  FormatForUiWithYearNoSeconds = 'M/D/YYYY h:mm a',
+  FormatLocalWithoutTimezone = 'YYYY-MM-DDTHH:mm:ss.SSS',
+  FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
+
+export const FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
+
 export type DateTypeAcceptable =
   | Date
   | string
@@ -41,82 +54,129 @@ export function isDateObject(obj: unknown): obj is Date {
   return false
 }
 
+export function dateConvertToObject(
+  date: DateTypeAcceptable,
+  setToNowIfEmpty = true
+): Date {
+  if (isNullOrUndefined(date)) {
+    if (setToNowIfEmpty) {
+      return new Date()
+    }
+  } else if (isDateObject(date)) {
+    return new Date(date.getTime())
+  } else if (moment.isMoment(date)) {
+    return date.toDate()
+  } else if (isNumber(date)) {
+    return new Date(date)
+  } else {
+    // If it's a string, we can try to convert it to a Date object
+    const d = new Date(date)
+    if (!isNullOrUndefined(d) && !isNaN(d.getTime())) {
+      return d
+    }
+  }
+
+  // if (!isNullOrUndefined(msSinceEpoch) && !isNaN(msSinceEpoch)) {
+  //   if (useUtc) {
+  //     msSinceEpoch += new Date().getTimezoneOffset() * 60000
+  //   }
+
+  //   return new Date(msSinceEpoch)
+  // }
+
+  throw new AppException(
+    `Invalid date: ${safestr(date)}`,
+    dateConvertToObject.name,
+    date
+  )
+}
+
+export function dateGetTime(date: DateTypeAcceptable) {
+  if (isNumber(date)) {
+    return date
+  }
+
+  return dateConvertToObject(date).getTime()
+}
+
+/**
+ * Checks the date value passed in to see if the variable is a valid Date object.
+ * @param date Any value to test if it is a valid date.
+ * @returns true if the date is valid. false otherwise.
+ */
+export function dateIsValid(date: DateTypeAcceptable) {
+  try {
+    dateConvertToObject(date, false)
+
+    return true
+  } catch (e) {
+    console.error(`${dateIsValid.name}:`, e)
+  }
+
+  return false
+}
+
+export function dateTimeFormat(
+  format?: string,
+  dateToFormat?: DateTypeAcceptable,
+  isUtc = false
+) {
+  let m = dateToFormat ? moment(dateToFormat) : moment()
+  if (isUtc) {
+    m = m.utc()
+  }
+
+  return m.format(safestr(format, FormatSeconds)).trim()
+}
+
+/**
+ * Converts a Date object to a string in ISO format.
+ * If there is no date provided, undefined is returned.
+ * @param date Any format of date that can be converted to a Date object.
+ * @returns A string formatted to example - '230906_145201'
+ */
+export function dateTimeFormatForUiWithTime(
+  date?: Moment | Date | number | string,
+  showFullYear = false,
+  showSeconds = false,
+  isUtc = false
+) {
+  return dateTimeFormat(
+    showFullYear
+      ? showSeconds
+        ? FormatForUiWithYear
+        : FormatForUiWithYearNoSeconds
+      : showSeconds
+      ? FormatForUi2DigitYearWithTime
+      : FormatForUi2DigitYearWithTimeNoSeconds,
+    date,
+    isUtc
+  )
+}
+
+export function dateTimeFormatWithMillis(
+  dateToFormat?: DateTypeAcceptable,
+  isUtc = false
+) {
+  return dateTimeFormat(FormatWithMillis, dateToFormat, isUtc)
+}
+
+export function dateTimeFormatLocaleDateString(
+  date?: DateTypeAcceptable,
+  locale = 'en-US'
+) {
+  const intlOptions: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    },
+    now = dateConvertToObject(date).toLocaleDateString(locale, intlOptions)
+
+  return now
+}
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class DateHelper {
-  static readonly FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
-  static readonly FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
-  static readonly FormatLocalWithoutTimezone = 'YYYY-MM-DDTHH:mm:ss.SSS'
-  static readonly FormatForFiles = 'YYMMDD_HHmmss'
-  static readonly FormatForApiCalls = 'YYYY-MM-DD'
-  static readonly FormatForUi = 'M/D/YYYY'
-  static readonly FormatForUiWithYear = 'M/D/YYYY h:mm:ss a'
-  static readonly FormatForUiWithYearNoSeconds = 'M/D/YYYY h:mm a'
-  static readonly FormatForUi2DigitYear = 'M/D/YY'
-  static readonly FormatForUi2DigitYearWithTime = 'M/D/YY h:mm:ss a'
-  static readonly FormatForUi2DigitYearWithTimeNoSeconds = 'M/D/YY h:mm a'
-
-  /**
-   * Checks the date value passed in to see if the variable is a valid Date object.
-   * @param date Any value to test if it is a valid date.
-   * @returns true if the date is valid. false otherwise.
-   */
-  static IsValidDate(date: DateTypeAcceptable) {
-    try {
-      DateHelper.ConvertToDateObject(date, false)
-
-      return true
-    } catch (e) {
-      console.error(`${DateHelper.name}.${DateHelper.IsValidDate.name}:`, e)
-    }
-
-    return false
-  }
-
-  static ConvertToDateObject(
-    date: DateTypeAcceptable,
-    setToNowIfEmpty = true
-  ): Date {
-    if (isNullOrUndefined(date)) {
-      if (setToNowIfEmpty) {
-        return new Date()
-      }
-    } else if (isDateObject(date)) {
-      return new Date(date.getTime())
-    } else if (moment.isMoment(date)) {
-      return date.toDate()
-    } else if (isNumber(date)) {
-      return new Date(date)
-    } else {
-      // If it's a string, we can try to convert it to a Date object
-      const d = new Date(date)
-      if (!isNullOrUndefined(d) && !isNaN(d.getTime())) {
-        return d
-      }
-    }
-
-    // if (!isNullOrUndefined(msSinceEpoch) && !isNaN(msSinceEpoch)) {
-    //   if (useUtc) {
-    //     msSinceEpoch += new Date().getTimezoneOffset() * 60000
-    //   }
-
-    //   return new Date(msSinceEpoch)
-    // }
-
-    throw new AppException(
-      `Invalid date: ${safestr(date)}`,
-      `${DateHelper.name}.${DateHelper.ConvertToDateObject.name}`,
-      date
-    )
-  }
-
-  static GetTime(date: DateTypeAcceptable) {
-    if (isNumber(date)) {
-      return date
-    }
-
-    return DateHelper.ConvertToDateObject(date).getTime()
-  }
-
   /**
    * Adds (or subtracts if millisToAdd is negative) any number of seconds to a Date.
    * If no Date is provided, the current Date now is used.
@@ -125,7 +185,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of seconds added.
    */
   static addMillisToDate(millisToAdd: number, date?: Date | number | string) {
-    return new Date(DateHelper.GetTime(date) + millisToAdd)
+    return new Date(dateGetTime(date) + millisToAdd)
   }
 
   /**
@@ -136,7 +196,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of seconds added.
    */
   static addMonthsToDate(monthsToAdd: number, date?: Date | number | string) {
-    const d = DateHelper.ConvertToDateObject(date)
+    const d = dateConvertToObject(date)
     d.setMonth(d.getMonth() + monthsToAdd)
 
     return d
@@ -150,7 +210,7 @@ export abstract class DateHelper {
    * @returns A new Date object with the number of seconds added.
    */
   static addYearsToDate(yearsToAdd: number, date?: Date | number | string) {
-    const d = DateHelper.ConvertToDateObject(date)
+    const d = dateConvertToObject(date)
     d.setFullYear(d.getFullYear() + yearsToAdd)
 
     return d
@@ -198,44 +258,6 @@ export abstract class DateHelper {
    */
   static addDaysToDate(daysToAdd: number, date?: Date | number | string) {
     return DateHelper.addMillisToDate(daysToAdd * MILLIS_PER_DAY, date)
-  }
-
-  static FormatDateTime(
-    format?: string,
-    dateToFormat?: DateTypeAcceptable,
-    isUtc = false
-  ) {
-    let m = dateToFormat ? moment(dateToFormat) : moment()
-    if (isUtc) {
-      m = m.utc()
-    }
-
-    return m.format(safestr(format, DateHelper.FormatSeconds)).trim()
-  }
-
-  static FormatDateTimeWithMillis(
-    dateToFormat?: DateTypeAcceptable,
-    isUtc = false
-  ) {
-    return DateHelper.FormatDateTime(
-      DateHelper.FormatWithMillis,
-      dateToFormat,
-      isUtc
-    )
-  }
-
-  static FormatLocaleDateString(date?: DateTypeAcceptable, locale = 'en-US') {
-    const intlOptions: Intl.DateTimeFormatOptions = {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      },
-      now = DateHelper.ConvertToDateObject(date).toLocaleDateString(
-        locale,
-        intlOptions
-      )
-
-    return now
   }
 
   static Midnight(date: Date | string | null | undefined) {
@@ -289,7 +311,7 @@ export abstract class DateHelper {
    * @param sqlDateString The SQL date string in 2022-10-30 22:09:20.875 format
    * @param stripMilliseconds If true, the milliseconds are removed from the string.
    */
-  static SqlUtcToUtcString(sqlDateString: string, stripMilliseconds = true) {
+  static sqlUtcToUtcString(sqlDateString: string, stripMilliseconds = true) {
     let strToConvert = safestr(sqlDateString)
     if (stripMilliseconds) {
       strToConvert = strToConvert.replace(/\.\d{3}/u, '')
@@ -312,10 +334,7 @@ export abstract class DateHelper {
 .
    */
   static toLocalStringWithoutTimezone(date?: Moment | Date | number | string) {
-    return DateHelper.FormatDateTime(
-      DateHelper.FormatLocalWithoutTimezone,
-      date
-    )
+    return dateTimeFormat(FormatLocalWithoutTimezone, date)
   }
 
   /**
@@ -325,7 +344,7 @@ export abstract class DateHelper {
    * @returns A string formatted to example - '230906_145201'
    */
   static fileDateTime(date?: DateTypeAcceptable, isUtc = false) {
-    return DateHelper.FormatDateTime(DateHelper.FormatForFiles, date, isUtc)
+    return dateTimeFormat(FormatForFiles, date, isUtc)
   }
 
   /**
@@ -338,7 +357,7 @@ export abstract class DateHelper {
     date?: Moment | Date | number | string,
     isUtc = false
   ) {
-    return DateHelper.FormatDateTime(DateHelper.FormatForApiCalls, date, isUtc)
+    return dateTimeFormat(FormatForApiCalls, date, isUtc)
   }
 
   /**
@@ -352,33 +371,8 @@ export abstract class DateHelper {
     showFullYear = false,
     isUtc = false
   ) {
-    return DateHelper.FormatDateTime(
-      showFullYear ? DateHelper.FormatForUi : DateHelper.FormatForUi2DigitYear,
-      date,
-      isUtc
-    )
-  }
-
-  /**
-   * Converts a Date object to a string in ISO format.
-   * If there is no date provided, undefined is returned.
-   * @param date Any format of date that can be converted to a Date object.
-   * @returns A string formatted to example - '230906_145201'
-   */
-  static dateFormatForUiWithTime(
-    date?: Moment | Date | number | string,
-    showFullYear = false,
-    showSeconds = false,
-    isUtc = false
-  ) {
-    return DateHelper.FormatDateTime(
-      showFullYear
-        ? showSeconds
-          ? DateHelper.FormatForUiWithYear
-          : DateHelper.FormatForUiWithYearNoSeconds
-        : showSeconds
-        ? DateHelper.FormatForUi2DigitYearWithTime
-        : DateHelper.FormatForUi2DigitYearWithTimeNoSeconds,
+    return dateTimeFormat(
+      showFullYear ? FormatForUi : FormatForUi2DigitYear,
       date,
       isUtc
     )
@@ -479,7 +473,7 @@ export abstract class DateHelper {
     periodType: string,
     numberOfPeriods?: number | string | null
   ) {
-    const dateClean = DateHelper.ConvertToDateObject(date),
+    const dateClean = dateConvertToObject(date),
       numPeriods = isNullOrUndefined(numberOfPeriods)
         ? firstNumberInString(periodType)
         : getAsNumber(numberOfPeriods),
@@ -511,9 +505,9 @@ export abstract class DateHelper {
   }
 
   static FromTo(from: DateTypeAcceptable, to: DateTypeAcceptable) {
-    const fromDate = DateHelper.ConvertToDateObject(from),
+    const fromDate = dateConvertToObject(from),
       fromTime = fromDate.getTime(),
-      toDate = DateHelper.ConvertToDateObject(to),
+      toDate = dateConvertToObject(to),
       toTime = toDate.getTime(),
       zret: Required<FromTo> = {
         from: fromTime > toTime ? toTime : fromTime,
@@ -528,7 +522,7 @@ export abstract class DateHelper {
     periodType: string,
     numberOfPeriods: number
   ) {
-    const date = DateHelper.ConvertToDateObject(endDate),
+    const date = dateConvertToObject(endDate),
       from = DateHelper.AddTimeToDate(
         date,
         DateHelper.PeriodType(periodType),
@@ -553,8 +547,8 @@ export abstract class DateHelper {
         numberOfPeriods
       ),
       ret: Required<FromTo<Date>> = {
-        from: DateHelper.ConvertToDateObject(ft.from),
-        to: DateHelper.ConvertToDateObject(ft.to),
+        from: dateConvertToObject(ft.from),
+        to: dateConvertToObject(ft.to),
       }
 
     return ret
@@ -565,7 +559,7 @@ export abstract class DateHelper {
     periodType: string,
     numberOfPeriods: number
   ) {
-    const date = DateHelper.ConvertToDateObject(startDate),
+    const date = dateConvertToObject(startDate),
       from = DateHelper.AddTimeToDate(
         date,
         DateHelper.PeriodType(periodType),
@@ -590,15 +584,15 @@ export abstract class DateHelper {
         numberOfPeriods
       ),
       ret: Required<FromTo<Date>> = {
-        from: DateHelper.ConvertToDateObject(ft.from),
-        to: DateHelper.ConvertToDateObject(ft.to),
+        from: dateConvertToObject(ft.from),
+        to: dateConvertToObject(ft.to),
       }
 
     return ret
   }
 
   static LocalToUtc(date: DateTypeAcceptable) {
-    const dateNonEmpty = DateHelper.ConvertToDateObject(date),
+    const dateNonEmpty = dateConvertToObject(date),
       utc = new Date(
         dateNonEmpty.getTime() + dateNonEmpty.getTimezoneOffset() * 60000
       )
@@ -640,11 +634,10 @@ export abstract class DateHelper {
       )
     }
 
-    const endTimeNotEmpty = DateHelper.ConvertToDateObject(endTime)
+    const endTimeNotEmpty = dateConvertToObject(endTime)
 
     return Math.abs(
-      endTimeNotEmpty.getTime() -
-        DateHelper.ConvertToDateObject(startTime).getTime()
+      endTimeNotEmpty.getTime() - dateConvertToObject(startTime).getTime()
     )
   }
   /**
@@ -747,12 +740,12 @@ export abstract class DateHelper {
   }
 }
 
-export function DateNowIsPastExpiry(expiryDate: DateTypeAcceptable) {
+export function dateNowIsPastExpiry(expiryDate: DateTypeAcceptable) {
   if (!expiryDate) {
     return true
   }
 
-  const expiry = DateHelper.ConvertToDateObject(expiryDate)
+  const expiry = dateConvertToObject(expiryDate)
 
   return Date.now() > expiry.getTime()
 }

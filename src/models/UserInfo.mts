@@ -13,8 +13,8 @@ import {
   type IDashboardSetting,
 } from '../tplot/DashboardSetting.mjs'
 import {
-  DateHelper,
   type DateTypeAcceptable,
+  dateGetTime,
 } from '../primitives/date-helper.mjs'
 import { type ICompany } from '../politagree/company.mjs'
 import type { IdName } from './id-name.mjs'
@@ -89,7 +89,7 @@ export interface IUserInfo {
 export function userConfigDefaults(
   updated?: DateTypeAcceptable
 ): UserConfigTypesAll {
-  const aDateNow = DateHelper.GetTime(updated),
+  const aDateNow = dateGetTime(updated),
     cfgIdeaCryptoTabSelected: IdName<number> = {
       id: 0,
       name: 'crypto',
