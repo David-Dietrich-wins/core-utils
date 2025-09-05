@@ -432,7 +432,7 @@ export class ExchangeInfo implements IExchangeInfo {
   volume = 0
 }
 
-export function CreateISymbolDetail(overrides?: Partial<ISymbolDetail>) {
+export function createISymbolDetail(overrides?: Partial<ISymbolDetail>) {
   const isd: ISymbolDetail = {
     createdby: '',
     exchange: '',
