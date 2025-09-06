@@ -3,12 +3,12 @@ import type {
   StringOrStringArray,
   WithoutFunctions,
 } from './types.mjs'
-import { toSafeArray, isArray, safeArray } from '../primitives/array-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
   isObject,
 } from '../primitives/object-helper.mjs'
+import { isArray, safeArray, toSafeArray } from '../primitives/array-helper.mjs'
 import {
   isString,
   pluralSuffix,
