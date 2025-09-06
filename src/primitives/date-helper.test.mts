@@ -35,6 +35,31 @@ describe('dateGetTime', () => {
       TEST_Settings.currentDateInMilliseconds
     )
   })
+
+  it('should return 0 for null/undefined when setToNowIfEmpty is false', () => {
+    expect.assertions(2)
+
+    expect(dateGetTime(null, false)).toBe(0)
+    expect(dateGetTime(undefined, false)).toBe(0)
+  })
+
+  it('should return current time for null/undefined when setToNowIfEmpty is true', () => {
+    expect.assertions(2)
+
+    expect(dateGetTime(null, true)).toBe(
+      TEST_Settings.currentDateInMilliseconds
+    )
+    expect(dateGetTime(undefined, true)).toBe(
+      TEST_Settings.currentDateInMilliseconds
+    )
+  })
+
+  it('should throw an error for invalid date strings', () => {
+    expect.assertions(2)
+
+    expect(() => dateGetTime('invalid-date-string')).toThrow(AppException)
+    expect(() => dateGetTime('2025-13-01T00:00:00.000Z')).toThrow(AppException)
+  })
 })
 
 describe('dateConvertToObject', () => {

@@ -91,12 +91,16 @@ export function dateConvertToObject(
   )
 }
 
-export function dateGetTime(date: DateTypeAcceptable) {
+export function dateGetTime(date: DateTypeAcceptable, setToNowIfEmpty = true) {
+  if (isNullOrUndefined(date) && !setToNowIfEmpty) {
+    return 0
+  }
+
   if (isNumber(date)) {
     return date
   }
 
-  return dateConvertToObject(date).getTime()
+  return dateConvertToObject(date, setToNowIfEmpty).getTime()
 }
 
 /**

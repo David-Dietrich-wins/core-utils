@@ -12,7 +12,7 @@ import {
   ObjectHelper,
   ObjectMustHaveKeyAndReturnValue,
   ObjectPrepareForJson,
-  ObjectTypesToString,
+  objectTypesToString,
   UpdateFieldValue,
   coalesce,
   deepCloneJson,
@@ -207,7 +207,7 @@ describe('objectTypesToString', () => {
   it('return string from array', () => {
     expect.assertions(1)
 
-    const ret = ObjectTypesToString(['hello', 'world'])
+    const ret = objectTypesToString(['hello', 'world'])
 
     expect(ret).toBe('["hello","world"]')
   })
@@ -215,7 +215,7 @@ describe('objectTypesToString', () => {
   it('null', () => {
     expect.assertions(1)
 
-    const ret = ObjectTypesToString(null)
+    const ret = objectTypesToString(null)
 
     expect(ret).toBe('')
   })
@@ -225,7 +225,7 @@ describe('objectTypesToString', () => {
 
     const e = new Error('test error')
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toContain('Error')
     expect(ret).toContain('{"message":"test error","name":"Error"')
@@ -267,7 +267,7 @@ describe('objectTypesToString', () => {
 
     const e = new File('', 'test.txt')
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -277,7 +277,7 @@ describe('objectTypesToString', () => {
 
     const e = new FileList('', 'test.txt')
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -287,7 +287,7 @@ describe('objectTypesToString', () => {
 
     const e = { data: '', name: 'test.txt' }
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -383,7 +383,7 @@ describe('buildLogFriendlyMessage', () => {
 
     const e = new File('', 'test.txt')
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -393,7 +393,7 @@ describe('buildLogFriendlyMessage', () => {
 
     const e = new FileList('', 'test.txt')
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -403,7 +403,7 @@ describe('buildLogFriendlyMessage', () => {
 
     const e = { data: '', name: 'test.txt' }
 
-    const ret = ObjectTypesToString(e)
+    const ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })

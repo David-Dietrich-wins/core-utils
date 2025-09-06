@@ -236,7 +236,7 @@ export function safeJsonToString<T extends object | Array<T>>(
   return ''
 }
 
-export function ObjectTypesToString(
+export function objectTypesToString(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   e: any
 ) {
@@ -276,7 +276,7 @@ export function BuildLogFriendlyMessage({
   message: any
 }) {
   const msg = safeArray(message)
-    .map((e: unknown) => ObjectTypesToString(e))
+    .map((e: unknown) => objectTypesToString(e))
     .join(' ')
 
   return `${dateTimeFormatWithMillis()}: [${componentName}] [${level}] ${msg}`
