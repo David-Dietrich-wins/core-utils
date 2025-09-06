@@ -1,49 +1,60 @@
 import * as z from 'zod/v4'
 import { CONST_ListMustBeAnArray, type IId, IdManager } from './IdManager.mjs'
+import { describe, expect, it } from '@jest/globals'
 import { AppException } from './AppException.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
-it('good', () => {
-  const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
-    idm = new IdManager(ads, new InstrumentationStatistics())
+describe('idManager', () => {
+  it('good', () => {
+    expect.assertions(11)
 
-  expect(idm.list).toBe(ads)
-  expect(idm.stats?.totalProcessed).toBe(0)
+    const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
+      idm = new IdManager(ads, new InstrumentationStatistics())
 
-  idm.add({ id: '4' })
-  expect(idm.list).toHaveLength(4)
-  expect(idm.stats?.totalProcessed).toBe(1)
-  expect(idm.stats?.add).toBe(0)
-  expect(idm.stats?.successes).toBe(1)
+    expect(idm.list).toBe(ads)
+    expect(idm.stats?.totalProcessed).toBe(0)
 
-  idm.remove(ads[1])
-  expect(idm.list).toHaveLength(3)
-  expect(idm.stats?.totalProcessed).toBe(2)
-  expect(idm.stats?.add).toBe(0)
-  expect(idm.stats?.successes).toBe(1)
-  expect(idm.stats?.delete).toBe(1)
-})
+    idm.add({ id: '4' })
 
-describe(IdManager.name, () => {
+    expect(idm.list).toHaveLength(4)
+    expect(idm.stats?.totalProcessed).toBe(1)
+    expect(idm.stats?.add).toBe(0)
+    expect(idm.stats?.successes).toBe(1)
+
+    idm.remove(ads[1])
+
+    expect(idm.list).toHaveLength(3)
+    expect(idm.stats?.totalProcessed).toBe(2)
+    expect(idm.stats?.add).toBe(0)
+    expect(idm.stats?.successes).toBe(1)
+    expect(idm.stats?.delete).toBe(1)
+  })
+
   it('default constructor', () => {
+    expect.assertions(4)
+
     const idm = new IdManager()
 
     expect(idm.list).toMatchObject([])
     expect(idm.stats?.totalProcessed).toBeUndefined()
 
     idm.add({ id: '4' })
+
     expect(idm.list).toHaveLength(1)
     expect(idm.list).toMatchObject([{ id: '4' }])
   })
 
   it('with list and stats', () => {
+    expect.assertions(5)
+
     const idm = new IdManager([{ id: '1' }], new InstrumentationStatistics())
 
     expect(idm.list).toMatchObject([{ id: '1' }])
     expect(idm.stats?.totalProcessed).toBe(0)
 
     idm.add({ id: '4' })
+
     expect(idm.list).toHaveLength(2)
     expect(idm.list).toMatchObject([{ id: '1' }, { id: '4' }])
 
@@ -67,67 +78,78 @@ describe(IdManager.name, () => {
   })
 
   it('exception', () => {
+    expect.assertions(1)
+
     const testItem: IId = { idwhat: '1' } as IId
+
     expect(() => new IdManager([testItem])).toThrow(
       new AppException(CONST_ListMustBeAnArray, 'IdManager.constructor')
     )
   })
-})
 
-it('IdManager.Create', () => {
-  const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
-    idm = IdManager.CreateIdManager(ads, new InstrumentationStatistics())
+  it('idManager.Create', () => {
+    expect.assertions(2)
 
-  expect(idm.list).toBe(ads)
-  expect(idm.stats?.totalProcessed).toBe(0)
-})
+    const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
+      idm = IdManager.CreateIdManager(ads, new InstrumentationStatistics())
 
-it('IdManager.FindWithObjectId', () => {
-  const ads: object[] = [
-      {
-        b: '11',
-        id: '1',
-      },
-      {
-        b: '22',
-        id: '2',
-      },
-      {
-        b: '33',
-        id: '3',
-      },
-    ],
-    idm = IdManager.FindObjectWithId(ads, '2')
-
-  expect(idm).toMatchObject({
-    b: '22',
-    id: '2',
+    expect(idm.list).toBe(ads)
+    expect(idm.stats?.totalProcessed).toBe(0)
   })
-})
 
-it('zIId', () => {
-  const zId = IdManager.zIId(zStringMinMax(1, 50))
-  // Const ret = zId.safeParse({ id: 'test' })
-  expect(zId.safeParse({ id: 'test' }).success).toBe(true)
-  expect(zId.safeParse({}).success).toBe(true)
-  expect(zId.safeParse({ id: 123 }).success).toBe(false)
-  expect(zId.safeParse({ id: 'a'.repeat(51) }).success).toBe(false)
-  expect(zId.safeParse({ id: 'a' }).success).toBe(true)
-  expect(zId.safeParse({ id: '' }).success).toBe(false)
-  expect(zId.safeParse({ id: null }).success).toBe(false)
-  expect(zId.safeParse({ id: undefined }).success).toBe(true)
-  expect(zId.safeParse({ id: ' ' }).success).toBe(true)
-  expect(zId.safeParse({ id: 'a'.repeat(50) }).success).toBe(true)
-  expect(zId.safeParse({ id: 'a'.repeat(49) }).success).toBe(true)
-  expect(zId.safeParse({ id: 'a'.repeat(52) }).success).toBe(false)
-  expect(zId.safeParse({ id: 'a'.repeat(51) }).success).toBe(false)
+  it('findWithObjectId', () => {
+    expect.assertions(1)
 
-  const zIdNum = IdManager.zIId(z.number().min(1).max(50))
-  expect(zIdNum.safeParse({ id: 'test' }).success).toBe(false)
-  expect(zIdNum.safeParse({ id: 25 }).success).toBe(true)
-  expect(zIdNum.safeParse({ id: 0 }).success).toBe(false)
-  expect(zIdNum.safeParse({ id: 1 }).success).toBe(true)
-  expect(zIdNum.safeParse({ id: 50 }).success).toBe(true)
-  expect(zIdNum.safeParse({ id: 51 }).success).toBe(false)
-  expect(zIdNum.safeParse({ id: -1 }).success).toBe(false)
+    const ads: object[] = [
+        {
+          b: '11',
+          id: '1',
+        },
+        {
+          b: '22',
+          id: '2',
+        },
+        {
+          b: '33',
+          id: '3',
+        },
+      ],
+      idm = IdManager.FindObjectWithId(ads, '2')
+
+    expect(idm).toMatchObject({
+      b: '22',
+      id: '2',
+    })
+  })
+
+  it('zIId', () => {
+    expect.assertions(20)
+
+    const zId = IdManager.zIId(zStringMinMax(1, 50))
+    // Const ret = zId.safeParse({ id: 'test' })
+
+    expect(zId.safeParse({ id: 'test' }).success).toBe(true)
+    expect(zId.safeParse({}).success).toBe(true)
+    expect(zId.safeParse({ id: 123 }).success).toBe(false)
+    expect(zId.safeParse({ id: 'a'.repeat(51) }).success).toBe(false)
+    expect(zId.safeParse({ id: 'a' }).success).toBe(true)
+    expect(zId.safeParse({ id: '' }).success).toBe(false)
+    expect(zId.safeParse({ id: null }).success).toBe(false)
+    expect(zId.safeParse({ id: undefined }).success).toBe(true)
+    expect(zId.safeParse({ id: ' ' }).success).toBe(true)
+    expect(zId.safeParse({ id: 'a'.repeat(50) }).success).toBe(true)
+    expect(zId.safeParse({ id: 'a'.repeat(49) }).success).toBe(true)
+    expect(zId.safeParse({ id: 'a'.repeat(52) }).success).toBe(false)
+    expect(zId.safeParse({ id: 'a'.repeat(51) }).success).toBe(false)
+
+    const zIdNum = IdManager.zIId(z.number().min(1).max(50))
+
+    expect(zIdNum.safeParse({ id: 'test' }).success).toBe(false)
+    expect(zIdNum.safeParse({ id: 25 }).success).toBe(true)
+    expect(zIdNum.safeParse({ id: 0 }).success).toBe(false)
+    expect(zIdNum.safeParse({ id: 1 }).success).toBe(true)
+    expect(zIdNum.safeParse({ id: 50 }).success).toBe(true)
+    expect(zIdNum.safeParse({ id: 51 }).success).toBe(false)
+    expect(zIdNum.safeParse({ id: -1 }).success).toBe(false)
+  })
 })

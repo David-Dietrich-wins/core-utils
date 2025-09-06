@@ -15,7 +15,7 @@ export const HTTP_NetworkAuthenticationRequired = 511 as const
 /**
  * Type predicate to narrow an unknown error to an object with a string 'message' property
  */
-export function IsErrorMessage(error: unknown): error is { message: string } {
+export function isErrorMessage(error: unknown): error is { message: string } {
   return (
     error !== null &&
     typeof error === 'object' &&
@@ -24,7 +24,7 @@ export function IsErrorMessage(error: unknown): error is { message: string } {
   )
 }
 
-export function GetErrorMessage(err: unknown) {
+export function getErrorMessage(err: unknown) {
   if (!isNullOrUndefined(err)) {
     switch (typeof err) {
       case 'object':

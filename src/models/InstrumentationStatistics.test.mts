@@ -1,4 +1,4 @@
-import { AppException, GetErrorMessage } from './AppException.mjs'
+import { AppException, getErrorMessage } from './AppException.mjs'
 import { describe, expect, it } from '@jest/globals'
 import { DateHelper } from '../primitives/date-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
@@ -524,7 +524,7 @@ describe('times', () => {
       throw new AppException('Should never get here')
     } catch (err: unknown) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(GetErrorMessage(err)).toBe(
+      expect(getErrorMessage(err)).toBe(
         'Message is not a string or set of strings.'
       )
     }
