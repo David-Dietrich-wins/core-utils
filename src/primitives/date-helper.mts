@@ -139,6 +139,24 @@ export function dateTimeFormat(
  * @param date Any format of date that can be converted to a Date object.
  * @returns A string formatted to example - '230906_145201'
  */
+export function dateTimeFormatForUi(
+  date?: Moment | Date | number | string,
+  showFullYear = false,
+  isUtc = false
+) {
+  return dateTimeFormat(
+    showFullYear ? FormatForUi : FormatForUi2DigitYear,
+    date,
+    isUtc
+  )
+}
+
+/**
+ * Converts a Date object to a string in ISO format.
+ * If there is no date provided, undefined is returned.
+ * @param date Any format of date that can be converted to a Date object.
+ * @returns A string formatted to example - '230906_145201'
+ */
 export function dateTimeFormatForUiWithTime(
   date?: Moment | Date | number | string,
   showFullYear = false,
@@ -362,24 +380,6 @@ export abstract class DateHelper {
     isUtc = false
   ) {
     return dateTimeFormat(FormatForApiCalls, date, isUtc)
-  }
-
-  /**
-   * Converts a Date object to a string in ISO format.
-   * If there is no date provided, undefined is returned.
-   * @param date Any format of date that can be converted to a Date object.
-   * @returns A string formatted to example - '230906_145201'
-   */
-  static dateFormatForUi(
-    date?: Moment | Date | number | string,
-    showFullYear = false,
-    isUtc = false
-  ) {
-    return dateTimeFormat(
-      showFullYear ? FormatForUi : FormatForUi2DigitYear,
-      date,
-      isUtc
-    )
   }
 
   /**

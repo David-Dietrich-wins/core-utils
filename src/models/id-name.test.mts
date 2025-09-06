@@ -82,7 +82,7 @@ describe('id name', () => {
 
     const id = 'id',
       name = 'name',
-      pr = IdName.ToIIdName(id, name)
+      pr = IdName.toIIdName(id, name)
 
     expect(pr.id).toBe(id)
     expect(pr.name).toBe(name)
@@ -95,7 +95,7 @@ describe('id name', () => {
       name = 'name',
       type = 'type',
       value = { id: 'id', name: 'name' },
-      zpr = IdNameValueType.ToIIdNameValueType(id, name, value, type)
+      zpr = IdNameValueType.toIIdNameValueType(id, name, value, type)
 
     expect(zpr.id).toBe(id)
     expect(zpr.name).toBe(name)

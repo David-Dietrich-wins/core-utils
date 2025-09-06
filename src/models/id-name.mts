@@ -16,7 +16,7 @@ export class IdName<Tid = string, Tname = string>
     this.name = name
   }
 
-  static ToIIdName<Tid = string>(id: Tid, name: string): IIdName<Tid> {
+  static toIIdName<Tid = string>(id: Tid, name: string): IIdName<Tid> {
     return { id, name }
   }
 }
@@ -56,7 +56,7 @@ export class IdNameValueType<Tvalue = string, Type = string, Tid = string>
     this.type = type
   }
 
-  static ToIIdNameValueType<Tvalue = string, Type = string, Tid = string>(
+  static toIIdNameValueType<Tvalue = string, Type = string, Tid = string>(
     id: Tid,
     name: string,
     value: Tvalue,

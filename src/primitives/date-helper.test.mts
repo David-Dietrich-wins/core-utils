@@ -6,6 +6,7 @@ import {
   dateIsValid,
   dateNowIsPastExpiry,
   dateTimeFormat,
+  dateTimeFormatForUi,
   dateTimeFormatForUiWithTime,
   dateTimeFormatLocaleDateString,
   dateTimeFormatWithMillis,
@@ -468,11 +469,11 @@ describe('toLocalStringWithoutTimezone', () => {
   })
 })
 
-describe('dateFormatForUi', () => {
+describe('dateTimeFormatForUi', () => {
   it('default', () => {
     expect.assertions(1)
 
-    const ret = DateHelper.dateFormatForUi()
+    const ret = dateTimeFormatForUi()
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{2}/u)
   })
@@ -480,7 +481,7 @@ describe('dateFormatForUi', () => {
   it('show full year', () => {
     expect.assertions(1)
 
-    const ret = DateHelper.dateFormatForUi(undefined, true)
+    const ret = dateTimeFormatForUi(undefined, true)
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
@@ -488,7 +489,7 @@ describe('dateFormatForUi', () => {
   it('utc', () => {
     expect.assertions(1)
 
-    const ret = DateHelper.dateFormatForUi(Date.now(), true, true)
+    const ret = dateTimeFormatForUi(Date.now(), true, true)
 
     expect(ret).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/u)
   })
