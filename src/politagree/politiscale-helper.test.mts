@@ -32,7 +32,7 @@ describe('politiscale-helper', () => {
         { name: 'religion', value: 20 },
       ]
 
-    expect(PolitiscaleHelper.UserColorFromScales(scales, userScales)).toBe(
+    expect(PolitiscaleHelper.userColorFromScales(scales, userScales)).toBe(
       '#EEEEEE'
     )
 
@@ -40,7 +40,7 @@ describe('politiscale-helper', () => {
     scales[1].value = 10
     scales[2].value = 10
 
-    expect(PolitiscaleHelper.UserColorFromScales(scales, userScales)).toBe(
+    expect(PolitiscaleHelper.userColorFromScales(scales, userScales)).toBe(
       '#eb0014'
     )
 
@@ -48,7 +48,7 @@ describe('politiscale-helper', () => {
     userScales[1].value = 10
     userScales[2].value = 10
 
-    expect(PolitiscaleHelper.UserColorFromScales(scales, userScales)).toBe(
+    expect(PolitiscaleHelper.userColorFromScales(scales, userScales)).toBe(
       '#d4002b'
     )
   })
@@ -109,30 +109,30 @@ describe('politiscale-helper', () => {
   it('politiscaleRating', () => {
     expect.assertions(26)
 
-    expect(PolitiscaleHelper.PolitiscaleRating()).toStrictEqual({
+    expect(PolitiscaleHelper.politiscaleRating()).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 0 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 0 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 20 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 20 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 20, weight: 0 },
       right: { active: true, isPrimary: false, value: 2, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 50 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 50 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 50, weight: 0 },
       right: { active: true, isPrimary: false, value: 5, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 80 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 80 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: false, value: 80, weight: 0 },
       right: {
@@ -144,25 +144,25 @@ describe('politiscale-helper', () => {
     })
 
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 0 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 0 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 20 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 20 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 20, weight: 0 },
       right: { active: true, isPrimary: false, value: 2, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 50 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 50 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 50, weight: 0 },
       right: { active: true, isPrimary: false, value: 5, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 80 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 80 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: false, value: 80, weight: 0 },
       right: {
@@ -173,32 +173,32 @@ describe('politiscale-helper', () => {
       },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'climate', value: 100 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'climate', value: 100 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: false, value: 100, weight: 0 },
       right: { active: true, isPrimary: false, value: 10, weight: 0 },
     })
 
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'freeSpeech', value: 0 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'freeSpeech', value: 0 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'freeSpeech', value: 20 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'freeSpeech', value: 20 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 8, weight: 0 },
       right: { active: true, isPrimary: false, value: 10, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'freeSpeech', value: 50 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'freeSpeech', value: 50 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 20, weight: 0 },
       right: { active: true, isPrimary: false, value: 25, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'freeSpeech', value: 80 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'freeSpeech', value: 80 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 32, weight: 0 },
       right: {
@@ -209,32 +209,32 @@ describe('politiscale-helper', () => {
       },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'freeSpeech', value: 100 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'freeSpeech', value: 100 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 40, weight: 0 },
       right: { active: true, isPrimary: false, value: 50, weight: 0 },
     })
 
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'religion', value: 0 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'religion', value: 0 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'religion', value: 20 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'religion', value: 20 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 2, weight: 0 },
       right: { active: true, isPrimary: false, value: 20, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'religion', value: 50 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'religion', value: 50 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 5, weight: 0 },
       right: { active: true, isPrimary: false, value: 50, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'religion', value: 80 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'religion', value: 80 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 8, weight: 0 },
       right: {
@@ -245,14 +245,14 @@ describe('politiscale-helper', () => {
       },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([{ name: 'religion', value: 100 }])
+      PolitiscaleHelper.politiscaleRating([{ name: 'religion', value: 100 }])
     ).toStrictEqual({
       left: { active: true, isPrimary: true, value: 10, weight: 0 },
       right: { active: true, isPrimary: true, value: 100, weight: 0 },
     })
 
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 20 },
         { name: 'freeSpeech', value: 50 },
       ])
@@ -262,7 +262,7 @@ describe('politiscale-helper', () => {
     })
 
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 0 },
         { name: 'freeSpeech', value: 0 },
         { name: 'religion', value: 0 },
@@ -272,7 +272,7 @@ describe('politiscale-helper', () => {
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 20 },
         { name: 'freeSpeech', value: 20 },
         { name: 'religion', value: 20 },
@@ -282,7 +282,7 @@ describe('politiscale-helper', () => {
       right: { active: true, isPrimary: false, value: 11, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 50 },
         { name: 'freeSpeech', value: 50 },
         { name: 'religion', value: 50 },
@@ -292,7 +292,7 @@ describe('politiscale-helper', () => {
       right: { active: true, isPrimary: false, value: 27, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 80 },
         { name: 'freeSpeech', value: 80 },
         { name: 'religion', value: 80 },
@@ -302,7 +302,7 @@ describe('politiscale-helper', () => {
       right: { active: true, isPrimary: false, value: 43, weight: 0 },
     })
     expect(
-      PolitiscaleHelper.PolitiscaleRating([
+      PolitiscaleHelper.politiscaleRating([
         { name: 'climate', value: 100 },
         { name: 'freeSpeech', value: 100 },
         { name: 'religion', value: 100 },

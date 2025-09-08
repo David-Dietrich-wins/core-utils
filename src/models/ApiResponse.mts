@@ -64,13 +64,13 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     this.stats = stats
   }
 
-  static IsStatus(obj: unknown): obj is IStatus {
+  static isStatus(obj: unknown): obj is IStatus {
     return isObject(obj, 'status') || isObject(obj, 'statusText')
   }
 
-  static IsApiResponse(obj: unknown): obj is IApiResponse {
+  static isApiResponse(obj: unknown): obj is IApiResponse {
     return (
-      // ApiResponse.IsStatus(obj) &&
+      // ApiResponse.isStatus(obj) &&
       isObject(obj, 'id') &&
       isObject(obj, 'ts') &&
       isObject(obj, 'data') &&
@@ -79,15 +79,15 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     )
   }
 
-  static IsApiResponseError(obj: unknown) {
+  static isApiResponseError(obj: unknown) {
     if (!isObject(obj)) {
       return false
     }
 
-    if (ApiResponse.IsApiResponse(obj)) {
+    if (ApiResponse.isApiResponse(obj)) {
       try {
         ApiResponse.verifySuccess(
-          ApiResponse.IsApiResponseError.name,
+          ApiResponse.isApiResponseError.name,
           obj,
           true
         )
@@ -101,28 +101,28 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
     return true
   }
 
-  static HasObj(obj: unknown): obj is { obj: unknown } {
+  static hasObj(obj: unknown): obj is { obj: unknown } {
     return isObject(obj, 'obj')
   }
 
-  static IsCaptureResponse(
+  static isCaptureResponse(
     obj: unknown
   ): obj is { captureResponse: IApiResponseError } {
     return isObject(obj, 'captureResponse')
   }
 
-  static IsWrappedCaptureResponse(
+  static isWrappedCaptureResponse(
     obj: unknown
   ): obj is { captureResponse: IApiResponseError } {
-    return ApiResponse.HasObj(obj) && ApiResponse.IsCaptureResponse(obj.obj)
+    return ApiResponse.hasObj(obj) && ApiResponse.isCaptureResponse(obj.obj)
   }
 
-  static IsWrappedCaptureResponseWithMessage(
+  static isWrappedCaptureResponseWithMessage(
     obj: unknown
   ): obj is { obj: { captureResponse: { message: string } } } {
     return (
-      ApiResponse.HasObj(obj) &&
-      ApiResponse.IsCaptureResponse(obj.obj) &&
+      ApiResponse.hasObj(obj) &&
+      ApiResponse.isCaptureResponse(obj.obj) &&
       isObject(obj.obj.captureResponse, 'message')
     )
   }

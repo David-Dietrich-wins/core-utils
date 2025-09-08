@@ -362,7 +362,7 @@ export abstract class PolitiscaleHelper {
       rating
     )
   }
-  static UserColorFromScales(
+  static userColorFromScales(
     scales?: IHasPolitiscales | IPolitiscale[],
     userScales?: IHasPolitiscales | IPolitiscale[],
     colorIfEmpty = '#EEEEEE'
@@ -379,7 +379,7 @@ export abstract class PolitiscaleHelper {
     return PolitiscaleHelper.getColorRange(name)
   }
 
-  static PolitiscaleRating(
+  static politiscaleRating(
     scales?: { name: PolitiscaleName; value?: number }[]
   ) {
     return PolitiscaleHelper.RatingOverall(scales)
@@ -561,7 +561,7 @@ export function MapSlugWithScalesToIdNameValue(x: IdNameSlugWithScales) {
   const inv: IdNameValue = {
     id: x.slug,
     name: x.name,
-    value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+    value: PolitiscaleHelper.userColorFromScales(safeArray(x.scales)),
   }
 
   return inv
@@ -571,7 +571,7 @@ export function MapTickerSearchToIdNameValue(x: ITickerSearch) {
   const inv: IdNameValue = {
     id: x.ticker,
     name: x.name,
-    value: PolitiscaleHelper.UserColorFromScales(safeArray(x.scales)),
+    value: PolitiscaleHelper.userColorFromScales(safeArray(x.scales)),
   }
 
   return inv

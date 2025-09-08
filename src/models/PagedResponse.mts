@@ -52,11 +52,11 @@ export class PagedResponse<T> implements IPagedResponse<T> {
     )
   }
 
-  static GetDataFromApiResponse<T>(ret: ApiResponse<IPagedResponse<T>>) {
+  static apiResponseGetData<T>(ret: ApiResponse<IPagedResponse<T>>) {
     return safeArray(ret.data.dataPage)
   }
 
-  static ToIPagedResponse<T>(
+  static toIPagedResponse<T>(
     pagedResponse: T[] | null | undefined | IPagedResponse<T>,
     totalCount?: number,
     rowCount?: number
