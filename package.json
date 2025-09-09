@@ -43,24 +43,24 @@
   "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "dependencies": {
     "moment": "^2.30.1",
-    "zod": "*"
+    "zod": "latest"
   },
   "devDependencies": {
-    "@eslint/js": "*",
-    "@types/jest": "*",
+    "@eslint/js": "latest",
+    "@types/jest": "latest",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "*",
+    "@types/node": "latest",
     "@types/tmp": "^0.2.6",
-    "@typescript-eslint/eslint-plugin": "*",
-    "@typescript-eslint/parser": "*",
-    "eslint": "*",
-    "eslint-plugin-jest": "*",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-plugin-jest": "latest",
     "jest": "^30.1.2",
     "msw": "^2.11.1",
     "tmp": "^0.2.5",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "*",
-    "typescript-eslint": "*"
+    "typescript": "latest",
+    "typescript-eslint": "latest"
   }
 }
