@@ -67,7 +67,7 @@ describe('nameValueManager', () => {
       type = 'type',
       value = 'value',
       zpr = new NameValueType(name, value, type),
-      zzmanager = NameValueManager.CreateNameValueManager([zpr])
+      zzmanager = NameValueManager.createNameValueManager([zpr])
 
     expect(zzmanager.list).toHaveLength(1)
     expect(zzmanager.list[0].name).toBe(name)
@@ -77,7 +77,7 @@ describe('nameValueManager', () => {
   it('createNameValueManager with null', () => {
     expect.assertions(1)
 
-    const manager = NameValueManager.CreateNameValueManager(null)
+    const manager = NameValueManager.createNameValueManager(null)
 
     expect(manager.list).toHaveLength(0)
   })
@@ -85,7 +85,7 @@ describe('nameValueManager', () => {
   it('with undefined', () => {
     expect.assertions(1)
 
-    const manager = NameValueManager.CreateNameValueManager(undefined)
+    const manager = NameValueManager.createNameValueManager(undefined)
 
     expect(manager.list).toHaveLength(0)
   })
@@ -95,7 +95,7 @@ describe('nameValueManager', () => {
 
     const name = 'name',
       value = 'value',
-      zitem = NameValueManager.CreateINameValue(name, value)
+      zitem = NameValueManager.createINameValue(name, value)
 
     expect(zitem.name).toBe(name)
     expect(zitem.value).toBe(value)
@@ -118,7 +118,7 @@ describe('nameValueManager', () => {
   it('nameValueLineFormatter', () => {
     expect.assertions(22)
 
-    const formatNumberOrString = (
+    const formatnumberOrString = (
         value: number | string | null | undefined
       ): string => {
         // eslint-disable-next-line jest/no-conditional-in-test
@@ -141,7 +141,7 @@ describe('nameValueManager', () => {
         formatter,
         tooltip,
         style,
-        formatNumberOrString
+        formatnumberOrString
       )
 
     expect(zpr.key).toBe(key)
@@ -150,9 +150,9 @@ describe('nameValueManager', () => {
     expect(zpr.formatter).toBe(formatter)
     expect(zpr.tooltip).toBe(tooltip)
     expect(zpr.style).toBe(style)
-    expect(zpr.formatNumberOrString).toBe(formatNumberOrString)
+    expect(zpr.formatnumberOrString).toBe(formatnumberOrString)
 
-    const nvf = zpr.FromStyle('testName', 100, true, 2)
+    const nvf = zpr.fromStyle('testName', 100, true, 2)
 
     expect(nvf).toBeInstanceOf(NameValueWithStyle)
     expect(nvf.name).toBe(keyDisplayValue)
@@ -160,7 +160,7 @@ describe('nameValueManager', () => {
     expect(nvf.style).toBe(style)
     expect(nvf.tooltip).toBe(tooltip)
 
-    const nors = zpr.NumberOrString('testName', 200)
+    const nors = zpr.numberOrString('testName', 200)
 
     expect(nors).toBeInstanceOf(NameValueWithStyle)
 
@@ -170,7 +170,7 @@ describe('nameValueManager', () => {
     expect(nors.tooltip).toBe(tooltip)
 
     zpr.formatter = undefined
-    const nvfNoFormatter = zpr.FromStyle('testName', 'value', true, 2)
+    const nvfNoFormatter = zpr.fromStyle('testName', 'value', true, 2)
 
     expect(nvfNoFormatter).toBeInstanceOf(NameValueWithStyle)
     expect(nvfNoFormatter.name).toBe(keyDisplayValue)
@@ -184,7 +184,7 @@ describe('nameValueLineFormatManager', () => {
   it('with constructor arguments', () => {
     expect.assertions(64)
 
-    const formatNumberOrString = (
+    const formatnumberOrString = (
         value: number | string | null | undefined
       ): string => {
         // eslint-disable-next-line jest/no-conditional-in-test
@@ -207,7 +207,7 @@ describe('nameValueLineFormatManager', () => {
         formatter,
         tooltip,
         style,
-        formatNumberOrString
+        formatnumberOrString
       ),
       zzmgr = new NameValueLineFormatManager([zpr])
 
@@ -219,16 +219,16 @@ describe('nameValueLineFormatManager', () => {
     expect(zzmgr.nvlist[0].formatter).toBe(formatter)
     expect(zzmgr.nvlist[0].tooltip).toBe(tooltip)
     expect(zzmgr.nvlist[0].style).toBe(style)
-    expect(zzmgr.nvlist[0].formatNumberOrString).toBe(formatNumberOrString)
+    expect(zzmgr.nvlist[0].formatnumberOrString).toBe(formatnumberOrString)
 
     const anv = new NameValue('testName', '100'),
-      arrnvf = zzmgr.FormatWithStyle([anv], 'name', true)
+      arrnvf = zzmgr.formatWithStyle([anv], 'name', true)
 
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf).toHaveLength(0)
 
     const anvkey = new NameValue('key', '100'),
-      arrnvfName = zzmgr.FormatWithStyle([anvkey], 'name', false)
+      arrnvfName = zzmgr.formatWithStyle([anvkey], 'name', false)
 
     expect(arrnvfName).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfName).toHaveLength(1)
@@ -238,13 +238,13 @@ describe('nameValueLineFormatManager', () => {
     expect(arrnvfName[0].style).toBe(style)
     expect(arrnvfName[0].tooltip).toBe(tooltip)
 
-    const arrnvfValue = zzmgr.FormatWithStyle([anv], 'value', false)
+    const arrnvfValue = zzmgr.formatWithStyle([anv], 'value', false)
 
     expect(arrnvfValue).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvfValue).toHaveLength(0)
 
     zpr.order = undefined
-    const arrnvf2 = zzmgr.FormatWithStyle([anvkey], 'name', false)
+    const arrnvf2 = zzmgr.formatWithStyle([anvkey], 'name', false)
 
     expect(arrnvf2).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf2).toHaveLength(1)
@@ -264,7 +264,7 @@ describe('nameValueLineFormatManager', () => {
       style
     )
     zzmgr.nvlist.push(nvlf2)
-    const arrnvf3 = zzmgr.FormatWithStyle(
+    const arrnvf3 = zzmgr.formatWithStyle(
       [anvkey, new NameValue(anvkey.name, '200')],
       'name'
     )
@@ -285,7 +285,7 @@ describe('nameValueLineFormatManager', () => {
 
     zzmgr.nvlist[0].order = undefined
     zzmgr.nvlist[1].order = undefined
-    const arrnvfSortValue = zzmgr.FormatWithStyle(
+    const arrnvfSortValue = zzmgr.formatWithStyle(
       [anvkey, new NameValue(anvkey.name, '0')],
       'value'
     )
@@ -304,7 +304,7 @@ describe('nameValueLineFormatManager', () => {
     expect(arrnvfSortValue[1].style).toBe(style)
     expect(arrnvfSortValue[1].tooltip).toBe(tooltip)
 
-    const ret = zzmgr.FromObject({ key: 'value', key2: 'value2' }, 'key')
+    const ret = zzmgr.fromObject({ key: 'value', key2: 'value2' }, 'key')
 
     expect(ret).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(ret).toHaveLength(1)
@@ -313,8 +313,8 @@ describe('nameValueLineFormatManager', () => {
     expect(ret[0].style).toBe(style)
     expect(ret[0].tooltip).toBe(tooltip)
 
-    zpr.formatNumberOrString = undefined
-    const nors = zpr.NumberOrString('testName', '200')
+    zpr.formatnumberOrString = undefined
+    const nors = zpr.numberOrString('testName', '200')
 
     expect(nors).toBeInstanceOf(NameValueWithStyle)
     expect(nors.name).toBe(keyDisplayValue)
@@ -322,7 +322,7 @@ describe('nameValueLineFormatManager', () => {
     expect(nors.style).toBe(style)
     expect(nors.tooltip).toBe(tooltip)
 
-    const ret2 = zzmgr.FromObject()
+    const ret2 = zzmgr.fromObject()
 
     expect(ret2).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(ret2).toHaveLength(0)
@@ -337,7 +337,7 @@ describe('nameValueLineFormatManager', () => {
     expect(mgr.nvlist).toHaveLength(0)
 
     const anv = new NameValue('testName', '100'),
-      arrnvf = mgr.FormatWithStyle([anv], 'name', true)
+      arrnvf = mgr.formatWithStyle([anv], 'name', true)
 
     expect(arrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(arrnvf).toHaveLength(0)
@@ -350,8 +350,8 @@ describe('nameValueLineFormatManager', () => {
       keyDisplayValue = 'keyDisplayValue',
       pr = new NameValueLineFormatter(key, keyDisplayValue),
       pr2 = new NameValueLineFormatter(key, keyDisplayValue)
-    pr.FromStyle = undefined as any
-    pr2.FromStyle = undefined as any
+    pr.fromStyle = undefined as any
+    pr2.fromStyle = undefined as any
 
     const mgr = new NameValueLineFormatManager([pr, pr2])
 
@@ -360,7 +360,7 @@ describe('nameValueLineFormatManager', () => {
 
     const nv = new NameValue(key, '100'),
       nvNotFound = new NameValue(key, '200'),
-      zarrnvf = mgr.FormatWithStyle([nv, nvNotFound], 'name', true)
+      zarrnvf = mgr.formatWithStyle([nv, nvNotFound], 'name', true)
 
     expect(zarrnvf).toBeInstanceOf(Array<NameValueWithStyle>)
     expect(zarrnvf).toHaveLength(2)

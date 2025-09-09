@@ -36,7 +36,7 @@ export class ConfigWebsite {
     return cfgWebsite
   }
 
-  static UpdateHeader(
+  static updateHeader(
     cfg: IConfigWebsite,
     updated?: DateTypeAcceptable,
     overrides?: Partial<IConfigWebsite>
@@ -55,7 +55,7 @@ export class ConfigWebsite {
 
     const hideHelp = updateContextValueToggleBoolean(cfg.hideHelp, dtUpdated)
 
-    return ConfigWebsite.UpdateHeader(cfg, dtUpdated, {
+    return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       hideHelp,
     })
   }
@@ -68,7 +68,7 @@ export class ConfigWebsite {
       dtUpdated
     )
 
-    return ConfigWebsite.UpdateHeader(cfg, dtUpdated, {
+    return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       hideTooltips,
     })
   }
@@ -81,7 +81,7 @@ export class ConfigWebsite {
       dtUpdated
     )
 
-    return ConfigWebsite.UpdateHeader(cfg, dtUpdated, {
+    return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       openFirstPlot,
     })
   }

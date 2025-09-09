@@ -19,7 +19,7 @@ describe('constructor', () => {
     const akeyvals = [{ id: 'key1', value: 'abc' }],
       fnCache = async (_arrKeys: ArrayOrSingle<string>) =>
         Promise.resolve(
-          akeyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+          akeyvals.map((x) => IdValueManager.createIIdValue(x.id, x.value))
         )
 
     await expect(cacheManager.get('key1', fnCache)).resolves.toBe('abc')
@@ -35,7 +35,7 @@ describe('getters', () => {
       cacheManager = new CacheManager<string, string>('testCache', 60),
       // eslint-disable-next-line @typescript-eslint/require-await
       fnCache = async (key: string) =>
-        IdValueManager.CreateIIdValue(
+        IdValueManager.createIIdValue(
           key,
           safestr(akeyvals.find((x) => x.id === key)?.value)
         )
@@ -65,7 +65,7 @@ describe('getters', () => {
       ],
       kvCache = async (_arrKeys: ArrayOrSingle<string>) =>
         Promise.resolve(
-          keyvals.map((x) => IdValueManager.CreateIIdValue(x.id, x.value))
+          keyvals.map((x) => IdValueManager.createIIdValue(x.id, x.value))
         ),
       result = await cacheManager.getAll(['key1', 'key2'], kvCache)
 

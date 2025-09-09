@@ -6,7 +6,7 @@ describe('api responses', () => {
   it('success', () => {
     expect.assertions(18)
 
-    const resapi = ApiResponseHelper.Success('test')
+    const resapi = ApiResponseHelper.success('test')
 
     expect(resapi.id).toBeGreaterThan(0)
     expect(resapi.ts).toBeGreaterThan(0)
@@ -16,7 +16,7 @@ describe('api responses', () => {
     expect(resapi.data).toBe('test')
 
     const obj = { a: 'test' },
-      resobj = ApiResponseHelper.Success(obj)
+      resobj = ApiResponseHelper.success(obj)
 
     expect(resobj.id).toBeGreaterThan(0)
     expect(resobj.ts).toBeGreaterThan(0)
@@ -26,7 +26,7 @@ describe('api responses', () => {
     expect(resobj.data).toBe(obj)
 
     const newApiResponse = new ApiResponse('', 'success', '', 0),
-      resApiResponse = ApiResponseHelper.Success(newApiResponse)
+      resApiResponse = ApiResponseHelper.success(newApiResponse)
 
     expect(resApiResponse.id).toBeGreaterThan(0)
     expect(resApiResponse.ts).toBeGreaterThan(0)
@@ -39,7 +39,7 @@ describe('api responses', () => {
   it('error', () => {
     expect.assertions(12)
 
-    const resapi = ApiResponseHelper.Error('test')
+    const resapi = ApiResponseHelper.error('test')
 
     expect(resapi.id).toBeGreaterThan(0)
     expect(resapi.ts).toBeGreaterThan(0)
@@ -54,7 +54,7 @@ describe('api responses', () => {
         'Error',
         -1
       ),
-      resApiResponse = ApiResponseHelper.Error(newApiResponse)
+      resApiResponse = ApiResponseHelper.error(newApiResponse)
 
     expect(resApiResponse.id).toBeGreaterThan(0)
     expect(resApiResponse.ts).toBeGreaterThan(0)

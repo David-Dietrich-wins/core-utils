@@ -464,7 +464,7 @@ export function safestrPlus(
   return s
 }
 
-export function ReplaceAll(
+export function replaceAll(
   str: string,
   regex: RegExp,
   replaceWith = ''
@@ -472,11 +472,11 @@ export function ReplaceAll(
   return safestr(str).replaceAll(regex, replaceWith)
 }
 
-export function RemoveLeadingNumbersAndWhitespace(str: string) {
-  return ReplaceAll(str, /^\s*\d*\s*/gu)
+export function removeLeadingNumbersAndWhitespace(str: string) {
+  return replaceAll(str, /^\s*\d*\s*/gu)
 }
 
-export function GenerateRandomString(
+export function generateRandomString(
   length: number,
   charactersToAllow?: string
 ) {
@@ -493,11 +493,11 @@ export function GenerateRandomString(
   return result
 }
 
-export function ReplaceNonPrintable(str: string | null | undefined) {
+export function replaceNonPrintable(str: string | null | undefined) {
   return safestr(str).replaceAll(/[^\x20-\x7E]/gu, '')
 }
 
-export function ReplaceTwoOrMoreSpacesWithSingleSpace(
+export function replaceTwoOrMoreSpacesWithSingleSpace(
   str: string | null | undefined
 ) {
   return safestr(str).replaceAll(/[ \t\r\n]{2,}/gu, ' ')
@@ -529,7 +529,7 @@ export function safeSuffix(s?: string | number | boolean | null, suffix = ' ') {
   })
 }
 
-export function IncludesAnyFromArray(
+export function includesAnyFromArray(
   mainString: string,
   substrings: string[]
 ): boolean {

@@ -219,7 +219,7 @@ export class TileConfig<Tvalue = any>
     return tile
   }
 
-  static ChartDefault(overrides?: Partial<TileConfigChart>) {
+  static chartDefault(overrides?: Partial<TileConfigChart>) {
     const ret: TileConfigChart = {
       frequency: 1,
       frequencyType: 'daily',
@@ -237,7 +237,7 @@ export class TileConfig<Tvalue = any>
     overrides?: Partial<ITileConfig<TileConfigChart>> | null
   ) {
     return TileConfig.createTileConfig({
-      value: TileConfig.ChartDefault({ ticker }),
+      value: TileConfig.chartDefault({ ticker }),
       ...overrides,
       type: TileTypeKeys.chart,
     })

@@ -6,7 +6,7 @@ describe('tradingClientBase', () => {
     it('should calculate position size correctly', () => {
       expect.assertions(1)
 
-      const result = TradingClientBase.CalculatePositionSize(
+      const result = TradingClientBase.calculatePositionSize(
         10000,
         0.01,
         100,
@@ -21,7 +21,7 @@ describe('tradingClientBase', () => {
     it('should calculate risk-reward ratio correctly', () => {
       expect.assertions(1)
 
-      const result = TradingClientBase.CalculateRiskReward(100, 120, 90)
+      const result = TradingClientBase.calculateRiskReward(100, 120, 90)
 
       expect(result).toBe(2)
     })

@@ -161,7 +161,7 @@ export class ApiResponse<TData = unknown> implements IApiResponse<TData> {
    * @returns true if the error was handled (e.g., a 403 error that redirects to a sign-in page),
    * false otherwise.
    */
-  static ErrorHandler(
+  static errorHandler(
     fname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,

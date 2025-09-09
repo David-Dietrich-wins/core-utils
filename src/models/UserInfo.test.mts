@@ -47,7 +47,7 @@ describe('createUserInfo', () => {
   it('with default', () => {
     expect.assertions(2)
 
-    const ui = UserInfo.CreateUserInfo({
+    const ui = UserInfo.createUserInfo({
       firstName: 'Jane',
       lastName: 'Doe',
     })
@@ -77,7 +77,7 @@ describe('createUserInfo', () => {
   it('iUserInfo', () => {
     expect.assertions(1)
 
-    const ui = UserInfo.CreateUserInfo({
+    const ui = UserInfo.createUserInfo({
       firstName: 'Jane',
       lastName: 'Doe',
     })
@@ -108,7 +108,7 @@ describe('createIUserInfo', () => {
   it('with default', () => {
     expect.assertions(1)
 
-    const ui = UserInfo.CreateIUserInfo({
+    const ui = UserInfo.createIUserInfo({
       firstName: 'Jane',
       lastName: 'Doe',
     })
@@ -137,7 +137,7 @@ describe('createIUserInfo', () => {
   it('iUserInfo', () => {
     expect.assertions(1)
 
-    const ui = UserInfo.CreateIUserInfo({
+    const ui = UserInfo.createIUserInfo({
       firstName: 'Jane',
       lastName: 'Doe',
     })

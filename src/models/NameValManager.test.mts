@@ -57,7 +57,7 @@ describe('nameValManager', () => {
       type = 'type',
       value = 'value',
       vpr = new NameValType(name, value, type),
-      zmanager = NameValManager.CreateNameValManager([vpr])
+      zmanager = NameValManager.createNameValManager([vpr])
 
     expect(zmanager.list).toHaveLength(1)
     expect(zmanager.list[0].name).toBe(name)
@@ -67,7 +67,7 @@ describe('nameValManager', () => {
   it('createNameValManager with null', () => {
     expect.assertions(1)
 
-    const manager = NameValManager.CreateNameValManager(null)
+    const manager = NameValManager.createNameValManager(null)
 
     expect(manager.list).toHaveLength(0)
   })
@@ -75,23 +75,23 @@ describe('nameValManager', () => {
   it('createNameValManager with undefined', () => {
     expect.assertions(1)
 
-    const manager = NameValManager.CreateNameValManager(undefined)
+    const manager = NameValManager.createNameValManager(undefined)
 
     expect(manager.list).toHaveLength(0)
   })
 
-  it('nameVal.CreateINameVal', () => {
+  it('nameVal.createINameVal', () => {
     expect.assertions(5)
 
     const name = 'name',
       value = 'value',
-      zitem = NameVal.CreateINameVal(name, value)
+      zitem = NameVal.createINameVal(name, value)
 
     expect(zitem.name).toBe(name)
     expect(zitem.val).toBe(value)
     expect(zitem).toStrictEqual({ name, val: value })
 
-    const item2 = NameVal.CreateINameVal<{ id: number }>(name, {
+    const item2 = NameVal.createINameVal<{ id: number }>(name, {
       id: 123,
     })
 
@@ -99,18 +99,18 @@ describe('nameValManager', () => {
     expect(item2.val).toStrictEqual({ id: 123 })
   })
 
-  it('nameValManager.CreateINameVal', () => {
+  it('nameValManager.createINameVal', () => {
     expect.assertions(5)
 
     const name = 'name',
       value = 'value',
-      zitem = NameValManager.ToINameVal(name, value)
+      zitem = NameValManager.toINameVal(name, value)
 
     expect(zitem.name).toBe(name)
     expect(zitem.val).toBe(value)
     expect(zitem).toStrictEqual({ name, val: value })
 
-    const item2 = NameValManager.ToINameVal<{ id: number }>(name, {
+    const item2 = NameValManager.toINameVal<{ id: number }>(name, {
       id: 123,
     })
 

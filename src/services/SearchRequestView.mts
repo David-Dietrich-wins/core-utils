@@ -4,21 +4,21 @@ import {
   type AnyObject,
   type AnyRecord,
   type SortOrder,
-  SortOrderAsBoolean,
+  sortOrderAsBoolean,
 } from '../models/types.mjs'
-import {
-  IncludesAnyFromArray,
-  isString,
-  safestr,
-  safestrLowercase,
-  safestrTrim,
-} from '../primitives/string-helper.mjs'
 import {
   hasData,
   isNullOrUndefined,
   isObject,
   sortFunction,
 } from '../primitives/object-helper.mjs'
+import {
+  includesAnyFromArray,
+  isString,
+  safestr,
+  safestrLowercase,
+  safestrTrim,
+} from '../primitives/string-helper.mjs'
 import { isArray, safeArray } from '../primitives/array-helper.mjs'
 import { getAsNumber } from '../primitives/number-helper.mjs'
 
@@ -168,7 +168,7 @@ export class SearchRequestView implements ISearchRequestView {
             found =
               this.exactMatch || !isString(s)
                 ? lterm === s
-                : IncludesAnyFromArray(s, safeArray(lterm))
+                : includesAnyFromArray(s, safeArray(lterm))
           }
         })
 
@@ -179,7 +179,7 @@ export class SearchRequestView implements ISearchRequestView {
     const numFound = ret.length,
       sortColumn = safestrTrim(this.sortColumn)
     if (hasData(sortColumn)) {
-      const lsortDirection = SortOrderAsBoolean(this.sortDirection)
+      const lsortDirection = sortOrderAsBoolean(this.sortDirection)
 
       ret = ret.sort((a: AnyObject, b: AnyObject) =>
         sortFunction(a[sortColumn], b[sortColumn], lsortDirection)
@@ -221,7 +221,7 @@ export class SearchRequestView implements ISearchRequestView {
   }
 
   get isAscending() {
-    return SortOrderAsBoolean(this.sortDirection)
+    return sortOrderAsBoolean(this.sortDirection)
   }
   get isDescending() {
     return !this.isAscending

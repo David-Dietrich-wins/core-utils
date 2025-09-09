@@ -47,7 +47,7 @@ export type ConfigTickerInfoTabSettings = {
   selectedTab: ConfigTickerInfoTabNames
   // SelectedRatioTab: string
 }
-export function TickerInfoTabSettingsDefault(
+export function tickerInfoTabSettingsDefault(
   overrides?: Partial<ConfigTickerInfoTabSettings>
 ) {
   const tickerInfo: ConfigTickerInfoTabSettings = {
@@ -116,7 +116,7 @@ export function userConfigDefaults(
         aDateNow
       ),
       [UserConfigNames.website]: ConfigWebsite.defaults(undefined, aDateNow),
-      [UserConfigNames.tickerInfo]: TickerInfoTabSettingsDefault(),
+      [UserConfigNames.tickerInfo]: tickerInfoTabSettingsDefault(),
     }
 
   return deepCloneJson(items) as UserConfigTypesAll
@@ -139,11 +139,11 @@ export class UserInfo implements IUserInfo {
     }
   }
 
-  static CreateUserInfo(obj?: Partial<IUserInfo>) {
+  static createUserInfo(obj?: Partial<IUserInfo>) {
     return new UserInfo(obj)
   }
 
-  static CreateIUserInfo(obj?: Partial<IUserInfo>) {
+  static createIUserInfo(obj?: Partial<IUserInfo>) {
     return new UserInfo(obj).IUserInfo
   }
 

@@ -134,7 +134,7 @@ export class ChartPlotReturn {
 // Export interface IChartSettings {
 //   Ticker: string
 //   Period: number
-//   PeriodType: string
+//   periodType: string
 //   Frequency: number
 //   FrequencyType: string
 //   Granularity?: string
@@ -261,7 +261,7 @@ export class ChartSettings implements IChartSettings {
     return this.endMoment?.valueOf()
   }
 
-  static Create(overrides?: Partial<IChartSettings>) {
+  static create(overrides?: Partial<IChartSettings>) {
     // Default chart data settings
     const csettings = ChartSettings.createISettings({
       frequency: 1,
@@ -317,7 +317,7 @@ export class ChartSettings implements IChartSettings {
     })
   }
 
-  static CreateForTradingView(
+  static createForTradingView(
     ticker: string,
     startDate?: number,
     endDate?: number,
@@ -332,7 +332,7 @@ export class ChartSettings implements IChartSettings {
       startDate = moment().subtract(1, 'year').valueOf()
     }
 
-    return ChartSettings.Create({
+    return ChartSettings.create({
       endDate,
       extendedHoursTrading,
       frequency: 1,

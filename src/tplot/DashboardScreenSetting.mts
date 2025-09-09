@@ -16,7 +16,7 @@ export class DashboardScreenSetting implements IDashboardScreenSetting {
     this.tiles = tiles
   }
 
-  static Create(overrides?: Partial<IDashboardScreenSetting>) {
+  static create(overrides?: Partial<IDashboardScreenSetting>) {
     return Object.assign(new DashboardScreenSetting(), overrides)
   }
   static createISetting(overrides?: Partial<IDashboardScreenSetting>) {

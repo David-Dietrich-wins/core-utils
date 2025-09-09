@@ -4,6 +4,7 @@ import {
   dateConvertToObject,
   dateGetTime,
   dateIsValid,
+  dateLocalToUtc,
   dateNowIsPastExpiry,
   dateTimeFormat,
   dateTimeFormatForUi,
@@ -714,62 +715,62 @@ describe('periodType', () => {
   it.each(['day', '2d', '  DAYS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('day')
+    expect(DateHelper.periodType(timeframe)).toBe('day')
   })
 
   it.each(['hour', '2h', '  HOURS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('hour')
+    expect(DateHelper.periodType(timeframe)).toBe('hour')
   })
 
   it.each(['minute', '2m', '  MINUTES of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('minute')
+    expect(DateHelper.periodType(timeframe)).toBe('minute')
   })
 
   it.each(['second', '2s', '  SECONDS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('second')
+    expect(DateHelper.periodType(timeframe)).toBe('second')
   })
 
   it.each(['week', '2w', '  WEEKS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('week')
+    expect(DateHelper.periodType(timeframe)).toBe('week')
   })
 
   it.each(['month', '2MONTH', '  MONTHS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('month')
+    expect(DateHelper.periodType(timeframe)).toBe('month')
   })
 
   it.each(['year', '2y', '  YEARS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('year')
+    expect(DateHelper.periodType(timeframe)).toBe('year')
   })
 
   it.each(['quarter', '2q', '  QUARTERS of our lives'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('quarter')
+    expect(DateHelper.periodType(timeframe)).toBe('quarter')
   })
 
   it.each(['', '  ', ' 3  y'])('%s', (timeframe) => {
     expect.assertions(1)
 
-    expect(DateHelper.PeriodType(timeframe)).toBe('year')
+    expect(DateHelper.periodType(timeframe)).toBe('year')
   })
 
   it('invalid timeframe', () => {
     expect.assertions(2)
 
-    expect(DateHelper.PeriodType('v')).toBe('v')
-    expect(DateHelper.PeriodType('invalid')).toBe('invalid')
+    expect(DateHelper.periodType('v')).toBe('v')
+    expect(DateHelper.periodType('invalid')).toBe('invalid')
   })
 })
 
@@ -778,12 +779,12 @@ describe('other formatters', () => {
     expect.assertions(3)
 
     const localDate = new Date('2024-01-01T00:00:00.000Z'),
-      utcDate = DateHelper.LocalToUtc(localDate)
+      utcDate = dateLocalToUtc(localDate)
 
     expect(utcDate).toBeInstanceOf(Date)
     expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
 
-    expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
+    expect(dateLocalToUtc(undefined)).toStrictEqual(
       new Date('2025-12-01T17:00:00.000Z')
     )
   })
@@ -795,7 +796,7 @@ describe('other formatters', () => {
   //   Expect(utcDate).toBeInstanceOf(Date)
   //   Expect(utcDate.toISOString()).toBe('2024-01-01T05:00:00.000Z')
 
-  //   Expect(DateHelper.LocalToUtc(undefined)).toStrictEqual(
+  //   Expect(dateLocalToUtc(undefined)).toStrictEqual(
   //     New Date('2025-12-01T17:00:00.000Z')
   //   )
   // })
@@ -804,7 +805,7 @@ describe('other formatters', () => {
     expect.assertions(1)
 
     const localDate = new Date('2024-01-01T00:00:00.000Z'),
-      utcDate = DateHelper.FormattedUnixTime(localDate.getTime())
+      utcDate = DateHelper.formattedUnixTime(localDate.getTime())
 
     expect(utcDate).toBe('Saturday, September 27th 55969, 8:00:00 pm')
   })
@@ -812,7 +813,7 @@ describe('other formatters', () => {
   it('timezoneOffsetInMinutes', () => {
     expect.assertions(1)
 
-    const utcDate = DateHelper.TimezoneOffsetInMinutes()
+    const utcDate = DateHelper.timezoneOffsetInMinutes()
 
     expect(utcDate).toBe(-300)
   })
@@ -820,7 +821,7 @@ describe('other formatters', () => {
   it('unixTimeFormat', () => {
     expect.assertions(1)
 
-    const utcDate = DateHelper.UnixTimeFormat(new Date().getTime())
+    const utcDate = DateHelper.unixTimeFormat(new Date().getTime())
 
     expect(utcDate).toBe('Dec 1, 2025 7:00 AM')
   })
@@ -828,7 +829,7 @@ describe('other formatters', () => {
   it('unixTimeFormatForTheDow', () => {
     expect.assertions(1)
 
-    const utcDate = DateHelper.UnixTimeFormatForTheDow(new Date().getTime())
+    const utcDate = DateHelper.unixTimeFormatForTheDow(new Date().getTime())
 
     expect(utcDate).toBe('Monday, December 1st 2025, 7:00:00 AM')
   })
@@ -861,10 +862,10 @@ describe('other formatters', () => {
   it('midnight', () => {
     expect.assertions(2)
 
-    const utcDate = DateHelper.Midnight(new Date())
+    const utcDate = DateHelper.midnight(new Date())
 
     expect(utcDate).toStrictEqual(new Date('2025-12-01T00:00:00.000Z'))
-    expect(DateHelper.Midnight('2025-12-01T00:00:00.000Z')).toStrictEqual(
+    expect(DateHelper.midnight('2025-12-01T00:00:00.000Z')).toStrictEqual(
       new Date('2025-12-01T00:00:00.000Z')
     )
   })
@@ -872,7 +873,7 @@ describe('other formatters', () => {
   it('midnight bad date', () => {
     expect.assertions(1)
 
-    const utcDate = DateHelper.Midnight('invalid date')
+    const utcDate = DateHelper.midnight('invalid date')
 
     expect(utcDate).toBeUndefined()
   })
@@ -894,40 +895,40 @@ describe('nextBoundaryUp', () => {
   it('good', () => {
     expect.assertions(12)
 
-    expect(DateHelper.NextBoundaryUp(new Date(), 'year')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'year')).toStrictEqual(
       new Date('2026-01-01T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'year', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'year', 3)).toStrictEqual(
       new Date('2028-01-01T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'month')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'month')).toStrictEqual(
       new Date('2026-01-01T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'month', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'month', 3)).toStrictEqual(
       new Date('2026-03-01T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'day')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'day')).toStrictEqual(
       new Date('2025-12-02T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'day', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'day', 3)).toStrictEqual(
       new Date('2025-12-04T00:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'hour')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'hour')).toStrictEqual(
       new Date('2025-12-01T13:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'hour', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'hour', 3)).toStrictEqual(
       new Date('2025-12-01T15:00:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'minute')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'minute')).toStrictEqual(
       new Date('2025-12-01T12:01:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'minute', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'minute', 3)).toStrictEqual(
       new Date('2025-12-01T12:03:00.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'second')).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'second')).toStrictEqual(
       new Date('2025-12-01T12:00:01.000Z')
     )
-    expect(DateHelper.NextBoundaryUp(new Date(), 'second', 3)).toStrictEqual(
+    expect(DateHelper.nextBoundaryUp(new Date(), 'second', 3)).toStrictEqual(
       new Date('2025-12-01T12:00:03.000Z')
     )
   })
@@ -980,7 +981,7 @@ describe('misc', () => {
 
     const dateEnd = new Date('2025-12-01T00:00:00.000Z'),
       dateStart = new Date('2025-12-02T00:00:00.000Z'),
-      periods = DateHelper.FromTo(dateStart, dateEnd)
+      periods = DateHelper.fromTo(dateStart, dateEnd)
 
     // Should be reversed
     expect(periods.from).toBe(dateEnd.getTime())
@@ -991,7 +992,7 @@ describe('misc', () => {
     expect.assertions(2)
 
     const beginDate = '2025-12-01T00:00:00.000Z',
-      periods = DateHelper.FromToPeriodsFromStartDate(beginDate, 'day', 1)
+      periods = DateHelper.fromToPeriodsFromStartDate(beginDate, 'day', 1)
 
     expect(periods.from).toBe(
       // 1764460800000
@@ -1004,7 +1005,7 @@ describe('misc', () => {
     expect.assertions(2)
 
     const beginDate = '2025-12-01T00:00:00.000Z',
-      periods = DateHelper.FromToPeriodsFromStartDateAsDates(
+      periods = DateHelper.fromToPeriodsFromStartDateAsDates(
         beginDate,
         'day',
         1
@@ -1018,7 +1019,7 @@ describe('misc', () => {
     expect.assertions(2)
 
     const endDate = '2025-12-01T00:00:00.000Z',
-      periods = DateHelper.FromToPeriodsFromEndDate(endDate, 'day', 1)
+      periods = DateHelper.fromToPeriodsFromEndDate(endDate, 'day', 1)
 
     expect(periods.from).toBe(
       // 1764460800000
@@ -1031,7 +1032,7 @@ describe('misc', () => {
     expect.assertions(2)
 
     const endDate = '2025-12-01T00:00:00.000Z',
-      periods = DateHelper.FromToPeriodsFromEndDateAsDates(endDate, 'day', 1)
+      periods = DateHelper.fromToPeriodsFromEndDateAsDates(endDate, 'day', 1)
 
     expect(periods.from).toStrictEqual(new Date('2025-11-30T00:00:00.000Z'))
     expect(periods.to).toStrictEqual(new Date('2025-12-02T00:00:00.000Z'))
@@ -1042,47 +1043,47 @@ describe('misc', () => {
 
     const addDate = new Date('2025-12-01T00:00:00.000Z')
 
-    expect(() => DateHelper.AddTimeToDate(addDate, 'invalid', 1)).toThrow(
+    expect(() => DateHelper.addTimeToDate(addDate, 'invalid', 1)).toThrow(
       'Invalid period type: invalid'
     )
     expect(addDate.toISOString()).toBe('2025-12-01T00:00:00.000Z')
-    expect(DateHelper.AddTimeToDate(addDate, '1d', 1).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, '1d', 1).toISOString()).toBe(
       '2025-12-02T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, '1d').toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, '1d').toISOString()).toBe(
       '2025-12-02T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'minute', 2).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'minute', 2).toISOString()).toBe(
       '2025-12-01T00:02:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'hour', 2).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'hour', 2).toISOString()).toBe(
       '2025-12-01T02:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'hour', 48).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'hour', 48).toISOString()).toBe(
       '2025-12-03T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'day', 1).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'day', 1).toISOString()).toBe(
       '2025-12-02T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'week', 1).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'week', 1).toISOString()).toBe(
       '2025-12-08T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'second', 1).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'second', 1).toISOString()).toBe(
       '2025-12-01T00:00:01.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'second', 120).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'second', 120).toISOString()).toBe(
       '2025-12-01T00:02:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'year', 2).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'year', 2).toISOString()).toBe(
       '2027-12-01T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'quarter', 2).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'quarter', 2).toISOString()).toBe(
       '2026-05-30T23:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'month', 1).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'month', 1).toISOString()).toBe(
       '2025-12-31T00:00:00.000Z'
     )
-    expect(DateHelper.AddTimeToDate(addDate, 'month', 12).toISOString()).toBe(
+    expect(DateHelper.addTimeToDate(addDate, 'month', 12).toISOString()).toBe(
       '2026-12-01T00:00:00.000Z'
     )
   })

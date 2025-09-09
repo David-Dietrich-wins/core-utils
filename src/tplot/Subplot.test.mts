@@ -92,7 +92,7 @@ describe('renumber', () => {
         useMinusEight: true,
       })
 
-    expect(Subplot.Renumber([subplot, subplot2])).toStrictEqual([
+    expect(Subplot.renumber([subplot, subplot2])).toStrictEqual([
       new Subplot({ ...subplot, orderNumber: 0 }),
       new Subplot({ ...subplot2, orderNumber: 1 }),
     ])
@@ -223,7 +223,7 @@ describe('parse', () => {
     expect(retzod.success).toBe(false)
     expect(retzod.error).toBeInstanceOf(z.ZodError)
     expect(retzod.error?.issues).toStrictEqual([
-      ZodTestHelper.InvalidType('number', 'string', ['total']),
+      ZodTestHelper.invalidType('number', 'string', ['total']),
     ])
   })
 })
@@ -246,7 +246,7 @@ describe('getFmpIndicatorQueryParams', () => {
         timeframe: '1d',
         useMinusEight: true,
       }),
-      zparams = Subplot.GetFmpIndicatorQueryParams('AAPL', subplot)
+      zparams = Subplot.getFmpIndicatorQueryParams('AAPL', subplot)
 
     expect(zparams).toStrictEqual({
       from: 1764158400000,
@@ -318,7 +318,7 @@ describe('getNewWithNextPattern', () => {
           useMinusEight: true,
         }),
       ],
-      newSubplot = Subplot.GetNewWithNextPattern(asubplots)
+      newSubplot = Subplot.getNewWithNextPattern(asubplots)
 
     expect(newSubplot instanceof Subplot).toBe(true)
     expect(newSubplot.pattern).toBe('ra200')

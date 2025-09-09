@@ -3,20 +3,20 @@ import {
   CompanyProfile,
   ExchangeInfo,
   type IAssetQuoteResponse,
-  IAssetQuoteResponseToAssetQuote,
-  IAssetQuoteResponseToAssetQuoteWithChanges,
-  IAssetQuoteResponseToAssetQuoteWithIpoDate,
-  IAssetQuoteResponseToAssetQuoteWithScore,
-  IAssetQuotesWithChanges,
-  IAssetQuotesWithIpoDate,
-  IAssetQuotesWithScore,
   type IPriceHistoricalFull,
   type ISymbolDetail,
   type ISymbolSearch,
-  ISymbolSearch2ITickerSearch,
-  ISymbolSearch2ITickerSearchArray,
   PriceHistoricalResponse,
+  createIAssetQuoteResponseToAssetQuote,
+  createIAssetQuoteResponseToAssetQuoteWithChanges,
+  createIAssetQuoteResponseToAssetQuoteWithIpoDate,
+  createIAssetQuoteResponseToAssetQuoteWithScore,
+  createIAssetQuotesWithChanges,
+  createIAssetQuotesWithIpoDate,
+  createIAssetQuotesWithScore,
   createISymbolDetail,
+  createISymbolSearch2ITickerSearch,
+  createISymbolSearch2ITickerSearchArray,
 } from './ticker-info.mjs'
 import { describe, expect, it } from '@jest/globals'
 import moment from 'moment'
@@ -190,7 +190,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuoteResponseToAssetQuote(aaqr)
+      aqs = createIAssetQuoteResponseToAssetQuote(aaqr)
 
     expect(aqs).toMatchObject({
       price: 150,
@@ -227,7 +227,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuoteResponseToAssetQuoteWithChanges(aqr)
+      aqs = createIAssetQuoteResponseToAssetQuoteWithChanges(aqr)
 
     expect(aqs).toStrictEqual({
       avgVolume: 9315590,
@@ -311,7 +311,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuotesWithChanges([aqr, aqr2])
+      aqs = createIAssetQuotesWithChanges([aqr, aqr2])
 
     expect(aqs).toStrictEqual([
       {
@@ -399,7 +399,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuoteResponseToAssetQuoteWithIpoDate(aqr)
+      aqs = createIAssetQuoteResponseToAssetQuoteWithIpoDate(aqr)
 
     expect(aqs).toStrictEqual({
       avgVolume: 9315590,
@@ -483,7 +483,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuotesWithIpoDate(
+      aqs = createIAssetQuotesWithIpoDate(
         'testfname',
         [aqr, aqr2],
         [
@@ -605,7 +605,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuotesWithIpoDate(
+      aqs = createIAssetQuotesWithIpoDate(
         'testfname',
         [aqr, aqr2],
         [
@@ -702,7 +702,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuoteResponseToAssetQuoteWithScore(aqr, 5, 25)
+      aqs = createIAssetQuoteResponseToAssetQuoteWithScore(aqr, 5, 25)
 
     expect(aqs).toStrictEqual({
       avgVolume: 9315590,
@@ -788,7 +788,7 @@ describe('companyProfile', () => {
         yearHigh: 483,
         yearLow: 3.77,
       },
-      aqs = IAssetQuotesWithScore([aqr, aqr2], {
+      aqs = createIAssetQuotesWithScore([aqr, aqr2], {
         AAPL: { matches: 5, score: 25 },
         MSFT: { matches: 3, score: 0 },
       })
@@ -867,7 +867,7 @@ describe('iSymbolSearch2ITickerSearch', () => {
         stockExchange: 'NASDAQ',
         symbol: 'AAPL',
       },
-      result = ISymbolSearch2ITickerSearch(params)
+      result = createISymbolSearch2ITickerSearch(params)
 
     expect(result).toMatchObject({
       exchange: 'NASDAQ',
@@ -894,7 +894,7 @@ describe('iSymbolSearch2ITickerSearch', () => {
         stockExchange: 'New York Stock Exchange',
         symbol: 'MSFT',
       },
-      result = ISymbolSearch2ITickerSearchArray([aapl, msft])
+      result = createISymbolSearch2ITickerSearchArray([aapl, msft])
 
     expect(result).toMatchObject([
       {
@@ -944,7 +944,7 @@ describe('asset quotes', () => {
       },
       assets = [{ ipoDate: '2024-01-01', symbol: 'AAPL' }]
 
-    let ret = IAssetQuotesWithIpoDate('test', [aqr], assets)
+    let ret = createIAssetQuotesWithIpoDate('test', [aqr], assets)
 
     expect(ret).toStrictEqual([
       {
@@ -955,7 +955,7 @@ describe('asset quotes', () => {
       },
     ])
 
-    ret = IAssetQuotesWithIpoDate(
+    ret = createIAssetQuotesWithIpoDate(
       'test',
       [aqr],
       [{ ...assets[0], symbol: 'MSFT' }]
@@ -1001,7 +1001,7 @@ describe('asset quotes', () => {
       },
       assets = { AAPL: { matches: 5, score: 25 } }
 
-    let ret = IAssetQuotesWithScore([aqr], assets)
+    let ret = createIAssetQuotesWithScore([aqr], assets)
 
     expect(ret).toStrictEqual([
       {
@@ -1016,7 +1016,9 @@ describe('asset quotes', () => {
       },
     ])
 
-    ret = IAssetQuotesWithScore([aqr], { MSFT: { matches: 3, score: 15 } })
+    ret = createIAssetQuotesWithScore([aqr], {
+      MSFT: { matches: 3, score: 15 },
+    })
 
     expect(ret).toStrictEqual([
       {

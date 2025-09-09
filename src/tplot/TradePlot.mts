@@ -83,7 +83,7 @@ export class TradePlot implements ITradePlot {
       cleanTicker = zStringMinMax(1, 100, { trim: true }).parse(ticker),
       tp = new TradePlot()
     tp.ticker = cleanTicker
-    tp.subplots = [Subplot.GetNewWithNextPattern()]
+    tp.subplots = [Subplot.getNewWithNextPattern()]
 
     tp.updatedby = cleanEmail
     tp.createdby = cleanEmail

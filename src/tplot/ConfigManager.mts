@@ -1,8 +1,8 @@
 import {
   type ConfigTickerInfoTabSettings,
-  TickerInfoTabSettingsDefault,
   UserConfigNames,
   type UserConfigTypes,
+  tickerInfoTabSettingsDefault,
   userConfigDefaults,
 } from '../models/UserInfo.mjs'
 import { deepCloneJson, hasData } from '../primitives/object-helper.mjs'
@@ -57,7 +57,7 @@ export class ConfigManager {
     this.configs = configs
   }
 
-  static ValidateConfigName(name: string | null | undefined): string {
+  static validateConfigName(name: string | null | undefined): string {
     if (!name || !hasData(name) || name.length > 50) {
       throw new AppException('Config name is required.', 'ConfigManager')
     }
@@ -80,7 +80,7 @@ export class ConfigManager {
 
     throw new AppException(
       'Invalid config name',
-      'ConfigManager.ValidateConfigName'
+      'ConfigManager.validateConfigName'
     )
   }
 
@@ -99,11 +99,11 @@ export class ConfigManager {
   }
 
   get charts() {
-    return this.FindConfig<IConfigCharts>(UserConfigNames.charts)
+    return this.findConfig<IConfigCharts>(UserConfigNames.charts)
   }
 
   get dashboards() {
-    const dashboard = this.FindConfig<IDashboardSetting>(
+    const dashboard = this.findConfig<IDashboardSetting>(
       UserConfigNames.dashboards
     )
 
@@ -111,26 +111,26 @@ export class ConfigManager {
   }
 
   get headerTickerBars() {
-    return this.FindConfig<IConfigHeaderTickerBars>(
+    return this.findConfig<IConfigHeaderTickerBars>(
       UserConfigNames.headerTickerBars
     )
   }
 
   get ideaTabSelected() {
-    return this.FindConfig<IdName<number>>(UserConfigNames.ideaTabSelected)
+    return this.findConfig<IdName<number>>(UserConfigNames.ideaTabSelected)
   }
   get ideaCryptoTabSelected() {
-    return this.FindConfig<IdName<number>>(
+    return this.findConfig<IdName<number>>(
       UserConfigNames.ideaCryptoTabSelected
     )
   }
 
   get operations() {
-    return this.FindConfig<IConfigOperations>(UserConfigNames.operations)
+    return this.findConfig<IConfigOperations>(UserConfigNames.operations)
   }
 
   get website() {
-    return this.FindConfig<IConfigWebsite>(UserConfigNames.website)
+    return this.findConfig<IConfigWebsite>(UserConfigNames.website)
   }
 
   /**
@@ -139,7 +139,7 @@ export class ConfigManager {
    * @param name - The name of the config to find.
    * @returns The config if found, otherwise the default value for that config.
    */
-  FindConfig<T = string>(name: string) {
+  findConfig<T = string>(name: string) {
     const found = this.configs.find((config) => name === config.k)
     if (found) {
       return found.v as T
@@ -148,11 +148,11 @@ export class ConfigManager {
     return userConfigDefaults()[name] as T
   }
 
-  FindBoolean(name: keyof typeof UserConfigNames) {
-    return this.FindConfig<boolean>(name)
+  findBoolean(name: keyof typeof UserConfigNames) {
+    return this.findConfig<boolean>(name)
   }
-  FindString(name: keyof typeof UserConfigNames) {
-    return this.FindConfig(name)
+  findString(name: keyof typeof UserConfigNames) {
+    return this.findConfig(name)
   }
 
   findScreen(screenName: string) {
@@ -164,7 +164,7 @@ export function createConfigTickerInfoTabSettings(
   overrides?: Partial<ConfigTickerInfoTabSettings>
 ) {
   const ret: ConfigTickerInfoTabSettings = {
-    ...TickerInfoTabSettingsDefault(),
+    ...tickerInfoTabSettingsDefault(),
     ...overrides,
   }
 

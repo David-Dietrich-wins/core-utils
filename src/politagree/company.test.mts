@@ -2,7 +2,7 @@
 import * as z from 'zod/v4'
 import { describe, expect, it } from '@jest/globals'
 import { Company } from './company.mjs'
-import { GenerateRandomString } from '../primitives/string-helper.mjs'
+import { generateRandomString } from '../primitives/string-helper.mjs'
 import { getCurrentDate } from '../jest.setup.mjs'
 
 describe('constructor', () => {
@@ -213,7 +213,7 @@ describe('companyNamezSchema', () => {
 
     expect(() =>
       Company.companyNamezSchema.parse({
-        name: GenerateRandomString(126),
+        name: generateRandomString(126),
       })
     ).toThrow(
       new Error(`[

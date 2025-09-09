@@ -91,7 +91,7 @@ describe('idManager', () => {
     expect.assertions(2)
 
     const ads: IId[] = [{ id: '1' }, { id: '2' }, { id: '3' }],
-      idm = IdManager.CreateIdManager(ads, new InstrumentationStatistics())
+      idm = IdManager.createIdManager(ads, new InstrumentationStatistics())
 
     expect(idm.list).toBe(ads)
     expect(idm.stats?.totalProcessed).toBe(0)
@@ -114,7 +114,7 @@ describe('idManager', () => {
           id: '3',
         },
       ],
-      idm = IdManager.FindObjectWithId(ads, '2')
+      idm = IdManager.findObjectWithId(ads, '2')
 
     expect(idm).toMatchObject({
       b: '22',

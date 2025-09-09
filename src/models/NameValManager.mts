@@ -17,7 +17,7 @@ export class NameVal<Tval = string, Tname extends string = string>
     this.val = val
   }
 
-  static CreateINameVal<T = unknown, Tname extends string = string>(
+  static createINameVal<T = unknown, Tname extends string = string>(
     name: Tname,
     val: T
   ): INameVal<T, Tname> {
@@ -60,14 +60,14 @@ export class NameValManager<TValue = string, Tname extends string = string> {
     this.stats = stats
   }
 
-  static CreateNameValManager<TValue = string, Tname extends string = string>(
+  static createNameValManager<TValue = string, Tname extends string = string>(
     arr: INameVal<TValue, Tname>[] | null | undefined,
     stats?: InstrumentationStatistics
   ): NameValManager<TValue, Tname> {
     return new NameValManager(safeArray(arr), stats)
   }
 
-  static ToINameVal<TValue = string, Tname extends string = string>(
+  static toINameVal<TValue = string, Tname extends string = string>(
     name: Tname,
     val: TValue
   ): INameVal<TValue, Tname> {

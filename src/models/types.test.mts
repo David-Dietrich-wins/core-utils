@@ -1,9 +1,9 @@
 import {
-  CreateClass,
   type SortOrder,
-  SortOrderAsBoolean,
-  SortOrderAsNumeric,
-  SortOrderAsString,
+  createClass,
+  sortOrderAsBoolean,
+  sortOrderAsNumeric,
+  sortOrderAsString,
 } from './types.mjs'
 import { describe, expect, it } from '@jest/globals'
 
@@ -14,14 +14,14 @@ describe('types', () => {
     const soasc: SortOrder = 'asc',
       sodesc: SortOrder = 'desc'
 
-    expect(SortOrderAsBoolean(soasc)).toBe(true)
-    expect(SortOrderAsBoolean(sodesc)).toBe(false)
-    expect(SortOrderAsBoolean(undefined)).toBe(true)
-    expect(SortOrderAsBoolean(null)).toBe(true)
-    expect(SortOrderAsBoolean(true)).toBe(true)
-    expect(SortOrderAsBoolean(false)).toBe(false)
-    expect(SortOrderAsBoolean(1)).toBe(true)
-    expect(SortOrderAsBoolean(-1)).toBe(false)
+    expect(sortOrderAsBoolean(soasc)).toBe(true)
+    expect(sortOrderAsBoolean(sodesc)).toBe(false)
+    expect(sortOrderAsBoolean(undefined)).toBe(true)
+    expect(sortOrderAsBoolean(null)).toBe(true)
+    expect(sortOrderAsBoolean(true)).toBe(true)
+    expect(sortOrderAsBoolean(false)).toBe(false)
+    expect(sortOrderAsBoolean(1)).toBe(true)
+    expect(sortOrderAsBoolean(-1)).toBe(false)
   })
 
   it('sortOrderAsNumeric', () => {
@@ -30,14 +30,14 @@ describe('types', () => {
     const soasc: SortOrder = 'asc',
       sodesc: SortOrder = 'desc'
 
-    expect(SortOrderAsNumeric(soasc)).toBe(1)
-    expect(SortOrderAsNumeric(sodesc)).toBe(-1)
-    expect(SortOrderAsNumeric(undefined)).toBe(1)
-    expect(SortOrderAsNumeric(null)).toBe(1)
-    expect(SortOrderAsNumeric(true)).toBe(1)
-    expect(SortOrderAsNumeric(false)).toBe(-1)
-    expect(SortOrderAsNumeric(1)).toBe(1)
-    expect(SortOrderAsNumeric(-1)).toBe(-1)
+    expect(sortOrderAsNumeric(soasc)).toBe(1)
+    expect(sortOrderAsNumeric(sodesc)).toBe(-1)
+    expect(sortOrderAsNumeric(undefined)).toBe(1)
+    expect(sortOrderAsNumeric(null)).toBe(1)
+    expect(sortOrderAsNumeric(true)).toBe(1)
+    expect(sortOrderAsNumeric(false)).toBe(-1)
+    expect(sortOrderAsNumeric(1)).toBe(1)
+    expect(sortOrderAsNumeric(-1)).toBe(-1)
   })
 
   it('sortOrderAsString', () => {
@@ -46,14 +46,14 @@ describe('types', () => {
     const soasc: SortOrder = 'asc',
       sodesc: SortOrder = 'desc'
 
-    expect(SortOrderAsString(soasc)).toBe('asc')
-    expect(SortOrderAsString(sodesc)).toBe('desc')
-    expect(SortOrderAsString(undefined)).toBe('asc')
-    expect(SortOrderAsString(null)).toBe('asc')
-    expect(SortOrderAsString(true)).toBe('asc')
-    expect(SortOrderAsString(false)).toBe('desc')
-    expect(SortOrderAsString(1)).toBe('asc')
-    expect(SortOrderAsString(-1)).toBe('desc')
+    expect(sortOrderAsString(soasc)).toBe('asc')
+    expect(sortOrderAsString(sodesc)).toBe('desc')
+    expect(sortOrderAsString(undefined)).toBe('asc')
+    expect(sortOrderAsString(null)).toBe('asc')
+    expect(sortOrderAsString(true)).toBe('asc')
+    expect(sortOrderAsString(false)).toBe('desc')
+    expect(sortOrderAsString(1)).toBe('asc')
+    expect(sortOrderAsString(-1)).toBe('desc')
   })
 
   it('createClass', () => {
@@ -66,7 +66,7 @@ describe('types', () => {
         this.name = name
       }
     }
-    const instance = CreateClass(TestClass, 'TestName')
+    const instance = createClass(TestClass, 'TestName')
 
     expect(instance).toBeInstanceOf(TestClass)
     expect(instance.name).toBe('TestName')

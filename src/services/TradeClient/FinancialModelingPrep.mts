@@ -20,7 +20,7 @@ export type FmpIndicatorQueryParams<TFromTo = number> = ISymbol &
   }
 
 export class FinancialModelingPrep extends TradingClientBase {
-  static FmpIndicatorParamsSetDateBoundary(fmp: FmpIndicatorQueryParams) {
+  static fmpIndicatorParamsSetDateBoundary(fmp: FmpIndicatorQueryParams) {
     const { from, timeframe } = fmp,
       fmpNew = { ...fmp },
       regex = /(?<units>\d+)(?<unit>[A-Za-z]+)/giu,
@@ -30,7 +30,7 @@ export class FinancialModelingPrep extends TradingClientBase {
       if (from) {
         fmpNew.from = from
         //   fmpNew.from = Number(
-        //     DateHelper.NextBoundaryUp(
+        //     DateHelper.nextBoundaryUp(
         //       from,
         //       regexMatches.groups.unit,
         //       Number(regexMatches.groups.units)
@@ -39,7 +39,7 @@ export class FinancialModelingPrep extends TradingClientBase {
       }
 
       fmpNew.to = Number(
-        DateHelper.NextBoundaryUp(
+        DateHelper.nextBoundaryUp(
           fmpNew.to ? fmpNew.to : Date.now(),
           regexMatches.groups.unit,
           Number(regexMatches.groups.units)
@@ -50,7 +50,7 @@ export class FinancialModelingPrep extends TradingClientBase {
     return fmpNew
   }
 
-  static FmpIndicatorParamsToPath(
+  static fmpIndicatorParamsToPath(
     params: FmpIndicatorQueryParams,
     existingQueryParams = ''
   ) {
@@ -69,7 +69,7 @@ export class FinancialModelingPrep extends TradingClientBase {
     return qp
   }
 
-  static FmpIndicatorParamsFromObject(body: AnyRecord) {
+  static fmpIndicatorParamsFromObject(body: AnyRecord) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const from = getAsNumberOrUndefined(body.from),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -108,7 +108,7 @@ export class FinancialModelingPrep extends TradingClientBase {
 
     if (numIntervals || firstDataRequest) {
       const resolutionLower = safestr(resolution, 'day').toLowerCase(),
-        stime = DateHelper.AddTimeToDate(
+        stime = DateHelper.addTimeToDate(
           endTime,
           resolutionLower,
           -intervals
@@ -119,7 +119,7 @@ export class FinancialModelingPrep extends TradingClientBase {
       }
     }
 
-    return ChartSettings.Create({
+    return ChartSettings.create({
       endDate: endTime,
       extendedHoursTrading,
       frequency: 1,

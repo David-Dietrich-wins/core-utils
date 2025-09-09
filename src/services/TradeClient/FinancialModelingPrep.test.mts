@@ -19,14 +19,14 @@ describe('from', () => {
     }
 
     let dateBoundary =
-      FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+      FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary(aparams)
 
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01').getTime(),
       // to: new Date('2022-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       timeframe: '5y',
     })
@@ -36,7 +36,7 @@ describe('from', () => {
       // to: new Date('2030-01-01').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       timeframe: '',
     })
@@ -45,7 +45,7 @@ describe('from', () => {
       from: new Date('2021-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       from: undefined,
       to: new Date('2025-01-01').getTime(),
@@ -70,14 +70,14 @@ describe('to', () => {
     }
 
     let dateBoundary =
-      FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+      FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary(aparams)
 
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01').getTime(),
       to: new Date('2026-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       timeframe: '5y',
     })
@@ -87,7 +87,7 @@ describe('to', () => {
       // to: new Date('2030-01-01').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       timeframe: '',
     })
@@ -96,7 +96,7 @@ describe('to', () => {
       from: new Date('2021-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...aparams,
       from: undefined,
       to: new Date('2025-01-01').getTime(),
@@ -121,7 +121,7 @@ describe('fmpIndicatorParamsSetDateBoundary', () => {
         to: new Date('2021-12-31').getTime(),
       },
       dateBoundary =
-        FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+        FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary(aparams)
 
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01').getTime(),
@@ -140,7 +140,7 @@ describe('fmpIndicatorParamsSetDateBoundary', () => {
         to: new Date('2021-12-31').getTime(),
       },
       dateBoundary =
-        FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(aparams)
+        FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary(aparams)
 
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01').getTime(),
@@ -159,14 +159,14 @@ describe('fmpIndicatorParamsSetDateBoundary', () => {
     }
 
     let dateBoundary =
-      FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary(params)
+      FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary(params)
 
     expect(dateBoundary).toMatchObject({
       from: new Date('2021-01-01').getTime(),
       // to: new Date('2026-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...params,
       timeframe: '5y',
     })
@@ -176,7 +176,7 @@ describe('fmpIndicatorParamsSetDateBoundary', () => {
       // to: new Date('2030-01-01').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...params,
       timeframe: '',
     })
@@ -185,7 +185,7 @@ describe('fmpIndicatorParamsSetDateBoundary', () => {
       from: new Date('2021-01-01T00:00:00Z').getTime(),
     })
 
-    dateBoundary = FinancialModelingPrep.FmpIndicatorParamsSetDateBoundary({
+    dateBoundary = FinancialModelingPrep.fmpIndicatorParamsSetDateBoundary({
       ...params,
       from: undefined,
       to: new Date('2025-01-01').getTime(),
@@ -210,13 +210,13 @@ describe('fmpIndicatorQueryParamsToPath', () => {
       to: new Date('2021-12-31').getTime(),
     }
 
-    let path = FinancialModelingPrep.FmpIndicatorParamsToPath(aparams)
+    let path = FinancialModelingPrep.fmpIndicatorParamsToPath(aparams)
 
     expect(path).toBe(
       '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
     )
 
-    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+    path = FinancialModelingPrep.fmpIndicatorParamsToPath({
       ...aparams,
       from: undefined,
     })
@@ -225,7 +225,7 @@ describe('fmpIndicatorQueryParamsToPath', () => {
       '&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000'
     )
 
-    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+    path = FinancialModelingPrep.fmpIndicatorParamsToPath({
       ...aparams,
       to: undefined,
     })
@@ -246,13 +246,13 @@ describe('fmpIndicatorQueryParamsToPath', () => {
       to: new Date('2021-12-31').getTime(),
     }
 
-    let path = FinancialModelingPrep.FmpIndicatorParamsToPath(params)
+    let path = FinancialModelingPrep.fmpIndicatorParamsToPath(params)
 
     expect(path).toBe(
       '&symbol=AAPL&periodLength=1&timeframe=1y&from=1609459200000&to=1640908800000'
     )
 
-    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+    path = FinancialModelingPrep.fmpIndicatorParamsToPath({
       ...params,
       from: undefined,
     })
@@ -261,7 +261,7 @@ describe('fmpIndicatorQueryParamsToPath', () => {
       '&symbol=AAPL&periodLength=1&timeframe=1y&to=1640908800000'
     )
 
-    path = FinancialModelingPrep.FmpIndicatorParamsToPath({
+    path = FinancialModelingPrep.fmpIndicatorParamsToPath({
       ...params,
       to: undefined,
     })
@@ -281,7 +281,7 @@ describe('fmpIndicatorParamsFromObject', () => {
         symbol: 'AAPL',
         timeframe: '1y',
       },
-      path = FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+      path = FinancialModelingPrep.fmpIndicatorParamsFromObject(params)
 
     expect(path).toMatchObject({
       from: undefined,
@@ -302,7 +302,7 @@ describe('fmpIndicatorParamsFromObject', () => {
     }
 
     expect(() =>
-      FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+      FinancialModelingPrep.fmpIndicatorParamsFromObject(params)
     ).toThrow('No ticker')
   })
 
@@ -316,7 +316,7 @@ describe('fmpIndicatorParamsFromObject', () => {
     }
 
     expect(() =>
-      FinancialModelingPrep.FmpIndicatorParamsFromObject(params)
+      FinancialModelingPrep.fmpIndicatorParamsFromObject(params)
     ).toThrow('No ticker')
   })
 })
@@ -443,7 +443,7 @@ describe('chartSettings', () => {
         granularity: '1d',
         period: 3,
         periodType: 'd',
-        startDate: DateHelper.AddTimeToDate(
+        startDate: DateHelper.addTimeToDate(
           TEST_Settings.currentDateString,
           'd',
           -2
@@ -484,7 +484,7 @@ describe('chartSettings', () => {
         granularity: 'minute',
         period: 3,
         periodType: 'd',
-        startDate: DateHelper.AddTimeToDate(
+        startDate: DateHelper.addTimeToDate(
           TEST_Settings.currentDateString,
           'm',
           -1100
@@ -525,7 +525,7 @@ describe('chartSettings', () => {
         granularity: 'minute',
         period: 3,
         periodType: 'd',
-        startDate: DateHelper.AddTimeToDate(
+        startDate: DateHelper.addTimeToDate(
           TEST_Settings.currentDateString,
           'm',
           -1100

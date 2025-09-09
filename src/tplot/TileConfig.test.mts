@@ -43,7 +43,7 @@ describe('create methods', () => {
   it('chartDefault', () => {
     expect.hasAssertions()
 
-    const chartConfig = TileConfig.ChartDefault({ ticker: 'AAPL' })
+    const chartConfig = TileConfig.chartDefault({ ticker: 'AAPL' })
 
     expect(chartConfig).toStrictEqual({
       frequency: 1,

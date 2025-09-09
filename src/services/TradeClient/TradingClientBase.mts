@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class TradingClientBase {
-  static CalculatePositionSize(
+  static calculatePositionSize(
     accountBalance: number,
     riskPercentage: number,
     entryPrice: number,
@@ -13,7 +13,7 @@ export abstract class TradingClientBase {
     return zpositionSize
   }
 
-  static CalculateRiskReward(
+  static calculateRiskReward(
     entryPrice: number,
     takeProfitPrice: number,
     stopLossPrice: number

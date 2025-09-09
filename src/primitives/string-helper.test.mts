@@ -1,12 +1,10 @@
 import {
   CONST_CharsNumbers,
-  GenerateRandomString,
-  RemoveLeadingNumbersAndWhitespace,
-  ReplaceTwoOrMoreSpacesWithSingleSpace,
   capitalizeFirstLetter,
   capitalizeWords,
   exceedsMaxNumberOfCharacters,
   firstCharCapitalFormatter,
+  generateRandomString,
   getCommaUpperList,
   hasConsecutiveNumbers,
   hasNumbersOnly,
@@ -19,6 +17,8 @@ import {
   pluralize,
   plusMinus,
   randomStringGenerate,
+  removeLeadingNumbersAndWhitespace,
+  replaceTwoOrMoreSpacesWithSingleSpace,
   safeHtmlAttribute,
   safePrefix,
   safeSuffix,
@@ -545,25 +545,25 @@ describe('formatters', () => {
     const expected = 'This is a test string'
 
     expect(
-      ReplaceTwoOrMoreSpacesWithSingleSpace('This  is   a    test   string')
+      replaceTwoOrMoreSpacesWithSingleSpace('This  is   a    test   string')
     ).toBe(expected)
     expect(
-      ReplaceTwoOrMoreSpacesWithSingleSpace(
+      replaceTwoOrMoreSpacesWithSingleSpace(
         'This  is \t\r \n  a    test   string'
       )
     ).toBe(expected)
     expect(
-      ReplaceTwoOrMoreSpacesWithSingleSpace(
+      replaceTwoOrMoreSpacesWithSingleSpace(
         'This  is \n  a  \t  test \r  string'
       )
     ).toBe(expected)
 
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(' ')
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
-    expect(ReplaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace('')).toBe('')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace(' ')).toBe(' ')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace('  ')).toBe(' ')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace('   \n\r\t')).toBe(' ')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace(null)).toBe('')
+    expect(replaceTwoOrMoreSpacesWithSingleSpace(undefined)).toBe('')
   })
 
   it('safePrefix', () => {
@@ -623,8 +623,8 @@ describe('formatters', () => {
     expect.assertions(4)
 
     const length = 10,
-      randomString = GenerateRandomString(length),
-      randomString2 = GenerateRandomString(length, 'abcde')
+      randomString = generateRandomString(length),
+      randomString2 = generateRandomString(length, 'abcde')
 
     expect(randomString).toHaveLength(length)
     expect(randomString).toMatch(/^[a-zA-Z0-9]{1,10}$/u)
@@ -636,11 +636,11 @@ describe('formatters', () => {
   it('removeLeadingNumbersAndWhitespace', () => {
     expect.assertions(6)
 
-    expect(RemoveLeadingNumbersAndWhitespace('123abc')).toBe('abc')
-    expect(RemoveLeadingNumbersAndWhitespace('   123abc')).toBe('abc')
-    expect(RemoveLeadingNumbersAndWhitespace('   abc')).toBe('abc')
-    expect(RemoveLeadingNumbersAndWhitespace('123   abc')).toBe('abc')
-    expect(RemoveLeadingNumbersAndWhitespace('123   ')).toBe('')
-    expect(RemoveLeadingNumbersAndWhitespace('   ')).toBe('')
+    expect(removeLeadingNumbersAndWhitespace('123abc')).toBe('abc')
+    expect(removeLeadingNumbersAndWhitespace('   123abc')).toBe('abc')
+    expect(removeLeadingNumbersAndWhitespace('   abc')).toBe('abc')
+    expect(removeLeadingNumbersAndWhitespace('123   abc')).toBe('abc')
+    expect(removeLeadingNumbersAndWhitespace('123   ')).toBe('')
+    expect(removeLeadingNumbersAndWhitespace('   ')).toBe('')
   })
 })

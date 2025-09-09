@@ -248,7 +248,7 @@ describe('mapToPlotMsg', () => {
 
     const itp: ITradePlotProfitizer = deepCloneJson(arrITradePlotProfitizer[0]),
       itpNoProfit: ITradePlotProfitizer = deepCloneJson(itp),
-      profitizer = TradePlotProfitizer.MapToPlotMsg(itpp)
+      profitizer = TradePlotProfitizer.mapToPlotMsg(itpp)
 
     expect(profitizer).toMatchObject({
       lineColor: '#00ff00',
@@ -258,7 +258,7 @@ describe('mapToPlotMsg', () => {
       symbol: '',
     })
 
-    expect(TradePlotProfitizer.MapToPlotMsg(itp)).toMatchObject({
+    expect(TradePlotProfitizer.mapToPlotMsg(itp)).toMatchObject({
       lineColor: '#00ff00',
       msgText: 'Currently up $100.00!',
       price: undefined,
@@ -268,7 +268,7 @@ describe('mapToPlotMsg', () => {
 
     itpNoProfit.profit = 0
 
-    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+    expect(TradePlotProfitizer.mapToPlotMsg(itpNoProfit)).toMatchObject({
       lineColor: '#00ff00',
       msgText: 'Currently break even.',
       price: undefined,
@@ -278,7 +278,7 @@ describe('mapToPlotMsg', () => {
 
     itpNoProfit.profit = -100
 
-    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+    expect(TradePlotProfitizer.mapToPlotMsg(itpNoProfit)).toMatchObject({
       lineColor: '#00ff00',
       msgText: 'Currently down -$100.00.',
       price: undefined,
@@ -288,7 +288,7 @@ describe('mapToPlotMsg', () => {
 
     itpNoProfit.isShort = true
 
-    expect(TradePlotProfitizer.MapToPlotMsg(itpNoProfit)).toMatchObject({
+    expect(TradePlotProfitizer.mapToPlotMsg(itpNoProfit)).toMatchObject({
       lineColor: '#f2c200',
       msgText: 'Currently down -$100.00.',
       price: undefined,

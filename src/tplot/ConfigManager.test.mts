@@ -104,55 +104,55 @@ describe('validateConfigName', () => {
   it('should validate config names', () => {
     expect.hasAssertions()
 
-    expect(() => ConfigManager.ValidateConfigName('charts')).not.toThrow()
-    expect(() => ConfigManager.ValidateConfigName('dashboards')).not.toThrow()
+    expect(() => ConfigManager.validateConfigName('charts')).not.toThrow()
+    expect(() => ConfigManager.validateConfigName('dashboards')).not.toThrow()
     expect(() =>
-      ConfigManager.ValidateConfigName('headerTickerBars')
+      ConfigManager.validateConfigName('headerTickerBars')
     ).not.toThrow()
     expect(() =>
-      ConfigManager.ValidateConfigName('ideaTabSelected')
+      ConfigManager.validateConfigName('ideaTabSelected')
     ).not.toThrow()
     expect(() =>
-      ConfigManager.ValidateConfigName('ideaCryptoTabSelected')
+      ConfigManager.validateConfigName('ideaCryptoTabSelected')
     ).not.toThrow()
-    expect(() => ConfigManager.ValidateConfigName('operations')).not.toThrow()
-    expect(() => ConfigManager.ValidateConfigName('website')).not.toThrow()
-    expect(() => ConfigManager.ValidateConfigName('tickerInfo')).not.toThrow()
+    expect(() => ConfigManager.validateConfigName('operations')).not.toThrow()
+    expect(() => ConfigManager.validateConfigName('website')).not.toThrow()
+    expect(() => ConfigManager.validateConfigName('tickerInfo')).not.toThrow()
 
-    expect(() => ConfigManager.ValidateConfigName('invalidConfig')).toThrow(
+    expect(() => ConfigManager.validateConfigName('invalidConfig')).toThrow(
       'Invalid config name'
     )
-    expect(() => ConfigManager.ValidateConfigName('')).toThrow(
+    expect(() => ConfigManager.validateConfigName('')).toThrow(
       new AppException('Config name is required.', 'ConfigManager')
     )
-    expect(() => ConfigManager.ValidateConfigName(null)).toThrow(
+    expect(() => ConfigManager.validateConfigName(null)).toThrow(
       new AppException('Config name is required.', 'ConfigManager')
     )
-    expect(() => ConfigManager.ValidateConfigName(undefined)).toThrow(
+    expect(() => ConfigManager.validateConfigName(undefined)).toThrow(
       new AppException('Config name is required.', 'ConfigManager')
     )
     expect(() =>
-      ConfigManager.ValidateConfigName(
+      ConfigManager.validateConfigName(
         '012345678901234567890123456789012345678901234567895'
       )
     ).toThrow(new AppException('Config name is required.', 'ConfigManager'))
 
-    expect(() => ConfigManager.ValidateConfigName('tickerInfo-')).toThrow(
+    expect(() => ConfigManager.validateConfigName('tickerInfo-')).toThrow(
       new AppException(
         'Invalid config name',
-        'ConfigManager.ValidateConfigName'
+        'ConfigManager.validateConfigName'
       )
     )
     expect(() =>
-      ConfigManager.ValidateConfigName('tickerInfo-12345678901')
+      ConfigManager.validateConfigName('tickerInfo-12345678901')
     ).toThrow(
       new AppException(
         'Invalid config name',
-        'ConfigManager.ValidateConfigName'
+        'ConfigManager.validateConfigName'
       )
     )
 
-    expect(ConfigManager.ValidateConfigName('tickerInfo-AAPL')).toBe(
+    expect(ConfigManager.validateConfigName('tickerInfo-AAPL')).toBe(
       'tickerInfo-AAPL'
     )
   })
@@ -173,11 +173,11 @@ describe('findConfig', () => {
       },
       configManager = new ConfigManager([configCharts])
 
-    expect(configManager.FindConfig(UserConfigNames.charts)).toBe(
+    expect(configManager.findConfig(UserConfigNames.charts)).toBe(
       UserConfigNames.charts
     )
     expect(
-      configManager.FindConfig(
+      configManager.findConfig(
         'nonExistentConfig' as keyof typeof UserConfigNames
       )
     ).toBeUndefined()
@@ -189,7 +189,7 @@ describe('findConfig', () => {
     const configManager = new ConfigManager([])
 
     expect(
-      configManager.FindBoolean(
+      configManager.findBoolean(
         UserConfigNames.charts as keyof typeof UserConfigNames
       )
     ).toStrictEqual({
@@ -207,7 +207,7 @@ describe('findConfig', () => {
     const configManager = new ConfigManager([])
 
     expect(
-      configManager.FindString(
+      configManager.findString(
         UserConfigNames.charts as keyof typeof UserConfigNames
       )
     ).toStrictEqual({

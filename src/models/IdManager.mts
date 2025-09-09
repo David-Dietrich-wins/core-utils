@@ -6,8 +6,8 @@ import {
   safeArray,
 } from '../primitives/array-helper.mjs'
 import { AppException } from './AppException.mjs'
-import { FindObjectWithField } from '../primitives/object-helper.mjs'
 import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
+import { findObjectWithField } from '../primitives/object-helper.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
 // Export type IId<T> = z.infer<ReturnType<typeof IIdSchema<z.ZodType<T>>>>
@@ -34,18 +34,18 @@ export class IdManager<T extends IId<Tid>, Tid = T['id']> {
     this.stats = stats
   }
 
-  static CreateIdManager<T extends IId<Tid>, Tid = T['id']>(
+  static createIdManager<T extends IId<Tid>, Tid = T['id']>(
     arr: T[] | null | undefined,
     stats?: InstrumentationStatistics
   ) {
     return new IdManager(safeArray(arr), stats)
   }
 
-  static FindObjectWithId<T extends object = object>(
+  static findObjectWithId<T extends object = object>(
     obj: T,
     id: string | number
   ) {
-    return FindObjectWithField(obj, 'id', id)
+    return findObjectWithField(obj, 'id', id)
   }
 
   static zIId<T extends z.ZodType = z.ZodString>(id: T) {

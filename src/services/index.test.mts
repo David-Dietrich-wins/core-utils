@@ -10,7 +10,7 @@ describe('index', () => {
 
   // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it('should not have undefined exports', () => {
-    expect.assertions(25)
+    expect.assertions(24)
 
     for (const k of Object.keys(MyLib)) {
       expect(MyLib).not.toHaveProperty(k, undefined)

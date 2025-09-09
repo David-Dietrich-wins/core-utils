@@ -594,7 +594,7 @@ describe('header', () => {
       crypto: { id: newGuid(), tickers: ['ETH'], updated },
       disabled: true,
     }
-    const result = ConfigHeaderTickerBars.UpdateHeader(cm, overrides, updated)
+    const result = ConfigHeaderTickerBars.updateHeader(cm, overrides, updated)
 
     expect(result).toStrictEqual({
       asset: {

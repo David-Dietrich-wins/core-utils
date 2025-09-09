@@ -1,11 +1,11 @@
+import { describe, expect, it } from '@jest/globals'
 import {
-  GetHttpHeaderApplicationName,
-  GetHttpHeaders,
-  ParamsEncoder,
+  getHttpHeaderApplicationName,
   getHttpHeaderJson,
+  getHttpHeaders,
+  paramsEncoder,
   urlJoin,
 } from './html-helper.mjs'
-import { describe, expect, it } from '@jest/globals'
 import { AppException } from '../models/AppException.mjs'
 import type { ArrayOrSingle } from '../models/types.mjs'
 
@@ -13,16 +13,16 @@ describe('paramsEncoder', () => {
   it('encodes parameters correctly', () => {
     expect.assertions(4)
 
-    expect(ParamsEncoder()).toBe('')
+    expect(paramsEncoder()).toBe('')
 
     expect(
-      ParamsEncoder({
+      paramsEncoder({
         baz: 'qux',
         foo: 'bar',
       })
     ).toBe('baz=qux&foo=bar')
     expect(
-      ParamsEncoder({
+      paramsEncoder({
         baz: 'qux',
         foo: 'bar',
         quux: 'corge',
@@ -30,7 +30,7 @@ describe('paramsEncoder', () => {
     ).toBe('baz=qux&foo=bar&quux=corge')
 
     expect(
-      ParamsEncoder({
+      paramsEncoder({
         baz: 'qux',
         grault: 'garply',
         quux: 'corge',
@@ -62,7 +62,7 @@ describe('paramsEncoder', () => {
   it('getHttpHeaderApplicationName', () => {
     expect.assertions(2)
 
-    const headers = GetHttpHeaderApplicationName('MyApp')
+    const headers = getHttpHeaderApplicationName('MyApp')
 
     expect(headers[0]).toBe('x-application-name')
     expect(headers[1]).toBe('MyApp')
@@ -71,7 +71,7 @@ describe('paramsEncoder', () => {
   it('getHttpHeaders', () => {
     expect.assertions(3)
 
-    const headers = GetHttpHeaders([
+    const headers = getHttpHeaders([
       ['Content-Type', 'application/json'],
       ['Authorization', 'Bearer my-token'],
       ['x-test-header'],

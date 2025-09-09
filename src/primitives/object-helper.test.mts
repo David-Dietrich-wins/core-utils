@@ -4,18 +4,15 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { CONST_ListMustBeAnArray, type IId } from '../models/IdManager.mjs'
 import {
-  BuildLogFriendlyMessage,
-  DeepCloneJsonWithUndefined,
-  FindObjectWithField,
-  ObjectFindKeyAndReturnValue,
   ObjectHelper,
-  ObjectMustHaveKeyAndReturnValue,
-  ObjectPrepareForJson,
-  UpdateFieldValue,
+  buildLogFriendlyMessage,
   coalesce,
   deepCloneJson,
+  deepCloneJsonWithUndefined,
   deepDiffMapper,
+  findObjectWithField,
   getBody,
   getObjectValue,
   hasData,
@@ -24,8 +21,11 @@ import {
   objectCloneAlphabetizingKeys,
   objectDecodeFromBase64,
   objectEncodeToBase64,
+  objectFindKeyAndReturnValue,
   objectGetFirstNewWithException,
   objectGetNew,
+  objectMustHaveKeyAndReturnValue,
+  objectPrepareForJson,
   objectTypesToString,
   removeFields,
   renameProperty,
@@ -34,8 +34,8 @@ import {
   safeObject,
   searchObjectForArray,
   sortFunction,
+  updateFieldValue,
 } from './object-helper.mjs'
-import { CONST_ListMustBeAnArray, type IId } from '../models/IdManager.mjs'
 import {
   afterEach,
   beforeEach,
@@ -60,11 +60,11 @@ describe('objectFindKeyAndReturnValue', () => {
     }
 
     const keyToFind = 'key1'
-    let result = ObjectFindKeyAndReturnValue(obj, keyToFind)
+    let result = objectFindKeyAndReturnValue(obj, keyToFind)
 
     expect(result).toBe('value1')
 
-    result = ObjectFindKeyAndReturnValue(obj, '')
+    result = objectFindKeyAndReturnValue(obj, '')
 
     expect(result).toBeUndefined()
   })
@@ -80,7 +80,7 @@ describe('objectFindKeyAndReturnValue', () => {
 
     const keyToFind = 'key1'
     const matchLowercaseAndTrimKey = true
-    const result = ObjectFindKeyAndReturnValue(
+    const result = objectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -100,7 +100,7 @@ describe('objectFindKeyAndReturnValue', () => {
 
     const keyToFind = 'kEy1'
     const matchLowercaseAndTrimKey = false
-    const result = ObjectFindKeyAndReturnValue(
+    const result = objectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -120,7 +120,7 @@ describe('objectFindKeyAndReturnValue', () => {
 
     const keyToFind = 'key1'
     const matchLowercaseAndTrimKey = false
-    const result = ObjectFindKeyAndReturnValue(
+    const result = objectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -140,7 +140,7 @@ describe('objectFindKeyAndReturnValue', () => {
 
     const keyToFind = 'KEy1'
     const matchLowercaseAndTrimKey = true
-    const result = ObjectFindKeyAndReturnValue(
+    const result = objectFindKeyAndReturnValue(
       obj,
       keyToFind,
       matchLowercaseAndTrimKey
@@ -162,11 +162,11 @@ describe('objectMustHaveKeyAndReturnValue', () => {
 
     const keyToFind = 'key1'
 
-    const result = ObjectMustHaveKeyAndReturnValue('test', obj, keyToFind)
+    const result = objectMustHaveKeyAndReturnValue('test', obj, keyToFind)
 
     expect(result).toBe('value1')
 
-    expect(() => ObjectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow(
+    expect(() => objectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow(
       new AppException('Key key4 not found in test object: ', 'key4')
     )
   })
@@ -183,7 +183,7 @@ describe('objectMustHaveKeyAndReturnValue', () => {
     const keyToFind = 'key1'
     const matchLowercaseAndTrimKey = true
 
-    const result = ObjectMustHaveKeyAndReturnValue(
+    const result = objectMustHaveKeyAndReturnValue(
       'test',
       obj,
       keyToFind,
@@ -193,7 +193,7 @@ describe('objectMustHaveKeyAndReturnValue', () => {
     expect(result).toBe('value1')
 
     expect(() =>
-      ObjectMustHaveKeyAndReturnValue(
+      objectMustHaveKeyAndReturnValue(
         'test',
         obj,
         'key4',
@@ -305,7 +305,7 @@ describe('buildLogFriendlyMessage', () => {
   it('return string from array', () => {
     expect.assertions(1)
 
-    const ret = BuildLogFriendlyMessage({
+    const ret = buildLogFriendlyMessage({
       componentName,
       level,
       message: ['hello', 'world'],
@@ -317,7 +317,7 @@ describe('buildLogFriendlyMessage', () => {
   it.each([null, undefined, ''])('empty: %s', (message) => {
     expect.assertions(1)
 
-    const ret = BuildLogFriendlyMessage({
+    const ret = buildLogFriendlyMessage({
       componentName,
       level,
       message,
@@ -331,7 +331,7 @@ describe('buildLogFriendlyMessage', () => {
 
     const e = new Error('test error')
 
-    const ret = BuildLogFriendlyMessage({
+    const ret = buildLogFriendlyMessage({
       componentName,
       level,
       message: e,
@@ -649,7 +649,7 @@ describe('prepareForJson', () => {
       updatedAt: new Date(),
     }
 
-    const result = ObjectPrepareForJson(obj)
+    const result = objectPrepareForJson(obj)
 
     expect(result).toStrictEqual({
       createdAt: expect.any(Date),
@@ -661,17 +661,17 @@ describe('prepareForJson', () => {
     })
 
     expect(
-      ObjectPrepareForJson({ anything: 'anything' }, 'anything')
+      objectPrepareForJson({ anything: 'anything' }, 'anything')
     ).toStrictEqual({})
     expect(
-      ObjectPrepareForJson(
+      objectPrepareForJson(
         { anything: 'anything', something: 'something', where: 'good' },
         ['anything', 'something']
       )
     ).toStrictEqual({ where: 'good' })
-    expect(ObjectPrepareForJson(undefined)).toStrictEqual({})
-    expect(ObjectPrepareForJson(null)).toStrictEqual({})
-    expect(ObjectPrepareForJson({})).toStrictEqual({})
+    expect(objectPrepareForJson(undefined)).toStrictEqual({})
+    expect(objectPrepareForJson(null)).toStrictEqual({})
+    expect(objectPrepareForJson({})).toStrictEqual({})
   })
 })
 
@@ -731,19 +731,19 @@ describe('field functions', () => {
       },
     }
 
-    expect(FindObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
+    expect(findObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
 
-    expect(FindObjectWithField(obj, 'a', 'a')).toBe(obj)
-    expect(FindObjectWithField(obj, 'b', 'c')).toBeUndefined()
-    expect(FindObjectWithField(obj, 'e', 'e')).toBe(obj.d)
-    expect(FindObjectWithField(obj, 'd', 'd')).toBeUndefined()
-    expect(FindObjectWithField(obj, 'j', 'k')).toBeUndefined()
-    expect(FindObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
-    expect(FindObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
+    expect(findObjectWithField(obj, 'a', 'a')).toBe(obj)
+    expect(findObjectWithField(obj, 'b', 'c')).toBeUndefined()
+    expect(findObjectWithField(obj, 'e', 'e')).toBe(obj.d)
+    expect(findObjectWithField(obj, 'd', 'd')).toBeUndefined()
+    expect(findObjectWithField(obj, 'j', 'k')).toBeUndefined()
+    expect(findObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
+    expect(findObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
 
     const deepObj = createDeepObject(101, 'value')
 
-    expect(FindObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
+    expect(findObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
   })
 
   it('remove from an object by fields array', () => {
@@ -894,7 +894,7 @@ describe('field functions', () => {
       id: 'abc1',
     }
 
-    expect(UpdateFieldValue(obj, 'field', 'newvalue')).toStrictEqual({
+    expect(updateFieldValue(obj, 'field', 'newvalue')).toStrictEqual({
       ...obj,
       field: 'newvalue',
     })
@@ -1464,7 +1464,7 @@ describe('objectHelper', () => {
           e: undefined,
         },
       },
-      clonedObj = DeepCloneJsonWithUndefined(aobj)
+      clonedObj = deepCloneJsonWithUndefined(aobj)
 
     expect(clonedObj).toStrictEqual({
       a: 'a',
@@ -1485,7 +1485,7 @@ describe('objectHelper', () => {
           e: undefined,
         },
       },
-      clonedObj = DeepCloneJsonWithUndefined(aobj)
+      clonedObj = deepCloneJsonWithUndefined(aobj)
 
     expect(clonedObj).toStrictEqual(
       expect.objectContaining({

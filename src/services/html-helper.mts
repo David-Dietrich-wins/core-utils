@@ -28,7 +28,7 @@ export type HttpFetchRequestProps<
   statusCodesToBypassErrorHandler?: number[]
 }
 
-export function ParamsEncoder(params?: object): string {
+export function paramsEncoder(params?: object): string {
   return Object.entries(params || {}).reduce((acc, [key, value], index) => {
     const encodedKey = encodeURIComponent(key),
       encodedValue = encodeURIComponent(safestr(value)),
@@ -39,7 +39,7 @@ export function ParamsEncoder(params?: object): string {
   }, '')
 }
 
-export function GetHttpHeaders(
+export function getHttpHeaders(
   headers: ArrayOrSingle<Readonly<[string, string]>>
 ) {
   const h = new Headers()
@@ -71,10 +71,10 @@ export function getHttpHeaderJson(
     headers.push(['Authorization', `Bearer ${safestr(bearerToken)}`])
   }
 
-  return GetHttpHeaders(headers)
+  return getHttpHeaders(headers)
 }
 
-export function GetHttpHeaderApplicationName(appName: string) {
+export function getHttpHeaderApplicationName(appName: string) {
   return [HttpHeaderNamesAllowedKeys.ApplicationName, appName] as const
 }
 

@@ -86,7 +86,7 @@ export class ConfigHeaderTickerBars {
     )
   }
 
-  static UpdateHeader(
+  static updateHeader(
     cfg: IConfigHeaderTickerBars,
     overrides: Partial<IConfigHeaderTickerBars>,
     updated?: DateTypeAcceptable
@@ -101,7 +101,7 @@ export class ConfigHeaderTickerBars {
   }
 
   static disable(cfg: IConfigHeaderTickerBars, updated?: DateTypeAcceptable) {
-    return ConfigHeaderTickerBars.UpdateHeader(
+    return ConfigHeaderTickerBars.updateHeader(
       cfg,
       {
         disabled: !cfg.disabled,
@@ -118,7 +118,7 @@ export class ConfigHeaderTickerBars {
     const dtUpdated = dateGetTime(updated)
     const updater = isFunction(payload) ? payload(cfg.crypto) : payload
 
-    return ConfigHeaderTickerBars.UpdateHeader(
+    return ConfigHeaderTickerBars.updateHeader(
       cfg,
       { crypto: { ...cfg.crypto, ...updater, updated: dtUpdated } },
       dtUpdated
@@ -133,7 +133,7 @@ export class ConfigHeaderTickerBars {
     const dtUpdated = dateGetTime(updated)
     const updater = isFunction(payload) ? payload(cfg.asset) : payload
 
-    return ConfigHeaderTickerBars.UpdateHeader(
+    return ConfigHeaderTickerBars.updateHeader(
       cfg,
       { asset: { ...cfg.asset, ...updater, updated: dtUpdated } },
       dtUpdated

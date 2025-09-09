@@ -53,14 +53,14 @@ export class NameValueManager<TValue = string> {
     this.stats = stats
   }
 
-  static CreateNameValueManager<TValue = string>(
+  static createNameValueManager<TValue = string>(
     arr: INameValue<TValue>[] | null | undefined,
     stats?: InstrumentationStatistics
   ): NameValueManager<TValue> {
     return new NameValueManager(safeArray(arr), stats)
   }
 
-  static CreateINameValue<TValue = string>(
+  static createINameValue<TValue = string>(
     name: string,
     value: TValue
   ): INameValue<TValue> {
@@ -108,7 +108,7 @@ export class NameValueLineFormatter<T extends object> {
   formatter?: StyleFormatter
   tooltip?: string
   style?: object
-  formatNumberOrString?: (_val: number | string | null | undefined) => string
+  formatnumberOrString?: (_val: number | string | null | undefined) => string
 
   constructor(
     key: keyof T,
@@ -117,7 +117,7 @@ export class NameValueLineFormatter<T extends object> {
     formatter?: StyleFormatter,
     tooltip?: string,
     style?: object,
-    formatNumberOrString?: (_val: number | string | null | undefined) => string
+    formatnumberOrString?: (_val: number | string | null | undefined) => string
   ) {
     this.key = key
     this.keyDisplayValue = keyDisplayValue
@@ -125,10 +125,10 @@ export class NameValueLineFormatter<T extends object> {
     this.formatter = formatter
     this.tooltip = tooltip
     this.style = style
-    this.formatNumberOrString = formatNumberOrString
+    this.formatnumberOrString = formatnumberOrString
   }
 
-  FromStyle(
+  fromStyle(
     name: string,
     value: number | string | undefined,
     showZeroValues = true,
@@ -144,10 +144,10 @@ export class NameValueLineFormatter<T extends object> {
     )
   }
 
-  NumberOrString(name: string, value: number | string | undefined) {
+  numberOrString(name: string, value: number | string | undefined) {
     return new NameValueWithStyle(
       this.keyDisplayValue,
-      this.formatNumberOrString ? this.formatNumberOrString(value) : value,
+      this.formatnumberOrString ? this.formatnumberOrString(value) : value,
       this.style,
       this.tooltip
     )
@@ -161,12 +161,12 @@ export class NameValueLineFormatManager<T extends object> {
     this.nvlist = nvlist
   }
 
-  FormatWithStyle(data: NameValue[], sortField?: string, sortDirection = true) {
+  formatWithStyle(data: NameValue[], sortField?: string, sortDirection = true) {
     const itemMapper = (item: NameValueWithStyle) => {
         const nvlf = this.nvlist.find((x) => x.key === item.name)
 
-        return nvlf?.FromStyle
-          ? nvlf.FromStyle(item.name, item.value)
+        return nvlf?.fromStyle
+          ? nvlf.fromStyle(item.name, item.value)
           : new NameValueWithStyle(
               item.name,
               item.value,
@@ -202,8 +202,8 @@ export class NameValueLineFormatManager<T extends object> {
       .concat(unordered)
   }
 
-  FromObject(obj?: object, sortField?: string, sortDirection = true) {
-    return this.FormatWithStyle(
+  fromObject(obj?: object, sortField?: string, sortDirection = true) {
+    return this.formatWithStyle(
       Object.entries(obj || {}).map(
         ([key, value]) => new NameValue(key, safestr(value))
       ),

@@ -3,14 +3,14 @@ import type {
   ArrayOrSingleBasicTypes,
   StringOrStringArray,
 } from '../models/types.mjs'
+import { hasData, isNullOrUndefined } from './object-helper.mjs'
 import {
-  ReplaceNonPrintable,
   isString,
+  replaceNonPrintable,
   safestr,
   safestrTrim,
   safestrUppercase,
 } from './string-helper.mjs'
-import { hasData, isNullOrUndefined } from './object-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 import type { IId } from '../models/IdManager.mjs'
 import { type IIdName } from '../models/id-name.mjs'
@@ -610,7 +610,7 @@ export function shuffleArray<T>(array: T[], maxItems?: number) {
 export function splitIntoArray(
   strToSplit: ArrayOrSingleBasicTypes,
   splitter = ',',
-  replaceNonPrintable = true,
+  replaceNonPrintableChars = true,
   preTrimString = false
 ) {
   let str = isString(strToSplit)
@@ -619,8 +619,8 @@ export function splitIntoArray(
       : safestr(strToSplit)
     : String(strToSplit)
 
-  if (replaceNonPrintable) {
-    str = ReplaceNonPrintable(str)
+  if (replaceNonPrintableChars) {
+    str = replaceNonPrintable(str)
   }
 
   if (str.startsWith('[')) {

@@ -103,7 +103,7 @@ describe('createFromTicker', () => {
     expect((err as z.ZodError).issues).toHaveLength(1)
     expect((err as z.ZodError).stack).toBeDefined()
 
-    expect(err).toMatchObject(ZodTestHelper.Issue(ZodTestHelper.InvalidEmail()))
+    expect(err).toMatchObject(ZodTestHelper.issue(ZodTestHelper.invalidEmail()))
   })
 
   it('bad empty ticker', () => {
@@ -123,7 +123,7 @@ describe('createFromTicker', () => {
     expect(retzod.issues).toHaveLength(1)
     expect(retzod.stack).toBeDefined()
     expect(retzod.issues).toStrictEqual([
-      ZodTestHelper.StringTooSmall(1, [], true),
+      ZodTestHelper.stringTooSmall(1, [], true),
     ])
   })
 })

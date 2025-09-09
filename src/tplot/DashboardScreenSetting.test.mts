@@ -33,7 +33,7 @@ describe('create', () => {
   it('should create a new instance with the given values', () => {
     expect.assertions(3)
 
-    const dss = DashboardScreenSetting.Create({
+    const dss = DashboardScreenSetting.create({
       name: 'Test',
       tiles: [],
     })

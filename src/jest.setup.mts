@@ -19,13 +19,13 @@ export const mockLoggerWarn = jest.fn()
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ZodTestHelper {
-  static Issue(error: object) {
+  static issue(error: object) {
     return {
       issues: expect.arrayContaining([expect.objectContaining(error)]),
     }
   }
 
-  static SuccessFalseSingle(error: object) {
+  static successFalseSingle(error: object) {
     return {
       error: expect.objectContaining({
         issues: expect.arrayContaining([expect.objectContaining(error)]),
@@ -34,13 +34,13 @@ export class ZodTestHelper {
     }
   }
 
-  static SuccessFalse(errors: z.ZodError[][]) {
+  static successFalse(errors: z.ZodError[][]) {
     return {
-      error: expect.objectContaining(ZodTestHelper.InvalidUnion(errors)),
+      error: expect.objectContaining(ZodTestHelper.invalidUnion(errors)),
       success: false,
     }
   }
-  static InvalidUnion(errors: z.ZodError[][]) {
+  static invalidUnion(errors: z.ZodError[][]) {
     return {
       issues: expect.arrayContaining([
         expect.objectContaining({
@@ -53,7 +53,7 @@ export class ZodTestHelper {
     }
   }
 
-  static InvalidEmail() {
+  static invalidEmail() {
     return {
       code: 'invalid_format',
       format: 'email',
@@ -65,7 +65,7 @@ export class ZodTestHelper {
     }
   }
 
-  static InvalidType(
+  static invalidType(
     expected = 'array',
     received = 'string',
     path: (string | number)[] = []
@@ -77,14 +77,14 @@ export class ZodTestHelper {
       path,
     }
   }
-  static InvalidTypeArrayString() {
-    return ZodTestHelper.InvalidType('array', 'string')
+  static invalidTypeArrayString() {
+    return ZodTestHelper.invalidType('array', 'string')
   }
-  static InvalidTypeStringArray() {
-    return ZodTestHelper.InvalidType('string', 'array')
+  static invalidTypeStringArray() {
+    return ZodTestHelper.invalidType('string', 'array')
   }
 
-  static StringTooBig(
+  static stringTooBig(
     maximum: number,
     path: (string | number)[] = [],
     inclusive?: boolean
@@ -100,7 +100,7 @@ export class ZodTestHelper {
 
     return ret
   }
-  static StringTooSmall(
+  static stringTooSmall(
     minimum: number,
     path: (string | number)[] = [],
     inclusive?: boolean
@@ -119,7 +119,7 @@ export class ZodTestHelper {
     return ret
   }
 
-  static ArrayTooBig(maximum: number, path: (string | number)[] = []) {
+  static arrayTooBig(maximum: number, path: (string | number)[] = []) {
     return {
       code: 'too_big',
       maximum,
@@ -130,7 +130,7 @@ export class ZodTestHelper {
       path,
     }
   }
-  static ArrayTooSmall(minimum: number, path: (string | number)[] = []) {
+  static arrayTooSmall(minimum: number, path: (string | number)[] = []) {
     return {
       code: 'too_small',
       message: `Too small: expected array to have >=${numberToString(

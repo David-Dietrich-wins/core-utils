@@ -3,8 +3,8 @@ import {
   ChartSettings,
   type IChartSettings,
 } from './ChartSettings.mjs'
+import { DateHelper, dateLocalToUtc } from '../primitives/date-helper.mjs'
 import { describe, expect, it } from '@jest/globals'
-import { DateHelper } from '../primitives/date-helper.mjs'
 
 describe('constructor', () => {
   it('defaults', () => {
@@ -107,8 +107,8 @@ describe('constructor', () => {
         startDate: undefined,
         ticker: 'AAPL',
       },
-      chartSettings = ChartSettings.Create(acs),
-      chartSettingsWithExtendedHours = ChartSettings.Create(acs)
+      chartSettings = ChartSettings.create(acs),
+      chartSettingsWithExtendedHours = ChartSettings.create(acs)
 
     expect(chartSettings).toMatchObject(acs)
 
@@ -126,7 +126,7 @@ describe('constructor', () => {
     acs.startDate = Number(new Date('2025-01-01'))
     acs.endDate = Number(new Date('2026-01-01'))
 
-    const chartSettingsWithDates = ChartSettings.Create(acs)
+    const chartSettingsWithDates = ChartSettings.create(acs)
 
     expect(chartSettingsWithDates).toMatchObject({
       ...acs,
@@ -169,7 +169,7 @@ describe('constructor', () => {
         startDate: undefined,
         ticker: 'AAPL',
       },
-      chartSettings = ChartSettings.CreateForTradingView(
+      chartSettings = ChartSettings.createForTradingView(
         acs.ticker,
         acs.startDate,
         acs.endDate,
@@ -190,7 +190,7 @@ describe('constructor', () => {
     })
 
     expect(
-      ChartSettings.CreateForTradingView('AAPL', undefined, undefined, '1d')
+      ChartSettings.createForTradingView('AAPL', undefined, undefined, '1d')
     ).toMatchObject({
       endDate: undefined,
       extendedHoursTrading: true,
@@ -204,7 +204,7 @@ describe('constructor', () => {
     })
 
     expect(
-      ChartSettings.CreateForTradingView(
+      ChartSettings.createForTradingView(
         'AAPL',
         undefined,
         undefined,
@@ -335,8 +335,8 @@ describe('debugMessage', () => {
 
     expect(cs.debugMessage).toBe('Daily')
 
-    cs.startDate = Number(DateHelper.LocalToUtc('2025-01-01'))
-    cs.endDate = Number(DateHelper.LocalToUtc('2026-01-01'))
+    cs.startDate = Number(dateLocalToUtc('2025-01-01'))
+    cs.endDate = Number(dateLocalToUtc('2026-01-01'))
 
     expect(cs.debugMessage).toBe('Daily from 2025-01-01 to 2026-01-01')
   })

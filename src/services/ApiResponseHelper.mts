@@ -7,7 +7,7 @@ import { isString } from '../primitives/string-helper.mjs'
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ApiResponseHelper {
-  static Error<T = unknown>(obj: T) {
+  static error<T = unknown>(obj: T) {
     // Uow.syserrWrite(req.uiv?.muserid ?? 'respondWithError', fname, obj)
 
     let crret: ApiResponse<T>
@@ -22,7 +22,7 @@ export class ApiResponseHelper {
     return crret
   }
 
-  static Success<T = unknown>(obj: T) {
+  static success<T = unknown>(obj: T) {
     let crret: ApiResponse<T>
     if (isObject(obj) && obj instanceof ApiResponse) {
       crret = obj

@@ -34,14 +34,14 @@ export class IdValueManager<Tid = string, Tvalue = string> extends IdManager<
     super(list, stats)
   }
 
-  static CreateIdValueManager<Tid = string, Tvalue = string>(
+  static createIdValueManager<Tid = string, Tvalue = string>(
     arr: IIdValue<Tid, Tvalue>[] | null | undefined,
     stats?: InstrumentationStatistics
   ) {
     return new IdValueManager(safeArray(arr), stats)
   }
 
-  static CreateIIdValue<Tid = string, Tvalue = string>(
+  static createIIdValue<Tid = string, Tvalue = string>(
     id: Tid,
     value: Tvalue
   ): IIdValue<Tid, Tvalue> {

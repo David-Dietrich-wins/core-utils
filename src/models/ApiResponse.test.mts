@@ -604,7 +604,7 @@ describe('creators', () => {
         search: '?query=1',
       }
 
-    let ret = ApiResponse.ErrorHandler(
+    let ret = ApiResponse.errorHandler(
       fname,
       new Error('error message'),
       location
@@ -612,7 +612,7 @@ describe('creators', () => {
 
     expect(ret).toBe(false)
 
-    ret = ApiResponse.ErrorHandler(
+    ret = ApiResponse.errorHandler(
       fname,
       new AppExceptionHttp('error message', 'test', 402),
       location
@@ -620,7 +620,7 @@ describe('creators', () => {
 
     expect(ret).toBe(false)
 
-    ret = ApiResponse.ErrorHandler(
+    ret = ApiResponse.errorHandler(
       fname,
       new AppExceptionHttp('error message', 'test', 403),
       location
@@ -628,7 +628,7 @@ describe('creators', () => {
 
     expect(ret).toBe(true)
 
-    ret = ApiResponse.ErrorHandler(
+    ret = ApiResponse.errorHandler(
       fname,
       new AppExceptionHttp('error message', 'test', 403),
       location

@@ -55,7 +55,7 @@ export default defineConfig(
       'max-lines-per-function': 'off',
       'max-params': 'off',
       'max-statements': 'off',
-      'new-cap': 'off',
+      // 'new-cap': 'off',
       'no-console': 'off',
       'no-empty-function': 'off',
       // '@typescript-eslint/no-floating-promises': 'error',

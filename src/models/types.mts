@@ -147,8 +147,8 @@ export type HeaderNavLinks = IdName & {
 export type IConstructor<T> = new (..._args: any[]) => T
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function CreateClass<T>(type: IConstructor<T>, ...args: any[]) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+export function createClass<T>(type: IConstructor<T>, ...args: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, new-cap
   return new type(...args)
 }
 
@@ -195,7 +195,7 @@ export type Primitive =
 export type SortOrderString = 'a' | 'd' | 'asc' | 'desc'
 export type SortOrderNumeric = 1 | -1
 export type SortOrder = SortOrderString | SortOrderNumeric | boolean
-export function SortOrderAsBoolean(order?: SortOrder | null) {
+export function sortOrderAsBoolean(order?: SortOrder | null) {
   if (isNullOrUndefined(order)) {
     return true
   }
@@ -215,16 +215,16 @@ export function SortOrderAsBoolean(order?: SortOrder | null) {
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsNumeric(order?: SortOrder | null) {
-  return SortOrderAsBoolean(order) ? 1 : -1
+export function sortOrderAsNumeric(order?: SortOrder | null) {
+  return sortOrderAsBoolean(order) ? 1 : -1
 }
 /**
  * Converts a SortOrder to a numeric value for sorting.
  * @param order The SortOrder to convert.
  * @returns 1 for ascending, -1 for descending, or 0 if no order is provided.
  */
-export function SortOrderAsString(order?: SortOrder | null) {
-  return SortOrderAsBoolean(order) ? 'asc' : 'desc'
+export function sortOrderAsString(order?: SortOrder | null) {
+  return sortOrderAsBoolean(order) ? 'asc' : 'desc'
 }
 
 export type StringOrStringArray = ArrayOrSingle<string>

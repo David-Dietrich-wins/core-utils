@@ -70,7 +70,7 @@ export interface ISymbolSearch extends ISymbolName {
   exchangeShortName: string
 }
 
-export function ISymbolSearch2ITickerSearch(iss: ISymbolSearch) {
+export function createISymbolSearch2ITickerSearch(iss: ISymbolSearch) {
   const its: ITickerSearch = {
     description: iss.stockExchange,
     exchange: iss.stockExchange,
@@ -84,10 +84,10 @@ export function ISymbolSearch2ITickerSearch(iss: ISymbolSearch) {
   return its
 }
 
-export function ISymbolSearch2ITickerSearchArray(
+export function createISymbolSearch2ITickerSearchArray(
   iss: ISymbolSearch[]
 ): ITickerSearch[] {
-  return safeArray(iss).map(ISymbolSearch2ITickerSearch)
+  return safeArray(iss).map(createISymbolSearch2ITickerSearch)
 }
 
 export interface ISymbolPriceChanges extends ISymbolPrice, ISymbolName {
@@ -786,7 +786,9 @@ export type CompanyAssetInfo = {
   ratios?: IRatio
 }
 
-export function IAssetQuoteResponseToAssetQuote(obj: IAssetQuoteResponse) {
+export function createIAssetQuoteResponseToAssetQuote(
+  obj: IAssetQuoteResponse
+) {
   return new AssetQuoteShort({
     price: obj.price,
     symbol: obj.symbol,
@@ -794,7 +796,7 @@ export function IAssetQuoteResponseToAssetQuote(obj: IAssetQuoteResponse) {
   })
 }
 
-export function IAssetQuoteResponseToAssetQuoteWithChanges(
+export function createIAssetQuoteResponseToAssetQuoteWithChanges(
   x: IAssetQuoteResponse
 ) {
   const aqr: AssetQuoteWithChanges = {
@@ -807,11 +809,15 @@ export function IAssetQuoteResponseToAssetQuoteWithChanges(
   return aqr
 }
 
-export function IAssetQuotesWithChanges(assetQuotes: IAssetQuoteResponse[]) {
-  return safeArray(assetQuotes).map(IAssetQuoteResponseToAssetQuoteWithChanges)
+export function createIAssetQuotesWithChanges(
+  assetQuotes: IAssetQuoteResponse[]
+) {
+  return safeArray(assetQuotes).map(
+    createIAssetQuoteResponseToAssetQuoteWithChanges
+  )
 }
 
-export function IAssetQuoteResponseToAssetQuoteWithIpoDate(
+export function createIAssetQuoteResponseToAssetQuoteWithIpoDate(
   x: IAssetQuoteResponse
 ) {
   const aqr: AssetQuoteWithIpoDate = {
@@ -824,13 +830,13 @@ export function IAssetQuoteResponseToAssetQuoteWithIpoDate(
   return aqr
 }
 
-export function IAssetQuotesWithIpoDate(
+export function createIAssetQuotesWithIpoDate(
   fname: string,
   assetQuotes: IAssetQuoteResponse[],
   retobj: { ipoDate: string; symbol: string }[]
 ) {
   return safeArray(assetQuotes).map((aqr) => {
-    const aqripo = IAssetQuoteResponseToAssetQuoteWithIpoDate(aqr)
+    const aqripo = createIAssetQuoteResponseToAssetQuoteWithIpoDate(aqr)
 
     try {
       const found = retobj.find((spac) => aqr.symbol === spac.symbol)
@@ -839,7 +845,7 @@ export function IAssetQuotesWithIpoDate(
           val = t.valueOf()
         if (isNaN(val)) {
           throw new AppException(
-            `IAssetQuotesWithIpoDate: ${fname} - Invalid IPO date for symbol ${aqr.symbol}`
+            `createIAssetQuotesWithIpoDate: ${fname} - Invalid IPO date for symbol ${aqr.symbol}`
           )
         }
 
@@ -853,7 +859,7 @@ export function IAssetQuotesWithIpoDate(
   })
 }
 
-export function IAssetQuoteResponseToAssetQuoteWithScore(
+export function createIAssetQuoteResponseToAssetQuoteWithScore(
   x: IAssetQuoteResponse,
   matches: number,
   scorePercentage?: number
@@ -870,7 +876,7 @@ export function IAssetQuoteResponseToAssetQuoteWithScore(
   return aqr
 }
 
-export function IAssetQuotesWithScore(
+export function createIAssetQuotesWithScore(
   iaqrs: IAssetQuoteResponse[],
   retobj: { [key: string]: { matches: number; score?: number } }
 ) {
@@ -892,7 +898,7 @@ export function IAssetQuotesWithScore(
       matches = dictsym.matches
     }
 
-    return IAssetQuoteResponseToAssetQuoteWithScore(
+    return createIAssetQuoteResponseToAssetQuoteWithScore(
       iaqr,
       matches,
       scorePercentage

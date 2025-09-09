@@ -1,16 +1,16 @@
 import {
-  RemoveLeadingNumbersAndWhitespace,
-  isString,
-  pluralSuffix,
-  prefixIfHasData,
-  safestr,
-} from './string-helper.mjs'
-import {
   firstNumberInString,
   getAsNumber,
   isNumber,
   numberToString,
 } from './number-helper.mjs'
+import {
+  isString,
+  pluralSuffix,
+  prefixIfHasData,
+  removeLeadingNumbersAndWhitespace,
+  safestr,
+} from './string-helper.mjs'
 import moment, {
   type DurationInputArg1,
   type Moment,
@@ -118,6 +118,15 @@ export function dateIsValid(date: DateTypeAcceptable) {
   }
 
   return false
+}
+
+export function dateLocalToUtc(date: DateTypeAcceptable) {
+  const dateNonEmpty = dateConvertToObject(date),
+    utc = new Date(
+      dateNonEmpty.getTime() + dateNonEmpty.getTimezoneOffset() * 60000
+    )
+
+  return utc
 }
 
 export function dateTimeFormat(
@@ -282,7 +291,7 @@ export abstract class DateHelper {
     return DateHelper.addMillisToDate(daysToAdd * MILLIS_PER_DAY, date)
   }
 
-  static Midnight(date: Date | string | null | undefined) {
+  static midnight(date: Date | string | null | undefined) {
     if (date) {
       if (isString(date)) {
         const num = Date.parse(date)
@@ -304,7 +313,7 @@ export abstract class DateHelper {
     }
   }
   static midnightSafe(date: Date | string | null | undefined) {
-    const d = DateHelper.Midnight(date)
+    const d = DateHelper.midnight(date)
     if (!d) {
       throw new AppException(
         'Invalid date passed in',
@@ -405,26 +414,26 @@ export abstract class DateHelper {
   //   Return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
   // }
 
-  static FormattedUnixTime(unixtime: number) {
+  static formattedUnixTime(unixtime: number) {
     const mom = moment.unix(unixtime)
 
     return mom.format('dddd, MMMM Do YYYY, h:mm:ss a')
   }
 
-  static TimezoneOffsetInMinutes() {
+  static timezoneOffsetInMinutes() {
     return 0 - new Date().getTimezoneOffset()
   }
 
-  static UnixTimeFormat(val: number) {
+  static unixTimeFormat(val: number) {
     return moment(val).format('MMM D, YYYY LT')
   }
 
-  static UnixTimeFormatForTheDow(val: number) {
+  static unixTimeFormatForTheDow(val: number) {
     return moment(val).format('dddd, MMMM Do YYYY, LTS')
   }
 
-  static PeriodType(period: string) {
-    let speriodString = RemoveLeadingNumbersAndWhitespace(period)
+  static periodType(period: string) {
+    let speriodString = removeLeadingNumbersAndWhitespace(period)
     if (speriodString.length > 0) {
       if (speriodString.toLowerCase().startsWith('month')) {
         speriodString = 'M'
@@ -458,7 +467,7 @@ export abstract class DateHelper {
     return period
     // Throw new AppException(
     //   `Invalid timeframe: ${timeframe}`,
-    //   'DateHelper.NextBoundaryUp'
+    //   'DateHelper.nextBoundaryUp'
     // )
   }
 
@@ -472,7 +481,7 @@ export abstract class DateHelper {
    * If periodType is '2h', then numberOfPeriods will be 2.
    * @returns The new date with the added time.
    */
-  static AddTimeToDate(
+  static addTimeToDate(
     date: Readonly<DateTypeAcceptable>,
     periodType: string,
     numberOfPeriods?: number | string | null
@@ -481,7 +490,7 @@ export abstract class DateHelper {
       numPeriods = isNullOrUndefined(numberOfPeriods)
         ? firstNumberInString(periodType)
         : getAsNumber(numberOfPeriods),
-      period = DateHelper.PeriodType(periodType)
+      period = DateHelper.periodType(periodType)
 
     switch (period) {
       case 'day':
@@ -503,12 +512,12 @@ export abstract class DateHelper {
       default:
         throw new AppException(
           `Invalid period type: ${periodType}`,
-          'DateHelper.AddTimeToDate'
+          'DateHelper.addTimeToDate'
         )
     }
   }
 
-  static FromTo(from: DateTypeAcceptable, to: DateTypeAcceptable) {
+  static fromTo(from: DateTypeAcceptable, to: DateTypeAcceptable) {
     const fromDate = dateConvertToObject(from),
       fromTime = fromDate.getTime(),
       toDate = dateConvertToObject(to),
@@ -521,31 +530,31 @@ export abstract class DateHelper {
     return zret
   }
 
-  static FromToPeriodsFromEndDate(
+  static fromToPeriodsFromEndDate(
     endDate: DateTypeAcceptable,
     periodType: string,
     numberOfPeriods: number
   ) {
     const date = dateConvertToObject(endDate),
-      from = DateHelper.AddTimeToDate(
+      from = DateHelper.addTimeToDate(
         date,
-        DateHelper.PeriodType(periodType),
+        DateHelper.periodType(periodType),
         -1
       ),
-      to = DateHelper.AddTimeToDate(
+      to = DateHelper.addTimeToDate(
         date,
-        DateHelper.PeriodType(periodType),
+        DateHelper.periodType(periodType),
         numberOfPeriods
       )
 
-    return DateHelper.FromTo(from, to)
+    return DateHelper.fromTo(from, to)
   }
-  static FromToPeriodsFromEndDateAsDates(
+  static fromToPeriodsFromEndDateAsDates(
     startDate: DateTypeAcceptable,
     periodType: string,
     numberOfPeriods: number
   ) {
-    const ft = DateHelper.FromToPeriodsFromEndDate(
+    const ft = DateHelper.fromToPeriodsFromEndDate(
         startDate,
         periodType,
         numberOfPeriods
@@ -558,31 +567,31 @@ export abstract class DateHelper {
     return ret
   }
 
-  static FromToPeriodsFromStartDate(
+  static fromToPeriodsFromStartDate(
     startDate: DateTypeAcceptable,
     periodType: string,
     numberOfPeriods: number
   ) {
     const date = dateConvertToObject(startDate),
-      from = DateHelper.AddTimeToDate(
+      from = DateHelper.addTimeToDate(
         date,
-        DateHelper.PeriodType(periodType),
+        DateHelper.periodType(periodType),
         -1
       ),
-      to = DateHelper.AddTimeToDate(
+      to = DateHelper.addTimeToDate(
         date,
-        DateHelper.PeriodType(periodType),
+        DateHelper.periodType(periodType),
         numberOfPeriods
       )
 
-    return DateHelper.FromTo(from, to)
+    return DateHelper.fromTo(from, to)
   }
-  static FromToPeriodsFromStartDateAsDates(
+  static fromToPeriodsFromStartDateAsDates(
     startDate: DateTypeAcceptable,
     periodType: string,
     numberOfPeriods: number
   ) {
-    const ft = DateHelper.FromToPeriodsFromStartDate(
+    const ft = DateHelper.fromToPeriodsFromStartDate(
         startDate,
         periodType,
         numberOfPeriods
@@ -595,22 +604,13 @@ export abstract class DateHelper {
     return ret
   }
 
-  static LocalToUtc(date: DateTypeAcceptable) {
-    const dateNonEmpty = dateConvertToObject(date),
-      utc = new Date(
-        dateNonEmpty.getTime() + dateNonEmpty.getTimezoneOffset() * 60000
-      )
-
-    return utc
-  }
-
-  static NextBoundaryUp(
+  static nextBoundaryUp(
     date: Readonly<Date | string | number>,
     unit: DurationInputArg1,
     units: number = 1
   ) {
     const mom = moment.utc(date),
-      momTimeframe = DateHelper.PeriodType(unit as string),
+      momTimeframe = DateHelper.periodType(unit as string),
       momUtcStart = mom
         .utc()
         .startOf(momTimeframe as moment.unitOfTime.StartOf),

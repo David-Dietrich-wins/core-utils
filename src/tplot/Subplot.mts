@@ -99,7 +99,7 @@ export class Subplot implements ISubplot {
     return schema
   }
 
-  static GetFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
+  static getFmpIndicatorQueryParams(symbol: string, subplot: ISubplot) {
     const { periodLength } = arrayMustFind(
         ChartPatternOptions,
         subplot.pattern
@@ -117,7 +117,7 @@ export class Subplot implements ISubplot {
     return fmp
   }
 
-  static GetNewWithNextPattern(subplots: ISubplot[] = []) {
+  static getNewWithNextPattern(subplots: ISubplot[] = []) {
     let pattern = 'b28'
 
     const subplotPatterns = safeArray(subplots).map((sp) => sp.pattern)
@@ -132,7 +132,7 @@ export class Subplot implements ISubplot {
     return new Subplot(newGuid(), 0, pattern, '1d', 0, 0, 1000)
   }
 
-  static Renumber(subplots: ISubplot[]) {
+  static renumber(subplots: ISubplot[]) {
     safeArray(subplots).forEach((sp, index) => {
       sp.orderNumber = index
     })

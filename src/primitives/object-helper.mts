@@ -2,8 +2,8 @@
 import {
   type IConstructor,
   type SortOrder,
-  SortOrderAsBoolean,
   type StringOrStringArray,
+  sortOrderAsBoolean,
 } from '../models/types.mjs'
 import {
   arrayElement,
@@ -157,7 +157,7 @@ export function hasData(o: unknown, minlength = 1): boolean {
  * @param mustExist If true, throws an exception if the key is not found
  * @param exactMatch If true, the key must match exactly and is not trimmed or lowercase matched
  */
-export function ObjectFindKeyAndReturnValue<T = string>(
+export function objectFindKeyAndReturnValue<T = string>(
   obj: Readonly<Record<string, T>>,
   keyToFind: string,
   matchLowercaseAndTrimKey = true
@@ -179,13 +179,13 @@ export function ObjectFindKeyAndReturnValue<T = string>(
   }
 }
 
-export function ObjectMustHaveKeyAndReturnValue<T = string>(
+export function objectMustHaveKeyAndReturnValue<T = string>(
   fname: string,
   obj: Readonly<Record<string, T>>,
   keyToFind: string,
   matchLowercaseAndTrimKey = true
 ) {
-  const ret = ObjectFindKeyAndReturnValue(
+  const ret = objectFindKeyAndReturnValue(
     obj,
     keyToFind,
     matchLowercaseAndTrimKey
@@ -265,7 +265,7 @@ export function objectTypesToString(
   return etoString
 }
 
-export function BuildLogFriendlyMessage({
+export function buildLogFriendlyMessage({
   componentName,
   level,
   message,
@@ -391,7 +391,7 @@ export function searchObjectForArray<T = unknown>(obj: object) {
   return []
 }
 
-export function ObjectPrepareForJson(
+export function objectPrepareForJson(
   obj?: object | null,
   removeKeys: StringOrStringArray = []
 ) {
@@ -403,7 +403,7 @@ export function ObjectPrepareForJson(
     if (!keysToRemove.includes(key) && !isFunction(value)) {
       acc[key] =
         isObject(value) && !isDateObject(value)
-          ? ObjectPrepareForJson(value, keysToRemove)
+          ? objectPrepareForJson(value, keysToRemove)
           : value
     }
 
@@ -412,7 +412,7 @@ export function ObjectPrepareForJson(
   }, {} as Record<string, unknown>)
 }
 
-export function UpdateFieldValue<T extends IId>(
+export function updateFieldValue<T extends IId>(
   parentObject: Readonly<T>,
   fieldName: string,
   fieldValue: unknown
@@ -425,7 +425,7 @@ export function UpdateFieldValue<T extends IId>(
   return ret
 }
 
-export function FindObjectWithField(
+export function findObjectWithField(
   obj: object,
   fieldName: string,
   value: string | number | boolean,
@@ -440,13 +440,13 @@ export function FindObjectWithField(
   // eslint-disable-next-line guard-for-in
   for (const key in obj) {
     if (isObject(obj[key])) {
-      found = FindObjectWithField(obj[key], fieldName, value, depth + 1)
+      found = findObjectWithField(obj[key], fieldName, value, depth + 1)
     } else if (isArray(obj[key])) {
       const arr: unknown[] = obj[key]
       if (arr.length && isObject(arr[0])) {
         const arrobj = arr as object[]
         for (let i = 0; i < arrobj.length; ++i) {
-          found = FindObjectWithField(arrobj[i], fieldName, value, depth + 1)
+          found = findObjectWithField(arrobj[i], fieldName, value, depth + 1)
           // eslint-disable-next-line max-depth
           if (found) {
             break
@@ -493,7 +493,7 @@ export function objectEncodeToBase64(obj: object) {
  * @param fname The function name of the caller. Not required.
  * @returns A JSON stringify and parsed copy of the obj.
  */
-export function DeepCloneJsonWithUndefined<T extends object | Array<T>>(
+export function deepCloneJsonWithUndefined<T extends object | Array<T>>(
   obj: T,
   fname?: string
 ) {
@@ -509,7 +509,7 @@ export class ObjectHelper {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, new-cap
     return new theClass(...args)
   }
 }
@@ -858,7 +858,7 @@ export function sortFunction(
 ) {
   const aEmpty = isNullOrUndefined(a),
     bEmpty = isNullOrUndefined(b),
-    isAsc = SortOrderAsBoolean(sortOrder)
+    isAsc = sortOrderAsBoolean(sortOrder)
 
   if (aEmpty && bEmpty) {
     return 0

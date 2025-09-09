@@ -5,8 +5,8 @@ import {
   SearchRequestView,
 } from './SearchRequestView.mjs'
 import { describe, expect, it } from '@jest/globals'
-import { GenerateRandomString } from '../primitives/string-helper.mjs'
 import { type IIdNameValue } from '../models/id-name.mjs'
+import { generateRandomString } from '../primitives/string-helper.mjs'
 import { numberToString } from '../primitives/number-helper.mjs'
 
 describe('constructor', () => {
@@ -128,7 +128,7 @@ describe('getItems', () => {
 
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${generateRandomString(10)}`
 
       items.push({
         id: i,
@@ -266,7 +266,7 @@ describe('getItems', () => {
 
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${generateRandomString(10)}`
 
       items.push({
         id: i,
@@ -296,7 +296,7 @@ describe('getItems', () => {
 
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${generateRandomString(10)}`
 
       items.push({
         id: i,
@@ -327,7 +327,7 @@ describe('getItems', () => {
 
     const items: IIdNameValue<string, number>[] = []
     for (let i = 0; i < 10; i++) {
-      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${generateRandomString(10)}`
 
       items.push({
         id: i,
@@ -356,7 +356,7 @@ describe('getItems', () => {
 
     const items: IIdNameValue<number, number>[] = []
     for (let i = 0; i < 100; i++) {
-      const randomString = `${numberToString(i)}-${GenerateRandomString(10)}`
+      const randomString = `${numberToString(i)}-${generateRandomString(10)}`
 
       items.push({
         id: i,

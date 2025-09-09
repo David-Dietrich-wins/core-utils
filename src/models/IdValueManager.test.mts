@@ -65,7 +65,7 @@ describe('id value manager', () => {
         { id: '2', value: '20' },
         { id: '3', value: '30' },
       ],
-      idm = IdValueManager.CreateIdValueManager(
+      idm = IdValueManager.createIdValueManager(
         aids,
         new InstrumentationStatistics()
       )
@@ -96,7 +96,7 @@ describe('iid value', () => {
 
     const id = 'id',
       value = 'value',
-      zpr = IdValueManager.CreateIIdValue(id, value)
+      zpr = IdValueManager.createIIdValue(id, value)
 
     expect(zpr.id).toBe(id)
     expect(zpr.value).toBe(value)
@@ -107,7 +107,7 @@ describe('iid value', () => {
 
     const id = 'id',
       value = 'value',
-      zpr = IdValueManager.CreateIIdValue(id, value)
+      zpr = IdValueManager.createIIdValue(id, value)
 
     expect(zpr.id).toBe(id)
     expect(zpr.value).toBe('value')

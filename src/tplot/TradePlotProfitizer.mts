@@ -114,7 +114,7 @@ export class TradePlotProfitizer
   }
 
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  static MapToPlotMsg(this: void, x: ITradePlotProfitizer) {
+  static mapToPlotMsg(this: void, x: ITradePlotProfitizer) {
     let msg = ''
 
     if (isNullOrUndefined(x.profit)) {
@@ -139,7 +139,7 @@ export class TradePlotProfitizer
   }
 
   static mapToPlotMsgs(x: ITradePlotProfitizer[]) {
-    return safeArray(x).map(TradePlotProfitizer.MapToPlotMsg)
+    return safeArray(x).map(TradePlotProfitizer.mapToPlotMsg)
   }
 
   get currentPriceDisplay() {
