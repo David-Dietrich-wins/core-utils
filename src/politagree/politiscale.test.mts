@@ -1,8 +1,8 @@
 import {
-  CreatePolitiscaleSearchParams,
   type IPolitiscale,
   Politiscale,
-  PolitiscalesCreateAll,
+  createPolitiscaleSearchParams,
+  politiscalesCreateAll,
 } from './politiscale.mjs'
 import { describe, expect, it } from '@jest/globals'
 
@@ -39,7 +39,7 @@ describe('createPolitiscaleSearchParams', () => {
   it('no params', () => {
     expect.assertions(1)
 
-    const ret = CreatePolitiscaleSearchParams({
+    const ret = createPolitiscaleSearchParams({
       sortDirection: 'desc',
       term: 'test',
     })
@@ -64,7 +64,7 @@ describe('politiscalesCreateAll', () => {
   it('creates all politiscales', () => {
     expect.assertions(1)
 
-    const ret = PolitiscalesCreateAll({
+    const ret = politiscalesCreateAll({
       climate: 5,
       freeSpeech: 10,
     })

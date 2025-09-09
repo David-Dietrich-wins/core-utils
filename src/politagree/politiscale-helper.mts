@@ -145,12 +145,12 @@ export abstract class PolitiscaleHelper {
     },
   ]
 
-  static FindSetting(name: PolitiscaleName): PolitiscaleSetting {
+  static findSetting(name: PolitiscaleName): PolitiscaleSetting {
     const setting = PolitiscaleHelper.settings.find((x) => x.name === name)
     if (!setting) {
       throw new AppException(
         `Attempt to find setting for invalid name ${name}.`,
-        PolitiscaleHelper.FindSetting.name
+        PolitiscaleHelper.findSetting.name
       )
     }
 
@@ -158,10 +158,10 @@ export abstract class PolitiscaleHelper {
   }
 
   static getColorRange(name: PolitiscaleName): ColorRange {
-    return PolitiscaleHelper.FindSetting(name).colorRange
+    return PolitiscaleHelper.findSetting(name).colorRange
   }
 
-  static PolitiscaleHeadings(): PolitiscaleHeading[] {
+  static politiscaleHeadings(): PolitiscaleHeading[] {
     return this.settings.map((x) => {
       const heading: PolitiscaleHeading = {
         heading: x.heading,
@@ -177,14 +177,14 @@ export abstract class PolitiscaleHelper {
    * @param name The PolitiscaleName to get the ratings for.
    * @param rating The rating to be translated.
    */
-  static CoreRating(
+  static coreRating(
     name: PolitiscaleName,
     rating?: number
   ): PolitiRatingLeftRight {
     let left = rating ?? 0,
       right = rating ?? 0
 
-    const setting = PolitiscaleHelper.FindSetting(name).rating
+    const setting = PolitiscaleHelper.findSetting(name).rating
 
     if (rating) {
       // If (setting.left.active) {
@@ -213,11 +213,11 @@ export abstract class PolitiscaleHelper {
 
     return leaning
   }
-  static CoreRatingValueTuple(
+  static coreRatingValueTuple(
     name: PolitiscaleName,
     rating?: number
   ): [number, number] {
-    const pr = PolitiscaleHelper.CoreRating(name, rating)
+    const pr = PolitiscaleHelper.coreRating(name, rating)
 
     return [
       pr.left.active && pr.left.value ? pr.left.value : 0,
@@ -225,20 +225,20 @@ export abstract class PolitiscaleHelper {
     ]
   }
 
-  static PrimaryRating(name: PolitiscaleName, rating?: number): number {
-    const pr = PolitiscaleHelper.CoreRating(name, rating)
+  static primaryRating(name: PolitiscaleName, rating?: number): number {
+    const pr = PolitiscaleHelper.coreRating(name, rating)
 
     return pr.left.isPrimary ? pr.left.value : pr.right.value
   }
 
-  static RatingOverall(
+  static ratingOverall(
     scales: { name: PolitiscaleName; value?: number }[] = []
   ): PolitiRatingLeftRight {
     const ratingsLeft: number[] = [],
       ratingsRight: number[] = []
 
     safeArray(scales).forEach((scale) => {
-      const pr = PolitiscaleHelper.CoreRating(scale.name, scale.value)
+      const pr = PolitiscaleHelper.coreRating(scale.name, scale.value)
 
       if (pr.left.active && pr.left.value) {
         ratingsLeft.push(pr.left.value)
@@ -254,13 +254,13 @@ export abstract class PolitiscaleHelper {
       leaning: PolitiRatingLeftRight = {
         left: {
           active: true,
-          isPrimary: PolitiscaleHelper.IsLeftLeaning(aleft),
+          isPrimary: PolitiscaleHelper.isLeftLeaning(aleft),
           value: aleft,
           weight: 0,
         },
         right: {
           active: true,
-          isPrimary: PolitiscaleHelper.IsRightLeaning(aright),
+          isPrimary: PolitiscaleHelper.isRightLeaning(aright),
           value: aright,
           weight: 0,
         },
@@ -269,36 +269,36 @@ export abstract class PolitiscaleHelper {
     return leaning
   }
 
-  static UserRatingOverall(
+  static userRatingOverall(
     scales: IHasPolitiscales | IPolitiscale[] = [],
     userScales: IHasPolitiscales | IPolitiscale[] = []
   ) {
-    const rating = PolitiscaleHelper.RatingOverall(
+    const rating = PolitiscaleHelper.ratingOverall(
       PolitiscaleHelper.getScales(scales)
     )
 
     if (isArray(userScales as unknown)) {
-      const userRating = PolitiscaleHelper.RatingOverall(
+      const userRating = PolitiscaleHelper.ratingOverall(
         PolitiscaleHelper.getScales(userScales as IPolitiscale[])
       )
 
-      return PolitiscaleHelper.CombineRatings(rating, userRating)
+      return PolitiscaleHelper.combineRatings(rating, userRating)
     }
 
     return rating
   }
 
-  static IsLeftLeaning(rating?: number) {
+  static isLeftLeaning(rating?: number) {
     return (rating ?? 0) < 60
   }
-  static IsRightLeaning(rating?: number) {
+  static isRightLeaning(rating?: number) {
     return (rating ?? 0) > 50
   }
-  static ColorRangeOfParty(isLeft: boolean) {
+  static colorRangeOfParty(isLeft: boolean) {
     return isLeft ? ColorRangeLeft : ColorRangeRight
   }
 
-  static CombineRatings(
+  static combineRatings(
     primary: PolitiRatingLeftRight,
     applied: PolitiRatingLeftRight
   ) {
@@ -321,7 +321,7 @@ export abstract class PolitiscaleHelper {
       ratingLeft = Math.round(ratingLeft / 2)
 
       if (isLeft && !applied.left.isPrimary) {
-        isLeft = PolitiscaleHelper.IsLeftLeaning(ratingLeft)
+        isLeft = PolitiscaleHelper.isLeftLeaning(ratingLeft)
       }
     }
 
@@ -330,7 +330,7 @@ export abstract class PolitiscaleHelper {
       ratingRight = Math.round(ratingRight / 2)
 
       if (isRight && !applied.right.isPrimary) {
-        isRight = PolitiscaleHelper.IsRightLeaning(ratingRight)
+        isRight = PolitiscaleHelper.isRightLeaning(ratingRight)
       }
     }
 
@@ -356,9 +356,9 @@ export abstract class PolitiscaleHelper {
     return pl
   }
 
-  static PolitiscaleColor(name: PolitiscaleName, rating: number) {
+  static politiscaleColor(name: PolitiscaleName, rating: number) {
     return colorInterpolateRange(
-      PolitiscaleHelper.PolitiscaleColorRange(name),
+      PolitiscaleHelper.politiscaleColorRange(name),
       rating
     )
   }
@@ -367,7 +367,7 @@ export abstract class PolitiscaleHelper {
     userScales?: IHasPolitiscales | IPolitiscale[],
     colorIfEmpty = '#EEEEEE'
   ) {
-    const status = PolitiscaleHelper.UserRatingOverall(scales, userScales)
+    const status = PolitiscaleHelper.userRatingOverall(scales, userScales)
 
     if (status.left.active && status.left.value) {
       return colorInterpolateRange(ColorRangeLeft, status.left.value)
@@ -375,55 +375,48 @@ export abstract class PolitiscaleHelper {
 
     return colorIfEmpty
   }
-  static PolitiscaleColorRange(name: PolitiscaleName) {
+  static politiscaleColorRange(name: PolitiscaleName) {
     return PolitiscaleHelper.getColorRange(name)
   }
 
   static politiscaleRating(
     scales?: { name: PolitiscaleName; value?: number }[]
   ) {
-    return PolitiscaleHelper.RatingOverall(scales)
+    return PolitiscaleHelper.ratingOverall(scales)
   }
 
-  static PolitiscaleValue(
-    name: PolitiscaleName,
+  static politiscaleValueClimate(
     scales?: IHasPolitiscales | IPolitiscale[],
     valueIfEmpty?: number
   ) {
-    return PolitiscaleHelper.politiscaleValue(name, scales, valueIfEmpty)
-  }
-  static PolitiscaleValueClimate(
-    scales?: IHasPolitiscales | IPolitiscale[],
-    valueIfEmpty?: number
-  ) {
-    return PolitiscaleHelper.PolitiscaleValue(
+    return PolitiscaleHelper.politiscaleValue(
       CONST_ScaleNameClimate,
       scales,
       valueIfEmpty
     )
   }
-  static PolitiscaleValueFreeSpeech(
+  static politiscaleValueFreeSpeech(
     scales?: IHasPolitiscales | IPolitiscale[],
     valueIfEmpty?: number
   ) {
-    return PolitiscaleHelper.PolitiscaleValue(
+    return PolitiscaleHelper.politiscaleValue(
       CONST_ScaleNameFreeSpeech,
       scales,
       valueIfEmpty
     )
   }
-  static PolitiscaleValueReligion(
+  static politiscaleValueReligion(
     scales?: IHasPolitiscales | IPolitiscale[],
     valueIfEmpty?: number
   ) {
-    return PolitiscaleHelper.PolitiscaleValue(
+    return PolitiscaleHelper.politiscaleValue(
       CONST_ScaleNameReligion,
       scales,
       valueIfEmpty
     )
   }
 
-  static setPolitiscaleValue(scale: IPolitiscale, value: string | number) {
+  static setpolitiscaleValue(scale: IPolitiscale, value: string | number) {
     const newFormData: IPolitiscale = { ...scale, value: Number(value) }
 
     return newFormData
@@ -477,7 +470,7 @@ export abstract class PolitiscaleHelper {
       formDataOrScaleArray
     )
 
-    return PolitiscaleHelper.PrimaryRating(name, rating)
+    return PolitiscaleHelper.primaryRating(name, rating)
   }
 
   static ratingForScaleRaw(
@@ -499,7 +492,7 @@ export abstract class PolitiscaleHelper {
     scales: IHasPolitiscales | IPolitiscale[],
     isLeft?: boolean
   ) {
-    const overall = PolitiscaleHelper.RatingOverall(
+    const overall = PolitiscaleHelper.ratingOverall(
       PolitiscaleHelper.getScales(scales)
     )
 
@@ -557,7 +550,7 @@ export type PolitiscaleCardProps = {
   visitText?: string
 }
 
-export function MapSlugWithScalesToIdNameValue(x: IdNameSlugWithScales) {
+export function mapSlugWithScalesToIdNameValue(x: IdNameSlugWithScales) {
   const inv: IdNameValue = {
     id: x.slug,
     name: x.name,
@@ -567,7 +560,7 @@ export function MapSlugWithScalesToIdNameValue(x: IdNameSlugWithScales) {
   return inv
 }
 
-export function MapTickerSearchToIdNameValue(x: ITickerSearch) {
+export function mapTickerSearchToIdNameValue(x: ITickerSearch) {
   const inv: IdNameValue = {
     id: x.ticker,
     name: x.name,
@@ -577,7 +570,7 @@ export function MapTickerSearchToIdNameValue(x: ITickerSearch) {
   return inv
 }
 
-export function MapSymbolDetailToPolitiscaleCardProps(
+export function mapSymbolDetailToPolitiscaleCardProps(
   symbolDetail: ISymbolDetail
 ): PolitiscaleCardProps {
   const inv: PolitiscaleCardProps = {
@@ -593,7 +586,7 @@ export function MapSymbolDetailToPolitiscaleCardProps(
   return inv
 }
 
-export function MapCityToPolitiscaleCardProps(
+export function mapCityToPolitiscaleCardProps(
   symbolDetail: ICity
 ): PolitiscaleCardProps {
   const inv: PolitiscaleCardProps = {

@@ -25,7 +25,7 @@ export class City implements ICity {
     }
   }
 
-  static CreateICity(overrides?: Partial<ICity>) {
+  static createICity(overrides?: Partial<ICity>) {
     const icity: ICity = {
       city: '',
       city_img: '',

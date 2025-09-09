@@ -61,7 +61,7 @@ describe('createICity', () => {
         slug: 'slug',
         sourceUrl: 'sourceUrl',
       },
-      city = City.CreateICity(aic)
+      city = City.createICity(aic)
 
     expect(city).toStrictEqual({
       city: 'city',

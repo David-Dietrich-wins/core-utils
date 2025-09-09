@@ -17,7 +17,7 @@ export interface IPolitiscaleSearchParams
   extends ISearchRequestView,
     IPolitiscales {}
 
-export function CreatePolitiscaleSearchParams(
+export function createPolitiscaleSearchParams(
   overrides?: Partial<IPolitiscaleSearchParams>
 ) {
   const ret: IPolitiscaleSearchParams = {
@@ -44,7 +44,7 @@ export const DEFAULT_PolitiscalesAll: IPolitiscales = {
   religion: 0,
 } as const
 
-export function PolitiscalesCreateAll(overrides?: Partial<IPolitiscales>) {
+export function politiscalesCreateAll(overrides?: Partial<IPolitiscales>) {
   const ret: IPolitiscales = { ...DEFAULT_PolitiscalesAll, ...overrides }
 
   return ret
