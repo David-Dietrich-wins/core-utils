@@ -55,17 +55,9 @@ export type ApiPropsDigicrew = {
 }
 
 export type ArrayOrSingle<T> = T | T[]
-export type ArrayOrSingleBasicTypes = ArrayOrSingle<BasicTypes>
 
 export type BasicTypes = string | number | bigint | boolean | null | undefined
-
-export type CreateImmutable<Type> = {
-  +readonly [Property in keyof Type]: Type[Property]
-}
-
-export type CreateMutable<Type> = {
-  -readonly [Property in keyof Type]: Type[Property]
-}
+export type ArrayOrSingleBasicTypes = ArrayOrSingle<BasicTypes>
 
 export type DataOrError<T = unknown> =
   | {
