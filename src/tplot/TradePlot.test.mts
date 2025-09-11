@@ -139,12 +139,14 @@ describe('fixupForSave', () => {
       expect.any(Date)
     )
 
+    // eslint-disable-next-line one-var
     const fixedTradePlot = TradePlot.fixupForSave(tradePlot)
 
     expect(fixedTradePlot.subplots[0].expectedTriggerDate).toBeUndefined()
 
     delete tradePlot.subplots[0].expectedTriggerDate
 
+    // eslint-disable-next-line one-var
     const fixedTradePlot2 = TradePlot.fixupForSave(tradePlot)
 
     expect(fixedTradePlot2.subplots[0].expectedTriggerDate).toBeUndefined()
@@ -427,48 +429,48 @@ describe('constructor', () => {
   it('misc calculations', () => {
     expect.hasAssertions()
 
-    const currentPrice = 100
-    const subplot = new Subplot({
-      comment: 'Test comment',
-      expectedTriggerDate: new Date('2023-10-01'),
-      gainCeilingPercent: 10,
-      id: '1',
-      lossFloorPercent: 5,
-      orderNumber: 1,
-      pattern: 'b28',
-      scaleInverted: false,
-      targetHigh: 155,
-      targetLow: 145,
-      timeframe: '1d',
-      useMinusEight: true,
-    })
-    const subplot2 = new Subplot({
-      comment: 'Another comment',
-      expectedTriggerDate: new Date('2023-10-01'),
-      gainCeilingPercent: 10,
-      id: '2',
-      lossFloorPercent: 5,
-      orderNumber: 1,
-      pattern: 'b28',
-      scaleInverted: false,
-      targetHigh: 200,
-      targetLow: 180,
-      timeframe: '1d',
-      useMinusEight: true,
-    })
-    const tradePlot = new TradePlot({
-      created: new Date(),
-      createdby: 'TradePlot',
-      description: 'Test Trade Plot',
-      goal: 150,
-      isShort: false,
-      purchase: 145,
-      shares: 10,
-      subplots: [subplot, subplot2],
-      ticker: 'AAPL',
-      updated: new Date(),
-      updatedby: 'TradePlot',
-    })
+    const currentPrice = 100,
+      subplot = new Subplot({
+        comment: 'Test comment',
+        expectedTriggerDate: new Date('2023-10-01'),
+        gainCeilingPercent: 10,
+        id: '1',
+        lossFloorPercent: 5,
+        orderNumber: 1,
+        pattern: 'b28',
+        scaleInverted: false,
+        targetHigh: 155,
+        targetLow: 145,
+        timeframe: '1d',
+        useMinusEight: true,
+      }),
+      subplot2 = new Subplot({
+        comment: 'Another comment',
+        expectedTriggerDate: new Date('2023-10-01'),
+        gainCeilingPercent: 10,
+        id: '2',
+        lossFloorPercent: 5,
+        orderNumber: 1,
+        pattern: 'b28',
+        scaleInverted: false,
+        targetHigh: 200,
+        targetLow: 180,
+        timeframe: '1d',
+        useMinusEight: true,
+      }),
+      tradePlot = new TradePlot({
+        created: new Date(),
+        createdby: 'TradePlot',
+        description: 'Test Trade Plot',
+        goal: 150,
+        isShort: false,
+        purchase: 145,
+        shares: 10,
+        subplots: [subplot, subplot2],
+        ticker: 'AAPL',
+        updated: new Date(),
+        updatedby: 'TradePlot',
+      })
 
     expect(tradePlot.getProfit(currentPrice)).toBe(-450)
     expect(tradePlot.getMaxExpectedTriggerDate(Date.now())).toBeUndefined()

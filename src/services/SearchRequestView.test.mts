@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 /* eslint-disable jest/no-conditional-in-test */
 import * as z from 'zod/v4'
 import {

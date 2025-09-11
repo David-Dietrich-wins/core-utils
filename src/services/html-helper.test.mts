@@ -45,16 +45,15 @@ describe('paramsEncoder', () => {
     expect.assertions(4)
 
     const headers = getHttpHeaderJson('my-token', [
-      ['X-Custom-Header', 'CustomValue'],
-    ])
+        ['X-Custom-Header', 'CustomValue'],
+      ]),
+      headersWithoutToken = getHttpHeaderJson(undefined, [
+        ['X-Custom-Header', 'CustomValue'],
+      ])
 
     expect(headers.get('Content-Type')).toBe('application/json')
     expect(headers.get('Authorization')).toBe('Bearer my-token')
     expect(headers.get('X-Custom-Header')).toBe('CustomValue')
-
-    const headersWithoutToken = getHttpHeaderJson(undefined, [
-      ['X-Custom-Header', 'CustomValue'],
-    ])
 
     expect(headersWithoutToken.get('Authorization')).toBeNull()
   })

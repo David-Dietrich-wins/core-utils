@@ -395,8 +395,8 @@ describe('randomStringGenerate', () => {
   it('no params', () => {
     expect.assertions(1)
 
-    const lengthForRandomString = 4
-    const ranstr = randomStringGenerate()
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate()
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
@@ -404,8 +404,8 @@ describe('randomStringGenerate', () => {
   it('proper length', () => {
     expect.assertions(1)
 
-    const lengthForRandomString = 4
-    const ranstr = randomStringGenerate(lengthForRandomString)
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })
@@ -413,11 +413,8 @@ describe('randomStringGenerate', () => {
   it('using chars and numbers', () => {
     expect.assertions(1)
 
-    const lengthForRandomString = 4
-    const ranstr = randomStringGenerate(
-      lengthForRandomString,
-      CONST_CharsNumbers
-    )
+    const lengthForRandomString = 4,
+      ranstr = randomStringGenerate(lengthForRandomString, CONST_CharsNumbers)
 
     expect(ranstr).toHaveLength(lengthForRandomString)
   })

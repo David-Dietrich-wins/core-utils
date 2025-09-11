@@ -16,6 +16,7 @@ describe('constructor', () => {
     cacheManager.set('key1', Date.now() + 60000, 'value1')
     cacheManager.set('key2', Date.now() + 60000, 'value2')
 
+    // eslint-disable-next-line one-var
     const akeyvals = [{ id: 'key1', value: 'abc' }],
       fnCache = async (_arrKeys: ArrayOrSingle<string>) =>
         Promise.resolve(

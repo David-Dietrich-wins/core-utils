@@ -6,27 +6,25 @@ describe('api responses', () => {
   it('success', () => {
     expect.assertions(18)
 
-    const resapi = ApiResponseHelper.success('test')
+    const apires = ApiResponseHelper.success('test'),
+      apiresSuccess = new ApiResponse('', 'success', '', 0),
+      obj = { a: 'test' },
+      objres = ApiResponseHelper.success(obj),
+      resApiResponse = ApiResponseHelper.success(apiresSuccess)
 
-    expect(resapi.id).toBeGreaterThan(0)
-    expect(resapi.ts).toBeGreaterThan(0)
-    expect(resapi.message).toBe('test')
-    expect(resapi.responseCode).toBe(0)
-    expect(resapi.result).toBe('success')
-    expect(resapi.data).toBe('test')
+    expect(apires.id).toBeGreaterThan(0)
+    expect(apires.ts).toBeGreaterThan(0)
+    expect(apires.message).toBe('test')
+    expect(apires.responseCode).toBe(0)
+    expect(apires.result).toBe('success')
+    expect(apires.data).toBe('test')
 
-    const obj = { a: 'test' },
-      resobj = ApiResponseHelper.success(obj)
-
-    expect(resobj.id).toBeGreaterThan(0)
-    expect(resobj.ts).toBeGreaterThan(0)
-    expect(resobj.message).toBe('')
-    expect(resobj.responseCode).toBe(0)
-    expect(resobj.result).toBe('success')
-    expect(resobj.data).toBe(obj)
-
-    const newApiResponse = new ApiResponse('', 'success', '', 0),
-      resApiResponse = ApiResponseHelper.success(newApiResponse)
+    expect(objres.id).toBeGreaterThan(0)
+    expect(objres.ts).toBeGreaterThan(0)
+    expect(objres.message).toBe('')
+    expect(objres.responseCode).toBe(0)
+    expect(objres.result).toBe('success')
+    expect(objres.data).toBe(obj)
 
     expect(resApiResponse.id).toBeGreaterThan(0)
     expect(resApiResponse.ts).toBeGreaterThan(0)
@@ -39,23 +37,16 @@ describe('api responses', () => {
   it('error', () => {
     expect.assertions(12)
 
-    const resapi = ApiResponseHelper.error('test')
-
-    expect(resapi.id).toBeGreaterThan(0)
-    expect(resapi.ts).toBeGreaterThan(0)
-    expect(resapi.message).toBe('test')
-    expect(resapi.responseCode).toBe(-1)
-    expect(resapi.result).toBe('Error')
-    expect(resapi.data).toBe('test')
-
-    const newApiResponse = new ApiResponse<string>(
-        'Error',
-        'Error',
-        'Error',
-        -1
-      ),
+    const apires = ApiResponseHelper.error('test'),
+      newApiResponse = new ApiResponse<string>('Error', 'Error', 'Error', -1),
       resApiResponse = ApiResponseHelper.error(newApiResponse)
 
+    expect(apires.id).toBeGreaterThan(0)
+    expect(apires.ts).toBeGreaterThan(0)
+    expect(apires.message).toBe('test')
+    expect(apires.responseCode).toBe(-1)
+    expect(apires.result).toBe('Error')
+    expect(apires.data).toBe('test')
     expect(resApiResponse.id).toBeGreaterThan(0)
     expect(resApiResponse.ts).toBeGreaterThan(0)
     expect(resApiResponse.message).toBe('Error')

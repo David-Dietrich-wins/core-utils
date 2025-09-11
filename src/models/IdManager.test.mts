@@ -125,7 +125,8 @@ describe('idManager', () => {
   it('zIId', () => {
     expect.assertions(20)
 
-    const zId = IdManager.zIId(zStringMinMax(1, 50))
+    const zId = IdManager.zIId(zStringMinMax(1, 50)),
+      zIdNum = IdManager.zIId(z.number().min(1).max(50))
     // Const ret = zId.safeParse({ id: 'test' })
 
     expect(zId.safeParse({ id: 'test' }).success).toBe(true)
@@ -141,8 +142,6 @@ describe('idManager', () => {
     expect(zId.safeParse({ id: 'a'.repeat(49) }).success).toBe(true)
     expect(zId.safeParse({ id: 'a'.repeat(52) }).success).toBe(false)
     expect(zId.safeParse({ id: 'a'.repeat(51) }).success).toBe(false)
-
-    const zIdNum = IdManager.zIId(z.number().min(1).max(50))
 
     expect(zIdNum.safeParse({ id: 'test' }).success).toBe(false)
     expect(zIdNum.safeParse({ id: 25 }).success).toBe(true)

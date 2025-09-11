@@ -336,11 +336,11 @@ describe('finders', () => {
     expect.assertions(3)
 
     const arr = [
-      { id: 1, name: 'name1' },
-      { id: 2, name: 'name2' },
-      { id: 3, name: 'name3' },
-    ]
-    const filterFunc = (item: IdName<number>) => item.id === 1
+        { id: 1, name: 'name1' },
+        { id: 2, name: 'name2' },
+        { id: 3, name: 'name3' },
+      ],
+      filterFunc = (item: IdName<number>) => item.id === 1
 
     expect(arrayFilter([], filterFunc)).toStrictEqual([])
     expect(arrayFilter(undefined, filterFunc)).toStrictEqual([])
@@ -351,11 +351,11 @@ describe('finders', () => {
     expect.assertions(3)
 
     const arr = [
-      { id: 1, name: 'name1' },
-      { id: 2, name: 'name2' },
-      { id: 3, name: 'name3' },
-    ]
-    const filterFunc = (item: IdName<number>) => item.id === 1
+        { id: 1, name: 'name1' },
+        { id: 2, name: 'name2' },
+        { id: 3, name: 'name3' },
+      ],
+      filterFunc = (item: IdName<number>) => item.id === 1
 
     expect(arrayFind([], filterFunc)).toBeUndefined()
     expect(arrayFind(undefined, filterFunc)).toBeUndefined()
@@ -366,11 +366,11 @@ describe('finders', () => {
     expect.assertions(2)
 
     const arr = [
-      { id: 1, name: 'name1' },
-      { id: 2, name: 'name2' },
-      { id: 3, name: 'name3' },
-    ]
-    const filterFunc = (item: IdName<number>) => item.id === 1
+        { id: 1, name: 'name1' },
+        { id: 2, name: 'name2' },
+        { id: 3, name: 'name3' },
+      ],
+      filterFunc = (item: IdName<number>) => item.id === 1
 
     expect(() => arrayMustFindFunc([], filterFunc)).toThrow(
       'Unable to find arrayMustFindFunc.'
@@ -502,13 +502,12 @@ describe('converters', () => {
   it('arrayLastNonEmpty', () => {
     expect.assertions(6)
 
-    const fname = arrayLastNonEmpty.name
-
-    const arr = [
-      { id: 1, name: 'name1' },
-      { id: 2, name: 'name2' },
-      { id: 3, name: 'name3' },
-    ]
+    const fname = arrayLastNonEmpty.name,
+      zarr = [
+        { id: 1, name: 'name1' },
+        { id: 2, name: 'name2' },
+        { id: 3, name: 'name3' },
+      ]
 
     expect(() => arrayLastNonEmpty()).toThrow(
       new AppException('Array has no items.')
@@ -523,8 +522,8 @@ describe('converters', () => {
       new AppException('Array has no items.')
     )
 
-    expect(arrayFirstNonEmpty(arr)).toStrictEqual(arr[0])
-    expect(arrayLastNonEmpty(arr)).toStrictEqual(arr[2])
+    expect(arrayFirstNonEmpty(zarr)).toStrictEqual(zarr[0])
+    expect(arrayLastNonEmpty(zarr)).toStrictEqual(zarr[2])
   })
 
   it('arrayForEachReturns', () => {
@@ -705,17 +704,14 @@ describe('converters', () => {
     expect.assertions(3)
 
     const arr: IIdNameValue[] = [
-      { id: '1', name: 'name1', value: 'value1' },
-      { id: '2', name: 'name2', value: 'value2' },
-      { id: '3', name: 'name3', value: 'value3' },
-    ]
+        { id: '1', name: 'name1', value: 'value1' },
+        { id: '2', name: 'name2', value: 'value2' },
+        { id: '3', name: 'name3', value: 'value3' },
+      ],
+      arrString = ['2', '4', '6']
 
     expect(toIIdNameArray(arr)).toStrictEqual(arr)
-
     expect(toIIdNameArray(undefined)).toStrictEqual([])
-
-    const arrString = ['2', '4', '6']
-
     expect(toIIdNameArray(arrString)).toStrictEqual([
       { id: '2', name: '2' },
       { id: '4', name: '4' },
@@ -753,6 +749,7 @@ describe('converters', () => {
 
     expect(arrayReduceArrayReturns(undefined, funcReturns)).toStrictEqual([])
 
+    // eslint-disable-next-line one-var
     let result = arrayReduceArrayReturns(arr, funcReturns)
 
     expect(result).toStrictEqual(arr)
@@ -766,6 +763,7 @@ describe('converters', () => {
 
     result = arrayReduceArrayReturns(arr, funcReturns)
 
+    // eslint-disable-next-line one-var
     const expected = [arr[0], arr[0], arr[1], arr[1], arr[2], arr[2]]
 
     expect(result).toStrictEqual(expected)
@@ -890,15 +888,14 @@ describe('converters', () => {
   it('arrayMoveFromTo', () => {
     expect.assertions(12)
 
-    const arr = [0, 1, 2, 3, 4, 5, 6]
-    const myArray = [10, 20, 30, 40, 50]
+    const anotherArray = ['a', 'b', 'c', 'd'],
+      arr = [0, 1, 2, 3, 4, 5, 6],
+      myArray = [10, 20, 30, 40, 50]
 
     // Move element at index 0 (10) to index 2
     expect(arrayMoveElement([...myArray], 0, 2)).toStrictEqual([
       20, 30, 10, 40, 50,
     ])
-
-    const anotherArray = ['a', 'b', 'c', 'd']
 
     // Move element at index 3 ('d') to index 1
     expect(arrayMoveElement([...anotherArray], 3, 1)).toStrictEqual([
@@ -941,20 +938,19 @@ describe('converters', () => {
     expect.assertions(2)
 
     const arr: IdName<number>[] = [
-      { id: 1, name: 'name1' },
-      { id: 2, name: 'name2' },
-      { id: 3, name: 'name3' },
-    ]
+        { id: 1, name: 'name1' },
+        { id: 2, name: 'name2' },
+        { id: 3, name: 'name3' },
+      ],
+      filterFunc = (item: IdName<number>) => item.id !== 2,
+      mapFunc = (item: IdName<number>) => {
+        const ret: IdName<number> = {
+          id: item.id,
+          name: item.name.toUpperCase(),
+        }
 
-    const filterFunc = (item: IdName<number>) => item.id !== 2
-    const mapFunc = (item: IdName<number>) => {
-      const ret: IdName<number> = {
-        id: item.id,
-        name: item.name.toUpperCase(),
+        return ret
       }
-
-      return ret
-    }
 
     expect(arrayFilterMap(arr, mapFunc)).toStrictEqual([
       { id: 1, name: 'NAME1' },
@@ -973,64 +969,65 @@ describe(`${splitToArray.name} types`, () => {
   it('good', () => {
     expect.assertions(14)
 
-    let strOrArray: StringOrStringArray = 'a,b , c,'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = true
-    let arr = splitToArray(strOrArray)
+    const removeEmpties = true,
+      splitter = ',',
+      trimStrings = true
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    let arr: StringOrStringArray = 'a,b , c,',
+      arrSplit = splitToArray(arr)
 
-    arr = splitToArray(strOrArray, splitter)
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    arrSplit = splitToArray(arr, splitter)
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties)
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    arrSplit = splitToArray(arr, splitter, removeEmpties)
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties, trimStrings)
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    arrSplit = splitToArray(arr, splitter, removeEmpties, trimStrings)
 
-    strOrArray = 'a'
-    arr = splitToArray(strOrArray)
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    expect(arr).toStrictEqual(['a'])
+    arr = 'a'
+    arrSplit = splitToArray(arr)
 
-    arr = splitToArray(strOrArray, splitter)
+    expect(arrSplit).toStrictEqual(['a'])
 
-    expect(arr).toStrictEqual(['a'])
+    arrSplit = splitToArray(arr, splitter)
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties)
+    expect(arrSplit).toStrictEqual(['a'])
 
-    expect(arr).toStrictEqual(['a'])
+    arrSplit = splitToArray(arr, splitter, removeEmpties)
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties, trimStrings)
+    expect(arrSplit).toStrictEqual(['a'])
 
-    expect(arr).toStrictEqual(['a'])
+    arrSplit = splitToArray(arr, splitter, removeEmpties, trimStrings)
+
+    expect(arrSplit).toStrictEqual(['a'])
 
     // strOrArray as Array
-    strOrArray = ['a', 'b ', ' c', '']
-    arr = splitToArray(strOrArray)
+    arr = ['a', 'b ', ' c', '']
+    arrSplit = splitToArray(arr)
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    arr = splitToArray(strOrArray, splitter)
+    arrSplit = splitToArray(arr, splitter)
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties)
+    arrSplit = splitToArray(arr, splitter, removeEmpties)
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    arr = splitToArray(strOrArray, splitter, removeEmpties, trimStrings)
+    arrSplit = splitToArray(arr, splitter, removeEmpties, trimStrings)
 
-    expect(arr).toStrictEqual(['a', 'b', 'c'])
+    expect(arrSplit).toStrictEqual(['a', 'b', 'c'])
 
-    arr = splitToArray(undefined)
+    arrSplit = splitToArray(undefined)
 
-    expect(arr).toStrictEqual([])
+    expect(arrSplit).toStrictEqual([])
 
     expect(splitToArray(2 as any)).toStrictEqual(['2'])
   })
@@ -1040,10 +1037,11 @@ describe('splitToArrayOrStringIfOnlyOne', () => {
   it('default', () => {
     expect.assertions(5)
 
-    const strOrArray = 'a,b , c'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = true
+    const removeEmpties = true,
+      splitter = ',',
+      strOrArray = 'a,b , c',
+      trimStrings = true
+
     let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
 
     expect(arr).toStrictEqual(['a', 'b', 'c'])
@@ -1078,10 +1076,11 @@ describe('splitToArrayOrStringIfOnlyOne', () => {
   it('no remove empties', () => {
     expect.assertions(5)
 
-    const strOrArray = 'a,b   , c,'
-    const splitter = ','
-    const removeEmpties = false
-    const trimStrings = false
+    const removeEmpties = false,
+      splitter = ',',
+      strOrArray = 'a,b   , c,',
+      trimStrings = false
+
     let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
 
     expect(arr).toStrictEqual(['a', 'b', 'c'])
@@ -1116,10 +1115,11 @@ describe('splitToArrayOrStringIfOnlyOne', () => {
   it('no trim strings', () => {
     expect.assertions(6)
 
-    const strOrArray = 'a,b   , c'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = false
+    const removeEmpties = true,
+      splitter = ',',
+      strOrArray = 'a,b   , c',
+      trimStrings = false
+
     let arr: StringOrStringArray = splitToArrayOrStringIfOnlyOne(strOrArray)
 
     expect(arr).toStrictEqual(['a', 'b', 'c'])
@@ -1165,10 +1165,11 @@ describe('splitters', () => {
   it('default', () => {
     expect.assertions(5)
 
-    const strOrArray = 'a,b , c'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = true
+    const removeEmpties = true,
+      splitter = ',',
+      strOrArray = 'a,b , c',
+      trimStrings = true
+
     let arr: StringOrStringArray =
       splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
 
@@ -1208,10 +1209,11 @@ describe('splitters', () => {
   it('no remove empties', () => {
     expect.assertions(5)
 
-    const strOrArray = 'a,b   , c,'
-    const splitter = ','
-    const removeEmpties = false
-    const trimStrings = false
+    const removeEmpties = false,
+      splitter = ',',
+      strOrArray = 'a,b   , c,',
+      trimStrings = false
+
     let arr: StringOrStringArray =
       splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
 
@@ -1251,10 +1253,11 @@ describe('splitters', () => {
   it('no trim strings', () => {
     expect.assertions(5)
 
-    const strOrArray = 'a,b   , c'
-    const splitter = ','
-    const removeEmpties = true
-    const trimStrings = false
+    const removeEmpties = true,
+      splitter = ',',
+      strOrArray = 'a,b   , c',
+      trimStrings = false
+
     let arr: StringOrStringArray =
       splitToArrayOrStringIfOnlyOneToUpper(strOrArray)
 

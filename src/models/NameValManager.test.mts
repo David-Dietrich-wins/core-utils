@@ -83,38 +83,36 @@ describe('nameValManager', () => {
   it('nameVal.createINameVal', () => {
     expect.assertions(5)
 
-    const name = 'name',
-      value = 'value',
-      zitem = NameVal.createINameVal(name, value)
+    const aname = 'name',
+      avalue = 'value',
+      item = NameVal.createINameVal(aname, avalue),
+      item2 = NameVal.createINameVal<{ id: number }>(aname, {
+        id: 123,
+      })
 
-    expect(zitem.name).toBe(name)
-    expect(zitem.val).toBe(value)
-    expect(zitem).toStrictEqual({ name, val: value })
+    expect(item.name).toBe(aname)
+    expect(item.val).toBe(avalue)
+    expect(item).toStrictEqual({ name: aname, val: avalue })
 
-    const item2 = NameVal.createINameVal<{ id: number }>(name, {
-      id: 123,
-    })
-
-    expect(item2.name).toBe(name)
+    expect(item2.name).toBe(aname)
     expect(item2.val).toStrictEqual({ id: 123 })
   })
 
   it('nameValManager.createINameVal', () => {
     expect.assertions(5)
 
-    const name = 'name',
-      value = 'value',
-      zitem = NameValManager.toINameVal(name, value)
+    const aname = 'name',
+      avalue = 'value',
+      item = NameValManager.toINameVal(aname, avalue),
+      item2 = NameValManager.toINameVal<{ id: number }>(aname, {
+        id: 123,
+      })
 
-    expect(zitem.name).toBe(name)
-    expect(zitem.val).toBe(value)
-    expect(zitem).toStrictEqual({ name, val: value })
+    expect(item.name).toBe(aname)
+    expect(item.val).toBe(avalue)
+    expect(item).toStrictEqual({ name: aname, val: avalue })
 
-    const item2 = NameValManager.toINameVal<{ id: number }>(name, {
-      id: 123,
-    })
-
-    expect(item2.name).toBe(name)
+    expect(item2.name).toBe(aname)
     expect(item2.val).toStrictEqual({ id: 123 })
   })
 })

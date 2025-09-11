@@ -21,14 +21,11 @@ describe('getRedirectAfterLogin', () => {
   it('returns default redirect for illegal paths', () => {
     expect.assertions(3)
 
-    const result = RedirectHelper.cleansedRedirect('/login', '/dashboard')
+    const result = RedirectHelper.cleansedRedirect('/login', '/dashboard'),
+      resultNull = RedirectHelper.cleansedRedirect('/login', null)
 
     expect(result).toBe('/dashboard')
-
-    const defaultResult = RedirectHelper.cleansedRedirect('/login', null)
-
-    expect(defaultResult).toBe('/')
-
+    expect(resultNull).toBe('/')
     expect(RedirectHelper.cleansedRedirect('/a', null)).toBe(
       '/login?redirectUrl=%2Fa'
     )
@@ -37,18 +34,15 @@ describe('getRedirectAfterLogin', () => {
   it('handles illegal redirect paths', () => {
     expect.assertions(8)
 
-    const result = RedirectHelper.cleansedRedirect('/login', '/')
-
-    expect(result).toBe('/')
-
-    const result2 = RedirectHelper.cleansedRedirect('/login', '/dashboard')
-
-    expect(result2).toBe('/dashboard')
-
-    const myCustomPath = '/test-path',
+    const aresult = RedirectHelper.cleansedRedirect('/login', '/'),
+      aresult2 = RedirectHelper.cleansedRedirect('/login', '/dashboard'),
+      myCustomPath = '/test-path',
       nonLoggedInRedirectPath = `/login?redirectUrl=${encodeURIComponent(
         myCustomPath
       )}`
+
+    expect(aresult).toBe('/')
+    expect(aresult2).toBe('/dashboard')
 
     expect(RedirectHelper.cleansedRedirect('/login', myCustomPath)).toBe(
       myCustomPath

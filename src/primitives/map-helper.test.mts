@@ -39,8 +39,8 @@ describe('map-helper', () => {
   it('dictionaryFromObject', () => {
     expect.assertions(2)
 
-    const obj = { key1: 1, key2: 2 }
-    const dict = dictionaryFromObject(obj)
+    const aobj = { key1: 1, key2: 2 },
+      dict = dictionaryFromObject(aobj)
 
     expect(dict.get('key1')).toBe(1)
     expect(dict.get('key2')).toBe(2)
@@ -52,6 +52,7 @@ describe('map-helper', () => {
     const dict = new Map<string, number>()
     dict.set('key1', 1)
     dict.set('key2', 2)
+    // eslint-disable-next-line one-var
     const obj = dictionaryToObject(dict)
 
     expect(obj).toStrictEqual({ key1: 1, key2: 2 })

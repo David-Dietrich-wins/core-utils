@@ -176,6 +176,7 @@ export class SearchRequestView implements ISearchRequestView {
       })
     }
 
+    // eslint-disable-next-line one-var
     const numFound = ret.length,
       sortColumn = safestrTrim(this.sortColumn)
     if (hasData(sortColumn)) {
@@ -186,6 +187,7 @@ export class SearchRequestView implements ISearchRequestView {
       )
     }
 
+    // eslint-disable-next-line one-var
     const offset = this.calculatedOffset,
       pageSize = this.calculatedPageSize
     if (pageSize > 0) {

@@ -20,40 +20,35 @@ import { isObject } from '../primitives/object-helper.mjs'
 import moment from 'moment'
 import { safeArray } from '../primitives/array-helper.mjs'
 
-const CONST_TickerMaxLength = 20
-
-export const zSymbol = z.object({
-  symbol: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
-})
-export type ISymbol = z.infer<typeof zSymbol>
-
-export const zTicker = z.object({
-  ticker: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
-})
-export type ITicker = z.infer<typeof zTicker>
-
-export const zTickerArray = z.object({
-  ticker: zFromStringOrStringArray(1, CONST_TickerMaxLength, {
-    arrayStringMax: 1000,
-    uppercase: true,
+export const CONST_TickerMaxLength = 20,
+  zSymbol = z.object({
+    symbol: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
   }),
-})
+  zTicker = z.object({
+    ticker: zStringMinMax(1, CONST_TickerMaxLength, { uppercase: true }),
+  }),
+  zTickerArray = z.object({
+    ticker: zFromStringOrStringArray(1, CONST_TickerMaxLength, {
+      arrayStringMax: 1000,
+      uppercase: true,
+    }),
+  }),
+  zTickerToArray = z.object({
+    ticker: zToStringArray(1, 10, { arrayStringMax: 1000, uppercase: true }),
+  }),
+  zTickersArray = z.object({
+    tickers: zFromStringOrStringArray(1, 10, { uppercase: true }),
+  }),
+  zVolume = z.object({
+    //Z.preprocess(Number, z.number()),
+    volume: z.coerce.number().min(1).max(1000000000000),
+  })
+
+export type ISymbol = z.infer<typeof zSymbol>
+export type ITicker = z.infer<typeof zTicker>
 export type ITickerArray = z.infer<typeof zTickerArray>
-
-export const zTickerToArray = z.object({
-  ticker: zToStringArray(1, 10, { arrayStringMax: 1000, uppercase: true }),
-})
 export type ITickerToArray = z.infer<typeof zTickerToArray>
-
-export const zTickersArray = z.object({
-  tickers: zFromStringOrStringArray(1, 10, { uppercase: true }),
-})
 export type ITickersArray = z.infer<typeof zTickersArray>
-
-export const zVolume = z.object({
-  //Z.preprocess(Number, z.number()),
-  volume: z.coerce.number().min(1).max(1000000000000),
-})
 
 export type IVolume = z.infer<typeof zVolume>
 
@@ -895,6 +890,7 @@ export function createIAssetQuotesWithScore(
     if (isObject(dictsym) && totalScore) {
       scorePercentage = dictsym.score ? dictsym.score / totalScore : 0
 
+      // eslint-disable-next-line prefer-destructuring
       matches = dictsym.matches
     }
 

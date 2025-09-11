@@ -6,6 +6,7 @@ import { newGuid } from '../primitives/uuid-helper.mjs'
 
 const CONST_DefaultTicker = 'AAPL'
 
+// eslint-disable-next-line one-var
 export const TileTypeKeys = {
   chart: 'chart',
   content: 'content',

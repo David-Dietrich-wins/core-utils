@@ -43,13 +43,12 @@ describe('pagedResponse', () => {
 
     let pr = new PagedResponse<{ data: 'hello' }>([{ data: 'hello' }], 1)
 
-    const apiResponse = new ApiResponse(pr, 'result', 'message', 20)
+    const apiResponse = new ApiResponse(pr, 'result', 'message', 20),
+      mydata = PagedResponse.apiResponseGetData(apiResponse)
     pr = PagedResponse.createFromApiResponse(apiResponse)
 
     expect(pr.totalCount).toBe(1)
     expect(pr.dataPage[0].data).toBe('hello')
-
-    const mydata = PagedResponse.apiResponseGetData(apiResponse)
 
     expect(mydata).toHaveLength(1)
     expect(mydata[0].data).toBe('hello')

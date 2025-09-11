@@ -57,13 +57,12 @@ describe('createdTable', () => {
       createdby: 'IdCreatedUpdated',
     }
 
-    let createTable = new CreatedTable()
+    let createTable = new CreatedTable(),
+      ret = createTable.copyFromDatabase(icreatedTable)
 
     expect(createTable).toBeInstanceOf(CreatedTable)
     expect(createTable.createdby).toBe('IdCreatedUpdated')
     expect(createTable.created).toBeInstanceOf(Date)
-
-    let ret = createTable.copyFromDatabase(icreatedTable)
 
     expect(ret).toBeUndefined()
     expect(createTable.createdby).toBe('IdCreatedUpdated')
@@ -128,22 +127,21 @@ describe('createdUpdatedTable', () => {
   it('copyFromDatabase', () => {
     expect.assertions(15)
 
-    const icreatedTable: ICreatedUpdatedTable = {
-      created: new Date('2025-12-01T12:00:00.000Z'),
-      createdby: 'IdCreatedUpdated',
-      updated: new Date('2025-12-01T12:00:00.000Z'),
-      updatedby: 'IdCreatedUpdated',
-    }
-
     let createTable = new CreatedUpdatedTable()
+
+    const icreatedTable: ICreatedUpdatedTable = {
+        created: new Date('2025-12-01T12:00:00.000Z'),
+        createdby: 'IdCreatedUpdated',
+        updated: new Date('2025-12-01T12:00:00.000Z'),
+        updatedby: 'IdCreatedUpdated',
+      },
+      ret = createTable.copyFromDatabase(icreatedTable)
 
     expect(createTable).toBeInstanceOf(CreatedUpdatedTable)
     expect(createTable.createdby).toBe('IdCreatedUpdated')
     expect(createTable.created).toBeInstanceOf(Date)
     expect(createTable.updatedby).toBe('IdCreatedUpdated')
     expect(createTable.updated).toBeInstanceOf(Date)
-
-    const ret = createTable.copyFromDatabase(icreatedTable)
 
     expect(ret).toBeUndefined()
 
@@ -230,6 +228,7 @@ describe('userCreatedUpdatedTable', () => {
     expect(createTable.updated).toBeInstanceOf(Date)
     expect(createTable.userid).toBeUndefined()
 
+    // eslint-disable-next-line one-var
     let ret = createTable.copyFromDatabase(icreatedTable)
 
     expect(ret).toBeUndefined()

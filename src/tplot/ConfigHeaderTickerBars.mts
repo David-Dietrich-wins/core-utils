@@ -39,23 +39,22 @@ export class ConfigHeaderTickerBars {
     overrides?: Partial<IConfigHeaderTickerBars>,
     updated?: DateTypeAcceptable
   ) {
-    const dateNow = dateGetTime(updated)
-
-    const cfgHeaderTickerBars: IConfigHeaderTickerBars = {
-      asset: {
+    const adateNow = dateGetTime(updated),
+      cfgHeaderTickerBars: IConfigHeaderTickerBars = {
+        asset: {
+          id: newGuid(),
+          tickers: ['AAPL'],
+          updated: adateNow,
+        },
+        crypto: {
+          id: newGuid(),
+          tickers: ['BTCUSD', 'ETHUSD'],
+          updated: adateNow,
+        },
         id: newGuid(),
-        tickers: ['AAPL'],
-        updated: dateNow,
-      },
-      crypto: {
-        id: newGuid(),
-        tickers: ['BTCUSD', 'ETHUSD'],
-        updated: dateNow,
-      },
-      id: newGuid(),
-      updated: dateNow,
-      ...overrides,
-    }
+        updated: adateNow,
+        ...overrides,
+      }
 
     return ConfigHeaderTickerBars.verifyHeaderBars(cfgHeaderTickerBars)
   }
@@ -115,8 +114,8 @@ export class ConfigHeaderTickerBars {
     payload: FuncContextTickers<T>,
     updated?: DateTypeAcceptable
   ) {
-    const dtUpdated = dateGetTime(updated)
-    const updater = isFunction(payload) ? payload(cfg.crypto) : payload
+    const dtUpdated = dateGetTime(updated),
+      updater = isFunction(payload) ? payload(cfg.crypto) : payload
 
     return ConfigHeaderTickerBars.updateHeader(
       cfg,
@@ -130,8 +129,8 @@ export class ConfigHeaderTickerBars {
     payload: FuncContextTickers<T>,
     updated?: DateTypeAcceptable
   ) {
-    const dtUpdated = dateGetTime(updated)
-    const updater = isFunction(payload) ? payload(cfg.asset) : payload
+    const dtUpdated = dateGetTime(updated),
+      updater = isFunction(payload) ? payload(cfg.asset) : payload
 
     return ConfigHeaderTickerBars.updateHeader(
       cfg,

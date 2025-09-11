@@ -35,8 +35,6 @@ export function colorInterpolateRange(
 ) {
   let [startColor, endColor] = colorRange
 
-  const percent = percentOfRange / 100
-
   if (startColor.startsWith('#')) {
     startColor = startColor.substring(1)
   }
@@ -45,6 +43,7 @@ export function colorInterpolateRange(
   }
 
   const endMatch = endColor.match(/.{1,2}/gu),
+    percent = percentOfRange / 100,
     startMatch = startColor.match(/.{1,2}/gu),
     tn0 = startMatch
       ? safeArray(startMatch).map((oct) => parseInt(oct, 16) * (1 - percent))

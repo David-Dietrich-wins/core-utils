@@ -41,6 +41,7 @@ describe('assetQuoteShort', () => {
     a.price = 123.45
     a.volume = 1000000
 
+    // eslint-disable-next-line one-var
     const aqs = new AssetQuoteShort(a)
 
     expect(aqs.symbol).toBe('AAPL')
@@ -105,21 +106,21 @@ describe('companyProfile', () => {
     expect.assertions(14)
 
     const iphr: IPriceHistoricalFull = {
-      adjClose: 0,
-      change: 0,
-      changeOverTime: 0,
-      changePercent: 0,
-      close: 0,
-      date: '',
-      high: 0,
-      label: '',
-      low: 0,
-      open: 0,
-      unadjustedVolume: 0,
-      volume: 0,
-      vwap: 0,
-    }
-    const phr = new PriceHistoricalResponse(iphr)
+        adjClose: 0,
+        change: 0,
+        changeOverTime: 0,
+        changePercent: 0,
+        close: 0,
+        date: '',
+        high: 0,
+        label: '',
+        low: 0,
+        open: 0,
+        unadjustedVolume: 0,
+        volume: 0,
+        vwap: 0,
+      },
+      phr = new PriceHistoricalResponse(iphr)
 
     expect(phr.date).toBe('')
     expect(phr.open).toBe(0)

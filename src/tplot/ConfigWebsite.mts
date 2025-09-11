@@ -22,16 +22,15 @@ export class ConfigWebsite {
     overrides?: Partial<IConfigWebsite>,
     updated?: DateTypeAcceptable
   ): IConfigWebsite {
-    const dtUpdated = dateGetTime(updated)
-
-    const cfgWebsite: IConfigWebsite = {
-      hideHelp: { id: newGuid(), updated: dtUpdated, value: false },
-      hideTooltips: { id: newGuid(), updated: dtUpdated, value: false },
-      id: newGuid(),
-      openFirstPlot: { id: newGuid(), updated: dtUpdated, value: true },
-      updated: dtUpdated,
-      ...overrides,
-    }
+    const aUpdated = dateGetTime(updated),
+      cfgWebsite: IConfigWebsite = {
+        hideHelp: { id: newGuid(), updated: aUpdated, value: false },
+        hideTooltips: { id: newGuid(), updated: aUpdated, value: false },
+        id: newGuid(),
+        openFirstPlot: { id: newGuid(), updated: aUpdated, value: true },
+        updated: aUpdated,
+        ...overrides,
+      }
 
     return cfgWebsite
   }
@@ -51,9 +50,8 @@ export class ConfigWebsite {
   }
 
   static hideHelp(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = dateGetTime(updated)
-
-    const hideHelp = updateContextValueToggleBoolean(cfg.hideHelp, dtUpdated)
+    const dtUpdated = dateGetTime(updated),
+      hideHelp = updateContextValueToggleBoolean(cfg.hideHelp, dtUpdated)
 
     return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       hideHelp,
@@ -61,12 +59,11 @@ export class ConfigWebsite {
   }
 
   static hideTooltips(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = dateGetTime(updated)
-
-    const hideTooltips = updateContextValueToggleBoolean(
-      cfg.hideTooltips,
-      dtUpdated
-    )
+    const dtUpdated = dateGetTime(updated),
+      hideTooltips = updateContextValueToggleBoolean(
+        cfg.hideTooltips,
+        dtUpdated
+      )
 
     return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       hideTooltips,
@@ -74,12 +71,11 @@ export class ConfigWebsite {
   }
 
   static openFirstPlot(cfg: IConfigWebsite, updated?: DateTypeAcceptable) {
-    const dtUpdated = dateGetTime(updated)
-
-    const openFirstPlot = updateContextValueToggleBoolean(
-      cfg.openFirstPlot,
-      dtUpdated
-    )
+    const dtUpdated = dateGetTime(updated),
+      openFirstPlot = updateContextValueToggleBoolean(
+        cfg.openFirstPlot,
+        dtUpdated
+      )
 
     return ConfigWebsite.updateHeader(cfg, dtUpdated, {
       openFirstPlot,

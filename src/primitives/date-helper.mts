@@ -20,12 +20,7 @@ import { AppException } from '../models/AppException.mjs'
 import type { FromTo } from '../models/types.mjs'
 import { isNullOrUndefined } from './object-helper.mjs'
 
-export const MILLIS_PER_DAY = 86400000,
-  MILLIS_PER_HOUR = 3600000,
-  MILLIS_PER_MINUTE = 60000,
-  MILLIS_PER_SECOND = 1000
-
-const FormatForApiCalls = 'YYYY-MM-DD',
+export const FormatForApiCalls = 'YYYY-MM-DD',
   FormatForFiles = 'YYMMDD_HHmmss',
   FormatForUi = 'M/D/YYYY',
   FormatForUi2DigitYear = 'M/D/YY',
@@ -34,9 +29,12 @@ const FormatForApiCalls = 'YYYY-MM-DD',
   FormatForUiWithYear = 'M/D/YYYY h:mm:ss a',
   FormatForUiWithYearNoSeconds = 'M/D/YYYY h:mm a',
   FormatLocalWithoutTimezone = 'YYYY-MM-DDTHH:mm:ss.SSS',
-  FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS'
-
-export const FormatSeconds = 'YYYY/MM/DD HH:mm:ss'
+  FormatSeconds = 'YYYY/MM/DD HH:mm:ss',
+  FormatWithMillis = 'YYYY/MM/DD HH:mm:ss.SSS',
+  MILLIS_PER_DAY = 86400000,
+  MILLIS_PER_HOUR = 3600000,
+  MILLIS_PER_MINUTE = 60000,
+  MILLIS_PER_SECOND = 1000
 
 export type DateTypeAcceptable =
   | Date

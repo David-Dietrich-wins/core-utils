@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 import { AppException, getErrorMessage } from './AppException.mjs'
 import { describe, expect, it } from '@jest/globals'
 import { DateHelper } from '../primitives/date-helper.mjs'

@@ -7,7 +7,23 @@ import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { getBoolean } from '../primitives/boolean-helper.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
-export const CONST_NOT_IMPLEMENTED = 'Not implemented' as const,
+export type HttpHeaderNamesAllowed =
+  (typeof HttpHeadersAllowedKeyNames)[keyof typeof HttpHeadersAllowedKeyNames]
+
+export const CONST_AppNamePolitagree = 'politagree',
+  CONST_AppNameTradePlotter = 'tradeplotter',
+  CONST_NOT_IMPLEMENTED = 'Not implemented' as const,
+  HttpHeadersAllowedKeyNames = {
+    ApplicationName: 'x-application-name',
+    Authorization: 'authorization',
+    ShowDebug: 'ShowDebug',
+  } as const,
+  // eslint-disable-next-line sort-vars
+  HttpHeadersAllowed: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
+    { id: HttpHeadersAllowedKeyNames.ApplicationName, type: 'string' },
+    { id: HttpHeadersAllowedKeyNames.Authorization, type: 'string' },
+    { id: HttpHeadersAllowedKeyNames.ShowDebug, type: 'boolean' },
+  ] as const,
   REGEX_ElapsedTime = /^(?<numSeconds>\d+ seconds|1 second|\d+m?s)/u,
   REGEX_ElapsedTimeString = '(\\d+ seconds|1 second|\\d+ms)' as const,
   REGEX_UptimeMatcher = /^\d+m*s$/u,
@@ -94,23 +110,6 @@ export type FunctionKeyNames<T extends object> = Exclude<
   { [K in keyof T]: T[K] extends Function ? K : never }[keyof T],
   undefined
 >
-
-export const HttpHeaderNamesAllowedKeys = {
-  ApplicationName: 'x-application-name',
-  Authorization: 'authorization',
-  ShowDebug: 'ShowDebug',
-} as const
-
-export type HttpHeaderNamesAllowed =
-  (typeof HttpHeaderNamesAllowedKeys)[keyof typeof HttpHeaderNamesAllowedKeys]
-
-export const CONST_AppNamePolitagree = 'politagree',
-  CONST_AppNameTradePlotter = 'tradeplotter',
-  HttpAllowedHeaders: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
-    { id: HttpHeaderNamesAllowedKeys.ApplicationName, type: 'string' },
-    { id: HttpHeaderNamesAllowedKeys.Authorization, type: 'string' },
-    { id: HttpHeaderNamesAllowedKeys.ShowDebug, type: 'boolean' },
-  ] as const
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TypishFunction<T = unknown> = (..._args: any[]) => T

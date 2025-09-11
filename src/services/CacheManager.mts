@@ -58,27 +58,27 @@ export class CacheManager<T = object, Tkey = string> {
     fnData: (_arrTickers: ArrayOrSingle<Tkey>) => Promise<IIdValue<Tkey, T>[]>
   ) {
     const arrKeys = safeArray(keys),
-      now = Date.now(),
+      dtNow = Date.now(),
+      expire = dtNow + this.cacheTimeInSeconds * 1000,
       zexpiredKeys = arrKeys.filter((key) => {
         const cacheObj = this.cache.get(key)
 
-        return !cacheObj || cacheObj.expire < now
-      })
+        return !cacheObj || cacheObj.expire < dtNow
+      }),
+      zret = await fnData(zexpiredKeys)
 
-    console.log(
-      `CacheManager (${this.name}):`,
-      zexpiredKeys.length,
-      'expired, ',
-      arrKeys.length,
-      'local, ',
-      this.keys.length,
-      'total.'
-      // 'Keys:',
-      // SafeJsonToString(this.keys.join)
-    )
-    const expire = now + this.cacheTimeInSeconds * 1000,
-      ret = await fnData(zexpiredKeys)
-    safeArray(ret).forEach((item) => {
+    // console.log(
+    //   `CacheManager (${this.name}):`,
+    //   zexpiredKeys.length,
+    //   'expired, ',
+    //   arrKeys.length,
+    //   'local, ',
+    //   this.keys.length,
+    //   'total.'
+    //   // 'Keys:',
+    //   // SafeJsonToString(this.keys.join)
+    // )
+    safeArray(zret).forEach((item) => {
       // Console.log('CacheManager:', this.name, 'set', item.id)
       this.set(item.id, expire, item.value)
     })

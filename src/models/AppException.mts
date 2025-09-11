@@ -1,16 +1,18 @@
+/* eslint-disable sort-vars */
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
-export const HTTP_Ok = 200 as const
-export const HTTP_Created = 201 as const
-export const HTTP_Accepted = 202 as const
-export const HTTP_BadRequest = 400 as const
-export const HTTP_Unauthorized = 401 as const
-export const HTTP_Forbidden = 403 as const
-export const HTTP_NotFound = 404 as const
-export const HTTP_MethodNotAllowed = 405 as const
-export const HTTP_NotAcceptable = 406 as const
-export const HTTP_PreconditionRequired = 428 as const
-export const HTTP_NetworkAuthenticationRequired = 511 as const
+export const HTTP_Ok = 200 as const,
+  HTTP_Created = 201 as const,
+  HTTP_Accepted = 202 as const,
+  HTTP_BadRequest = 400 as const,
+  HTTP_Unauthorized = 401 as const,
+  HTTP_Forbidden = 403 as const,
+  HTTP_NotFound = 404 as const,
+  HTTP_MethodNotAllowed = 405 as const,
+  HTTP_NotAcceptable = 406 as const,
+  HTTP_PreconditionRequired = 428 as const,
+  HTTP_InternalServerError = 500 as const,
+  HTTP_NetworkAuthenticationRequired = 511 as const
 
 /**
  * Type predicate to narrow an unknown error to an object with a string 'message' property
@@ -30,7 +32,7 @@ export function getErrorMessage(err: unknown) {
       case 'object':
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (err && 'message' in err) {
-          const message = (err as { message: string }).message
+          const { message } = err
           if (message) {
             return message
           }

@@ -5,6 +5,32 @@ import { type ITicker } from './ticker-info.mjs'
 import { type IWebState } from './WebState.mjs'
 import { zStringMinMax } from '../services/zod-helper.mjs'
 
+export const zBearerToken = z.object({
+    bearerToken: zStringMinMax(1, 5000),
+  }),
+  zErrorMessage = z.object({
+    errorMessage: zStringMinMax(1, 5000),
+  }),
+  zName = z.object({
+    name: z.string().min(1).max(1000),
+  }),
+  zPrice = z.object({
+    price: z.number().nonnegative().max(1000),
+  }),
+  zSlug = z.object({
+    slug: zStringMinMax(1, 1000),
+  })
+
+// export const zJwt = z.object({
+//   jwt: z.string().min(1).max(5000),
+// })
+// export type IJwt = z.infer<typeof zJwt>
+
+export type IBearerToken = z.infer<typeof zBearerToken>
+export type IPrice = z.infer<typeof zPrice>
+export type ISlug = z.infer<typeof zSlug>
+export type IErrorMessage = z.infer<typeof zErrorMessage>
+
 export interface IDate<T = string> {
   date: T
 }
@@ -13,9 +39,6 @@ export interface IUserId<T = string> {
   userid?: T
 }
 
-export const zName = z.object({
-  name: z.string().min(1).max(1000),
-})
 export interface IName<T = string> {
   name: T
 }
@@ -40,26 +63,6 @@ export interface INameTypeValue<TValue = string, TType = string>
 export interface INameValue<Tvalue = string, Tname extends string = string>
   extends IName<Tname>,
     IValue<Tvalue> {}
-
-// export const zJwt = z.object({
-//   jwt: z.string().min(1).max(5000),
-// })
-// export type IJwt = z.infer<typeof zJwt>
-
-export const zPrice = z.object({
-  price: z.number().nonnegative().max(1000),
-})
-export type IPrice = z.infer<typeof zPrice>
-
-export const zSlug = z.object({
-  slug: zStringMinMax(1, 1000),
-})
-export type ISlug = z.infer<typeof zSlug>
-
-export const zErrorMessage = z.object({
-  errorMessage: zStringMinMax(1, 5000),
-})
-export type IErrorMessage = z.infer<typeof zErrorMessage>
 
 export interface IEventLogin<T = string> extends IId, IUserId<T>, ICreatedBy {
   ip: string
@@ -91,8 +94,3 @@ export interface IChartRunLogApiReturn extends ITicker {
 
   created: Date
 }
-
-export const zBearerToken = z.object({
-  bearerToken: zStringMinMax(1, 5000),
-})
-export type IBearerToken = z.infer<typeof zBearerToken>

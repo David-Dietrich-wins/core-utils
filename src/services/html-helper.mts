@@ -1,6 +1,6 @@
 import {
   type ArrayOrSingle,
-  HttpHeaderNamesAllowedKeys,
+  HttpHeadersAllowedKeyNames,
   type JSONValue,
 } from '../models/types.mjs'
 import { hasData, isNullOrUndefined } from '../primitives/object-helper.mjs'
@@ -75,7 +75,7 @@ export function getHttpHeaderJson(
 }
 
 export function getHttpHeaderApplicationName(appName: string) {
-  return [HttpHeaderNamesAllowedKeys.ApplicationName, appName] as const
+  return [HttpHeadersAllowedKeyNames.ApplicationName, appName] as const
 }
 
 /**
@@ -123,6 +123,7 @@ export function urlJoin(
     url += `/${pathname}`
   }
 
+  // eslint-disable-next-line one-var
   let trailingSlash = addTrailingSlash
   if (
     url.includes('?') ||

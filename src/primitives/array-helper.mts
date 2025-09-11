@@ -348,8 +348,8 @@ export function addObjectToList<T>(
   // eslint-disable-next-line no-param-reassign
   listObjects = safeArray(listObjects)
 
-  const arrobj = safeArray(obj)
-  const len = arrobj.length
+  const arrobj = safeArray(obj),
+    len = arrobj.length
 
   for (let i = 0; i < len; ++i) {
     const objCurrent = getObject(obj, i)
@@ -576,6 +576,7 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
     )
   }
 
+  // eslint-disable-next-line one-var
   const dest = arrayFindById(arrItems, destId)
   if (!dest || !dest.id) {
     throw new AppException(
@@ -585,8 +586,9 @@ export function arraySwapItemsById<T extends IId<Tid>, Tid = T['id']>(
     )
   }
 
-  const sourceIndex = arrItems.findIndex((x) => sourceId === x.id)
-  const destIndex = arrItems.findIndex((x) => destId === x.id)
+  // eslint-disable-next-line one-var
+  const destIndex = arrItems.findIndex((x) => destId === x.id),
+    sourceIndex = arrItems.findIndex((x) => sourceId === x.id)
 
   return arraySwapItems(arrItems, sourceIndex, destIndex)
 }
@@ -798,6 +800,7 @@ export function arrayMoveElement<T>(
   }
 
   // Remove the element and store it
+  // eslint-disable-next-line one-var
   const [element] = arrCopy.splice(fromIndex, 1)
 
   // Insert the element at the new position

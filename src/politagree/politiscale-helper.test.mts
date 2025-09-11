@@ -56,17 +56,15 @@ describe('politiscale-helper', () => {
   it('politiscale', () => {
     expect.assertions(6)
 
-    const ps = new Politiscale('climate', 50)
+    const ps = new Politiscale('climate', 50),
+      ps2 = new Politiscale('freeSpeech', 80),
+      ps3 = new Politiscale('religion', 100)
 
     expect(ps.name).toBe('climate')
     expect(ps.value).toBe(50)
 
-    const ps2 = new Politiscale('freeSpeech', 80)
-
     expect(ps2.name).toBe('freeSpeech')
     expect(ps2.value).toBe(80)
-
-    const ps3 = new Politiscale('religion', 100)
 
     expect(ps3.name).toBe('religion')
     expect(ps3.value).toBe(100)
@@ -703,7 +701,8 @@ describe('mapping', () => {
   it('userratingOverall', () => {
     expect.assertions(4)
 
-    const scales: IPolitiscale[] = [
+    const emptyScales: Politiscale[] = [],
+      scales: IPolitiscale[] = [
         { name: 'climate', value: 20 },
         { name: 'freeSpeech', value: 50 },
         { name: 'religion', value: 80 },
@@ -721,8 +720,6 @@ describe('mapping', () => {
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
       right: { active: true, isPrimary: false, value: 0, weight: 0 },
     })
-
-    const emptyScales: Politiscale[] = []
 
     expect(PolitiscaleHelper.userRatingOverall(emptyScales)).toStrictEqual({
       left: { active: true, isPrimary: true, value: 0, weight: 0 },
@@ -982,34 +979,34 @@ describe('mapping', () => {
     expect.assertions(3)
 
     const scales: IdNameSlugWithScales[] = [
-      {
-        id: 'climate',
-        name: 'climate',
-        scales: [{ name: 'climate', value: 20 }],
-        slug: 'climate',
-      },
-      {
-        id: 'freeSpeech',
-        name: 'freeSpeech',
-        scales: [{ name: 'freeSpeech', value: 50 }],
-        slug: 'freeSpeech',
-      },
-      {
-        id: 'religion',
-        name: 'religion',
-        scales: [{ name: 'religion', value: 80 }],
-        slug: 'religion',
-      },
-    ]
+        {
+          id: 'climate',
+          name: 'climate',
+          scales: [{ name: 'climate', value: 20 }],
+          slug: 'climate',
+        },
+        {
+          id: 'freeSpeech',
+          name: 'freeSpeech',
+          scales: [{ name: 'freeSpeech', value: 50 }],
+          slug: 'freeSpeech',
+        },
+        {
+          id: 'religion',
+          name: 'religion',
+          scales: [{ name: 'religion', value: 80 }],
+          slug: 'religion',
+        },
+      ],
+      zresult = mapSlugWithScalesToIdNameValue(scales[0])
 
     // const scales: IPolitiscale[] = [
     //   { name: 'climate', value: 20 },
     //   { name: 'freeSpeech', value: 50 },
     //   { name: 'religion', value: 80 },
     // ]
-    const result = mapSlugWithScalesToIdNameValue(scales[0])
 
-    expect(result).toStrictEqual({
+    expect(zresult).toStrictEqual({
       id: 'climate',
       name: 'climate',
       value: '#cc0033',
@@ -1032,17 +1029,17 @@ describe('mapping', () => {
     expect.assertions(1)
 
     const its: ITickerSearch = {
-      description: 'Apple Inc.',
-      exchange: 'NASDAQ',
-      full_name: 'Apple Inc.',
-      id: 'climate',
-      name: 'climate',
-      scales: [{ name: 'climate', value: 20 }],
-      symbol: 'AAPL',
-      ticker: 'AAPL',
-      type: 'stock',
-    }
-    const result = mapTickerSearchToIdNameValue(its)
+        description: 'Apple Inc.',
+        exchange: 'NASDAQ',
+        full_name: 'Apple Inc.',
+        id: 'climate',
+        name: 'climate',
+        scales: [{ name: 'climate', value: 20 }],
+        symbol: 'AAPL',
+        ticker: 'AAPL',
+        type: 'stock',
+      },
+      result = mapTickerSearchToIdNameValue(its)
 
     expect(result).toStrictEqual({
       id: 'AAPL',
@@ -1055,33 +1052,32 @@ describe('mapping', () => {
     expect.assertions(1)
 
     const symbolDetail: ISymbolDetail = {
-      createdby: 'user123',
-      description: 'Apple Inc.',
-      exchange: 'NASDAQ',
-      id: 'AAPL',
-      industry: 'Technology',
-      minmov: 1,
-      minmov2: 0,
-      name: 'Apple Inc.',
-      pricescale: 100,
-      scales: [{ name: 'climate', value: 20 }],
-      sector: 'Technology',
-      slug: 'climate',
-      ticker: 'AAPL',
-      type: 'stock',
-      updatedby: 'user456',
-      val: {
+        createdby: 'user123',
+        description: 'Apple Inc.',
         exchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ',
+        id: 'AAPL',
+        industry: 'Technology',
+        minmov: 1,
+        minmov2: 0,
         name: 'Apple Inc.',
-        price: 150.0,
-        symbol: 'AAPL',
+        pricescale: 100,
+        scales: [{ name: 'climate', value: 20 }],
+        sector: 'Technology',
+        slug: 'climate',
+        ticker: 'AAPL',
+        type: 'stock',
+        updatedby: 'user456',
+        val: {
+          exchange: 'NASDAQ',
+          exchangeShortName: 'NASDAQ',
+          name: 'Apple Inc.',
+          price: 150.0,
+          symbol: 'AAPL',
+        },
       },
-    }
+      zresult = mapSymbolDetailToPolitiscaleCardProps(symbolDetail)
 
-    const result = mapSymbolDetailToPolitiscaleCardProps(symbolDetail)
-
-    expect(result).toStrictEqual({
+    expect(zresult).toStrictEqual({
       description: '',
       name: 'Apple Inc.',
       scales: [{ name: 'climate', value: 20 }],
@@ -1096,16 +1092,15 @@ describe('mapping', () => {
     expect.assertions(1)
 
     const city: ICity = {
-      city: 'New York',
-      city_img: '',
-      description: '',
-      name: 'New York',
-      scales: [{ name: 'climate', value: 20 }],
-      slug: '1',
-      sourceUrl: '',
-    }
-
-    const result = mapCityToPolitiscaleCardProps(city)
+        city: 'New York',
+        city_img: '',
+        description: '',
+        name: 'New York',
+        scales: [{ name: 'climate', value: 20 }],
+        slug: '1',
+        sourceUrl: '',
+      },
+      result = mapCityToPolitiscaleCardProps(city)
 
     expect(result).toStrictEqual({
       description: '',

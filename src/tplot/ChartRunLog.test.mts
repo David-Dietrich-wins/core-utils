@@ -112,6 +112,7 @@ describe('constructor', () => {
     aicrl.startDate = undefined
     aicrl.endDate = undefined
 
+    // eslint-disable-next-line one-var
     const apiSettingsWithoutDates = ChartRunLog.toApi(aicrl)
 
     expect(apiSettingsWithoutDates.startDate).toBe(0)

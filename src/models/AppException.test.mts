@@ -230,6 +230,7 @@ describe('getErrorMessage', () => {
 
     e.message = undefined as unknown as string
 
+    // eslint-disable-next-line one-var
     const ret = getErrorMessage(e)
 
     expect(ret).toBe('Unknown error')

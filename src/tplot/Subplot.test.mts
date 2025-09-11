@@ -117,7 +117,12 @@ describe('parse', () => {
         timeframe: '1d',
         useMinusEight: true,
       }),
-      subplotParsed = Subplot.zSchema.parse(subplot.toApi())
+      subplotParsed = Subplot.zSchema.parse(subplot.toApi()),
+      zodret = Subplot.zSchema.safeParse({
+        ...subplotParsed,
+        id: '1',
+        total: 'not a number',
+      })
 
     expect(subplotParsed).toStrictEqual({
       comment: 'Test comment',
@@ -214,15 +219,9 @@ describe('parse', () => {
       })
     ).toThrow(z.ZodError)
 
-    const retzod = Subplot.zSchema.safeParse({
-      ...subplotParsed,
-      id: '1',
-      total: 'not a number',
-    })
-
-    expect(retzod.success).toBe(false)
-    expect(retzod.error).toBeInstanceOf(z.ZodError)
-    expect(retzod.error?.issues).toStrictEqual([
+    expect(zodret.success).toBe(false)
+    expect(zodret.error).toBeInstanceOf(z.ZodError)
+    expect(zodret.error?.issues).toStrictEqual([
       ZodTestHelper.invalidType('number', 'string', ['total']),
     ])
   })

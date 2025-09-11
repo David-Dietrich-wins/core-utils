@@ -7,10 +7,10 @@ import { newGuid } from '../primitives/uuid-helper.mjs'
 
 describe('constructor', () => {
   it('constructor with default', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cfg: IConfigHeaderTickerBars = ConfigHeaderTickerBars.defaults()
-    const ui = new ConfigHeaderTickerBars(cfg)
+    const cfg: IConfigHeaderTickerBars = ConfigHeaderTickerBars.defaults(),
+      ui = new ConfigHeaderTickerBars(cfg)
 
     expect(ui).toBeInstanceOf(ConfigHeaderTickerBars)
 
@@ -59,6 +59,7 @@ describe('disabled', () => {
 
     const cm = ConfigHeaderTickerBars.defaults()
     cm.disabled = true
+    // eslint-disable-next-line one-var
     const ui = new ConfigHeaderTickerBars(cm)
 
     expect(ui.isHeaderTickerBarsDisabled).toBe(true)
@@ -78,6 +79,7 @@ describe('disabled', () => {
     cm.asset.disabled = true
     cm.crypto.disabled = true
 
+    // eslint-disable-next-line one-var
     const ui = new ConfigHeaderTickerBars(cm)
 
     expect(ui.shouldHeaderTickerBarsBeDisabled).toBe(true)
@@ -102,16 +104,16 @@ describe('disabled', () => {
   })
 
   it('disable', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.disable(cm, updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.disable(cm, dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       disabled: true,
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 })
@@ -122,6 +124,7 @@ describe('assets', () => {
 
     const cm = ConfigHeaderTickerBars.defaults()
     cm.asset.disabled = true
+    // eslint-disable-next-line one-var
     const ui = new ConfigHeaderTickerBars(cm)
 
     expect(ui.isHeaderTickerBarsAssetsDisabled).toBe(true)
@@ -132,209 +135,203 @@ describe('assets', () => {
   })
 
   it('update', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.updateAsset(
-      cm,
-      { symbol: 'AAPL' },
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.updateAsset(
+        cm,
+        { symbol: 'AAPL' },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         symbol: 'AAPL',
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('addTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetAddTicker(cm, 'AAPL', updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetAddTicker(cm, 'AAPL', dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         tickers: ['AAPL'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('background', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetHeaderBackground(
-      cm,
-      'blue',
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetHeaderBackground(
+        cm,
+        'blue',
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         backgroundColor: { color: 'blue' },
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('disable', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetHeaderDisable(cm, updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetHeaderDisable(cm, dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         disabled: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('scrollSpeed', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetHeaderScrollSpeed(
-      cm,
-      100,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetHeaderScrollSpeed(cm, 100, dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         scrollSpeed: 100,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('showPercentChanges', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetHeaderShowPercentChanges(
-      cm,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetHeaderShowPercentChanges(
+        cm,
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         showPercentChanges: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('showPriceChanges', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetHeaderShowPriceChanges(
-      cm,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetHeaderShowPriceChanges(cm, dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         showPriceChanges: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('moveTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
     const cm = ConfigHeaderTickerBars.defaults()
     cm.asset.tickers = ['AAPL', 'GOOGL', 'TSLA']
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetMoveTicker(
-      cm,
-      { from: 0, to: 1 },
-      updated
-    )
+    // eslint-disable-next-line one-var
+    const dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetMoveTicker(
+        cm,
+        { from: 0, to: 1 },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         tickers: ['GOOGL', 'AAPL', 'TSLA'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('removeTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetRemoveTicker(cm, 'AAPL', updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetRemoveTicker(cm, 'AAPL', dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         tickers: [],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('updateTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(2)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.assetUpdateTicker(
-      cm,
-      { index: 0, ticker: 'AAPL' },
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.assetUpdateTicker(
+        cm,
+        { index: 0, ticker: 'AAPL' },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         tickers: ['AAPL'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
 
     cm.asset.tickers = ['AAPL', 'TSLA']
@@ -343,16 +340,16 @@ describe('assets', () => {
       ConfigHeaderTickerBars.assetUpdateTicker(
         cm,
         { index: 1, ticker: 'GOOGL' },
-        updated
+        dtUpdated
       )
     ).toStrictEqual({
       ...cm,
       asset: {
         ...cm.asset,
         tickers: ['AAPL', 'GOOGL'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 })
@@ -363,6 +360,7 @@ describe('crypto', () => {
 
     const cm = ConfigHeaderTickerBars.defaults()
     cm.crypto.disabled = true
+    // eslint-disable-next-line one-var
     const ui = new ConfigHeaderTickerBars(cm)
 
     expect(ui.isHeaderTickerBarsCryptosDisabled).toBe(true)
@@ -373,253 +371,254 @@ describe('crypto', () => {
   })
 
   it('updateCrypto', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.updateCrypto(
-      cm,
-      { symbol: 'BTC' },
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.updateCrypto(
+        cm,
+        { symbol: 'BTC' },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         symbol: 'BTC',
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('addTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoAddTicker(cm, 'BTCUSD', updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoAddTicker(cm, 'BTCUSD', dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         tickers: ['BTCUSD', 'ETHUSD'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('headerBackground', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoHeaderBackground(
-      cm,
-      'blue',
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoHeaderBackground(
+        cm,
+        'blue',
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         backgroundColor: { color: 'blue' },
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('headerDisable', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoHeaderDisable(cm, updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoHeaderDisable(cm, dtUpdated)
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         disabled: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('scrollSpeed', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoHeaderScrollSpeed(
-      cm,
-      100,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoHeaderScrollSpeed(
+        cm,
+        100,
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         scrollSpeed: 100,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('showPercentChanges', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoHeaderShowPercentChanges(
-      cm,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoHeaderShowPercentChanges(
+        cm,
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         showPercentChanges: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('showPriceChanges', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoHeaderShowPriceChanges(
-      cm,
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoHeaderShowPriceChanges(
+        cm,
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         showPriceChanges: true,
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('moveTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
     const cm = ConfigHeaderTickerBars.defaults()
     cm.crypto.tickers = ['BTCUSD', 'ETHUSD', 'LTCUSD']
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoMoveTicker(
-      cm,
-      { from: 0, to: 1 },
-      updated
-    )
+    // eslint-disable-next-line one-var
+    const dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoMoveTicker(
+        cm,
+        { from: 0, to: 1 },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         tickers: ['ETHUSD', 'BTCUSD', 'LTCUSD'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('removeTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoRemoveTicker(
-      cm,
-      'BTCUSD',
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoRemoveTicker(
+        cm,
+        'BTCUSD',
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         tickers: ['ETHUSD'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 
   it('updateTicker', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = new Date()
-    const result = ConfigHeaderTickerBars.cryptoUpdateTicker(
-      cm,
-      { index: 0, ticker: 'BTCUSD' },
-      updated
-    )
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = new Date(),
+      result = ConfigHeaderTickerBars.cryptoUpdateTicker(
+        cm,
+        { index: 0, ticker: 'BTCUSD' },
+        dtUpdated
+      )
 
     expect(result).toStrictEqual({
       ...cm,
       crypto: {
         ...cm.crypto,
         tickers: ['BTCUSD', 'ETHUSD'],
-        updated: updated.getTime(),
+        updated: dtUpdated.getTime(),
       },
-      updated: updated.getTime(),
+      updated: dtUpdated.getTime(),
     })
   })
 })
 
 describe('header', () => {
   it('update', () => {
-    expect.hasAssertions()
+    expect.assertions(1)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const updated = Date.now()
-    const overrides = {
-      crypto: { id: newGuid(), tickers: ['ETH'], updated },
-      disabled: true,
-    }
-    const result = ConfigHeaderTickerBars.updateHeader(cm, overrides, updated)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      dtUpdated = Date.now(),
+      overrides = {
+        crypto: { id: newGuid(), tickers: ['ETH'], updated: dtUpdated },
+        disabled: true,
+      },
+      result = ConfigHeaderTickerBars.updateHeader(cm, overrides, dtUpdated)
 
     expect(result).toStrictEqual({
       asset: {
         id: expect.any(String),
         tickers: ['AAPL'],
-        updated,
+        updated: dtUpdated,
       },
       crypto: {
         id: expect.any(String),
         tickers: ['ETH'],
-        updated,
+        updated: dtUpdated,
       },
       disabled: true,
       id: expect.any(String),
-      updated,
+      updated: dtUpdated,
     })
   })
 })
 
 describe('verify', () => {
   it('header bars', () => {
-    expect.hasAssertions()
+    expect.assertions(8)
 
-    const cm = ConfigHeaderTickerBars.defaults()
-    const result = ConfigHeaderTickerBars.verifyHeaderBars(cm)
+    const cm = ConfigHeaderTickerBars.defaults(),
+      result = ConfigHeaderTickerBars.verifyHeaderBars(cm)
 
     expect(result).toStrictEqual({
       ...cm,

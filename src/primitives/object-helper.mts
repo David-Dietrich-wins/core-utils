@@ -395,11 +395,10 @@ export function objectPrepareForJson(
   obj?: object | null,
   removeKeys: StringOrStringArray = []
 ) {
-  const objClean = isNullOrUndefined(obj) || !isObject(obj) ? {} : obj
+  const cleanObj = isNullOrUndefined(obj) || !isObject(obj) ? {} : obj,
+    keysToRemove = safeArray(removeKeys).concat(ARRAY_KeysToAlwaysRemove)
 
-  const keysToRemove = safeArray(removeKeys).concat(ARRAY_KeysToAlwaysRemove)
-
-  return Object.entries(objClean).reduce((acc, [key, value]) => {
+  return Object.entries(cleanObj).reduce((acc, [key, value]) => {
     if (!keysToRemove.includes(key) && !isFunction(value)) {
       acc[key] =
         isObject(value) && !isDateObject(value)
@@ -737,8 +736,9 @@ export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
   fname?: string
 ) {
-  const funcname = safestr(fname, 'deepCloneJson')
-  const ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
+  const funcname = safestr(fname, 'deepCloneJson'),
+    ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
+
   if (!ret) {
     throw new AppException(
       `deepCloneJson() failed to clone object ${safestr(obj)}`,
@@ -791,6 +791,7 @@ export type ObjectRemoveFieldsOptions = {
   fields: string[] | Record<string, ObjectRemoveFieldOptions>
 }
 
+// eslint-disable-next-line one-var
 export const ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
   fields: {
     _id: { deleteIfHasData: true, deleteIfNull: true, deleteIfUndefined: true },

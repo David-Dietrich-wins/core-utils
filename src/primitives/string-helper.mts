@@ -164,15 +164,13 @@ export function hasConsecutiveNumbers(strToSearch: string) {
     return true
   }
 
-  const plusOneCheck = (arrNumbers: number[]) =>
-    arrNumbers.slice(1).map((n: number, i: number) => n - arrNumbers[i])
-
-  const arr = safestr(strToSearch)
-    .split('')
-    .map((x) => getAsNumber(x))
-
-  const differenceForward = plusOneCheck(arr)
-  const differenceReverse = plusOneCheck(arr.slice().reverse())
+  const aplusOneCheck = (arrNumbers: number[]) =>
+      arrNumbers.slice(1).map((n: number, i: number) => n - arrNumbers[i]),
+    arr = safestr(strToSearch)
+      .split('')
+      .map((x) => getAsNumber(x)),
+    differenceForward = aplusOneCheck(arr),
+    differenceReverse = aplusOneCheck(arr.slice().reverse())
 
   return (
     differenceForward.every((value) => value === 1) ||

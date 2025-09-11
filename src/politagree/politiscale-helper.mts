@@ -196,6 +196,7 @@ export abstract class PolitiscaleHelper {
       // }
     }
 
+    // eslint-disable-next-line one-var
     const leaning: Readonly<PolitiRatingLeftRight> = {
       left: {
         active: setting.left.active,
@@ -249,6 +250,7 @@ export abstract class PolitiscaleHelper {
       }
     })
 
+    // eslint-disable-next-line one-var
     const aleft = reduceRatings(ratingsLeft),
       aright = reduceRatings(ratingsRight),
       leaning: PolitiRatingLeftRight = {

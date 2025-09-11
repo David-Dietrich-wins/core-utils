@@ -38,12 +38,11 @@ export class ConfigOperations {
     cfg: IConfigOperations,
     updated?: DateTypeAcceptable
   ) {
-    const ctxValue = updateContextValueToggleBoolean(
-      cfg.minusEightPlus10,
-      updated
-    )
-
-    const ctx = updateContext(cfg, { minusEightPlus10: ctxValue }, updated)
+    const ctValue = updateContextValueToggleBoolean(
+        cfg.minusEightPlus10,
+        updated
+      ),
+      ctx = updateContext(cfg, { minusEightPlus10: ctValue }, updated)
 
     return ctx
   }

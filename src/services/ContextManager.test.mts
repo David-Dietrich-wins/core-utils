@@ -15,13 +15,12 @@ describe('getInstance', () => {
   it('should return the same instance', () => {
     expect.assertions(3)
 
-    const cm = ContextManager.getInstance()
+    const cm = ContextManager.getInstance(),
+      cm2 = ContextManager.getInstance()
 
     expect(cm).toMatchObject({
       id: expect.any(String),
     })
-
-    const cm2 = ContextManager.getInstance()
 
     expect(cm2).toBe(cm)
     expect(cm2.id).toBe(cm.id)
@@ -31,19 +30,18 @@ describe('getInstance', () => {
     expect.assertions(1)
 
     const ctxui: IContextUI = {
-      color: 'blue',
-      cols: 3,
-      h: 100,
-      icon: { alt: 'test-icon', src: 'https://test-img.com' },
-      rows: 2,
-      w: 200,
-      x: 10,
-      y: 20,
-    }
+        color: 'blue',
+        cols: 3,
+        h: 100,
+        icon: { alt: 'test-icon', src: 'https://test-img.com' },
+        rows: 2,
+        w: 200,
+        x: 10,
+        y: 20,
+      },
+      ctxupdated = updateContextUi(ctxui, { color: 'red' })
 
-    const ctx = updateContextUi(ctxui, { color: 'red' })
-
-    expect(ctx).toStrictEqual({
+    expect(ctxupdated).toStrictEqual({
       color: 'red',
       cols: 3,
       h: 100,
@@ -60,11 +58,10 @@ describe('getInstance', () => {
       expect.assertions(1)
 
       const ctx = {
-        disabled: true,
-        updated: Date.now(),
-      } as IContext
-
-      const newCtx = updateContext(ctx, { description: 'red' })
+          disabled: true,
+          updated: Date.now(),
+        } as IContext,
+        newCtx = updateContext(ctx, { description: 'red' })
 
       expect(newCtx).toStrictEqual({
         description: 'red',
@@ -78,11 +75,11 @@ describe('getInstance', () => {
       expect.assertions(1)
 
       const ctx: IContext = {
-        disabled: true,
-        id: 'test-id',
-        updated: Date.now(),
-      }
-      const newCtx = updateContext(ctx, { description: 'red' })
+          disabled: true,
+          id: 'test-id',
+          updated: Date.now(),
+        },
+        newCtx = updateContext(ctx, { description: 'red' })
 
       expect(newCtx).toStrictEqual({
         description: 'red',
@@ -97,13 +94,13 @@ describe('getInstance', () => {
     expect.assertions(1)
 
     const ctx: IContext = {
-      disabled: true,
-      id: 'test-id',
-      updated: Date.now(),
-    }
-    const key = 'description'
-    const value = 'red'
-    const newCtx = updateContextKeyValue(ctx, key, value)
+        disabled: true,
+        id: 'test-id',
+        updated: Date.now(),
+      },
+      ctxKey = 'description',
+      ctxValue = 'red',
+      newCtx = updateContextKeyValue(ctx, ctxKey, ctxValue)
 
     expect(newCtx).toStrictEqual({
       description: 'red',
@@ -117,14 +114,13 @@ describe('getInstance', () => {
     expect.assertions(1)
 
     const ctx: IContextValue<{ a: string; b: string }> = {
-      disabled: true,
-      id: 'test-id',
-      updated: Date.now(),
-      value: { a: 'foo', b: 'bar' },
-    }
-
-    const value = { a: 'red', b: 'blue' }
-    const newCtx = updateContextValueValue(ctx, value)
+        disabled: true,
+        id: 'test-id',
+        updated: Date.now(),
+        value: { a: 'foo', b: 'bar' },
+      },
+      ctxValue = { a: 'red', b: 'blue' },
+      newCtx = updateContextValueValue(ctx, ctxValue)
 
     expect(newCtx).toStrictEqual({
       disabled: true,
@@ -138,13 +134,12 @@ describe('getInstance', () => {
     expect.assertions(1)
 
     const ctx: IContextValue<boolean> = {
-      disabled: true,
-      id: 'test-id',
-      updated: Date.now(),
-      value: false,
-    }
-
-    const newCtx = updateContextValueToggleBoolean(ctx)
+        disabled: true,
+        id: 'test-id',
+        updated: Date.now(),
+        value: false,
+      },
+      newCtx = updateContextValueToggleBoolean(ctx)
 
     expect(newCtx).toStrictEqual({
       disabled: true,

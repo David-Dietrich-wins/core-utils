@@ -10,12 +10,54 @@ import { safestr } from './primitives/string-helper.mjs'
 // Set to 60 seconds. We are going over Global VPN.
 // jest.setTimeout(600000)
 
-export const mockLoggerDebug = jest.fn()
-export const mockLoggerError = jest.fn()
-export const mockLoggerInfo = jest.fn()
-export const mockLoggerLog = jest.fn()
-export const mockLoggerSilly = jest.fn()
-export const mockLoggerWarn = jest.fn()
+const originalEnv = { ...process.env }
+
+// eslint-disable-next-line one-var
+export const TEST_Settings: {
+    apiBaseUrl: string
+    beforeEach: () => void
+    currentDate: Date
+    currentDateInMilliseconds: number
+    currentDateString: string
+    // jwt: string
+    rsaPassPhrase: string
+    rsaPrivateKey: string
+    rsaPublicKey: string
+    userIdBad: number
+    userIdGood: number
+    userIdGoodEmail: string
+  } = {
+    apiBaseUrl: 'http://localhost:3000',
+    beforeEach: () => {
+      TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
+      TEST_Settings.currentDateInMilliseconds =
+        TEST_Settings.currentDate.getTime()
+
+      TEST_Settings.rsaPassPhrase = safestr(process.env.rsaPassPhrase)
+      TEST_Settings.rsaPrivateKey = safestr(process.env.rsaPrivateKey)
+      TEST_Settings.rsaPublicKey = safestr(process.env.rsaPublicKey)
+    },
+    currentDate: new Date('2025-12-01T12:00:00.000Z'),
+    currentDateInMilliseconds: 0,
+    currentDateString: '2025-12-01T12:00:00.000Z',
+    rsaPassPhrase: safestr(process.env.rsaPassPhrase),
+    rsaPrivateKey: safestr(process.env.rsaPrivateKey),
+    rsaPublicKey: safestr(process.env.rsaPublicKey),
+    userIdBad: 987654321,
+    userIdGood: 123456789,
+    userIdGoodEmail: 'test@test.com',
+  },
+  mockConsoleDebug = jest.spyOn(console, 'debug').mockImplementation(() => {}),
+  mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {}),
+  mockConsoleInfo = jest.spyOn(console, 'info').mockImplementation(() => {}),
+  mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {}),
+  mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {}),
+  mockLoggerDebug = jest.fn(),
+  mockLoggerError = jest.fn(),
+  mockLoggerInfo = jest.fn(),
+  mockLoggerLog = jest.fn(),
+  mockLoggerSilly = jest.fn(),
+  mockLoggerWarn = jest.fn()
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ZodTestHelper {
@@ -147,41 +189,6 @@ export class ZodTestHelper {
 
 // Export const mockServer = setupServer(...httpHandlers)
 
-export const TEST_Settings: {
-  apiBaseUrl: string
-  beforeEach: () => void
-  currentDate: Date
-  currentDateInMilliseconds: number
-  currentDateString: string
-  // jwt: string
-  rsaPassPhrase: string
-  rsaPrivateKey: string
-  rsaPublicKey: string
-  userIdBad: number
-  userIdGood: number
-  userIdGoodEmail: string
-} = {
-  apiBaseUrl: 'http://localhost:3000',
-  beforeEach: () => {
-    TEST_Settings.currentDate = new Date(TEST_Settings.currentDateString)
-    TEST_Settings.currentDateInMilliseconds =
-      TEST_Settings.currentDate.getTime()
-
-    TEST_Settings.rsaPassPhrase = safestr(process.env.rsaPassPhrase)
-    TEST_Settings.rsaPrivateKey = safestr(process.env.rsaPrivateKey)
-    TEST_Settings.rsaPublicKey = safestr(process.env.rsaPublicKey)
-  },
-  currentDate: new Date('2025-12-01T12:00:00.000Z'),
-  currentDateInMilliseconds: 0,
-  currentDateString: '2025-12-01T12:00:00.000Z',
-  rsaPassPhrase: safestr(process.env.rsaPassPhrase),
-  rsaPrivateKey: safestr(process.env.rsaPrivateKey),
-  rsaPublicKey: safestr(process.env.rsaPublicKey),
-  userIdBad: 987654321,
-  userIdGood: 123456789,
-  userIdGoodEmail: 'test@test.com',
-}
-
 beforeAll(() => {
   // MockServer.listen({
   //   // This tells MSW to throw an error whenever it
@@ -206,39 +213,8 @@ export function getCurrentDate() {
   return TEST_Settings.currentDate
 }
 
-export const mockConsoleDebug = jest
-  .spyOn(console, 'debug')
-  .mockImplementation(() => {})
-export const mockConsoleError = jest
-  .spyOn(console, 'error')
-  .mockImplementation(() => {})
-export const mockConsoleInfo = jest
-  .spyOn(console, 'info')
-  .mockImplementation(() => {})
-export const mockConsoleLog = jest
-  .spyOn(console, 'log')
-  .mockImplementation(() => {})
-export const mockConsoleWarn = jest
-  .spyOn(console, 'warn')
-  .mockImplementation(() => {})
-
-const originalEnv = { ...process.env }
-
 beforeEach(() => {
-  // Jest.resetModules()
-
-  mockConsoleDebug.mockClear()
-  mockConsoleError.mockClear()
-  mockConsoleInfo.mockClear()
-  mockConsoleLog.mockClear()
-  mockConsoleWarn.mockClear()
-
-  mockLoggerDebug.mockClear()
-  mockLoggerError.mockClear()
-  mockLoggerInfo.mockClear()
-  mockLoggerLog.mockClear()
-  mockLoggerSilly.mockClear()
-  mockLoggerWarn.mockClear()
+  jest.clearAllMocks()
 
   TEST_Settings.beforeEach()
 })

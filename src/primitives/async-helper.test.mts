@@ -104,6 +104,7 @@ describe('asyncGeneratorLoopStopOnFalsyOrException', () => {
       return Promise.resolve([])
     })
 
+    // eslint-disable-next-line one-var
     let result = await generator.next()
 
     expect(result).toStrictEqual({
@@ -135,6 +136,7 @@ describe('asyncGeneratorLoopStopOnFalsyOrException', () => {
       return Promise.resolve(undefined)
     })
 
+    // eslint-disable-next-line one-var
     let result = await generator.next()
 
     expect(result).toStrictEqual({
@@ -166,6 +168,7 @@ describe('asyncGeneratorLoopStopOnFalsyOrException', () => {
       return Promise.reject(new Error('Test error'))
     })
 
+    // eslint-disable-next-line one-var
     let result = await generator.next()
 
     expect(result).toStrictEqual({

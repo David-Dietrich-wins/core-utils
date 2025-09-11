@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 import * as z from 'zod/v4'
 import {
   type IPlotPricesWithMidpoint,

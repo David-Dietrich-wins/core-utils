@@ -26,58 +26,57 @@ export class DashboardSetting implements IDashboardSetting {
     overrides?: Partial<IDashboardSetting>,
     updated?: DateTypeAcceptable
   ): IDashboardSetting {
-    const aDateNow = dateGetTime(updated)
-
-    const cfgDashboards: IDashboardSetting = {
-      id: newGuid(),
-      screens: [
-        {
-          id: 'default',
-          name: 'default',
-          tiles: [
-            {
-              color: 'white',
-              cols: 1,
-              id: 'initial-tile-left',
-              index: 0,
-              name: 'Trade Plotter',
-              rows: 2,
-              type: TileTypeKeys.empty,
-              value: {},
-            },
-            {
-              color: 'white',
-              cols: 1,
-              id: 'initial-tile-right',
-              index: 0,
-              name: 'Trade Plotter',
-              rows: 2,
-              type: TileTypeKeys.empty,
-              value: {},
-            },
-          ],
-        },
-        // Example for a chart and a plotlist.
-        // [
-        //   {
-        //     Id: 'AAPL',
-        //     Index: 0,
-        //     Typeid: 3,
-        //     Cols: 1,
-        //     Rows: 2
-        //   },
-        //   {
-        //     Id: 'Trade Plotter',
-        //     Index: 2,
-        //     Typeid: 1,
-        //     Cols: 2,
-        //     Rows: 2
-        //   }
-        // ],
-      ],
-      updated: aDateNow,
-      ...overrides,
-    }
+    const aDateNow = dateGetTime(updated),
+      cfgDashboards: IDashboardSetting = {
+        id: newGuid(),
+        screens: [
+          {
+            id: 'default',
+            name: 'default',
+            tiles: [
+              {
+                color: 'white',
+                cols: 1,
+                id: 'initial-tile-left',
+                index: 0,
+                name: 'Trade Plotter',
+                rows: 2,
+                type: TileTypeKeys.empty,
+                value: {},
+              },
+              {
+                color: 'white',
+                cols: 1,
+                id: 'initial-tile-right',
+                index: 0,
+                name: 'Trade Plotter',
+                rows: 2,
+                type: TileTypeKeys.empty,
+                value: {},
+              },
+            ],
+          },
+          // Example for a chart and a plotlist.
+          // [
+          //   {
+          //     Id: 'AAPL',
+          //     Index: 0,
+          //     Typeid: 3,
+          //     Cols: 1,
+          //     Rows: 2
+          //   },
+          //   {
+          //     Id: 'Trade Plotter',
+          //     Index: 2,
+          //     Typeid: 1,
+          //     Cols: 2,
+          //     Rows: 2
+          //   }
+          // ],
+        ],
+        updated: aDateNow,
+        ...overrides,
+      }
 
     return cfgDashboards
   }

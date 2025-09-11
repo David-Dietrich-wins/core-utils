@@ -3,17 +3,14 @@ import { ConfigOperations } from './ConfigOperations.mjs'
 
 describe('config operations', () => {
   it('good', () => {
-    expect.hasAssertions()
+    expect.assertions(4)
 
-    const cfg = ConfigOperations.defaults()
+    const cfg = ConfigOperations.defaults(),
+      updated = ConfigOperations.minusEightPlus10(cfg)
 
-    expect(cfg).toBeDefined()
     expect(cfg.minusEightPlus10).toBeDefined()
     expect(cfg.minusEightPlus10.value).toBe(true)
 
-    const updated = ConfigOperations.minusEightPlus10(cfg)
-
-    expect(updated).toBeDefined()
     expect(updated.minusEightPlus10.value).toBe(false)
     expect(updated.updated).toBeDefined()
   })
@@ -21,17 +18,13 @@ describe('config operations', () => {
 
 describe('minus eight plus 10', () => {
   it('good', () => {
-    expect.hasAssertions()
+    expect.assertions(3)
 
-    const cfg = ConfigOperations.defaults()
+    const cfg = ConfigOperations.defaults(),
+      updated = ConfigOperations.minusEightPlus10(cfg)
 
-    expect(cfg).toBeDefined()
-    expect(cfg.minusEightPlus10).toBeDefined()
     expect(cfg.minusEightPlus10.value).toBe(true)
 
-    const updated = ConfigOperations.minusEightPlus10(cfg)
-
-    expect(updated).toBeDefined()
     expect(updated.minusEightPlus10.value).toBe(false)
     expect(updated.updated).toBeDefined()
   })

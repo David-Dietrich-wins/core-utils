@@ -53,18 +53,18 @@ describe('objectFindKeyAndReturnValue', () => {
   it('default', () => {
     expect.assertions(2)
 
-    const obj = {
-      key1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
+    const aobj = {
+        key1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'key1'
 
-    const keyToFind = 'key1'
-    let result = objectFindKeyAndReturnValue(obj, keyToFind)
+    let result = objectFindKeyAndReturnValue(aobj, keyToFind)
 
     expect(result).toBe('value1')
 
-    result = objectFindKeyAndReturnValue(obj, '')
+    result = objectFindKeyAndReturnValue(aobj, '')
 
     expect(result).toBeUndefined()
   })
@@ -72,19 +72,18 @@ describe('objectFindKeyAndReturnValue', () => {
   it('match lower and trim key', () => {
     expect.assertions(1)
 
-    const obj = {
-      key1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = true
-    const result = objectFindKeyAndReturnValue(
-      obj,
-      keyToFind,
-      matchLowercaseAndTrimKey
-    )
+    const aobj = {
+        key1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'key1',
+      matchLowercaseAndTrimKey = true,
+      result = objectFindKeyAndReturnValue(
+        aobj,
+        keyToFind,
+        matchLowercaseAndTrimKey
+      )
 
     expect(result).toBe('value1')
   })
@@ -92,19 +91,18 @@ describe('objectFindKeyAndReturnValue', () => {
   it('match key case fail', () => {
     expect.assertions(1)
 
-    const obj = {
-      key1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'kEy1'
-    const matchLowercaseAndTrimKey = false
-    const result = objectFindKeyAndReturnValue(
-      obj,
-      keyToFind,
-      matchLowercaseAndTrimKey
-    )
+    const aobj = {
+        key1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'kEy1',
+      matchLowercaseAndTrimKey = false,
+      result = objectFindKeyAndReturnValue(
+        aobj,
+        keyToFind,
+        matchLowercaseAndTrimKey
+      )
 
     expect(result).toBeUndefined()
   })
@@ -112,19 +110,18 @@ describe('objectFindKeyAndReturnValue', () => {
   it('match key in object case fail', () => {
     expect.assertions(1)
 
-    const obj = {
-      kEy1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = false
-    const result = objectFindKeyAndReturnValue(
-      obj,
-      keyToFind,
-      matchLowercaseAndTrimKey
-    )
+    const aobj = {
+        kEy1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'key1',
+      matchLowercaseAndTrimKey = false,
+      result = objectFindKeyAndReturnValue(
+        aobj,
+        keyToFind,
+        matchLowercaseAndTrimKey
+      )
 
     expect(result).toBeUndefined()
   })
@@ -132,19 +129,18 @@ describe('objectFindKeyAndReturnValue', () => {
   it('do not match key case', () => {
     expect.assertions(1)
 
-    const obj = {
-      kEY1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'KEy1'
-    const matchLowercaseAndTrimKey = true
-    const result = objectFindKeyAndReturnValue(
-      obj,
-      keyToFind,
-      matchLowercaseAndTrimKey
-    )
+    const aobj = {
+        kEY1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'KEy1',
+      matchLowercaseAndTrimKey = true,
+      result = objectFindKeyAndReturnValue(
+        aobj,
+        keyToFind,
+        matchLowercaseAndTrimKey
+      )
 
     expect(result).toBe('value1')
   })
@@ -154,19 +150,17 @@ describe('objectMustHaveKeyAndReturnValue', () => {
   it('default', () => {
     expect.assertions(2)
 
-    const obj = {
-      key1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'key1'
-
-    const result = objectMustHaveKeyAndReturnValue('test', obj, keyToFind)
+    const aobj = {
+        key1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'key1',
+      result = objectMustHaveKeyAndReturnValue('test', aobj, keyToFind)
 
     expect(result).toBe('value1')
 
-    expect(() => objectMustHaveKeyAndReturnValue('test', obj, 'key4')).toThrow(
+    expect(() => objectMustHaveKeyAndReturnValue('test', aobj, 'key4')).toThrow(
       new AppException('Key key4 not found in test object: ', 'key4')
     )
   })
@@ -174,28 +168,26 @@ describe('objectMustHaveKeyAndReturnValue', () => {
   it('match lower key', () => {
     expect.assertions(2)
 
-    const obj = {
-      key1: 'value1',
-      key2: 'value2',
-      key3: 'value3',
-    }
-
-    const keyToFind = 'key1'
-    const matchLowercaseAndTrimKey = true
-
-    const result = objectMustHaveKeyAndReturnValue(
-      'test',
-      obj,
-      keyToFind,
-      matchLowercaseAndTrimKey
-    )
+    const aobj = {
+        key1: 'value1',
+        key2: 'value2',
+        key3: 'value3',
+      },
+      keyToFind = 'key1',
+      matchLowercaseAndTrimKey = true,
+      result = objectMustHaveKeyAndReturnValue(
+        'test',
+        aobj,
+        keyToFind,
+        matchLowercaseAndTrimKey
+      )
 
     expect(result).toBe('value1')
 
     expect(() =>
       objectMustHaveKeyAndReturnValue(
         'test',
-        obj,
+        aobj,
         'key4',
         matchLowercaseAndTrimKey
       )
@@ -223,9 +215,8 @@ describe('objectTypesToString', () => {
   it('js Error response', () => {
     expect.assertions(2)
 
-    const e = new Error('test error')
-
-    const ret = objectTypesToString(e)
+    const e = new Error('test error'),
+      ret = objectTypesToString(e)
 
     expect(ret).toContain('Error')
     expect(ret).toContain('{"message":"test error","name":"Error"')
@@ -265,9 +256,8 @@ describe('objectTypesToString', () => {
   it('file object', () => {
     expect.assertions(1)
 
-    const e = new File('', 'test.txt')
-
-    const ret = objectTypesToString(e)
+    const e = new File('', 'test.txt'),
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -275,9 +265,8 @@ describe('objectTypesToString', () => {
   it('fileList object', () => {
     expect.assertions(1)
 
-    const e = new FileList('', 'test.txt')
-
-    const ret = objectTypesToString(e)
+    const e = new FileList('', 'test.txt'),
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -285,22 +274,21 @@ describe('objectTypesToString', () => {
   it('object generic', () => {
     expect.assertions(1)
 
-    const e = { data: '', name: 'test.txt' }
-
-    const ret = objectTypesToString(e)
+    const e = { data: '', name: 'test.txt' },
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
 })
 
 describe('buildLogFriendlyMessage', () => {
-  const componentName = 'test'
-  const level = 'info'
-  const regex = (suffix: string) =>
-    new RegExp(
-      `^\\d{4}\\/\\d{2}\\/\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}: \\[${componentName}\\] \\[${level}\\] ${suffix}$`,
-      'u'
-    )
+  const componentName = 'test',
+    level = 'info',
+    regex = (suffix: string) =>
+      new RegExp(
+        `^\\d{4}\\/\\d{2}\\/\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}: \\[${componentName}\\] \\[${level}\\] ${suffix}$`,
+        'u'
+      )
 
   it('return string from array', () => {
     expect.assertions(1)
@@ -329,13 +317,12 @@ describe('buildLogFriendlyMessage', () => {
   it('js Error response', () => {
     expect.assertions(2)
 
-    const e = new Error('test error')
-
-    const ret = buildLogFriendlyMessage({
-      componentName,
-      level,
-      message: e,
-    })
+    const e = new Error('test error'),
+      ret = buildLogFriendlyMessage({
+        componentName,
+        level,
+        message: e,
+      })
 
     expect(ret).toContain('Error')
     expect(ret).toContain('"message":"test error"')
@@ -381,9 +368,8 @@ describe('buildLogFriendlyMessage', () => {
   it('file object', () => {
     expect.assertions(1)
 
-    const e = new File('', 'test.txt')
-
-    const ret = objectTypesToString(e)
+    const e = new File('', 'test.txt'),
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -391,9 +377,8 @@ describe('buildLogFriendlyMessage', () => {
   it('fileList object', () => {
     expect.assertions(1)
 
-    const e = new FileList('', 'test.txt')
-
-    const ret = objectTypesToString(e)
+    const e = new FileList('', 'test.txt'),
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -401,9 +386,8 @@ describe('buildLogFriendlyMessage', () => {
   it('object generic', () => {
     expect.assertions(1)
 
-    const e = { data: '', name: 'test.txt' }
-
-    const ret = objectTypesToString(e)
+    const e = { data: '', name: 'test.txt' },
+      ret = objectTypesToString(e)
 
     expect(ret).toBe('{"data":"","name":"test.txt"}')
   })
@@ -595,10 +579,10 @@ describe('runners', () => {
   it('renameProperty', () => {
     expect.assertions(5)
 
-    let obj = { a: 'a', b: 'b', c: 'c' }
-    let retobj = { b: 'b', c: 'c', d: 'a' }
-    let oldKey: any = 'a'
-    let newKey: any = 'd'
+    let newKey: any = 'd',
+      obj = { a: 'a', b: 'b', c: 'c' },
+      oldKey: any = 'a',
+      retobj = { b: 'b', c: 'c', d: 'a' }
 
     renameProperty(obj, oldKey, newKey)
 
@@ -638,18 +622,17 @@ describe('prepareForJson', () => {
     expect.assertions(6)
 
     const obj = {
-      createdAt: new Date(),
-      id: 1,
-      other: {
-        nested: 'this should not be removed',
-        secret: 'this should be removed too',
+        createdAt: new Date(),
+        id: 1,
+        other: {
+          nested: 'this should not be removed',
+          secret: 'this should be removed too',
+        },
+        password: 'test-secret',
+        pwd: 'test-secret',
+        updatedAt: new Date(),
       },
-      password: 'test-secret',
-      pwd: 'test-secret',
-      updatedAt: new Date(),
-    }
-
-    const result = objectPrepareForJson(obj)
+      result = objectPrepareForJson(obj)
 
     expect(result).toStrictEqual({
       createdAt: expect.any(Date),
@@ -713,35 +696,34 @@ describe('field functions', () => {
   it('findObjectWithField', () => {
     expect.assertions(9)
 
-    const obj = {
-      a: 'a',
-      b: 'b',
-      c: 'c',
-      d: {
-        e: 'e',
-        f: [{ f1: 'f1' }, { f2: 'f2' }],
-        g: {
-          h: 'h',
-          i: 'i',
-          j: {
-            k: 'k',
-            l: 'l',
+    const aobj = {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        d: {
+          e: 'e',
+          f: [{ f1: 'f1' }, { f2: 'f2' }],
+          g: {
+            h: 'h',
+            i: 'i',
+            j: {
+              k: 'k',
+              l: 'l',
+            },
           },
         },
       },
-    }
+      deepObj = createDeepObject(101, 'value')
 
     expect(findObjectWithField({ b: ['a'] }, 'a', 'a')).toBeUndefined()
 
-    expect(findObjectWithField(obj, 'a', 'a')).toBe(obj)
-    expect(findObjectWithField(obj, 'b', 'c')).toBeUndefined()
-    expect(findObjectWithField(obj, 'e', 'e')).toBe(obj.d)
-    expect(findObjectWithField(obj, 'd', 'd')).toBeUndefined()
-    expect(findObjectWithField(obj, 'j', 'k')).toBeUndefined()
-    expect(findObjectWithField(obj, 'k', 'k')).toBe(obj.d.g.j)
-    expect(findObjectWithField(obj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
-
-    const deepObj = createDeepObject(101, 'value')
+    expect(findObjectWithField(aobj, 'a', 'a')).toBe(aobj)
+    expect(findObjectWithField(aobj, 'b', 'c')).toBeUndefined()
+    expect(findObjectWithField(aobj, 'e', 'e')).toBe(aobj.d)
+    expect(findObjectWithField(aobj, 'd', 'd')).toBeUndefined()
+    expect(findObjectWithField(aobj, 'j', 'k')).toBeUndefined()
+    expect(findObjectWithField(aobj, 'k', 'k')).toBe(aobj.d.g.j)
+    expect(findObjectWithField(aobj, 'f1', 'f1')).toStrictEqual({ f1: 'f1' })
 
     expect(findObjectWithField(deepObj, 'k', 'k')).toBeUndefined()
   })
@@ -750,14 +732,14 @@ describe('field functions', () => {
     expect.assertions(1)
 
     const obj = {
-      a: 'a',
-      b: 'b',
-      c: 'c',
-    }
-    const props = {
-      fields: ['b'],
-      recursive: false,
-    }
+        a: 'a',
+        b: 'b',
+        c: 'c',
+      },
+      props = {
+        fields: ['b'],
+        recursive: false,
+      }
 
     removeFields(obj, props)
 
@@ -771,18 +753,18 @@ describe('field functions', () => {
     expect.assertions(1)
 
     const obj = {
-      a: 'a',
-      b: 'b',
-      c: 'c',
-      d: { a: 'a', b: 'b', c: 'c', d: { a: 'a', b: 'b' } },
-      e: { a: 'a' },
-      f: 12,
-      g: { h: 'h' },
-    }
-    const props = {
-      fields: ['b', 'e', 'h'],
-      recursive: true,
-    }
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        d: { a: 'a', b: 'b', c: 'c', d: { a: 'a', b: 'b' } },
+        e: { a: 'a' },
+        f: 12,
+        g: { h: 'h' },
+      },
+      props = {
+        fields: ['b', 'e', 'h'],
+        recursive: true,
+      }
 
     removeFields(obj, props)
 
@@ -799,32 +781,32 @@ describe('field functions', () => {
     expect.assertions(1)
 
     const obj = {
-      a: 'a',
-      b: 'b',
-      c: 'c',
-      d: {
         a: 'a',
         b: 'b',
         c: 'c',
-        d: { a: 'a', b: 'b' },
-        e: null,
-        h: undefined,
+        d: {
+          a: 'a',
+          b: 'b',
+          c: 'c',
+          d: { a: 'a', b: 'b' },
+          e: null,
+          h: undefined,
+        },
+        e: { a: 'a', b: '' },
+        f: 12,
+        g: { b: 'b', e: undefined, h: 'h' },
+        h: { h: null, i: 'i', j: undefined },
+        j: null,
       },
-      e: { a: 'a', b: '' },
-      f: 12,
-      g: { b: 'b', e: undefined, h: 'h' },
-      h: { h: null, i: 'i', j: undefined },
-      j: null,
-    }
-    const props = {
-      fields: {
-        b: { deleteIfHasData: true },
-        e: {},
-        h: { deleteIfUndefined: true },
-        j: { deleteIfNull: true },
-      },
-      recursive: true,
-    }
+      props = {
+        fields: {
+          b: { deleteIfHasData: true },
+          e: {},
+          h: { deleteIfUndefined: true },
+          j: { deleteIfNull: true },
+        },
+        recursive: true,
+      }
 
     removeFields(obj, props)
 
@@ -866,11 +848,11 @@ describe('field functions', () => {
   it('not an object', () => {
     expect.assertions(9)
 
-    const obj = 'not an object'
-    const props = {
-      fields: ['b', 'e', 'h'],
-      recursive: true,
-    }
+    const obj = 'not an object',
+      props = {
+        fields: ['b', 'e', 'h'],
+        recursive: true,
+      }
 
     removeFields(obj, props)
 

@@ -616,7 +616,8 @@ describe('zDateTime', () => {
   it('should parse valid date inputs', () => {
     expect.assertions(8)
 
-    const schema = zDateTime()
+    const schema = zDateTime(),
+      spret = schema.safeParse(null)
 
     expect(schema.safeParse(new Date('2023-01-01'))).toStrictEqual({
       data: new Date('2023-01-01'),
@@ -645,11 +646,9 @@ describe('zDateTime', () => {
       success: false,
     })
 
-    const ret = schema.safeParse(null)
-
-    expect(ret.success).toBe(false)
-    expect(ret.error).toBeInstanceOf(z.ZodError)
-    expect(ret.error?.issues).toStrictEqual(
+    expect(spret.success).toBe(false)
+    expect(spret.error).toBeInstanceOf(z.ZodError)
+    expect(spret.error?.issues).toStrictEqual(
       expect.arrayContaining([
         expect.objectContaining({
           code: 'invalid_type',
