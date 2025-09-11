@@ -7,9 +7,6 @@ import { safestr } from './primitives/string-helper.mjs'
 // Import { HttpHandler } from 'msw'
 // Import { setupServer } from 'msw/node'
 
-// Set to 60 seconds. We are going over Global VPN.
-// jest.setTimeout(600000)
-
 const originalEnv = { ...process.env }
 
 // eslint-disable-next-line one-var

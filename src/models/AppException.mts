@@ -1,5 +1,6 @@
 /* eslint-disable sort-vars */
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
+import { safestr } from '../primitives/string-helper.mjs'
 
 export const HTTP_Ok = 200 as const,
   HTTP_Created = 201 as const,
@@ -26,7 +27,7 @@ export function isErrorMessage(error: unknown): error is { message: string } {
   )
 }
 
-export function getErrorMessage(err: unknown) {
+export function getErrorMessage(err: unknown): string {
   if (!isNullOrUndefined(err)) {
     switch (typeof err) {
       case 'object':
@@ -34,7 +35,7 @@ export function getErrorMessage(err: unknown) {
         if (err && 'message' in err) {
           const { message } = err
           if (message) {
-            return message
+            return safestr(message)
           }
         }
         break
