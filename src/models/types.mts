@@ -7,27 +7,27 @@ import { InstrumentationStatistics } from './InstrumentationStatistics.mjs'
 import { getBoolean } from '../primitives/boolean-helper.mjs'
 import { isNullOrUndefined } from '../primitives/object-helper.mjs'
 
-export type HttpHeaderNamesAllowed =
-  (typeof HttpHeadersAllowedKeyNames)[keyof typeof HttpHeadersAllowedKeyNames]
-
 export const CONST_AppNamePolitagree = 'politagree',
   CONST_AppNameTradePlotter = 'tradeplotter',
   CONST_NOT_IMPLEMENTED = 'Not implemented' as const,
-  HttpHeadersAllowedKeyNames = {
+  HttpHeaderAllowedKeyNames = {
     ApplicationName: 'x-application-name',
     Authorization: 'authorization',
     ShowDebug: 'ShowDebug',
   } as const,
-  // eslint-disable-next-line sort-vars
-  HttpHeadersAllowed: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
-    { id: HttpHeadersAllowedKeyNames.ApplicationName, type: 'string' },
-    { id: HttpHeadersAllowedKeyNames.Authorization, type: 'string' },
-    { id: HttpHeadersAllowedKeyNames.ShowDebug, type: 'boolean' },
-  ] as const,
   REGEX_ElapsedTime = /^(?<numSeconds>\d+ seconds|1 second|\d+m?s)/u,
   REGEX_ElapsedTimeString = '(\\d+ seconds|1 second|\\d+ms)' as const,
   REGEX_UptimeMatcher = /^\d+m*s$/u,
   REGEX_Version = /\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{6}-\d{6})?/u
+
+export type HttpHeaderNamesAllowed =
+  (typeof HttpHeaderAllowedKeyNames)[keyof typeof HttpHeaderAllowedKeyNames]
+// eslint-disable-next-line one-var
+export const HttpHeadersAllowed: Readonly<IdType<HttpHeaderNamesAllowed>>[] = [
+  { id: HttpHeaderAllowedKeyNames.ApplicationName, type: 'string' },
+  { id: HttpHeaderAllowedKeyNames.Authorization, type: 'string' },
+  { id: HttpHeaderAllowedKeyNames.ShowDebug, type: 'boolean' },
+] as const
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyObject<T = any> = { [key: string]: T }

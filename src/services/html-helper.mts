@@ -1,6 +1,6 @@
 import {
   type ArrayOrSingle,
-  HttpHeadersAllowedKeyNames,
+  HttpHeaderAllowedKeyNames,
   type JSONValue,
 } from '../models/types.mjs'
 import { hasData, isNullOrUndefined } from '../primitives/object-helper.mjs'
@@ -75,7 +75,7 @@ export function getHttpHeaderJson(
 }
 
 export function getHttpHeaderApplicationName(appName: string) {
-  return [HttpHeadersAllowedKeyNames.ApplicationName, appName] as const
+  return [HttpHeaderAllowedKeyNames.ApplicationName, appName] as const
 }
 
 /**
