@@ -24,6 +24,9 @@ import { isFunction } from './function-helper.mjs'
 import { isNumber } from './number-helper.mjs'
 import { isSymbol } from './symbol-helper.mjs'
 
+/**
+ * Keys that should always be removed from objects for security reasons.
+ */
 export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret']
 
 // const CONST_JsonDepth = 5
@@ -735,39 +738,39 @@ export function deepDiffMapper() {
 export function deepCloneJson<T extends object | Array<T>>(
   obj: T,
   fname?: string
-) {
-  const funcname = safestr(fname, 'deepCloneJson'),
-    ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
-
+): T {
+  const funcname = safestr(fname, 'deepCloneJson')
+  const ret = safestrToJson<T>(safeJsonToString(obj, funcname), funcname)
   if (!ret) {
     throw new AppException(
       `deepCloneJson() failed to clone object ${safestr(obj)}`,
       funcname
     )
   }
-
   return ret
 }
+
 /**
  * Looks for a ret.body object to return.
  * Throws an Error if the body is not found or not an object.
  * @param ret The object to get the ret.body object.
- * @returns The existing ret.body object of the ret object..
+ * @returns The existing ret.body object of the ret object.
  */
-
-export function getBody(ret: unknown) {
+export function getBody(ret: unknown): unknown {
   if (!isObject(ret, 'body')) {
     throw new AppException('Object body not found')
   }
-
   return (ret as { body: unknown }).body
 }
 
-type CoalesceType<T> = T | (() => T) | undefined
-
+/**
+ * Returns the first non-null/non-undefined value from a list of values or functions.
+ * Functions are invoked and their return value is checked.
+ * @param all List of values or functions to coalesce
+ * @returns First non-null/non-undefined value, or undefined
+ */
 export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
   let retItem: T | undefined
-
   for (const item of all) {
     if (isFunction(item)) {
       retItem = item()
@@ -780,45 +783,26 @@ export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
   }
 }
 
-export type ObjectRemoveFieldOptions = {
-  deleteIfHasData?: boolean
-  deleteIfNull?: boolean
-  deleteIfUndefined?: boolean
-}
-
-export type ObjectRemoveFieldsOptions = {
-  recursive?: boolean
-  fields: string[] | Record<string, ObjectRemoveFieldOptions>
-}
-
-// eslint-disable-next-line one-var
-export const ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
-  fields: {
-    _id: { deleteIfHasData: true, deleteIfNull: true, deleteIfUndefined: true },
-    id: { deleteIfHasData: false, deleteIfNull: true, deleteIfUndefined: true },
-  },
-
-  recursive: true,
-}
-
-// eslint-disable-next-line complexity
+/**
+ * Removes specified fields from an object, optionally recursively.
+ * @param obj Object to remove fields from
+ * @param props Options specifying fields and removal conditions
+ * @returns The object with fields removed
+ */
 export function removeFields<T = unknown>(
   obj: T,
   props: ObjectRemoveFieldsOptions = ObjectRemoveIdFieldsOptions
-) {
+): T {
   if (isObject(obj)) {
     const objKeys = Object.entries(obj)
-    // @typescript-eslint/no-for-in-array
     for (const [key, value] of objKeys) {
       let removed = false
-
       const fieldOptions =
         Array.isArray(props.fields) && props.fields.includes(key)
           ? {}
           : isObject(props.fields) && key in props.fields
           ? (props.fields as Record<string, ObjectRemoveFieldOptions>)[key]
           : undefined
-
       if (
         fieldOptions &&
         ((!fieldOptions.deleteIfHasData &&
@@ -830,26 +814,24 @@ export function removeFields<T = unknown>(
       ) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-dynamic-delete
         delete (obj as any)[key]
-
         removed = true
       }
-
       if (props.recursive && !removed && isObject(value)) {
         removeFields(value, props)
       }
     }
   }
-
   return obj
 }
 
 /**
- * Compares two objects and returns a value for use in the JavaScript sort() method.
- * @param a The first object to compare with.
- * @param b The second object to compare with.
- * @param isAsc True if you want to sort ascending.
- * @param compareStringsLowercase True if you want to do a lowercase compare on strings.
- * @returns -1, 0 or 1 depending on the sort direction.
+ * Compares two values for use in Array.sort().
+ * Handles null/undefined, string case, and sort order.
+ * @param a First value
+ * @param b Second value
+ * @param sortOrder True for ascending, false for descending
+ * @param compareStringsLowercase If true, compares strings in lowercase
+ * @returns -1, 0, or 1 depending on sort direction
  */
 export function sortFunction(
   a: unknown,
@@ -863,27 +845,49 @@ export function sortFunction(
 
   if (aEmpty && bEmpty) {
     return 0
-  }
-  // Null and undefined sort after anything else
-  else if (aEmpty) {
+  } else if (aEmpty) {
     return 1
   } else if (bEmpty) {
     return -1
-  }
-  // Equal items sort equally
-  else if (a === b) {
+  } else if (a === b) {
     return 0
   } else if (compareStringsLowercase && isString(a) && isString(b)) {
-    // A little recursive, but we will not come back here a second time.
     return sortFunction(safestrLowercase(a), safestrLowercase(b), isAsc, false)
-  }
-  // Otherwise, if we're ascending, lowest sorts first
-  else if (isAsc) {
+  } else if (isAsc) {
     return a < b ? -1 : 1
   }
-  // If descending, highest sorts first
-
   return a < b ? 1 : -1
+}
 
-  // Return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
+/**
+ * Type for coalesce: value, function returning value, or undefined.
+ */
+type CoalesceType<T> = T | (() => T) | undefined
+
+/**
+ * Options for removing a single field from an object.
+ */
+export type ObjectRemoveFieldOptions = {
+  deleteIfHasData?: boolean
+  deleteIfNull?: boolean
+  deleteIfUndefined?: boolean
+}
+
+/**
+ * Options for removing multiple fields from an object.
+ */
+export type ObjectRemoveFieldsOptions = {
+  recursive?: boolean
+  fields: string[] | Record<string, ObjectRemoveFieldOptions>
+}
+
+/**
+ * Default options for removing id fields from an object.
+ */
+export const ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
+  fields: {
+    _id: { deleteIfHasData: true, deleteIfNull: true, deleteIfUndefined: true },
+    id: { deleteIfHasData: false, deleteIfNull: true, deleteIfUndefined: true },
+  },
+  recursive: true,
 }
