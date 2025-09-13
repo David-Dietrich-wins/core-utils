@@ -9,11 +9,26 @@ import { isArray, splitToArray } from './array-helper.mjs'
 import { isFunction, typishValue } from './function-helper.mjs'
 import { AppException } from '../models/AppException.mjs'
 
-export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
-  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  CONST_CharsNumbers = '0123456789',
-  CONST_CharsToUseForRandomString =
-    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
+/**
+ * Lowercase alphabet characters.
+ */
+/**
+ * Lowercase alphabet characters.
+ */
+export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz'
+/**
+ * Uppercase alphabet characters.
+ */
+export const CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+/**
+ * Numeric characters.
+ */
+export const CONST_CharsNumbers = '0123456789'
+/**
+ * All characters to use for random string generation.
+ */
+export const CONST_CharsToUseForRandomString =
+  CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
 
 export function capitalizeFirstLetter(str?: string | null) {
   return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''
