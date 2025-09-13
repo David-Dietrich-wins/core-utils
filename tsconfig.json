@@ -26,10 +26,14 @@
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.mts"],
+  "include": ["**/*"],
   "exclude": [
     "__tests__",
+    "build",
     "coverage",
+    "dist",
+    "logs",
+    "out",
     "node_modules",
     "storybook-static",
     "eslint.config.mjs",

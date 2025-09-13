@@ -3,7 +3,6 @@
   "version": "2.2.0",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
   "private": false,
-  "module": "src/index.mjs",
   "type": "module",
   "exports": "./dist/index.mjs",
   "scripts": {
@@ -17,6 +16,7 @@
     "export:package": "echo '{\"name\": \"@digicrewllc/core-utils\", \"type\": \"module\", \"exports\": \"./dist/index.mjs\", \"version\": \"2.1.0\"}' > dist/package.json",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
+    "postbuild": "cp package.json ./dist",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "test2": "jest --coverage",
     "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
@@ -42,24 +42,24 @@
   },
   "homepage": "https://github.com/David-Dietrich-wins/core-utils#readme",
   "dependencies": {
-    "moment": "^2.30.1",
+    "moment": "latest",
     "zod": "latest"
   },
   "devDependencies": {
     "@eslint/js": "latest",
     "@types/jest": "latest",
-    "@types/jsonwebtoken": "^9.0.10",
+    "@types/jsonwebtoken": "latest",
     "@types/node": "latest",
-    "@types/tmp": "^0.2.6",
+    "@types/tmp": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "eslint": "latest",
     "eslint-plugin-jest": "latest",
-    "jest": "^30.1.2",
-    "msw": "^2.11.1",
-    "tmp": "^0.2.5",
-    "ts-jest": "^29.4.1",
-    "ts-node": "^10.9.2",
+    "jest": "latest",
+    "msw": "latest",
+    "tmp": "latest",
+    "ts-jest": "latest",
+    "ts-node": "latest",
     "typescript": "latest",
     "typescript-eslint": "latest"
   }

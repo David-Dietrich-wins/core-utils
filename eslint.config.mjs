@@ -31,7 +31,7 @@ export default defineConfig(
       parserOptions: {
         // projectService: true,
         project: './tsconfig.test.json',
-        // tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
