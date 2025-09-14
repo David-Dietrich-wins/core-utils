@@ -1,8 +1,8 @@
 {
   "name": "@digicrewllc/core-utils",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Core helper utilities for supporting TypeScript and JavaScript projects.",
-  "private": false,
+  "private": true,
   "type": "module",
   "exports": "./dist/index.mjs",
   "scripts": {
