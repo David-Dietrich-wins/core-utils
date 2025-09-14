@@ -23,6 +23,9 @@
     "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/David-Dietrich-wins/core-utils.git"
