@@ -35,8 +35,7 @@ export default defineConfig(
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
-      'jest': jestPlugin,
+      jest: jestPlugin,
     },
     rules: {
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
