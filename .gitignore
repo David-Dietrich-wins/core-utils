@@ -119,3 +119,4 @@ lib/
 
 # local files
 bookmarks.json
+.DS_Store
