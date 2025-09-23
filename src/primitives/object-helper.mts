@@ -803,18 +803,6 @@ export function coalesce<T>(...all: CoalesceType<T>[]): T | undefined {
 }
 
 /**
- * Default options for removing id fields from an object.
- */
-// eslint-disable-next-line one-var
-export const ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
-  fields: {
-    _id: { deleteIfHasData: true, deleteIfNull: true, deleteIfUndefined: true },
-    id: { deleteIfHasData: false, deleteIfNull: true, deleteIfUndefined: true },
-  },
-  recursive: true,
-}
-
-/**
  * Removes specified fields from an object, optionally recursively.
  * @param obj Object to remove fields from
  * @param props Options specifying fields and removal conditions
