@@ -15,20 +15,20 @@ import { AppException } from '../models/AppException.mjs'
 /**
  * Lowercase alphabet characters.
  */
-export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz'
-/**
- * Uppercase alphabet characters.
- */
-export const CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-/**
- * Numeric characters.
- */
-export const CONST_CharsNumbers = '0123456789'
-/**
- * All characters to use for random string generation.
- */
-export const CONST_CharsToUseForRandomString =
-  CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
+export const CONST_CharsAlphabetLower = 'abcdefghijklmnopqrstuvwxyz',
+  /**
+   * Uppercase alphabet characters.
+   */
+  CONST_CharsAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  /**
+   * Numeric characters.
+   */
+  CONST_CharsNumbers = '0123456789',
+  /**
+   * All characters to use for random string generation.
+   */
+  CONST_CharsToUseForRandomString =
+    CONST_CharsAlphabetLower + CONST_CharsAlphabetUpper + CONST_CharsNumbers
 
 export function capitalizeFirstLetter(str?: string | null) {
   return str && hasData(str) ? str.charAt(0).toUpperCase() + str.slice(1) : ''

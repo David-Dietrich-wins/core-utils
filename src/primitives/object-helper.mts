@@ -27,9 +27,27 @@ import { isSymbol } from './symbol-helper.mjs'
 /**
  * Keys that should always be removed from objects for security reasons.
  */
-export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret']
+export const ARRAY_KeysToAlwaysRemove = ['password', 'pwd', 'secret'],
+  // const CONST_JsonDepth = 5
 
-// const CONST_JsonDepth = 5
+  /**
+   * Default options for removing id fields from an object.
+   */
+  ObjectRemoveIdFieldsOptions: ObjectRemoveFieldsOptions = {
+    fields: {
+      _id: {
+        deleteIfHasData: true,
+        deleteIfNull: true,
+        deleteIfUndefined: true,
+      },
+      id: {
+        deleteIfHasData: false,
+        deleteIfNull: true,
+        deleteIfUndefined: true,
+      },
+    },
+    recursive: true,
+  }
 
 /**
  * Tests if a variable is null or undefined.
@@ -747,6 +765,7 @@ export function deepCloneJson<T extends object | Array<T>>(
       funcname
     )
   }
+
   return ret
 }
 
